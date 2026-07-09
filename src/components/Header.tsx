@@ -1,106 +1,210 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Sun, Moon } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+
+const NAV_LINKS = [
+  { label: "Work", href: "/work" },
+  { label: "Products", href: "/products" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true); // Dark mode default for premium STURDY feel
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    if (isDarkMode) {
-      document.documentElement.classList.remove("dark");
-    } else {
-      document.documentElement.classList.add("dark");
-    }
-  };
+  // Close menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
-  const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Work", href: "/work" },
-    { name: "Services", href: "/services" },
-    { name: "About", href: "/about" },
-    { name: "Careers", href: "/careers" },
-    { name: "Blog", href: "/blog" },
-    { name: "Contact", href: "/contact" },
-  ];
+  // Prevent body scroll when menu open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-50 mix-blend-difference px-6 md:px-12 py-6 flex justify-between items-center text-white">
-        <Link href="/" className="text-2xl font-black tracking-tighter">
-          AAREN<span className="text-accent font-bold">.</span>
+      {/* ─── Main Header Bar ─── */}
+      <header
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          zIndex: 1000,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "20px 28px",
+          mixBlendMode: "difference",
+        }}
+      >
+        {/* Logo */}
+        <Link
+          href="/"
+          style={{
+            fontSize: "15px",
+            fontWeight: 700,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            color: "#ffffff",
+          }}
+        >
+          AAREN.
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold tracking-wider uppercase">
-          {navLinks.map((link) => (
+        {/* Desktop Nav */}
+        <nav
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "28px",
+          }}
+          className="hidden md:flex"
+        >
+          {NAV_LINKS.map((link) => (
             <Link
-              key={link.name}
+              key={link.href}
               href={link.href}
-              className={`hover:text-accent transition-colors ${
-                pathname === link.href ? "text-accent" : ""
-              }`}
+              className="link-underline"
+              style={{
+                fontSize: "13px",
+                fontWeight: 500,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                color: "#ffffff",
+                opacity: pathname === link.href ? 1 : 0.7,
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = pathname === link.href ? "1" : "0.7")}
             >
-              {link.name}
+              {link.label}
             </Link>
           ))}
-          <button
-            onClick={toggleTheme}
-            className="p-1 rounded-full border border-white/20 hover:border-accent transition-colors flex items-center justify-center"
-            title="Toggle theme"
+          <Link
+            href="/careers"
+            style={{
+              fontSize: "13px",
+              fontWeight: 500,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: "#ffffff",
+              opacity: 0.7,
+              transition: "opacity 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.7")}
+            className="link-underline"
           >
-            {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
+            Join Our Team
+          </Link>
         </nav>
 
-        <div className="md:hidden flex items-center space-x-4">
-          <button onClick={toggleTheme} className="p-1 rounded-full border border-white/20">
-            {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
-          <button onClick={() => setIsOpen(!isOpen)} className="text-white">
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden"
+          style={{
+            background: "none",
+            border: "none",
+            color: "#ffffff",
+            fontSize: "13px",
+            fontWeight: 500,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            padding: 0,
+          }}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? "Close" : "Menu"}
+        </button>
       </header>
 
-      {/* Fullscreen Mobile Navigation Menu */}
+      {/* ─── Fullscreen Mobile Menu ─── */}
       <AnimatePresence>
-        {isOpen && (
+        {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: "-100%" }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "-100%" }}
-            transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 bg-[#080808] z-40 flex flex-col justify-center px-8 md:px-16"
+            key="mobile-menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "#0a0a0a",
+              zIndex: 999,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              padding: "100px 28px 40px",
+            }}
           >
-            <div className="flex flex-col space-y-6">
-              {navLinks.map((link, idx) => (
-                <motion.div
-                  key={link.name}
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.08 }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`text-5xl md:text-7xl font-black uppercase tracking-tighter hover:text-accent transition-colors ${
-                      pathname === link.href ? "text-accent" : "text-white"
-                    }`}
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {[...NAV_LINKS, { label: "Join Our Team", href: "/careers" }, { label: "Blog", href: "/blog" }].map(
+                (link, i) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.07, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                   >
-                    {link.name}
-                  </Link>
-                </motion.div>
-              ))}
+                    <Link
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      style={{
+                        display: "block",
+                        fontSize: "clamp(2.5rem, 10vw, 6rem)",
+                        fontWeight: 700,
+                        lineHeight: 1.05,
+                        letterSpacing: "-0.02em",
+                        color: pathname === link.href ? "#ffffff" : "rgba(255,255,255,0.35)",
+                        transition: "color 0.2s",
+                        textTransform: "uppercase",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = pathname === link.href ? "#ffffff" : "rgba(255,255,255,0.35)")}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                )
+              )}
             </div>
-            <div className="absolute bottom-8 left-8 text-xs text-muted-foreground">
-              <p>© {new Date().getFullYear()} Aaren Creative Studio. All Rights Reserved.</p>
-            </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              style={{
+                position: "absolute",
+                bottom: "32px",
+                left: "28px",
+                right: "28px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+              }}
+            >
+              <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", letterSpacing: "0.05em" }}>
+                © {new Date().getFullYear()} AAREN CREATIVE STUDIO
+              </p>
+              <a
+                href="https://www.instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", letterSpacing: "0.05em" }}
+                className="link-underline"
+              >
+                Instagram
+              </a>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,86 +1,62 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect } from "react";
 
 export default function CustomCursor() {
-  const [mounted, setMounted] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [click, setClick] = useState(false);
-
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-
-  const springConfig = { damping: 40, stiffness: 400, mass: 0.4 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
-
   useEffect(() => {
-    setMounted(true);
+    const dot = document.querySelector(".cursor-dot") as HTMLElement;
+    const ring = document.querySelector(".cursor-ring") as HTMLElement;
 
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
+    if (!dot || !ring) return;
+
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+    let rafId: number;
+
+    const onMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.style.left = mouseX + "px";
+      dot.style.top = mouseY + "px";
     };
 
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === "A" ||
-        target.tagName === "BUTTON" ||
-        target.closest("a") ||
-        target.closest("button") ||
-        target.classList.contains("cursor-pointer")
-      ) {
-        setHovered(true);
-      } else {
-        setHovered(false);
-      }
+    const animateRing = () => {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      ring.style.left = ringX + "px";
+      ring.style.top = ringY + "px";
+      rafId = requestAnimationFrame(animateRing);
     };
 
-    const handleMouseDown = () => setClick(true);
-    const handleMouseUp = () => setClick(false);
+    const onEnter = () => {
+      dot.classList.add("hovering");
+      ring.classList.add("hovering");
+    };
 
-    window.addEventListener("mousemove", moveCursor);
-    window.addEventListener("mouseover", handleMouseOver);
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
+    const onLeave = () => {
+      dot.classList.remove("hovering");
+      ring.classList.remove("hovering");
+    };
+
+    document.addEventListener("mousemove", onMove);
+
+    document.querySelectorAll("a, button, [data-cursor]").forEach((el) => {
+      el.addEventListener("mouseenter", onEnter);
+      el.addEventListener("mouseleave", onLeave);
+    });
+
+    rafId = requestAnimationFrame(animateRing);
 
     return () => {
-      window.removeEventListener("mousemove", moveCursor);
-      window.removeEventListener("mouseover", handleMouseOver);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(rafId);
     };
-  }, [cursorX, cursorY]);
-
-  if (!mounted) return null;
+  }, []);
 
   return (
     <>
-      <motion.div
-        className="custom-cursor hidden md:block"
-        style={{
-          x: cursorXSpring,
-          y: cursorYSpring,
-        }}
-        animate={{
-          scale: click ? 0.6 : hovered ? 1.5 : 1,
-          backgroundColor: hovered ? "#ff3e3e" : "#ff3e3e",
-        }}
-      />
-      <motion.div
-        className="custom-cursor-ring hidden md:block"
-        style={{
-          x: cursorXSpring,
-          y: cursorYSpring,
-        }}
-        animate={{
-          scale: click ? 0.8 : hovered ? 1.8 : 1,
-          borderColor: hovered ? "#ff3e3e" : "#ff3e3e",
-          borderWidth: hovered ? "2px" : "1px",
-        }}
-      />
+      <div className="cursor-dot" />
+      <div className="cursor-ring" />
     </>
   );
 }
