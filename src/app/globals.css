@@ -1,26 +1,188 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #0b0b0b;
+    --card: #f9f9f9;
+    --card-foreground: #0b0b0b;
+    --popover: #ffffff;
+    --popover-foreground: #0b0b0b;
+    --primary: #101010;
+    --primary-foreground: #ffffff;
+    --secondary: #f0f0f0;
+    --secondary-foreground: #101010;
+    --muted: #f4f4f4;
+    --muted-foreground: #666666;
+    --accent: #ff3e3e;
+    --accent-foreground: #ffffff;
+    --border: #e0e0e0;
+    --input: #e0e0e0;
+    --ring: #101010;
+    --radius: 0rem;
+  }
+
+  .dark {
+    --background: #080808;
+    --foreground: #f5f5f5;
+    --card: #121212;
+    --card-foreground: #f5f5f5;
+    --popover: #0c0c0c;
+    --popover-foreground: #f5f5f5;
+    --primary: #ffffff;
+    --primary-foreground: #080808;
+    --secondary: #181818;
+    --secondary-foreground: #ffffff;
+    --muted: #141414;
+    --muted-foreground: #a0a0a0;
+    --accent: #ff3e3e;
+    --accent-foreground: #ffffff;
+    --border: #222222;
+    --input: #222222;
+    --ring: #ffffff;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  cursor: none; /* Hide default cursor for GSAP animated custom cursor */
+}
+
+a, button, input, select, textarea {
+  cursor: none !important;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.5s ease, color 0.3s ease;
+}
+
+/* Custom Premium Custom Cursor Styles */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background-color 0.2s;
+}
+
+.custom-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s, border-color 0.3s;
+}
+
+/* Lenis smooth scrolling configuration */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overflow: clip;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Custom premium aesthetic utilities */
+.text-huge {
+  font-size: clamp(3rem, 12vw, 15rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.infinite-marquee {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: flex;
+  animation: marquee 25s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Custom Glassmorphism Card style */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark .glass-panel {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Image reveal effect */
+.reveal-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.reveal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--accent);
+  transform: scaleY(1);
+  transform-origin: bottom;
+  transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.reveal-wrapper.active .reveal-overlay {
+  transform: scaleY(0);
 }
