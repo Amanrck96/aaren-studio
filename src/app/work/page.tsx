@@ -22,6 +22,7 @@ export default function WorkPage() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [flipImage, setFlipImage] = useState(false);
 
   const filtered =
     activeFilter === "All"
@@ -30,35 +31,41 @@ export default function WorkPage() {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     setMousePos({ x: e.clientX, y: e.clientY });
+    setFlipImage(e.clientX > window.innerWidth / 2);
   };
+
+  const hoveredData = ALL_PROJECTS.find((p) => p.slug === hoveredProject);
 
   return (
     <div
       style={{ background: "#0a0a0a", color: "#f0f0f0", minHeight: "100vh", paddingTop: "80px" }}
       onMouseMove={handleMouseMove}
     >
-      {/* Floating hover preview image */}
-      {hoveredProject && (
-        <div
-          style={{
-            position: "fixed",
-            left: mousePos.x + 20,
-            top: mousePos.y - 80,
-            width: "240px",
-            height: "160px",
-            pointerEvents: "none",
-            zIndex: 500,
-            overflow: "hidden",
-            transition: "opacity 0.2s ease",
-          }}
-        >
+      {/* ── Floating hover preview image — Sturdy.co style ── */}
+      <div
+        style={{
+          position: "fixed",
+          pointerEvents: "none",
+          zIndex: 800,
+          left: flipImage ? "auto" : mousePos.x + 28,
+          right: flipImage ? window.innerWidth - mousePos.x + 28 : "auto",
+          top: mousePos.y - 130,
+          width: "320px",
+          height: "240px",
+          opacity: hoveredProject ? 1 : 0,
+          transform: hoveredProject ? "translateY(0) scale(1)" : "translateY(12px) scale(0.97)",
+          transition: "opacity 0.25s ease, transform 0.3s ease",
+          overflow: "hidden",
+        }}
+      >
+        {hoveredData && (
           <img
-            src={ALL_PROJECTS.find((p) => p.slug === hoveredProject)?.image}
+            src={hoveredData.image}
             alt=""
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           />
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Page Header */}
       <div
