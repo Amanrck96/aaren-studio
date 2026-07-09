@@ -7,6 +7,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Play, ArrowUpRight } from "lucide-react";
 
+import WebGLCanvas from "@/components/WebGLCanvas";
+
 gsap.registerPlugin(ScrollTrigger);
 
 // Custom mock values to avoid blank UI pages
@@ -100,6 +102,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative h-screen w-full flex items-center justify-center px-6 md:px-12">
         <div className="absolute inset-0 bg-black/60 z-10" />
+        {/* WebGL Canvas background points */}
+        <WebGLCanvas />
         {/* Placeholder video background (premium dark gradient look) */}
         <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-purple-900/20 via-black to-red-900/20" />
         
