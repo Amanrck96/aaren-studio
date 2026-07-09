@@ -1,32 +1,26 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import SmoothScroll from "@/components/SmoothScroll";
 
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-outfit",
-});
-
 export const metadata: Metadata = {
-  title: "Aaren Creative Studio | Premium Design & Brand Experiences",
-  description: "Inspired by STURDY.CO. Aaren is a global creative powerhouse specializing in next-generation branding, motion design, 3D animations, and immersive WebGL experiences.",
+  title: "Aaren Creative Studio",
+  description:
+    "A creative studio and material house dedicated to designing and producing immersive spatial experiences, premium architectural surfaces, and environments — meant to evoke feeling.",
+  metadataBase: new URL("https://aarenstudio.com"),
   openGraph: {
     title: "Aaren Creative Studio",
-    description: "Premium Design & Brand Experiences.",
-    url: "https://aaren.com",
-    siteName: "Aaren Studio",
-    images: [{ url: "/og-image.jpg" }],
+    description: "Immersive spatial experiences and premium architectural surfaces.",
+    url: "https://aarenstudio.com",
+    siteName: "Aaren Creative Studio",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Aaren Creative Studio",
-    description: "Premium Design & Brand Experiences.",
-    images: ["/og-image.jpg"],
+    description: "Immersive spatial experiences and premium architectural surfaces.",
   },
 };
 
@@ -36,12 +30,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${outfit.variable} antialiased`}>
+    <html lang="en">
+      <body style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
         <SmoothScroll>
           <CustomCursor />
           <Header />
-          <main className="min-h-screen relative">{children}</main>
+          <main>{children}</main>
           <Footer />
         </SmoothScroll>
       </body>

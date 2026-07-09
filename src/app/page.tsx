@@ -1,191 +1,418 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Play, ArrowUpRight } from "lucide-react";
-
-import WebGLCanvas from "@/components/WebGLCanvas";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Custom mock values to avoid blank UI pages
-const featuredProjects = [
+const SERVICES = [
+  "Interior Design",
+  "Space Planning",
+  "Material Curation",
+  "Furniture Design",
+  "Architectural Surfaces",
+  "Lighting Design",
+  "Joinery & Millwork",
+  "Bathroom & Wellness",
+  "Flooring Systems",
+  "Facade & Cladding",
+  "Brand Environments",
+  "Turnkey Delivery",
+];
+
+const PROJECTS = [
   {
-    title: "VIRTUAL HORIZONS",
-    category: "3D Animation / Motion Graphics",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
-    slug: "virtual-horizons",
+    id: "AC 01",
+    client: "The Oberoi",
+    code: "OB",
+    num: "01",
+    title: "Presidential Suite — Lobby Renovation",
+    year: "2025",
+    category: "Hospitality",
+    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
+    slug: "oberoi-lobby",
+    large: true,
   },
   {
-    title: "NEON SYNAPSE",
-    category: "Brand Identity / Creative Direction",
-    image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80",
-    slug: "neon-synapse",
+    id: "AC 02",
+    client: "Ratan Group",
+    code: "RG",
+    num: "02",
+    title: "Corporate Headquarters — Mumbai",
+    year: "2025",
+    category: "Commercial",
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+    slug: "ratan-hq",
+    large: false,
   },
   {
-    title: "CHRONO CLOUD",
-    category: "Web Design / Interactive Dev",
-    image: "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?auto=format&fit=crop&w=800&q=80",
-    slug: "chrono-cloud",
+    id: "AC 03",
+    client: "Private Villa",
+    code: "PV",
+    num: "03",
+    title: "Bespoke Residence — Alibaug",
+    year: "2024",
+    category: "Residential",
+    image: "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=800&q=80",
+    slug: "alibaug-villa",
+    large: false,
+  },
+  {
+    id: "AC 04",
+    client: "Taj Hotels",
+    code: "TJ",
+    num: "04",
+    title: "Spa & Wellness Sanctuary",
+    year: "2024",
+    category: "Hospitality",
+    image: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80",
+    slug: "taj-spa",
+    large: true,
+  },
+  {
+    id: "AC 05",
+    client: "Godrej Properties",
+    code: "GP",
+    num: "05",
+    title: "Luxury Showflat — Worli",
+    year: "2024",
+    category: "Residential",
+    image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80",
+    slug: "godrej-worli",
+    large: false,
+  },
+  {
+    id: "AC 06",
+    client: "Nykaa",
+    code: "NK",
+    num: "06",
+    title: "Flagship Retail Experience",
+    year: "2023",
+    category: "Retail",
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80",
+    slug: "nykaa-retail",
+    large: false,
   },
 ];
 
-const clientBrands = [
-  "AETHER CORP", "APEX LABS", "VERTEX CO", "ZEPHYR MEDIA", "NEXUS INTERACTIVE", "GRAVITY DESIGN"
+const CLIENTS = [
+  "The Oberoi",
+  "Taj Hotels",
+  "Godrej Properties",
+  "Nykaa",
+  "Ratan Group",
+  "Hiranandani",
+  "Lodha Group",
+  "Piramal Realty",
+  "Birla Estates",
+  "Mahindra",
 ];
 
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const heroTextRef = useRef<HTMLHeadingElement>(null);
-  const [loading, setLoading] = useState(true);
+  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Premium loading screen timeout animation
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (loading) return;
-
-    // GSAP ScrollTrigger intro fade animations
     const ctx = gsap.context(() => {
-      gsap.from(heroTextRef.current, {
-        y: 100,
+      // Hero text reveal
+      gsap.from(".hero-line", {
+        y: "105%",
         opacity: 0,
-        duration: 1.5,
+        duration: 1.1,
         ease: "power4.out",
+        stagger: 0.12,
       });
 
-      gsap.utils.toArray(".project-card").forEach((card: any) => {
+      gsap.from(".hero-meta", {
+        opacity: 0,
+        y: 20,
+        duration: 0.9,
+        delay: 0.8,
+        ease: "power3.out",
+        stagger: 0.1,
+      });
+
+      // Project cards reveal on scroll
+      gsap.utils.toArray<HTMLElement>(".proj-card").forEach((card) => {
         gsap.from(card, {
           scrollTrigger: {
             trigger: card,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
+            start: "top 85%",
+            toggleActions: "play none none none",
           },
-          y: 60,
+          y: 40,
           opacity: 0,
-          duration: 1,
+          duration: 0.9,
           ease: "power3.out",
         });
       });
-    }, containerRef);
+    }, heroRef);
 
     return () => ctx.revert();
-  }, [loading]);
-
-  if (loading) {
-    return (
-      <div className="fixed inset-0 bg-[#080808] z-50 flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.2 }}
-          className="text-center"
-        >
-          <h1 className="text-4xl md:text-6xl font-black tracking-widest text-white">AAREN</h1>
-          <div className="w-16 h-[2px] bg-accent mx-auto mt-4 animate-pulse" />
-        </motion.div>
-      </div>
-    );
-  }
+  }, []);
 
   return (
-    <div ref={containerRef} className="bg-[#080808] text-white overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative h-screen w-full flex items-center justify-center px-6 md:px-12">
-        <div className="absolute inset-0 bg-black/60 z-10" />
-        {/* WebGL Canvas background points */}
-        <WebGLCanvas />
-        {/* Placeholder video background (premium dark gradient look) */}
-        <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-purple-900/20 via-black to-red-900/20" />
-        
-        <div className="relative z-20 text-center max-w-5xl">
-          <h1 ref={heroTextRef} className="text-huge text-white font-black tracking-tighter mb-8 leading-none">
-            WE MAKE<br />IT UNREAL<span className="text-accent">.</span>
-          </h1>
-          <p className="text-neutral-400 text-lg md:text-2xl max-w-2xl mx-auto mb-10 font-light leading-relaxed">
-            Aaren Creative Studio is a global powerhouse of design, interactive production, and immersive brand stories.
+    <div ref={heroRef} style={{ background: "#0a0a0a", color: "#f0f0f0", minHeight: "100vh" }}>
+
+      {/* ═══════════════════════════════════════
+          HERO — exact Sturdy.co style
+          Full viewport, left-aligned giant paragraph
+      ═══════════════════════════════════════ */}
+      <section
+        style={{
+          minHeight: "100vh",
+          padding: "0 28px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          paddingBottom: "80px",
+        }}
+      >
+        <div style={{ maxWidth: "1200px" }}>
+          {/* Giant description text — Sturdy style */}
+          <div style={{ overflow: "hidden", marginBottom: "6px" }}>
+            <p
+              className="hero-line"
+              style={{
+                fontSize: "clamp(2.2rem, 5.5vw, 5.8rem)",
+                fontWeight: 700,
+                lineHeight: 1.0,
+                letterSpacing: "-0.03em",
+                color: "#ffffff",
+              }}
+            >
+              A creative studio and material house
+            </p>
+          </div>
+          <div style={{ overflow: "hidden", marginBottom: "6px" }}>
+            <p
+              className="hero-line"
+              style={{
+                fontSize: "clamp(2.2rem, 5.5vw, 5.8rem)",
+                fontWeight: 700,
+                lineHeight: 1.0,
+                letterSpacing: "-0.03em",
+                color: "#ffffff",
+              }}
+            >
+              dedicated to designing and producing
+            </p>
+          </div>
+          <div style={{ overflow: "hidden", marginBottom: "6px" }}>
+            <p
+              className="hero-line"
+              style={{
+                fontSize: "clamp(2.2rem, 5.5vw, 5.8rem)",
+                fontWeight: 700,
+                lineHeight: 1.0,
+                letterSpacing: "-0.03em",
+                color: "rgba(255,255,255,0.35)",
+              }}
+            >
+              immersive spatial experiences — meant
+            </p>
+          </div>
+          <div style={{ overflow: "hidden" }}>
+            <p
+              className="hero-line"
+              style={{
+                fontSize: "clamp(2.2rem, 5.5vw, 5.8rem)",
+                fontWeight: 700,
+                lineHeight: 1.0,
+                letterSpacing: "-0.03em",
+                color: "rgba(255,255,255,0.35)",
+              }}
+            >
+              to evoke feeling.
+            </p>
+          </div>
+
+          {/* Services list — below hero text, Sturdy style */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "8px 24px",
+              marginTop: "48px",
+              borderTop: "1px solid #1a1a1a",
+              paddingTop: "28px",
+            }}
+          >
+            {SERVICES.map((s, i) => (
+              <span
+                key={i}
+                className="hero-meta"
+                style={{
+                  fontSize: "13px",
+                  color: "rgba(255,255,255,0.4)",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom-right: year + studio mark */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: "32px",
+            right: "28px",
+            textAlign: "right",
+          }}
+          className="hero-meta"
+        >
+          <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            AAREN.© {new Date().getFullYear()}
           </p>
-          <div className="flex flex-wrap justify-center gap-6">
-            <Link
-              href="/work"
-              className="px-8 py-4 bg-white text-black font-bold uppercase tracking-wider text-sm hover:bg-accent hover:text-white transition-all flex items-center gap-2 group"
-            >
-              Explore Portfolio
-              <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            </Link>
-            <Link
-              href="/contact"
-              className="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-wider text-sm hover:border-accent transition-colors"
-            >
-              Start A Project
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* Infinite Marquee Section */}
-      <section className="py-12 bg-accent/90 text-white border-y border-neutral-900">
-        <div className="infinite-marquee">
-          <div className="marquee-content font-black text-4xl md:text-7xl uppercase tracking-tighter space-x-12 py-2">
-            <span>AAREN CREATIVE STUDIO • NEXT GEN IMMERSIVE EXPERIENCES • BRANDING • MOTION GRAPHICS • 3D ANIMATION • UI UX DESIGN • </span>
-            <span>AAREN CREATIVE STUDIO • NEXT GEN IMMERSIVE EXPERIENCES • BRANDING • MOTION GRAPHICS • 3D ANIMATION • UI UX DESIGN • </span>
-          </div>
-        </div>
-      </section>
+      {/* ═══════════════════════════════════════
+          SELECTED WORK — exact Sturdy.co grid
+      ═══════════════════════════════════════ */}
+      <section style={{ borderTop: "1px solid #1a1a1a", padding: "0 28px" }}>
 
-      {/* Featured Projects Section */}
-      <section className="py-32 px-6 md:px-12 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-baseline mb-20">
-          <div>
-            <h4 className="text-accent uppercase tracking-wider font-bold text-xs mb-4">SELECTED WORKS</h4>
-            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight">FEATURED CREATIONS</h2>
-          </div>
-          <Link href="/work" className="text-sm font-bold uppercase tracking-wider hover:text-accent transition-colors mt-4 md:mt-0">
-            View All Projects →
+        {/* Section header */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "28px 0",
+            borderBottom: "1px solid #1a1a1a",
+          }}
+        >
+          <p style={{ fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)" }}>
+            Selected Work
+          </p>
+          <Link
+            href="/work"
+            className="link-underline"
+            style={{ fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
+          >
+            All Projects [{PROJECTS.length}]
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {featuredProjects.map((project, idx) => (
-            <Link href={`/work/${project.slug}`} key={idx} className="project-card group block">
-              <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-900 mb-6">
+        {/* Project list — Sturdy.co layout */}
+        <div>
+          {PROJECTS.map((project) => (
+            <Link
+              key={project.id}
+              href={`/work/${project.slug}`}
+              className="proj-card project-item"
+              style={{
+                display: "grid",
+                gridTemplateColumns: project.large ? "1fr" : "1fr 1fr",
+                borderBottom: "1px solid #1a1a1a",
+                textDecoration: "none",
+              }}
+            >
+              {/* Image */}
+              <div
+                style={{
+                  position: "relative",
+                  aspectRatio: project.large ? "16/7" : "4/3",
+                  overflow: "hidden",
+                  background: "#111",
+                }}
+              >
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                  className="project-img"
+                  style={{ width: "100%", height: "100%" }}
                 />
               </div>
-              <h3 className="text-xl font-bold uppercase tracking-tight group-hover:text-accent transition-colors">
-                {project.title}
-              </h3>
-              <p className="text-neutral-400 text-xs mt-2 uppercase tracking-widest">{project.category}</p>
+
+              {/* Text info */}
+              <div
+                style={{
+                  padding: project.large ? "28px 0" : "28px 28px",
+                  display: "flex",
+                  flexDirection: project.large ? "row" : "column",
+                  justifyContent: project.large ? "space-between" : "flex-end",
+                  alignItems: project.large ? "flex-end" : "flex-start",
+                  gap: "12px",
+                }}
+              >
+                <div>
+                  <p style={{ fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "8px" }}>
+                    {project.year} &nbsp;·&nbsp; {project.category}
+                  </p>
+                  <h3
+                    style={{
+                      fontSize: project.large ? "clamp(1.5rem, 3vw, 3rem)" : "1.2rem",
+                      fontWeight: 700,
+                      letterSpacing: "-0.02em",
+                      lineHeight: 1.1,
+                      color: "#ffffff",
+                    }}
+                  >
+                    {project.client}
+                  </h3>
+                  <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.45)", marginTop: "6px" }}>
+                    {project.title}
+                  </p>
+                </div>
+                <p
+                  style={{
+                    fontSize: "clamp(2rem, 5vw, 5rem)",
+                    fontWeight: 700,
+                    letterSpacing: "-0.04em",
+                    color: "rgba(255,255,255,0.07)",
+                    lineHeight: 1,
+                    flexShrink: 0,
+                  }}
+                >
+                  {project.code}
+                  <br />
+                  {project.num}
+                </p>
+              </div>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Featured Clients Section */}
-      <section className="py-24 bg-[#0c0c0c] px-6 md:px-12 border-y border-neutral-900">
-        <div className="max-w-7xl mx-auto">
-          <h4 className="text-accent uppercase tracking-wider font-bold text-xs text-center mb-16">TRUSTED BY WORLD CLASS BRANDS</h4>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-8 items-center text-center">
-            {clientBrands.map((brand, idx) => (
-              <div key={idx} className="text-neutral-500 font-bold uppercase tracking-widest text-lg hover:text-white transition-colors duration-300">
-                {brand}
-              </div>
+      {/* ═══════════════════════════════════════
+          CLIENT MARQUEE — Sturdy.co infinite scroll
+      ═══════════════════════════════════════ */}
+      <section
+        style={{
+          borderTop: "1px solid #1a1a1a",
+          padding: "24px 0",
+          overflow: "hidden",
+        }}
+      >
+        <div className="marquee-wrap">
+          <div className="marquee-track" style={{ gap: "0" }}>
+            {[...CLIENTS, ...CLIENTS].map((client, i) => (
+              <span
+                key={i}
+                style={{
+                  fontSize: "13px",
+                  color: "rgba(255,255,255,0.35)",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  padding: "0 32px",
+                  whiteSpace: "nowrap",
+                  borderRight: "1px solid #1a1a1a",
+                }}
+              >
+                {client}
+              </span>
             ))}
           </div>
         </div>
       </section>
+
     </div>
   );
 }
