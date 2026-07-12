@@ -202,6 +202,42 @@ export default function Home() {
 
       // Mobile trigger (<1024px)
       mm.add("(max-width: 1023px)", () => {
+        // Heading reveal
+        const heading = containerRef.current?.querySelector(".t-tag");
+        if (heading) {
+          gsap.fromTo(heading,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top 90%",
+                toggleActions: "play none none none"
+              }
+            }
+          );
+        }
+
+        // Stagger items reveal
+        gsap.fromTo(clientsRef.current.filter(Boolean),
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.04,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 80%",
+              toggleActions: "play none none none"
+            }
+          }
+        );
+
         const triggers = ScrollTrigger.batch(clientsRef.current, {
           interval: 0.1,
           batchMax: 1,
@@ -235,6 +271,42 @@ export default function Home() {
             force3D: true,
           });
         });
+
+        // Heading reveal
+        const heading = containerRef.current?.querySelector(".t-tag");
+        if (heading) {
+          gsap.fromTo(heading,
+            { opacity: 0, y: 40 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top 85%",
+                toggleActions: "play none none none"
+              }
+            }
+          );
+        }
+
+        // Stagger client items reveal
+        gsap.fromTo(clients,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.05,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 80%",
+              toggleActions: "play none none none"
+            }
+          }
+        );
 
         const lastRotation = -18 * (clients.length - 1) - 90;
 
