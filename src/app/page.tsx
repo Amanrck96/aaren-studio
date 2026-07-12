@@ -1,326 +1,269 @@
 "use client";
-
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 gsap.registerPlugin(ScrollTrigger);
 
-const SERVICES = [
-  "Interior Design",
-  "Space Planning",
-  "Material Curation",
-  "Furniture Design",
-  "Architectural Surfaces",
-  "Lighting Design",
-  "Joinery & Millwork",
-  "Bathroom & Wellness",
-  "Flooring Systems",
-  "Facade & Cladding",
-  "Brand Environments",
-  "Turnkey Delivery",
-];
-
+/* ─── Aaren projects (replaces Drake / Bad Bunny / Adobe etc.) ─── */
 const PROJECTS = [
-  {
-    client: "The Oberoi",
-    code: "OB",
-    num: "01",
-    title: "Presidential Suite — Lobby Renovation",
-    year: "2025",
-    category: "Hospitality",
-    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=85",
-    slug: "oberoi-lobby",
-    large: true,
-  },
-  {
-    client: "Ratan Group",
-    code: "RG",
-    num: "02",
-    title: "Corporate Headquarters — Mumbai",
-    year: "2025",
-    category: "Commercial",
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=85",
-    slug: "ratan-hq",
-    large: false,
-  },
-  {
-    client: "Private Villa",
-    code: "PV",
-    num: "03",
-    title: "Bespoke Residence — Alibaug",
-    year: "2024",
-    category: "Residential",
-    image: "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=800&q=85",
-    slug: "alibaug-villa",
-    large: false,
-  },
-  {
-    client: "Taj Hotels",
-    code: "TJ",
-    num: "04",
-    title: "Spa & Wellness Sanctuary",
-    year: "2024",
-    category: "Hospitality",
-    image: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=85",
-    slug: "taj-spa",
-    large: true,
-  },
-  {
-    client: "Godrej Properties",
-    code: "GP",
-    num: "05",
-    title: "Luxury Showflat — Worli",
-    year: "2024",
-    category: "Residential",
-    image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85",
-    slug: "godrej-worli",
-    large: false,
-  },
-  {
-    client: "Nykaa",
-    code: "NK",
-    num: "06",
-    title: "Flagship Retail Experience",
-    year: "2023",
-    category: "Retail",
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=85",
-    slug: "nykaa-retail",
-    large: false,
-  },
+  { client: "The Oberoi",        sub: "Presidential Suite — Lobby Renovation",  year: "2025", code: "OB", num: "01", slug: "oberoi-lobby",   img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80" },
+  { client: "Taj Hotels",        sub: "Spa & Wellness Sanctuary",                year: "2025", code: "TJ", num: "02", slug: "taj-spa",        img: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=900&q=80" },
+  { client: "Ratan Group",       sub: "Corporate Headquarters — Mumbai",         year: "2025", code: "RG", num: "03", slug: "ratan-hq",       img: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=80" },
+  { client: "Godrej Properties", sub: "Luxury Showflat — Worli",                 year: "2024", code: "GP", num: "04", slug: "godrej-worli",   img: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=900&q=80" },
+  { client: "Private Villa",     sub: "Bespoke Residence — Alibaug",             year: "2024", code: "PV", num: "05", slug: "alibaug-villa",  img: "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=900&q=80" },
+  { client: "Nykaa",             sub: "Flagship Retail Experience",               year: "2023", code: "NK", num: "06", slug: "nykaa-retail",   img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=900&q=80" },
+  { client: "Lodha Group",       sub: "Club Lounge & Amenity Deck",              year: "2023", code: "LG", num: "07", slug: "lodha-club",     img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80" },
+  { client: "Birla Estates",     sub: "Penthouse Interiors — Delhi",             year: "2023", code: "BE", num: "08", slug: "birla-penthouse",img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" },
 ];
 
+/* ─── Client marquee names (replaces Drake / Bad Bunny scroll) ─── */
 const CLIENTS = [
-  "The Oberoi", "Taj Hotels", "Godrej Properties", "Nykaa",
-  "Ratan Group", "Hiranandani", "Lodha Group", "Piramal Realty",
-  "Birla Estates", "Mahindra",
+  "The Oberoi","Taj Hotels","Godrej Properties","Nykaa","Ratan Group",
+  "Hiranandani","Lodha Group","Piramal Realty","Birla Estates","Mahindra",
+  "ITC Hotels","Leela Group","DLF","Prestige Group","Embassy Group",
+];
+
+/* ─── Services (replaces Creative Direction / Show Design etc.) ─── */
+const SERVICES = [
+  "Interior Design","Space Planning","Material Curation","Furniture Design",
+  "Architectural Surfaces","Lighting Design","Joinery & Millwork",
+  "Bathroom & Wellness","Flooring Systems","Facade & Cladding",
 ];
 
 export default function Home() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [pos, setPos]   = useState({ x: 0, y: 0 });
+  const [flip, setFlip] = useState(false);
+  const [email, setEmail] = useState("");
+  const [sent, setSent]   = useState(false);
+
+  const onMove = useCallback((e: MouseEvent) => {
+    setPos({ x: e.clientX, y: e.clientY });
+    setFlip(e.clientX > window.innerWidth / 2);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [onMove]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".hero-line", {
-        y: "110%",
-        opacity: 0,
-        duration: 1.2,
-        ease: "power4.out",
-        stagger: 0.1,
+      /* Description text lines slide up */
+      gsap.from(".s-desc span", {
+        y: "105%", opacity: 0, duration: 1.1,
+        ease: "power4.out", stagger: .1, delay: .1,
       });
-      gsap.from(".hero-meta", {
-        opacity: 0,
-        y: 16,
-        duration: 0.9,
-        delay: 0.9,
-        ease: "power3.out",
-        stagger: 0.04,
+      /* Services fade in */
+      gsap.from(".s-svc", {
+        opacity: 0, y: 10, duration: .8,
+        ease: "power3.out", stagger: .04, delay: .6,
       });
-      gsap.utils.toArray<HTMLElement>(".proj-card").forEach((card) => {
-        gsap.from(card, {
-          scrollTrigger: {
-            trigger: card,
-            start: "top 88%",
-            toggleActions: "play none none none",
-          },
-          y: 48,
-          opacity: 0,
-          duration: 1,
-          ease: "power3.out",
-        });
+      /* Project names slide up */
+      gsap.from(".s-name", {
+        y: 50, opacity: 0, duration: .9,
+        ease: "power3.out", stagger: .06, delay: .2,
+        scrollTrigger: { trigger: ".s-projects", start: "top 80%" },
       });
-    }, heroRef);
+    }, ref);
     return () => ctx.revert();
   }, []);
 
+  const hovPrj = PROJECTS.find(p => p.slug === hovered);
+
   return (
-    <div ref={heroRef} style={{ background: "#0a0a0a", color: "#f0f0f0", minHeight: "100vh" }}>
+    <div ref={ref} style={{ background: "#000", color: "#fff", minHeight: "100vh" }}>
 
-      {/* ══════════════════════════════════════
-          HERO
-      ══════════════════════════════════════ */}
-      <section
-        style={{
-          minHeight: "100vh",
-          padding: "0 28px 80px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          position: "relative",
-        }}
-      >
-        <div style={{ maxWidth: "1200px" }}>
-          <div style={{ overflow: "hidden", marginBottom: "4px" }}>
-            <p className="hero-line" style={{ fontSize: "clamp(2.4rem, 5.8vw, 6rem)", fontWeight: 700, lineHeight: 1.0, letterSpacing: "-0.03em", color: "#ffffff" }}>
-              A creative studio and material house
-            </p>
-          </div>
-          <div style={{ overflow: "hidden", marginBottom: "4px" }}>
-            <p className="hero-line" style={{ fontSize: "clamp(2.4rem, 5.8vw, 6rem)", fontWeight: 700, lineHeight: 1.0, letterSpacing: "-0.03em", color: "#ffffff" }}>
-              dedicated to designing and producing
-            </p>
-          </div>
-          <div style={{ overflow: "hidden", marginBottom: "4px" }}>
-            <p className="hero-line" style={{ fontSize: "clamp(2.4rem, 5.8vw, 6rem)", fontWeight: 700, lineHeight: 1.0, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.28)" }}>
-              immersive spatial experiences — meant
-            </p>
-          </div>
-          <div style={{ overflow: "hidden" }}>
-            <p className="hero-line" style={{ fontSize: "clamp(2.4rem, 5.8vw, 6rem)", fontWeight: 700, lineHeight: 1.0, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.28)" }}>
-              to evoke feeling.
-            </p>
+      {/* ══ FLOATING HOVER IMAGE — Drake/Bad Bunny exact clone ══ */}
+      <div style={{
+        position: "fixed", pointerEvents: "none", zIndex: 900,
+        left: flip ? "auto" : pos.x + 30,
+        right: flip ? `calc(100vw - ${pos.x}px + 30px)` : "auto",
+        top: pos.y - 150,
+        width: 340, height: 260,
+        opacity: hovered ? 1 : 0,
+        transform: hovered ? "translateY(0) scale(1)" : "translateY(14px) scale(.96)",
+        transition: "opacity .28s ease, transform .32s ease",
+        overflow: "hidden",
+        background: "#111",
+      }}>
+        {hovPrj && (
+          <img src={hovPrj.img} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+        )}
+      </div>
+
+      {/* ══ HERO ══
+          Structure: exactly like Sturdy.co
+          - Description paragraph at top-left
+          - Services list below description
+          - Then the project name list fills rest of viewport
+      */}
+      <section style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "100px 24px 32px" }}>
+
+        {/* ── Top: description + services ── */}
+        <div>
+          {/* Description — same as Sturdy's opening line */}
+          <div className="s-desc" style={{ maxWidth: 580, marginBottom: 32, overflow: "hidden" }}>
+            {[
+              "A creative studio and material house",
+              "dedicated to designing and producing",
+              "immersive spatial experiences —",
+              "meant to evoke feeling.",
+            ].map((line, i) => (
+              <div key={i} style={{ overflow: "hidden" }}>
+                <span style={{ display: "block", fontSize: "clamp(.9rem,1.3vw,1.15rem)", lineHeight: 1.55, color: "rgba(255,255,255,.55)", fontWeight: 400 }}>
+                  {line}
+                </span>
+              </div>
+            ))}
           </div>
 
-          {/* Services tags */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 20px", marginTop: "48px", borderTop: "1px solid #1a1a1a", paddingTop: "24px" }}>
+          {/* Visual innovation subline — Sturdy has "Visual innovation and experiences for world class artists and brands." */}
+          <p style={{ fontSize: "11px", color: "rgba(255,255,255,.3)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 20 }}>
+            Visual innovation and spatial experiences for world class clients and brands.
+          </p>
+
+          {/* Services list — exactly like Sturdy's service tags */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 0", borderTop: "1px solid rgba(255,255,255,.08)", paddingTop: 16 }}>
             {SERVICES.map((s, i) => (
-              <span key={i} className="hero-meta" style={{ fontSize: "13px", color: "rgba(255,255,255,0.35)" }}>
+              <span key={i} className="s-svc" style={{
+                fontSize: "12px", color: "rgba(255,255,255,.4)",
+                paddingRight: 16, marginBottom: 6,
+                borderRight: i < SERVICES.length - 1 ? "1px solid rgba(255,255,255,.1)" : "none",
+                paddingLeft: i > 0 ? 16 : 0,
+              }}>
                 {s}
               </span>
             ))}
           </div>
         </div>
 
-        <div style={{ position: "absolute", bottom: "32px", right: "28px" }} className="hero-meta">
-          <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.2)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-            AAREN.© {new Date().getFullYear()}
+        {/* ── Bottom: description repeated (Sturdy does this) ── */}
+        <div style={{ maxWidth: 480, marginBottom: 16 }}>
+          <p style={{ fontSize: "clamp(.85rem,1.1vw,1rem)", color: "rgba(255,255,255,.35)", lineHeight: 1.6 }}>
+            A creative studio and material house dedicated to designing and producing immersive spatial experiences — meant to evoke feeling. Our work spans disciplines, unified by the singular drive of crafting unforgettable environments.
           </p>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          SELECTED WORK — Image Cards Grid
-          (large/small alternating like Sturdy)
-      ══════════════════════════════════════ */}
-      <section style={{ borderTop: "1px solid #1a1a1a" }}>
+      {/* ══ PROJECT NAME LIST — Exact Sturdy.co layout ══
+          Each row: project image card + client name + subtitle + year + code
+          On hover: floating image follows cursor (Drake/Bad Bunny feature)
+      */}
+      <section className="s-projects" style={{ borderTop: "1px solid rgba(255,255,255,.08)" }}>
 
-        {/* Section label */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 28px", borderBottom: "1px solid #1a1a1a" }}>
-          <p style={{ fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>
-            Selected Work
-          </p>
+        {PROJECTS.map((p, i) => (
           <Link
-            href="/work"
-            className="link-underline"
-            style={{ fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", transition: "color 0.2s" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.3)")}
+            key={p.slug}
+            href={`/work/${p.slug}`}
+            className="s-name"
+            onMouseEnter={() => setHovered(p.slug)}
+            onMouseLeave={() => setHovered(null)}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr auto",
+              alignItems: "center",
+              padding: "14px 24px",
+              borderBottom: "1px solid rgba(255,255,255,.08)",
+              textDecoration: "none",
+              gap: 24,
+              transition: "background .15s",
+              background: "transparent",
+            }}
+            onMouseOver={e => (e.currentTarget.style.background = "rgba(255,255,255,.03)")}
+            onMouseOut={e => (e.currentTarget.style.background = "transparent")}
           >
-            All Projects [{PROJECTS.length}]
+            {/* Left: client name (large) + subtitle */}
+            <div>
+              <h2 style={{
+                fontSize: "clamp(1.6rem, 4.5vw, 5rem)",
+                fontWeight: 700,
+                letterSpacing: "-.025em",
+                lineHeight: 1.0,
+                color: hovered === null ? "rgba(255,255,255,.88)"
+                     : hovered === p.slug ? "#fff"
+                     : "rgba(255,255,255,.12)",
+                transition: "color .18s",
+                textTransform: "uppercase",
+              }}>
+                {p.client}
+              </h2>
+              <p style={{ fontSize: 12, color: "rgba(255,255,255,.35)", marginTop: 4 }}>
+                {p.sub}
+              </p>
+            </div>
+
+            {/* Right: year + code — exactly like Sturdy */}
+            <div style={{ textAlign: "right", flexShrink: 0 }}>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,.25)", letterSpacing: ".04em", marginBottom: 2 }}>{p.year}</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,.1)", letterSpacing: "-.01em" }}>
+                {p.code}&nbsp;{p.num}
+              </p>
+            </div>
           </Link>
-        </div>
-
-        {/* ── Image card grid ── */}
-        <div>
-          {PROJECTS.map((project) => (
-            <Link
-              key={project.slug}
-              href={`/work/${project.slug}`}
-              className="proj-card project-item"
-              onMouseEnter={() => setHoveredSlug(project.slug)}
-              onMouseLeave={() => setHoveredSlug(null)}
-              style={{
-                display: "grid",
-                gridTemplateColumns: project.large ? "1fr" : "1fr 1fr",
-                borderBottom: "1px solid #1a1a1a",
-                textDecoration: "none",
-              }}
-            >
-              {/* Image */}
-              <div style={{ position: "relative", aspectRatio: project.large ? "21/9" : "4/3", overflow: "hidden", background: "#111" }}>
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="project-img"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    filter: hoveredSlug === project.slug ? "grayscale(0%)" : "grayscale(30%)",
-                    transform: hoveredSlug === project.slug ? "scale(1.04)" : "scale(1)",
-                    transition: "filter 0.6s ease, transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)",
-                  }}
-                />
-              </div>
-
-              {/* Text info */}
-              <div
-                style={{
-                  padding: project.large ? "24px 28px" : "28px",
-                  display: "flex",
-                  flexDirection: project.large ? "row" : "column",
-                  justifyContent: project.large ? "space-between" : "flex-end",
-                  alignItems: project.large ? "flex-end" : "flex-start",
-                  gap: "12px",
-                  background: hoveredSlug === project.slug ? "#111" : "transparent",
-                  transition: "background 0.2s",
-                }}
-              >
-                <div>
-                  <p style={{ fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "8px" }}>
-                    {project.year} &nbsp;·&nbsp; {project.category}
-                  </p>
-                  <h3
-                    style={{
-                      fontSize: project.large ? "clamp(1.4rem, 2.5vw, 2.5rem)" : "1.15rem",
-                      fontWeight: 700,
-                      letterSpacing: "-0.02em",
-                      lineHeight: 1.1,
-                      color: "#ffffff",
-                    }}
-                  >
-                    {project.client}
-                  </h3>
-                  <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", marginTop: "5px" }}>
-                    {project.title}
-                  </p>
-                </div>
-                <p
-                  style={{
-                    fontSize: "clamp(2.5rem, 5vw, 6rem)",
-                    fontWeight: 700,
-                    letterSpacing: "-0.04em",
-                    color: "rgba(255,255,255,0.05)",
-                    lineHeight: 1,
-                    flexShrink: 0,
-                  }}
-                >
-                  {project.code}
-                  <br />
-                  {project.num}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        ))}
       </section>
 
-      {/* ══════════════════════════════════════
-          CLIENT MARQUEE
-      ══════════════════════════════════════ */}
-      <section style={{ borderTop: "1px solid #1a1a1a", padding: "20px 0", overflow: "hidden" }}>
-        <div className="marquee-wrap">
-          <div className="marquee-track">
-            {[...CLIENTS, ...CLIENTS].map((client, i) => (
-              <span
-                key={i}
-                style={{
-                  fontSize: "12px",
-                  color: "rgba(255,255,255,0.28)",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  padding: "0 28px",
-                  whiteSpace: "nowrap",
-                  borderRight: "1px solid #1a1a1a",
-                }}
-              >
-                {client}
+      {/* ══ CLIENT NAMES MARQUEE — Drake · Bad Bunny · Adobe scroll ══ */}
+      <section style={{ borderTop: "1px solid rgba(255,255,255,.08)", padding: "18px 0", overflow: "hidden" }}>
+        <div className="mq-wrap">
+          <div className="mq-track" style={{ gap: 0 }}>
+            {[...CLIENTS, ...CLIENTS].map((c, i) => (
+              <span key={i} style={{
+                fontSize: 12, color: "rgba(255,255,255,.3)",
+                letterSpacing: ".08em", textTransform: "uppercase",
+                padding: "0 24px", whiteSpace: "nowrap",
+                borderRight: "1px solid rgba(255,255,255,.08)",
+              }}>
+                {c}
               </span>
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ══ NEWSLETTER — exact Sturdy.co copy ══ */}
+      <section style={{ borderTop: "1px solid rgba(255,255,255,.08)", padding: "60px 24px" }}>
+        <p style={{ fontSize: "clamp(.85rem,1.1vw,1rem)", color: "rgba(255,255,255,.45)", marginBottom: 24, maxWidth: 420 }}>
+          Keep up with the latest, for all things AAREN. Drop your email below, and let&apos;s stay connected.
+        </p>
+        {sent ? (
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,.5)" }}>Thank you — we&apos;ll be in touch.</p>
+        ) : (
+          <form
+            onSubmit={e => { e.preventDefault(); if (email) setSent(true); }}
+            style={{ display: "flex", maxWidth: 380 }}
+          >
+            <input
+              type="email" value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="Email address"
+              required
+              style={{
+                flex: 1, background: "transparent",
+                border: "1px solid rgba(255,255,255,.2)",
+                borderRight: "none", padding: "10px 14px",
+                fontSize: 12, color: "#fff", outline: "none",
+                letterSpacing: ".02em",
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                background: "#fff", color: "#000",
+                border: "1px solid #fff",
+                padding: "10px 18px",
+                fontSize: 11, fontWeight: 600,
+                letterSpacing: ".07em", textTransform: "uppercase",
+                flexShrink: 0,
+              }}
+            >
+              Subscribe
+            </button>
+          </form>
+        )}
       </section>
 
     </div>

@@ -6,32 +6,22 @@ import CustomCursor from "@/components/CustomCursor";
 import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
-  title: "Aaren Creative Studio",
-  description:
-    "A creative studio and material house dedicated to designing and producing immersive spatial experiences, premium architectural surfaces, and environments — meant to evoke feeling.",
+  title: "AAREN | Home",
+  description: "A creative studio and material house dedicated to designing and producing immersive spatial experiences — meant to evoke feeling. Our work spans disciplines, unified by the singular drive of crafting unforgettable environments.",
   metadataBase: new URL("https://aarenstudio.com"),
   openGraph: {
-    title: "Aaren Creative Studio",
-    description: "Immersive spatial experiences and premium architectural surfaces.",
+    title: "AAREN | Home",
+    description: "A creative studio and material house dedicated to designing and producing immersive spatial experiences — meant to evoke feeling.",
     url: "https://aarenstudio.com",
     siteName: "Aaren Creative Studio",
     type: "website",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Aaren Creative Studio",
-    description: "Immersive spatial experiences and premium architectural surfaces.",
-  },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
+      <body>
         <SmoothScroll>
           <CustomCursor />
           <Header />

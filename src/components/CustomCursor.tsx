@@ -1,62 +1,48 @@
 "use client";
-
 import { useEffect } from "react";
 
 export default function CustomCursor() {
   useEffect(() => {
-    const dot = document.querySelector(".cursor-dot") as HTMLElement;
-    const ring = document.querySelector(".cursor-ring") as HTMLElement;
-
+    const dot  = document.querySelector(".s-cursor") as HTMLElement;
+    const ring = document.querySelector(".s-cursor-ring") as HTMLElement;
     if (!dot || !ring) return;
 
-    let mouseX = 0, mouseY = 0;
-    let ringX = 0, ringY = 0;
-    let rafId: number;
+    let mx = 0, my = 0, rx = 0, ry = 0, raf = 0;
 
-    const onMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      dot.style.left = mouseX + "px";
-      dot.style.top = mouseY + "px";
+    const move = (e: MouseEvent) => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left  = mx + "px";
+      dot.style.top   = my + "px";
     };
 
-    const animateRing = () => {
-      ringX += (mouseX - ringX) * 0.12;
-      ringY += (mouseY - ringY) * 0.12;
-      ring.style.left = ringX + "px";
-      ring.style.top = ringY + "px";
-      rafId = requestAnimationFrame(animateRing);
+    const loop = () => {
+      rx += (mx - rx) * .1;
+      ry += (my - ry) * .1;
+      ring.style.left = rx + "px";
+      ring.style.top  = ry + "px";
+      raf = requestAnimationFrame(loop);
     };
 
-    const onEnter = () => {
-      dot.classList.add("hovering");
-      ring.classList.add("hovering");
-    };
+    const on  = () => { dot.classList.add("hov");  ring.classList.add("hov"); };
+    const off = () => { dot.classList.remove("hov"); ring.classList.remove("hov"); };
 
-    const onLeave = () => {
-      dot.classList.remove("hovering");
-      ring.classList.remove("hovering");
-    };
-
-    document.addEventListener("mousemove", onMove);
-
-    document.querySelectorAll("a, button, [data-cursor]").forEach((el) => {
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
+    document.addEventListener("mousemove", move);
+    document.querySelectorAll("a,button,[data-hover]").forEach(el => {
+      el.addEventListener("mouseenter", on);
+      el.addEventListener("mouseleave", off);
     });
-
-    rafId = requestAnimationFrame(animateRing);
+    raf = requestAnimationFrame(loop);
 
     return () => {
-      document.removeEventListener("mousemove", onMove);
-      cancelAnimationFrame(rafId);
+      document.removeEventListener("mousemove", move);
+      cancelAnimationFrame(raf);
     };
   }, []);
 
   return (
     <>
-      <div className="cursor-dot" />
-      <div className="cursor-ring" />
+      <div className="s-cursor" />
+      <div className="s-cursor-ring" />
     </>
   );
 }
