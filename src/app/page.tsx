@@ -178,15 +178,14 @@ export default function Home() {
             {/* Left: client name (large) + subtitle */}
             <div>
               <h2 style={{
-                fontSize: "clamp(1.6rem, 4.5vw, 5rem)",
+                fontSize: "clamp(2.8rem, 7vw, 8rem)",
                 fontWeight: 700,
-                letterSpacing: "-.025em",
+                letterSpacing: "-.03em",
                 lineHeight: 1.0,
-                color: hovered === null ? "rgba(255,255,255,.88)"
+                color: hovered === null ? "rgba(255,255,255,.85)"
                      : hovered === p.slug ? "#fff"
-                     : "rgba(255,255,255,.12)",
-                transition: "color .18s",
-                textTransform: "uppercase",
+                     : "rgba(255,255,255,.1)",
+                transition: "color .2s",
               }}>
                 {p.client}
               </h2>
