@@ -169,11 +169,6 @@ export default function Home() {
   const projectsRef = useInView(0.05);
   const newsletterRef = useInView(0.2);
 
-  /* ── Client animation states ── */
-  const [clientIdVisible, setClientIdVisible] = useState<number>(-1);
-  const [isBackfaceHidden, setIsBackfaceHidden] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-
   /* ── Logo reveal on mount ── */
   useEffect(() => {
     LOGO_LETTERS.forEach((_, i) => {
@@ -245,9 +240,9 @@ export default function Home() {
 
         const sectionTrigger = ScrollTrigger.create({
           trigger: containerRef.current,
+          start: "top bottom",
           end: "bottom top-=5%",
-          onEnterBack: () => setIsVisible(true),
-          onLeave: () => setIsVisible(false),
+          toggleClass: "home-clients--visible",
         });
 
         const mapper = gsap.utils.pipe(
@@ -265,11 +260,21 @@ export default function Home() {
             onUpdate: (self) => {
               const progress = +self.progress.toFixed(3);
               const activeIdx = mapper(progress);
-              setClientIdVisible(activeIdx);
+
+              // Direct DOM toggle for client highlight
+              clients.forEach((el, i) => {
+                if (i === activeIdx) {
+                  el.classList.add("home-clients__item--highlighted");
+                } else {
+                  el.classList.remove("home-clients__item--highlighted");
+                }
+              });
+
+              // Direct DOM toggle for backface visibility class
               if (progress >= 0.6) {
-                setIsBackfaceHidden(true);
+                clientsContainerRef.current?.classList.add("home-clients__list--bfh");
               } else {
-                setIsBackfaceHidden(false);
+                clientsContainerRef.current?.classList.remove("home-clients__list--bfh");
               }
             },
           },
@@ -564,14 +569,12 @@ export default function Home() {
           {/* 3D sliding list container */}
           <div className="home-clients__list-container" ref={listContainerRef}>
             <div className="home-clients__list-sticky">
-              <ul ref={clientsContainerRef} className={`home-clients__list${isBackfaceHidden ? " home-clients__list--bfh" : ""}`}>
+              <ul ref={clientsContainerRef} className="home-clients__list">
                 {CLIENTS.map((client, i) => (
                   <li
                     key={client}
                     ref={(el) => { clientsRef.current[i] = el; }}
-                    className={`home-clients__item home-clients__label ttu${
-                      clientIdVisible === i ? " home-clients__item--highlighted" : ""
-                    }`}
+                    className="home-clients__item home-clients__label ttu"
                   >
                     {client}
                   </li>
