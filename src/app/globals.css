@@ -998,5 +998,32 @@ input, select, textarea {
   -webkit-backface-visibility: hidden;
 }
 
+/* ── First Project Card Slideshow (Ken Burns Crossfade) ── */
+.slideshow-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.02);
+  transition: opacity 1.2s ease-in-out;
+}
+
+.slideshow-img.active {
+  opacity: 1;
+  animation: kenBurns 8s linear infinite alternate;
+}
+
+@keyframes kenBurns {
+  0% {
+    transform: scale(1.02) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.10) translate(-1%, -0.5%);
+  }
+}
+
+
 
 

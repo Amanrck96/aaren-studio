@@ -737,6 +737,46 @@ export default function Home() {
 /* ─────────────────────────────────────────────────
    PROJECT CARD COMPONENT
    ───────────────────────────────────────────────── */
+const OBEROI_SLIDES = [
+  "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1617806118233-18e1db207f62?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80"
+];
+
+function ProjectSlideshow() {
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % OBEROI_SLIDES.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden" }}>
+      {OBEROI_SLIDES.map((slide, i) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={slide}
+          src={slide}
+          alt={`Oberoi Slide ${i + 1}`}
+          className={`slideshow-img${currentIdx === i ? " active" : ""}`}
+        />
+      ))}
+    </div>
+  );
+}
+
 interface ProjectCardProps {
   project: typeof PROJECTS[0];
   onHover: (slug: string | null) => void;
@@ -750,6 +790,8 @@ function ProjectCard({
   visible,
   delay,
 }: ProjectCardProps) {
+  const isSlideshow = project.slug === "oberoi-lobby";
+
   return (
     <div className="cursor-trigger project-item project-item--project">
       <Link
@@ -763,14 +805,18 @@ function ProjectCard({
           transition: `opacity 0.8s ease ${delay}s, transform 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
         }}
       >
-        {/* Image */}
+        {/* Image / Slideshow */}
         <div className="project-item__fig-wrapper">
           <figure className="project-item__fig">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={project.img}
-              alt={`${project.client} — ${project.sub}`}
-            />
+            {isSlideshow ? (
+              <ProjectSlideshow />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={project.img}
+                alt={`${project.client} — ${project.sub}`}
+              />
+            )}
           </figure>
         </div>
 
