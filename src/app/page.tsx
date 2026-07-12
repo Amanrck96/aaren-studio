@@ -1,6 +1,12 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 /* ─── Projects ─── */
 const PROJECTS = [
@@ -12,7 +18,6 @@ const PROJECTS = [
     num: "01",
     slug: "oberoi-lobby",
     img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80",
-    wide: true,
   },
   {
     client: "Taj Hotels",
@@ -22,7 +27,6 @@ const PROJECTS = [
     num: "02",
     slug: "taj-spa",
     img: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=900&q=80",
-    wide: false,
   },
   {
     client: "Ratan Group",
@@ -32,7 +36,6 @@ const PROJECTS = [
     num: "03",
     slug: "ratan-hq",
     img: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=80",
-    wide: false,
   },
   {
     client: "Godrej Properties",
@@ -42,7 +45,6 @@ const PROJECTS = [
     num: "04",
     slug: "godrej-worli",
     img: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=900&q=80",
-    wide: true,
   },
   {
     client: "Private Villa",
@@ -52,7 +54,6 @@ const PROJECTS = [
     num: "05",
     slug: "alibaug-villa",
     img: "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=900&q=80",
-    wide: false,
   },
   {
     client: "Nykaa",
@@ -62,7 +63,6 @@ const PROJECTS = [
     num: "06",
     slug: "nykaa-retail",
     img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=900&q=80",
-    wide: false,
   },
   {
     client: "Lodha Group",
@@ -72,7 +72,6 @@ const PROJECTS = [
     num: "07",
     slug: "lodha-club",
     img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80",
-    wide: false,
   },
   {
     client: "Birla Estates",
@@ -82,7 +81,6 @@ const PROJECTS = [
     num: "08",
     slug: "birla-penthouse",
     img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80",
-    wide: false,
   },
 ];
 
@@ -130,7 +128,12 @@ function useInView(threshold = 0.15) {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
       { threshold }
     );
     obs.observe(el);
@@ -155,14 +158,21 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
 
-  /* ── Client 3D scroll ── */
-  const clientSectionRef = useRef<HTMLDivElement>(null);
-  const clientTrackRef = useRef<HTMLDivElement>(null);
+  /* ── Client 3D scroll refs ── */
+  const containerRef = useRef<HTMLDivElement>(null);
+  const listContainerRef = useRef<HTMLDivElement>(null);
+  const clientsContainerRef = useRef<HTMLUListElement>(null);
+  const clientsRef = useRef<(HTMLLIElement | null)[]>([]);
 
   /* ── Scroll observer refs ── */
   const introRef = useInView(0.1);
   const projectsRef = useInView(0.05);
   const newsletterRef = useInView(0.2);
+
+  /* ── Client animation states ── */
+  const [clientIdVisible, setClientIdVisible] = useState<number>(-1);
+  const [isBackfaceHidden, setIsBackfaceHidden] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   /* ── Logo reveal on mount ── */
   useEffect(() => {
@@ -188,22 +198,104 @@ export default function Home() {
     return () => window.removeEventListener("mousemove", onMouseMove);
   }, [onMouseMove]);
 
-  /* ── 3D client scroll effect ── */
+  /* ── Client 3D cylinder roll ScrollTrigger ── */
   useEffect(() => {
-    const section = clientSectionRef.current;
-    const track = clientTrackRef.current;
-    if (!section || !track) return;
+    if (typeof window === "undefined") return;
 
-    const onScroll = () => {
-      const rect = section.getBoundingClientRect();
-      const progress = Math.max(0, Math.min(1, 1 - rect.bottom / (window.innerHeight + rect.height)));
-      const rotateX = -8 + progress * 16;
-      const translateZ = -20 + progress * 20;
-      track.style.transform = `rotateX(${rotateX}deg) translateZ(${translateZ}rem)`;
-    };
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+      // Mobile trigger (<1024px)
+      mm.add("(max-width: 1023px)", () => {
+        const triggers = ScrollTrigger.batch(clientsRef.current, {
+          interval: 0.1,
+          batchMax: 1,
+          start: "top 47%",
+          onEnter: (batch) => batch.forEach(el => el.classList.add("home-clients__item--active")),
+          onLeave: (batch) => batch.forEach(el => el.classList.remove("home-clients__item--active")),
+          onEnterBack: (batch) => batch.forEach(el => el.classList.add("home-clients__item--active")),
+          onLeaveBack: (batch) => batch.forEach(el => el.classList.remove("home-clients__item--active")),
+        });
+
+        return () => {
+          triggers.forEach(t => t.kill());
+          gsap.set(clientsRef.current, { clearProps: "all" });
+        };
+      });
+
+      // Desktop trigger (>=1024px)
+      mm.add("(min-width: 1024px)", () => {
+        const clients = clientsRef.current.filter(Boolean) as HTMLLIElement[];
+        const width = window.innerWidth;
+        const n = 20 * (width < 1240 ? 12 : 14);
+        const origin = `50% 50% -${n}px`;
+
+        // Position items in 3D circle
+        clients.forEach((el, i) => {
+          const rotationX = -18 * i;
+          gsap.set(el, {
+            z: n,
+            rotationX: rotationX,
+            transformOrigin: origin,
+            force3D: true,
+          });
+        });
+
+        const lastRotation = -18 * (clients.length - 1) - 90;
+
+        const sectionTrigger = ScrollTrigger.create({
+          trigger: containerRef.current,
+          end: "bottom top-=5%",
+          onEnterBack: () => setIsVisible(true),
+          onLeave: () => setIsVisible(false),
+        });
+
+        const mapper = gsap.utils.pipe(
+          gsap.utils.mapRange(0.135, 0.79, 0, clients.length - 1),
+          gsap.utils.snap(1)
+        );
+
+        const tl = gsap.timeline({
+          paused: true,
+          scrollTrigger: {
+            trigger: listContainerRef.current,
+            start: "top top-=30%",
+            end: "bottom bottom",
+            scrub: true,
+            onUpdate: (self) => {
+              const progress = +self.progress.toFixed(3);
+              const activeIdx = mapper(progress);
+              setClientIdVisible(activeIdx);
+              if (progress >= 0.6) {
+                setIsBackfaceHidden(true);
+              } else {
+                setIsBackfaceHidden(false);
+              }
+            },
+          },
+        });
+
+        tl.fromTo(
+          clientsContainerRef.current,
+          { rotationX: -80 },
+          {
+            rotationX: -lastRotation,
+            ease: "none",
+            transformOrigin: "50% 50%",
+            force3D: true,
+          }
+        );
+
+        return () => {
+          sectionTrigger.kill();
+          tl.kill();
+          gsap.set(clients, { clearProps: "all" });
+          gsap.set(clientsContainerRef.current, { clearProps: "all" });
+        };
+      });
+    });
+
+    return () => ctx.revert();
   }, []);
 
   const hovProject = PROJECTS.find((p) => p.slug === hovered);
@@ -348,7 +440,7 @@ export default function Home() {
         }}
       >
         <div ref={introRef.ref}>
-          {/* Right-aligned large text block — grid col 13/span 12 equivalent */}
+          {/* Right-aligned large text block ── */}
           <div
             style={{
               marginLeft: "auto",
@@ -380,8 +472,8 @@ export default function Home() {
           SECTION 3: PROJECTS — light #eaeef4
           ══════════════════════════════════════ */}
       <section
-        className="theme-light"
-        style={{ borderTop: "0.1rem solid var(--color-border)", paddingBottom: "10rem" }}
+        className="project-list"
+        style={{ borderTop: "0.1rem solid var(--color-border)" }}
       >
         {/* Section label row */}
         <div
@@ -406,95 +498,86 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* ── Project cards in flex layout ── */}
-        <div ref={projectsRef.ref}>
-          {/* Row 1: full-width card */}
-          <ProjectCard
-            project={PROJECTS[0]}
-            onHover={setHovered}
-            visible={projectsRef.visible}
-            delay={0}
-            fullWidth
-          />
-
-          {/* Row 2: two half-width */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: "0.1rem solid var(--color-border)" }}>
-            <ProjectCard project={PROJECTS[1]} onHover={setHovered} visible={projectsRef.visible} delay={0.05} noBorder />
-            <ProjectCard project={PROJECTS[2]} onHover={setHovered} visible={projectsRef.visible} delay={0.1} noBorder borderLeft />
-          </div>
-
-          {/* Row 3: full-width */}
-          <ProjectCard project={PROJECTS[3]} onHover={setHovered} visible={projectsRef.visible} delay={0.05} fullWidth />
-
-          {/* Row 4: three equal */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "0.1rem solid var(--color-border)" }}>
-            <ProjectCard project={PROJECTS[4]} onHover={setHovered} visible={projectsRef.visible} delay={0.0} noBorder />
-            <ProjectCard project={PROJECTS[5]} onHover={setHovered} visible={projectsRef.visible} delay={0.05} noBorder borderLeft />
-            <ProjectCard project={PROJECTS[6]} onHover={setHovered} visible={projectsRef.visible} delay={0.1} noBorder borderLeft />
-          </div>
-
-          {/* Row 5: full-width */}
-          <ProjectCard project={PROJECTS[7]} onHover={setHovered} visible={projectsRef.visible} delay={0.05} fullWidth />
+        {/* ── Project cards in exact Sturdy layout (2 -> 4 -> 2) ── */}
+        <div className="project-list__grid" ref={projectsRef.ref}>
+          {PROJECTS.map((project, idx) => (
+            <ProjectCard
+              key={project.slug}
+              project={project}
+              onHover={setHovered}
+              visible={projectsRef.visible}
+              delay={idx * 0.05}
+            />
+          ))}
         </div>
       </section>
 
       {/* ══════════════════════════════════════
-          SECTION 4: CLIENTS — dark #1e1e1e
+          SECTION 4: CLIENTS — light #eaeef4 (like Sturdy)
           ══════════════════════════════════════ */}
       <section
-        ref={clientSectionRef}
-        className="theme-dark"
+        ref={containerRef}
+        className="home-clients"
         style={{
-          padding: "10rem 0.8rem",
-          overflow: "hidden",
+          padding: "0",
         }}
       >
-        {/* Label */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "6rem",
-            paddingBottom: "2rem",
-            borderBottom: "0.1rem solid rgba(255,255,255,0.1)",
-          }}
-        >
-          <span className="t-tag" style={{ color: "rgba(234,238,244,0.4)" }}>
-            Clients
-          </span>
+        {/* Title */}
+        <div className="home-clients__title-wrapper">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "2rem 0.8rem",
+            }}
+          >
+            <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)" }}>
+              Featured Clients
+            </span>
+          </div>
         </div>
 
-        {/* 3D perspective client list */}
-        <div
-          className="client-3d-wrap"
-          style={{ perspective: "80rem" }}
-        >
-          <div
-            ref={clientTrackRef}
-            className="client-3d-track"
-            style={{ transformStyle: "preserve-3d", transition: "transform 0.1s ease-out" }}
-          >
-            {CLIENTS.map((client, i) => (
-              <div
-                key={client}
-                className="t-client-label"
-                style={{
-                  color: "#c8cbd0",
-                  paddingTop: "1.2rem",
-                  paddingBottom: "1.2rem",
-                  borderBottom: "0.1rem solid rgba(255,255,255,0.07)",
-                  display: "flex",
-                  justifyContent: i % 2 === 0 ? "flex-start" : "flex-end",
-                  transition: "color 0.2s ease",
-                  opacity: 1,
-                }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "#eaeef4"; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "#c8cbd0"; }}
-              >
+        {/* Wrapper */}
+        <div className="home-clients__wrapper">
+          {/* Arrow overlay */}
+          <div className="home-clients__arrow-wrapper">
+            <div className="home-clients__arrow">
+              <svg viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg" role="presentation" className="home-clients__arrow-svg">
+                <path d="M8.01 13 15.5 0H.5l7.51 13Z"></path>
+              </svg>
+              <svg viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg" role="presentation" className="home-clients__arrow-svg">
+                <path d="M8.01 13 15.5 0H.5l7.51 13Z"></path>
+              </svg>
+            </div>
+          </div>
+
+          {/* Hidden list to push wrapper height naturally (Sturdy layout trick) */}
+          <div aria-hidden="true" className="home-clients__hidden-list">
+            {CLIENTS.map((client) => (
+              <div key={client} className="home-clients__label ttu">
                 {client}
               </div>
             ))}
+          </div>
+
+          {/* 3D sliding list container */}
+          <div className="home-clients__list-container" ref={listContainerRef}>
+            <div className="home-clients__list-sticky">
+              <ul ref={clientsContainerRef} className={`home-clients__list${isBackfaceHidden ? " home-clients__list--bfh" : ""}`}>
+                {CLIENTS.map((client, i) => (
+                  <li
+                    key={client}
+                    ref={(el) => { clientsRef.current[i] = el; }}
+                    className={`home-clients__item home-clients__label ttu${
+                      clientIdVisible === i ? " home-clients__item--highlighted" : ""
+                    }`}
+                  >
+                    {client}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -600,9 +683,6 @@ interface ProjectCardProps {
   onHover: (slug: string | null) => void;
   visible: boolean;
   delay: number;
-  fullWidth?: boolean;
-  noBorder?: boolean;
-  borderLeft?: boolean;
 }
 
 function ProjectCard({
@@ -610,82 +690,46 @@ function ProjectCard({
   onHover,
   visible,
   delay,
-  fullWidth,
-  noBorder,
-  borderLeft,
 }: ProjectCardProps) {
-  const [isHov, setIsHov] = useState(false);
-
   return (
-    <Link
-      href={`/work/${project.slug}`}
-      onMouseEnter={() => { setIsHov(true); onHover(project.slug); }}
-      onMouseLeave={() => { setIsHov(false); onHover(null); }}
-      style={{
-        display: "block",
-        borderBottom: noBorder ? "none" : "0.1rem solid var(--color-border)",
-        borderLeft: borderLeft ? "0.1rem solid var(--color-border)" : "none",
-        textDecoration: "none",
-        background: isHov ? "rgba(0,0,0,0.02)" : "transparent",
-        transition: "background 0.2s ease",
-      }}
-    >
-      {/* Image */}
-      <div
-        className="img-zoom"
+    <div className="cursor-trigger project-item project-item--project">
+      <Link
+        href={`/work/${project.slug}`}
+        className="project-item__link"
+        onMouseEnter={() => onHover(project.slug)}
+        onMouseLeave={() => onHover(null)}
         style={{
-          aspectRatio: fullWidth ? "21/9" : "4/3",
-          overflow: "hidden",
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : "translateY(3rem)",
           transition: `opacity 0.8s ease ${delay}s, transform 0.8s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={project.img}
-          alt={`${project.client} — ${project.sub}`}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
-      </div>
+        {/* Image */}
+        <div className="project-item__fig-wrapper">
+          <figure className="project-item__fig">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={project.img}
+              alt={`${project.client} — ${project.sub}`}
+            />
+          </figure>
+        </div>
 
-      {/* Meta */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          padding: "1.6rem 0.8rem",
-          gap: "1.6rem",
-        }}
-      >
-        <div>
-          <p
-            style={{
-              fontSize: "clamp(1.6rem, 2.8vw, 2.4rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.03em",
-              lineHeight: 1.0,
-              color: "#000",
-              textTransform: "uppercase",
-              marginBottom: "0.4rem",
-            }}
-          >
-            {project.client}
-          </p>
-          <p style={{ fontSize: "1.2rem", color: "rgba(0,0,0,0.4)", letterSpacing: "-0.01em" }}>
-            {project.sub}
-          </p>
+        {/* Content */}
+        <div className="project-item__content">
+          <div className="project-item__inner">
+            <h3 className="projec-item__title">
+              {project.client}
+            </h3>
+            <p className="project-item__info">{project.sub}</p>
+            <p className="project-item__info">{project.year}</p>
+          </div>
+          <div className="project-item__inner unicode">
+            <p>{project.code}</p>
+            <p>{project.num}</p>
+          </div>
         </div>
-        <div style={{ textAlign: "right", flexShrink: 0 }}>
-          <p style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.3)", letterSpacing: "0.03em", marginBottom: "0.2rem" }}>
-            {project.year}
-          </p>
-          <p style={{ fontSize: "1.2rem", fontWeight: 600, color: "rgba(0,0,0,0.2)", letterSpacing: "-0.01em" }}>
-            {project.code}&nbsp;{project.num}
-          </p>
-        </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
