@@ -158,11 +158,8 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
 
-  /* ── Client 3D scroll refs ── */
+  /* ── Client container ref ── */
   const containerRef = useRef<HTMLDivElement>(null);
-  const listContainerRef = useRef<HTMLDivElement>(null);
-  const clientsContainerRef = useRef<HTMLUListElement>(null);
-  const clientsRef = useRef<(HTMLLIElement | null)[]>([]);
 
   /* ── Scroll observer refs ── */
   const introRef = useInView(0.1);
@@ -193,112 +190,40 @@ export default function Home() {
     return () => window.removeEventListener("mousemove", onMouseMove);
   }, [onMouseMove]);
 
-  /* ── Client 3D cylinder roll ScrollTrigger ── */
+  /* ── Client Infinite Horizontal Marquee ScrollTrigger ── */
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const ctx = gsap.context(() => {
-      const mm = gsap.matchMedia();
-
-      // Mobile trigger (<1024px)
-      mm.add("(max-width: 1023px)", () => {
-        // Heading reveal
-        const heading = containerRef.current?.querySelector(".t-tag");
-        if (heading) {
-          gsap.fromTo(heading,
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.6,
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: containerRef.current,
-                start: "top 90%",
-                toggleActions: "play none none none"
-              }
-            }
-          );
-        }
-
-        // Stagger items reveal
-        gsap.fromTo(clientsRef.current.filter(Boolean),
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            stagger: 0.04,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-              toggleActions: "play none none none"
-            }
-          }
-        );
-
-        const triggers = ScrollTrigger.batch(clientsRef.current, {
-          interval: 0.1,
-          batchMax: 1,
-          start: "top 47%",
-          onEnter: (batch) => batch.forEach(el => el.classList.add("home-clients__item--active")),
-          onLeave: (batch) => batch.forEach(el => el.classList.remove("home-clients__item--active")),
-          onEnterBack: (batch) => batch.forEach(el => el.classList.add("home-clients__item--active")),
-          onLeaveBack: (batch) => batch.forEach(el => el.classList.remove("home-clients__item--active")),
-        });
-
-        return () => {
-          triggers.forEach(t => t.kill());
-          gsap.set(clientsRef.current, { clearProps: "all" });
-        };
-      });
-
-      // Desktop trigger (>=1024px)
-      mm.add("(min-width: 1024px)", () => {
-        const clients = clientsRef.current.filter(Boolean) as HTMLLIElement[];
-        const width = window.innerWidth;
-        const n = 20 * (width < 1240 ? 12 : 14);
-        const origin = `50% 50% -${n}px`;
-
-        // Position items in 3D circle
-        clients.forEach((el, i) => {
-          const rotationX = -18 * i;
-          gsap.set(el, {
-            z: n,
-            rotationX: rotationX,
-            transformOrigin: origin,
-            force3D: true,
-          });
-        });
-
-        // Heading reveal
-        const heading = containerRef.current?.querySelector(".t-tag");
-        if (heading) {
-          gsap.fromTo(heading,
-            { opacity: 0, y: 40 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: containerRef.current,
-                start: "top 85%",
-                toggleActions: "play none none none"
-              }
-            }
-          );
-        }
-
-        // Stagger client items reveal
-        gsap.fromTo(clients,
+      // 1. Heading reveal
+      const heading = containerRef.current?.querySelector(".t-tag");
+      if (heading) {
+        gsap.fromTo(heading,
           { opacity: 0, y: 40 },
           {
             opacity: 1,
             y: 0,
             duration: 0.8,
-            stagger: 0.05,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none none"
+            }
+          }
+        );
+      }
+
+      // 2. Marquee items stagger reveal
+      const marqueeItems = containerRef.current?.querySelectorAll(".home-clients__marquee-item");
+      if (marqueeItems && marqueeItems.length > 0) {
+        gsap.fromTo(marqueeItems,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.02,
             ease: "power2.out",
             scrollTrigger: {
               trigger: containerRef.current,
@@ -307,69 +232,7 @@ export default function Home() {
             }
           }
         );
-
-        const lastRotation = -18 * (clients.length - 1) - 90;
-
-        const sectionTrigger = ScrollTrigger.create({
-          trigger: containerRef.current,
-          start: "top bottom",
-          end: "bottom top-=5%",
-          toggleClass: "home-clients--visible",
-        });
-
-        const mapper = gsap.utils.pipe(
-          gsap.utils.mapRange(0.135, 0.79, 0, clients.length - 1),
-          gsap.utils.snap(1)
-        );
-
-        const tl = gsap.timeline({
-          paused: true,
-          scrollTrigger: {
-            trigger: listContainerRef.current,
-            start: "top top-=30%",
-            end: "bottom bottom",
-            scrub: true,
-            onUpdate: (self) => {
-              const progress = +self.progress.toFixed(3);
-              const activeIdx = mapper(progress);
-
-              // Direct DOM toggle for client highlight
-              clients.forEach((el, i) => {
-                if (i === activeIdx) {
-                  el.classList.add("home-clients__item--highlighted");
-                } else {
-                  el.classList.remove("home-clients__item--highlighted");
-                }
-              });
-
-              // Direct DOM toggle for backface visibility class
-              if (progress >= 0.6) {
-                clientsContainerRef.current?.classList.add("home-clients__list--bfh");
-              } else {
-                clientsContainerRef.current?.classList.remove("home-clients__list--bfh");
-              }
-            },
-          },
-        });
-
-        tl.fromTo(
-          clientsContainerRef.current,
-          { rotationX: -80 },
-          {
-            rotationX: -lastRotation,
-            ease: "none",
-            transformOrigin: "50% 50%",
-            force3D: true,
-          }
-        );
-
-        return () => {
-          sectionTrigger.kill();
-          tl.kill();
-          gsap.set(clients, { clearProps: "all" });
-          gsap.set(clientsContainerRef.current, { clearProps: "all" });
-        };
-      });
+      }
     });
 
     return () => ctx.revert();
@@ -615,44 +478,25 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Wrapper */}
-        <div className="home-clients__wrapper">
-          {/* Arrow overlay */}
-          <div className="home-clients__arrow-wrapper">
-            <div className="home-clients__arrow">
-              <svg viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg" role="presentation" className="home-clients__arrow-svg">
-                <path d="M8.01 13 15.5 0H.5l7.51 13Z"></path>
-              </svg>
-              <svg viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg" role="presentation" className="home-clients__arrow-svg">
-                <path d="M8.01 13 15.5 0H.5l7.51 13Z"></path>
-              </svg>
-            </div>
-          </div>
-
-          {/* Hidden list to push wrapper height naturally (Sturdy layout trick) */}
-          <div aria-hidden="true" className="home-clients__hidden-list">
-            {CLIENTS.map((client) => (
-              <div key={client} className="home-clients__label ttu">
-                {client}
-              </div>
+        {/* Marquee Wrapper with edge fade mask */}
+        <div className="home-clients__marquee-wrap">
+          {/* Track 1 */}
+          <div className="home-clients__marquee-track">
+            {CLIENTS.map((client, i) => (
+              <span key={`t1-item-${i}`} style={{ display: "contents" }}>
+                <span className="home-clients__marquee-item">{client}</span>
+                <span className="home-clients__marquee-sep" />
+              </span>
             ))}
           </div>
-
-          {/* 3D sliding list container */}
-          <div className="home-clients__list-container" ref={listContainerRef}>
-            <div className="home-clients__list-sticky">
-              <ul ref={clientsContainerRef} className="home-clients__list">
-                {CLIENTS.map((client, i) => (
-                  <li
-                    key={client}
-                    ref={(el) => { clientsRef.current[i] = el; }}
-                    className="home-clients__item home-clients__label ttu"
-                  >
-                    {client}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Track 2 for seamless loop */}
+          <div className="home-clients__marquee-track" aria-hidden="true">
+            {CLIENTS.map((client, i) => (
+              <span key={`t2-item-${i}`} style={{ display: "contents" }}>
+                <span className="home-clients__marquee-item">{client}</span>
+                <span className="home-clients__marquee-sep" />
+              </span>
+            ))}
           </div>
         </div>
       </section>
