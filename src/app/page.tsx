@@ -752,25 +752,136 @@ const OBEROI_SLIDES = [
   "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80"
 ];
 
+const COLLAGE_LAYOUTS = [
+  // Layout 0: 2x2 Grid (4 items)
+  [
+    { top: "0%", left: "0%", width: "50%", height: "50%", opacity: 1 },
+    { top: "0%", left: "50%", width: "50%", height: "50%", opacity: 1 },
+    { top: "50%", left: "0%", width: "50%", height: "50%", opacity: 1 },
+    { top: "50%", left: "50%", width: "50%", height: "50%", opacity: 1 },
+  ],
+  // Layout 1: Large Left, 2 Small Right (3 items)
+  [
+    { top: "0%", left: "0%", width: "60%", height: "100%", opacity: 1 },
+    { top: "0%", left: "60%", width: "40%", height: "50%", opacity: 1 },
+    { top: "50%", left: "60%", width: "40%", height: "50%", opacity: 1 },
+    { top: "0%", left: "100%", width: "0%", height: "0%", opacity: 0 },
+  ],
+  // Layout 2: 2 Small Left, Large Right (3 items)
+  [
+    { top: "0%", left: "0%", width: "40%", height: "50%", opacity: 1 },
+    { top: "50%", left: "0%", width: "40%", height: "50%", opacity: 1 },
+    { top: "0%", left: "40%", width: "60%", height: "100%", opacity: 1 },
+    { top: "0%", left: "100%", width: "0%", height: "0%", opacity: 0 },
+  ],
+  // Layout 3: 2 Vertical Columns (2 items)
+  [
+    { top: "0%", left: "0%", width: "50%", height: "100%", opacity: 1 },
+    { top: "0%", left: "50%", width: "50%", height: "100%", opacity: 1 },
+    { top: "0%", left: "100%", width: "0%", height: "0%", opacity: 0 },
+    { top: "0%", left: "100%", width: "0%", height: "0%", opacity: 0 },
+  ],
+  // Layout 4: 3 Vertical Columns (3 items)
+  [
+    { top: "0%", left: "0%", width: "33.33%", height: "100%", opacity: 1 },
+    { top: "0%", left: "33.33%", width: "33.34%", height: "100%", opacity: 1 },
+    { top: "0%", left: "66.67%", width: "33.33%", height: "100%", opacity: 1 },
+    { top: "0%", left: "100%", width: "0%", height: "0%", opacity: 0 },
+  ],
+  // Layout 5: Large Top, 2 Small Bottom (3 items)
+  [
+    { top: "0%", left: "0%", width: "100%", height: "60%", opacity: 1 },
+    { top: "60%", left: "0%", width: "50%", height: "40%", opacity: 1 },
+    { top: "60%", left: "50%", width: "50%", height: "40%", opacity: 1 },
+    { top: "0%", left: "100%", width: "0%", height: "0%", opacity: 0 },
+  ]
+];
+
+function CollageSlot({ src, style }: { src: string; style: React.CSSProperties }) {
+  const [imgSrc, setImgSrc] = useState(src);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    if (src !== imgSrc) {
+      setFade(false);
+      const t = setTimeout(() => {
+        setImgSrc(src);
+        setFade(true);
+      }, 400);
+      return () => clearTimeout(t);
+    }
+  }, [src, imgSrc]);
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        overflow: "hidden",
+        border: "0.1rem solid var(--color-bg)",
+        transition: "top 1.2s cubic-bezier(0.25, 1, 0.5, 1), left 1.2s cubic-bezier(0.25, 1, 0.5, 1), width 1.2s cubic-bezier(0.25, 1, 0.5, 1), height 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.2s ease",
+        ...style,
+      }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={imgSrc}
+        alt="Collage segment"
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          opacity: fade ? 1 : 0,
+          transform: fade ? "scale(1)" : "scale(1.05)",
+          transition: "opacity 0.6s ease, transform 0.6s ease",
+        }}
+      />
+    </div>
+  );
+}
+
 function ProjectSlideshow() {
-  const [currentIdx, setCurrentIdx] = useState(0);
+  const [layoutIdx, setLayoutIdx] = useState(0);
+  const [activeImages, setActiveImages] = useState<string[]>([
+    OBEROI_SLIDES[0],
+    OBEROI_SLIDES[1],
+    OBEROI_SLIDES[2],
+    OBEROI_SLIDES[3]
+  ]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIdx((prev) => (prev + 1) % OBEROI_SLIDES.length);
-    }, 3000);
+      // 1. Choose new layout
+      setLayoutIdx((prev) => {
+        let next = Math.floor(Math.random() * COLLAGE_LAYOUTS.length);
+        while (next === prev) {
+          next = Math.floor(Math.random() * COLLAGE_LAYOUTS.length);
+        }
+        return next;
+      });
+
+      // 2. Select 4 random unique images
+      setActiveImages(() => {
+        const shuffled = [...OBEROI_SLIDES].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, 4);
+      });
+    }, 4000);
+
     return () => clearInterval(timer);
   }, []);
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden" }}>
-      {OBEROI_SLIDES.map((slide, i) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={slide}
-          src={slide}
-          alt={`Oberoi Slide ${i + 1}`}
-          className={`slideshow-img${currentIdx === i ? " active" : ""}`}
+    <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", background: "#eaeef4" }}>
+      {COLLAGE_LAYOUTS[layoutIdx].map((slotStyle, i) => (
+        <CollageSlot
+          key={i}
+          src={activeImages[i] || OBEROI_SLIDES[i]}
+          style={{
+            top: slotStyle.top,
+            left: slotStyle.left,
+            width: slotStyle.width,
+            height: slotStyle.height,
+            opacity: slotStyle.opacity,
+          }}
         />
       ))}
     </div>
