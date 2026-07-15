@@ -567,71 +567,76 @@ export default function Home() {
       <section
         className="theme-light"
         style={{
+          paddingTop: "6rem",
           paddingBottom: "8rem",
           paddingLeft: "0.8rem",
           paddingRight: "0.8rem",
-          borderBottom: "0.1rem solid var(--color-border)",
+          borderBottom: "1px dashed rgba(0,0,0,0.15)",
         }}
       >
-        <div style={{ maxWidth: "140rem", margin: "0 auto" }}>
-          {/* Header Row: Title + Nav Arrows */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "3rem",
-              padding: "0 1.2rem",
-            }}
-          >
-            <span className="t-tag" style={{ color: "rgba(0,0,0,0.6)", fontSize: "1.2rem", fontWeight: 600 }}>
+        <div style={{ maxWidth: "140rem", margin: "0 auto", position: "relative" }}>
+          {/* Centered Category Title */}
+          <div style={{ textAlign: "center", marginBottom: "4rem" }}>
+            <span className="t-tag" style={{ color: "rgba(0,0,0,0.6)", fontSize: "1.4rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>
               Browse by Category
             </span>
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <button
-                onClick={() => scrollCategories("left")}
-                className="btn btn--primary btn--blur"
-                style={{
-                  width: "4rem",
-                  height: "4rem",
-                  borderRadius: "50%",
-                  padding: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "1.6rem",
-                  color: "#000",
-                  border: "0.1rem solid rgba(0,0,0,0.15)",
-                  backgroundColor: "rgba(255,255,255,0.8)",
-                  cursor: "pointer",
-                }}
-                aria-label="Scroll left"
-              >
-                ←
-              </button>
-              <button
-                onClick={() => scrollCategories("right")}
-                className="btn btn--primary btn--blur"
-                style={{
-                  width: "4rem",
-                  height: "4rem",
-                  borderRadius: "50%",
-                  padding: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "1.6rem",
-                  color: "#000",
-                  border: "0.1rem solid rgba(0,0,0,0.15)",
-                  backgroundColor: "rgba(255,255,255,0.8)",
-                  cursor: "pointer",
-                }}
-                aria-label="Scroll right"
-              >
-                →
-              </button>
-            </div>
           </div>
+
+          {/* Left Arrow Button */}
+          <button
+            onClick={() => scrollCategories("left")}
+            className="btn btn--primary btn--blur"
+            style={{
+              position: "absolute",
+              left: "-1rem",
+              top: "calc(50% + 2rem)",
+              transform: "translateY(-50%)",
+              zIndex: 10,
+              width: "4.5rem",
+              height: "4.5rem",
+              borderRadius: "50%",
+              padding: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "1.8rem",
+              color: "#000",
+              border: "0.1rem solid rgba(0,0,0,0.15)",
+              backgroundColor: "rgba(255,255,255,0.85)",
+              cursor: "pointer",
+            }}
+            aria-label="Scroll left"
+          >
+            ←
+          </button>
+
+          {/* Right Arrow Button */}
+          <button
+            onClick={() => scrollCategories("right")}
+            className="btn btn--primary btn--blur"
+            style={{
+              position: "absolute",
+              right: "-1rem",
+              top: "calc(50% + 2rem)",
+              transform: "translateY(-50%)",
+              zIndex: 10,
+              width: "4.5rem",
+              height: "4.5rem",
+              borderRadius: "50%",
+              padding: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "1.8rem",
+              color: "#000",
+              border: "0.1rem solid rgba(0,0,0,0.15)",
+              backgroundColor: "rgba(255,255,255,0.85)",
+              cursor: "pointer",
+            }}
+            aria-label="Scroll right"
+          >
+            →
+          </button>
 
           {/* Grid showing exactly 2 items side-by-side */}
           <div
@@ -701,42 +706,66 @@ export default function Home() {
           ══════════════════════════════════════ */}
       <section
         className="project-list"
-        style={{ borderTop: "0.1rem solid var(--color-border)" }}
+        style={{
+          paddingTop: "8rem",
+          paddingBottom: "8rem",
+          borderBottom: "1px dashed rgba(0,0,0,0.15)",
+        }}
       >
-        {/* Section label row */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "2rem 0.8rem",
-            borderBottom: "0.1rem solid var(--color-border)",
-            marginBottom: "0",
-          }}
-        >
-          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)" }}>
-            Selected Projects
-          </span>
-          <Link
-            href="/work"
-            className="btn btn--transparent"
-            style={{ fontSize: "1.1rem" }}
-          >
-            View All
-          </Link>
-        </div>
+        <div style={{ maxWidth: "140rem", margin: "0 auto" }}>
+          {/* Centered Selected Projects Heading */}
+          <div style={{ textAlign: "center", marginBottom: "4rem" }}>
+            <span className="t-tag" style={{ color: "rgba(0,0,0,0.6)", fontSize: "1.4rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              Selected Projects
+            </span>
+          </div>
 
-        {/* ── Project cards in exact Sturdy layout (2 -> 4 -> 2) ── */}
-        <div className="project-list__grid" ref={projectsRef.ref}>
-          {PROJECTS.map((project, idx) => (
-            <ProjectCard
-              key={project.slug}
-              project={project}
-              onHover={setHovered}
-              visible={projectsRef.visible}
-              delay={idx * 0.05}
-            />
-          ))}
+          {/* Grid showing exactly 4 cards side-by-side, matching Brands style */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: "2rem",
+              padding: "0 1.2rem",
+            }}
+            ref={projectsRef.ref}
+          >
+            {PROJECTS.slice(0, 4).map((project) => (
+              <div
+                key={project.slug}
+                style={{
+                  borderRadius: "1.2rem",
+                  overflow: "hidden",
+                  backgroundColor: "transparent",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "1rem",
+                }}
+              >
+                <div style={{ width: "100%", height: "26rem", borderRadius: "1.2rem", overflow: "hidden" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={project.img}
+                    alt={project.client}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <p style={{ margin: 0, fontSize: "1.4rem", fontWeight: 700, color: "#000", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    {project.client}
+                  </p>
+                  <p style={{ margin: "0.2rem 0 0", fontSize: "1.2rem", color: "rgba(0,0,0,0.5)" }}>
+                    {project.sub}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
