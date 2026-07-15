@@ -527,7 +527,7 @@ export default function Home() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "0 0.8rem",
-          paddingTop: "12rem",
+          paddingTop: "7rem",
           paddingBottom: "4rem",
           position: "relative",
           overflow: "hidden",
@@ -542,7 +542,7 @@ export default function Home() {
             flex: 1,
             display: "flex",
             alignItems: "flex-start",
-            paddingTop: "2rem",
+            paddingTop: "0.5rem",
           }}
         >
           <div
