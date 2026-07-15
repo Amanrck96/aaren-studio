@@ -701,46 +701,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          FEATURED BANNERS (2 HORIZONTAL IMAGES)
-          ══════════════════════════════════════ */}
-      <section
-        className="theme-light"
-        style={{
-          paddingBottom: "8rem",
-          paddingLeft: "0.8rem",
-          paddingRight: "0.8rem",
-          borderBottom: "1px dashed rgba(0,0,0,0.15)",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "140rem",
-            margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "2rem",
-            padding: "0 1.2rem",
-          }}
-        >
-          <div style={{ height: "45rem", borderRadius: "1.2rem", overflow: "hidden" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
-              alt="Featured Interior 1"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          </div>
-          <div style={{ height: "45rem", borderRadius: "1.2rem", overflow: "hidden" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=80"
-              alt="Featured Interior 2"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          </div>
-        </div>
-      </section>
 
       {/* ══════════════════════════════════════
           SECTION 3: PROJECTS — light #eaeef4
