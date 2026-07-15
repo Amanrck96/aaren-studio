@@ -406,7 +406,8 @@ export default function Home() {
             lineHeight: 0.85,
             flex: 1,
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-start",
+            paddingTop: "2rem",
           }}
         >
           <div

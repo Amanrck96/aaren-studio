@@ -3,23 +3,21 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-/* ── Nav links — exact Sturdy.co structure ── */
-const NAV_LINKS = [
-  { label: "Work",         href: "/work" },
-  { label: "Instagram",   href: "https://www.instagram.com/aaren.studio/", ext: true },
-  { label: "Contact",     href: "/contact" },
-  { label: "Store",       href: "/products" },
-  { label: "Join Our Team", href: "/careers" },
+type NavLink = {
+  label: string;
+  href: string;
+  ext?: boolean;
+};
+
+const NAV_LINKS: NavLink[] = [
+  { label: "About us", href: "/about" },
+  { label: "Our team", href: "/team" },
+  { label: "Contact us", href: "/contact" },
+  { label: "Shop", href: "/shop" },
+  { label: "Sign up", href: "/signup" },
 ];
 
-const MOBILE_LINKS = [
-  { label: "Work",         href: "/work" },
-  { label: "About",        href: "/about" },
-  { label: "Contact",      href: "/contact" },
-  { label: "Store",        href: "/products" },
-  { label: "Instagram",   href: "https://www.instagram.com/aaren.studio/", ext: true },
-  { label: "Join Our Team", href: "/careers" },
-];
+const MOBILE_LINKS: NavLink[] = NAV_LINKS;
 
 export default function Header() {
   const [open, setOpen] = useState(false);
