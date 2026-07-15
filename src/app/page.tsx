@@ -132,6 +132,15 @@ const CATEGORIES = [
   { title: "Facade & Cladding", img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80" },
 ];
 
+const INTRO_SENTENCES = [
+  "One Stop Destination for World Class Interior Solutions",
+  "Window to the world of interior products",
+  "Incredible products of world renowned brands",
+  "Carefully curated products focused on unique experience",
+  "The experience you've only dreamt about",
+  "To see the unseen"
+];
+
 /* ─── Hook: scroll-triggered class ─── */
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -176,6 +185,11 @@ export default function Home() {
   const listContainerRef = useRef<HTMLDivElement>(null);
   const clientsContainerRef = useRef<HTMLUListElement>(null);
   const clientsRef = useRef<(HTMLLIElement | null)[]>([]);
+
+  /* ── Intro scroll-driven text refs ── */
+  const introSectionRef = useRef<HTMLDivElement>(null);
+  const introTextContainerRef = useRef<HTMLDivElement>(null);
+  const introLinesRef = useRef<(HTMLParagraphElement | null)[]>([]);
 
   /* ── Scroll observer refs ── */
   const introRef = useInView(0.1);
@@ -235,6 +249,96 @@ export default function Home() {
       const clients = clientsRef.current.filter(Boolean) as HTMLLIElement[];
 
       if (clients.length === 0) return;
+
+      // 0. Intro Section Scroll-driven text animation
+      const introLines = introLinesRef.current.filter(Boolean) as HTMLParagraphElement[];
+      if (introLines.length > 0 && introSectionRef.current && introTextContainerRef.current) {
+        if (prefersReducedMotion) {
+          gsap.set(introLines, {
+            opacity: 1,
+            scale: 1,
+            z: 0,
+            rotationX: 0,
+            color: "#eaeef4"
+          });
+        } else {
+          // Initialize style of first item as active, rest as inactive
+          gsap.set(introLines, {
+            opacity: 0.25,
+            scale: 0.8,
+            rotationX: (i) => (i === 0 ? 0 : 30),
+            z: (i) => (i === 0 ? 0 : -100),
+            color: (i) => (i === 0 ? "#eaeef4" : "rgba(234, 238, 244, 0.4)"),
+            transformOrigin: "50% 50%",
+          });
+          if (introLines[0]) {
+            gsap.set(introLines[0], { opacity: 1, scale: 1.15 });
+          }
+
+          const introMapper = gsap.utils.pipe(
+            gsap.utils.mapRange(0, 1, 0, introLines.length - 1),
+            gsap.utils.snap(1)
+          );
+
+          ScrollTrigger.create({
+            trigger: introSectionRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: true,
+            onUpdate: (self) => {
+              const activeIdx = introMapper(self.progress);
+              const container = introTextContainerRef.current;
+              if (!container) return;
+
+              const targetLine = introLines[activeIdx];
+              if (!targetLine) return;
+
+              const containerHeight = container.clientHeight;
+              const targetOffsetTop = targetLine.offsetTop;
+              const targetHeight = targetLine.clientHeight;
+
+              // Translate the container to center the active line
+              const targetY = -(targetOffsetTop + targetHeight / 2 - containerHeight / 2);
+
+              gsap.to(container, {
+                y: targetY,
+                duration: 0.4,
+                ease: "power2.out",
+                overwrite: "auto"
+              });
+
+              // Apply 3D perspective Receding effect
+              introLines.forEach((el, i) => {
+                const diff = Math.abs(i - activeIdx);
+                if (diff === 0) {
+                  gsap.to(el, {
+                    opacity: 1,
+                    scale: 1.15,
+                    rotationX: 0,
+                    z: 0,
+                    color: "#eaeef4",
+                    duration: 0.4,
+                    ease: "power2.out",
+                    overwrite: "auto"
+                  });
+                } else {
+                  const direction = i < activeIdx ? -1 : 1;
+                  gsap.to(el, {
+                    opacity: 0.25,
+                    scale: 0.8,
+                    rotationX: 30 * direction,
+                    z: -100,
+                    color: "rgba(234, 238, 244, 0.4)",
+                    duration: 0.4,
+                    ease: "power2.out",
+                    overwrite: "auto"
+                  });
+                }
+              });
+            }
+          });
+        }
+      }
 
       // 1. Heading Scroll Reveal Entrance Animation
       const heading = containerRef.current?.querySelector(".t-tag");
@@ -525,69 +629,105 @@ export default function Home() {
           SECTION 2: INTRO — light #eaeef4
           ══════════════════════════════════════ */}
       {/* ══════════════════════════════════════
-          SECTION 2: INTRO — with showroom background image
+          SECTION 2: INTRO — with showroom background image & scroll-driven typography
           ══════════════════════════════════════ */}
       <section
+        ref={introSectionRef}
         className="theme-dark"
         style={{
           position: "relative",
-          paddingTop: "12rem",
-          paddingBottom: "12rem",
-          paddingLeft: "0.8rem",
-          paddingRight: "0.8rem",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
+          height: "280vh",
+          overflow: "visible",
         }}
       >
-        {/* Blurred background image */}
+        {/* Sticky container to pin viewport */}
         <div
           style={{
-            position: "absolute",
+            position: "sticky",
             top: 0,
             left: 0,
             right: 0,
-            bottom: 0,
-            backgroundImage: "url('/showroom.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            filter: "blur(6px) brightness(0.45)",
-            zIndex: 1,
-            transform: "scale(1.05)",
-          }}
-        />
-
-        {/* Content wrapper */}
-        <div
-          ref={introRef.ref}
-          style={{
-            position: "relative",
-            zIndex: 2,
-            maxWidth: "100rem",
-            width: "100%",
-            textAlign: "center",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
           }}
         >
-          <p
-            className={`text-splitter${introRef.visible ? " is-visible" : ""}`}
+          {/* Blurred background image */}
+          <div
             style={{
-              fontSize: "clamp(2.0rem, 3.5vw, 3.8rem)",
-              letterSpacing: "-0.02em",
-              lineHeight: 1.6,
-              fontWeight: 500,
-              color: "#eaeef4",
-              transitionDelay: "0s",
-              textTransform: "uppercase",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: "url('/showroom.jpg')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              filter: "blur(6px) brightness(0.4)",
+              zIndex: 1,
+              transform: "scale(1.05)",
+            }}
+          />
+
+          {/* Perspective container */}
+          <div
+            style={{
+              position: "relative",
+              zIndex: 2,
+              maxWidth: "110rem",
+              width: "100%",
+              padding: "0 2.4rem",
+              textAlign: "center",
+              height: "45rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              perspective: "1000px",
+              transformStyle: "preserve-3d",
             }}
           >
-            One Stop Destination for World Class Interior Solutions<br /><br />
-            Window to the world of interior products<br /><br />
-            Incredible products of world renowned brands<br /><br />
-            Carefully curated products focused on unique experience<br /><br />
-            The experience you&apos;ve only dreamt about<br /><br />
-            To see the unseen
-          </p>
+            {/* Scrollable text wrapper */}
+            <div
+              ref={introTextContainerRef}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "2.5rem",
+                willChange: "transform",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "100%",
+                transformStyle: "preserve-3d",
+              }}
+            >
+              {INTRO_SENTENCES.map((line, idx) => (
+                <p
+                  key={idx}
+                  ref={(el) => { introLinesRef.current[idx] = el; }}
+                  style={{
+                    fontSize: "clamp(2rem, 3.5vw, 3.6rem)",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "-0.01em",
+                    lineHeight: 1.2,
+                    margin: 0,
+                    width: "100%",
+                    transformStyle: "preserve-3d",
+                    backfaceVisibility: "hidden",
+                    color: "#eaeef4",
+                    willChange: "transform, opacity",
+                  }}
+                >
+                  {line}
+                </p>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
