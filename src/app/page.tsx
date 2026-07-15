@@ -123,6 +123,15 @@ const SERVICES = [
 /* ─── Logo letters for staggered reveal ─── */
 const LOGO_LETTERS = ["A", "A", "R", "E", "N"];
 
+const CATEGORIES = [
+  { title: "Flooring Systems", img: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&w=800&q=80" },
+  { title: "Architectural Surfaces", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" },
+  { title: "Lighting Design", img: "https://images.unsplash.com/photo-1565538810844-1e119d81a207?auto=format&fit=crop&w=800&q=80" },
+  { title: "Joinery & Millwork", img: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80" },
+  { title: "Bathroom & Wellness", img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" },
+  { title: "Facade & Cladding", img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80" },
+];
+
 /* ─── Hook: scroll-triggered class ─── */
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -172,6 +181,24 @@ export default function Home() {
   const introRef = useInView(0.1);
   const projectsRef = useInView(0.05);
   const newsletterRef = useInView(0.2);
+
+  /* ── Category Carousel State and Auto-loop ── */
+  const [categoryIndex, setCategoryIndex] = useState(0);
+
+  const scrollCategories = (direction: "left" | "right") => {
+    if (direction === "left") {
+      setCategoryIndex((prev) => (prev - 1 + CATEGORIES.length) % CATEGORIES.length);
+    } else {
+      setCategoryIndex((prev) => (prev + 1) % CATEGORIES.length);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCategoryIndex((prev) => (prev + 1) % CATEGORIES.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, []);
 
   /* ── Logo reveal on mount ── */
   useEffect(() => {
@@ -530,6 +557,141 @@ export default function Home() {
               disciplines, unified by the singular drive of crafting unforgettable
               environments.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════
+          BROWSE BY CATEGORY SECTION WITH ARROWS (2 LOOPING IMAGES)
+          ══════════════════════════════════════ */}
+      <section
+        className="theme-light"
+        style={{
+          paddingBottom: "8rem",
+          paddingLeft: "0.8rem",
+          paddingRight: "0.8rem",
+          borderBottom: "0.1rem solid var(--color-border)",
+        }}
+      >
+        <div style={{ maxWidth: "140rem", margin: "0 auto" }}>
+          {/* Header Row: Title + Nav Arrows */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "3rem",
+              padding: "0 1.2rem",
+            }}
+          >
+            <span className="t-tag" style={{ color: "rgba(0,0,0,0.6)", fontSize: "1.2rem", fontWeight: 600 }}>
+              Browse by Category
+            </span>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <button
+                onClick={() => scrollCategories("left")}
+                className="btn btn--primary btn--blur"
+                style={{
+                  width: "4rem",
+                  height: "4rem",
+                  borderRadius: "50%",
+                  padding: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.6rem",
+                  color: "#000",
+                  border: "0.1rem solid rgba(0,0,0,0.15)",
+                  backgroundColor: "rgba(255,255,255,0.8)",
+                  cursor: "pointer",
+                }}
+                aria-label="Scroll left"
+              >
+                ←
+              </button>
+              <button
+                onClick={() => scrollCategories("right")}
+                className="btn btn--primary btn--blur"
+                style={{
+                  width: "4rem",
+                  height: "4rem",
+                  borderRadius: "50%",
+                  padding: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.6rem",
+                  color: "#000",
+                  border: "0.1rem solid rgba(0,0,0,0.15)",
+                  backgroundColor: "rgba(255,255,255,0.8)",
+                  cursor: "pointer",
+                }}
+                aria-label="Scroll right"
+              >
+                →
+              </button>
+            </div>
+          </div>
+
+          {/* Grid showing exactly 2 items side-by-side */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "2rem",
+              padding: "0 1.2rem 1.6rem",
+            }}
+          >
+            {[
+              CATEGORIES[categoryIndex],
+              CATEGORIES[(categoryIndex + 1) % CATEGORIES.length],
+            ].map((cat) => (
+              <div
+                key={cat.title}
+                style={{
+                  position: "relative",
+                  borderRadius: "1.2rem",
+                  overflow: "hidden",
+                  height: "38rem",
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={cat.img}
+                  alt={cat.title}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+                {/* Category Title Overlay */}
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    width: "100%",
+                    padding: "3rem 2rem",
+                    background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)",
+                    display: "flex",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "2rem",
+                      fontWeight: 600,
+                      color: "#eaeef4",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    {cat.title}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
