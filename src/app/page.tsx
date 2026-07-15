@@ -104,16 +104,20 @@ const CLIENTS = [
 
 /* ─── Services ─── */
 const SERVICES = [
-  "Interior Design",
-  "Space Planning",
-  "Material Curation",
-  "Furniture Design",
-  "Architectural Surfaces",
-  "Lighting Design",
-  "Joinery & Millwork",
-  "Bathroom & Wellness",
-  "Flooring Systems",
-  "Facade & Cladding",
+  "Plywood",
+  "Decorative surfaces",
+  "Cladding & Declining",
+  "Wooden flooring",
+  "Screens",
+  "Doors",
+  "Windows",
+  "Kitchen",
+  "Wardrobe",
+  "Hardware",
+  "Partition",
+  "Ffne",
+  "Tiles",
+  "Wellness",
 ];
 
 /* ─── Logo letters for staggered reveal ─── */
