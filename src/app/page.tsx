@@ -524,40 +524,70 @@ export default function Home() {
       {/* ══════════════════════════════════════
           SECTION 2: INTRO — light #eaeef4
           ══════════════════════════════════════ */}
+      {/* ══════════════════════════════════════
+          SECTION 2: INTRO — with showroom background image
+          ══════════════════════════════════════ */}
       <section
-        className="theme-light"
+        className="theme-dark"
         style={{
-          paddingTop: "10rem",
-          paddingBottom: "15rem",
-          padding: "10rem 0.8rem 15rem",
+          position: "relative",
+          paddingTop: "12rem",
+          paddingBottom: "12rem",
+          paddingLeft: "0.8rem",
+          paddingRight: "0.8rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
         }}
       >
-        <div ref={introRef.ref}>
-          {/* Right-aligned large text block ── */}
-          <div
+        {/* Blurred background image */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: "url('/showroom.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: "blur(6px) brightness(0.45)",
+            zIndex: 1,
+            transform: "scale(1.05)",
+          }}
+        />
+
+        {/* Content wrapper */}
+        <div
+          ref={introRef.ref}
+          style={{
+            position: "relative",
+            zIndex: 2,
+            maxWidth: "100rem",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          <p
+            className={`text-splitter${introRef.visible ? " is-visible" : ""}`}
             style={{
-              marginLeft: "auto",
-              maxWidth: "80rem",
+              fontSize: "clamp(2.0rem, 3.5vw, 3.8rem)",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.6,
+              fontWeight: 500,
+              color: "#eaeef4",
+              transitionDelay: "0s",
+              textTransform: "uppercase",
             }}
           >
-            <p
-              className={`text-splitter${introRef.visible ? " is-visible" : ""}`}
-              style={{
-                fontSize: "clamp(2.4rem, 4.6vw, 4.6rem)",
-                letterSpacing: "-0.03em",
-                lineHeight: 1.0,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                color: "#000",
-                transitionDelay: "0s",
-              }}
-            >
-              A creative studio and material house dedicated to designing and producing
-              immersive spatial experiences — meant to evoke feeling. Our work spans
-              disciplines, unified by the singular drive of crafting unforgettable
-              environments.
-            </p>
-          </div>
+            One Stop Destination for World Class Interior Solutions<br /><br />
+            Window to the world of interior products<br /><br />
+            Incredible products of world renowned brands<br /><br />
+            Carefully curated products focused on unique experience<br /><br />
+            The experience you&apos;ve only dreamt about<br /><br />
+            To see the unseen
+          </p>
         </div>
       </section>
 
