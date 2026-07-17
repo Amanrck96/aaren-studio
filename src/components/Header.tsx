@@ -10,11 +10,10 @@ type NavLink = {
 };
 
 const NAV_LINKS: NavLink[] = [
+  { label: "Products", href: "/products" },
+  { label: "Brands", href: "/brands" },
   { label: "About us", href: "/about" },
-  { label: "Our team", href: "/team" },
   { label: "Contact us", href: "/contact" },
-  { label: "Shop", href: "/shop" },
-  { label: "Sign up", href: "/signup" },
 ];
 
 const MOBILE_LINKS: NavLink[] = NAV_LINKS;
