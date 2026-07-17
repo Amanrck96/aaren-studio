@@ -1024,6 +1024,29 @@ input, select, textarea {
   }
 }
 
+/* ── Home Ticket Cards ── */
+.home-ticket-card:hover .home-ticket-img {
+  transform: scale(1.04);
+}
+
+.home-ticket-card:hover .home-ticket-caption {
+  background: #dfe3e9;
+}
+
+/* 4-across projects: collapse to 2-col on mobile */
+@media (max-width: 767px) {
+  .home-projects-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .home-projects-grid .home-ticket-card:nth-child(2n) {
+    border-right: none;
+  }
+  .home-projects-grid .home-ticket-card:nth-child(2n-1) {
+    border-right: 0.1rem solid rgba(0,0,0,0.12);
+  }
+}
+
+
 
 
 

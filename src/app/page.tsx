@@ -123,13 +123,35 @@ const SERVICES = [
 /* ─── Logo letters for staggered reveal ─── */
 const LOGO_LETTERS = ["A", "A", "R", "E", "N"];
 
-const CATEGORIES = [
-  { title: "Flooring Systems", img: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&w=800&q=80" },
-  { title: "Architectural Surfaces", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" },
-  { title: "Lighting Design", img: "https://images.unsplash.com/photo-1565538810844-1e119d81a207?auto=format&fit=crop&w=800&q=80" },
-  { title: "Joinery & Millwork", img: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80" },
-  { title: "Bathroom & Wellness", img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" },
-  { title: "Facade & Cladding", img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80" },
+const HOME_CATEGORIES = [
+  { id: "plywood", code: "PW", num: "01", name: "Plywood", sub: "Structural Panels", img: "/categories/cat_1.png" },
+  { id: "laminate", code: "LM", num: "02", name: "Laminate", sub: "Decorative Surfaces", img: "/categories/cat_2.png" },
+  { id: "facade", code: "FC", num: "03", name: "Facade", sub: "Cladding & Decking", img: "/categories/cat_3.png" },
+  { id: "wooden-flooring", code: "WF", num: "04", name: "Wooden Flooring", sub: "Engineered & Solid", img: "/categories/cat_4.png" },
+  { id: "screens", code: "SS", num: "05", name: "Screens", sub: "Zipline Systems", img: "/categories/cat_5.png" },
+  { id: "door-system", code: "DS", num: "06", name: "Door System", sub: "Aluminum & Slashform", img: "/categories/cat_6.png" },
+  { id: "doors", code: "WD", num: "07", name: "Doors", sub: "Wood & Laminate", img: "/categories/cat_7.png" },
+  { id: "windows", code: "WW", num: "08", name: "Windows", sub: "Timber & Aluminum", img: "/categories/cat_8.png" },
+  { id: "kitchen", code: "KK", num: "09", name: "Kitchen", sub: "Slashform K+W", img: "/categories/cat_9.png" },
+  { id: "wardrobe", code: "WW", num: "10", name: "Wardrobe", sub: "Freedom & Slashform", img: "/categories/cat_10.png" },
+  { id: "furniture", code: "FF", num: "11", name: "Furniture", sub: "Millwork & Bespoke", img: "/categories/cat_11.png" },
+  { id: "tiles", code: "TL", num: "12", name: "Tiles", sub: "Floors, Walls & Facades", img: "/categories/cat_12.png" },
+  { id: "bathroom-fittings", code: "BF", num: "13", name: "Bathroom Fittings", sub: "Fima · Falper · Mildue", img: "/categories/cat_13.png" },
+  { id: "sanitary-ware", code: "SW", num: "14", name: "Sanitary Ware", sub: "IWW · Flaminia", img: "/categories/cat_14.png" },
+  { id: "mirrors", code: "MR", num: "15", name: "Mirrors", sub: "Mira · Waltz", img: "/categories/cat_15.png" },
+];
+
+const HOME_BRANDS = [
+  { id: "slashform", code: "SF", num: "01", name: "Slashform", sub: "Doors · Windows · Kitchens", img: "/brands/brand_1_1.png" },
+  { id: "waltz", code: "WB", num: "02", name: "Waltz by JB Glass", sub: "Mirrors · Glass Systems", img: "/brands/brand_2_1.png" },
+  { id: "newtech", code: "NW", num: "03", name: "Newtech Wood", sub: "WPC · Facade", img: "/brands/brand_3_1.png" },
+  { id: "formica", code: "FC", num: "04", name: "Formica", sub: "Laminates · Surfaces", img: "/brands/brand_4_1.png" },
+  { id: "loco", code: "LC", num: "05", name: "Loco", sub: "Furniture · Millwork", img: "/brands/brand_5_1.png" },
+  { id: "falper", code: "FP", num: "06", name: "Falper", sub: "Bathroom Fittings", img: "/brands/brand_6_1.png" },
+  { id: "fima", code: "FM", num: "07", name: "Fima Carlo Frattini", sub: "Tapware · Showers", img: "/brands/brand_7_1.png" },
+  { id: "inkiostro", code: "IB", num: "08", name: "Inkiostro Bianco", sub: "Wallcoverings · Decor", img: "/brands/brand_8_1.png" },
+  { id: "mafi", code: "MF", num: "09", name: "Mafi", sub: "Engineered Wood Floors", img: "/brands/brand_9_1.png" },
+  { id: "mirage", code: "MG", num: "10", name: "Mirage", sub: "Porcelain Tiles", img: "/brands/brand_10_1.png" },
 ];
 
 const INTRO_SENTENCES = [
@@ -196,22 +218,16 @@ export default function Home() {
   const projectsRef = useInView(0.05);
   const newsletterRef = useInView(0.2);
 
-  /* ── Category Carousel State and Auto-loop ── */
-  const [categoryIndex, setCategoryIndex] = useState(0);
-
-  const scrollCategories = (direction: "left" | "right") => {
-    if (direction === "left") {
-      setCategoryIndex((prev) => (prev - 1 + CATEGORIES.length) % CATEGORIES.length);
-    } else {
-      setCategoryIndex((prev) => (prev + 1) % CATEGORIES.length);
-    }
-  };
-
+  /* ── Category Carousel ── */
+  const [catIdx, setCatIdx] = useState(0);
+  const catTotal = HOME_CATEGORIES.length;
+  const prevCat = () => setCatIdx((p) => (p - 1 + catTotal) % catTotal);
+  const nextCat = () => setCatIdx((p) => (p + 1) % catTotal);
+  // auto-advance
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCategoryIndex((prev) => (prev + 1) % CATEGORIES.length);
-    }, 4500);
-    return () => clearInterval(timer);
+    const t = setInterval(nextCat, 5000);
+    return () => clearInterval(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* ── Logo reveal on mount ── */
@@ -732,241 +748,150 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════
-          BROWSE BY CATEGORY SECTION WITH ARROWS (2 LOOPING IMAGES)
+          BROWSE BY CATEGORY — carousel with arrows
           ══════════════════════════════════════ */}
-      <section
-        className="theme-light"
-        style={{
-          paddingTop: "6rem",
-          paddingBottom: "8rem",
-          paddingLeft: "0.8rem",
-          paddingRight: "0.8rem",
-          borderBottom: "1px dashed rgba(0,0,0,0.15)",
-        }}
-      >
-        <div style={{ maxWidth: "140rem", margin: "0 auto", position: "relative" }}>
-          {/* Centered Category Title */}
-          <div style={{ textAlign: "center", marginBottom: "4rem" }}>
-            <span className="t-tag" style={{ color: "rgba(0,0,0,0.6)", fontSize: "1.4rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              Browse by Category
-            </span>
+      <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
+
+        {/* Section header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2.4rem 0.8rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
+          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)", letterSpacing: "0.08em" }}>Browse by Category</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+            <button id="cat-prev" onClick={prevCat} aria-label="Previous category" style={{ width: "3.6rem", height: "3.6rem", borderRadius: "50%", border: "0.1rem solid rgba(0,0,0,0.15)", background: "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem", transition: "background 0.2s" }} onMouseEnter={e => (e.currentTarget.style.background = "#000", e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.background = "transparent", e.currentTarget.style.color = "#000")}>←</button>
+            <button id="cat-next" onClick={nextCat} aria-label="Next category" style={{ width: "3.6rem", height: "3.6rem", borderRadius: "50%", border: "0.1rem solid rgba(0,0,0,0.15)", background: "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem", transition: "background 0.2s" }} onMouseEnter={e => (e.currentTarget.style.background = "#000", e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.background = "transparent", e.currentTarget.style.color = "#000")}>→</button>
+            <Link href="/products" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.45)", letterSpacing: "0.08em", marginLeft: "0.8rem" }}>View all</Link>
           </div>
+        </div>
 
-          {/* Left Arrow Button */}
-          <button
-            onClick={() => scrollCategories("left")}
-            className="btn btn--primary btn--blur"
-            style={{
-              position: "absolute",
-              left: "-1rem",
-              top: "calc(50% + 2rem)",
-              transform: "translateY(-50%)",
-              zIndex: 10,
-              width: "4.5rem",
-              height: "4.5rem",
-              borderRadius: "50%",
-              padding: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "1.8rem",
-              color: "#000",
-              border: "0.1rem solid rgba(0,0,0,0.15)",
-              backgroundColor: "rgba(255,255,255,0.85)",
-              cursor: "pointer",
-            }}
-            aria-label="Scroll left"
-          >
-            ←
-          </button>
-
-          {/* Right Arrow Button */}
-          <button
-            onClick={() => scrollCategories("right")}
-            className="btn btn--primary btn--blur"
-            style={{
-              position: "absolute",
-              right: "-1rem",
-              top: "calc(50% + 2rem)",
-              transform: "translateY(-50%)",
-              zIndex: 10,
-              width: "4.5rem",
-              height: "4.5rem",
-              borderRadius: "50%",
-              padding: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "1.8rem",
-              color: "#000",
-              border: "0.1rem solid rgba(0,0,0,0.15)",
-              backgroundColor: "rgba(255,255,255,0.85)",
-              cursor: "pointer",
-            }}
-            aria-label="Scroll right"
-          >
-            →
-          </button>
-
-          {/* Grid showing exactly 2 items side-by-side */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "2rem",
-              padding: "0 1.2rem 1.6rem",
-            }}
-          >
-            {[
-              CATEGORIES[categoryIndex],
-              CATEGORIES[(categoryIndex + 1) % CATEGORIES.length],
-            ].map((cat) => (
-              <div
-                key={cat.title}
-                style={{
-                  position: "relative",
-                  borderRadius: "1.2rem",
-                  overflow: "hidden",
-                  height: "38rem",
-                }}
-              >
+        {/* 2-up carousel */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", width: "100%" }}>
+          {[HOME_CATEGORIES[catIdx % catTotal], HOME_CATEGORIES[(catIdx + 1) % catTotal]].map((cat, i) => (
+            <Link
+              key={`${cat.id}-${i}`}
+              href="/products"
+              id={`home-cat-carousel-${i}`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                borderRight: i === 0 ? "0.1rem solid rgba(0,0,0,0.12)" : "none",
+                textDecoration: "none",
+                color: "inherit",
+                overflow: "hidden",
+              }}
+              className="home-ticket-card"
+            >
+              <div style={{ overflow: "hidden", height: "clamp(24rem, 36vw, 54rem)", background: "#111", flexShrink: 0 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={cat.img}
-                  alt={cat.title}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-                {/* Category Title Overlay */}
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    width: "100%",
-                    padding: "3rem 2rem",
-                    background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)",
-                    display: "flex",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "2rem",
-                      fontWeight: 600,
-                      color: "#eaeef4",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.02em",
-                    }}
-                  >
-                    {cat.title}
-                  </span>
+                <img src={cat.img} alt={cat.name} className="home-ticket-img" style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }} />
+              </div>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem", padding: "1.6rem 1.2rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                  <span style={{ fontSize: "clamp(1.3rem, 1.5vw, 1.6rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#000" }}>{cat.name}</span>
+                  <span style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{cat.sub}</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
+                  <span style={{ fontSize: "clamp(2.4rem, 4vw, 5.6rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{cat.code}</span>
+                  <span style={{ fontSize: "clamp(2rem, 3.5vw, 4.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{cat.num}</span>
                 </div>
               </div>
-            ))}
-          </div>
+            </Link>
+          ))}
         </div>
       </section>
 
 
       {/* ══════════════════════════════════════
-          SECTION 3: PROJECTS — light #eaeef4
+          BROWSE BY BRANDS — 2-col ticket grid
           ══════════════════════════════════════ */}
-      <section
-        className="project-list"
-        style={{
-          paddingTop: "8rem",
-          paddingBottom: "8rem",
-          borderBottom: "1px dashed rgba(0,0,0,0.15)",
-        }}
-      >
-        <div style={{ maxWidth: "140rem", margin: "0 auto" }}>
-          {/* Centered Selected Projects Heading */}
-          <div style={{ textAlign: "center", marginBottom: "4rem" }}>
-            <span className="t-tag" style={{ color: "rgba(0,0,0,0.6)", fontSize: "1.4rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              Selected Projects
-            </span>
-          </div>
+      <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
-          {/* Grid showing exactly 4 cards side-by-side, matching Brands style */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "2rem",
-              padding: "0 1.2rem",
-            }}
-            ref={projectsRef.ref}
-          >
-            {PROJECTS.slice(0, 4).map((project) => (
-              <div
-                key={project.slug}
-                style={{
-                  borderRadius: "1.2rem",
-                  overflow: "hidden",
-                  backgroundColor: "transparent",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "1rem",
-                }}
-              >
-                <div style={{ width: "100%", height: "26rem", borderRadius: "1.2rem", overflow: "hidden" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={project.img}
-                    alt={project.client}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2.4rem 0.8rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
+          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)", letterSpacing: "0.08em" }}>Browse by Brands</span>
+          <Link href="/brands" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.45)", letterSpacing: "0.08em" }}>View all</Link>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", width: "100%" }}>
+          {HOME_BRANDS.map((brand, i) => (
+            <Link
+              key={brand.id}
+              href="/brands"
+              id={`home-brand-${brand.id}`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                borderBottom: "0.1rem solid rgba(0,0,0,0.12)",
+                borderRight: i % 2 === 0 ? "0.1rem solid rgba(0,0,0,0.12)" : "none",
+                textDecoration: "none",
+                color: "inherit",
+                overflow: "hidden",
+              }}
+              className="home-ticket-card"
+            >
+              <div style={{ overflow: "hidden", height: "clamp(20rem, 28vw, 44rem)", background: "#111", flexShrink: 0 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={brand.img} alt={brand.name} className="home-ticket-img" style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }} />
+              </div>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem", padding: "1.4rem 1.2rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+                  <span style={{ fontSize: "clamp(1.2rem, 1.4vw, 1.5rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#000" }}>{brand.name}</span>
+                  <span style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{brand.sub}</span>
                 </div>
-                <div style={{ textAlign: "center" }}>
-                  <p style={{ margin: 0, fontSize: "1.4rem", fontWeight: 700, color: "#000", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                    {project.client}
-                  </p>
-                  <p style={{ margin: "0.2rem 0 0", fontSize: "1.2rem", color: "rgba(0,0,0,0.5)" }}>
-                    {project.sub}
-                  </p>
+                <div style={{ display: "flex", alignItems: "center", gap: "1.4rem", flexShrink: 0 }}>
+                  <span style={{ fontSize: "clamp(2rem, 3.5vw, 4.4rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{brand.code}</span>
+                  <span style={{ fontSize: "clamp(1.8rem, 3vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{brand.num}</span>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Project Banners (2 Horizontal Banners, same style & size) */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "2rem",
-              padding: "0 1.2rem",
-              marginTop: "6rem",
-            }}
-          >
-            <div style={{ height: "45rem", borderRadius: "1.2rem", overflow: "hidden" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
-                alt="Project Banner 1"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            </div>
-            <div style={{ height: "45rem", borderRadius: "1.2rem", overflow: "hidden" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
-                alt="Project Banner 2"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            </div>
-          </div>
+            </Link>
+          ))}
         </div>
       </section>
+
+
+      {/* ══════════════════════════════════════
+          SELECTED PROJECTS — 4-across ticket grid
+          ══════════════════════════════════════ */}
+      <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
+
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2.4rem 0.8rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
+          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)", letterSpacing: "0.08em" }}>Selected Projects</span>
+          <Link href="/work" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.45)", letterSpacing: "0.08em" }}>View all</Link>
+        </div>
+
+        {/* 4-across on desktop, 2-across on mobile */}
+        <div className="home-projects-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", width: "100%" }}>
+          {PROJECTS.slice(0, 4).map((project, i) => (
+            <Link
+              key={project.slug}
+              href="/work"
+              id={`home-proj-${project.slug}`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                borderRight: i < 3 ? "0.1rem solid rgba(0,0,0,0.12)" : "none",
+                textDecoration: "none",
+                color: "inherit",
+                overflow: "hidden",
+              }}
+              className="home-ticket-card"
+            >
+              <div style={{ overflow: "hidden", height: "clamp(18rem, 22vw, 36rem)", background: "#111", flexShrink: 0 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={project.img} alt={project.client} className="home-ticket-img" style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }} />
+              </div>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.8rem", padding: "1.2rem 0.8rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+                  <span style={{ fontSize: "clamp(1.0rem, 1.1vw, 1.3rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#000" }}>{project.client}</span>
+                  <span style={{ fontSize: "1.0rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.2 }}>{project.sub}</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flexShrink: 0 }}>
+                  <span style={{ fontSize: "clamp(1.4rem, 2.2vw, 2.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{project.code}</span>
+                  <span style={{ fontSize: "clamp(1.2rem, 1.8vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{project.num}</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
 
       {/* ══════════════════════════════════════
           SECTION 4: CLIENTS — light #eaeef4 (like Sturdy)
