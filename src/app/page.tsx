@@ -536,7 +536,7 @@ export default function Home() {
           SECTION 1: HERO — dark #1e1e1e
           ══════════════════════════════════════ */}
       <section
-        className="theme-dark"
+        className="theme-dark hero-section"
         style={{
           minHeight: "100vh",
           display: "flex",
@@ -562,8 +562,9 @@ export default function Home() {
           }}
         >
           <div
+            className="hero-wordmark"
             style={{
-              fontSize: "clamp(15rem, 25vw, 35rem)",
+              fontSize: "clamp(6rem, 18vw, 35rem)",
               fontWeight: 700,
               letterSpacing: "-0.05em",
               textTransform: "uppercase",
@@ -748,53 +749,141 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════
-          BROWSE BY CATEGORY — carousel with arrows
+          BROWSE BY CATEGORY — cursor-driven carousel
           ══════════════════════════════════════ */}
-      <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
+      <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
 
-        {/* Section header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2.4rem 0.8rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
-          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)", letterSpacing: "0.08em" }}>Browse by Category</span>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
-            <button id="cat-prev" onClick={prevCat} aria-label="Previous category" style={{ width: "3.6rem", height: "3.6rem", borderRadius: "50%", border: "0.1rem solid rgba(0,0,0,0.15)", background: "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem", transition: "background 0.2s" }} onMouseEnter={e => (e.currentTarget.style.background = "#000", e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.background = "transparent", e.currentTarget.style.color = "#000")}>←</button>
-            <button id="cat-next" onClick={nextCat} aria-label="Next category" style={{ width: "3.6rem", height: "3.6rem", borderRadius: "50%", border: "0.1rem solid rgba(0,0,0,0.15)", background: "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem", transition: "background 0.2s" }} onMouseEnter={e => (e.currentTarget.style.background = "#000", e.currentTarget.style.color = "#fff")} onMouseLeave={e => (e.currentTarget.style.background = "transparent", e.currentTarget.style.color = "#000")}>→</button>
-            <Link href="/products" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.45)", letterSpacing: "0.08em", marginLeft: "0.8rem" }}>View all</Link>
-          </div>
-        </div>
-
-        {/* 2-up carousel */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", width: "100%" }}>
-          {[HOME_CATEGORIES[catIdx % catTotal], HOME_CATEGORIES[(catIdx + 1) % catTotal]].map((cat, i) => (
+        {/* Cursor-driven navigation zones — left half = prev, right half = next */}
+        <div
+          style={{ position: "relative", width: "100%" }}
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            e.currentTarget.style.cursor = x < rect.width / 2 ? "w-resize" : "e-resize";
+          }}
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            if (x < rect.width / 2) prevCat(); else nextCat();
+          }}
+        >
+          {/* Overlaid label — centered on the images */}
+          <div style={{
+            position: "absolute",
+            top: 0, left: 0, right: 0,
+            zIndex: 10,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "1.8rem 2rem",
+            pointerEvents: "none",
+          }}>
+            <span style={{
+              fontSize: "1.1rem",
+              fontWeight: 600,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#fff",
+              background: "rgba(0,0,0,0.38)",
+              padding: "0.5rem 1.1rem",
+              borderRadius: "2rem",
+              backdropFilter: "blur(6px)",
+            }}>Browse by Category</span>
             <Link
-              key={`${cat.id}-${i}`}
               href="/products"
-              id={`home-cat-carousel-${i}`}
+              id="cat-view-all"
               style={{
-                display: "flex",
-                flexDirection: "column",
-                borderRight: i === 0 ? "0.1rem solid rgba(0,0,0,0.12)" : "none",
+                fontSize: "1.1rem",
+                fontWeight: 600,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "#fff",
+                background: "rgba(0,0,0,0.38)",
+                padding: "0.5rem 1.1rem",
+                borderRadius: "2rem",
                 textDecoration: "none",
-                color: "inherit",
-                overflow: "hidden",
+                backdropFilter: "blur(6px)",
+                pointerEvents: "all",
               }}
-              className="home-ticket-card"
-            >
-              <div style={{ overflow: "hidden", height: "clamp(24rem, 36vw, 54rem)", background: "#111", flexShrink: 0 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={cat.img} alt={cat.name} className="home-ticket-img" style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }} />
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem", padding: "1.6rem 1.2rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                  <span style={{ fontSize: "clamp(1.3rem, 1.5vw, 1.6rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#000" }}>{cat.name}</span>
-                  <span style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{cat.sub}</span>
+            >View all</Link>
+          </div>
+
+          {/* Left arrow overlay */}
+          <div className="cat-arrow-left" style={{
+            position: "absolute",
+            left: "1.6rem",
+            top: "50%",
+            transform: "translateY(-50%)",
+            zIndex: 10,
+            pointerEvents: "none",
+            width: "4rem",
+            height: "4rem",
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.18)",
+            border: "0.1rem solid rgba(255,255,255,0.4)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#fff",
+            fontSize: "1.8rem",
+            backdropFilter: "blur(4px)",
+            opacity: 0.7,
+          }}>←</div>
+
+          {/* Right arrow overlay */}
+          <div className="cat-arrow-right" style={{
+            position: "absolute",
+            right: "1.6rem",
+            top: "50%",
+            transform: "translateY(-50%)",
+            zIndex: 10,
+            pointerEvents: "none",
+            width: "4rem",
+            height: "4rem",
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.18)",
+            border: "0.1rem solid rgba(255,255,255,0.4)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#fff",
+            fontSize: "1.8rem",
+            backdropFilter: "blur(4px)",
+            opacity: 0.7,
+          }}>→</div>
+
+          {/* 2-up carousel grid */}
+          <div className="cat-carousel-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", width: "100%" }}>
+            {[HOME_CATEGORIES[catIdx % catTotal], HOME_CATEGORIES[(catIdx + 1) % catTotal]].map((cat, i) => (
+              <div
+                key={`${cat.id}-${i}`}
+                id={`home-cat-carousel-${i}`}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  borderRight: i === 0 ? "0.1rem solid rgba(0,0,0,0.12)" : "none",
+                  overflow: "hidden",
+                  position: "relative",
+                }}
+                className="home-ticket-card"
+              >
+                <div style={{ overflow: "hidden", height: "clamp(24rem, 36vw, 54rem)", background: "#111", flexShrink: 0 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={cat.img} alt={cat.name} className="home-ticket-img" style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }} />
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
-                  <span style={{ fontSize: "clamp(2.4rem, 4vw, 5.6rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{cat.code}</span>
-                  <span style={{ fontSize: "clamp(2rem, 3.5vw, 4.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{cat.num}</span>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem", padding: "1.6rem 1.2rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    <span style={{ fontSize: "clamp(1.3rem, 1.5vw, 1.6rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#000" }}>{cat.name}</span>
+                    <span style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{cat.sub}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
+                    <span style={{ fontSize: "clamp(2.4rem, 4vw, 5.6rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{cat.code}</span>
+                    <span style={{ fontSize: "clamp(2rem, 3.5vw, 4.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{cat.num}</span>
+                  </div>
                 </div>
               </div>
-            </Link>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
@@ -804,12 +893,12 @@ export default function Home() {
           ══════════════════════════════════════ */}
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2.4rem 0.8rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
-          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)", letterSpacing: "0.08em" }}>Browse by Brands</span>
-          <Link href="/brands" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.45)", letterSpacing: "0.08em" }}>View all</Link>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1.2rem 2rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
+          <span className="t-tag" style={{ color: "rgba(0,0,0,0.75)", letterSpacing: "0.12em", fontSize: "1.2rem", fontWeight: 700 }}>Browse by Brands</span>
+          <Link href="/brands" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.6)", letterSpacing: "0.08em", fontSize: "1.1rem" }}>View all</Link>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", width: "100%" }}>
+        <div className="brands-grid-mobile" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", width: "100%" }}>
           {HOME_BRANDS.map((brand, i) => (
             <Link
               key={brand.id}

@@ -1044,9 +1044,26 @@ input, select, textarea {
   .home-projects-grid .home-ticket-card:nth-child(2n-1) {
     border-right: 0.1rem solid rgba(0,0,0,0.12);
   }
+
+  /* ── Hero AAREN wordmark — mobile fixes ── */
+  .hero-wordmark {
+    font-size: clamp(5.5rem, 17.5vw, 10rem) !important;
+    letter-spacing: -0.03em !important;
+  }
+
+  /* ── Hero section — reduce top padding on mobile ── */
+  .hero-section {
+    padding-top: 5rem !important;
+    padding-bottom: 2.4rem !important;
+  }
+
+  /* ── Category carousel — stack to single column on mobile ── */
+  .cat-carousel-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Brands grid — stack to single column on mobile ── */
+  .brands-grid-mobile {
+    grid-template-columns: 1fr !important;
+  }
 }
-
-
-
-
-
