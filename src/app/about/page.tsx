@@ -90,8 +90,8 @@ export default function About() {
       {/* ── Team Section ── */}
       <div className="about-team-section">
         <div className="team-header">
-          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)" }}>LEADERSHIP</span>
-          <Link href="/team" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.45)" }}>View all team →</Link>
+          <span className="t-tag" style={{ color: "#8c764b", fontWeight: 700 }}>LEADERSHIP</span>
+          <Link href="/team" className="t-tag ul-link" style={{ color: "#8c764b", fontWeight: 700 }}>View all team →</Link>
         </div>
         <div className="team-grid">
           {TEAM.map((member) => (
@@ -108,20 +108,41 @@ export default function About() {
                   />
                 </div>
               </div>
-              <div className="team-card__caption" style={{ display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2.4rem" }}>
+              <div className="team-card__caption" style={{ display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2.4rem 2rem 3rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: "1.6rem" }}>
                   <div className="team-card__caption-left">
-                    <span className="team-card__caption-name" style={{ fontSize: "1.6rem" }}>{member.name}</span>
-                    <span className="team-card__caption-role t-tag" style={{ marginTop: "0.2rem" }}>{member.role}</span>
+                    <span className="team-card__caption-name" style={{ color: "#8c764b", fontSize: "1.7rem", fontWeight: 700, letterSpacing: "0.02em" }}>{member.name}</span>
+                    <span className="team-card__caption-role t-tag" style={{ marginTop: "0.4rem", color: "#000", fontWeight: 700, fontSize: "1.2rem" }}>{member.role}</span>
                   </div>
                   <div className="team-card__caption-right">
                     <span className="team-card__caption-code">{member.code}</span>
                     <span className="team-card__caption-num">{member.num}</span>
                   </div>
                 </div>
-                <p style={{ fontSize: "1.3rem", lineHeight: 1.5, color: "rgba(0,0,0,0.55)", margin: 0, fontWeight: 400 }}>
+                <p style={{ fontSize: "1.35rem", lineHeight: 1.6, color: "rgba(0,0,0,0.6)", margin: 0, fontWeight: 400 }}>
                   {member.bio}
                 </p>
+
+                {/* Minimal sharing/profile social media icons */}
+                <div style={{ display: "flex", gap: "1rem", marginTop: "0.6rem" }}>
+                  <a href="#" className="team-member-social-icon" aria-label="Facebook">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                    </svg>
+                  </a>
+                  <a href="#" className="team-member-social-icon" aria-label="Twitter">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                    </svg>
+                  </a>
+                  <a href="#" className="team-member-social-icon" aria-label="LinkedIn">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                      <rect x="2" y="9" width="4" height="12"></rect>
+                      <circle cx="4" cy="4" r="2"></circle>
+                    </svg>
+                  </a>
+                </div>
               </div>
             </div>
           ))}
@@ -421,6 +442,24 @@ export default function About() {
           letter-spacing: -0.04em;
           line-height: 1;
           color: rgba(0,0,0,0.25);
+        }
+
+        .team-member-social-icon {
+          width: 2.8rem;
+          height: 2.8rem;
+          border-radius: 50%;
+          border: 0.1rem solid rgba(0,0,0,0.12);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba(0,0,0,0.45);
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .team-member-social-icon:hover {
+          border-color: #8c764b;
+          color: #8c764b;
+          transform: translateY(-0.15rem);
         }
       `}</style>
     </div>

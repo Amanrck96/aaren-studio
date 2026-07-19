@@ -3,13 +3,62 @@
 import Image from "next/image";
 
 const TEAM = [
-  { name: "Mohanlal MP", role: "Founder & Director", code: "MM", num: "01", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80", bio: "Acts as the face and voice of AAREN, focusing on company culture, value systems, and the well-being of the team." },
-  { name: "Ramniklal M Vagadiya", role: "Founder & Chairman", code: "RV", num: "02", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80", bio: "Chartered Accountant who defines concrete business plans, provides business focus, and motivates the team toward an innovative vision." },
-  { name: "Madhusudhan MP", role: "Envisioner & Chief Planner", code: "MP", num: "03", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80", bio: "Responsible for establishing long-term strategy, executing business decisions, and scouting for elite, world-class products." },
-  { name: "Koushik", role: "Space Optimizer", code: "KS", num: "04", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80", bio: "Focuses on industry trends, guiding customers through layouts, and optimizing the utility of living spaces." },
-  { name: "Ashwin", role: "Material Consultant", code: "AW", num: "05", image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80", bio: "Manages customer outreach regarding surface and material solutions for architects, developers, and industry professionals." },
-  { name: "Mukund", role: "Product Curator", code: "MK", num: "06", image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80", bio: "Curates merchandise, educates audiences on the product mix, and manages market presence." },
-  { name: "Jignesh", role: "Bagno Space Specialist", code: "JG", num: "07", image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80", bio: "Develops communication narratives, identifies sales channels, and reaches out to customers regarding home improvement and luxury 'Bagno' space trends." },
+  { 
+    name: "MOHANLAL MP", 
+    role: "Founder", 
+    code: "MM", 
+    num: "01", 
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80", 
+    bio: "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team." 
+  },
+  { 
+    name: "RAMNIKLAL M VAGADIYA", 
+    role: "Founder & Chairman", 
+    code: "RV", 
+    num: "02", 
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80", 
+    bio: "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision." 
+  },
+  { 
+    name: "MADHUSUDHAN MP", 
+    role: "Envisioner & Chief Planner", 
+    code: "MP", 
+    num: "03", 
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80", 
+    bio: "He is the vision of AAREN. Responsible for creating the strategy, driving the business and scouting for world class products." 
+  },
+  { 
+    name: "KOU SHIK", 
+    role: "Sales", 
+    code: "KS", 
+    num: "04", 
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80", 
+    bio: "He guides customers to optimize the space utility, is abreast with market trends, and coordinates layouts for projects." 
+  },
+  { 
+    name: "ASHWIN", 
+    role: "Sales", 
+    code: "AW", 
+    num: "05", 
+    image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80", 
+    bio: "Consults with architects and developers to find surface and material solutions, manages customer relations and outreach." 
+  },
+  { 
+    name: "MUKUND", 
+    role: "Sales", 
+    code: "MK", 
+    num: "06", 
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80", 
+    bio: "Curates the products, educates customers on the product mix and manages the store display." 
+  },
+  { 
+    name: "JIGNESH", 
+    role: "Sales", 
+    code: "JG", 
+    num: "07", 
+    image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80", 
+    bio: "Maintains communication narratives, manages the sales channels, and reaches out to customers for Bagno & Surface solutions." 
+  },
 ];
 
 export default function TeamPage() {
@@ -18,12 +67,12 @@ export default function TeamPage() {
       {/* ── Page Header ── */}
       <div className="team-header">
         <div className="team-header__inner">
-          <div className="team-header__meta t-tag" style={{ color: "rgba(0,0,0,0.4)", marginBottom: "2.4rem" }}>
-            CREATIVE UNIT — {TEAM.length} Specialists
+          <div className="team-header__meta t-tag" style={{ color: "#8c764b", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+            MEET THE TEAM
           </div>
-          <h1 className="team-header__title">Our Team</h1>
-          <p className="team-header__desc t-body" style={{ color: "rgba(0,0,0,0.5)", maxWidth: "52rem" }}>
-            A unified group dedicated to bringing luxury interior solutions to the global customer, combining design consulting, curation, and structural engineering.
+          <h1 className="team-header__title" style={{ color: "#8c764b" }}>OUR TEAM</h1>
+          <p className="team-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
+            Aaren Intpro is built by a family of people who are united by a common dream to create a luxury brand that serves the global customer by providing world class products under one roof.
           </p>
         </div>
       </div>
@@ -44,23 +93,58 @@ export default function TeamPage() {
                 />
               </div>
             </div>
-            <div className="team-card__caption" style={{ display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2.4rem" }}>
+            <div className="team-card__caption" style={{ display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2.4rem 2rem 3rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: "1.6rem" }}>
                 <div className="team-card__caption-left">
-                  <span className="team-card__caption-name" style={{ fontSize: "1.6rem" }}>{member.name}</span>
-                  <span className="team-card__caption-role t-tag" style={{ marginTop: "0.2rem" }}>{member.role}</span>
+                  <span className="team-card__caption-name" style={{ color: "#8c764b", fontSize: "1.7rem", fontWeight: 700, letterSpacing: "0.02em" }}>{member.name}</span>
+                  <span className="team-card__caption-role t-tag" style={{ marginTop: "0.4rem", color: "#000", fontWeight: 700, fontSize: "1.2rem" }}>{member.role}</span>
                 </div>
                 <div className="team-card__caption-right">
                   <span className="team-card__caption-code">{member.code}</span>
                   <span className="team-card__caption-num">{member.num}</span>
                 </div>
               </div>
-              <p style={{ fontSize: "1.3rem", lineHeight: 1.5, color: "rgba(0,0,0,0.55)", margin: 0, fontWeight: 400 }}>
+              <p style={{ fontSize: "1.35rem", lineHeight: 1.6, color: "rgba(0,0,0,0.6)", margin: 0, fontWeight: 400 }}>
                 {member.bio}
               </p>
+
+              {/* Minimal sharing/profile social media icons */}
+              <div style={{ display: "flex", gap: "1rem", marginTop: "0.6rem" }}>
+                <a href="#" className="team-member-social-icon" aria-label="Facebook">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                  </svg>
+                </a>
+                <a href="#" className="team-member-social-icon" aria-label="Twitter">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                  </svg>
+                </a>
+                <a href="#" className="team-member-social-icon" aria-label="LinkedIn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
         ))}
+      </div>
+
+      {/* ── Call to Action Join Section ── */}
+      <div className="team-join-section">
+        <h2 className="team-join-title">DO YOU WANT TO JOIN THE CREATIVE TEAM?</h2>
+        <div className="team-join-info">
+          <div className="team-join-circle-icon">i</div>
+          <p className="team-join-hours">Open 9am to 9pm (All days)</p>
+          <div className="team-join-contacts">
+            <a href="tel:+918884464444" className="team-join-link">+91 88844 64444</a>
+            <a href="mailto:info@aarenintpro.com" className="team-join-link">info@aarenintpro.com</a>
+            <p className="team-join-address">NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026</p>
+          </div>
+        </div>
       </div>
 
       <style>{`
