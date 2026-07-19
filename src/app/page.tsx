@@ -176,7 +176,7 @@ const INTRO_SENTENCES = [
   "One Stop Destination for World<br />Class Interior Solutions",
   "Window to the world of interior products",
   "Incredible products of<br />world renowned brands",
-  "Carefully curated products focused on unique experience",
+  "Carefully curated products<br />focused on unique experience",
   "The experience you've only dreamt about",
   "To see the unseen"
 ];
@@ -785,7 +785,7 @@ export default function Home() {
                 <p
                   key={idx}
                   ref={(el) => { introLinesRef.current[idx] = el; }}
-                  className={idx === 0 || idx === 2 ? "intro-drum-label intro-drum-label--first" : "intro-drum-label"}
+                  className={idx === 0 || idx === 2 || idx === 3 ? "intro-drum-label intro-drum-label--first" : "intro-drum-label"}
                   style={{
                     position: "absolute",
                     top: "50%",
