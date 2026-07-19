@@ -229,18 +229,7 @@ export default function Home() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* ── Brand carousel slide state ── */
-  const [brandSlides, setBrandSlides] = useState([0, 0]);
 
-  useEffect(() => {
-    const t = setInterval(() => {
-      setBrandSlides((prev) => [
-        (prev[0] + 1) % BRAND_CAROUSEL_IMGS[0].length,
-        (prev[1] + 1) % BRAND_CAROUSEL_IMGS[1].length,
-      ]);
-    }, 900);
-    return () => clearInterval(t);
-  }, []);
 
   /* ── Client 3D scroll refs ── */
   const containerRef = useRef<HTMLDivElement>(null);
@@ -813,9 +802,9 @@ export default function Home() {
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
         {/* Centered Header bar */}
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "1.2rem 2rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative", minHeight: "5.4rem" }}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
           {/* Left pagination & controls */}
-          <div style={{ position: "absolute", left: "2rem", display: "flex", alignItems: "center", gap: "1.6rem" }}>
+          <div style={{ position: "absolute", left: "2.4rem", bottom: "2.4rem", display: "flex", alignItems: "center", gap: "1.6rem" }}>
             <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 600, color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em" }}>
               {String(catIdx + 1).padStart(2, "0")} / {String(catTotal).padStart(2, "0")}
             </span>
@@ -832,10 +821,10 @@ export default function Home() {
           </div>
 
           {/* Centered Title */}
-          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Browse by Category</span>
+          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Browse by Category</span>
 
           {/* Right link */}
-          <Link href="/products" id="cat-view-all" className="t-tag ul-link" style={{ position: "absolute", right: "2rem", color: "rgba(0,0,0,0.5)", letterSpacing: "0.08em", fontSize: "1.1rem" }}>View all</Link>
+          <Link href="/products" id="cat-view-all" className="t-tag ul-link" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "rgba(0,0,0,0.5)", letterSpacing: "0.08em", fontSize: "1.25rem" }}>View all</Link>
         </div>
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
@@ -931,9 +920,12 @@ export default function Home() {
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
         {/* Centered Header bar */}
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "1.2rem 2rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative", minHeight: "5.4rem" }}>
-          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Browse by Brands</span>
-          <Link href="/brands" className="t-tag ul-link" style={{ position: "absolute", right: "2rem", color: "rgba(0,0,0,0.6)", letterSpacing: "0.08em", fontSize: "1.1rem" }}>View all</Link>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
+          {/* Centered Title */}
+          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Browse by Brands</span>
+
+          {/* Right link */}
+          <Link href="/brands" className="t-tag ul-link" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "rgba(0,0,0,0.6)", letterSpacing: "0.08em", fontSize: "1.25rem" }}>View all</Link>
         </div>
 
         {/* TOP ROW: 4 small columns */}
@@ -989,34 +981,20 @@ export default function Home() {
               }}
               className="home-ticket-card"
             >
-              {/* Fast photo carousel */}
-              <div style={{ position: "relative", overflow: "hidden", height: "clamp(28rem, 42vw, 64rem)", background: "#111", flexShrink: 0 }}>
-                {BRAND_CAROUSEL_IMGS[i].map((src, si) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    key={si}
-                    src={src}
-                    alt={brand.name}
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      opacity: brandSlides[i] === si ? 1 : 0,
-                      transition: "opacity 0.35s ease",
-                      transform: brandSlides[i] === si ? "scale(1.03)" : "scale(1)",
-                      transitionProperty: "opacity, transform",
-                      transitionDuration: "0.35s",
-                    }}
-                  />
-                ))}
-                {/* Slide dots */}
-                <div style={{ position: "absolute", bottom: "1.2rem", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "0.5rem", zIndex: 5 }}>
-                  {BRAND_CAROUSEL_IMGS[i].map((_, si) => (
-                    <div key={si} style={{ width: "0.5rem", height: "0.5rem", borderRadius: "50%", background: brandSlides[i] === si ? "#fff" : "rgba(255,255,255,0.35)", transition: "background 0.3s" }} />
-                  ))}
-                </div>
+              {/* Static image */}
+              <div style={{ overflow: "hidden", height: "clamp(28rem, 42vw, 64rem)", background: "#111", flexShrink: 0 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={BRAND_CAROUSEL_IMGS[i][0]}
+                  alt={brand.name}
+                  className="home-ticket-img"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)",
+                  }}
+                />
               </div>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem", padding: "1.6rem 1.4rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
@@ -1039,9 +1017,13 @@ export default function Home() {
           ══════════════════════════════════════ */}
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2.4rem 0.8rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
-          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)" }}>Selected Projects</span>
-          <Link href="/work" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.6)", letterSpacing: "0.08em", fontSize: "1.1rem" }}>View all</Link>
+        {/* Centered Header bar */}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
+          {/* Centered Title */}
+          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Selected Projects</span>
+
+          {/* Right link */}
+          <Link href="/work" className="t-tag ul-link" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "rgba(0,0,0,0.6)", letterSpacing: "0.08em", fontSize: "1.25rem" }}>View all</Link>
         </div>
 
         {/* 4-across on desktop, 2-across on mobile */}
