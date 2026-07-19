@@ -1019,13 +1019,13 @@ input, select, textarea {
 
 @media(min-width: 768px) {
   .intro-drum-label--first {
-    font-size: 3.2rem !important;
+    font-size: 3.3rem !important;
   }
 }
 
 @media(min-width: 1240px) {
   .intro-drum-label--first {
-    font-size: 4.4rem !important;
+    font-size: 4.5rem !important;
   }
 }
 
