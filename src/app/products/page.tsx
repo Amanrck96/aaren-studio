@@ -133,13 +133,51 @@ export default function ProductsPage() {
       {/* ── Page Header ── */}
       <div className="products-header">
         <div className="products-header__inner">
-          <div className="products-header__meta t-tag" style={{ color: "rgba(0,0,0,0.4)", marginBottom: "2.4rem" }}>
-            Material Catalog — {PRODUCT_CATEGORIES.length} Categories
+          <div className="products-header__meta t-tag" style={{ color: "#8c764b", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "2.4rem" }}>
+            MATERIAL CATALOG — {PRODUCT_CATEGORIES.length} Categories
           </div>
           <h1 className="products-header__title">Products</h1>
           <p className="products-header__desc t-body" style={{ color: "rgba(0,0,0,0.5)", maxWidth: "52rem" }}>
             A curated catalog of premium architectural materials, surfaces, hardware, and wellness solutions — sourced from the world&apos;s finest manufacturers.
           </p>
+        </div>
+      </div>
+
+      {/* ── Client Review Layout Switcher Banner ── */}
+      <div className="client-review-banner">
+        <div className="client-review-banner__content">
+          <span className="client-review-banner__tag">Client Review Mode</span>
+          <h2 className="client-review-banner__title">Preview Layout Grid Options</h2>
+          <p className="client-review-banner__desc">
+            Select one of the 5 custom product listing layouts below. Once approved by the client, we will implement this look across all category catalog pages.
+          </p>
+          <div className="client-review-banner__grid">
+            <Link href="/products/demo-archiproducts" className="layout-preview-card">
+              <span className="layout-num">01</span>
+              <span className="layout-name">Archiproducts Style</span>
+              <span className="layout-sub">Shower Panels Grid</span>
+            </Link>
+            <Link href="/products/demo-undomus" className="layout-preview-card">
+              <span className="layout-num">02</span>
+              <span className="layout-name">Undomus Style</span>
+              <span className="layout-sub">Ceramic Tiles Grid</span>
+            </Link>
+            <Link href="/products/demo-madheke" className="layout-preview-card">
+              <span className="layout-num">03</span>
+              <span className="layout-name">Madheke Style</span>
+              <span className="layout-sub">Sofas Editorial Grid</span>
+            </Link>
+            <Link href="/products/demo-taamaa" className="layout-preview-card">
+              <span className="layout-num">04</span>
+              <span className="layout-name">Taamaa Style</span>
+              <span className="layout-sub">Lighting Studio Grid</span>
+            </Link>
+            <Link href="/products/demo-thecollective" className="layout-preview-card">
+              <span className="layout-num">05</span>
+              <span className="layout-name">The Collective Style</span>
+              <span className="layout-sub">Women Shirts Grid</span>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -405,6 +443,115 @@ export default function ProductsPage() {
           color: #000;
           max-width: 48rem;
           line-height: 1.3;
+        }
+
+        /* ── Client Review Banner ── */
+        .client-review-banner {
+          background: #0f172a;
+          color: #fff;
+          padding: 4rem 1.2rem;
+          border-bottom: 0.1rem solid rgba(255,255,255,0.1);
+        }
+
+        @media (min-width: 768px) {
+          .client-review-banner {
+            padding: 6rem 2.4rem;
+          }
+        }
+
+        .client-review-banner__content {
+          max-width: 1320px;
+          margin: 0 auto;
+        }
+
+        .client-review-banner__tag {
+          font-size: 1.1rem;
+          font-weight: 700;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          color: #38bdf8;
+          display: inline-block;
+          margin-bottom: 1.6rem;
+        }
+
+        .client-review-banner__title {
+          font-size: clamp(2.4rem, 4vw, 4rem);
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          margin-bottom: 1.6rem;
+          color: #fff;
+        }
+
+        .client-review-banner__desc {
+          font-size: clamp(1.4rem, 1.8vw, 1.6rem);
+          line-height: 1.5;
+          color: #94a3b8;
+          max-width: 72rem;
+          margin-bottom: 4rem;
+        }
+
+        .client-review-banner__grid {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 1.6rem;
+        }
+
+        @media (max-width: 1024px) {
+          .client-review-banner__grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (max-width: 640px) {
+          .client-review-banner__grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .layout-preview-card {
+          background: #1e293b;
+          border: 0.1rem solid rgba(255,255,255,0.08);
+          padding: 2.4rem 2rem;
+          text-decoration: none;
+          color: #fff;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .layout-preview-card:hover {
+          background: #38bdf8;
+          transform: translateY(-0.4rem);
+          border-color: #38bdf8;
+        }
+
+        .layout-preview-card:hover .layout-num {
+          color: rgba(255,255,255,0.6);
+        }
+
+        .layout-preview-card:hover .layout-sub {
+          color: #ffffff;
+        }
+
+        .layout-num {
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 2.4rem;
+          font-weight: 800;
+          color: rgba(255,255,255,0.15);
+          transition: color 0.3s;
+        }
+
+        .layout-name {
+          font-size: 1.45rem;
+          font-weight: 700;
+          letter-spacing: -0.01em;
+        }
+
+        .layout-sub {
+          font-size: 1.2rem;
+          color: #94a3b8;
+          transition: color 0.3s;
         }
       `}</style>
     </div>
