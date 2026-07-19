@@ -848,16 +848,14 @@ export default function Home() {
                   />
                 </div>
 
-                {/* Caption Bar: Category Name (Left), Short Code (Center), Serial Number (Right) */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
                     <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, textTransform: "uppercase", color: "#000" }}>{cat.name}</span>
                     <span style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.2 }}>{cat.sub}</span>
                   </div>
-                  <div style={{ textAlign: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
                     <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{cat.code}</span>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
                     <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{cat.num}</span>
                   </div>
                 </div>
