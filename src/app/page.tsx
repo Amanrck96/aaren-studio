@@ -849,16 +849,16 @@ export default function Home() {
                 </div>
 
                 {/* Caption Bar: Category Name (Left), Short Code (Center), Serial Number (Right) */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: "1.2rem", padding: "1.2rem 1.4rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem", textAlign: "left" }}>
-                    <span style={{ fontSize: "clamp(1.1rem, 1.2vw, 1.4rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#000" }}>{cat.name}</span>
-                    <span style={{ fontSize: "1.0rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em", textTransform: "uppercase" }}>{cat.sub}</span>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
+                    <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, textTransform: "uppercase", color: "#000" }}>{cat.name}</span>
+                    <span style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.2 }}>{cat.sub}</span>
                   </div>
                   <div style={{ textAlign: "center" }}>
-                    <span style={{ fontSize: "clamp(1.4rem, 2vw, 2.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{cat.code}</span>
+                    <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{cat.code}</span>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <span style={{ fontSize: "clamp(1.2rem, 1.6vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{cat.num}</span>
+                    <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{cat.num}</span>
                   </div>
                 </div>
               </Link>
