@@ -1012,6 +1012,23 @@ input, select, textarea {
   }
 }
 
+/* Modifier class for the first (longest) sentence */
+.intro-drum-label--first {
+  font-size: 1.7rem !important;
+}
+
+@media(min-width: 768px) {
+  .intro-drum-label--first {
+    font-size: 3.0rem !important;
+  }
+}
+
+@media(min-width: 1240px) {
+  .intro-drum-label--first {
+    font-size: 4.0rem !important;
+  }
+}
+
 .home-clients__item {
   color: #c8cbd0;
   opacity: 0.3;
