@@ -785,7 +785,7 @@ export default function Home() {
                 <p
                   key={idx}
                   ref={(el) => { introLinesRef.current[idx] = el; }}
-                  className="intro-drum-label"
+                  className={idx === 0 ? "intro-drum-label intro-drum-label--first" : "intro-drum-label"}
                   style={{
                     position: "absolute",
                     top: "50%",
