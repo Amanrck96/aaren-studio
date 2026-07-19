@@ -5,13 +5,13 @@ import Link from "next/link";
 import { useState } from "react";
 
 const PRODUCTS = [
-  { id: 1, name: "BRERA SOFA SYSTEM", designer: "Jean-Marie Massaud", desc: "Monolithic modular seating system covered in luxury linen fabric.", space: "Living Room", img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80" },
-  { id: 2, name: "YOKO AMCHAIR", designer: "Inoda & Staje", desc: "Solid ash wood frame with woven straw seat and soft leather backrest.", space: "Lounge", img: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=800&q=80" },
-  { id: 3, name: "SENDAI LOUNGE SOFA", designer: "Toyo Ito", desc: "Sculptural compact sofa, upholstered in wool blend with bronze feet.", space: "Office", img: "https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=800&q=80" },
-  { id: 4, name: "BELT CORNER SOFA", designer: "Rodolfo Dordoni", desc: "Plush curvilinear modular sofa system in premium velvet.", space: "Living Room", img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80" },
+  { id: 1, name: "MADHEKE SOFA SYSTEM", designer: "Jean-Marie Massaud", desc: "Handcrafted modular seating system covered in premium fabric & leather.", space: "Sofas", img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80" },
+  { id: 2, name: "LOCO WALNUT DINING TABLE", designer: "Loco", desc: "Solid walnut top table with brushed brass legs and structure.", space: "Tables", img: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=800&q=80" },
+  { id: 3, name: "SLASHFORM WALK-IN WARDROBE", designer: "Slashform", desc: "Flush lacquered panels, integrated walk-in storage unit with LED rails.", space: "Storage", img: "https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=800&q=80" },
+  { id: 4, name: "LOCO BESPOKE MILLWORK UNIT", designer: "Loco", desc: "Bespoke architectural wall storage unit with fluted oak finish.", space: "Millwork", img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80" },
 ];
 
-const SPACES = ["All", "Living Room", "Lounge", "Office"];
+const SPACES = ["All", "Sofas", "Tables", "Storage", "Millwork"];
 
 export default function MadhekeDemo() {
   const [activeSpace, setActiveSpace] = useState("All");
@@ -40,14 +40,14 @@ export default function MadhekeDemo() {
         {/* Editorial Header */}
         <header className="ma-header">
           <div className="ma-header-top">
-            <span className="ma-meta">MADHEKE COLLECTION</span>
+            <span className="ma-meta">FURNITURE &amp; STORAGE</span>
             <div className="ma-sort">
               <span>SORT BY: POPULARITY</span>
             </div>
           </div>
-          <h1 className="ma-title">The Sofa</h1>
+          <h1 className="ma-title">FURNITURE</h1>
           <p className="ma-subtitle">
-            An editorial showcase of sculptural seating systems and modular lounging items. Designed for ultimate visual harmony and spatial expression.
+            An editorial showcase of handcrafted sofas, dining tables, wardrobe systems, and bespoke architectural millwork.
           </p>
         </header>
 

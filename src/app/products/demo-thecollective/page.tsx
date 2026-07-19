@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useState } from "react";
 
 const PRODUCTS = [
-  { id: 1, brand: "EQUIPMENT", name: "CLASSIC LINEN SHIRT", price: "₹18,500", color: "Off-White", imgFront: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" },
-  { id: 2, brand: "VINCE", name: "SILK POP OVER BLOUSE", price: "₹24,000", color: "Sage Green", imgFront: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" },
-  { id: 3, brand: "EQUIPMENT", name: "SLIM SIGNATURE SILK SHIRT", price: "₹21,000", color: "Midnight Blue", imgFront: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80" },
-  { id: 4, brand: "THEORY", name: "UTILITY STRETCH SHIRT", price: "₹16,500", color: "Khaki", imgFront: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80" },
+  { id: 1, brand: "FORMICA", name: "FENIX NTM® SURFACE", price: "₹12,500", color: "Nero Ingo", imgFront: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" },
+  { id: 2, brand: "ALPI", name: "ALPI SIGNATURE VENEER", price: "₹24,000", color: "Smoked Oak", imgFront: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" },
+  { id: 3, brand: "INCLASS", name: "INCLASS HPL LAMINATE", price: "₹8,500", color: "Brushed Brass", imgFront: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80" },
+  { id: 4, brand: "FORMICA", name: "DECOMETAL SURFACING", price: "₹16,500", color: "Rose Gold", imgFront: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80" },
 ];
 
 export default function TheCollectiveDemo() {
@@ -38,13 +38,13 @@ export default function TheCollectiveDemo() {
       <div className="tc-container">
         {/* Breadcrumb */}
         <div className="tc-breadcrumb">
-          <Link href="#">HOME</Link> / <Link href="#">WOMEN</Link> / <span className="active">SHIRTS & BLOUSES</span>
+          <Link href="#">HOME</Link> / <Link href="#">SURFACES</Link> / <span className="active">LAMINATES &amp; VENEERS</span>
         </div>
 
         {/* Fashion Header */}
         <header className="tc-header">
           <div className="tc-header-inner">
-            <h1 className="tc-title">SHIRTS &amp; BLOUSES</h1>
+            <h1 className="tc-title">LAMINATES &amp; VENEERS</h1>
             <div className="tc-sort-dropdown">
               <span>SORT BY: NEW IN ▾</span>
             </div>
@@ -56,9 +56,9 @@ export default function TheCollectiveDemo() {
           {/* Sidebar */}
           <aside className="tc-sidebar">
             <div className="sidebar-accordion">
-              <h3 className="accordion-header">DESIGNER</h3>
+              <h3 className="accordion-header">BRAND</h3>
               <div className="accordion-content">
-                {["All", "EQUIPMENT", "VINCE", "THEORY"].map((brand) => (
+                {["All", "FORMICA", "ALPI", "INCLASS"].map((brand) => (
                   <button
                     key={brand}
                     className={`accordion-btn ${selectedBrand === brand ? "active" : ""}`}

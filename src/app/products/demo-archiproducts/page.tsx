@@ -5,15 +5,15 @@ import Link from "next/link";
 import { useState } from "react";
 
 const PRODUCTS = [
-  { id: 1, brand: "FIMA CARLO FRATTINI", name: "OUTDOOR SHOWER PANEL", desc: "Freestanding stainless steel shower column", category: "Shower Columns", tags: ["New", "BIM", "CAD"], img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" },
-  { id: 2, brand: "FALPER", name: "MAESTRO SHOWER", desc: "Wall-mounted built-in shower panel in brass", category: "Shower Panels", tags: ["BIM"], img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80" },
-  { id: 3, brand: "MILDUE", name: "SYNCHRO PANEL", desc: "Stainless steel ceiling shower head with mist option", category: "Shower Heads", tags: ["Eco", "CAD"], img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80" },
-  { id: 4, brand: "FIMA CARLO FRATTINI", name: "SOUL PANEL", desc: "Thermostatic shower panel with body jets", category: "Shower Panels", tags: ["New", "BIM"], img: "https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&w=600&q=80" },
-  { id: 5, brand: "ANTONIOLUPI", name: "METEOR COLUMN", desc: "Minimalist stainless steel shower column", category: "Shower Columns", tags: ["CAD"], img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80" },
-  { id: 6, brand: "FALPER", name: "ECCENTRICO PANEL", desc: "Integrated shower head and shelf unit", category: "Shower Heads", tags: ["New", "Eco"], img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80" },
+  { id: 1, brand: "FIMA CARLO FRATTINI", name: "FIMA TAPWARE SYSTEM", desc: "Complete luxury brass mixer and tapware range", category: "Shower Fittings", tags: ["New", "BIM", "CAD"], img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" },
+  { id: 2, brand: "FALPER", name: "FALPER VIA VENETO VANITY", desc: "Italian designer timber vanity unit with integrated washbasin", category: "Bathroom Vanities", tags: ["BIM"], img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80" },
+  { id: 3, brand: "MILDUE", name: "MILDUE SPA ACCESSORIES", desc: "Luxury solid brass shelves, towel rails, and bath hooks", category: "Accessories", tags: ["Eco", "CAD"], img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80" },
+  { id: 4, brand: "ANTONIOLUPI", name: "ANTONIOLUPI ECLIPSE BATH", desc: "Sculptural solid surface freestanding bathtub", category: "Bathtubs", tags: ["New", "BIM"], img: "https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&w=600&q=80" },
+  { id: 5, brand: "FIMA CARLO FRATTINI", name: "THERMOSTATIC SHOWER COLUMN", desc: "Sleek wall-mounted thermostatic shower with rain head", category: "Shower Fittings", tags: ["CAD"], img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80" },
+  { id: 6, brand: "FALPER", name: "MAESTRO WASHBASIN", desc: "Pedestal washbasin in luxury matte marble composite", category: "Bathroom Vanities", tags: ["New", "Eco"], img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80" },
 ];
 
-const CATEGORIES = ["All", "Shower Columns", "Shower Panels", "Shower Heads"];
+const CATEGORIES = ["All", "Shower Fittings", "Bathroom Vanities", "Accessories", "Bathtubs"];
 
 export default function ArchiproductsDemo() {
   const [activeCat, setActiveCat] = useState("All");
@@ -50,13 +50,13 @@ export default function ArchiproductsDemo() {
       <div className="ap-container">
         {/* Breadcrumb */}
         <div className="ap-breadcrumb">
-          <Link href="#">Home</Link> / <Link href="#">Products</Link> / <Link href="#">Bathroom</Link> / <span className="active">Shower Panels</span>
+          <Link href="#">Home</Link> / <Link href="#">Products</Link> / <Link href="#">Bathroom</Link> / <span className="active">Bathroom Fittings</span>
         </div>
 
         {/* Header Title */}
         <div className="ap-header">
-          <h1 className="ap-title">SHOWER PANELS</h1>
-          <p className="ap-subtitle">Explore a premium catalog of architectural outdoor columns and luxury thermostatic panels.</p>
+          <h1 className="ap-title">BATHROOM FITTINGS</h1>
+          <p className="ap-subtitle">Explore a premium catalog of luxury Italian bathroom vanities, shower tapware, and designer accessories.</p>
         </div>
 
         {/* Main Content Grid */}

@@ -5,16 +5,16 @@ import Link from "next/link";
 import { useState } from "react";
 
 const PRODUCTS = [
-  { id: 1, name: "CALACATTA EXTRA MARBLE", collection: "Marvel Shine", look: "Marble Look", size: "120x120 cm", finish: "Polished", img: "https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=600&q=80" },
-  { id: 2, name: "GRIGIO INTENSO STONE", collection: "Brave Stone", look: "Stone Look", size: "60x120 cm", finish: "Matt", img: "https://images.unsplash.com/photo-1502005229762-fc1b2d812ca5?auto=format&fit=crop&w=600&q=80" },
-  { id: 3, name: "ROVERE NATURALE WOOD", collection: "Heartwood", look: "Wood Look", size: "20x120 cm", finish: "Matt", img: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&w=600&q=80" },
-  { id: 4, name: "PORTLAND GREY CONCRETE", collection: "Boost Concrete", look: "Concrete Look", size: "120x120 cm", finish: "Matt", img: "https://images.unsplash.com/photo-1585412727339-54e4bae3bbf9?auto=format&fit=crop&w=600&q=80" },
-  { id: 5, name: "STATUARIO LUXURY GLOW", collection: "Marvel Shine", look: "Marble Look", size: "60x60 cm", finish: "Polished", img: "https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=600&q=80" },
-  { id: 6, name: "DECK ROVERE SCURO", collection: "Heartwood", look: "Wood Look", size: "20x120 cm", finish: "Textured", img: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&w=600&q=80" },
+  { id: 1, name: "PORCELAIN FLOORINGS & WALLS", collection: "Mirage", look: "Floorings & Walls", size: "120x120 cm", finish: "Polished", img: "https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=600&q=80" },
+  { id: 2, name: "DECORATIVE ACCENT TILES", collection: "Mirage", look: "Decorative", size: "60x120 cm", finish: "Lappato", img: "https://images.unsplash.com/photo-1502005229762-fc1b2d812ca5?auto=format&fit=crop&w=600&q=80" },
+  { id: 3, name: "20MM OUTDOOR SLABS", collection: "Mirage", look: "20mm Outdoor", size: "60x120 cm", finish: "Anti-slip", img: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&w=600&q=80" },
+  { id: 4, name: "TERRAZZO & TERRACOTTA", collection: "Curated", look: "Terrazzo & Terracotta", size: "60x60 cm", finish: "Natural", img: "https://images.unsplash.com/photo-1585412727339-54e4bae3bbf9?auto=format&fit=crop&w=600&q=80" },
+  { id: 5, name: "SWIMMING POOL MOSAIC", collection: "Curated", look: "Swimming Pool", size: "60x60 cm", finish: "Anti-slip", img: "https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=600&q=80" },
+  { id: 6, name: "LARGE FORMAT FAÇADE", collection: "Mirage", look: "Façade", size: "120x120 cm", finish: "Structured", img: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&w=600&q=80" },
 ];
 
-const LOOKS = ["All", "Marble Look", "Stone Look", "Wood Look", "Concrete Look"];
-const FINISHES = ["All", "Matt", "Polished", "Textured"];
+const LOOKS = ["All", "Floorings & Walls", "Decorative", "20mm Outdoor", "Terrazzo & Terracotta", "Swimming Pool", "Façade"];
+const FINISHES = ["All", "Polished", "Lappato", "Natural", "Structured", "Anti-slip"];
 
 export default function UndomusDemo() {
   const [activeLook, setActiveLook] = useState("All");

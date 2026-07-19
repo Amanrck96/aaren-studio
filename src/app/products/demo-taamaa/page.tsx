@@ -5,13 +5,13 @@ import Link from "next/link";
 import { useState } from "react";
 
 const PRODUCTS = [
-  { id: 1, name: "ORB PENDANT LIGHT", type: "Pendant", sizeClass: "wide", imgOff: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80", imgOn: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=800&q=80" },
-  { id: 2, name: "ARC TABLE LAMP", type: "Table Lamp", sizeClass: "tall", imgOff: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=800&q=80", imgOn: "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=800&q=80" },
-  { id: 3, name: "SLATE WALL SCONCE", type: "Wall Sconce", sizeClass: "tall", imgOff: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=800&q=80", imgOn: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80" },
-  { id: 4, name: "DOME FLOOR LAMP", type: "Floor Lamp", sizeClass: "wide", imgOff: "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=800&q=80", imgOn: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=800&q=80" },
+  { id: 1, name: "TAAMAA DESIGN LIGHT", type: "Lighting", sizeClass: "wide", imgOff: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80", imgOn: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=800&q=80" },
+  { id: 2, name: "WALTZ BRONZE GLASS MIRROR", type: "Frameless", sizeClass: "tall", imgOff: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=800&q=80", imgOn: "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=800&q=80" },
+  { id: 3, name: "MIRA FRAMELESS MIRROR", type: "Frameless", sizeClass: "tall", imgOff: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=800&q=80", imgOn: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80" },
+  { id: 4, name: "GELLI PRECISION BRASS FRAME", type: "Framed", sizeClass: "wide", imgOff: "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=800&q=80", imgOn: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=800&q=80" },
 ];
 
-const TYPES = ["All", "Pendant", "Table Lamp", "Wall Sconce", "Floor Lamp"];
+const TYPES = ["All", "Lighting", "Frameless", "Framed"];
 
 export default function TaamaaDemo() {
   const [activeType, setActiveType] = useState("All");
@@ -40,9 +40,9 @@ export default function TaamaaDemo() {
       <div className="tm-container">
         {/* Modern Studio Header */}
         <header className="tm-header">
-          <span className="tm-brand-tag">TAAMAA</span>
-          <h1 className="tm-title">Lighting collection</h1>
-          <p className="tm-desc">A playful, geometric range of lighting objects. Hover over a product tile to illuminate the lamp.</p>
+          <span className="tm-brand-tag">LIGHTING &amp; MIRRORS</span>
+          <h1 className="tm-title">LIGHTING &amp; MIRRORS</h1>
+          <p className="tm-desc">A playful, geometric range of designer lighting and mirror objects. Hover over a product tile to illuminate the light source.</p>
         </header>
 
         {/* Quick Tag Swapping */}
