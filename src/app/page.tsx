@@ -297,7 +297,7 @@ export default function Home() {
 
       if (clients.length === 0) return;
 
-      // 0. Intro Section Scroll-driven text animation
+      // 0. Intro Section Scroll-driven 3D Drum Text Animation
       const introLines = introLinesRef.current.filter(Boolean) as HTMLParagraphElement[];
       if (introLines.length > 0 && introSectionRef.current && introTextContainerRef.current) {
         if (prefersReducedMotion) {
@@ -309,80 +309,108 @@ export default function Home() {
             color: "#eaeef4"
           });
         } else {
-          // Initialize style of first item as active, rest as inactive
-          gsap.set(introLines, {
-            opacity: 0.25,
-            scale: 0.8,
-            rotationX: (i) => (i === 0 ? 0 : 30),
-            z: (i) => (i === 0 ? 0 : -100),
-            color: (i) => (i === 0 ? "#eaeef4" : "rgba(234, 238, 244, 0.4)"),
-            transformOrigin: "50% 50%",
-          });
-          if (introLines[0]) {
-            gsap.set(introLines[0], { opacity: 1, scale: 1.15 });
-          }
+          // Define radius matching the viewport
+          const introSetups = [
+            { query: "(max-width: 767px)", radius: 140 },
+            { query: "(min-width: 768px) and (max-width: 1239px)", radius: 240 },
+            { query: "(min-width: 1240px)", radius: 360 }
+          ];
 
-          const introMapper = gsap.utils.pipe(
-            gsap.utils.mapRange(0, 1, 0, introLines.length - 1),
-            gsap.utils.snap(1)
-          );
+          introSetups.forEach(({ query, radius }) => {
+            mm.add(query, () => {
+              const origin = `50% 50% -${radius}px`;
+              const angleStep = 55; // spacing in degrees for each segment
 
-          ScrollTrigger.create({
-            trigger: introSectionRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true,
-            onUpdate: (self) => {
-              const activeIdx = introMapper(self.progress);
-              const container = introTextContainerRef.current;
-              if (!container) return;
-
-              const targetLine = introLines[activeIdx];
-              if (!targetLine) return;
-
-              const containerHeight = container.clientHeight;
-              const targetOffsetTop = targetLine.offsetTop;
-              const targetHeight = targetLine.clientHeight;
-
-              // Translate the container to center the active line
-              const targetY = -(targetOffsetTop + targetHeight / 2 - containerHeight / 2);
-
-              gsap.to(container, {
-                y: targetY,
-                duration: 0.4,
-                ease: "power2.out",
-                overwrite: "auto"
+              // Position each sentence on the 3D drum cylinder
+              introLines.forEach((el, i) => {
+                const rotationX = -angleStep * i;
+                gsap.set(el, {
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  xPercent: -50,
+                  yPercent: -50,
+                  z: radius,
+                  rotationX: rotationX,
+                  transformOrigin: origin,
+                  force3D: true,
+                  scale: 0.8,
+                  opacity: 0.15,
+                  color: "rgba(234, 238, 244, 0.4)",
+                  width: "100%",
+                  textAlign: "center"
+                });
               });
 
-              // Apply 3D perspective Receding effect
-              introLines.forEach((el, i) => {
-                const diff = Math.abs(i - activeIdx);
-                if (diff === 0) {
-                  gsap.to(el, {
-                    opacity: 1,
-                    scale: 1.15,
-                    rotationX: 0,
-                    z: 0,
-                    color: "#eaeef4",
-                    duration: 0.4,
-                    ease: "power2.out",
-                    overwrite: "auto"
-                  });
-                } else {
-                  const direction = i < activeIdx ? -1 : 1;
-                  gsap.to(el, {
-                    opacity: 0.25,
-                    scale: 0.8,
-                    rotationX: 30 * direction,
-                    z: -100,
-                    color: "rgba(234, 238, 244, 0.4)",
-                    duration: 0.4,
-                    ease: "power2.out",
-                    overwrite: "auto"
-                  });
+              // Initial state for the first item
+              if (introLines[0]) {
+                gsap.set(introLines[0], {
+                  scale: 1.15,
+                  opacity: 1,
+                  color: "#eaeef4"
+                });
+              }
+
+              const lastRotation = -angleStep * (introLines.length - 1);
+
+              const introMapper = gsap.utils.pipe(
+                gsap.utils.mapRange(0, 1, 0, introLines.length - 1),
+                gsap.utils.snap(1)
+              );
+
+              // Timeline for rotating the cylinder container
+              const tl = gsap.timeline({
+                scrollTrigger: {
+                  trigger: introSectionRef.current,
+                  start: "top top",
+                  end: "bottom bottom",
+                  scrub: true,
+                  onUpdate: (self) => {
+                    const activeIdx = introMapper(self.progress);
+                    introLines.forEach((el, i) => {
+                      const diff = Math.abs(i - activeIdx);
+                      if (diff === 0) {
+                        gsap.to(el, {
+                          opacity: 1,
+                          scale: 1.15,
+                          color: "#eaeef4",
+                          duration: 0.35,
+                          ease: "power1.out",
+                          overwrite: "auto"
+                        });
+                      } else {
+                        gsap.to(el, {
+                          opacity: 0.15,
+                          scale: 0.8,
+                          color: "rgba(234, 238, 244, 0.4)",
+                          duration: 0.35,
+                          ease: "power1.out",
+                          overwrite: "auto"
+                        });
+                      }
+                    });
+                  }
                 }
               });
-            }
+
+              tl.fromTo(introTextContainerRef.current,
+                { rotationX: 0 },
+                {
+                  rotationX: -lastRotation,
+                  ease: "none",
+                  transformOrigin: "50% 50%",
+                  force3D: true,
+                }
+              );
+
+              return () => {
+                tl.kill();
+                gsap.set(introLines, { clearProps: "all" });
+                if (introTextContainerRef.current) {
+                  gsap.set(introTextContainerRef.current, { clearProps: "all" });
+                }
+              };
+            });
           });
         }
       }
@@ -741,17 +769,16 @@ export default function Home() {
             <div
               ref={introTextContainerRef}
               style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "2.5rem",
-                willChange: "transform",
                 position: "absolute",
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 width: "100%",
+                height: "100%",
                 transformStyle: "preserve-3d",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               {INTRO_SENTENCES.map((line, idx) => (
@@ -759,6 +786,10 @@ export default function Home() {
                   key={idx}
                   ref={(el) => { introLinesRef.current[idx] = el; }}
                   style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
                     fontSize: "clamp(2rem, 3.5vw, 3.6rem)",
                     fontWeight: 700,
                     textTransform: "uppercase",
