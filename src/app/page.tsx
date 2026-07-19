@@ -173,7 +173,7 @@ const BRAND_CAROUSEL_IMGS = [
 ];
 
 const INTRO_SENTENCES = [
-  "One Stop Destination for World Class Interior Solutions",
+  "One Stop Destination for World<br />Class Interior Solutions",
   "Window to the world of interior products",
   "Incredible products of world renowned brands",
   "Carefully curated products focused on unique experience",
@@ -799,9 +799,8 @@ export default function Home() {
                     color: "#eaeef4",
                     willChange: "transform, opacity",
                   }}
-                >
-                  {line}
-                </p>
+                  dangerouslySetInnerHTML={{ __html: line }}
+                />
               ))}
             </div>
           </div>
