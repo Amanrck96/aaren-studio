@@ -784,15 +784,13 @@ export default function Home() {
           ══════════════════════════════════════ */}
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
-        {/* Header bar */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1.2rem 2rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
-          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)" }}>Browse by Category</span>
-          <div style={{ display: "flex", alignItems: "center", gap: "1.6rem" }}>
-            {/* Counter */}
+        {/* Centered Header bar */}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "1.2rem 2rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative", minHeight: "5.4rem" }}>
+          {/* Left pagination & controls */}
+          <div style={{ position: "absolute", left: "2rem", display: "flex", alignItems: "center", gap: "1.6rem" }}>
             <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 600, color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em" }}>
               {String(catIdx + 1).padStart(2, "0")} / {String(catTotal).padStart(2, "0")}
             </span>
-            {/* Dot pills */}
             <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
               {HOME_CATEGORIES.map((_, i) => (
                 <button
@@ -803,8 +801,13 @@ export default function Home() {
                 />
               ))}
             </div>
-            <Link href="/products" id="cat-view-all" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.5)", letterSpacing: "0.08em", fontSize: "1.1rem" }}>View all</Link>
           </div>
+
+          {/* Centered Title */}
+          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Browse by Category</span>
+
+          {/* Right link */}
+          <Link href="/products" id="cat-view-all" className="t-tag ul-link" style={{ position: "absolute", right: "2rem", color: "rgba(0,0,0,0.5)", letterSpacing: "0.08em", fontSize: "1.1rem" }}>View all</Link>
         </div>
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
@@ -832,9 +835,10 @@ export default function Home() {
                   color: "inherit",
                   borderRight: "0.1rem solid rgba(0,0,0,0.12)",
                 }}
-                className="home-cat-card"
+                className="home-ticket-card"
               >
-                <div style={{ position: "relative", overflow: "hidden", height: "clamp(30rem, 46vw, 72rem)", background: "#111" }}>
+                {/* Large Image (same height limit and transition) */}
+                <div style={{ position: "relative", overflow: "hidden", height: "clamp(30rem, 44vw, 68rem)", background: "#111" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={cat.img}
@@ -842,13 +846,20 @@ export default function Home() {
                     className="home-ticket-img"
                     style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
                   />
-                  {/* Gradient overlay with text */}
-                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.08) 55%, transparent 100%)", display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "2.4rem 2.8rem" }}>
-                    <p style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "clamp(2.8rem, 5vw, 8rem)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 0.9, textTransform: "uppercase", color: "#fff", margin: "0 0 0.8rem" }}>{cat.name}</p>
-                    <p style={{ fontSize: "1.2rem", color: "rgba(255,255,255,0.55)", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{cat.sub}</p>
+                </div>
+
+                {/* Caption Bar: Category Name (Left), Short Code (Center), Serial Number (Right) */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: "1.2rem", padding: "1.2rem 1.4rem", background: "#eaeef4", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem", textAlign: "left" }}>
+                    <span style={{ fontSize: "clamp(1.1rem, 1.2vw, 1.4rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#000" }}>{cat.name}</span>
+                    <span style={{ fontSize: "1.0rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em", textTransform: "uppercase" }}>{cat.sub}</span>
                   </div>
-                  {/* Code watermark top-right */}
-                  <span style={{ position: "absolute", top: "1.6rem", right: "1.8rem", fontFamily: "var(--font-jost), sans-serif", fontSize: "clamp(3rem, 6vw, 9rem)", fontWeight: 800, letterSpacing: "-0.05em", lineHeight: 1, color: "rgba(255,255,255,0.12)", userSelect: "none" }}>{cat.code}</span>
+                  <div style={{ textAlign: "center" }}>
+                    <span style={{ fontSize: "clamp(1.4rem, 2vw, 2.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{cat.code}</span>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <span style={{ fontSize: "clamp(1.2rem, 1.6vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{cat.num}</span>
+                  </div>
                 </div>
               </Link>
             ))}
@@ -893,9 +904,10 @@ export default function Home() {
           ══════════════════════════════════════ */}
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1.2rem 2rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
-          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)" }}>Browse by Brands</span>
-          <Link href="/brands" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.6)", letterSpacing: "0.08em", fontSize: "1.1rem" }}>View all</Link>
+        {/* Centered Header bar */}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "1.2rem 2rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative", minHeight: "5.4rem" }}>
+          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Browse by Brands</span>
+          <Link href="/brands" className="t-tag ul-link" style={{ position: "absolute", right: "2rem", color: "rgba(0,0,0,0.6)", letterSpacing: "0.08em", fontSize: "1.1rem" }}>View all</Link>
         </div>
 
         {/* TOP ROW: 4 small columns */}
