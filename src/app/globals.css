@@ -994,6 +994,9 @@ input, select, textarea {
   font-weight: 800;
   text-transform: uppercase;
   text-align: center;
+  white-space: normal !important;
+  max-width: 90% !important;
+  margin: 0 auto !important;
 }
 
 @media(min-width: 768px) {
@@ -1005,6 +1008,7 @@ input, select, textarea {
 @media(min-width: 1240px) {
   .intro-drum-label {
     font-size: 7.2rem;
+    max-width: 85% !important;
   }
 }
 
