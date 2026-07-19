@@ -988,7 +988,7 @@ input, select, textarea {
 
 /* ── Intro section drum text size rules ── */
 .intro-drum-label {
-  font-size: 3.8rem;
+  font-size: 2.8rem;
   line-height: 1.05;
   letter-spacing: -0.03em;
   font-weight: 800;
@@ -998,13 +998,13 @@ input, select, textarea {
 
 @media(min-width: 768px) {
   .intro-drum-label {
-    font-size: 7.5rem;
+    font-size: 5.2rem;
   }
 }
 
 @media(min-width: 1240px) {
   .intro-drum-label {
-    font-size: 10rem;
+    font-size: 7.2rem;
   }
 }
 
