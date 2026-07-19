@@ -3,12 +3,13 @@
 import Image from "next/image";
 
 const TEAM = [
-  { name: "Aaren Patel", role: "Creative Director", code: "AP", num: "01", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" },
-  { name: "Zoe Chen", role: "Head of 3D Motion", code: "ZC", num: "02", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" },
-  { name: "Marcus Sterling", role: "Lead Interactive Dev", code: "MS", num: "03", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80" },
-  { name: "Sofia Rodriguez", role: "Interior Architect", code: "SR", num: "04", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" },
-  { name: "Yuki Tanaka", role: "Visual Researcher", code: "YT", num: "05", image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80" },
-  { name: "Liam Bennett", role: "Lead Spatial Designer", code: "LB", num: "06", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80" },
+  { name: "Mohanlal MP", role: "Founder & Director", code: "MM", num: "01", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80", bio: "Acts as the face and voice of AAREN, focusing on company culture, value systems, and the well-being of the team." },
+  { name: "Ramniklal M Vagadiya", role: "Founder & Chairman", code: "RV", num: "02", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80", bio: "Chartered Accountant who defines concrete business plans, provides business focus, and motivates the team toward an innovative vision." },
+  { name: "Madhusudhan MP", role: "Envisioner & Chief Planner", code: "MP", num: "03", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80", bio: "Responsible for establishing long-term strategy, executing business decisions, and scouting for elite, world-class products." },
+  { name: "Koushik", role: "Space Optimizer", code: "KS", num: "04", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80", bio: "Focuses on industry trends, guiding customers through layouts, and optimizing the utility of living spaces." },
+  { name: "Ashwin", role: "Material Consultant", code: "AW", num: "05", image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80", bio: "Manages customer outreach regarding surface and material solutions for architects, developers, and industry professionals." },
+  { name: "Mukund", role: "Product Curator", code: "MK", num: "06", image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80", bio: "Curates merchandise, educates audiences on the product mix, and manages market presence." },
+  { name: "Jignesh", role: "Bagno Space Specialist", code: "JG", num: "07", image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80", bio: "Develops communication narratives, identifies sales channels, and reaches out to customers regarding home improvement and luxury 'Bagno' space trends." },
 ];
 
 export default function TeamPage() {
@@ -22,7 +23,7 @@ export default function TeamPage() {
           </div>
           <h1 className="team-header__title">Our Team</h1>
           <p className="team-header__desc t-body" style={{ color: "rgba(0,0,0,0.5)", maxWidth: "52rem" }}>
-            A curated collective of architects, 3D artists, designers, and developers working at the intersection of material innovation and digital experience.
+            A unified group dedicated to bringing luxury interior solutions to the global customer, combining design consulting, curation, and structural engineering.
           </p>
         </div>
       </div>
@@ -43,15 +44,20 @@ export default function TeamPage() {
                 />
               </div>
             </div>
-            <div className="team-card__caption">
-              <div className="team-card__caption-left">
-                <span className="team-card__caption-name">{member.name}</span>
-                <span className="team-card__caption-role t-tag">{member.role}</span>
+            <div className="team-card__caption" style={{ display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2.4rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: "1.6rem" }}>
+                <div className="team-card__caption-left">
+                  <span className="team-card__caption-name" style={{ fontSize: "1.6rem" }}>{member.name}</span>
+                  <span className="team-card__caption-role t-tag" style={{ marginTop: "0.2rem" }}>{member.role}</span>
+                </div>
+                <div className="team-card__caption-right">
+                  <span className="team-card__caption-code">{member.code}</span>
+                  <span className="team-card__caption-num">{member.num}</span>
+                </div>
               </div>
-              <div className="team-card__caption-right">
-                <span className="team-card__caption-code">{member.code}</span>
-                <span className="team-card__caption-num">{member.num}</span>
-              </div>
+              <p style={{ fontSize: "1.3rem", lineHeight: 1.5, color: "rgba(0,0,0,0.55)", margin: 0, fontWeight: 400 }}>
+                {member.bio}
+              </p>
             </div>
           </div>
         ))}

@@ -4,15 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 const TEAM = [
-  { name: "Aaren Patel", role: "Creative Director", code: "AP", num: "01", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" },
-  { name: "Zoe Chen", role: "Head of 3D Motion", code: "ZC", num: "02", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" },
-  { name: "Marcus Sterling", role: "Lead Interactive Dev", code: "MS", num: "03", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80" },
+  { name: "Mohanlal MP", role: "Founder & Director", code: "MM", num: "01", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80", bio: "Acts as the face and voice of AAREN, focusing on company culture, value systems, and the well-being of the team." },
+  { name: "Ramniklal M Vagadiya", role: "Founder & Chairman", code: "RV", num: "02", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80", bio: "Chartered Accountant who defines concrete business plans, provides business focus, and motivates the team toward an innovative vision." },
+  { name: "Madhusudhan MP", role: "Envisioner & Chief Planner", code: "MP", num: "03", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80", bio: "Responsible for establishing long-term strategy, executing business decisions, and scouting for elite, world-class products." },
 ];
 
 const TIMELINE = [
-  { year: "2022", event: "Establishment of Aaren in Bangalore, India.", code: "ES", num: "22" },
-  { year: "2024", event: "Expansion of our global virtual motion studios.", code: "EX", num: "24" },
-  { year: "2026", event: "Ranked as top immersive premium agency globally.", code: "RN", num: "26" },
+  { year: "1990", event: "Founded as Poonam Timbers, establishing our deep roots in high-quality timber and raw surface materials.", code: "PT", num: "90" },
+  { year: "2015", event: "Rebranded as Aaren Intpro, expanding into elite global interior products and architectural solutions.", code: "AI", num: "15" },
+  { year: "2026", event: "Bengaluru's primary destination for world-renowned brands, luxury bathroom fixtures, and surfaces.", code: "UD", num: "26" },
 ];
 
 export default function About() {
@@ -22,11 +22,11 @@ export default function About() {
       <div className="about-header">
         <div className="about-header__inner">
           <div className="about-header__meta t-tag" style={{ color: "rgba(0,0,0,0.4)", marginBottom: "2.4rem" }}>
-            THE STUDIO — Est. 2022
+            THE HOUSE — Est. 1990
           </div>
           <h1 className="about-header__title">About Us</h1>
           <p className="about-header__desc t-body" style={{ color: "rgba(0,0,0,0.5)", maxWidth: "52rem" }}>
-            A creative studio and material house dedicated to designing and producing immersive spatial experiences — meant to evoke feeling.
+            Aaren Intpro is Bengaluru's premier material house and luxury lifestyle curator, dedicated to providing world-class interior products under one roof.
           </p>
         </div>
       </div>
@@ -39,7 +39,7 @@ export default function About() {
             <span className="value-card__num">01</span>
           </div>
           <p className="value-card__text">
-            We design and construct premium digital realities that elevate the standards of visual aesthetics across every medium.
+            To provide premium, elite, and high-quality lifestyle products under one roof for the global Indian customer.
           </p>
         </div>
         <div className="value-card">
@@ -48,7 +48,7 @@ export default function About() {
             <span className="value-card__num">02</span>
           </div>
           <p className="value-card__text">
-            To remain the primary destination for luxury brands seeking custom design architecture, 3D motion, and immersive coding.
+            To remain the primary one-stop destination for architects, interior designers, builders, and homeowners seeking world-class materials.
           </p>
         </div>
         <div className="value-card">
@@ -57,7 +57,7 @@ export default function About() {
             <span className="value-card__num">03</span>
           </div>
           <p className="value-card__text">
-            Unyielding precision, premium design frameworks, fast interfaces, and standard production execution.
+            Uniting as a family, prioritizing robust value systems, and providing curated designs focusing on unique client experiences.
           </p>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function About() {
       {/* ── Timeline Section (Ticket Layout) ── */}
       <div className="about-timeline-section">
         <div className="timeline-header">
-          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)" }}>STUDIO TIMELINE</span>
+          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)" }}>COMPANY TIMELINE</span>
         </div>
         <div className="timeline-grid">
           {TIMELINE.map((item) => (
@@ -90,7 +90,7 @@ export default function About() {
       {/* ── Team Section ── */}
       <div className="about-team-section">
         <div className="team-header">
-          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)" }}>THE TEAM</span>
+          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)" }}>LEADERSHIP</span>
           <Link href="/team" className="t-tag ul-link" style={{ color: "rgba(0,0,0,0.45)" }}>View all team →</Link>
         </div>
         <div className="team-grid">
@@ -108,15 +108,20 @@ export default function About() {
                   />
                 </div>
               </div>
-              <div className="team-card__caption">
-                <div className="team-card__caption-left">
-                  <span className="team-card__caption-name">{member.name}</span>
-                  <span className="team-card__caption-role t-tag">{member.role}</span>
+              <div className="team-card__caption" style={{ display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2.4rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: "1.6rem" }}>
+                  <div className="team-card__caption-left">
+                    <span className="team-card__caption-name" style={{ fontSize: "1.6rem" }}>{member.name}</span>
+                    <span className="team-card__caption-role t-tag" style={{ marginTop: "0.2rem" }}>{member.role}</span>
+                  </div>
+                  <div className="team-card__caption-right">
+                    <span className="team-card__caption-code">{member.code}</span>
+                    <span className="team-card__caption-num">{member.num}</span>
+                  </div>
                 </div>
-                <div className="team-card__caption-right">
-                  <span className="team-card__caption-code">{member.code}</span>
-                  <span className="team-card__caption-num">{member.num}</span>
-                </div>
+                <p style={{ fontSize: "1.3rem", lineHeight: 1.5, color: "rgba(0,0,0,0.55)", margin: 0, fontWeight: 400 }}>
+                  {member.bio}
+                </p>
               </div>
             </div>
           ))}
