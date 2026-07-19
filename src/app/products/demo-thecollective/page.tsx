@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useState } from "react";
 
 const PRODUCTS = [
-  { id: 1, brand: "FORMICA", name: "FENIX NTM® SURFACE", price: "₹12,500", color: "Nero Ingo", imgFront: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" },
-  { id: 2, brand: "ALPI", name: "ALPI SIGNATURE VENEER", price: "₹24,000", color: "Smoked Oak", imgFront: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" },
-  { id: 3, brand: "INCLASS", name: "INCLASS HPL LAMINATE", price: "₹8,500", color: "Brushed Brass", imgFront: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80" },
-  { id: 4, brand: "FORMICA", name: "DECOMETAL SURFACING", price: "₹16,500", color: "Rose Gold", imgFront: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", imgBack: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=80" },
+  { id: 1, brand: "FORMICA", name: "FENIX NTM® SURFACE", price: "₹12,500", color: "Nero Ingo", imgFront: "/categories/cat_2.png", imgBack: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" },
+  { id: 2, brand: "ALPI", name: "ALPI SIGNATURE VENEER", price: "₹24,000", color: "Smoked Oak", imgFront: "/categories/cat_1.png", imgBack: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80" },
+  { id: 3, brand: "INCLASS", name: "INCLASS HPL LAMINATE", price: "₹8,500", color: "Brushed Brass", imgFront: "/categories/cat_3.png", imgBack: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=800&q=80" },
+  { id: 4, brand: "FORMICA", name: "DECOMETAL SURFACING", price: "₹16,500", color: "Rose Gold", imgFront: "/categories/cat_4.png", imgBack: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" },
 ];
 
 export default function TheCollectiveDemo() {
