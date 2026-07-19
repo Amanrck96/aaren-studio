@@ -986,6 +986,28 @@ input, select, textarea {
   }
 }
 
+/* ── Intro section drum text size rules ── */
+.intro-drum-label {
+  font-size: 3.8rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+@media(min-width: 768px) {
+  .intro-drum-label {
+    font-size: 7.5rem;
+  }
+}
+
+@media(min-width: 1240px) {
+  .intro-drum-label {
+    font-size: 10rem;
+  }
+}
+
 .home-clients__item {
   color: #c8cbd0;
   opacity: 0.3;

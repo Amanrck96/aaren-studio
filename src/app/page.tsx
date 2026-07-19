@@ -785,16 +785,13 @@ export default function Home() {
                 <p
                   key={idx}
                   ref={(el) => { introLinesRef.current[idx] = el; }}
+                  className="intro-drum-label"
                   style={{
                     position: "absolute",
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
-                    fontSize: "clamp(2rem, 3.5vw, 3.6rem)",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "-0.01em",
-                    lineHeight: 1.2,
+                    fontFamily: "var(--font-jost), sans-serif",
                     margin: 0,
                     width: "100%",
                     transformStyle: "preserve-3d",
