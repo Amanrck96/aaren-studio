@@ -52,10 +52,33 @@ export default function Header() {
     <>
       {/* ══ Fixed Header ══ */}
       <header className="site-header">
-        {/* Logo */}
-        <Link href="/" className="site-header__logo">
-          AAREN
-        </Link>
+        {/* Logo & Dynamic Home Button */}
+        <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
+          <Link href="/" className="site-header__logo">
+            AAREN
+          </Link>
+          {path !== "/" && (
+            <Link
+              href="/"
+              className="btn btn--primary btn--blur header-home-btn"
+              style={{
+                fontSize: "1.1rem",
+                color: "#eaeef4",
+                padding: "0.4rem 1.2rem",
+                borderRadius: "2rem",
+                textDecoration: "none",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                background: "rgba(255, 255, 255, 0.08)",
+                border: "0.1rem solid rgba(255, 255, 255, 0.15)",
+                backdropFilter: "blur(0.8rem)",
+                transition: "all 0.2s ease"
+              }}
+            >
+              HOME
+            </Link>
+          )}
+        </div>
 
         {/* Desktop nav — pill blur buttons */}
         <nav className="site-header__nav">
