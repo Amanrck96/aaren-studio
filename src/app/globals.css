@@ -1033,6 +1033,72 @@ input, select, textarea {
   background: #dfe3e9;
 }
 
+/* ── Category carousel nav buttons ── */
+.cat-nav-btn:hover {
+  transform: translateY(-50%) scale(1.08) !important;
+  box-shadow: 0 0.8rem 3rem rgba(0,0,0,0.22) !important;
+}
+
+.home-cat-card:hover .home-ticket-img {
+  transform: scale(1.04);
+}
+
+/* ── Categories full-width grid: 5-col desktop, 3-col tablet, 2-col mobile ── */
+.home-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+}
+
+/* Remove right border on last item in each row */
+.home-categories-grid .home-ticket-card:nth-child(5n) {
+  border-right: none;
+}
+
+@media (max-width: 1023px) {
+  .home-categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .home-categories-grid .home-ticket-card:nth-child(5n) {
+    border-right: 0.1rem solid rgba(0,0,0,0.12);
+  }
+  .home-categories-grid .home-ticket-card:nth-child(3n) {
+    border-right: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .home-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .home-categories-grid .home-ticket-card:nth-child(3n) {
+    border-right: 0.1rem solid rgba(0,0,0,0.12);
+  }
+  .home-categories-grid .home-ticket-card:nth-child(2n) {
+    border-right: none;
+  }
+}
+
+/* ── Brands 4-col: collapse on mobile ── */
+@media (max-width: 767px) {
+  .brands-grid-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .brands-grid-4 .home-ticket-card:nth-child(2n) {
+    border-right: none;
+  }
+  .brands-grid-4 .home-ticket-card:nth-child(2n-1) {
+    border-right: 0.1rem solid rgba(0,0,0,0.12);
+  }
+}
+
+/* ── Brands 2-col: single col on mobile ── */
+@media (max-width: 639px) {
+  .brands-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* 4-across projects: collapse to 2-col on mobile */
 @media (max-width: 767px) {
   .home-projects-grid {
@@ -1056,14 +1122,5 @@ input, select, textarea {
     padding-top: 5rem !important;
     padding-bottom: 2.4rem !important;
   }
-
-  /* ── Category carousel — stack to single column on mobile ── */
-  .cat-carousel-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* ── Brands grid — stack to single column on mobile ── */
-  .brands-grid-mobile {
-    grid-template-columns: 1fr !important;
-  }
 }
+

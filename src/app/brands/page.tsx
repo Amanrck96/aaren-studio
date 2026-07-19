@@ -137,7 +137,7 @@ export default function BrandsPage() {
         {BRANDS.map((brand) => (
           <Link
             key={brand.id}
-            href="/contact"
+            href={`/brands/${brand.id}`}
             className="brand-card"
             id={`brand-card-${brand.id}`}
           >

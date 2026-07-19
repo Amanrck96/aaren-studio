@@ -148,7 +148,7 @@ export default function ProductsPage() {
         {PRODUCT_CATEGORIES.map((cat) => (
           <Link
             key={cat.id}
-            href="/contact"
+            href={`/products/${cat.id}`}
             className="product-card"
             id={`product-card-${cat.id}`}
           >

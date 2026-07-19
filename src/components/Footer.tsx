@@ -3,6 +3,8 @@ import Link from "next/link";
 
 const NAV_LINKS = [
   { label: "All Projects", href: "/work" },
+  { label: "Brands",       href: "/brands" },
+  { label: "Products",     href: "/products" },
   { label: "Instagram",    href: "https://www.instagram.com/aaren.studio/", ext: true },
   { label: "Privacy Policy", href: "#" },
 ];
