@@ -84,23 +84,7 @@ const PROJECTS = [
   },
 ];
 
-/* ─── Clients ─── */
-const CLIENTS = [
-  "The Oberoi",
-  "Taj Hotels",
-  "Godrej Properties",
-  "Nykaa",
-  "Ratan Group",
-  "Hiranandani",
-  "Lodha Group",
-  "Piramal Realty",
-  "Birla Estates",
-  "Mahindra",
-  "ITC Hotels",
-  "Leela Group",
-  "DLF",
-  "Prestige Group",
-];
+
 
 /* ─── Services ─── */
 const SERVICES = [
@@ -231,11 +215,7 @@ export default function Home() {
 
 
 
-  /* ── Client 3D scroll refs ── */
-  const containerRef = useRef<HTMLDivElement>(null);
-  const listContainerRef = useRef<HTMLDivElement>(null);
-  const clientsContainerRef = useRef<HTMLUListElement>(null);
-  const clientsRef = useRef<(HTMLLIElement | null)[]>([]);
+
 
   /* ── Intro scroll-driven text refs ── */
   const introSectionRef = useRef<HTMLDivElement>(null);
@@ -282,9 +262,7 @@ export default function Home() {
 
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
-      const clients = clientsRef.current.filter(Boolean) as HTMLLIElement[];
 
-      if (clients.length === 0) return;
 
       // 0. Intro Section Scroll-driven 3D Drum Text Animation
       const introLines = introLinesRef.current.filter(Boolean) as HTMLParagraphElement[];
@@ -404,155 +382,7 @@ export default function Home() {
         }
       }
 
-      // 1. Heading Scroll Reveal Entrance Animation
-      const heading = containerRef.current?.querySelector(".t-tag");
-      if (heading) {
-        gsap.fromTo(heading,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 85%",
-              toggleActions: "play none none none"
-            }
-          }
-        );
-      }
 
-      // If user prefers reduced motion, implement a simple fade trigger instead of 3D cylinder rotation
-      if (prefersReducedMotion) {
-        gsap.fromTo(clients,
-          { opacity: 0, y: 20 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.05,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 75%",
-              toggleActions: "play none none none"
-            }
-          }
-        );
-        return;
-      }
-
-      // ── Responsive MatchMedia cylinder ──
-      // Define ranges for Mobile (< 768px), Tablet (768px - 1239px), and Desktop (>= 1240px)
-      const setups = [
-        { query: "(max-width: 767px)", radius: 120 },
-        { query: "(min-width: 768px) and (max-width: 1239px)", radius: 200 },
-        { query: "(min-width: 1240px)", radius: 280 }
-      ];
-
-      setups.forEach(({ query, radius }) => {
-        mm.add(query, () => {
-          const origin = `50% 50% -${radius}px`;
-
-          // Position each client item on the 3D cylinder
-          clients.forEach((el, i) => {
-            const rotationX = -18 * i;
-            gsap.set(el, {
-              z: radius,
-              rotationX: rotationX,
-              transformOrigin: origin,
-              force3D: true,
-              scale: 0.8,
-              opacity: 0.3,
-              color: "#c8cbd0"
-            });
-          });
-
-          // Highlight the first client initially
-          if (clients[0]) {
-            gsap.set(clients[0], {
-              scale: 1.15,
-              opacity: 1,
-              color: "#1e1e1e"
-            });
-          }
-
-          const lastRotation = -18 * (clients.length - 1) - 90;
-
-          // Toggle visibility of absolute container when section is active in viewport
-          const sectionTrigger = ScrollTrigger.create({
-            trigger: containerRef.current,
-            start: "top bottom",
-            end: "bottom top-=5%",
-            toggleClass: "home-clients--visible",
-          });
-
-          // Map progress (0.135 to 0.79) to client index
-          const mapper = gsap.utils.pipe(
-            gsap.utils.mapRange(0.135, 0.79, 0, clients.length - 1),
-            gsap.utils.snap(1)
-          );
-
-          // Timeline for rotating the cylinder container
-          const tl = gsap.timeline({
-            paused: true,
-            scrollTrigger: {
-              trigger: listContainerRef.current,
-              start: "top top-=30%",
-              end: "bottom bottom",
-              scrub: true,
-              onUpdate: (self) => {
-                const progress = +self.progress.toFixed(3);
-                const activeIdx = mapper(progress);
-
-                // Smoothly update scales, opacities, and colors of active/inactive elements via GSAP
-                clients.forEach((el, idx) => {
-                  if (idx === activeIdx) {
-                    gsap.to(el, {
-                      color: "#1e1e1e",
-                      opacity: 1,
-                      scale: 1.15,
-                      duration: 0.35,
-                      ease: "power2.out",
-                      overwrite: "auto"
-                    });
-                  } else {
-                    gsap.to(el, {
-                      color: "#c8cbd0",
-                      opacity: 0.3,
-                      scale: 0.8,
-                      duration: 0.35,
-                      ease: "power2.out",
-                      overwrite: "auto"
-                    });
-                  }
-                });
-              },
-            },
-          });
-
-          tl.fromTo(
-            clientsContainerRef.current,
-            { rotationX: -80 },
-            {
-              rotationX: -lastRotation,
-              ease: "none",
-              transformOrigin: "50% 50%",
-              force3D: true,
-            }
-          );
-
-          return () => {
-            sectionTrigger.kill();
-            tl.kill();
-            gsap.set(clients, { clearProps: "all" });
-            if (clientsContainerRef.current) {
-              gsap.set(clientsContainerRef.current, { clearProps: "all" });
-            }
-          };
-        });
-      });
     });
 
     return () => ctx.revert();
@@ -1063,73 +893,7 @@ export default function Home() {
       </section>
 
 
-      {/* ══════════════════════════════════════
-          SECTION 4: CLIENTS — light #eaeef4 (like Sturdy)
-          ══════════════════════════════════════ */}
-      <section
-        ref={containerRef}
-        className="home-clients"
-        style={{
-          padding: "0",
-        }}
-      >
-        {/* Title */}
-        <div className="home-clients__title-wrapper">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "2rem 0.8rem",
-            }}
-          >
-            <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)" }}>
-              Featured Clients
-            </span>
-          </div>
-        </div>
 
-        {/* Wrapper */}
-        <div className="home-clients__wrapper">
-          {/* Arrow overlay */}
-          <div className="home-clients__arrow-wrapper">
-            <div className="home-clients__arrow">
-              <svg viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg" role="presentation" className="home-clients__arrow-svg">
-                <path d="M8.01 13 15.5 0H.5l7.51 13Z"></path>
-              </svg>
-              <svg viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg" role="presentation" className="home-clients__arrow-svg">
-                <path d="M8.01 13 15.5 0H.5l7.51 13Z"></path>
-              </svg>
-            </div>
-          </div>
-
-          {/* Hidden list to push wrapper height naturally (Sturdy layout trick) */}
-          <div aria-hidden="true" className="home-clients__hidden-list">
-            {CLIENTS.map((client) => (
-              <div key={client} className="home-clients__label ttu">
-                {client}
-              </div>
-            ))}
-          </div>
-
-          {/* 3D sliding list container */}
-          <div className="home-clients__list-container" ref={listContainerRef}>
-            <div className="home-clients__list-sticky">
-              <ul ref={clientsContainerRef} className="home-clients__list">
-                {CLIENTS.map((client, i) => (
-                  <li
-                    key={client}
-                    ref={(el) => { clientsRef.current[i] = el; }}
-                    className="home-clients__item home-clients__label ttu"
-                  >
-                    {client}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ══════════════════════════════════════
           SECTION 5: NEWSLETTER — light #eaeef4
