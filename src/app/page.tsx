@@ -295,7 +295,7 @@ export default function Home() {
             scale: 1,
             z: 0,
             rotationX: 0,
-            color: "#8e939c"
+            color: "#80673f"
           });
         } else {
           // Define radius matching the viewport
@@ -325,7 +325,7 @@ export default function Home() {
                   force3D: true,
                   scale: 0.8,
                   opacity: 0.15,
-                  color: "rgba(142, 147, 156, 0.35)",
+                  color: "rgba(128, 103, 63, 0.35)",
                   width: "100%",
                   textAlign: "center"
                 });
@@ -336,7 +336,7 @@ export default function Home() {
                 gsap.set(introLines[0], {
                   scale: 1.15,
                   opacity: 1,
-                  color: "#8e939c"
+                  color: "#80673f"
                 });
               }
 
@@ -362,7 +362,7 @@ export default function Home() {
                         gsap.to(el, {
                           opacity: 1,
                           scale: 1.15,
-                          color: "#8e939c",
+                          color: "#80673f",
                           duration: 0.35,
                           ease: "power1.out",
                           overwrite: "auto"
@@ -371,7 +371,7 @@ export default function Home() {
                         gsap.to(el, {
                           opacity: 0.15,
                           scale: 0.8,
-                          color: "rgba(142, 147, 156, 0.35)",
+                          color: "rgba(128, 103, 63, 0.35)",
                           duration: 0.35,
                           ease: "power1.out",
                           overwrite: "auto"
@@ -785,7 +785,7 @@ export default function Home() {
                     width: "100%",
                     transformStyle: "preserve-3d",
                     backfaceVisibility: "hidden",
-                    color: "#8e939c",
+                    color: "#80673f",
                     willChange: "transform, opacity",
                   }}
                   dangerouslySetInnerHTML={{ __html: line }}
