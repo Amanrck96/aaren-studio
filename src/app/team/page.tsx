@@ -8,7 +8,7 @@ const TEAM = [
     role: "Founder", 
     code: "MM", 
     num: "01", 
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg", 
     bio: "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team." 
   },
   { 
@@ -16,7 +16,7 @@ const TEAM = [
     role: "Founder & Chairman", 
     code: "RV", 
     num: "02", 
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg", 
     bio: "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision." 
   },
   { 
@@ -24,7 +24,7 @@ const TEAM = [
     role: "Envisioner & Chief Planner", 
     code: "MP", 
     num: "03", 
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", 
     bio: "He is the vision of AAREN. Responsible for creating the strategy, driving the business and scouting for world class products." 
   },
   { 
@@ -32,7 +32,7 @@ const TEAM = [
     role: "Sales", 
     code: "KS", 
     num: "04", 
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", 
     bio: "He guides customers to optimize the space utility, is abreast with market trends, and coordinates layouts for projects." 
   },
   { 
@@ -40,7 +40,7 @@ const TEAM = [
     role: "Sales", 
     code: "AW", 
     num: "05", 
-    image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", 
     bio: "Consults with architects and developers to find surface and material solutions, manages customer relations and outreach." 
   },
   { 
@@ -48,7 +48,7 @@ const TEAM = [
     role: "Sales", 
     code: "MK", 
     num: "06", 
-    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg", 
     bio: "Curates the products, educates customers on the product mix and manages the store display." 
   },
   { 
@@ -56,7 +56,7 @@ const TEAM = [
     role: "Sales", 
     code: "JG", 
     num: "07", 
-    image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg", 
     bio: "Maintains communication narratives, manages the sales channels, and reaches out to customers for Bagno & Surface solutions." 
   },
 ];

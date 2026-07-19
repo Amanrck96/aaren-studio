@@ -4,9 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 const TEAM = [
-  { name: "Mohanlal MP", role: "Founder & Director", code: "MM", num: "01", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80", bio: "Acts as the face and voice of AAREN, focusing on company culture, value systems, and the well-being of the team." },
-  { name: "Ramniklal M Vagadiya", role: "Founder & Chairman", code: "RV", num: "02", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80", bio: "Chartered Accountant who defines concrete business plans, provides business focus, and motivates the team toward an innovative vision." },
-  { name: "Madhusudhan MP", role: "Envisioner & Chief Planner", code: "MP", num: "03", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80", bio: "Responsible for establishing long-term strategy, executing business decisions, and scouting for elite, world-class products." },
+  { name: "MOHANLAL MP", role: "Founder", code: "MM", num: "01", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg", bio: "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team." },
+  { name: "RAMNIKLAL M VAGADIYA", role: "Founder & Chairman", code: "RV", num: "02", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg", bio: "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision." },
+  { name: "MADHUSUDHAN MP", role: "Envisioner & Chief Planner", code: "MP", num: "03", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", bio: "He is the vision of AAREN. Responsible for creating the strategy, driving the business and scouting for world class products." },
 ];
 
 const TIMELINE = [
