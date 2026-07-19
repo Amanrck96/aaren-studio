@@ -595,8 +595,9 @@ export default function Home() {
           <div
             className="hero-wordmark"
             style={{
+              fontFamily: "var(--font-jost), sans-serif",
               fontSize: "clamp(6rem, 18vw, 35rem)",
-              fontWeight: 700,
+              fontWeight: 800,
               letterSpacing: "-0.05em",
               textTransform: "uppercase",
               color: "#eaeef4",

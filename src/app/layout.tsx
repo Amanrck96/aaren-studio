@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Jost } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import SmoothScroll from "@/components/SmoothScroll";
+
+import localFont from "next/font/local";
 
 /* ── Fonts — Geist as FK Grotesk Neue substitute ── */
 const geist = Geist({
@@ -19,11 +21,19 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 });
 
-const jost = Jost({
-  subsets: ["latin"],
-  display: "swap",
+const jost = localFont({
+  src: [
+    {
+      path: "./fonts/Jost-VariableFont_wght.ttf",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Jost-Italic-VariableFont_wght.ttf",
+      style: "italic",
+    }
+  ],
   variable: "--font-jost",
-  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {

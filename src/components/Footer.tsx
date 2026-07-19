@@ -75,29 +75,29 @@ export default function Footer() {
       </div>
 
       {/* ── Large AAREN wordmark — fills the footer ── */}
-      <div className="footer-wordmark" style={{ paddingTop: "4rem", paddingBottom: "2rem" }}>
-        <svg
-          viewBox="0 0 1200 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="xMidYMid meet"
-          aria-label="AAREN"
-          role="img"
-          style={{ width: "100%", height: "auto" }}
-        >
-          {/* A */}
-          <text
-            x="0"
-            y="190"
-            fontFamily="var(--font-geist), Helvetica, Arial, sans-serif"
-            fontSize="200"
-            fontWeight="700"
-            letterSpacing="-15"
-            fill="rgba(0,0,0,0.08)"
-          >
-            AAREN
-          </text>
-        </svg>
+      <div
+        className="footer-wordmark"
+        style={{
+          fontFamily: "var(--font-jost), sans-serif",
+          fontSize: "clamp(6rem, 18vw, 35rem)",
+          fontWeight: 800,
+          textTransform: "uppercase",
+          color: "rgba(0,0,0,0.06)",
+          display: "flex",
+          width: "100%",
+          justifyContent: "space-between",
+          overflow: "hidden",
+          lineHeight: 0.8,
+          userSelect: "none",
+          paddingTop: "4rem",
+          paddingBottom: "2rem",
+        }}
+      >
+        <span>A</span>
+        <span>A</span>
+        <span>R</span>
+        <span>E</span>
+        <span>N</span>
       </div>
 
       {/* ── Bottom copyright ── */}
