@@ -10,6 +10,7 @@ type NavLink = {
 };
 
 const NAV_LINKS: NavLink[] = [
+  { label: "Home", href: "/" },
   { label: "About us", href: "/about" },
   { label: "Our team", href: "/team" },
   { label: "Contact us", href: "/contact" },
@@ -52,7 +53,7 @@ export default function Header() {
     <>
       {/* ══ Fixed Header ══ */}
       <header className="site-header">
-        {/* Logo & Dynamic Home Button */}
+        {/* Logo & Dynamic High-Contrast Home Button */}
         <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
           <Link href="/" className="site-header__logo">
             AAREN
@@ -60,22 +61,35 @@ export default function Header() {
           {path !== "/" && (
             <Link
               href="/"
-              className="btn btn--primary btn--blur header-home-btn"
+              className="header-home-btn"
               style={{
                 fontSize: "1.1rem",
-                color: "#eaeef4",
-                padding: "0.4rem 1.2rem",
-                borderRadius: "2rem",
+                color: "#ffffff",
+                padding: "0.6rem 1.4rem",
+                borderRadius: "2.4rem",
                 textDecoration: "none",
                 fontWeight: 700,
-                letterSpacing: "0.05em",
-                background: "rgba(255, 255, 255, 0.08)",
-                border: "0.1rem solid rgba(255, 255, 255, 0.15)",
-                backdropFilter: "blur(0.8rem)",
-                transition: "all 0.2s ease"
+                letterSpacing: "0.06em",
+                background: "#000000",
+                border: "0.1rem solid rgba(255, 255, 255, 0.2)",
+                boxShadow: "0 0.4rem 1.4rem rgba(0,0,0,0.3)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                transition: "transform 0.2s ease, background 0.2s ease",
+                zIndex: 1001,
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.transform = "scale(1.05)";
+                (e.currentTarget as HTMLElement).style.background = "#1a1a1a";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+                (e.currentTarget as HTMLElement).style.background = "#000000";
               }}
             >
-              HOME
+              <span>←</span>
+              <span>HOME</span>
             </Link>
           )}
         </div>
