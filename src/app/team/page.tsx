@@ -8,7 +8,7 @@ const TEAM = [
     role: "Founder", 
     code: "MM", 
     num: "01", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", 
     bio: "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team." 
   },
   { 
@@ -16,7 +16,7 @@ const TEAM = [
     role: "Founder & Chairman", 
     code: "RV", 
     num: "02", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg", 
     bio: "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision." 
   },
   { 
@@ -24,7 +24,7 @@ const TEAM = [
     role: "Envisioner & Chief Planner", 
     code: "MP", 
     num: "03", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg", 
     bio: "He is the vision of AAREN. Responsible for creating the strategy, driving the business and scouting for world class products." 
   },
   { 
@@ -32,7 +32,7 @@ const TEAM = [
     role: "Sales", 
     code: "KS", 
     num: "04", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg", 
     bio: "He guides customers to optimize the space utility, is abreast with market trends, and coordinates layouts for projects." 
   },
   { 
@@ -40,7 +40,7 @@ const TEAM = [
     role: "Sales", 
     code: "AW", 
     num: "05", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", 
     bio: "Consults with architects and developers to find surface and material solutions, manages customer relations and outreach." 
   },
   { 
@@ -48,7 +48,7 @@ const TEAM = [
     role: "Sales", 
     code: "MK", 
     num: "06", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg", 
+    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", 
     bio: "Curates the products, educates customers on the product mix and manages the store display." 
   },
   { 
@@ -89,7 +89,7 @@ export default function TeamPage() {
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="team-card__img"
-                  style={{ objectFit: "cover", filter: "grayscale(100%)" }}
+                  style={{ objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(100%)" }}
                 />
               </div>
             </div>
@@ -162,7 +162,7 @@ export default function TeamPage() {
 
         @media (min-width: 768px) {
           .team-header {
-            padding: 8rem 1.2rem 4rem;
+            padding: 8rem 1.2rem 5rem;
           }
         }
 
@@ -182,54 +182,55 @@ export default function TeamPage() {
           letter-spacing: -0.01em;
         }
 
-        /* ── Team Grid ── */
+        /* ── Team Grid with Sturdy-style Spacing & Row Gaps ── */
         .team-grid {
-          display: flex;
-          flex-wrap: wrap;
-          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 4rem 2.4rem;
+          padding: 4rem 1.2rem 8rem;
+          max-width: 1600px;
+          margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+          .team-grid {
+            grid-template-columns: repeat(2, 1fr);
+            padding: 6rem 2.4rem 10rem;
+            gap: 5rem 3.2rem;
+          }
+        }
+
+        @media (min-width: 1200px) {
+          .team-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6rem 3.6rem;
+          }
         }
 
         .team-card {
           display: flex;
           flex-direction: column;
-          flex: 0 0 100%;
-          width: 100%;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          background: #eaeef4;
+          border: 0.1rem solid rgba(0, 0, 0, 0.12);
           overflow: hidden;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        @media (min-width: 768px) {
-          .team-card {
-            flex: 0 0 50%;
-            width: 50%;
-            border-right: 0.1rem solid rgba(0,0,0,0.12);
-          }
-          .team-card:nth-child(2n) {
-            border-right: none;
-          }
-        }
-
-        @media (min-width: 1200px) {
-          .team-card {
-            flex: 0 0 33.333%;
-            width: 33.333%;
-            border-right: 0.1rem solid rgba(0,0,0,0.12) !important;
-          }
-          .team-card:nth-child(3n) {
-            border-right: none !important;
-          }
+        .team-card:hover {
+          transform: translateY(-0.4rem);
+          box-shadow: 0 1.2rem 3.2rem rgba(0,0,0,0.08);
         }
 
         .team-card__fig-wrapper {
           position: relative;
           overflow: hidden;
-          height: 32rem;
+          height: 38rem;
           background: #111;
         }
 
         @media (min-width: 768px) {
           .team-card__fig-wrapper {
-            height: 38rem;
+            height: 44rem;
           }
         }
 
