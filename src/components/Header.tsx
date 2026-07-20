@@ -52,8 +52,22 @@ export default function Header() {
     <>
       {/* ══ Fixed Header ══ */}
       <header className="site-header">
-        {/* Logo — Clicking redirects to Home Page */}
-        <Link href="/" className="site-header__logo" aria-label="Aaren Home Page">
+        {/* Logo — Clicking redirects to Home Page. White on home page, Grey on subpages */}
+        <Link
+          href="/"
+          className="site-header__logo"
+          aria-label="Aaren Home Page"
+          style={{
+            color: path === "/" ? "#ffffff" : "#333333",
+            mixBlendMode: "normal",
+            fontWeight: 700,
+            fontSize: "1.3rem",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            transition: "color 0.25s ease",
+            textDecoration: "none",
+          }}
+        >
           AAREN
         </Link>
 
