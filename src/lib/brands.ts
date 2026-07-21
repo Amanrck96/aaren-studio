@@ -10,6 +10,7 @@ export type BrandProduct = {
   collection?: string;
   finish?: string;
   tag?: string;
+  image?: string;
 };
 
 export type Brand = {
@@ -94,18 +95,18 @@ const BRANDS: Brand[] = [
     founded: "2005",
     collections: ["All", "Decking", "Cladding", "Screens", "Fencing"],
     products: [
-      { id: "nw-01", name: "Naturale Solid Board (US01)", collection: "Decking", finish: "Flat Grain (138x22.5mm)", tag: "Flagship" },
-      { id: "nw-02", name: "Naturale Hollow Board (UH02)", collection: "Decking", finish: "Wood Grain (138x22.5mm)" },
-      { id: "nw-03", name: "Naturale Wide Solid Board (US54)", collection: "Decking", finish: "Flat Grain (210x22.5mm)" },
-      { id: "nw-04", name: "Naturale Wide Hollow Board (UH22)", collection: "Decking", finish: "Wood Grain (210x22.5mm)" },
-      { id: "nw-05", name: "Marina Heavy Commercial Board (US71)", collection: "Decking", finish: "Anti-Slip Grain (210x36mm)", tag: "36 PTV Wet Slip" },
-      { id: "nw-06", name: "Old World Rustic Board (US54)", collection: "Decking", finish: "Weathered / Flat Grain (210x22.5mm)" },
-      { id: "nw-07", name: "Essentials Convex Drainage Board (US94)", collection: "Decking", finish: "Handscrapped Grain (138x23.5mm)", tag: "Better Drainage" },
-      { id: "nw-08", name: "Essentials Cathedral Board (UH100)", collection: "Decking", finish: "Cathedral Grain (140x25mm)" },
-      { id: "nw-09", name: "Decking Bullnose Finisher (US33)", collection: "Decking", finish: "Flat Grain (138x22.5mm)" },
-      { id: "nw-10", name: "Decking Fascia Board (US08 / US06 / US07 / US03 / US05)", collection: "Decking", finish: "Multiple Widths (138-285mm)" },
-      { id: "nw-11", name: "Standard & Breaker Hidden Clip Systems", collection: "Decking", finish: "304 Stainless Steel & Torx Head" },
-      { id: "nw-12", name: "End Caps, Plugs & Color Screws", collection: "Decking", finish: "TPO UV-Stable / Stainless Steel" },
+      { id: "nw-p7-01", name: "Antique Decking Board", collection: "Decking", finish: "Antique Wood Grain", tag: "PDF Page 7", image: "/brands/newtechwood/product_p7.png" },
+      { id: "nw-p8-01", name: "Ipe Composite Decking", collection: "Decking", finish: "Ipe Wood Grain", tag: "PDF Page 8", image: "/brands/newtechwood/product_p8.png" },
+      { id: "nw-p9-01", name: "Ipe Architectural Deck Board", collection: "Decking", finish: "Ipe Finish", tag: "PDF Page 9", image: "/brands/newtechwood/product_p9_ipe.png" },
+      { id: "nw-p9-02", name: "Teak Composite Deck Plank", collection: "Decking", finish: "Teak Finish", tag: "PDF Page 9", image: "/brands/newtechwood/product_p9_teak.png" },
+      { id: "nw-p10-01", name: "Antique Outdoor Pool Decking", collection: "Decking", finish: "Antique Finish", tag: "PDF Page 10", image: "/brands/newtechwood/product_p10_sa.png" },
+      { id: "nw-p10-02", name: "Antique Patio Decking Board", collection: "Decking", finish: "Antique Grain", tag: "PDF Page 10", image: "/brands/newtechwood/product_p10_aus.png" },
+      { id: "nw-p13-01", name: "UltraShield Capped Decking", collection: "Decking", finish: "360° Co-Extruded Cap", tag: "PDF Page 13", image: "/brands/newtechwood/product_p13.png" },
+      { id: "nw-p13-02", name: "LEED Certified Composite Decking", collection: "Decking", finish: "Certified Eco WPC", tag: "PDF Page 13", image: "/brands/newtechwood/product_p13.png" },
+      { id: "nw-p14-01", name: "Eco-Composite Recycled Decking", collection: "Decking", finish: "Recycled PE & Wood Fiber", tag: "PDF Page 14", image: "/brands/newtechwood/product_p14.png" },
+      { id: "nw-p14-02", name: "Ocean-Safe Closed-Loop Deck Plank", collection: "Decking", finish: "100% Recyclable WPC", tag: "PDF Page 14", image: "/brands/newtechwood/product_p14.png" },
+      { id: "nw-01", name: "Naturale Solid Board (US01)", collection: "Decking", finish: "Flat Grain (138x22.5mm)", tag: "Flagship", image: "/brands/newtechwood/product_p216.png" },
+      { id: "nw-05", name: "Marina Heavy Commercial Board (US71)", collection: "Decking", finish: "Anti-Slip Grain (210x36mm)", tag: "36 PTV Wet Slip", image: "/brands/newtechwood/product_p44.png" },
     ],
     catalogues: [
       { title: "NewTechWood Product Catalog 2025", subtitle: "Complete Decking, Cladding & Systems Range", file: "NewTechWood/NewTechWood-Product-Catalog-2025.pdf" },

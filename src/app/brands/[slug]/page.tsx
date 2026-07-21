@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState, useEffect, use } from "react";
 import { getBrandById } from "@/lib/brands";
 import { notFound } from "next/navigation";
-import NewTechWoodSection from "@/components/NewTechWoodSection";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -130,9 +129,6 @@ export default function BrandDetailPage({ params }: Props) {
         <div className="bd-description__accent-line" style={{ background: accent }} />
       </div>
 
-      {/* ── Custom Brand Special Section: NewTechWood ── */}
-      {brand.id === "newtech-wood" && <NewTechWoodSection />}
-
       {/* ── Products / Collection ── */}
       {brand.products.length > 0 && (
         <div className="bd-products">
@@ -170,17 +166,27 @@ export default function BrandDetailPage({ params }: Props) {
                   style={{ animationDelay: `${i * 0.06}s` }}
                   id={`brand-product-${product.id}`}
                 >
-                  {/* Image area — coloured swatch using accent */}
+                  {/* Image area — product image if available, else coloured swatch */}
                   <div className="bd-product-card__swatch">
-                    <div
-                      className="bd-product-card__swatch-inner"
-                      style={{
-                        background: `linear-gradient(135deg, ${accent}22 0%, ${accent}44 100%)`,
-                      }}
-                    >
-                      {/* abstract pattern overlay */}
-                      <div className="bd-product-card__swatch-pattern" />
-                    </div>
+                    {product.image ? (
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        style={{ objectFit: "cover" }}
+                      />
+                    ) : (
+                      <div
+                        className="bd-product-card__swatch-inner"
+                        style={{
+                          background: `linear-gradient(135deg, ${accent}22 0%, ${accent}44 100%)`,
+                        }}
+                      >
+                        {/* abstract pattern overlay */}
+                        <div className="bd-product-card__swatch-pattern" />
+                      </div>
+                    )}
                     {product.tag && (
                       <span className="bd-product-card__tag">{product.tag}</span>
                     )}
