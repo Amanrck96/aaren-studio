@@ -143,87 +143,45 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* ── Client Review Layout Switcher Banner ── */}
-      <div className="client-review-banner">
-        <div className="client-review-banner__content">
-          <span className="client-review-banner__tag">Client Review Mode</span>
-          <h2 className="client-review-banner__title">Preview Layout Grid Options</h2>
-          <p className="client-review-banner__desc">
-            Select one of the 5 custom product listing layouts below. Once approved by the client, we will implement this look across all category catalog pages.
-          </p>
-          <div className="client-review-banner__grid">
-            <Link href="/products/demo-archiproducts" className="layout-preview-card">
-              <span className="layout-num">01</span>
-              <span className="layout-name">Archiproducts Style</span>
-              <span className="layout-sub">Shower Panels Grid</span>
-            </Link>
-            <Link href="/products/demo-undomus" className="layout-preview-card">
-              <span className="layout-num">02</span>
-              <span className="layout-name">Undomus Style</span>
-              <span className="layout-sub">Ceramic Tiles Grid</span>
-            </Link>
-            <Link href="/products/demo-madheke" className="layout-preview-card">
-              <span className="layout-num">03</span>
-              <span className="layout-name">Madheke Style</span>
-              <span className="layout-sub">Sofas Editorial Grid</span>
-            </Link>
-            <Link href="/products/demo-taamaa" className="layout-preview-card">
-              <span className="layout-num">04</span>
-              <span className="layout-name">Taamaa Style</span>
-              <span className="layout-sub">Lighting Studio Grid</span>
-            </Link>
-            <Link href="/products/demo-thecollective" className="layout-preview-card">
-              <span className="layout-num">05</span>
-              <span className="layout-name">The Collective Style</span>
-              <span className="layout-sub">Women Shirts Grid</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Category Grid ── */}
-      <div className="products-grid">
-        {PRODUCT_CATEGORIES.map((cat) => (
-          <Link
-            key={cat.id}
-            href={`/products/${cat.id}`}
-            className="product-card"
-            id={`product-card-${cat.id}`}
-          >
-            {/* Hero Image */}
-            <div className="product-card__fig-wrapper">
-              <div className="product-card__fig">
+      {/* ── Category Grid — Madheke Editorial 2-Column Style ── */}
+      <div className="ma-container">
+        <div className="ma-grid">
+          {PRODUCT_CATEGORIES.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/products/${cat.id}`}
+              className="ma-card"
+              id={`product-card-${cat.id}`}
+            >
+              {/* Image with hover overlay */}
+              <div className="ma-card-fig-wrap">
                 <Image
                   src={cat.hero}
                   alt={cat.name}
                   fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="product-card__img"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="ma-img"
                   style={{ objectFit: "cover" }}
                 />
+                <div className="ma-hover-overlay">
+                  <span className="ma-view-btn">EXPLORE CATEGORY →</span>
+                </div>
+                <div className="ma-badge-num">{cat.num}</div>
               </div>
 
-              {/* Subcategories count badge */}
-              <div className="product-card__badge t-tag">
-                {cat.subcategories.length} Lines
-              </div>
-            </div>
-
-            {/* Bottom caption bar — ticket style */}
-            <div className="product-card__caption">
-              <div className="product-card__caption-left">
-                <span className="product-card__caption-name">{cat.name}</span>
-                <span className="product-card__caption-subs t-tag">
-                  {cat.subcategories.slice(0, 2).join(" · ")}{cat.subcategories.length > 2 ? ` +${cat.subcategories.length - 2}` : ""}
+              {/* Editorial Info */}
+              <div className="ma-card-info">
+                <div className="ma-card-header">
+                  <h3 className="ma-card-title">{cat.name}</h3>
+                  <span className="ma-card-code">{cat.code}</span>
+                </div>
+                <span className="ma-card-meta">
+                  {cat.subcategories.length} LINES · {cat.subcategories.slice(0, 3).join(" · ")}
                 </span>
               </div>
-              <div className="product-card__caption-right">
-                <span className="product-card__caption-code">{cat.code}</span>
-                <span className="product-card__caption-num">{cat.num}</span>
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* ── CTA ── */}
@@ -237,191 +195,206 @@ export default function ProductsPage() {
       </div>
 
       <style>{`
-        /* ── Products Page ── */
+        /* ── Approved 03 Madheke Editorial Products Page ── */
         .products-page {
-          background: #eaeef4;
-          color: #000;
+          background: #faf8f5;
+          color: #1e1e1e;
           min-height: 100vh;
           padding-top: 8rem;
+          font-family: serif;
         }
 
         .products-header {
-          padding: 6rem 0.8rem 4rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          padding: 6rem 1.6rem 3.5rem;
+          border-bottom: 0.1rem solid rgba(0,0,0,0.1);
+          max-width: 1320px;
+          margin: 0 auto;
         }
 
         @media (min-width: 768px) {
           .products-header {
-            padding: 8rem 1.2rem 4rem;
+            padding: 8rem 2rem 4rem;
           }
         }
 
         .products-header__title {
-          font-size: clamp(6rem, 15vw, 22rem);
-          font-weight: 700;
-          letter-spacing: -0.05em;
-          line-height: 0.88;
+          font-family: "Playfair Display", Georgia, serif;
+          font-size: clamp(4.5rem, 12vw, 14rem);
+          font-weight: 400;
+          letter-spacing: -0.04em;
+          line-height: 0.9;
           text-transform: uppercase;
-          color: #000;
-          margin-bottom: 3.2rem;
+          color: #1a1a1a;
+          margin-bottom: 2rem;
         }
 
         .products-header__desc {
-          font-size: 1.5rem;
+          font-family: serif;
+          font-size: clamp(1.5rem, 2.2vw, 2.1rem);
           line-height: 1.5;
-          letter-spacing: -0.01em;
+          color: rgba(0,0,0,0.6);
+          font-style: italic;
+          max-width: 68rem;
         }
 
-        /* ── Grid ── */
-        .products-grid {
-          display: flex;
-          flex-wrap: wrap;
-          width: 100%;
+        /* ── Madheke Grid Container ── */
+        .ma-container {
+          max-width: 1320px;
+          margin: 0 auto;
+          padding: 4rem 1.6rem 8rem;
         }
 
-        /* ── Product Card ── */
-        .product-card {
+        @media (min-width: 768px) {
+          .ma-container {
+            padding: 5rem 2rem 8rem;
+          }
+        }
+
+        .ma-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 4rem 3rem;
+        }
+
+        @media (min-width: 768px) {
+          .ma-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        /* ── Madheke Card ── */
+        .ma-card {
           display: flex;
           flex-direction: column;
-          flex: 0 0 100%;
-          width: 100%;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
           text-decoration: none;
           color: inherit;
+          background: #ffffff;
+          border: 0.1rem solid rgba(0,0,0,0.08);
           overflow: hidden;
+          transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
         }
 
-        @media (min-width: 768px) {
-          .product-card {
-            flex: 0 0 50%;
-            width: 50%;
-            border-right: 0.1rem solid rgba(0,0,0,0.12);
-          }
-          .product-card:nth-child(2n) {
-            border-right: none;
-          }
+        .ma-card:hover {
+          transform: translateY(-0.4rem);
+          box-shadow: 0 1.6rem 4rem rgba(0,0,0,0.08);
         }
 
-        /* Image wrapper */
-        .product-card__fig-wrapper {
+        .ma-card-fig-wrap {
           position: relative;
-          overflow: hidden;
-          height: 26rem;
+          height: 32rem;
           background: #1a1a1a;
+          overflow: hidden;
         }
 
         @media (min-width: 768px) {
-          .product-card__fig-wrapper {
+          .ma-card-fig-wrap {
             height: 38rem;
           }
         }
 
-        @media (min-width: 1240px) {
-          .product-card__fig-wrapper {
-            height: 44vw;
-            max-height: 64rem;
+        @media (min-width: 1200px) {
+          .ma-card-fig-wrap {
+            height: 44rem;
           }
         }
 
-        .product-card__fig {
+        .ma-img {
+          transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) !important;
+        }
+
+        .ma-card:hover .ma-img {
+          transform: scale(1.05);
+        }
+
+        .ma-hover-overlay {
           position: absolute;
           inset: 0;
+          background: rgba(0,0,0,0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          backdrop-filter: blur(2px);
         }
 
-        .product-card__img {
-          transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        .ma-card:hover .ma-hover-overlay {
+          opacity: 1;
         }
 
-        .product-card:hover .product-card__img {
-          transform: scale(1.04);
+        .ma-view-btn {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 1.1rem;
+          font-weight: 700;
+          letter-spacing: 0.15em;
+          color: #ffffff;
+          background: rgba(0,0,0,0.8);
+          padding: 1rem 2rem;
+          border: 0.1rem solid rgba(255,255,255,0.3);
+          border-radius: 999px;
         }
 
-        /* Badge */
-        .product-card__badge {
+        .ma-badge-num {
           position: absolute;
           top: 1.6rem;
           right: 1.6rem;
-          background: rgba(0,0,0,0.6);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
-          color: rgba(255,255,255,0.8);
-          padding: 0.5rem 1rem;
-          font-size: 1.0rem;
-          letter-spacing: 0.08em;
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 1.1rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          background: rgba(250, 248, 245, 0.92);
+          color: #000000;
+          padding: 0.4rem 1rem;
+          border-radius: 0.4rem;
         }
 
-        /* Caption bar — ticket style */
-        .product-card__caption {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 1.6rem;
-          padding: 1.6rem 0.8rem;
-          background: #eaeef4;
-          transition: background 0.25s ease;
-        }
-
-        @media (min-width: 1240px) {
-          .product-card__caption {
-            padding: 1.2rem 0.71429vw;
-          }
-        }
-
-        .product-card:hover .product-card__caption {
-          background: #dfe3e9;
-        }
-
-        .product-card__caption-left {
+        .ma-card-info {
+          padding: 2.4rem;
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
+          gap: 0.8rem;
+          background: #ffffff;
         }
 
-        .product-card__caption-name {
-          font-size: clamp(1.3rem, 1.6vw, 1.5rem);
-          font-weight: 700;
-          letter-spacing: -0.02em;
-          line-height: 1.0;
-          text-transform: uppercase;
-          color: #000;
-        }
-
-        .product-card__caption-subs {
-          font-size: 1.1rem;
-          color: rgba(0,0,0,0.4);
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
-
-        .product-card__caption-right {
+        .ma-card-header {
           display: flex;
-          align-items: center;
-          gap: 2rem;
-          flex-shrink: 0;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 1.6rem;
         }
 
-        .product-card__caption-code {
-          font-size: clamp(2rem, 4vw, 4rem);
-          font-weight: 700;
-          letter-spacing: -0.04em;
-          line-height: 1;
-          color: #000;
-          font-family: var(--font-geist), sans-serif;
+        .ma-card-title {
+          font-family: "Playfair Display", Georgia, serif;
+          font-size: clamp(2rem, 3.2vw, 2.8rem);
+          font-weight: 600;
+          letter-spacing: -0.02em;
+          color: #1a1a1a;
+          margin: 0;
         }
 
-        .product-card__caption-num {
-          font-size: clamp(1.8rem, 3.5vw, 3.6rem);
+        .ma-card-code {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 1.4rem;
+          font-weight: 800;
+          color: rgba(0,0,0,0.3);
+          letter-spacing: 0.05em;
+        }
+
+        .ma-card-meta {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 1.1rem;
           font-weight: 700;
-          letter-spacing: -0.04em;
-          line-height: 1;
-          color: rgba(0,0,0,0.2);
-          font-family: var(--font-geist), sans-serif;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: rgba(0,0,0,0.45);
         }
 
         /* ── CTA ── */
         .products-cta {
-          padding: 8rem 0.8rem 10rem;
-          border-top: 0.1rem solid rgba(0,0,0,0.12);
+          max-width: 1320px;
+          margin: 0 auto;
+          padding: 6rem 1.6rem 10rem;
+          border-top: 0.1rem solid rgba(0,0,0,0.1);
           display: flex;
           flex-direction: column;
           gap: 2.4rem;
@@ -429,7 +402,7 @@ export default function ProductsPage() {
 
         @media (min-width: 768px) {
           .products-cta {
-            padding: 8rem 1.2rem 10rem;
+            padding: 8rem 2rem 10rem;
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
@@ -437,121 +410,12 @@ export default function ProductsPage() {
         }
 
         .products-cta__text {
-          font-size: clamp(1.4rem, 2vw, 2rem);
-          font-weight: 600;
-          letter-spacing: -0.02em;
-          color: #000;
-          max-width: 48rem;
-          line-height: 1.3;
-        }
-
-        /* ── Client Review Banner ── */
-        .client-review-banner {
-          background: #0f172a;
-          color: #fff;
-          padding: 4rem 1.2rem;
-          border-bottom: 0.1rem solid rgba(255,255,255,0.1);
-        }
-
-        @media (min-width: 768px) {
-          .client-review-banner {
-            padding: 6rem 2.4rem;
-          }
-        }
-
-        .client-review-banner__content {
-          max-width: 1320px;
-          margin: 0 auto;
-        }
-
-        .client-review-banner__tag {
-          font-size: 1.1rem;
-          font-weight: 700;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          color: #38bdf8;
-          display: inline-block;
-          margin-bottom: 1.6rem;
-        }
-
-        .client-review-banner__title {
-          font-size: clamp(2.4rem, 4vw, 4rem);
-          font-weight: 800;
-          letter-spacing: -0.02em;
-          margin-bottom: 1.6rem;
-          color: #fff;
-        }
-
-        .client-review-banner__desc {
-          font-size: clamp(1.4rem, 1.8vw, 1.6rem);
-          line-height: 1.5;
-          color: #94a3b8;
-          max-width: 72rem;
-          margin-bottom: 4rem;
-        }
-
-        .client-review-banner__grid {
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 1.6rem;
-        }
-
-        @media (max-width: 1024px) {
-          .client-review-banner__grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-
-        @media (max-width: 640px) {
-          .client-review-banner__grid {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        .layout-preview-card {
-          background: #1e293b;
-          border: 0.1rem solid rgba(255,255,255,0.08);
-          padding: 2.4rem 2rem;
-          text-decoration: none;
-          color: #fff;
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .layout-preview-card:hover {
-          background: #38bdf8;
-          transform: translateY(-0.4rem);
-          border-color: #38bdf8;
-        }
-
-        .layout-preview-card:hover .layout-num {
-          color: rgba(255,255,255,0.6);
-        }
-
-        .layout-preview-card:hover .layout-sub {
-          color: #ffffff;
-        }
-
-        .layout-num {
-          font-family: var(--font-geist-mono), monospace;
-          font-size: 2.4rem;
-          font-weight: 800;
-          color: rgba(255,255,255,0.15);
-          transition: color 0.3s;
-        }
-
-        .layout-name {
-          font-size: 1.45rem;
-          font-weight: 700;
-          letter-spacing: -0.01em;
-        }
-
-        .layout-sub {
-          font-size: 1.2rem;
-          color: #94a3b8;
-          transition: color 0.3s;
+          font-family: serif;
+          font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+          font-style: italic;
+          color: rgba(0,0,0,0.7);
+          max-width: 52rem;
+          line-height: 1.4;
         }
       `}</style>
     </div>
