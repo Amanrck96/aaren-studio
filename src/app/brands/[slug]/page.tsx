@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, use } from "react";
 import { getBrandById } from "@/lib/brands";
 import { notFound } from "next/navigation";
+import NewTechWoodSection from "@/components/NewTechWoodSection";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -129,6 +130,9 @@ export default function BrandDetailPage({ params }: Props) {
         <div className="bd-description__accent-line" style={{ background: accent }} />
       </div>
 
+      {/* ── Custom Brand Special Section: NewTechWood ── */}
+      {brand.id === "newtech-wood" && <NewTechWoodSection />}
+
       {/* ── Products / Collection ── */}
       {brand.products.length > 0 && (
         <div className="bd-products">
@@ -147,51 +151,57 @@ export default function BrandDetailPage({ params }: Props) {
                 id={`brand-filter-${brand.id}-${col.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 {col}
-                {col !== "All" && (
-                  <span className="bd-filter-chip__count">
-                    {brand.products.filter((p) => p.collection === col).length}
-                  </span>
-                )}
+                <span className="bd-filter-chip__count">
+                  {col === "All"
+                    ? brand.products.length
+                    : brand.products.filter((p) => p.collection === col).length}
+                </span>
               </button>
             ))}
           </div>
 
-          {/* Product grid */}
-          <div className={`bd-product-grid${mounted ? " is-mounted" : ""}`}>
-            {filteredProducts.map((product, i) => (
-              <div
-                key={product.id}
-                className="bd-product-card"
-                style={{ animationDelay: `${i * 0.06}s` }}
-                id={`brand-product-${product.id}`}
-              >
-                {/* Image area — coloured swatch using accent */}
-                <div className="bd-product-card__swatch">
-                  <div
-                    className="bd-product-card__swatch-inner"
-                    style={{
-                      background: `linear-gradient(135deg, ${accent}22 0%, ${accent}44 100%)`,
-                    }}
-                  >
-                    {/* abstract pattern overlay */}
-                    <div className="bd-product-card__swatch-pattern" />
+          {/* Product grid or Empty state */}
+          {filteredProducts.length > 0 ? (
+            <div className={`bd-product-grid${mounted ? " is-mounted" : ""}`}>
+              {filteredProducts.map((product, i) => (
+                <div
+                  key={product.id}
+                  className="bd-product-card"
+                  style={{ animationDelay: `${i * 0.06}s` }}
+                  id={`brand-product-${product.id}`}
+                >
+                  {/* Image area — coloured swatch using accent */}
+                  <div className="bd-product-card__swatch">
+                    <div
+                      className="bd-product-card__swatch-inner"
+                      style={{
+                        background: `linear-gradient(135deg, ${accent}22 0%, ${accent}44 100%)`,
+                      }}
+                    >
+                      {/* abstract pattern overlay */}
+                      <div className="bd-product-card__swatch-pattern" />
+                    </div>
+                    {product.tag && (
+                      <span className="bd-product-card__tag">{product.tag}</span>
+                    )}
                   </div>
-                  {product.tag && (
-                    <span className="bd-product-card__tag">{product.tag}</span>
-                  )}
-                </div>
 
-                {/* Info */}
-                <div className="bd-product-card__info">
-                  <span className="bd-product-card__collection">{product.collection}</span>
-                  <span className="bd-product-card__name">{product.name}</span>
-                  {product.finish && (
-                    <span className="bd-product-card__finish">{product.finish}</span>
-                  )}
+                  {/* Info */}
+                  <div className="bd-product-card__info">
+                    <span className="bd-product-card__collection">{product.collection}</span>
+                    <span className="bd-product-card__name">{product.name}</span>
+                    {product.finish && (
+                      <span className="bd-product-card__finish">{product.finish}</span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bd-empty-collection" style={{ padding: "4rem 1.2rem", textAlign: "center", color: "rgba(0,0,0,0.4)" }}>
+              <p style={{ fontSize: "1.4rem" }}>No items listed in <strong>{activeCollection}</strong> for this catalog edition.</p>
+            </div>
+          )}
         </div>
       )}
 
