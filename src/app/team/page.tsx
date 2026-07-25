@@ -61,7 +61,34 @@ const TEAM = [
   },
 ];
 
+import { useEffect, useState } from "react";
+
 export default function TeamPage() {
+  const [teamMembers, setTeamMembers] = useState(TEAM);
+
+  useEffect(() => {
+    fetch("/api/team")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success) {
+          const list = json.team || (json.data && json.data.team) || (Array.isArray(json.data) ? json.data : null);
+          if (list && list.length > 0) {
+            setTeamMembers(
+              list.map((m: any, idx: number) => ({
+                name: m.name,
+                role: m.designation || m.role,
+                code: m.memberCode ? m.memberCode.split(" ")[0] : "MM",
+                num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : `0${idx + 1}`,
+                image: m.photoUrl || m.image,
+                bio: m.bio,
+              }))
+            );
+          }
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <div className="team-page">
       {/* ── Page Header ── */}
@@ -79,7 +106,7 @@ export default function TeamPage() {
 
       {/* ── Team Grid ── */}
       <div className="team-grid">
-        {TEAM.map((member) => (
+        {teamMembers.map((member) => (
           <div key={member.name} className="team-card">
             <div className="team-card__fig-wrapper">
               <div className="team-card__fig">

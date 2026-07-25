@@ -1,33 +1,138 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function AdminNav() {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem("aaren_sidebar_open");
+    if (saved !== null) {
+      setIsOpen(saved === "true");
+    }
+  }, []);
+
+  const toggleSidebar = () => {
+    const nextState = !isOpen;
+    setIsOpen(nextState);
+    localStorage.setItem("aaren_sidebar_open", nextState ? "true" : "false");
+  };
 
   const navItems = [
     { label: "📊 Dashboard", href: "/admin/dashboard" },
+    { label: "📄 Page Builder", href: "/admin/pages" },
     { label: "🏠 Hero Section", href: "/admin/hero" },
+    { label: "🛠️ Services", href: "/admin/services" },
     { label: "🏷️ Categories", href: "/admin/categories" },
     { label: "🏢 Brands", href: "/admin/brands" },
     { label: "🖼️ Showcase Projects", href: "/admin/projects" },
     { label: "📦 Products", href: "/admin/products" },
+    { label: "💬 Testimonials", href: "/admin/testimonials" },
+    { label: "✍️ Blogs", href: "/admin/blogs" },
+    { label: "📁 Media Library", href: "/admin/media" },
+    { label: "🗂️ Dropdowns", href: "/admin/dropdowns" },
     { label: "ℹ️ About & Roadmap", href: "/admin/about" },
     { label: "👥 Team", href: "/admin/team" },
     { label: "📞 Contact & Footer", href: "/admin/contact" },
     { label: "📥 Inquiries & Leads", href: "/admin/inquiries" },
   ];
 
+  if (!mounted) return null;
+
   return (
-    <div style={{ background: "#111116", borderBottom: "1px solid #222", padding: "0.8rem 2rem" }}>
-      <div style={{ maxWidth: "1400px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <span style={{ fontSize: "1.2rem", fontWeight: 800, color: "#fff", letterSpacing: "0.05em" }}>AAREN ADMIN</span>
-          <span style={{ fontSize: "0.75rem", background: "#3b82f6", color: "#fff", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 700 }}>LIVE SYNC</span>
+    <>
+      {/* Floating Re-Open Button when Sidebar is Collapsed */}
+      {!isOpen && (
+        <button
+          onClick={toggleSidebar}
+          style={{
+            position: "fixed",
+            top: "16px",
+            left: "16px",
+            zIndex: 9999,
+            background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)",
+            color: "#000",
+            border: "none",
+            borderRadius: "10px",
+            padding: "0.8rem 1.4rem",
+            fontWeight: 900,
+            fontSize: "1.05rem",
+            cursor: "pointer",
+            boxShadow: "0 6px 20px rgba(0,0,0,0.6)",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            transition: "all 0.2s ease-in-out",
+          }}
+        >
+          ☰ Show Menu
+        </button>
+      )}
+
+      {/* Sidebar Container */}
+      <aside
+        style={{
+          width: "300px",
+          height: "100vh",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          background: "linear-gradient(180deg, #0e1017 0%, #08090d 100%)",
+          borderRight: "1px solid rgba(212, 175, 55, 0.25)",
+          display: "flex",
+          flexDirection: "column",
+          padding: "1.2rem 1rem",
+          zIndex: 1000,
+          boxShadow: "6px 0 30px rgba(0,0,0,0.6)",
+          transform: isOpen ? "translateX(0)" : "translateX(-300px)",
+          transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      >
+        {/* Brand Header */}
+        <div style={{ flexShrink: 0, marginBottom: "1rem", padding: "0 0.4rem" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontSize: "1.35rem", fontWeight: 900, color: "#d4af37", letterSpacing: "0.12em" }}>
+              AAREN CMS
+            </span>
+            <button
+              onClick={toggleSidebar}
+              title="Hide Sidebar Menu"
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                color: "#d4af37",
+                border: "1px solid rgba(212,175,55,0.35)",
+                borderRadius: "8px",
+                padding: "0.3rem 0.7rem",
+                cursor: "pointer",
+                fontSize: "0.85rem",
+                fontWeight: 800,
+              }}
+            >
+              ✕ Hide
+            </button>
+          </div>
+          <div style={{ color: "#94a3b8", fontSize: "0.85rem", marginTop: "0.2rem", fontWeight: 600 }}>Luxury Control Center</div>
         </div>
 
-        <div style={{ display: "flex", gap: "0.5rem", overflowX: "auto", padding: "0.2rem 0" }}>
+        {/* Scrollable Nav List filling entire height */}
+        <nav
+          className="admin-sidebar-nav"
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.25rem",
+            overflowY: "auto",
+            paddingRight: "0.4rem",
+            scrollbarWidth: "thin",
+            scrollbarColor: "#d4af37 rgba(255, 255, 255, 0.08)",
+          }}
+        >
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -35,26 +140,42 @@ export default function AdminNav() {
                 key={item.href}
                 href={item.href}
                 style={{
-                  padding: "0.5rem 0.9rem",
-                  borderRadius: "6px",
-                  fontSize: "0.85rem",
-                  fontWeight: isActive ? 700 : 500,
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0.6rem 0.9rem",
+                  borderRadius: "8px",
+                  fontSize: "1.05rem",
+                  fontWeight: isActive ? 800 : 600,
                   textDecoration: "none",
-                  color: isActive ? "#fff" : "#888",
-                  background: isActive ? "#222" : "transparent",
-                  whiteSpace: "nowrap",
-                  transition: "all 0.2s",
+                  color: isActive ? "#ffffff" : "#cbd5e1",
+                  background: isActive ? "linear-gradient(90deg, rgba(212, 175, 55, 0.35) 0%, rgba(212, 175, 55, 0.1) 100%)" : "transparent",
+                  borderLeft: isActive ? "5px solid #d4af37" : "5px solid transparent",
+                  transition: "all 0.15s ease-in-out",
                 }}
               >
                 {item.label}
               </Link>
             );
           })}
-        </div>
+        </nav>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <Link href="/" target="_blank" style={{ fontSize: "0.85rem", color: "#60a5fa", textDecoration: "none", fontWeight: 600 }}>
-            View Live Site ↗
+        {/* Footer / User Controls */}
+        <div style={{ flexShrink: 0, borderTop: "1px solid rgba(255,255,255,0.12)", paddingTop: "0.8rem", marginTop: "0.8rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+          <Link
+            href="/"
+            target="_blank"
+            style={{
+              fontSize: "0.95rem",
+              color: "#60a5fa",
+              textDecoration: "none",
+              fontWeight: 700,
+              display: "flex",
+              alignItems: "center",
+              gap: "0.4rem",
+              padding: "0.3rem 0.4rem",
+            }}
+          >
+            🌐 View Live Site ↗
           </Link>
 
           <button
@@ -64,20 +185,44 @@ export default function AdminNav() {
               window.location.href = "/admin/login";
             }}
             style={{
-              padding: "0.4rem 0.8rem",
+              width: "100%",
+              padding: "0.65rem",
               background: "rgba(239, 68, 68, 0.2)",
               color: "#f87171",
               border: "1px solid rgba(239, 68, 68, 0.4)",
-              borderRadius: "4px",
+              borderRadius: "8px",
               cursor: "pointer",
-              fontSize: "0.8rem",
-              fontWeight: 700,
+              fontSize: "0.95rem",
+              fontWeight: 800,
+              transition: "all 0.2s",
             }}
           >
             🔒 Logout
           </button>
         </div>
-      </div>
-    </div>
+      </aside>
+
+      {/* Global CSS for Custom Gold Scrollbar & layout transitions */}
+      <style jsx global>{`
+        .admin-sidebar-nav::-webkit-scrollbar {
+          width: 8px;
+        }
+        .admin-sidebar-nav::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 4px;
+        }
+        .admin-sidebar-nav::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #d4af37 0%, #aa820a 100%);
+          border-radius: 4px;
+        }
+        .admin-sidebar-nav::-webkit-scrollbar-thumb:hover {
+          background: #f3e5ab;
+        }
+        main.admin-main-content {
+          margin-left: ${isOpen ? "300px" : "0px"} !important;
+          transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+      `}</style>
+    </>
   );
 }

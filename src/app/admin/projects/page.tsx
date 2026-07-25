@@ -150,7 +150,7 @@ export default function AdminProjectsPage() {
   return (
     <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
       <AdminNav />
-      <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
       {/* Navigation Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #222", paddingBottom: "1.5rem" }}>
         <div>
@@ -323,7 +323,7 @@ export default function AdminProjectsPage() {
             </div>
           )}
         </div>
-      </div>
+      </main>
     </div>
   </div>
 );

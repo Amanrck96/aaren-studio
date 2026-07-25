@@ -1,242 +1,176 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import AdminNav from "@/components/AdminNav";
 import { TeamMemberItem } from "@/lib/types";
 
 export default function AdminTeamPage() {
   const [team, setTeam] = useState<TeamMemberItem[]>([]);
-  const [pageDesc, setPageDesc] = useState("Meet the visionary leaders, surface specialists, and design engineers behind Aaren Studio.");
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [editingMember, setEditingMember] = useState<Partial<TeamMemberItem>>({
-    name: "",
-    designation: "Surface Specialist",
-    memberCode: "MM 01",
-    photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-    phone: "+91 98800 12345",
-    bio: "",
-    linkedin: "https://linkedin.com",
-    instagram: "https://instagram.com",
-    sequenceNumber: 1,
-  });
+  const [editing, setEditing] = useState<Partial<TeamMemberItem> | null>(null);
+
+  const fetchTeam = () => {
+    fetch("/api/team")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success) {
+          const teamList = json.team || (json.data && json.data.team) || (Array.isArray(json.data) ? json.data : []);
+          setTeam(teamList);
+        }
+        setLoading(false);
+      })
+      .catch((err) => console.error(err));
+  };
 
   useEffect(() => {
     fetchTeam();
   }, []);
 
-  async function fetchTeam() {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/team");
-      const json = await res.json();
-      if (json.success) setTeam(json.team);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleSave(e: React.FormEvent) {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const res = await fetch("/api/team", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "team", data: editingMember }),
-      });
-      const json = await res.json();
-      if (json.success) {
-        setShowModal(false);
-        fetchTeam();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
+    if (!editing?.name || !editing?.designation) return alert("Name and Designation are required.");
 
-  async function handleDelete(id: string) {
-    if (!confirm("Are you sure you want to delete this team member?")) return;
-    try {
-      await fetch(`/api/team?id=${id}&type=team`, { method: "DELETE" });
+    const res = await fetch("/api/team", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...editing,
+        memberCode: editing.memberCode || "MM 01",
+        photoUrl: editing.photoUrl || "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg",
+      }),
+    });
+    const json = await res.json();
+    if (json.success) {
+      alert("Team member saved!");
+      setEditing(null);
       fetchTeam();
-    } catch (e) {
-      console.error(e);
-    }
-  }
+    } else alert("Error: " + json.error);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure?")) return;
+    await fetch(`/api/team?id=${id}`, { method: "DELETE" });
+    fetchTeam();
+  };
 
   return (
-    <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
+    <div style={{ background: "#0b0c10", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
 
-      <div style={{ maxWidth: "1200px", margin: "3rem auto", padding: "0 2rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "1rem" }}>
           <div>
-            <span style={{ color: "#6366f1", fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>TEAM CONTROLS</span>
-            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.3rem 0" }}>Our Team Manager</h1>
-            <p style={{ color: "#aaa", fontSize: "0.95rem" }}>Manage team member profiles, designations, member codes (MM 01), phone, bios, and social links.</p>
+            <span style={{ color: "#d4af37", fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>TEAM MANAGEMENT</span>
+            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.2rem 0", color: "#fff" }}>Our Team CMS</h1>
+            <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Manage official Aaren Intpro team members, designations, member codes, and profile photos.</p>
           </div>
           <button
-            onClick={() => {
-              setEditingMember({
-                name: "",
-                designation: "Surface Specialist",
-                memberCode: `MM 0${team.length + 1}`,
-                photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-                phone: "+91 98800 12345",
-                bio: "",
-                sequenceNumber: team.length + 1,
-              });
-              setShowModal(true);
-            }}
-            style={{ padding: "0.8rem 1.4rem", background: "#6366f1", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 700 }}
+            onClick={() => setEditing({ name: "", designation: "Sales", memberCode: "MM 08", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", bio: "", sequenceNumber: team.length + 1 })}
+            style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
           >
             + Add Team Member
           </button>
         </div>
 
-        {/* Intro Text Form */}
-        <div style={{ background: "#141418", border: "1px solid #222", borderRadius: "10px", padding: "1.5rem", marginBottom: "2rem" }}>
-          <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>Page Intro Description *</label>
-          <input
-            type="text"
-            value={pageDesc}
-            onChange={(e) => setPageDesc(e.target.value)}
-            style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-          />
-        </div>
-
-        {/* Team Grid */}
-        {loading ? (
-          <div style={{ padding: "3rem", textAlign: "center", color: "#888" }}>Loading team profiles...</div>
-        ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1.5rem" }}>
-            {team.map((member) => (
-              <div key={member.id} style={{ background: "#141418", border: "1px solid #222", borderRadius: "10px", overflow: "hidden", display: "flex", flexDirection: "column" }}>
-                <div style={{ position: "relative", height: "240px", background: "#222" }}>
-                  <Image src={member.photoUrl} alt={member.name} fill style={{ objectFit: "cover" }} />
-                  <span style={{ position: "absolute", top: "10px", right: "10px", background: "rgba(0,0,0,0.8)", color: "#6366f1", padding: "0.3rem 0.6rem", borderRadius: "4px", fontSize: "0.75rem", fontWeight: 700 }}>
-                    {member.memberCode}
-                  </span>
-                </div>
-                <div style={{ padding: "1.2rem", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <div>
-                    <h3 style={{ fontSize: "1.2rem", fontWeight: 700, margin: "0 0 0.2rem" }}>{member.name}</h3>
-                    <div style={{ fontSize: "0.85rem", color: "#6366f1", fontWeight: 600, marginBottom: "0.6rem" }}>{member.designation}</div>
-                    <p style={{ color: "#888", fontSize: "0.85rem", lineHeight: 1.4, margin: "0 0 0.8rem" }}>{member.bio}</p>
-                    {member.phone && <div style={{ fontSize: "0.8rem", color: "#aaa" }}>📞 {member.phone}</div>}
-                  </div>
-
-                  <div style={{ display: "flex", gap: "0.8rem", borderTop: "1px solid #222", paddingTop: "0.8rem", marginTop: "1rem" }}>
-                    <button
-                      onClick={() => {
-                        setEditingMember(member);
-                        setShowModal(true);
-                      }}
-                      style={{ flex: 1, padding: "0.5rem", background: "#222", color: "#fff", border: "1px solid #333", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}
-                    >
-                      ✏️ Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(member.id)}
-                      style={{ padding: "0.5rem 0.8rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}
-                    >
-                      🗑️ Delete
-                    </button>
-                  </div>
-                </div>
+        {editing && (
+          <form onSubmit={handleSave} style={{ background: "#12141c", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.2)", marginBottom: "2rem" }}>
+            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "1.2rem", color: "#d4af37" }}>{editing.id ? "Edit Team Member" : "Add Team Member"}</h2>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Full Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={editing.name || ""}
+                  onChange={(e) => setEditing({ ...editing, name: e.target.value })}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
               </div>
-            ))}
-          </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Designation / Role *</label>
+                <input
+                  type="text"
+                  required
+                  value={editing.designation || ""}
+                  onChange={(e) => setEditing({ ...editing, designation: e.target.value })}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Member Code (e.g. MM 01)</label>
+                <input
+                  type="text"
+                  value={editing.memberCode || ""}
+                  onChange={(e) => setEditing({ ...editing, memberCode: e.target.value })}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+            </div>
+
+            <div style={{ marginTop: "1rem" }}>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Photo URL (Direct image link)</label>
+              <input
+                type="text"
+                value={editing.photoUrl || ""}
+                onChange={(e) => setEditing({ ...editing, photoUrl: e.target.value })}
+                style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+              />
+            </div>
+
+            <div style={{ marginTop: "1rem" }}>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Biography</label>
+              <textarea
+                rows={3}
+                value={editing.bio || ""}
+                onChange={(e) => setEditing({ ...editing, bio: e.target.value })}
+                style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+              />
+            </div>
+
+            <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
+              <button type="submit" style={{ padding: "0.75rem 1.6rem", background: "#d4af37", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}>
+                Save Member
+              </button>
+              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.75rem 1.6rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+                Cancel
+              </button>
+            </div>
+          </form>
         )}
-      </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
-          <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "550px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
-            <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem" }}>{editingMember.id ? "Edit Member" : "Add Team Member"}</h2>
-            <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
+          {team.map((m) => (
+            <div key={m.id || m.name} style={{ background: "#12141c", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "1.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Full Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={editingMember.name || ""}
-                  onChange={(e) => setEditingMember({ ...editingMember, name: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                />
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-                <div>
-                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Designation *</label>
-                  <input
-                    type="text"
-                    required
-                    value={editingMember.designation || ""}
-                    onChange={(e) => setEditingMember({ ...editingMember, designation: e.target.value })}
-                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                <div style={{ display: "flex", gap: "1.2rem", alignItems: "center", marginBottom: "1rem" }}>
+                  <img
+                    src={m.photoUrl}
+                    alt={m.name}
+                    style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: "2px solid #d4af37" }}
                   />
+                  <div>
+                    <span style={{ fontSize: "0.75rem", background: "rgba(212,175,55,0.15)", color: "#d4af37", padding: "0.15rem 0.5rem", borderRadius: "4px", fontWeight: 800 }}>
+                      {m.memberCode || "MM"}
+                    </span>
+                    <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#fff", margin: "0.2rem 0" }}>{m.name}</h3>
+                    <div style={{ color: "#94a3b8", fontSize: "0.85rem", fontWeight: 600 }}>{m.designation}</div>
+                  </div>
                 </div>
-
-                <div>
-                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Member Code (e.g. MM 01) *</label>
-                  <input
-                    type="text"
-                    required
-                    value={editingMember.memberCode || ""}
-                    onChange={(e) => setEditingMember({ ...editingMember, memberCode: e.target.value })}
-                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                  />
-                </div>
+                <p style={{ color: "#94a3b8", fontSize: "0.88rem", lineHeight: 1.5, marginBottom: "1.2rem" }}>{m.bio}</p>
               </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Photo URL *</label>
-                <input
-                  type="text"
-                  required
-                  value={editingMember.photoUrl || ""}
-                  onChange={(e) => setEditingMember({ ...editingMember, photoUrl: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Contact / Phone Number</label>
-                <input
-                  type="text"
-                  value={editingMember.phone || ""}
-                  onChange={(e) => setEditingMember({ ...editingMember, phone: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Bio / Description</label>
-                <textarea
-                  rows={3}
-                  value={editingMember.bio || ""}
-                  onChange={(e) => setEditingMember({ ...editingMember, bio: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                />
-              </div>
-
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}>
-                <button type="button" onClick={() => setShowModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
-                  Cancel
+              <div style={{ display: "flex", gap: "0.8rem", paddingTop: "0.8rem", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <button onClick={() => setEditing(m)} style={{ padding: "0.45rem 1rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
+                  Edit
                 </button>
-                <button type="submit" style={{ padding: "0.7rem 1.4rem", background: "#6366f1", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 700 }}>
-                  Save Member
+                <button onClick={() => handleDelete(m.id)} style={{ padding: "0.45rem 1rem", background: "rgba(239, 68, 68, 0.15)", color: "#f87171", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
+                  Delete
                 </button>
               </div>
-            </form>
-          </div>
+            </div>
+          ))}
         </div>
-      )}
+      </main>
     </div>
   );
 }

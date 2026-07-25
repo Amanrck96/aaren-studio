@@ -230,41 +230,98 @@ export default function BrandDetailPage({ params }: Props) {
         </div>
       )}
 
-      {/* ── Catalogues ── */}
+      {/* ── Catalogues (Archiproducts Luxury PDF Card Display) ── */}
       {brand.catalogues.length > 0 && (
         <div className="bd-catalogues">
           <div className="bd-catalogues__header">
             <h2 className="bd-catalogues__heading">Catalogues</h2>
-            <p className="bd-catalogues__sub">Download the full product catalogues in PDF format.</p>
+            <p className="bd-catalogues__sub">Explore & download official luxury product catalogues in PDF format.</p>
           </div>
 
-          <div className="bd-catalogue-grid">
-            {brand.catalogues.map((cat, i) => (
-              <a
-                key={i}
-                href={`/catalogues/${cat.file}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bd-catalogue-card"
-                id={`catalogue-${brand.id}-${i}`}
-              >
-                <div className="bd-catalogue-card__icon" style={{ color: accent }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14,2 14,8 20,8"/>
-                    <line x1="12" y1="18" x2="12" y2="12"/>
-                    <polyline points="9,15 12,18 15,15"/>
-                  </svg>
-                </div>
-                <div className="bd-catalogue-card__text">
-                  <span className="bd-catalogue-card__title">{cat.title}</span>
-                  {cat.subtitle && (
-                    <span className="bd-catalogue-card__sub">{cat.subtitle}</span>
-                  )}
-                </div>
-                <div className="bd-catalogue-card__arrow">↗</div>
-              </a>
-            ))}
+          <div className="bd-catalogue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "2rem" }}>
+            {brand.catalogues.map((cat, i) => {
+              const pdfUrl = `/catalogues/${cat.file}`;
+              return (
+                <a
+                  key={i}
+                  href={pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bd-pdf-luxury-card"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    background: "#ffffff",
+                    borderRadius: "12px",
+                    overflow: "hidden",
+                    border: "1px solid rgba(0,0,0,0.12)",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
+                    textDecoration: "none",
+                    position: "relative",
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  }}
+                >
+                  {/* Red Luxury PDF Tag */}
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "14px",
+                      right: "14px",
+                      background: "#ef4444",
+                      color: "#ffffff",
+                      fontSize: "0.75rem",
+                      fontWeight: 900,
+                      padding: "0.25rem 0.65rem",
+                      borderRadius: "4px",
+                      letterSpacing: "0.08em",
+                      boxShadow: "0 4px 12px rgba(239, 68, 68, 0.4)",
+                      zIndex: 10,
+                    }}
+                  >
+                    PDF
+                  </span>
+
+                  {/* 1st Page Cover Preview Display */}
+                  <div
+                    style={{
+                      height: "320px",
+                      background: "#f1f5f9",
+                      position: "relative",
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <iframe
+                      src={`${pdfUrl}#page=1&view=FitH&toolbar=0&navpanes=0`}
+                      title={cat.title}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        border: "none",
+                        pointerEvents: "none",
+                      }}
+                    />
+                  </div>
+
+                  {/* Card Title & Meta Info */}
+                  <div style={{ padding: "1.4rem 1.2rem", background: "#ffffff", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    <span style={{ fontSize: "1.15rem", fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>
+                      {cat.title}
+                    </span>
+                    {cat.subtitle && (
+                      <span style={{ fontSize: "0.9rem", color: "#64748b", fontWeight: 500 }}>
+                        {cat.subtitle}
+                      </span>
+                    )}
+                    <span style={{ fontSize: "0.85rem", color: "#d4af37", fontWeight: 800, marginTop: "0.4rem", display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                      📄 Download 1st Page & Full PDF ↗
+                    </span>
+                  </div>
+                </a>
+              );
+            })}
           </div>
         </div>
       )}

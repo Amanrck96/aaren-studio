@@ -82,7 +82,7 @@ export default function AdminHeroPage() {
     <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
       <AdminNav />
 
-      <div style={{ maxWidth: "900px", margin: "3rem auto", padding: "0 2rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
         <div style={{ marginBottom: "2rem" }}>
           <span style={{ color: "#3b82f6", fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>HOMEPAGE CONTROLS</span>
           <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.3rem 0" }}>Hero Section Editor</h1>
@@ -207,7 +207,7 @@ export default function AdminHeroPage() {
             </div>
           )}
         </form>
-      </div>
+      </main>
     </div>
   );
 }

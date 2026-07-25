@@ -180,6 +180,94 @@ model Inquiry {
   createdAt      DateTime @default(now())
 }
 
+model Service {
+  id             String   @id @default(cuid())
+  title          String
+  description    String
+  icon           String?  @default("✨")
+  imageUrl       String?
+  category       String?  @default("General")
+  buttonText     String?  @default("Explore Service")
+  buttonLink     String?  @default("/contact")
+  seoUrl         String?
+  sequenceNumber Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Testimonial {
+  id             String   @id @default(cuid())
+  clientName     String
+  company        String
+  rating         Int      @default(5)
+  review         String
+  clientImage    String?
+  sequenceNumber Int      @default(0)
+  createdAt      DateTime @default(now())
+}
+
+model Blog {
+  id            String   @id @default(cuid())
+  title         String
+  slug          String   @unique
+  category      String   @default("Material Insights")
+  tags          String[]
+  content       String
+  featuredImage String
+  author        String   @default("Aaren Studio")
+  publishDate   String?
+  status        String   @default("Published") // "Draft" or "Published"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model MediaItem {
+  id        String   @id @default(cuid())
+  fileName  String
+  fileUrl   String
+  fileType  String   // "Image", "Video", "PDF", "Document"
+  folder    String   @default("General")
+  altText   String?
+  size      String?
+  createdAt DateTime @default(now())
+}
+
+model Taxonomy {
+  id             String   @id @default(cuid())
+  type           String   // "Category", "Technology", "ProjectType", "Status", "Tag"
+  name           String
+  code           String?
+  sequenceNumber Int      @default(0)
+  createdAt      DateTime @default(now())
+}
+
+model NavMenuItem {
+  id             String   @id @default(cuid())
+  label          String
+  href           String
+  sequenceNumber Int      @default(0)
+  isExternal     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+}
+
+model SeoConfig {
+  id              String   @id @default(cuid())
+  pageSlug        String   @unique // e.g. "home", "about", "services", "contact"
+  metaTitle       String
+  metaDescription String
+  keywords        String?
+  ogImage         String?
+  updatedAt       DateTime @updatedAt
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  action    String
+  user      String   @default("Admin")
+  details   String?
+  createdAt DateTime @default(now())
+}
+
 model ProjectItem {
   id          String   @id @default(cuid())
   projectId   String
@@ -202,24 +290,6 @@ model FAQ {
   category  String?  @default("General")
   order     Int      @default(0)
   createdAt DateTime @default(now())
-}
-
-model Service {
-  id          String   @id @default(cuid())
-  title       String   @unique
-  description String
-  icon        String
-  createdAt   DateTime @default(now())
-}
-
-model Testimonial {
-  id         String   @id @default(cuid())
-  name       String
-  role       String
-  company    String
-  message    String
-  avatarUrl  String?
-  createdAt  DateTime @default(now())
 }
 
 model Client {

@@ -11,58 +11,90 @@ import {
   TeamMemberItem,
   RoadmapStepItem,
   InquiryItem,
+  ServiceItem,
+  TestimonialItem,
+  BlogItem,
+  MediaAsset,
+  TaxonomyItem,
+  NavItem,
+  SeoItem,
+  CustomPageItem,
   DEFAULT_SETTINGS,
 } from "./types";
 
 export * from "./types";
 
-const JSON_STORE_PATH = path.join(process.cwd(), "data", "master_store.json");
+const PRIMARY_STORE_PATH = path.join(process.cwd(), "data", "master_store.json");
+const TMP_STORE_PATH = path.join("/tmp", "master_store.json");
 
-function ensureDataDirectory() {
-  const dir = path.dirname(JSON_STORE_PATH);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  if (!fs.existsSync(JSON_STORE_PATH)) {
-    fs.writeFileSync(
-      JSON_STORE_PATH,
-      JSON.stringify(
-        {
-          settings: DEFAULT_SETTINGS,
-          categories: DEFAULT_CATEGORIES,
-          brands: DEFAULT_BRANDS,
-          projects: DEFAULT_PROJECTS,
-          products: DEFAULT_PRODUCTS,
-          team: DEFAULT_TEAM,
-          roadmap: DEFAULT_ROADMAP,
-          inquiries: [],
-        },
-        null,
-        2
-      )
-    );
+declare global {
+  var __AAREN_MEMORY_STORE__: any;
+}
+
+function getActiveStorePath(): string {
+  try {
+    const dir = path.dirname(PRIMARY_STORE_PATH);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.accessSync(dir, fs.constants.W_OK);
+    return PRIMARY_STORE_PATH;
+  } catch (e) {
+    return TMP_STORE_PATH;
   }
 }
 
 function readJsonStore() {
-  ensureDataDirectory();
-  try {
-    return JSON.parse(fs.readFileSync(JSON_STORE_PATH, "utf-8"));
-  } catch (err) {
-    return {
-      settings: DEFAULT_SETTINGS,
-      categories: DEFAULT_CATEGORIES,
-      brands: DEFAULT_BRANDS,
-      projects: DEFAULT_PROJECTS,
-      products: DEFAULT_PRODUCTS,
-      team: DEFAULT_TEAM,
-      roadmap: DEFAULT_ROADMAP,
-      inquiries: [],
-    };
+  if (globalThis.__AAREN_MEMORY_STORE__) {
+    return globalThis.__AAREN_MEMORY_STORE__;
   }
+
+  const targetPath = getActiveStorePath();
+  try {
+    if (fs.existsSync(targetPath)) {
+      const data = JSON.parse(fs.readFileSync(targetPath, "utf-8"));
+      globalThis.__AAREN_MEMORY_STORE__ = data;
+      return data;
+    }
+  } catch (err) {}
+
+  try {
+    if (fs.existsSync(PRIMARY_STORE_PATH)) {
+      const data = JSON.parse(fs.readFileSync(PRIMARY_STORE_PATH, "utf-8"));
+      globalThis.__AAREN_MEMORY_STORE__ = data;
+      return data;
+    }
+  } catch (err) {}
+
+  const initial = {
+    settings: DEFAULT_SETTINGS,
+    categories: DEFAULT_CATEGORIES,
+    brands: DEFAULT_BRANDS,
+    projects: DEFAULT_PROJECTS,
+    products: DEFAULT_PRODUCTS,
+    team: DEFAULT_TEAM,
+    roadmap: DEFAULT_ROADMAP,
+    inquiries: [],
+    pages: [],
+  };
+  globalThis.__AAREN_MEMORY_STORE__ = initial;
+  return initial;
 }
 
 function writeJsonStore(data: any) {
-  ensureDataDirectory();
-  fs.writeFileSync(JSON_STORE_PATH, JSON.stringify(data, null, 2));
+  globalThis.__AAREN_MEMORY_STORE__ = data;
+
+  try {
+    const targetPath = getActiveStorePath();
+    const dir = path.dirname(targetPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(targetPath, JSON.stringify(data, null, 2));
+  } catch (err) {
+    try {
+      if (!fs.existsSync("/tmp")) fs.mkdirSync("/tmp", { recursive: true });
+      fs.writeFileSync(TMP_STORE_PATH, JSON.stringify(data, null, 2));
+    } catch (e) {
+      console.warn("FileSystem write fallback to memory:", e);
+    }
+  }
 }
 
 // Default Data Definitions
@@ -186,8 +218,13 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
 ];
 
 export const DEFAULT_TEAM: TeamMemberItem[] = [
-  { id: "tm-01", name: "Aman Ramchandani", designation: "Founder & Creative Director", memberCode: "AR 01", photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", phone: "+91 98800 12345", bio: "Leading architectural surface curation and luxury material sourcing across international brands.", linkedin: "https://linkedin.com", instagram: "https://instagram.com", sequenceNumber: 1 },
-  { id: "tm-02", name: "Meera Patel", designation: "Head of Design & Specifications", memberCode: "MP 02", photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80", phone: "+91 98800 54321", bio: "Specialist in high-end residential joinery, kitchen living systems, and surface specifications.", linkedin: "https://linkedin.com", sequenceNumber: 2 }
+  { id: "tm-01", name: "MOHANLAL MP", designation: "Founder", memberCode: "MM 01", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", phone: "+91 88844 64444", bio: "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team.", sequenceNumber: 1 },
+  { id: "tm-02", name: "RAMNIKLAL M VAGADIYA", designation: "Founder & Chairman", memberCode: "RV 02", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg", phone: "+91 88844 64444", bio: "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision.", sequenceNumber: 2 },
+  { id: "tm-03", name: "MADHUSUDHAN MP", designation: "Envisioner & Chief Planner", memberCode: "MP 03", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg", phone: "+91 88844 64444", bio: "He is the vision of AAREN. Responsible for creating the strategy, driving the business and scouting for world class products.", sequenceNumber: 3 },
+  { id: "tm-04", name: "KOU SHIK", designation: "Sales", memberCode: "KS 04", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg", phone: "+91 88844 64444", bio: "He guides customers to optimize the space utility, is abreast with market trends, and coordinates layouts for projects.", sequenceNumber: 4 },
+  { id: "tm-05", name: "ASHWIN", designation: "Sales", memberCode: "AW 05", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", phone: "+91 88844 64444", bio: "Consults with architects and developers to find surface and material solutions, manages customer relations and outreach.", sequenceNumber: 5 },
+  { id: "tm-06", name: "MUKUND", designation: "Sales", memberCode: "MK 06", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", phone: "+91 88844 64444", bio: "Curates the products, educates customers on the product mix and manages the store display.", sequenceNumber: 6 },
+  { id: "tm-07", name: "JIGNESH", designation: "Sales", memberCode: "JG 07", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg", phone: "+91 88844 64444", bio: "Maintains communication narratives, manages the sales channels, and reaches out to customers for Bagno & Surface solutions.", sequenceNumber: 7 },
 ];
 
 export const DEFAULT_ROADMAP: RoadmapStepItem[] = [
@@ -751,3 +788,251 @@ export async function getAllFAQsStore() {
     { id: "faq-2", question: "Where is the Aaren Studio Material Lab located?", answer: "Our Material Lab is located on Mysore Road, Bangalore, India." }
   ];
 }
+
+// SERVICES STORE
+export async function getServicesStore(): Promise<ServiceItem[]> {
+  try {
+    const db = await prisma.service.findMany({ orderBy: { sequenceNumber: "asc" } });
+    if (db && db.length > 0) return db as any;
+  } catch (e) {}
+  const json = readJsonStore();
+  return json.services || [
+    { id: "srv-1", title: "Material Curation & Sourcing", description: "Exclusive European surfaces, FENIX nano-laminates, and natural wood cladding.", icon: "💎", sequenceNumber: 1 },
+    { id: "srv-2", title: "Architectural Specification & Detailing", description: "Bespoke CAD drawings, technical joinery, and material sample kits.", icon: "📐", sequenceNumber: 2 },
+    { id: "srv-3", title: "Italian Modular Living Systems", description: "Precision engineered Slashform kitchen and wardrobe systems.", icon: "🏛️", sequenceNumber: 3 },
+  ];
+}
+
+export async function saveServiceStore(service: Omit<ServiceItem, "id"> & { id?: string }): Promise<ServiceItem> {
+  const id = service.id || `srv-${Date.now()}`;
+  const full = { ...service, id };
+  try {
+    await prisma.service.upsert({
+      where: { id },
+      update: service,
+      create: { id, ...service },
+    });
+  } catch (e) {}
+  const json = readJsonStore();
+  if (!json.services) json.services = [];
+  const idx = json.services.findIndex((s: any) => s.id === id);
+  if (idx >= 0) json.services[idx] = full;
+  else json.services.push(full);
+  writeJsonStore(json);
+  return full;
+}
+
+export async function deleteServiceStore(id: string) {
+  try {
+    await prisma.service.delete({ where: { id } });
+  } catch (e) {}
+  const json = readJsonStore();
+  if (json.services) json.services = json.services.filter((s: any) => s.id !== id);
+  writeJsonStore(json);
+}
+
+// TESTIMONIALS STORE
+export async function getTestimonialsStore(): Promise<TestimonialItem[]> {
+  try {
+    const db = await prisma.testimonial.findMany({ orderBy: { sequenceNumber: "asc" } });
+    if (db && db.length > 0) return db as any;
+  } catch (e) {}
+  const json = readJsonStore();
+  return json.testimonials || [
+    { id: "t-1", clientName: "Vikramaditya Rao", company: "Oberoi Penthouse Owner", rating: 5, review: "Aaren Studio transformed our penthouse with incredible FENIX surfaces and Mafi oak floors.", sequenceNumber: 1 },
+    { id: "t-2", clientName: "Ananya Deshmukh", company: "Principal Architect, Studio AD", rating: 5, review: "The material sample kits and Italian joinery precision from Aaren are unmatched in India.", sequenceNumber: 2 },
+  ];
+}
+
+export async function saveTestimonialStore(testimonial: Omit<TestimonialItem, "id"> & { id?: string }): Promise<TestimonialItem> {
+  const id = testimonial.id || `t-${Date.now()}`;
+  const full = { ...testimonial, id };
+  try {
+    await prisma.testimonial.upsert({
+      where: { id },
+      update: testimonial,
+      create: { id, ...testimonial },
+    });
+  } catch (e) {}
+  const json = readJsonStore();
+  if (!json.testimonials) json.testimonials = [];
+  const idx = json.testimonials.findIndex((t: any) => t.id === id);
+  if (idx >= 0) json.testimonials[idx] = full;
+  else json.testimonials.push(full);
+  writeJsonStore(json);
+  return full;
+}
+
+export async function deleteTestimonialStore(id: string) {
+  try {
+    await prisma.testimonial.delete({ where: { id } });
+  } catch (e) {}
+  const json = readJsonStore();
+  if (json.testimonials) json.testimonials = json.testimonials.filter((t: any) => t.id !== id);
+  writeJsonStore(json);
+}
+
+// BLOGS STORE
+export async function getBlogsStore(): Promise<BlogItem[]> {
+  try {
+    const db = await prisma.blog.findMany({ orderBy: { createdAt: "desc" } });
+    if (db && db.length > 0) return db as any;
+  } catch (e) {}
+  const json = readJsonStore();
+  return json.blogs || [
+    { id: "b-1", title: "The Evolution of FENIX Nano-Tech Surfaces in Indian Homes", slug: "fenix-surfaces-guide", category: "Surfaces", tags: ["FENIX", "Laminate", "Interior Design"], content: "FENIX nano-technology represents a breakthrough in thermal healing and ultra-matte surface aesthetics...", featuredImage: "/brands/brand_4_1.png", author: "Aaren Studio", publishDate: "2026-02-15", status: "Published" }
+  ];
+}
+
+export async function saveBlogStore(blog: Omit<BlogItem, "id"> & { id?: string }): Promise<BlogItem> {
+  const id = blog.id || `blog-${Date.now()}`;
+  const slug = blog.slug || blog.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const full = { ...blog, id, slug };
+  try {
+    await prisma.blog.upsert({
+      where: { id },
+      update: full,
+      create: full,
+    });
+  } catch (e) {}
+  const json = readJsonStore();
+  if (!json.blogs) json.blogs = [];
+  const idx = json.blogs.findIndex((b: any) => b.id === id);
+  if (idx >= 0) json.blogs[idx] = full;
+  else json.blogs.unshift(full);
+  writeJsonStore(json);
+  return full;
+}
+
+export async function deleteBlogStore(id: string) {
+  try {
+    await prisma.blog.delete({ where: { id } });
+  } catch (e) {}
+  const json = readJsonStore();
+  if (json.blogs) json.blogs = json.blogs.filter((b: any) => b.id !== id);
+  writeJsonStore(json);
+}
+
+// MEDIA LIBRARY STORE
+export async function getMediaStore(): Promise<MediaAsset[]> {
+  try {
+    const db = await prisma.mediaItem.findMany({ orderBy: { createdAt: "desc" } });
+    if (db && db.length > 0) return db as any;
+  } catch (e) {}
+  const json = readJsonStore();
+  return json.media || [
+    { id: "m-1", fileName: "Slashform_Kitchen_Catalog.pdf", fileUrl: "/catalogues/Slashform/Slashform_2025.pdf", fileType: "PDF", folder: "Catalogs", size: "12.4 MB" },
+    { id: "m-2", fileName: "FENIX_Brochure_2024.pdf", fileUrl: "/catalogues/Formica/2024-FENIX-brochure-digital.pdf", fileType: "PDF", folder: "Catalogs", size: "8.2 MB" },
+  ];
+}
+
+export async function saveMediaStore(media: Omit<MediaAsset, "id"> & { id?: string }): Promise<MediaAsset> {
+  const id = media.id || `med-${Date.now()}`;
+  const full = { ...media, id, createdAt: new Date().toISOString() };
+  try {
+    await prisma.mediaItem.upsert({
+      where: { id },
+      update: full,
+      create: full,
+    });
+  } catch (e) {}
+  const json = readJsonStore();
+  if (!json.media) json.media = [];
+  json.media.unshift(full);
+  writeJsonStore(json);
+  return full;
+}
+
+export async function deleteMediaStore(id: string) {
+  try {
+    await prisma.mediaItem.delete({ where: { id } });
+  } catch (e) {}
+  const json = readJsonStore();
+  if (json.media) json.media = json.media.filter((m: any) => m.id !== id);
+  writeJsonStore(json);
+}
+
+// TAXONOMIES & DROPDOWNS STORE
+export async function getTaxonomiesStore(): Promise<TaxonomyItem[]> {
+  try {
+    const db = await prisma.taxonomy.findMany({ orderBy: { sequenceNumber: "asc" } });
+    if (db && db.length > 0) return db as any;
+  } catch (e) {}
+  const json = readJsonStore();
+  return json.taxonomies || [
+    { id: "tax-1", type: "Category", name: "Surfaces", code: "SRF", sequenceNumber: 1 },
+    { id: "tax-2", type: "Technology", name: "FENIX Nano-Tech", code: "FNT", sequenceNumber: 1 },
+    { id: "tax-3", type: "ProjectType", name: "Penthouse Residence", code: "PR", sequenceNumber: 1 },
+  ];
+}
+
+export async function saveTaxonomyStore(taxonomy: Omit<TaxonomyItem, "id"> & { id?: string }): Promise<TaxonomyItem> {
+  const id = taxonomy.id || `tax-${Date.now()}`;
+  const full = { ...taxonomy, id };
+  try {
+    await prisma.taxonomy.upsert({
+      where: { id },
+      update: full,
+      create: full,
+    });
+  } catch (e) {}
+  const json = readJsonStore();
+  if (!json.taxonomies) json.taxonomies = [];
+  const idx = json.taxonomies.findIndex((t: any) => t.id === id);
+  if (idx >= 0) json.taxonomies[idx] = full;
+  else json.taxonomies.push(full);
+  writeJsonStore(json);
+  return full;
+}
+
+export async function deleteTaxonomyStore(id: string) {
+  try {
+    await prisma.taxonomy.delete({ where: { id } });
+  } catch (e) {}
+  const json = readJsonStore();
+  if (json.taxonomies) json.taxonomies = json.taxonomies.filter((t: any) => t.id !== id);
+  writeJsonStore(json);
+}
+
+// DYNAMIC PAGE BUILDER STORE
+export async function getPagesStore(): Promise<CustomPageItem[]> {
+  const json = readJsonStore();
+  return json.pages || [
+    {
+      id: "page-home",
+      title: "Homepage",
+      slug: "home",
+      status: "Published",
+      seoTitle: "AAREN Studio | Luxury Architectural Surfaces",
+      seoDescription: "Aaren Studio curates European surfaces, FENIX laminates, Mafi wood flooring, and Falper vanities.",
+      sections: [
+        { id: "sec-1", type: "Hero", title: "Main Hero Video Banner", isVisible: true, order: 1 },
+        { id: "sec-2", type: "Services", title: "Material Curation & Services", isVisible: true, order: 2 },
+        { id: "sec-3", type: "Portfolio", title: "Showcase Projects", isVisible: true, order: 3 },
+        { id: "sec-4", type: "Testimonials", title: "Client Feedback", isVisible: true, order: 4 },
+      ],
+    },
+  ];
+}
+
+export async function savePageStore(page: Omit<CustomPageItem, "id"> & { id?: string }): Promise<CustomPageItem> {
+  const id = page.id || `pg-${Date.now()}`;
+  const slug = page.slug || page.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const full = { ...page, id, slug, createdAt: new Date().toISOString() };
+
+  const json = readJsonStore();
+  if (!json.pages) json.pages = [];
+  const idx = json.pages.findIndex((p: any) => p.id === id);
+  if (idx >= 0) json.pages[idx] = full;
+  else json.pages.push(full);
+  writeJsonStore(json);
+  return full;
+}
+
+export async function deletePageStore(id: string) {
+  const json = readJsonStore();
+  if (json.pages) json.pages = json.pages.filter((p: any) => p.id !== id);
+  writeJsonStore(json);
+}
+
+

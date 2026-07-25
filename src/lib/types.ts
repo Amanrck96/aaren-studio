@@ -34,6 +34,79 @@ export type BrandItem = {
   catalogPdfUrl?: string;
 };
 
+export type ServiceItem = {
+  id: string;
+  title: string;
+  description: string;
+  icon?: string;
+  imageUrl?: string;
+  category?: string;
+  buttonText?: string;
+  buttonLink?: string;
+  seoUrl?: string;
+  sequenceNumber: number;
+};
+
+export type TestimonialItem = {
+  id: string;
+  clientName: string;
+  company: string;
+  rating: number;
+  review: string;
+  clientImage?: string;
+  sequenceNumber: number;
+};
+
+export type BlogItem = {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  tags: string[];
+  content: string;
+  featuredImage: string;
+  author: string;
+  publishDate?: string;
+  status: "Draft" | "Published";
+  createdAt?: string;
+};
+
+export type MediaAsset = {
+  id: string;
+  fileName: string;
+  fileUrl: string;
+  fileType: "Image" | "Video" | "PDF" | "Document";
+  folder: string;
+  altText?: string;
+  size?: string;
+  createdAt?: string;
+};
+
+export type TaxonomyItem = {
+  id: string;
+  type: "Category" | "Technology" | "ProjectType" | "Status" | "Tag";
+  name: string;
+  code?: string;
+  sequenceNumber: number;
+};
+
+export type NavItem = {
+  id: string;
+  label: string;
+  href: string;
+  sequenceNumber: number;
+  isExternal: boolean;
+};
+
+export type SeoItem = {
+  id: string;
+  pageSlug: string;
+  metaTitle: string;
+  metaDescription: string;
+  keywords?: string;
+  ogImage?: string;
+};
+
 export type ProductItem = {
   id: string;
   slNo?: number;
@@ -95,6 +168,28 @@ export type RoadmapStepItem = {
   title: string;
   description: string;
   year?: string;
+};
+
+export type CustomPageSection = {
+  id: string;
+  type: "Hero" | "Banner" | "Services" | "Portfolio" | "Gallery" | "Testimonials" | "FAQ" | "RichText";
+  title: string;
+  content?: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  isVisible: boolean;
+  order: number;
+};
+
+export type CustomPageItem = {
+  id: string;
+  title: string;
+  slug: string;
+  status: "Published" | "Draft";
+  seoTitle?: string;
+  seoDescription?: string;
+  sections: CustomPageSection[];
+  createdAt?: string;
 };
 
 export type InquiryItem = {

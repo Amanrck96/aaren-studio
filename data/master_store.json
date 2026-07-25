@@ -410,26 +410,73 @@
   "team": [
     {
       "id": "tm-01",
-      "name": "Aman Ramchandani",
-      "designation": "Founder & Creative Director",
-      "memberCode": "AR 01",
-      "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-      "phone": "+91 98800 12345",
-      "bio": "Leading architectural surface curation and luxury material sourcing across international brands.",
-      "linkedin": "https://linkedin.com",
-      "instagram": "https://instagram.com",
+      "name": "MOHANLAL MP",
+      "designation": "Founder",
+      "memberCode": "MM 01",
+      "photoUrl": "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg",
+      "phone": "+91 88844 64444",
+      "bio": "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team.",
       "sequenceNumber": 1
     },
     {
       "id": "tm-02",
-      "name": "Meera Patel",
-      "designation": "Head of Design & Specifications",
-      "memberCode": "MP 02",
-      "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
-      "phone": "+91 98800 54321",
-      "bio": "Specialist in high-end residential joinery, kitchen living systems, and surface specifications.",
-      "linkedin": "https://linkedin.com",
+      "name": "RAMNIKLAL M VAGADIYA",
+      "designation": "Founder & Chairman",
+      "memberCode": "RV 02",
+      "photoUrl": "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg",
+      "phone": "+91 88844 64444",
+      "bio": "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision.",
       "sequenceNumber": 2
+    },
+    {
+      "id": "tm-03",
+      "name": "MADHUSUDHAN MP",
+      "designation": "Envisioner & Chief Planner",
+      "memberCode": "MP 03",
+      "photoUrl": "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg",
+      "phone": "+91 88844 64444",
+      "bio": "He is the vision of AAREN. Responsible for creating the strategy, driving the business and scouting for world class products.",
+      "sequenceNumber": 3
+    },
+    {
+      "id": "tm-04",
+      "name": "KOU SHIK",
+      "designation": "Sales",
+      "memberCode": "KS 04",
+      "photoUrl": "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg",
+      "phone": "+91 88844 64444",
+      "bio": "He guides customers to optimize the space utility, is abreast with market trends, and coordinates layouts for projects.",
+      "sequenceNumber": 4
+    },
+    {
+      "id": "tm-05",
+      "name": "ASHWIN",
+      "designation": "Sales",
+      "memberCode": "AW 05",
+      "photoUrl": "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg",
+      "phone": "+91 88844 64444",
+      "bio": "Consults with architects and developers to find surface and material solutions, manages customer relations and outreach.",
+      "sequenceNumber": 5
+    },
+    {
+      "id": "tm-06",
+      "name": "MUKUND",
+      "designation": "Sales",
+      "memberCode": "MK 06",
+      "photoUrl": "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg",
+      "phone": "+91 88844 64444",
+      "bio": "Curates the products, educates customers on the product mix and manages the store display.",
+      "sequenceNumber": 6
+    },
+    {
+      "id": "tm-07",
+      "name": "JIGNESH",
+      "designation": "Sales",
+      "memberCode": "JG 07",
+      "photoUrl": "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg",
+      "phone": "+91 88844 64444",
+      "bio": "Maintains communication narratives, manages the sales channels, and reaches out to customers for Bagno & Surface solutions.",
+      "sequenceNumber": 7
     }
   ],
   "roadmap": [

@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { getTeamStore, saveTeamMemberStore, deleteTeamMemberStore, getRoadmapStore, saveRoadmapStepStore } from "@/lib/store";
+import { getServicesStore, saveServiceStore, deleteServiceStore } from "@/lib/store";
 
 export async function GET() {
   try {
-    const team = await getTeamStore();
-    const roadmap = await getRoadmapStore();
-    return NextResponse.json({ success: true, team, roadmap, data: { team, roadmap } });
+    const services = await getServicesStore();
+    return NextResponse.json({ success: true, count: services.length, data: services });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
@@ -14,15 +13,11 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const memberData = body.data || body;
-
-    if (body.type === "roadmap") {
-      const saved = await saveRoadmapStepStore(memberData);
-      return NextResponse.json({ success: true, data: saved });
-    } else {
-      const saved = await saveTeamMemberStore(memberData);
-      return NextResponse.json({ success: true, data: saved });
+    if (!body.title || !body.description) {
+      return NextResponse.json({ success: false, error: "Title and Description are required" }, { status: 400 });
     }
+    const saved = await saveServiceStore(body);
+    return NextResponse.json({ success: true, data: saved });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
@@ -32,10 +27,9 @@ export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-
     if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
 
-    await deleteTeamMemberStore(id);
+    await deleteServiceStore(id);
     return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
