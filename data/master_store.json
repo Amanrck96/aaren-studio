@@ -1,0 +1,459 @@
+{
+  "settings": {
+    "heroTitle": "AAREN",
+    "heroTagline": "Creative Studio & Material Lab",
+    "heroSubtext": "Architectural surfaces, luxury furniture, and bespoke interior solutions.",
+    "heroVideoUrl": "https://assets.mixkit.co/videos/preview/mixkit-modern-apartment-interior-design-41564-large.mp4",
+    "heroCategories": [
+      "Plywood",
+      "Laminate",
+      "Facade",
+      "Wooden Flooring",
+      "Screens",
+      "Door System",
+      "Doors",
+      "Windows",
+      "Kitchen",
+      "Wardrobe",
+      "Furniture",
+      "Tiles",
+      "Bathroom Fittings",
+      "Sanitary Ware",
+      "Mirrors"
+    ],
+    "contactEmail": "info@aarenintpro.com",
+    "contactPhone": "+91 98800 12345",
+    "contactAddress": "Mysore Road, Bangalore, Karnataka, India",
+    "googleMapUrl": "https://maps.google.com/?q=Mysore+Road+Bangalore",
+    "webhookUrl": "",
+    "footerLinks": [
+      "All Projects",
+      "Brands",
+      "Products",
+      "Instagram",
+      "Privacy Policy"
+    ],
+    "socialLinks": [
+      "https://instagram.com",
+      "https://facebook.com",
+      "https://linkedin.com",
+      "https://youtube.com"
+    ],
+    "copyrightText": "AAREN © 2026. All rights reserved."
+  },
+  "categories": [
+    {
+      "id": "cat-pw",
+      "name": "Plywood",
+      "coverImage": "/categories/cat_1.png",
+      "description": "Precision engineered structural plywood",
+      "shortCode": "PW 01",
+      "sequenceNumber": 1
+    },
+    {
+      "id": "cat-lm",
+      "name": "Laminate",
+      "coverImage": "/categories/cat_2.png",
+      "description": "FENIX nano-tech and decorative surfaces",
+      "shortCode": "LM 02",
+      "sequenceNumber": 2
+    },
+    {
+      "id": "cat-fc",
+      "name": "Facade",
+      "coverImage": "/categories/cat_3.png",
+      "description": "Architectural exterior WPC cladding",
+      "shortCode": "FC 03",
+      "sequenceNumber": 3
+    },
+    {
+      "id": "cat-wf",
+      "name": "Wooden Flooring",
+      "coverImage": "/categories/cat_4.png",
+      "description": "Austrian engineered natural wood floors",
+      "shortCode": "WF 04",
+      "sequenceNumber": 4
+    },
+    {
+      "id": "cat-ss",
+      "name": "Screens",
+      "coverImage": "/categories/cat_5.png",
+      "description": "Zipline tension fabric architectural screens",
+      "shortCode": "SS 05",
+      "sequenceNumber": 5
+    },
+    {
+      "id": "cat-ds",
+      "name": "Door System",
+      "coverImage": "/categories/cat_6.png",
+      "description": "Integrated aluminum and pivot doors",
+      "shortCode": "DS 06",
+      "sequenceNumber": 6
+    },
+    {
+      "id": "cat-wd",
+      "name": "Doors",
+      "coverImage": "/categories/cat_7.png",
+      "description": "Solid timber and lacquered flush doors",
+      "shortCode": "WD 07",
+      "sequenceNumber": 7
+    },
+    {
+      "id": "cat-ww",
+      "name": "Windows",
+      "coverImage": "/categories/cat_8.png",
+      "description": "Thermal efficiency aluminum window systems",
+      "shortCode": "WW 08",
+      "sequenceNumber": 8
+    },
+    {
+      "id": "cat-kk",
+      "name": "Kitchen",
+      "coverImage": "/categories/cat_9.png",
+      "description": "Italian modular kitchen living systems",
+      "shortCode": "KK 09",
+      "sequenceNumber": 9
+    },
+    {
+      "id": "cat-wrd",
+      "name": "Wardrobe",
+      "coverImage": "/categories/cat_10.png",
+      "description": "Walk-in closet and glass sliding systems",
+      "shortCode": "WRD 10",
+      "sequenceNumber": 10
+    },
+    {
+      "id": "cat-ff",
+      "name": "Furniture",
+      "coverImage": "/categories/cat_11.png",
+      "description": "Madheke sofas & Loco bespoke millwork",
+      "shortCode": "FF 11",
+      "sequenceNumber": 11
+    },
+    {
+      "id": "cat-tl",
+      "name": "Tiles",
+      "coverImage": "/categories/cat_12.png",
+      "description": "Italian porcelain marble & stone slabs",
+      "shortCode": "TL 12",
+      "sequenceNumber": 12
+    },
+    {
+      "id": "cat-bf",
+      "name": "Bathroom Fittings",
+      "coverImage": "/categories/cat_13.png",
+      "description": "Falper and FIMA tapware and vanities",
+      "shortCode": "BF 13",
+      "sequenceNumber": 13
+    },
+    {
+      "id": "cat-sw",
+      "name": "Sanitary Ware",
+      "coverImage": "/categories/cat_14.png",
+      "description": "Flaminia & Antonio Lupi basins",
+      "shortCode": "SW 14",
+      "sequenceNumber": 14
+    },
+    {
+      "id": "cat-mr",
+      "name": "Mirrors",
+      "coverImage": "/categories/cat_15.png",
+      "description": "Architectural glass backlit mirrors",
+      "shortCode": "MR 15",
+      "sequenceNumber": 15
+    }
+  ],
+  "brands": [
+    {
+      "id": "slashform",
+      "name": "Slashform",
+      "logoUrl": "/brands/brand_1_2.png",
+      "bannerUrl": "/brands/brand_1_1.png",
+      "description": "Italian precision living systems for kitchen & wardrobe",
+      "shortCode": "SF 01",
+      "sequenceNumber": 1,
+      "catalogPdfUrl": "/catalogues/Slashform/Slashform_2025.pdf"
+    },
+    {
+      "id": "waltz",
+      "name": "Waltz by JB Glass",
+      "logoUrl": "/brands/brand_2_2.png",
+      "bannerUrl": "/brands/brand_2_1.png",
+      "description": "Architectural glass partitions and zipline screens",
+      "shortCode": "WB 02",
+      "sequenceNumber": 2,
+      "catalogPdfUrl": "/catalogues/Waltz/Waltz_Glass.pdf"
+    },
+    {
+      "id": "newtech-wood",
+      "name": "Newtech Wood",
+      "logoUrl": "/brands/brand_3_2.png",
+      "bannerUrl": "/brands/brand_3_1.png",
+      "description": "WPC composite outdoor decking and architectural cladding",
+      "shortCode": "NW 03",
+      "sequenceNumber": 3,
+      "catalogPdfUrl": "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf"
+    },
+    {
+      "id": "formica",
+      "name": "Formica",
+      "logoUrl": "/brands/brand_4_2.png",
+      "bannerUrl": "/brands/brand_4_1.png",
+      "description": "FENIX nano-tech surfaces and premium laminates",
+      "shortCode": "FC 04",
+      "sequenceNumber": 4,
+      "catalogPdfUrl": "/catalogues/Formica/2024-FENIX-brochure-digital.pdf"
+    },
+    {
+      "id": "loco",
+      "name": "Loco",
+      "logoUrl": "/brands/brand_5_2.png",
+      "bannerUrl": "/brands/brand_5_1.png",
+      "description": "Bespoke Italian millwork and furniture sculpture",
+      "shortCode": "LC 05",
+      "sequenceNumber": 5
+    },
+    {
+      "id": "falper",
+      "name": "Falper",
+      "logoUrl": "/brands/brand_6_2.png",
+      "bannerUrl": "/brands/brand_6_1.png",
+      "description": "Luxury bath environments, vanities and freestanding tubs",
+      "shortCode": "FP 06",
+      "sequenceNumber": 6
+    },
+    {
+      "id": "fima",
+      "name": "Fima Carlo Frattini",
+      "logoUrl": "/brands/brand_7_2.png",
+      "bannerUrl": "/brands/brand_7_1.png",
+      "description": "Refined Italian tapware and thermostatic shower systems",
+      "shortCode": "FM 07",
+      "sequenceNumber": 7
+    },
+    {
+      "id": "inkiostro-bianco",
+      "name": "Inkiostro Bianco",
+      "logoUrl": "/brands/brand_8_2.png",
+      "bannerUrl": "/brands/brand_8_1.png",
+      "description": "Creative decorative wallcoverings and printed surfaces",
+      "shortCode": "IB 08",
+      "sequenceNumber": 8,
+      "catalogPdfUrl": "/catalogues/Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf"
+    },
+    {
+      "id": "mafi",
+      "name": "Mafi",
+      "logoUrl": "/brands/brand_9_2.png",
+      "bannerUrl": "/brands/brand_9_1.png",
+      "description": "Austrian natural wood flooring with hand-rubbed oil finish",
+      "shortCode": "MF 09",
+      "sequenceNumber": 9
+    },
+    {
+      "id": "mirage",
+      "name": "Mirage",
+      "logoUrl": "/brands/brand_10_2.png",
+      "bannerUrl": "/brands/brand_10_1.png",
+      "description": "Italian porcelain tile mastery and marble slabs",
+      "shortCode": "MG 10",
+      "sequenceNumber": 10,
+      "catalogPdfUrl": "/catalogues/Mirage/catalogue-elysian-pdf.pdf"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-01",
+      "title": "ONE BANGALORE WEST PENTHOUSE",
+      "slug": "one-bangalore-west",
+      "description": "Luxury pent-house featuring FENIX surfaces, Falper vanities and Mafi natural oak flooring.",
+      "category": "Residential",
+      "client": "Private Owner",
+      "projectCode": "OB 01",
+      "sequenceNumber": 1,
+      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": "proj-02",
+      "title": "THE JAYAMAHAL VILLA",
+      "slug": "jayamahal-villa",
+      "description": "Contemporary villa wrapped in Newtech Wood architectural composite cladding.",
+      "category": "Architecture",
+      "client": "Jayamahal Estates",
+      "projectCode": "TJ 02",
+      "sequenceNumber": 2,
+      "imageUrl": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": "proj-03",
+      "title": "REPUBLIC GARDENS CLUBHOUSE",
+      "slug": "republic-gardens",
+      "description": "Commercial clubhouse with Mirage porcelain slabs and Slashform kitchen systems.",
+      "category": "Hospitality",
+      "client": "Republic Developers",
+      "projectCode": "RG 03",
+      "sequenceNumber": 3,
+      "imageUrl": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
+    },
+    {
+      "id": "proj-04",
+      "title": "GREEN PARK VILLA",
+      "slug": "green-park-villa",
+      "description": "Modern residence with Waltz glass partitions and Madheke custom furniture.",
+      "category": "Residential",
+      "client": "Green Park Ltd",
+      "projectCode": "GP 04",
+      "sequenceNumber": 4,
+      "imageUrl": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-queen-sofa",
+      "slNo": 1,
+      "name": "Queen Sofa System",
+      "brand": "Madheke",
+      "category": "Furniture",
+      "subcategory": "Sofas",
+      "shortCode": "FF 01",
+      "width": "2800mm",
+      "height": "750mm",
+      "depth": "1050mm",
+      "measurementType": "mm",
+      "finish": "Bouclé Fabric & Solid Walnut",
+      "description": "The Queen sofa embodies the harmony of proportion and comfort. More stance in fabric with subtle curves, it invites conversation and repose.",
+      "tags": [
+        "Living",
+        "Sofa",
+        "Madheke"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80",
+      "galleryImages": [
+        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "catalogPdfUrl": "/catalogues/Formica/2024-FENIX-brochure-digital.pdf",
+      "qtyInStock": 2,
+      "price": 480000,
+      "finishOptions": [
+        {
+          "name": "Cream Bouclé",
+          "hex": "#F3EFE6"
+        },
+        {
+          "name": "Palma Teal Leather",
+          "hex": "#2B4C59"
+        },
+        {
+          "name": "Tobacco Leather",
+          "hex": "#6F4E37"
+        }
+      ]
+    },
+    {
+      "id": "prod-senzafine",
+      "slNo": 2,
+      "name": "Falper Senzafine Vanity",
+      "brand": "Falper",
+      "category": "Bathroom Fittings",
+      "subcategory": "Vanities",
+      "shortCode": "BF 01",
+      "width": "1200mm",
+      "height": "850mm",
+      "depth": "500mm",
+      "measurementType": "mm",
+      "finish": "Matte White Lacquer",
+      "description": "Architectural Italian double vanity unit with integrated washbasin and soft-close drawers.",
+      "tags": [
+        "Luxury",
+        "Bathroom",
+        "Falper"
+      ],
+      "imageUrl": "/brands/brand_6_1.png",
+      "galleryImages": [
+        "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "catalogPdfUrl": "/catalogues/Formica/2024-FENIX-brochure-digital.pdf",
+      "qtyInStock": 5,
+      "price": 345000
+    },
+    {
+      "id": "prod-antique-decking",
+      "slNo": 3,
+      "name": "Antique Outdoor Pool Decking",
+      "brand": "Newtech Wood",
+      "category": "Facade",
+      "subcategory": "Decking",
+      "shortCode": "NW 10",
+      "width": "138mm",
+      "height": "22.5mm",
+      "depth": "2900mm",
+      "measurementType": "mm",
+      "finish": "Antique Grain",
+      "description": "360-degree co-extruded capped composite decking with ultra-durable weather protection.",
+      "tags": [
+        "Decking",
+        "WPC",
+        "Outdoor"
+      ],
+      "imageUrl": "/brands/newtechwood/product_p10_sa.png",
+      "galleryImages": [
+        "/brands/newtechwood/product_p14_eco.png",
+        "/brands/newtechwood/product_p14_ocean.png"
+      ],
+      "catalogPdfUrl": "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf",
+      "qtyInStock": 120,
+      "price": 680
+    }
+  ],
+  "team": [
+    {
+      "id": "tm-01",
+      "name": "Aman Ramchandani",
+      "designation": "Founder & Creative Director",
+      "memberCode": "AR 01",
+      "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+      "phone": "+91 98800 12345",
+      "bio": "Leading architectural surface curation and luxury material sourcing across international brands.",
+      "linkedin": "https://linkedin.com",
+      "instagram": "https://instagram.com",
+      "sequenceNumber": 1
+    },
+    {
+      "id": "tm-02",
+      "name": "Meera Patel",
+      "designation": "Head of Design & Specifications",
+      "memberCode": "MP 02",
+      "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+      "phone": "+91 98800 54321",
+      "bio": "Specialist in high-end residential joinery, kitchen living systems, and surface specifications.",
+      "linkedin": "https://linkedin.com",
+      "sequenceNumber": 2
+    }
+  ],
+  "roadmap": [
+    {
+      "id": "rm-01",
+      "stepNumber": "01",
+      "year": "2015",
+      "title": "FOUNDATION & ITALIAN PARTNERSHIPS",
+      "description": "Established Aaren Intpro on Mysore Road, Bangalore as exclusive partners for luxury Italian surface brands."
+    },
+    {
+      "id": "rm-02",
+      "stepNumber": "02",
+      "year": "2019",
+      "title": "MATERIAL LAB EXPANSION",
+      "description": "Launched the 10,000 sq.ft. interactive Material Lab showcasing full-scale architectural mockups and FENIX nano-tech surfaces."
+    },
+    {
+      "id": "rm-03",
+      "stepNumber": "03",
+      "year": "2024",
+      "title": "AAREN CREATIVE STUDIO 2.0",
+      "description": "Expanded into bespoke furniture, outdoor WPC decking cladding, and automated project specification PDF generators."
+    }
+  ],
+  "inquiries": []
+}

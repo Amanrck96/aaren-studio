@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
 
 const PRODUCTS = [
   {
@@ -69,6 +70,7 @@ export default function MadhekeProductDetailPage() {
   const [expandedSection, setExpandedSection] = useState<string | null>("details");
   const [cartCount, setCartCount] = useState(0);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const [showPdfModal, setShowPdfModal] = useState(false);
 
   // Suggestions of same Brand and Category (Image 2 prompt)
   const relatedProducts = PRODUCTS.filter(
@@ -165,9 +167,9 @@ export default function MadhekeProductDetailPage() {
 
               <button
                 className="btn-add-cart"
-                onClick={() => setCartCount((c) => c + 1)}
+                onClick={() => setShowPdfModal(true)}
               >
-                + ADD TO QUOTE CART
+                📄 DOWNLOAD CATALOG PDF
               </button>
             </div>
 
@@ -267,6 +269,15 @@ export default function MadhekeProductDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Protected Catalog PDF Gate Modal */}
+      {showPdfModal && (
+        <CatalogPdfGateModal
+          itemTitle={selectedProduct.name}
+          catalogPdfUrl="/catalogues/Formica/2024-FENIX-brochure-digital.pdf"
+          onClose={() => setShowPdfModal(false)}
+        />
+      )}
 
       {/* Quote Request Modal */}
       {showQuoteModal && (

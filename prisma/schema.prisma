@@ -55,29 +55,66 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Project {
-  id           String        @id @default(cuid())
-  title        String
-  slug         String        @unique
-  description  String
-  category     String
-  client       String
-  videoUrl     String?
-  imageUrl     String
-  gallery      String[]      // array of images
-  brandDetails String?       // custom branding specifications
-  featured     Boolean       @default(false)
-  pdfUrl       String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  items        ProjectItem[]
+model SiteSettings {
+  id            String   @id @default("default")
+  heroTitle     String   @default("AAREN")
+  heroTagline   String   @default("Creative Studio & Material Lab")
+  heroSubtext   String   @default("Architectural surfaces, luxury furniture, and bespoke interior solutions.")
+  heroVideoUrl  String   @default("https://assets.mixkit.co/videos/preview/mixkit-modern-apartment-interior-design-41564-large.mp4")
+  heroCategories String[] @default(["Plywood", "Laminate", "Facade", "Wooden Flooring", "Screens", "Door System", "Doors", "Windows", "Kitchen", "Wardrobe", "Furniture", "Tiles", "Bathroom Fittings", "Sanitary Ware", "Mirrors"])
+  contactEmail  String   @default("info@aarenintpro.com")
+  contactPhone  String   @default("+91 98800 12345")
+  contactAddress String  @default("Mysore Road, Bangalore, Karnataka, India")
+  googleMapUrl  String?
+  webhookUrl    String?
+  footerLinks   String[] @default(["All Projects", "Brands", "Products", "Instagram", "Privacy Policy"])
+  socialLinks   String[] @default(["https://instagram.com", "https://facebook.com", "https://linkedin.com", "https://youtube.com"])
+  copyrightText String   @default("AAREN © 2026. All rights reserved.")
+  updatedAt     DateTime @updatedAt
+}
+
+model Category {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  coverImage     String
+  description    String
+  shortCode      String   // e.g. DS 06, WD 07
+  sequenceNumber Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Brand {
-  id          String   @id @default(cuid())
-  name        String
-  logoUrl     String
-  createdAt   DateTime @default(now())
+  id             String   @id @default(cuid())
+  name           String   @unique
+  logoUrl        String
+  bannerUrl      String
+  description    String
+  shortCode      String   // e.g. SF 01, WB 02, NW 03
+  sequenceNumber Int      @default(0)
+  catalogPdfUrl  String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Project {
+  id               String        @id @default(cuid())
+  title            String
+  slug             String        @unique
+  description      String
+  category         String
+  client           String
+  projectCode      String        // e.g. OB 01, TJ 02
+  sequenceNumber   Int           @default(0)
+  videoUrl         String?
+  imageUrl         String
+  gallery          String[]
+  brandDetails     String?
+  featured         Boolean       @default(false)
+  pdfUrl           String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  items            ProjectItem[]
 }
 
 model Product {
@@ -87,6 +124,7 @@ model Product {
   brand           String
   category        String
   subcategory     String?
+  shortCode       String?       // e.g. PR 01
   width           String?
   height          String?
   depth           String?
@@ -95,14 +133,51 @@ model Product {
   finish          String?
   description     String
   tags            String[]
-  imageUrl        String
-  catalog         String?
+  imageUrl        String        // Main feature image
+  galleryImages   String[]      // 2 additional high-res photos for middle section
+  catalogPdfUrl   String?
   qtyInStock      Int?          @default(0)
   price           Float?
-  finishOptions   String?       // JSON string of finish options
+  finishOptions   String?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   projectItems    ProjectItem[]
+}
+
+model TeamMember {
+  id             String   @id @default(cuid())
+  name           String
+  designation    String
+  memberCode     String   // e.g. MM 01, RV 02
+  photoUrl       String
+  phone          String?
+  bio            String
+  linkedin       String?
+  instagram      String?
+  sequenceNumber Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model RoadmapStep {
+  id          String   @id @default(cuid())
+  stepNumber  String   // e.g. 01, 02, 03
+  title       String
+  description String
+  year        String?
+  createdAt   DateTime @default(now())
+}
+
+model Inquiry {
+  id             String   @id @default(cuid())
+  name           String
+  email          String
+  phone          String
+  type           String   @default("Contact Form") // "Contact Form" or "Catalog PDF Gate"
+  subject        String?
+  message        String?
+  productOrBrand String?
+  createdAt      DateTime @default(now())
 }
 
 model ProjectItem {

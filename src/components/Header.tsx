@@ -29,6 +29,10 @@ export default function Header() {
     setOpen(false);
   }, [path]);
 
+  if (path?.startsWith("/admin")) {
+    return null;
+  }
+
   /* Lock body scroll when menu open */
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
