@@ -56,19 +56,21 @@ model VerificationToken {
 }
 
 model Project {
-  id           String   @id @default(cuid())
+  id           String        @id @default(cuid())
   title        String
-  slug         String   @unique
+  slug         String        @unique
   description  String
   category     String
   client       String
   videoUrl     String?
   imageUrl     String
-  gallery      String[] // array of images
-  brandDetails String?  // custom branding specifications
-  featured     Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  gallery      String[]      // array of images
+  brandDetails String?       // custom branding specifications
+  featured     Boolean       @default(false)
+  pdfUrl       String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  items        ProjectItem[]
 }
 
 model Brand {
@@ -79,12 +81,52 @@ model Brand {
 }
 
 model Product {
+  id              String        @id @default(cuid())
+  slNo            Int?
+  name            String
+  brand           String
+  category        String
+  subcategory     String?
+  width           String?
+  height          String?
+  depth           String?
+  measurementType String?
+  thickness       String?
+  finish          String?
+  description     String
+  tags            String[]
+  imageUrl        String
+  catalog         String?
+  qtyInStock      Int?          @default(0)
+  price           Float?
+  finishOptions   String?       // JSON string of finish options
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  projectItems    ProjectItem[]
+}
+
+model ProjectItem {
   id          String   @id @default(cuid())
-  name        String
-  description String
-  imageUrl    String
-  price       Float?
-  createdAt   DateTime @default(now())
+  projectId   String
+  productId   String?
+  productName String
+  brand       String
+  category    String
+  finish      String?
+  dimensions  String?
+  quantity    Int      @default(1)
+  notes       String?
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+}
+
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String?  @default("General")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
 }
 
 model Service {

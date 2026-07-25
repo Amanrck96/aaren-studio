@@ -136,24 +136,43 @@ export default function BrandDetailPage({ params }: Props) {
             <h2 className="bd-products__heading">Collection</h2>
           </div>
 
-          {/* Filter chips */}
-          <div className="bd-filter-bar">
-            {brand.collections.map((col) => (
-              <button
-                key={col}
-                onClick={() => setActiveCollection(col)}
-                className={`bd-filter-chip${activeCollection === col ? " is-active" : ""}`}
-                style={activeCollection === col ? { borderColor: accent, color: accent } : {}}
-                id={`brand-filter-${brand.id}-${col.toLowerCase().replace(/\s+/g, "-")}`}
-              >
-                {col}
-                <span className="bd-filter-chip__count">
-                  {col === "All"
-                    ? brand.products.length
-                    : brand.products.filter((p) => p.collection === col).length}
-                </span>
-              </button>
-            ))}
+          {/* Circular Category Cards Row (Image 1 & user layout specification) */}
+          <div className="bd-category-circles-bar">
+            {brand.collections.map((col) => {
+              const catSampleProduct = brand.products.find((p) => col === "All" || p.collection === col);
+              const thumbUrl = catSampleProduct?.image || brand.hero;
+              const count =
+                col === "All"
+                  ? brand.products.length
+                  : brand.products.filter((p) => p.collection === col).length;
+
+              const isActive = activeCollection === col;
+
+              return (
+                <button
+                  key={col}
+                  onClick={() => setActiveCollection(col)}
+                  className={`bd-cat-circle-card${isActive ? " is-active" : ""}`}
+                  id={`brand-filter-${brand.id}-${col.toLowerCase().replace(/\s+/g, "-")}`}
+                >
+                  <div
+                    className="bd-cat-circle__img-wrap"
+                    style={isActive ? { borderColor: accent, boxShadow: `0 0 0 3px ${accent}33` } : {}}
+                  >
+                    <Image
+                      src={thumbUrl}
+                      alt={col}
+                      fill
+                      sizes="80px"
+                      className="bd-cat-circle__img"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                  <span className="bd-cat-circle__title">{col}</span>
+                  <span className="bd-cat-circle__count">{count}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Product grid or Empty state */}
@@ -526,53 +545,80 @@ export default function BrandDetailPage({ params }: Props) {
           margin-bottom: 3.2rem;
         }
 
-        /* Filter bar */
-        .bd-filter-bar {
+        /* Category Circle Cards Bar (Image 1 & user layout) */
+        .bd-category-circles-bar {
           display: flex;
-          flex-wrap: wrap;
-          gap: 0.8rem;
-          padding: 0 0.8rem 2.4rem;
+          align-items: center;
+          gap: 2.4rem;
+          padding: 0 0.8rem 3.2rem;
           border-bottom: 0.1rem solid rgba(0,0,0,0.08);
           margin-bottom: 3.2rem;
+          overflow-x: auto;
         }
 
         @media (min-width: 768px) {
-          .bd-filter-bar {
-            padding: 0 1.2rem 2.4rem;
+          .bd-category-circles-bar {
+            padding: 0 1.2rem 3.2rem;
+            gap: 3.6rem;
           }
         }
 
-        .bd-filter-chip {
+        .bd-cat-circle-card {
           display: flex;
+          flex-direction: column;
           align-items: center;
           gap: 0.6rem;
-          padding: 0.6rem 1.4rem;
-          border: 0.1rem solid rgba(0,0,0,0.15);
           background: transparent;
-          font-size: 1.1rem;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          color: rgba(0,0,0,0.5);
+          border: none;
           cursor: pointer;
-          transition: all 0.2s ease;
           font-family: inherit;
+          padding: 0;
+          transition: transform 0.2s ease;
         }
 
-        .bd-filter-chip:hover {
-          border-color: rgba(0,0,0,0.4);
-          color: rgba(0,0,0,0.8);
+        .bd-cat-circle-card:hover {
+          transform: translateY(-3px);
         }
 
-        .bd-filter-chip.is-active {
-          border-width: 0.15rem;
-          background: rgba(0,0,0,0.03);
+        .bd-cat-circle__img-wrap {
+          width: 7.2rem;
+          height: 7.2rem;
+          border-radius: 50%;
+          overflow: hidden;
+          position: relative;
+          border: 0.2rem solid rgba(0,0,0,0.12);
+          background: #e2e8f0;
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        @media (min-width: 768px) {
+          .bd-cat-circle__img-wrap {
+            width: 8.8rem;
+            height: 8.8rem;
+          }
+        }
+
+        .bd-cat-circle-card.is-active .bd-cat-circle__img-wrap {
+          border-width: 0.25rem;
+        }
+
+        .bd-cat-circle__title {
+          font-size: 1.2rem;
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          color: rgba(0,0,0,0.7);
+          text-transform: capitalize;
+        }
+
+        .bd-cat-circle-card.is-active .bd-cat-circle__title {
+          color: #000;
           font-weight: 700;
         }
 
-        .bd-filter-chip__count {
-          font-size: 1.0rem;
-          color: rgba(0,0,0,0.3);
-          font-weight: 400;
+        .bd-cat-circle__count {
+          font-size: 1.1rem;
+          color: rgba(0,0,0,0.4);
+          font-weight: 500;
         }
 
         /* Product grid */
