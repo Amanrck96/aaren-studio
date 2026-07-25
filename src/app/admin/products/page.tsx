@@ -52,8 +52,7 @@ export default function AdminProductsPage() {
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleFileUpload = async (file: File) => {
     if (!file) return;
 
     setUploading(true);
