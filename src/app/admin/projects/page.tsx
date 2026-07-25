@@ -323,8 +323,9 @@ export default function AdminProjectsPage() {
             </div>
           )}
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   </div>
 );
 }
+

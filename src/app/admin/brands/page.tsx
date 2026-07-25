@@ -133,103 +133,103 @@ export default function AdminBrandsPage() {
             ))}
           </div>
         )}
-      </div>
 
-      {/* Add / Edit Brand Modal */}
-      {showModal && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
-          <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "550px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
-            <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem" }}>{editingBrand.id ? "Edit Brand" : "Add New Brand"}</h2>
-            <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Brand Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={editingBrand.name || ""}
-                  onChange={(e) => setEditingBrand({ ...editingBrand, name: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                />
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        {/* Add / Edit Brand Modal */}
+        {showModal && (
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
+            <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "550px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
+              <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem" }}>{editingBrand.id ? "Edit Brand" : "Add New Brand"}</h2>
+              <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Short Code (e.g. SF 01) *</label>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Brand Name *</label>
                   <input
                     type="text"
                     required
-                    value={editingBrand.shortCode || ""}
-                    onChange={(e) => setEditingBrand({ ...editingBrand, shortCode: e.target.value })}
+                    value={editingBrand.name || ""}
+                    onChange={(e) => setEditingBrand({ ...editingBrand, name: e.target.value })}
                     style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
                   />
                 </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Short Code (e.g. SF 01) *</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingBrand.shortCode || ""}
+                      onChange={(e) => setEditingBrand({ ...editingBrand, shortCode: e.target.value })}
+                      style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Sequence Number *</label>
+                    <input
+                      type="number"
+                      required
+                      value={editingBrand.sequenceNumber || 1}
+                      onChange={(e) => setEditingBrand({ ...editingBrand, sequenceNumber: parseInt(e.target.value, 10) || 1 })}
+                      style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Sequence Number *</label>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Logo Image URL *</label>
                   <input
-                    type="number"
+                    type="text"
                     required
-                    value={editingBrand.sequenceNumber || 1}
-                    onChange={(e) => setEditingBrand({ ...editingBrand, sequenceNumber: parseInt(e.target.value, 10) || 1 })}
+                    value={editingBrand.logoUrl || ""}
+                    onChange={(e) => setEditingBrand({ ...editingBrand, logoUrl: e.target.value })}
                     style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
                   />
                 </div>
-              </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Logo Image URL *</label>
-                <input
-                  type="text"
-                  required
-                  value={editingBrand.logoUrl || ""}
-                  onChange={(e) => setEditingBrand({ ...editingBrand, logoUrl: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                />
-              </div>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Banner Photo URL *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingBrand.bannerUrl || ""}
+                    onChange={(e) => setEditingBrand({ ...editingBrand, bannerUrl: e.target.value })}
+                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  />
+                </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Banner Photo URL *</label>
-                <input
-                  type="text"
-                  required
-                  value={editingBrand.bannerUrl || ""}
-                  onChange={(e) => setEditingBrand({ ...editingBrand, bannerUrl: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                />
-              </div>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Catalog PDF Link / URL</label>
+                  <input
+                    type="text"
+                    placeholder="/catalogues/Formica/2024-FENIX-brochure-digital.pdf"
+                    value={editingBrand.catalogPdfUrl || ""}
+                    onChange={(e) => setEditingBrand({ ...editingBrand, catalogPdfUrl: e.target.value })}
+                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  />
+                </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Catalog PDF Link / URL</label>
-                <input
-                  type="text"
-                  placeholder="/catalogues/Formica/2024-FENIX-brochure-digital.pdf"
-                  value={editingBrand.catalogPdfUrl || ""}
-                  onChange={(e) => setEditingBrand({ ...editingBrand, catalogPdfUrl: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                />
-              </div>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Description</label>
+                  <textarea
+                    rows={3}
+                    value={editingBrand.description || ""}
+                    onChange={(e) => setEditingBrand({ ...editingBrand, description: e.target.value })}
+                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  />
+                </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Description</label>
-                <textarea
-                  rows={3}
-                  value={editingBrand.description || ""}
-                  onChange={(e) => setEditingBrand({ ...editingBrand, description: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                />
-              </div>
-
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}>
-                <button type="button" onClick={() => setShowModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
-                  Cancel
-                </button>
-                <button type="submit" style={{ padding: "0.7rem 1.4rem", background: "#8b5cf6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 700 }}>
-                  Save Brand
-                </button>
-              </div>
-            </form>
+                <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}>
+                  <button type="button" onClick={() => setShowModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+                    Cancel
+                  </button>
+                  <button type="submit" style={{ padding: "0.7rem 1.4rem", background: "#8b5cf6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 700 }}>
+                    Save Brand
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </main>
     </div>
   );
 }
