@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductItem } from "@/lib/store";
 
+import AdminNav from "@/components/AdminNav";
+
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,13 +26,12 @@ export default function AdminProductsPage() {
     width: "",
     height: "",
     depth: "",
-    measurementType: "mm",
-    thickness: "",
+    material: "",
     finish: "",
+    image: "",
     description: "",
-    imageUrl: "/brands/brand_1_1.png",
-    qtyInStock: 10,
-    price: 0,
+    price: "",
+    qtyInStock: "",
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,24 +40,24 @@ export default function AdminProductsPage() {
     fetchProducts();
   }, []);
 
-  async function fetchProducts() {
-    setLoading(true);
+  const fetchProducts = async () => {
     try {
       const res = await fetch("/api/products");
-      const json = await res.json();
-      if (json.success) {
-        setProducts(json.data);
-      }
+      const data = await res.json();
+      if (data.products) setProducts(data.products);
     } catch (err) {
-      console.error("Failed to fetch products:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  async function handleFileUpload(file: File) {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
     setUploading(true);
-    setUploadMessage("Parsing and uploading Excel product catalog...");
+    setUploadMessage("Processing Excel file...");
 
     const formData = new FormData();
     formData.append("file", file);
@@ -67,39 +68,59 @@ export default function AdminProductsPage() {
         body: formData,
       });
 
-      const json = await res.json();
-      if (json.success) {
-        setUploadMessage(`Success! ${json.importedCount || json.data?.length} products uploaded.`);
+      const result = await res.json();
+      if (result.success) {
+        setUploadMessage(`Success! Added ${result.count} products from Excel.`);
         fetchProducts();
       } else {
-        setUploadMessage(`Error: ${json.error}`);
+        setUploadMessage(`Error: ${result.error || "Failed to import"}`);
       }
     } catch (err: any) {
-      setUploadMessage(`Upload failed: ${err.message}`);
+      setUploadMessage(`Error: ${err.message}`);
     } finally {
       setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
-  }
+  };
 
-  async function handleCreateProduct(e: React.FormEvent) {
+  const handleAddManualProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newProduct),
+        body: JSON.stringify({
+          ...newProduct,
+          price: parseFloat(newProduct.price) || 0,
+          qtyInStock: parseInt(newProduct.qtyInStock, 10) || 0,
+        }),
       });
-      const json = await res.json();
-      if (json.success) {
+
+      const data = await res.json();
+      if (data.success) {
         setShowAddModal(false);
+        setNewProduct({
+          name: "",
+          brand: "Aaren",
+          category: "Furniture",
+          subcategory: "",
+          width: "",
+          height: "",
+          depth: "",
+          material: "",
+          finish: "",
+          image: "",
+          description: "",
+          price: "",
+          qtyInStock: "",
+        });
         fetchProducts();
       }
     } catch (err) {
-      console.error("Error creating product:", err);
+      console.error(err);
     }
-  }
+  };
 
-  // Categories & Brands for filtering
   const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
   const brands = ["All", ...Array.from(new Set(products.map((p) => p.brand)))];
 
@@ -115,7 +136,10 @@ export default function AdminProductsPage() {
   });
 
   return (
-    <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh", padding: "2rem" }}>
+    <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
+      <AdminNav />
+
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #222", paddingBottom: "1.5rem" }}>
         <div>
@@ -377,6 +401,7 @@ export default function AdminProductsPage() {
           </div>
         </div>
       )}
+      </main>
     </div>
   );
 }

@@ -54,7 +54,7 @@ export default function AdminBlogsPage() {
     <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
       <AdminNav />
 
-      <div style={{ maxWidth: "1300px", margin: "2rem auto", padding: "0 2rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #222", paddingBottom: "1rem" }}>
           <div>
             <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>✍️ Blog Articles CMS</h1>
@@ -132,7 +132,7 @@ export default function AdminBlogsPage() {
             </div>
           ))}
         </div>
-      </div>
+      </main>
     </div>
   );
 }
