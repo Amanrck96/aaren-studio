@@ -194,7 +194,7 @@ export async function getAllProductsStore(): Promise<ProductItem[]> {
       orderBy: { createdAt: "desc" }
     });
     if (dbProducts && dbProducts.length > 0) {
-      return dbProducts.map((p) => ({
+      return dbProducts.map((p: any) => ({
         id: p.id,
         slNo: p.slNo || undefined,
         name: p.name,
@@ -356,7 +356,7 @@ export async function getAllProjectsStore(): Promise<ProjectItem[]> {
       orderBy: { createdAt: "desc" },
     });
     if (dbProjects && dbProjects.length > 0) {
-      return dbProjects.map((p) => ({
+      return dbProjects.map((p: any) => ({
         id: p.id,
         title: p.title,
         slug: p.slug,
@@ -366,7 +366,7 @@ export async function getAllProjectsStore(): Promise<ProjectItem[]> {
         imageUrl: p.imageUrl,
         gallery: p.gallery,
         pdfUrl: p.pdfUrl || undefined,
-        selectedProducts: p.items.map((it) => ({
+        selectedProducts: p.items.map((it: any) => ({
           productId: it.productId || undefined,
           productName: it.productName,
           brand: it.brand,
