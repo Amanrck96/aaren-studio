@@ -107,6 +107,7 @@ export default function AdminProductsPage() {
           width: "",
           height: "",
           depth: "",
+          thickness: "",
           material: "",
           finish: "",
           image: "",
