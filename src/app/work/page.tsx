@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const ALL_PROJECTS = [
@@ -19,15 +19,38 @@ const ALL_PROJECTS = [
 const CATEGORIES = ["All", "Hospitality", "Residential", "Commercial", "Retail"];
 
 export default function WorkPage() {
+  const [projectsList, setProjectsList] = useState(ALL_PROJECTS);
   const [activeFilter, setActiveFilter] = useState("All");
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [flipImage, setFlipImage] = useState(false);
 
+  useEffect(() => {
+    fetch("/api/projects?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setProjectsList(
+            json.data.map((p: any, idx: number) => ({
+              client: p.client || p.title,
+              code: p.client ? p.client.substring(0, 2).toUpperCase() : "PR",
+              num: idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`,
+              title: p.title,
+              year: p.year || "2025",
+              category: p.category || "Commercial",
+              image: p.imageUrl || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80",
+              slug: p.slug || p.id || `project-${idx + 1}`,
+            }))
+          );
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   const filtered =
     activeFilter === "All"
-      ? ALL_PROJECTS
-      : ALL_PROJECTS.filter((p) => p.category === activeFilter);
+      ? projectsList
+      : projectsList.filter((p) => p.category === activeFilter);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     setMousePos({ x: e.clientX, y: e.clientY });

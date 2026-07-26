@@ -43,10 +43,6 @@ function getActiveStorePath(): string {
 }
 
 function readJsonStore() {
-  if (globalThis.__AAREN_MEMORY_STORE__) {
-    return globalThis.__AAREN_MEMORY_STORE__;
-  }
-
   const targetPath = getActiveStorePath();
   try {
     if (fs.existsSync(targetPath)) {
@@ -63,6 +59,10 @@ function readJsonStore() {
       return data;
     }
   } catch (err) {}
+
+  if (globalThis.__AAREN_MEMORY_STORE__) {
+    return globalThis.__AAREN_MEMORY_STORE__;
+  }
 
   const initial = {
     settings: DEFAULT_SETTINGS,

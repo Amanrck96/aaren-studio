@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { getAllProjectsStore, createProjectStore } from "@/lib/store";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   try {
     const projects = await getAllProjectsStore();

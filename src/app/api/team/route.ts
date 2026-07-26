@@ -1,11 +1,23 @@
 import { NextResponse } from "next/server";
 import { getTeamStore, saveTeamMemberStore, deleteTeamMemberStore, getRoadmapStore, saveRoadmapStepStore } from "@/lib/store";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  "Pragma": "no-cache",
+  "Expires": "0",
+};
+
 export async function GET() {
   try {
     const team = await getTeamStore();
     const roadmap = await getRoadmapStore();
-    return NextResponse.json({ success: true, team, roadmap, data: { team, roadmap } });
+    return NextResponse.json(
+      { success: true, team, roadmap, data: { team, roadmap } },
+      { headers: NO_CACHE_HEADERS }
+    );
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

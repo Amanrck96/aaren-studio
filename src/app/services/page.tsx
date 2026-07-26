@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Sparkles, Layers, Box, Globe, Shield, Smartphone, Megaphone, FileText, Camera, Video, Palette, BrainCircuit } from "lucide-react";
 
 const allServices = [
@@ -20,6 +23,24 @@ function FilmIcon(props: any) {
 }
 
 export default function Services() {
+  const [servicesList, setServicesList] = useState(allServices);
+
+  useEffect(() => {
+    fetch("/api/services?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setServicesList(
+            json.data.map((s: any, idx: number) => ({
+              title: s.title,
+              desc: s.description,
+              icon: [Sparkles, Layers, Box, Globe, Shield, Palette, Megaphone, FileText, Video, Camera, BrainCircuit][idx % 11],
+            }))
+          );
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
   return (
     <div className="bg-[#080808] text-white pt-32 pb-24 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
@@ -29,7 +50,7 @@ export default function Services() {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {allServices.map((service, idx) => {
+          {servicesList.map((service, idx) => {
             const IconComp = service.icon;
             return (
               <div key={idx} className="border border-neutral-900 bg-neutral-950 p-10 flex flex-col justify-between hover:border-accent/40 transition-colors group">

@@ -116,14 +116,41 @@ const BRANDS = [
   },
 ];
 
+import { useEffect, useState } from "react";
+
 export default function BrandsPage() {
+  const [brandsList, setBrandsList] = useState(BRANDS);
+
+  useEffect(() => {
+    fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setBrandsList(
+            json.data.map((b: any, idx: number) => ({
+              id: b.id || b.name.toLowerCase().replace(/\s+/g, "-"),
+              name: b.name,
+              code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
+              num: b.sequenceNumber ? (b.sequenceNumber < 10 ? `0${b.sequenceNumber}` : `${b.sequenceNumber}`) : `0${idx + 1}`,
+              hero: b.bannerUrl || b.logoUrl || "/brands/brand_1_1.png",
+              logo: b.logoUrl || "/brands/brand_1_2.png",
+              category: b.description || "Surface Solution",
+              origin: "Global",
+              tagline: b.description || "Exclusive brand partner",
+            }))
+          );
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <div className="brands-page">
       {/* ── Page Header ── */}
       <div className="brands-header">
         <div className="brands-header__inner">
           <div className="brands-header__meta t-tag" style={{ color: "rgba(0,0,0,0.4)", marginBottom: "2.4rem" }}>
-            Exclusive Partners — {BRANDS.length} Brands
+            Exclusive Partners — {brandsList.length} Brands
           </div>
           <h1 className="brands-header__title">Brands</h1>
           <p className="brands-header__desc t-body" style={{ color: "rgba(0,0,0,0.5)", maxWidth: "52rem" }}>
@@ -134,7 +161,7 @@ export default function BrandsPage() {
 
       {/* ── Brand Grid ── */}
       <div className="brands-grid">
-        {BRANDS.map((brand) => (
+        {brandsList.map((brand) => (
           <Link
             key={brand.id}
             href={`/brands/${brand.id}`}

@@ -63,12 +63,36 @@ const BLOG_POSTS: BlogPost[] = [
 const CATEGORIES = ["All", "Design", "Development", "Motion Graphics", "Materials"];
 
 export default function BlogPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [postsList, setPostsList] = useState<BlogPost[]>(BLOG_POSTS);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const featuredPost = BLOG_POSTS.find((post) => post.featured) || BLOG_POSTS[0];
+  useEffect(() => {
+    fetch("/api/blogs?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setPostsList(
+            json.data.map((b: any, idx: number) => ({
+              title: b.title,
+              slug: b.slug || b.id || `blog-${idx + 1}`,
+              summary: b.excerpt || b.summary || b.content ? b.content.substring(0, 140) + "..." : "",
+              category: b.category || "Design",
+              date: b.publishedAt || b.date || "July 2026",
+              readTime: b.readTime || "5 MIN READ",
+              author: b.author || "AAREN ATELIER",
+              image: b.coverImage || b.image || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+              featured: idx === 0,
+            }))
+          );
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
 
-  const filteredPosts = BLOG_POSTS.filter((post) => {
+  const featuredPost = postsList.find((post) => post.featured) || postsList[0];
+
+  const filteredPosts = postsList.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||

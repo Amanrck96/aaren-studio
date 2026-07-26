@@ -127,14 +127,36 @@ const PRODUCT_CATEGORIES = [
 ];
 
 export default function ProductsPage() {
+  const [categoriesList, setCategoriesList] = useState(PRODUCT_CATEGORIES);
+
+  useEffect(() => {
+    fetch("/api/categories?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setCategoriesList(
+            json.data.map((c: any, idx: number) => ({
+              id: c.slug || c.id || c.name.toLowerCase().replace(/\s+/g, "-"),
+              code: c.code ? c.code.split(" ")[0] : "PC",
+              num: c.sequenceNumber ? (c.sequenceNumber < 10 ? `0${c.sequenceNumber}` : `${c.sequenceNumber}`) : (idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`),
+              name: c.name,
+              hero: c.coverImage || c.hero || `/categories/cat_${(idx % 14) + 1}.png`,
+              subcategories: Array.isArray(c.subcategories) ? c.subcategories : ["Curated Collection"],
+            }))
+          );
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <div className="products-page">
 
       {/* ── Page Header ── */}
       <div className="products-header">
         <div className="products-header__inner">
-          <div className="products-header__meta t-tag" style={{ color: "#8c764b", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "2.4rem" }}>
-            MATERIAL CATALOG — {PRODUCT_CATEGORIES.length} Categories
+          <div className="products-header__meta t-tag" style={{ color: "rgba(0,0,0,0.4)", marginBottom: "2.4rem" }}>
+            PRODUCT CATEGORIES — {categoriesList.length} CATEGORIES
           </div>
           <h1 className="products-header__title">Products</h1>
           <p className="products-header__desc t-body" style={{ color: "rgba(0,0,0,0.5)", maxWidth: "52rem" }}>
@@ -146,7 +168,7 @@ export default function ProductsPage() {
       {/* ── Category Grid — Madheke Editorial 2-Column Style ── */}
       <div className="ma-container">
         <div className="ma-grid">
-          {PRODUCT_CATEGORIES.map((cat) => (
+          {categoriesList.map((cat) => (
             <Link
               key={cat.id}
               href={`/products/${cat.id}`}

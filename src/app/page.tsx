@@ -194,7 +194,7 @@ export default function Home() {
   const [siteSettings, setSiteSettings] = useState<SiteSettingsItem | null>(null);
 
   useEffect(() => {
-    fetch("/api/site-settings")
+    fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) {
