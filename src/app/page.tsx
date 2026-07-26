@@ -437,26 +437,24 @@ export default function Home() {
         }}
       >
         {/* Background MP4 Video */}
-        {siteSettings?.heroVideoUrl && (
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            key={siteSettings.heroVideoUrl}
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              opacity: 0.35,
-              pointerEvents: "none",
-              zIndex: 0,
-            }}
-            src={siteSettings.heroVideoUrl}
-          />
-        )}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          key={siteSettings?.heroVideoUrl || "/hero_bg.mp4"}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: 0.35,
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+          src={siteSettings?.heroVideoUrl || "/hero_bg.mp4"}
+        />
 
         {/* ── Large AAREN wordmark — letter-by-letter reveal ── */}
         <div

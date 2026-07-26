@@ -208,7 +208,7 @@ export const DEFAULT_SETTINGS: SiteSettingsItem = {
   heroTitle: "AAREN",
   heroTagline: "Creative Studio & Material Lab",
   heroSubtext: "Architectural surfaces, luxury furniture, and bespoke interior solutions.",
-  heroVideoUrl: "https://assets.mixkit.co/videos/preview/mixkit-modern-apartment-interior-design-41564-large.mp4",
+  heroVideoUrl: "/hero_bg.mp4",
   heroCategories: ["Plywood", "Laminate", "Facade", "Wooden Flooring", "Screens", "Door System", "Doors", "Windows", "Kitchen", "Wardrobe", "Furniture", "Tiles", "Bathroom Fittings", "Sanitary Ware", "Mirrors"],
   contactEmail: "info@aarenintpro.com",
   contactPhone: "+91 98800 12345",
