@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getInquiriesStore, logInquiryStore, generateInquiriesCSV } from "@/lib/store";
+import { sendInquiryEmailNotification } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -35,6 +36,12 @@ export async function POST(request: Request) {
     }
 
     const inquiry = await logInquiryStore(body);
+
+    // Trigger instant email notification to info@aarenintpro.com via Gmail SMTP
+    sendInquiryEmailNotification(body).catch((err) => {
+      console.error("Async email notification error:", err);
+    });
+
     return NextResponse.json({ success: true, message: "Lead captured successfully", data: inquiry });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
