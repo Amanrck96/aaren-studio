@@ -215,7 +215,7 @@ export const DEFAULT_SETTINGS: SiteSettingsItem = {
   contactAddress: "Mysore Road, Bangalore, Karnataka, India",
   googleMapUrl: "https://maps.google.com/?q=Mysore+Road+Bangalore",
   webhookUrl: "",
-  footerLinks: ["All Projects", "Brands", "Products", "Instagram", "Privacy Policy"],
+  footerLinks: ["All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"],
   socialLinks: ["https://instagram.com", "https://facebook.com", "https://linkedin.com", "https://youtube.com"],
   copyrightText: "AAREN © 2026. All rights reserved.",
 };

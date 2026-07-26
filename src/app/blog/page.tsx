@@ -2,109 +2,603 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
-const blogPosts = [
+interface BlogPost {
+  title: string;
+  slug: string;
+  summary: string;
+  category: string;
+  date: string;
+  readTime: string;
+  author: string;
+  image: string;
+  featured?: boolean;
+}
+
+const BLOG_POSTS: BlogPost[] = [
   {
-    title: "THE FUTURE OF INTERACTIVE WEBGL SHADERS",
+    title: "THE FUTURE OF INTERACTIVE ARCHITECTURAL SHADERS",
     slug: "future-of-interactive-webgl-shaders",
-    summary: "How WebGL and modern React frameworks are shaping premium branding layouts.",
+    summary: "How WebGL shaders and modern real-time 3D pipelines are transforming digital material houses and luxury architectural experience centers.",
     category: "Development",
-    date: "July 8, 2026",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+    date: "July 22, 2026",
+    readTime: "5 MIN READ",
+    author: "AAREN TECH LABS",
+    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+    featured: true,
   },
   {
-    title: "ESTABLISHING MINIMALIST BRAND AESTHETICS",
+    title: "MINIMALIST MATERIALITY & BESPOKE GRAIN ARCHITECTURE",
     slug: "establishing-minimalist-brand-aesthetics",
-    summary: "Key lessons from the design architecture of premium creative portfolios.",
+    summary: "Key design lessons from hand-curating rare veneer flitches and natural wood grains for high-end residential penthouses.",
     category: "Design",
-    date: "July 2, 2026",
-    image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80",
+    date: "July 15, 2026",
+    readTime: "4 MIN READ",
+    author: "AAREN ATELIER",
+    image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1200&q=80",
   },
   {
-    title: "INTRODUCING REALTIME 3D CAMERA TRIGGERS",
+    title: "FLUID SCROLL TRIGGERS & SPATIAL CAMERA PIPELINES",
     slug: "introducing-realtime-3d-camera-triggers",
-    summary: "Configuring fluid scroll animations with GSAP and dynamic WebGL pipelines.",
+    summary: "Configuring fluid 60fps scroll animations with Lenis, GSAP, and dynamic lighting triggers for digital studio portfolios.",
     category: "Motion Graphics",
-    date: "June 24, 2026",
-    image: "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?auto=format&fit=crop&w=800&q=80",
+    date: "June 28, 2026",
+    readTime: "6 MIN READ",
+    author: "MOTION LABS",
+    image: "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    title: "SUSTAINABLE WPC COMPOSITE CLADDING IN TROPICAL CLIMATES",
+    slug: "sustainable-wpc-composite-cladding",
+    summary: "Engineering weather-resistant exterior facades using Newtech Wood composite technologies engineered for high humidity.",
+    category: "Materials",
+    date: "June 14, 2026",
+    readTime: "8 MIN READ",
+    author: "FACADE ADVISORY",
+    image: "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 
-export default function Blog() {
-  const [search, setSearch] = useState("");
+const CATEGORIES = ["All", "Design", "Development", "Motion Graphics", "Materials"];
+
+export default function BlogPage() {
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const filteredPosts = blogPosts.filter((post) => {
-    const matchesSearch = post.title.toLowerCase().includes(search.toLowerCase()) || post.summary.toLowerCase().includes(search.toLowerCase());
+  const featuredPost = BLOG_POSTS.find((post) => post.featured) || BLOG_POSTS[0];
+
+  const filteredPosts = BLOG_POSTS.filter((post) => {
+    const matchesSearch =
+      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.author.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   return (
-    <div className="bg-[#080808] text-white pt-32 pb-24 px-6 md:px-12">
-      <div className="max-w-7xl mx-auto">
-        <h4 className="text-accent uppercase tracking-wider font-bold text-xs mb-4">INSIGHTS</h4>
-        <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tight mb-16">
-          THE JOURNAL<span className="text-accent">.</span>
-        </h1>
+    <div className="blog-page">
+      <div className="blog-container">
+        {/* Header */}
+        <header className="blog-header">
+          <span className="blog-tag">JOURNAL & INSIGHTS</span>
+          <h1 className="blog-title">THE JOURNAL</h1>
+          <p className="blog-desc">
+            Perspectives on spatial design, material engineering, digital architecture, and bespoke craftsmanship from the Aaren Studio team.
+          </p>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-          {/* Main Grid */}
-          <div className="lg:col-span-3 space-y-12">
-            {filteredPosts.length === 0 ? (
-              <p className="text-neutral-500">No matching articles found.</p>
-            ) : (
-              filteredPosts.map((post) => (
-                <article key={post.slug} className="group border-b border-neutral-900 pb-12 flex flex-col md:flex-row gap-8 items-start">
-                  <div className="w-full md:w-1/3 aspect-video md:aspect-[4/3] bg-neutral-900 overflow-hidden">
-                    <img src={post.image} alt={post.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-                  </div>
-                  <div className="flex-1">
-                    <span className="text-xs font-bold uppercase tracking-widest text-accent">{post.category} • {post.date}</span>
-                    <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight mt-2 mb-4 group-hover:text-accent transition-colors">
-                      <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                    </h2>
-                    <p className="text-neutral-400 text-sm leading-relaxed mb-6 font-light">{post.summary}</p>
-                    <Link href={`/blog/${post.slug}`} className="text-xs font-bold uppercase tracking-widest hover:text-accent transition-colors">
-                      Read Article →
-                    </Link>
-                  </div>
-                </article>
-              ))
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-10">
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider mb-4 text-accent">SEARCH</h4>
+          {/* Search + Categories */}
+          <div className="blog-controls">
+            <div className="search-box">
               <input
                 type="text"
-                placeholder="Search articles..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-neutral-950 border border-neutral-900 p-4 text-white text-sm outline-none focus:border-accent"
+                placeholder="Search journal articles..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
               />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="search-clear">
+                  ✕
+                </button>
+              )}
             </div>
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider mb-4 text-accent">CATEGORIES</h4>
-              <div className="flex flex-col space-y-2 text-sm font-semibold uppercase">
-                {["All", "Development", "Design", "Motion Graphics"].map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`text-left hover:text-accent transition-colors ${
-                      selectedCategory === cat ? "text-accent" : "text-neutral-400"
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
+
+            <div className="category-pills">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`cat-pill ${selectedCategory === cat ? "is-active" : ""}`}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
+        </header>
+
+        {/* Featured Hero Post */}
+        {!searchQuery && selectedCategory === "All" && featuredPost && (
+          <section className="featured-post-section">
+            <Link href={`/blog/${featuredPost.slug}`} className="featured-card">
+              <div className="featured-fig">
+                <Image
+                  src={featuredPost.image}
+                  alt={featuredPost.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  className="featured-img"
+                />
+                <span className="featured-badge">FEATURED ARTICLE</span>
+              </div>
+              <div className="featured-content">
+                <div className="meta-line">
+                  <span>{featuredPost.category}</span>
+                  <span>•</span>
+                  <span>{featuredPost.date}</span>
+                  <span>•</span>
+                  <span>{featuredPost.readTime}</span>
+                </div>
+                <h2>{featuredPost.title}</h2>
+                <p>{featuredPost.summary}</p>
+                <span className="read-more-link">READ ARTICLE →</span>
+              </div>
+            </Link>
+          </section>
+        )}
+
+        {/* Main Post Grid */}
+        <main className="blog-grid-section">
+          {filteredPosts.length === 0 ? (
+            <div className="no-posts">
+              <h3>No articles found</h3>
+              <p>Try refining your search terms or selecting another category.</p>
+              <button onClick={() => { setSelectedCategory("All"); setSearchQuery(""); }} className="reset-btn">
+                Reset Filters
+              </button>
+            </div>
+          ) : (
+            <div className="posts-grid">
+              {filteredPosts.map((post) => (
+                <article key={post.slug} className="post-card">
+                  <Link href={`/blog/${post.slug}`} className="post-card__link">
+                    <div className="post-card__fig">
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="post-card__img"
+                      />
+                    </div>
+                    <div className="post-card__body">
+                      <div className="meta-line">
+                        <span className="post-cat">{post.category}</span>
+                        <span>•</span>
+                        <span>{post.date}</span>
+                      </div>
+                      <h3 className="post-title">{post.title}</h3>
+                      <p className="post-summary">{post.summary}</p>
+                      <div className="post-footer">
+                        <span className="post-author">By {post.author}</span>
+                        <span className="post-read-time">{post.readTime}</span>
+                      </div>
+                    </div>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          )}
+        </main>
+
+        {/* Newsletter Section */}
+        <section className="newsletter-section">
+          <div className="newsletter-card">
+            <h2>SUBSCRIBE TO AAREN DISPATCH</h2>
+            <p>Receive monthly curations on architectural materials, spatial trends, and new studio releases directly in your inbox.</p>
+            <form onSubmit={(e) => e.preventDefault()} className="newsletter-form">
+              <input type="email" placeholder="Enter your email address..." required className="newsletter-input" />
+              <button type="submit" className="newsletter-btn">SUBSCRIBE →</button>
+            </form>
+          </div>
+        </section>
       </div>
+
+      <style>{`
+        .blog-page {
+          background-color: #0a0a0a;
+          color: #ffffff;
+          min-height: 100vh;
+          padding-top: 10rem;
+          padding-bottom: 8rem;
+          font-family: var(--font-geist), sans-serif;
+        }
+
+        .blog-container {
+          max-width: 1320px;
+          margin: 0 auto;
+          padding: 0 2.4rem;
+        }
+
+        .blog-header {
+          padding-bottom: 4rem;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+          margin-bottom: 5rem;
+        }
+
+        .blog-tag {
+          font-size: 1.1rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          color: rgba(255,255,255,0.4);
+          display: block;
+          margin-bottom: 1.6rem;
+        }
+
+        .blog-title {
+          font-size: clamp(4rem, 11vw, 15rem);
+          font-weight: 800;
+          letter-spacing: -0.05em;
+          line-height: 0.9;
+          color: #ffffff;
+          text-transform: uppercase;
+          margin-bottom: 2.4rem;
+        }
+
+        .blog-desc {
+          font-size: clamp(1.5rem, 2.2vw, 2rem);
+          line-height: 1.5;
+          color: rgba(255,255,255,0.6);
+          max-width: 72rem;
+          margin-bottom: 4rem;
+          font-weight: 300;
+        }
+
+        .blog-controls {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+          .blog-controls {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+          }
+        }
+
+        .search-box {
+          position: relative;
+          min-width: 280px;
+        }
+
+        .search-input {
+          width: 100%;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.15);
+          color: #ffffff;
+          padding: 1.2rem 2rem;
+          border-radius: 999px;
+          font-size: 1.3rem;
+          outline: none;
+        }
+
+        .search-clear {
+          position: absolute;
+          right: 1.6rem;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          color: rgba(255,255,255,0.4);
+          cursor: pointer;
+        }
+
+        .category-pills {
+          display: flex;
+          gap: 0.8rem;
+          flex-wrap: wrap;
+        }
+
+        .cat-pill {
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.12);
+          color: rgba(255,255,255,0.7);
+          padding: 0.8rem 1.8rem;
+          border-radius: 999px;
+          font-size: 1.2rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+
+        .cat-pill.is-active {
+          background: #ffffff;
+          color: #000000;
+          border-color: #ffffff;
+        }
+
+        /* Featured Section */
+        .featured-post-section {
+          margin-bottom: 6rem;
+        }
+
+        .featured-card {
+          display: grid;
+          grid-template-columns: 1fr;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 0.8rem;
+          overflow: hidden;
+          text-decoration: none;
+          color: inherit;
+          transition: border-color 0.3s ease;
+        }
+
+        @media (min-width: 1024px) {
+          .featured-card {
+            grid-template-columns: 1.2fr 1fr;
+          }
+        }
+
+        .featured-card:hover {
+          border-color: rgba(255,255,255,0.3);
+        }
+
+        .featured-fig {
+          position: relative;
+          min-height: 380px;
+          background: #151515;
+        }
+
+        .featured-img {
+          object-fit: cover;
+          transition: transform 0.7s ease !important;
+        }
+
+        .featured-card:hover .featured-img {
+          transform: scale(1.04);
+        }
+
+        .featured-badge {
+          position: absolute;
+          top: 2rem;
+          left: 2rem;
+          background: #ffffff;
+          color: #000000;
+          font-size: 1rem;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          padding: 0.6rem 1.4rem;
+          border-radius: 0.4rem;
+        }
+
+        .featured-content {
+          padding: 4rem 3.2rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 1.6rem;
+        }
+
+        .meta-line {
+          display: flex;
+          gap: 0.8rem;
+          align-items: center;
+          font-size: 1.1rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          color: rgba(255,255,255,0.45);
+          text-transform: uppercase;
+        }
+
+        .featured-content h2 {
+          font-size: clamp(2.4rem, 3.5vw, 4rem);
+          font-weight: 800;
+          line-height: 1.1;
+          color: #ffffff;
+          margin: 0;
+          text-transform: uppercase;
+        }
+
+        .featured-content p {
+          font-size: 1.5rem;
+          line-height: 1.6;
+          color: rgba(255,255,255,0.65);
+          font-weight: 300;
+        }
+
+        .read-more-link {
+          font-size: 1.2rem;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          color: #ffffff;
+          margin-top: 1rem;
+        }
+
+        /* Posts Grid */
+        .blog-grid-section {
+          margin-bottom: 8rem;
+        }
+
+        .posts-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 3.2rem;
+        }
+
+        @media (min-width: 768px) {
+          .posts-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (min-width: 1200px) {
+          .posts-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        .post-card {
+          background: rgba(255,255,255,0.02);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 0.6rem;
+          overflow: hidden;
+          transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .post-card:hover {
+          transform: translateY(-0.4rem);
+          border-color: rgba(255,255,255,0.25);
+        }
+
+        .post-card__link {
+          text-decoration: none;
+          color: inherit;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+
+        .post-card__fig {
+          position: relative;
+          height: 240px;
+          background: #151515;
+          overflow: hidden;
+        }
+
+        .post-card__img {
+          object-fit: cover;
+          transition: transform 0.6s ease !important;
+        }
+
+        .post-card:hover .post-card__img {
+          transform: scale(1.06);
+        }
+
+        .post-card__body {
+          padding: 2.4rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1.2rem;
+          flex: 1;
+        }
+
+        .post-title {
+          font-size: 1.8rem;
+          font-weight: 700;
+          line-height: 1.3;
+          color: #ffffff;
+          margin: 0;
+          text-transform: uppercase;
+        }
+
+        .post-summary {
+          font-size: 1.3rem;
+          line-height: 1.6;
+          color: rgba(255,255,255,0.55);
+          font-weight: 300;
+          margin: 0;
+        }
+
+        .post-footer {
+          margin-top: auto;
+          padding-top: 1.6rem;
+          border-top: 1px solid rgba(255,255,255,0.06);
+          display: flex;
+          justify-content: space-between;
+          font-size: 1.1rem;
+          color: rgba(255,255,255,0.4);
+        }
+
+        /* Newsletter */
+        .newsletter-section {
+          border-top: 1px solid rgba(255,255,255,0.1);
+          padding-top: 6rem;
+        }
+
+        .newsletter-card {
+          background: #111111;
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 1.2rem;
+          padding: 5rem 3rem;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1.6rem;
+        }
+
+        .newsletter-card h2 {
+          font-size: clamp(2.4rem, 4vw, 3.6rem);
+          font-weight: 800;
+          letter-spacing: -0.02em;
+        }
+
+        .newsletter-card p {
+          font-size: 1.5rem;
+          color: rgba(255,255,255,0.6);
+          max-width: 600px;
+        }
+
+        .newsletter-form {
+          display: flex;
+          gap: 1rem;
+          width: 100%;
+          max-width: 500px;
+          margin-top: 1rem;
+          flex-direction: column;
+        }
+
+        @media (min-width: 640px) {
+          .newsletter-form {
+            flex-direction: row;
+          }
+        }
+
+        .newsletter-input {
+          flex: 1;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.15);
+          color: #ffffff;
+          padding: 1.2rem 2rem;
+          border-radius: 999px;
+          font-size: 1.3rem;
+          outline: none;
+        }
+
+        .newsletter-btn {
+          background: #ffffff;
+          color: #000000;
+          border: none;
+          padding: 1.2rem 2.4rem;
+          border-radius: 999px;
+          font-weight: 800;
+          font-size: 1.1rem;
+          letter-spacing: 0.08em;
+          cursor: pointer;
+        }
+
+        .no-posts {
+          text-align: center;
+          padding: 6rem 2rem;
+          color: rgba(255,255,255,0.5);
+        }
+
+        .reset-btn {
+          margin-top: 1.6rem;
+          background: #ffffff;
+          color: #000000;
+          border: none;
+          padding: 1rem 2rem;
+          border-radius: 999px;
+          font-weight: 700;
+          cursor: pointer;
+        }
+      `}</style>
     </div>
   );
 }

@@ -1012,7 +1012,7 @@ input, select, textarea {
   }
 }
 
-/* Modifier class for the first (longest) sentence */
+/* Modifier class for the multi-line sentences */
 .intro-drum-label--first {
   font-size: 1.6rem !important;
 }
@@ -1026,6 +1026,23 @@ input, select, textarea {
 @media(min-width: 1240px) {
   .intro-drum-label--first {
     font-size: 4.0rem !important;
+  }
+}
+
+/* Compact modifier for sentence 1 (One Stop Destination for World Class Interior Solutions) */
+.intro-drum-label--one-stop {
+  font-size: 1.35rem !important;
+}
+
+@media(min-width: 768px) {
+  .intro-drum-label--one-stop {
+    font-size: 2.3rem !important;
+  }
+}
+
+@media(min-width: 1240px) {
+  .intro-drum-label--one-stop {
+    font-size: 3.1rem !important;
   }
 }
 

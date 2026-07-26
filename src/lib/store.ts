@@ -249,7 +249,7 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
         contactAddress: db.contactAddress,
         googleMapUrl: db.googleMapUrl || "",
         webhookUrl: db.webhookUrl || "",
-        footerLinks: db.footerLinks,
+        footerLinks: Array.from(new Set([...(db.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
         socialLinks: db.socialLinks,
         copyrightText: db.copyrightText,
       };
@@ -257,7 +257,11 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
   } catch (e) {}
 
   const json = readJsonStore();
-  return json.settings || DEFAULT_SETTINGS;
+  const settings = json.settings || DEFAULT_SETTINGS;
+  return {
+    ...settings,
+    footerLinks: Array.from(new Set([...(settings.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
+  };
 }
 
 export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): Promise<SiteSettingsItem> {

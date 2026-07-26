@@ -38,39 +38,33 @@ export default function Footer() {
         {/* Left — navigation links */}
         <nav>
           <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {(settings.footerLinks || ["All Projects", "Brands", "Products", "Instagram", "Privacy Policy"]).map((l: string) => {
-              const isExt = l.toLowerCase().includes("http") || l.toLowerCase().includes("instagram");
-              const href = l.toLowerCase().includes("project")
-                ? "/work"
-                : l.toLowerCase().includes("brand")
+            {Array.from(new Set([...(settings.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])).map((l: string) => {
+              const lower = l.toLowerCase();
+              const href = lower.includes("project")
+                ? "/projects"
+                : lower.includes("brand")
                 ? "/brands"
-                : l.toLowerCase().includes("product")
+                : lower.includes("product")
                 ? "/products"
-                : l.toLowerCase().includes("instagram")
-                ? "https://www.instagram.com/aaren.studio/"
+                : lower.includes("instagram")
+                ? "/instagram"
+                : lower.includes("faq")
+                ? "/faq"
+                : lower.includes("blog")
+                ? "/blog"
+                : lower.includes("privacy")
+                ? "/privacy-policy"
                 : "#";
 
               return (
                 <li key={l}>
-                  {isExt ? (
-                    <a
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="ul-link"
-                      style={{ fontSize: "1.4rem", color: "rgba(0,0,0,0.5)", letterSpacing: "-0.01em" }}
-                    >
-                      {l}
-                    </a>
-                  ) : (
-                    <Link
-                      href={href}
-                      className="ul-link"
-                      style={{ fontSize: "1.4rem", color: "rgba(0,0,0,0.5)", letterSpacing: "-0.01em" }}
-                    >
-                      {l}
-                    </Link>
-                  )}
+                  <Link
+                    href={href}
+                    className="ul-link"
+                    style={{ fontSize: "1.4rem", color: "rgba(0,0,0,0.5)", letterSpacing: "-0.01em" }}
+                  >
+                    {l}
+                  </Link>
                 </li>
               );
             })}
