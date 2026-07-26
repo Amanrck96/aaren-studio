@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
+import { SiteSettingsItem } from "@/lib/types";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -190,9 +191,24 @@ function useInView(threshold = 0.15) {
 }
 
 export default function Home() {
+  const [siteSettings, setSiteSettings] = useState<SiteSettingsItem | null>(null);
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          setSiteSettings(json.data);
+        }
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  const logoLetters = (siteSettings?.heroTitle || "AAREN").split("");
+
   /* ── Logo reveal state ── */
   const [lettersRevealed, setLettersRevealed] = useState<boolean[]>(
-    LOGO_LETTERS.map(() => false)
+    Array(12).fill(false)
   );
 
   /* ── Hover image state ── */
@@ -213,26 +229,19 @@ export default function Home() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
-
-
-
   /* ── Intro scroll-driven text refs ── */
   const introSectionRef = useRef<HTMLDivElement>(null);
   const introTextContainerRef = useRef<HTMLDivElement>(null);
   const introLinesRef = useRef<(HTMLParagraphElement | null)[]>([]);
-
 
   /* ── Scroll observer refs ── */
   const introRef = useInView(0.1);
   const projectsRef = useInView(0.05);
   const newsletterRef = useInView(0.2);
 
-
-
   /* ── Logo reveal on mount ── */
   useEffect(() => {
-    LOGO_LETTERS.forEach((_, i) => {
+    logoLetters.forEach((_, i) => {
       setTimeout(() => {
         setLettersRevealed((prev) => {
           const next = [...prev];
@@ -241,7 +250,7 @@ export default function Home() {
         });
       }, 200 + i * 120);
     });
-  }, []);
+  }, [siteSettings?.heroTitle]);
 
   /* ── Mouse tracking ── */
   const onMouseMove = useCallback((e: MouseEvent) => {
@@ -427,9 +436,31 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
+        {/* Background MP4 Video */}
+        {siteSettings?.heroVideoUrl && (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            key={siteSettings.heroVideoUrl}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.35,
+              pointerEvents: "none",
+              zIndex: 0,
+            }}
+            src={siteSettings.heroVideoUrl}
+          />
+        )}
+
         {/* ── Large AAREN wordmark — letter-by-letter reveal ── */}
         <div
-          aria-label="AAREN"
+          aria-label={siteSettings?.heroTitle || "AAREN"}
           style={{
             overflow: "hidden",
             lineHeight: 0.85,
@@ -437,13 +468,14 @@ export default function Home() {
             display: "flex",
             alignItems: "flex-start",
             paddingTop: "0.5rem",
+            zIndex: 2,
           }}
         >
           <div
             className="hero-wordmark"
             style={{
               fontFamily: "var(--font-jost), sans-serif",
-              fontSize: "clamp(6rem, 18vw, 35rem)",
+              fontSize: logoLetters.length > 6 ? "clamp(4rem, 12vw, 20rem)" : "clamp(6rem, 18vw, 35rem)",
               fontWeight: 800,
               letterSpacing: "-0.05em",
               textTransform: "uppercase",
@@ -454,7 +486,7 @@ export default function Home() {
               overflow: "hidden",
             }}
           >
-            {LOGO_LETTERS.map((letter, i) => (
+            {logoLetters.map((letter, i) => (
               <span
                 key={i}
                 className={`logo-letter${lettersRevealed[i] ? " is-revealed" : ""}`}
@@ -474,6 +506,7 @@ export default function Home() {
             gap: "2.4rem",
             paddingTop: "4rem",
             borderTop: "0.1rem solid rgba(255,255,255,0.1)",
+            zIndex: 2,
           }}
         >
           {/* Tagline */}
@@ -482,17 +515,21 @@ export default function Home() {
             style={{
               fontSize: "clamp(1.6rem, 2.2vw, 2.4rem)",
               letterSpacing: "-0.03em",
-              lineHeight: 0.9,
+              lineHeight: 1.1,
               color: "#eaeef4",
               textTransform: "uppercase",
-              maxWidth: "60rem",
-              opacity: lettersRevealed[4] ? 1 : 0,
-              transform: lettersRevealed[4] ? "translateY(0)" : "translateY(2rem)",
+              maxWidth: "70rem",
+              opacity: lettersRevealed[0] ? 1 : 0,
+              transform: lettersRevealed[0] ? "translateY(0)" : "translateY(2rem)",
               transition: "opacity 0.7s ease 0.7s, transform 0.7s cubic-bezier(0.16,1,0.3,1) 0.7s",
             }}
           >
-            Visual innovation and spatial experiences
-            <br />for world class clients and brands.
+            {siteSettings?.heroTagline || "Visual innovation and spatial experiences for world class clients and brands."}
+            {siteSettings?.heroSubtext && (
+              <span style={{ display: "block", marginTop: "0.8rem", fontSize: "1.4rem", opacity: 0.75, textTransform: "none", fontWeight: 400, lineHeight: 1.4 }}>
+                {siteSettings.heroSubtext}
+              </span>
+            )}
           </p>
 
           {/* Service pill tags */}
@@ -501,11 +538,11 @@ export default function Home() {
               display: "flex",
               flexWrap: "wrap",
               gap: "0.6rem",
-              opacity: lettersRevealed[4] ? 1 : 0,
+              opacity: lettersRevealed[0] ? 1 : 0,
               transition: "opacity 0.6s ease 1s",
             }}
           >
-            {SERVICES.map((svc, i) => (
+            {(siteSettings?.heroCategories || SERVICES).map((svc, i) => (
               <span
                 key={i}
                 className="btn btn--secondary"

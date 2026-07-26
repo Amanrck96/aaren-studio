@@ -35,19 +35,18 @@ export default function Footer() {
           borderBottom: "0.1rem solid var(--color-border)",
         }}
       >
-        {/* Left — navigation links */}
+        {/* Left — 3-column navigation links */}
         <nav>
-          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {Array.from(new Set([...(settings.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])).map((l: string) => {
+          {(() => {
+            const allLinks = Array.from(new Set([...(settings.footerLinks || []), "All Projects", "Brands", "Products", "FAQ", "Blog", "Privacy Policy"])).filter(l => l.toLowerCase() !== "instagram");
+            const getHref = (l: string) => {
               const lower = l.toLowerCase();
-              const href = lower.includes("project")
+              return lower.includes("project")
                 ? "/projects"
                 : lower.includes("brand")
                 ? "/brands"
                 : lower.includes("product")
                 ? "/products"
-                : lower.includes("instagram")
-                ? "/instagram"
                 : lower.includes("faq")
                 ? "/faq"
                 : lower.includes("blog")
@@ -55,20 +54,42 @@ export default function Footer() {
                 : lower.includes("privacy")
                 ? "/privacy-policy"
                 : "#";
+            };
 
-              return (
-                <li key={l}>
-                  <Link
-                    href={href}
-                    className="ul-link"
-                    style={{ fontSize: "1.4rem", color: "rgba(0,0,0,0.5)", letterSpacing: "-0.01em" }}
-                  >
-                    {l}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+            const col1 = ["All Projects", "Privacy Policy", "Products"];
+            const col2 = ["Brands", "Blog", "FAQ"];
+
+            return (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(130px, 1fr))",
+                  gap: "2rem 4rem",
+                  maxWidth: "400px",
+                }}
+              >
+                <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+                  {col1.map((l) => (
+                    <li key={l}>
+                      <Link href={getHref(l)} className="ul-link" style={{ fontSize: "1.4rem", color: "rgba(0,0,0,0.5)", letterSpacing: "-0.01em" }}>
+                        {l}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+
+                <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+                  {col2.map((l) => (
+                    <li key={l}>
+                      <Link href={getHref(l)} className="ul-link" style={{ fontSize: "1.4rem", color: "rgba(0,0,0,0.5)", letterSpacing: "-0.01em" }}>
+                        {l}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })()}
         </nav>
 
         {/* Right — contact */}
