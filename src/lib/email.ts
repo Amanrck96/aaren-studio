@@ -13,7 +13,7 @@ interface InquiryEmailPayload {
 export async function sendInquiryEmailNotification(data: InquiryEmailPayload) {
   const gmailUser = process.env.GMAIL_USER || "info@rbanmsfgc.edu.in";
   const gmailPass = process.env.GMAIL_APP_PASSWORD || "fzhqegcjicvqroea";
-  const recipientEmail = process.env.INQUIRY_RECIPIENT_EMAIL || "amanrck69@gmail.com";
+  const recipientEmail = process.env.INQUIRY_RECIPIENT_EMAIL || "amanrck69@gmail.com, info@aarenintpro.com";
 
   try {
     const transporter = nodemailer.createTransport({
@@ -103,7 +103,7 @@ export async function sendInquiryEmailNotification(data: InquiryEmailPayload) {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Email notification sent to info@aarenintpro.com successfully! MessageId:", info.messageId);
+    console.log(`✅ Email notification sent to ${recipientEmail} successfully! MessageId:`, info.messageId);
     return { success: true, messageId: info.messageId };
   } catch (err: any) {
     console.error("❌ Failed to send email notification:", err.message);
