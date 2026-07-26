@@ -1198,3 +1198,61 @@ input, select, textarea {
   transform: translateY(-0.25rem);
 }
 
+/* ══════════════════════════════════════════════
+   ADMIN LIGHT THEME SYSTEM
+   White background, Black letters, Brown headings & buttons (#8c764b)
+   ══════════════════════════════════════════════ */
+.admin-main-content {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
+
+.admin-main-content h1,
+.admin-main-content h2,
+.admin-main-content .admin-page-title {
+  color: #8c764b !important;
+}
+
+.admin-main-content h3,
+.admin-main-content h4,
+.admin-main-content h5 {
+  color: #111111 !important;
+}
+
+.admin-main-content button.admin-btn-primary,
+.admin-btn-brown {
+  background-color: #8c764b !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(140, 118, 75, 0.25) !important;
+}
+
+.admin-main-content button.admin-btn-primary:hover,
+.admin-btn-brown:hover {
+  background-color: #75603a !important;
+}
+
+.admin-main-content input,
+.admin-main-content select,
+.admin-main-content textarea {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.admin-main-content input:focus,
+.admin-main-content select:focus,
+.admin-main-content textarea:focus {
+  border-color: #8c764b !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(140, 118, 75, 0.15) !important;
+}
+
+.admin-card,
+.admin-box,
+.admin-panel {
+  background-color: #f9f9fc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #111111 !important;
+}
+

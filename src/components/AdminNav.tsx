@@ -55,15 +55,15 @@ export default function AdminNav() {
             top: "16px",
             left: "16px",
             zIndex: 9999,
-            background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)",
-            color: "#000",
+            background: "#8c764b",
+            color: "#ffffff",
             border: "none",
             borderRadius: "10px",
             padding: "0.8rem 1.4rem",
             fontWeight: 900,
             fontSize: "1.05rem",
             cursor: "pointer",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.6)",
+            boxShadow: "0 6px 20px rgba(140, 118, 75, 0.4)",
             display: "flex",
             alignItems: "center",
             gap: "0.6rem",
@@ -74,7 +74,7 @@ export default function AdminNav() {
         </button>
       )}
 
-      {/* Sidebar Container */}
+      {/* Sidebar Container — White Background */}
       <aside
         style={{
           width: "300px",
@@ -82,13 +82,13 @@ export default function AdminNav() {
           position: "fixed",
           top: 0,
           left: 0,
-          background: "linear-gradient(180deg, #0e1017 0%, #08090d 100%)",
-          borderRight: "1px solid rgba(212, 175, 55, 0.25)",
+          background: "#ffffff",
+          borderRight: "1px solid #e2e8f0",
           display: "flex",
           flexDirection: "column",
           padding: "1.2rem 1rem",
           zIndex: 1000,
-          boxShadow: "6px 0 30px rgba(0,0,0,0.6)",
+          boxShadow: "4px 0 24px rgba(0,0,0,0.06)",
           transform: isOpen ? "translateX(0)" : "translateX(-300px)",
           transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         }}
@@ -96,16 +96,16 @@ export default function AdminNav() {
         {/* Brand Header */}
         <div style={{ flexShrink: 0, marginBottom: "1rem", padding: "0 0.4rem" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: "1.35rem", fontWeight: 900, color: "#d4af37", letterSpacing: "0.12em" }}>
+            <span style={{ fontSize: "1.35rem", fontWeight: 900, color: "#8c764b", letterSpacing: "0.12em" }}>
               AAREN CMS
             </span>
             <button
               onClick={toggleSidebar}
               title="Hide Sidebar Menu"
               style={{
-                background: "rgba(255,255,255,0.08)",
-                color: "#d4af37",
-                border: "1px solid rgba(212,175,55,0.35)",
+                background: "#f1f5f9",
+                color: "#8c764b",
+                border: "1px solid #cbd5e1",
                 borderRadius: "8px",
                 padding: "0.3rem 0.7rem",
                 cursor: "pointer",
@@ -116,7 +116,7 @@ export default function AdminNav() {
               ✕ Hide
             </button>
           </div>
-          <div style={{ color: "#94a3b8", fontSize: "0.85rem", marginTop: "0.2rem", fontWeight: 600 }}>Luxury Control Center</div>
+          <div style={{ color: "#64748b", fontSize: "0.85rem", marginTop: "0.2rem", fontWeight: 600 }}>Luxury Control Center</div>
         </div>
 
         {/* Scrollable Nav List filling entire height */}
@@ -130,7 +130,7 @@ export default function AdminNav() {
             overflowY: "auto",
             paddingRight: "0.4rem",
             scrollbarWidth: "thin",
-            scrollbarColor: "#d4af37 rgba(255, 255, 255, 0.08)",
+            scrollbarColor: "#8c764b #f1f5f9",
           }}
         >
           {navItems.map((item) => {
@@ -142,14 +142,14 @@ export default function AdminNav() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  padding: "0.6rem 0.9rem",
+                  padding: "0.65rem 0.9rem",
                   borderRadius: "8px",
                   fontSize: "1.05rem",
                   fontWeight: isActive ? 800 : 600,
                   textDecoration: "none",
-                  color: isActive ? "#ffffff" : "#cbd5e1",
-                  background: isActive ? "linear-gradient(90deg, rgba(212, 175, 55, 0.35) 0%, rgba(212, 175, 55, 0.1) 100%)" : "transparent",
-                  borderLeft: isActive ? "5px solid #d4af37" : "5px solid transparent",
+                  color: isActive ? "#8c764b" : "#1e293b",
+                  background: isActive ? "rgba(140, 118, 75, 0.12)" : "transparent",
+                  borderLeft: isActive ? "5px solid #8c764b" : "5px solid transparent",
                   transition: "all 0.15s ease-in-out",
                 }}
               >
@@ -160,13 +160,13 @@ export default function AdminNav() {
         </nav>
 
         {/* Footer / User Controls */}
-        <div style={{ flexShrink: 0, borderTop: "1px solid rgba(255,255,255,0.12)", paddingTop: "0.8rem", marginTop: "0.8rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+        <div style={{ flexShrink: 0, borderTop: "1px solid #e2e8f0", paddingTop: "0.8rem", marginTop: "0.8rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
           <Link
             href="/"
             target="_blank"
             style={{
               fontSize: "0.95rem",
-              color: "#60a5fa",
+              color: "#8c764b",
               textDecoration: "none",
               fontWeight: 700,
               display: "flex",
@@ -187,9 +187,9 @@ export default function AdminNav() {
             style={{
               width: "100%",
               padding: "0.65rem",
-              background: "rgba(239, 68, 68, 0.2)",
-              color: "#f87171",
-              border: "1px solid rgba(239, 68, 68, 0.4)",
+              background: "#fee2e2",
+              color: "#dc2626",
+              border: "1px solid #fca5a5",
               borderRadius: "8px",
               cursor: "pointer",
               fontSize: "0.95rem",
@@ -202,25 +202,25 @@ export default function AdminNav() {
         </div>
       </aside>
 
-      {/* Global CSS for Custom Gold Scrollbar & layout transitions */}
+      {/* Global CSS for Light Admin Theme */}
       <style jsx global>{`
         .admin-sidebar-nav::-webkit-scrollbar {
-          width: 8px;
+          width: 6px;
         }
         .admin-sidebar-nav::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.05);
+          background: #f1f5f9;
           border-radius: 4px;
         }
         .admin-sidebar-nav::-webkit-scrollbar-thumb {
-          background: linear-gradient(180deg, #d4af37 0%, #aa820a 100%);
+          background: #8c764b;
           border-radius: 4px;
-        }
-        .admin-sidebar-nav::-webkit-scrollbar-thumb:hover {
-          background: #f3e5ab;
         }
         main.admin-main-content {
           margin-left: ${isOpen ? "300px" : "0px"} !important;
           transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          background-color: #ffffff !important;
+          color: #111111 !important;
+          min-height: 100vh;
         }
       `}</style>
     </>

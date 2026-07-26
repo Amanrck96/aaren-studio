@@ -73,14 +73,14 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div style={{ background: "#0b0c10", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
+    <div style={{ background: "#ffffff", color: "#111111", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#ffffff" }}>
         <div style={{ marginBottom: "2.5rem" }}>
-          <span style={{ color: "#d4af37", fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>LUXURY CONTROL CENTER</span>
-          <h1 style={{ fontSize: "2.6rem", fontWeight: 800, margin: "0.3rem 0", color: "#fff" }}>Aaren Studio Master Admin</h1>
-          <p style={{ color: "#94a3b8", fontSize: "0.95rem" }}>Code-free website management. Edits saved here update the live website immediately.</p>
+          <span style={{ color: "#8c764b", fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>LUXURY CONTROL CENTER</span>
+          <h1 style={{ fontSize: "2.6rem", fontWeight: 800, margin: "0.3rem 0", color: "#8c764b" }}>Aaren Studio Master Admin</h1>
+          <p style={{ color: "#475569", fontSize: "0.95rem" }}>Code-free website management. Edits saved here update the live website immediately.</p>
         </div>
 
         {/* Real-time Counter Grid */}
@@ -90,49 +90,49 @@ export default function AdminDashboardPage() {
               key={c.label}
               href={c.href}
               style={{
-                background: "#12141c",
-                border: "1px solid rgba(255,255,255,0.06)",
+                background: "#f8f9fa",
+                border: "1px solid #e2e8f0",
                 borderRadius: "12px",
                 padding: "1.4rem 1.6rem",
                 textDecoration: "none",
-                color: "#fff",
+                color: "#111111",
                 display: "block",
                 transition: "all 0.2s ease-in-out",
-                boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
               }}
             >
-              <div style={{ fontSize: "0.78rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>{c.label}</div>
-              <div style={{ fontSize: "2.4rem", fontWeight: 900, color: c.color, marginTop: "0.3rem" }}>{c.count}</div>
+              <div style={{ fontSize: "0.78rem", color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>{c.label}</div>
+              <div style={{ fontSize: "2.4rem", fontWeight: 900, color: "#8c764b", marginTop: "0.3rem" }}>{c.count}</div>
             </Link>
           ))}
         </div>
 
         {/* Modules Grid */}
-        <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "1.5rem", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "0.8rem", color: "#d4af37" }}>CMS Management Modules</h2>
+        <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "1.5rem", borderBottom: "1px solid #e2e8f0", paddingBottom: "0.8rem", color: "#8c764b" }}>CMS Management Modules</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.4rem" }}>
           {modules.map((m) => (
             <Link
               key={m.href}
               href={m.href}
               style={{
-                background: "#12141c",
-                border: "1px solid rgba(255,255,255,0.06)",
+                background: "#f8f9fa",
+                border: "1px solid #e2e8f0",
                 borderRadius: "12px",
                 padding: "1.6rem",
                 textDecoration: "none",
-                color: "#fff",
+                color: "#111111",
                 transition: "all 0.2s ease-in-out",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
               }}
             >
               <div>
-                <div style={{ fontSize: "1.15rem", fontWeight: 700, marginBottom: "0.5rem", color: m.color }}>{m.title}</div>
-                <p style={{ color: "#94a3b8", fontSize: "0.88rem", lineHeight: 1.5, margin: 0 }}>{m.desc}</p>
+                <div style={{ fontSize: "1.15rem", fontWeight: 700, marginBottom: "0.5rem", color: "#8c764b" }}>{m.title}</div>
+                <p style={{ color: "#475569", fontSize: "0.88rem", lineHeight: 1.5, margin: 0 }}>{m.desc}</p>
               </div>
-              <div style={{ marginTop: "1.4rem", fontSize: "0.85rem", fontWeight: 700, color: m.color, display: "flex", alignItems: "center", gap: "0.4rem" }}>
+              <div style={{ marginTop: "1.4rem", fontSize: "0.85rem", fontWeight: 700, color: "#8c764b", display: "flex", alignItems: "center", gap: "0.4rem" }}>
                 Manage Module →
               </div>
             </Link>
