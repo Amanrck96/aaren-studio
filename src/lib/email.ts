@@ -13,7 +13,8 @@ interface InquiryEmailPayload {
 export async function sendInquiryEmailNotification(data: InquiryEmailPayload) {
   const gmailUser = process.env.GMAIL_USER || "info@rbanmsfgc.edu.in";
   const gmailPass = process.env.GMAIL_APP_PASSWORD || "fzhqegcjicvqroea";
-  const recipientEmail = process.env.INQUIRY_RECIPIENT_EMAIL || "amanrck69@gmail.com, info@aarenintpro.com";
+  const rawRecipient = process.env.INQUIRY_RECIPIENT_EMAIL || "amanrck69@gmail.com, info@aarenintpro.com";
+  const recipientEmail = rawRecipient.replace(/;/g, ",").replace(/"/g, "").trim();
 
   try {
     const transporter = nodemailer.createTransport({

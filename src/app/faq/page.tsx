@@ -442,8 +442,8 @@ export default function FaqPage() {
 
       <style>{`
         .faq-page {
-          background-color: #0c0c0c;
-          color: #ffffff;
+          background-color: #ffffff;
+          color: #111111;
           min-height: 100vh;
           padding-top: 10rem;
           padding-bottom: 8rem;
@@ -458,7 +458,7 @@ export default function FaqPage() {
 
         .faq-header {
           padding-bottom: 4rem;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
+          border-bottom: 1px solid rgba(0,0,0,0.1);
           margin-bottom: 4rem;
         }
 
@@ -469,7 +469,7 @@ export default function FaqPage() {
           font-size: 1.1rem;
           font-weight: 700;
           letter-spacing: 0.12em;
-          color: rgba(255,255,255,0.4);
+          color: #80673f;
           margin-bottom: 1.6rem;
         }
 
@@ -478,7 +478,7 @@ export default function FaqPage() {
           font-weight: 800;
           letter-spacing: -0.04em;
           line-height: 0.95;
-          color: #ffffff;
+          color: #80673f;
           text-transform: uppercase;
           margin-bottom: 2rem;
         }
@@ -486,10 +486,10 @@ export default function FaqPage() {
         .faq-desc {
           font-size: clamp(1.4rem, 2vw, 1.8rem);
           line-height: 1.6;
-          color: rgba(255,255,255,0.6);
+          color: rgba(0,0,0,0.7);
           max-width: 760px;
           margin-bottom: 3.2rem;
-          font-weight: 300;
+          font-weight: 400;
         }
 
         .faq-search {
@@ -499,9 +499,9 @@ export default function FaqPage() {
 
         .search-input {
           width: 100%;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.15);
-          color: #ffffff;
+          background: #f4f5f7;
+          border: 1px solid rgba(0,0,0,0.15);
+          color: #111111;
           padding: 1.4rem 2rem;
           border-radius: 999px;
           font-size: 1.3rem;
@@ -510,7 +510,7 @@ export default function FaqPage() {
         }
 
         .search-input:focus {
-          border-color: rgba(255,255,255,0.5);
+          border-color: #80673f;
         }
 
         .search-clear {
@@ -520,7 +520,7 @@ export default function FaqPage() {
           transform: translateY(-50%);
           background: none;
           border: none;
-          color: rgba(255,255,255,0.4);
+          color: rgba(0,0,0,0.4);
           font-size: 1.4rem;
           cursor: pointer;
         }
@@ -532,9 +532,9 @@ export default function FaqPage() {
         }
 
         .cat-btn {
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.12);
-          color: rgba(255,255,255,0.7);
+          background: #f0f2f5;
+          border: 1px solid rgba(0,0,0,0.12);
+          color: #333333;
           padding: 0.8rem 1.6rem;
           border-radius: 999px;
           font-size: 1.2rem;
@@ -543,14 +543,19 @@ export default function FaqPage() {
           transition: all 0.2s ease;
         }
 
+        .cat-btn:hover {
+          border-color: #80673f;
+          color: #80673f;
+        }
+
         .cat-btn.is-active {
-          background: #ffffff;
-          color: #000000;
-          border-color: #ffffff;
+          background: #80673f;
+          color: #ffffff;
+          border-color: #80673f;
         }
 
         .cat-count {
-          opacity: 0.6;
+          opacity: 0.75;
           font-size: 1rem;
         }
 
@@ -562,16 +567,16 @@ export default function FaqPage() {
         }
 
         .faq-item {
-          background: rgba(255,255,255,0.02);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: #ffffff;
+          border: 1px solid rgba(0,0,0,0.1);
           border-radius: 0.6rem;
           overflow: hidden;
           transition: border-color 0.25s ease, background 0.25s ease;
         }
 
         .faq-item.is-open {
-          border-color: rgba(255,255,255,0.25);
-          background: rgba(255,255,255,0.05);
+          border-color: #80673f;
+          background: #fdfbf7;
         }
 
         .faq-question-btn {
@@ -579,7 +584,7 @@ export default function FaqPage() {
           padding: 2.2rem 2.4rem;
           background: none;
           border: none;
-          color: #ffffff;
+          color: #111111;
           text-align: left;
           display: grid;
           grid-template-columns: 40px 1fr auto auto;
@@ -591,7 +596,7 @@ export default function FaqPage() {
         .faq-idx {
           font-size: 1.2rem;
           font-weight: 700;
-          color: rgba(255,255,255,0.3);
+          color: #80673f;
         }
 
         .faq-cat-badge {
@@ -599,8 +604,8 @@ export default function FaqPage() {
           font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          background: rgba(255,255,255,0.08);
-          color: rgba(255,255,255,0.6);
+          background: rgba(128, 103, 63, 0.1);
+          color: #80673f;
           padding: 0.4rem 0.8rem;
           border-radius: 0.4rem;
           white-space: nowrap;
@@ -612,12 +617,13 @@ export default function FaqPage() {
           margin: 0;
           line-height: 1.3;
           text-transform: none;
+          color: #111111;
         }
 
         .faq-icon {
           font-size: 2.2rem;
-          font-weight: 300;
-          color: rgba(255,255,255,0.5);
+          font-weight: 400;
+          color: #80673f;
           line-height: 1;
         }
 
@@ -625,36 +631,41 @@ export default function FaqPage() {
           padding: 1.6rem 2.4rem 2.4rem 8rem;
           font-size: 1.45rem;
           line-height: 1.7;
-          color: rgba(255,255,255,0.75);
-          border-top: 1px solid rgba(255,255,255,0.05);
+          color: #222222;
+          border-top: 1px solid rgba(0,0,0,0.06);
           white-space: pre-line;
         }
 
         .no-faqs {
           text-align: center;
           padding: 6rem 2rem;
-          color: rgba(255,255,255,0.5);
+          color: rgba(0,0,0,0.5);
         }
 
         .reset-btn {
           margin-top: 1.6rem;
-          background: #ffffff;
-          color: #000000;
+          background: #80673f;
+          color: #ffffff;
           border: none;
           padding: 1rem 2rem;
           border-radius: 999px;
           font-weight: 700;
           cursor: pointer;
+          transition: background 0.2s ease;
+        }
+
+        .reset-btn:hover {
+          background: #6a5431;
         }
 
         .faq-cta {
-          border-top: 1px solid rgba(255,255,255,0.1);
+          border-top: 1px solid rgba(0,0,0,0.1);
           padding-top: 6rem;
         }
 
         .faq-cta__card {
-          background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-          border: 1px solid rgba(255,255,255,0.12);
+          background: #fdfbf7;
+          border: 1px solid rgba(128, 103, 63, 0.25);
           border-radius: 1.2rem;
           padding: 4rem 3rem;
           text-align: center;
@@ -668,11 +679,12 @@ export default function FaqPage() {
           font-size: 2.8rem;
           font-weight: 800;
           letter-spacing: -0.02em;
+          color: #80673f;
         }
 
         .faq-cta__card p {
           font-size: 1.5rem;
-          color: rgba(255,255,255,0.65);
+          color: rgba(0,0,0,0.7);
           max-width: 600px;
         }
 
@@ -691,7 +703,7 @@ export default function FaqPage() {
           font-size: 1.2rem;
           letter-spacing: 0.06em;
           text-decoration: none;
-          transition: transform 0.2s ease;
+          transition: transform 0.2s ease, background 0.2s ease;
         }
 
         .cta-btn:hover {
@@ -699,14 +711,22 @@ export default function FaqPage() {
         }
 
         .cta-btn.primary {
-          background: #ffffff;
-          color: #000000;
+          background: #80673f;
+          color: #ffffff;
+        }
+
+        .cta-btn.primary:hover {
+          background: #6a5431;
         }
 
         .cta-btn.secondary {
-          background: rgba(255,255,255,0.08);
-          color: #ffffff;
-          border: 1px solid rgba(255,255,255,0.15);
+          background: #ffffff;
+          color: #80673f;
+          border: 1px solid #80673f;
+        }
+
+        .cta-btn.secondary:hover {
+          background: #fdfbf7;
         }
       `}</style>
     </div>

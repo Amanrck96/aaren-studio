@@ -55,63 +55,63 @@ export default function BlogDetail({ params }: PageProps) {
   };
 
   return (
-    <div className="bg-[#080808] text-white pt-32 pb-24 px-6 md:px-12">
+    <div className="bg-white text-neutral-900 pt-32 pb-24 px-6 md:px-12 min-h-screen">
       <div className="max-w-4xl mx-auto">
-        <Link href="/blog" className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors mb-12 text-sm uppercase tracking-widest font-bold">
+        <Link href="/blog" className="inline-flex items-center gap-2 text-neutral-500 hover:text-[#80673f] transition-colors mb-12 text-sm uppercase tracking-widest font-bold">
           <ArrowLeft size={16} /> Back to journal
         </Link>
 
         <article className="mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-accent">{article.category} • {article.date}</span>
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight mt-4 mb-8 leading-none">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#80673f]">{article.category} • {article.date}</span>
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight mt-4 mb-8 leading-none text-[#80673f]">
             {article.title}
           </h1>
 
-          <div className="w-full aspect-[21/9] bg-neutral-900 overflow-hidden mb-12">
+          <div className="w-full aspect-[21/9] bg-neutral-100 overflow-hidden mb-12 rounded-lg border border-neutral-200">
             <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
           </div>
 
-          <p className="text-neutral-300 text-lg leading-relaxed font-light whitespace-pre-line mb-12">
+          <p className="text-neutral-800 text-lg leading-relaxed font-normal whitespace-pre-line mb-12">
             {article.content}
           </p>
         </article>
 
         {/* Comments Section */}
-        <div className="border-t border-neutral-900 pt-12">
-          <h3 className="text-2xl font-black uppercase tracking-tight mb-8">COMMENTS ({comments.length})</h3>
+        <div className="border-t border-neutral-200 pt-12">
+          <h3 className="text-2xl font-black uppercase tracking-tight mb-8 text-[#80673f]">COMMENTS ({comments.length})</h3>
           
           <div className="space-y-6 mb-12">
             {comments.map((c, i) => (
-              <div key={i} className="bg-neutral-950 border border-neutral-900 p-6">
-                <span className="text-xs font-bold uppercase tracking-wider text-accent">{c.author}</span>
-                <p className="text-neutral-300 text-sm mt-2 font-light">{c.text}</p>
+              <div key={i} className="bg-[#fdfbf7] border border-neutral-200 p-6 rounded-lg">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#80673f]">{c.author}</span>
+                <p className="text-neutral-800 text-sm mt-2 font-normal">{c.text}</p>
               </div>
             ))}
           </div>
 
-          <form onSubmit={handleCommentSubmit} className="space-y-6 bg-neutral-950 border border-neutral-900 p-8">
-            <h4 className="text-lg font-bold uppercase">Add a Comment</h4>
+          <form onSubmit={handleCommentSubmit} className="space-y-6 bg-[#fdfbf7] border border-neutral-200 p-8 rounded-lg">
+            <h4 className="text-lg font-bold uppercase text-[#80673f]">Add a Comment</h4>
             <div>
-              <label className="block text-xs uppercase tracking-wider font-bold mb-2">Name</label>
+              <label className="block text-xs uppercase tracking-wider font-bold mb-2 text-neutral-700">Name</label>
               <input
                 type="text"
                 required
                 value={newComment.author}
                 onChange={(e) => setNewComment({ ...newComment, author: e.target.value })}
-                className="w-full bg-[#080808] border border-neutral-800 p-4 text-white text-sm outline-none focus:border-accent"
+                className="w-full bg-white border border-neutral-300 p-4 text-neutral-900 text-sm outline-none focus:border-[#80673f] rounded"
               />
             </div>
             <div>
-              <label className="block text-xs uppercase tracking-wider font-bold mb-2">Message</label>
+              <label className="block text-xs uppercase tracking-wider font-bold mb-2 text-neutral-700">Message</label>
               <textarea
                 rows={4}
                 required
                 value={newComment.text}
                 onChange={(e) => setNewComment({ ...newComment, text: e.target.value })}
-                className="w-full bg-[#080808] border border-neutral-800 p-4 text-white text-sm outline-none focus:border-accent"
+                className="w-full bg-white border border-neutral-300 p-4 text-neutral-900 text-sm outline-none focus:border-[#80673f] rounded"
               />
             </div>
-            <button type="submit" className="px-8 py-4 bg-white text-black font-bold uppercase tracking-wider text-xs hover:bg-accent hover:text-white transition-colors">
+            <button type="submit" className="px-8 py-4 bg-[#80673f] text-white font-bold uppercase tracking-wider text-xs hover:bg-[#6a5431] transition-colors rounded-full">
               Post Comment
             </button>
           </form>

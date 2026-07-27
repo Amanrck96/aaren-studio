@@ -232,8 +232,8 @@ export default function BlogPage() {
 
       <style>{`
         .blog-page {
-          background-color: #0a0a0a;
-          color: #ffffff;
+          background-color: #ffffff;
+          color: #111111;
           min-height: 100vh;
           padding-top: 10rem;
           padding-bottom: 8rem;
@@ -248,7 +248,7 @@ export default function BlogPage() {
 
         .blog-header {
           padding-bottom: 4rem;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
+          border-bottom: 1px solid rgba(0,0,0,0.1);
           margin-bottom: 5rem;
         }
 
@@ -256,7 +256,7 @@ export default function BlogPage() {
           font-size: 1.1rem;
           font-weight: 700;
           letter-spacing: 0.12em;
-          color: rgba(255,255,255,0.4);
+          color: #80673f;
           display: block;
           margin-bottom: 1.6rem;
         }
@@ -266,7 +266,7 @@ export default function BlogPage() {
           font-weight: 800;
           letter-spacing: -0.05em;
           line-height: 0.9;
-          color: #ffffff;
+          color: #80673f;
           text-transform: uppercase;
           margin-bottom: 2.4rem;
         }
@@ -274,10 +274,10 @@ export default function BlogPage() {
         .blog-desc {
           font-size: clamp(1.5rem, 2.2vw, 2rem);
           line-height: 1.5;
-          color: rgba(255,255,255,0.6);
+          color: rgba(0,0,0,0.7);
           max-width: 72rem;
           margin-bottom: 4rem;
-          font-weight: 300;
+          font-weight: 400;
         }
 
         .blog-controls {
@@ -301,13 +301,17 @@ export default function BlogPage() {
 
         .search-input {
           width: 100%;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.15);
-          color: #ffffff;
+          background: #f4f5f7;
+          border: 1px solid rgba(0,0,0,0.15);
+          color: #111111;
           padding: 1.2rem 2rem;
           border-radius: 999px;
           font-size: 1.3rem;
           outline: none;
+        }
+
+        .search-input:focus {
+          border-color: #80673f;
         }
 
         .search-clear {
@@ -317,7 +321,7 @@ export default function BlogPage() {
           transform: translateY(-50%);
           background: none;
           border: none;
-          color: rgba(255,255,255,0.4);
+          color: rgba(0,0,0,0.4);
           cursor: pointer;
         }
 
@@ -328,9 +332,9 @@ export default function BlogPage() {
         }
 
         .cat-pill {
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.12);
-          color: rgba(255,255,255,0.7);
+          background: #f0f2f5;
+          border: 1px solid rgba(0,0,0,0.12);
+          color: #333333;
           padding: 0.8rem 1.8rem;
           border-radius: 999px;
           font-size: 1.2rem;
@@ -339,10 +343,15 @@ export default function BlogPage() {
           transition: all 0.25s ease;
         }
 
+        .cat-pill:hover {
+          border-color: #80673f;
+          color: #80673f;
+        }
+
         .cat-pill.is-active {
-          background: #ffffff;
-          color: #000000;
-          border-color: #ffffff;
+          background: #80673f;
+          color: #ffffff;
+          border-color: #80673f;
         }
 
         /* Featured Section */
@@ -353,8 +362,8 @@ export default function BlogPage() {
         .featured-card {
           display: grid;
           grid-template-columns: 1fr;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: #fdfbf7;
+          border: 1px solid rgba(0,0,0,0.1);
           border-radius: 0.8rem;
           overflow: hidden;
           text-decoration: none;
@@ -369,13 +378,13 @@ export default function BlogPage() {
         }
 
         .featured-card:hover {
-          border-color: rgba(255,255,255,0.3);
+          border-color: #80673f;
         }
 
         .featured-fig {
           position: relative;
           min-height: 380px;
-          background: #151515;
+          background: #f4f5f7;
         }
 
         .featured-img {
@@ -391,8 +400,8 @@ export default function BlogPage() {
           position: absolute;
           top: 2rem;
           left: 2rem;
-          background: #ffffff;
-          color: #000000;
+          background: #80673f;
+          color: #ffffff;
           font-size: 1rem;
           font-weight: 800;
           letter-spacing: 0.1em;
@@ -415,7 +424,7 @@ export default function BlogPage() {
           font-size: 1.1rem;
           font-weight: 700;
           letter-spacing: 0.08em;
-          color: rgba(255,255,255,0.45);
+          color: #80673f;
           text-transform: uppercase;
         }
 
@@ -423,7 +432,7 @@ export default function BlogPage() {
           font-size: clamp(2.4rem, 3.5vw, 4rem);
           font-weight: 800;
           line-height: 1.1;
-          color: #ffffff;
+          color: #80673f;
           margin: 0;
           text-transform: uppercase;
         }
@@ -431,15 +440,15 @@ export default function BlogPage() {
         .featured-content p {
           font-size: 1.5rem;
           line-height: 1.6;
-          color: rgba(255,255,255,0.65);
-          font-weight: 300;
+          color: #222222;
+          font-weight: 400;
         }
 
         .read-more-link {
           font-size: 1.2rem;
           font-weight: 800;
           letter-spacing: 0.1em;
-          color: #ffffff;
+          color: #80673f;
           margin-top: 1rem;
         }
 
@@ -467,8 +476,8 @@ export default function BlogPage() {
         }
 
         .post-card {
-          background: rgba(255,255,255,0.02);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: #ffffff;
+          border: 1px solid rgba(0,0,0,0.1);
           border-radius: 0.6rem;
           overflow: hidden;
           transition: transform 0.3s ease, border-color 0.3s ease;
@@ -476,7 +485,7 @@ export default function BlogPage() {
 
         .post-card:hover {
           transform: translateY(-0.4rem);
-          border-color: rgba(255,255,255,0.25);
+          border-color: #80673f;
         }
 
         .post-card__link {
@@ -490,7 +499,7 @@ export default function BlogPage() {
         .post-card__fig {
           position: relative;
           height: 240px;
-          background: #151515;
+          background: #f4f5f7;
           overflow: hidden;
         }
 
@@ -515,7 +524,7 @@ export default function BlogPage() {
           font-size: 1.8rem;
           font-weight: 700;
           line-height: 1.3;
-          color: #ffffff;
+          color: #111111;
           margin: 0;
           text-transform: uppercase;
         }
@@ -523,30 +532,30 @@ export default function BlogPage() {
         .post-summary {
           font-size: 1.3rem;
           line-height: 1.6;
-          color: rgba(255,255,255,0.55);
-          font-weight: 300;
+          color: #333333;
+          font-weight: 400;
           margin: 0;
         }
 
         .post-footer {
           margin-top: auto;
           padding-top: 1.6rem;
-          border-top: 1px solid rgba(255,255,255,0.06);
+          border-top: 1px solid rgba(0,0,0,0.08);
           display: flex;
           justify-content: space-between;
           font-size: 1.1rem;
-          color: rgba(255,255,255,0.4);
+          color: rgba(0,0,0,0.5);
         }
 
         /* Newsletter */
         .newsletter-section {
-          border-top: 1px solid rgba(255,255,255,0.1);
+          border-top: 1px solid rgba(0,0,0,0.1);
           padding-top: 6rem;
         }
 
         .newsletter-card {
-          background: #111111;
-          border: 1px solid rgba(255,255,255,0.12);
+          background: #fdfbf7;
+          border: 1px solid rgba(128, 103, 63, 0.25);
           border-radius: 1.2rem;
           padding: 5rem 3rem;
           text-align: center;
@@ -560,11 +569,12 @@ export default function BlogPage() {
           font-size: clamp(2.4rem, 4vw, 3.6rem);
           font-weight: 800;
           letter-spacing: -0.02em;
+          color: #80673f;
         }
 
         .newsletter-card p {
           font-size: 1.5rem;
-          color: rgba(255,255,255,0.6);
+          color: rgba(0,0,0,0.7);
           max-width: 600px;
         }
 
@@ -585,9 +595,9 @@ export default function BlogPage() {
 
         .newsletter-input {
           flex: 1;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.15);
-          color: #ffffff;
+          background: #ffffff;
+          border: 1px solid rgba(0,0,0,0.2);
+          color: #111111;
           padding: 1.2rem 2rem;
           border-radius: 999px;
           font-size: 1.3rem;
@@ -595,8 +605,8 @@ export default function BlogPage() {
         }
 
         .newsletter-btn {
-          background: #ffffff;
-          color: #000000;
+          background: #80673f;
+          color: #ffffff;
           border: none;
           padding: 1.2rem 2.4rem;
           border-radius: 999px;
@@ -604,23 +614,33 @@ export default function BlogPage() {
           font-size: 1.1rem;
           letter-spacing: 0.08em;
           cursor: pointer;
+          transition: background 0.2s ease;
+        }
+
+        .newsletter-btn:hover {
+          background: #6a5431;
         }
 
         .no-posts {
           text-align: center;
           padding: 6rem 2rem;
-          color: rgba(255,255,255,0.5);
+          color: rgba(0,0,0,0.5);
         }
 
         .reset-btn {
           margin-top: 1.6rem;
-          background: #ffffff;
-          color: #000000;
+          background: #80673f;
+          color: #ffffff;
           border: none;
           padding: 1rem 2rem;
           border-radius: 999px;
           font-weight: 700;
           cursor: pointer;
+          transition: background 0.2s ease;
+        }
+
+        .reset-btn:hover {
+          background: #6a5431;
         }
       `}</style>
     </div>
