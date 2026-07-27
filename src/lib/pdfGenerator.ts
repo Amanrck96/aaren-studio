@@ -74,7 +74,7 @@ export function generateAarenProjectPDF(project: PDFProjectData): jsPDF {
     doc.setFontSize(8);
     doc.setTextColor(120, 120, 120);
     doc.text(
-      "Aaren Intpro | Mysore Road, Bangalore | info@aarenstudio.com",
+      "AAREN INTPRO | #342/8, NTY Layout, Mysore Road, Bangalore - 560026 | info@aarenintpro.com",
       margin,
       footerY
     );

@@ -94,22 +94,25 @@ export default function Footer() {
 
         {/* Right — contact */}
         <div style={{ textAlign: "right" }}>
-          <p style={{ fontSize: "1.1rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "rgba(0,0,0,0.35)", marginBottom: "0.8rem" }}>
+          <p style={{ fontSize: "1.1rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "rgba(0,0,0,0.35)", marginBottom: "0.6rem" }}>
             Contact Us
+          </p>
+          <p style={{ fontSize: "1.3rem", fontWeight: 700, letterSpacing: "0.02em", color: "#000", marginBottom: "0.4rem" }}>
+            AAREN INTPRO
+          </p>
+          <p style={{ fontSize: "1.2rem", color: "rgba(0,0,0,0.6)", lineHeight: 1.4, marginBottom: "0.4rem" }}>
+            {settings.contactAddress}
+          </p>
+          <p style={{ fontSize: "1.2rem", color: "rgba(0,0,0,0.7)", lineHeight: 1.4, marginBottom: "0.4rem" }}>
+            Phone: <a href={`tel:${settings.contactPhone}`} className="ul-link" style={{ color: "#000", fontWeight: 600 }}>{settings.contactPhone}</a>
           </p>
           <a
             href={`mailto:${settings.contactEmail}`}
             className="ul-link"
-            style={{ fontSize: "1.4rem", color: "#000", letterSpacing: "-0.01em", display: "block", marginBottom: "0.4rem" }}
+            style={{ fontSize: "1.2rem", color: "#000", fontWeight: 500, letterSpacing: "-0.01em", display: "inline-block" }}
           >
             {settings.contactEmail}
           </a>
-          <p style={{ fontSize: "1.2rem", color: "rgba(0,0,0,0.6)", lineHeight: 1.5, margin: "0.2rem 0" }}>
-            {settings.contactPhone}
-          </p>
-          <p style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.4)", lineHeight: 1.5 }}>
-            {settings.contactAddress}
-          </p>
         </div>
       </div>
 

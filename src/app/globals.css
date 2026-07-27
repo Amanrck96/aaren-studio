@@ -1256,3 +1256,33 @@ input, select, textarea {
   color: #111111 !important;
 }
 
+/* ── Category Header Bar Mobile Alignment Fix ── */
+.cat-header-dots {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .cat-header-dots {
+    display: none !important;
+  }
+  .cat-header-left {
+    left: 1.6rem !important;
+    bottom: 1.6rem !important;
+  }
+  .cat-header-bar {
+    padding: 3.2rem 1.6rem 1.6rem 1.6rem !important;
+  }
+  .cat-header-title {
+    font-size: 1.1rem !important;
+    letter-spacing: 0.06em !important;
+  }
+  .cat-header-view-all {
+    font-size: 1.1rem !important;
+    right: 1.6rem !important;
+    bottom: 1.6rem !important;
+  }
+}
+
+

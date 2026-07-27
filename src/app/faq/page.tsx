@@ -21,7 +21,7 @@ const FAQ_DATA: FaqItem[] = [
     id: "faq-2",
     category: "General & Showroom",
     question: "Where is Aaren Intpro located?",
-    answer: "Aaren Intpro is located on Mysore Road, Bengaluru, Karnataka. The showroom serves homeowners, architects, interior designers, builders, and commercial projects across India."
+    answer: "Aaren Intpro is located at #342/8, NTY Layout, Mysore Road, Bangalore - 560026. The showroom serves homeowners, architects, interior designers, builders, and commercial projects across India."
   },
   {
     id: "faq-3",

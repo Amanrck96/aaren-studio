@@ -37,7 +37,7 @@ export default function Contact() {
               <div className="info-item__icon"><Mail size={16} /></div>
               <div className="info-item__content">
                 <span className="info-item__label">Email Address</span>
-                <a href="mailto:hello@aarenstudio.com" className="info-item__value">hello@aarenstudio.com</a>
+                <a href="mailto:info@aarenintpro.com" className="info-item__value">info@aarenintpro.com</a>
               </div>
             </div>
 
@@ -45,15 +45,19 @@ export default function Contact() {
               <div className="info-item__icon"><Phone size={16} /></div>
               <div className="info-item__content">
                 <span className="info-item__label">Phone Number</span>
-                <span className="info-item__value">+91-9876543210</span>
+                <a href="tel:8884464444" className="info-item__value">8884464444</a>
               </div>
             </div>
 
             <div className="info-item">
               <div className="info-item__icon"><MapPin size={16} /></div>
               <div className="info-item__content">
-                <span className="info-item__label">Creative Office</span>
-                <span className="info-item__value">Bangalore, Karnataka, India</span>
+                <span className="info-item__label">Creative Office & Showroom</span>
+                <span className="info-item__value" style={{ lineHeight: 1.5 }}>
+                  <strong>AAREN INTPRO</strong><br />
+                  #342/8, NTY Layout, Mysore Road,<br />
+                  Bangalore - 560026
+                </span>
               </div>
             </div>
           </div>
@@ -63,7 +67,7 @@ export default function Contact() {
             <div className="mock-map__grid"></div>
             <div className="mock-map__overlay">
               <span className="mock-map__tag">MAP NAVIGATION ROUTE</span>
-              <span className="mock-map__address">Aaren Studio, Tech Park Road, Bangalore</span>
+              <span className="mock-map__address">AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026</span>
             </div>
           </div>
         </div>

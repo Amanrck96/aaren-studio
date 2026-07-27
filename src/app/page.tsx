@@ -673,13 +673,13 @@ export default function Home() {
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
         {/* Centered Header bar */}
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
+        <div className="cat-header-bar" style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
           {/* Left pagination & controls */}
-          <div style={{ position: "absolute", left: "2.4rem", bottom: "2.4rem", display: "flex", alignItems: "center", gap: "1.6rem" }}>
+          <div style={{ position: "absolute", left: "2.4rem", bottom: "2.4rem", display: "flex", alignItems: "center", gap: "1.6rem" }} className="cat-header-left">
             <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 600, color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em" }}>
               {String(catIdx + 1).padStart(2, "0")} / {String(catTotal).padStart(2, "0")}
             </span>
-            <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+            <div className="cat-header-dots" style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
               {HOME_CATEGORIES.map((_, i) => (
                 <button
                   key={i}
@@ -692,10 +692,10 @@ export default function Home() {
           </div>
 
           {/* Centered Title */}
-          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Browse by Category</span>
+          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Browse by Category</span>
 
           {/* Right link */}
-          <Link href="/products" id="cat-view-all" className="t-tag ul-link" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "rgba(0,0,0,0.5)", letterSpacing: "0.08em", fontSize: "1.25rem" }}>View all</Link>
+          <Link href="/products" id="cat-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "rgba(0,0,0,0.5)", letterSpacing: "0.08em", fontSize: "1.25rem" }}>View all</Link>
         </div>
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
