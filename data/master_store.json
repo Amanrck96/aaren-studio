@@ -506,6 +506,16 @@
   ],
   "inquiries": [
     {
+      "id": "inq-1785615538691",
+      "name": "AMAN SAH",
+      "email": "amanrck69@gmail.com",
+      "phone": "+919547526440",
+      "type": "Project Debrief",
+      "subject": "zvsd",
+      "message": "caf",
+      "createdAt": "2026-08-01T20:18:58.691Z"
+    },
+    {
       "id": "inq-1785615326944",
       "name": "Test Client",
       "email": "testclient@example.com",
