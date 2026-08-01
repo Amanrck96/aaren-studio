@@ -9,21 +9,47 @@ export default function AdminInquiriesPage() {
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchInquiries();
+    // Auto refresh leads every 10 seconds for real-time live updates
+    const interval = setInterval(() => {
+      fetchInquiries(true);
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
-  async function fetchInquiries() {
-    setLoading(true);
+  async function fetchInquiries(silent = false) {
+    if (!silent) setLoading(true);
     try {
-      const res = await fetch("/api/inquiries");
+      const res = await fetch(`/api/inquiries?t=${Date.now()}`, { cache: "no-store" });
       const json = await res.json();
-      if (json.success) setInquiries(json.data);
+      if (json.success && Array.isArray(json.data)) {
+        setInquiries(json.data);
+      }
     } catch (e) {
-      console.error(e);
+      console.error("Failed to fetch inquiries:", e);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
+    }
+  }
+
+  async function handleDeleteInquiry(id: string) {
+    if (!confirm("Are you sure you want to delete this lead inquiry?")) return;
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/inquiries?id=${id}`, { method: "DELETE" });
+      const json = await res.json();
+      if (json.success) {
+        setInquiries((prev) => prev.filter((i) => i.id !== id));
+      } else {
+        alert("Failed to delete lead: " + json.error);
+      }
+    } catch (err: any) {
+      alert("Error deleting lead: " + err.message);
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -37,105 +63,178 @@ export default function AdminInquiriesPage() {
       !searchQuery ||
       inq.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       inq.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      inq.phone.includes(searchQuery);
+      inq.phone.includes(searchQuery) ||
+      (inq.subject && inq.subject.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesType && matchesQuery;
   });
 
   return (
-    <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
+    <div style={{ background: "#ffffff", color: "#111111", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#ffffff" }}>
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem" }}>
           <div>
-            <span style={{ color: "#84cc16", fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>LEAD MANAGEMENT</span>
-            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.3rem 0" }}>Inquiries & PDF Download Leads</h1>
-            <p style={{ color: "#aaa", fontSize: "0.95rem" }}>View all leads submitted via Contact Form or Protected Catalog PDF Downloads. One-click CSV export.</p>
+            <span style={{ color: "#8c764b", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>
+              LEAD MANAGEMENT & BACKEND
+            </span>
+            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.4rem 0", color: "#8c764b" }}>
+              Inquiries & Customer Leads ({inquiries.length})
+            </h1>
+            <p style={{ color: "#475569", fontSize: "0.95rem" }}>
+              All inquiries submitted via Contact Forms, Project Debriefs, and Catalog PDF Downloads. Live synchronized with email dispatches.
+            </p>
           </div>
-          <button
-            onClick={handleExportCSV}
-            style={{ padding: "0.8rem 1.6rem", background: "linear-gradient(135deg, #84cc16 0%, #65a30d 100%)", color: "#000", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 800, fontSize: "0.95rem" }}
-          >
-            📥 Export All Leads to Excel / CSV
-          </button>
+
+          <div style={{ display: "flex", gap: "0.8rem", alignItems: "center" }}>
+            <button
+              onClick={() => fetchInquiries()}
+              style={{
+                padding: "0.75rem 1.2rem",
+                background: "#f1f5f9",
+                color: "#1e293b",
+                border: "1px solid #cbd5e1",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: 700,
+                fontSize: "0.9rem",
+              }}
+            >
+              🔄 Refresh Live
+            </button>
+            <button
+              onClick={handleExportCSV}
+              style={{
+                padding: "0.75rem 1.5rem",
+                background: "#8c764b",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: 700,
+                fontSize: "0.9rem",
+                boxShadow: "0 2px 8px rgba(140, 118, 75, 0.25)",
+              }}
+            >
+              📥 Export CSV / Excel
+            </button>
+          </div>
         </div>
 
         {/* Filter & Search Bar */}
-        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", background: "#141418", padding: "1rem", borderRadius: "8px" }}>
+        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "1.2rem", borderRadius: "8px" }}>
           <input
             type="text"
-            placeholder="Search leads by name, email, or phone..."
+            placeholder="Search leads by name, email, phone, or subject..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ flex: 1, padding: "0.7rem 1rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+            style={{
+              flex: 1,
+              padding: "0.75rem 1rem",
+              background: "#ffffff",
+              border: "1px solid #cbd5e1",
+              color: "#111111",
+              borderRadius: "6px",
+              fontSize: "0.95rem",
+            }}
           />
 
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            style={{ padding: "0.7rem 1rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+            style={{
+              padding: "0.75rem 1rem",
+              background: "#ffffff",
+              border: "1px solid #cbd5e1",
+              color: "#111111",
+              borderRadius: "6px",
+              fontSize: "0.95rem",
+              fontWeight: 600,
+            }}
           >
             <option value="All">All Lead Types</option>
-            <option value="Contact Form">Contact Form Submissions</option>
-            <option value="Catalog PDF Gate">Protected Catalog PDF Gate</option>
+            <option value="Contact Form">Contact Form</option>
+            <option value="Project Debrief">Project Debrief</option>
+            <option value="Catalog PDF Gate">Catalog PDF Gate</option>
           </select>
         </div>
 
         {/* Inquiries Table */}
-        <div style={{ background: "#141418", border: "1px solid #222", borderRadius: "10px", overflow: "hidden" }}>
+        <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "10px", overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.9rem" }}>
             <thead>
-              <tr style={{ background: "#1a1a20", color: "#888", borderBottom: "1px solid #222", textTransform: "uppercase", fontSize: "0.75rem", letterSpacing: "0.05em" }}>
-                <th style={{ padding: "1rem" }}>Lead Name</th>
-                <th style={{ padding: "1rem" }}>Contact Details</th>
-                <th style={{ padding: "1rem" }}>Lead Source</th>
-                <th style={{ padding: "1rem" }}>Product / Brand</th>
-                <th style={{ padding: "1rem" }}>Message / Subject</th>
-                <th style={{ padding: "1rem" }}>Date & Time</th>
+              <tr style={{ background: "#f8fafc", color: "#475569", borderBottom: "1px solid #e2e8f0", textTransform: "uppercase", fontSize: "0.75rem", letterSpacing: "0.08em" }}>
+                <th style={{ padding: "1rem 1.2rem" }}>Lead Name</th>
+                <th style={{ padding: "1rem 1.2rem" }}>Contact Info</th>
+                <th style={{ padding: "1rem 1.2rem" }}>Lead Source</th>
+                <th style={{ padding: "1rem 1.2rem" }}>Product / Brand</th>
+                <th style={{ padding: "1rem 1.2rem" }}>Subject & Message</th>
+                <th style={{ padding: "1rem 1.2rem" }}>Date & Time</th>
+                <th style={{ padding: "1rem 1.2rem", textAlign: "right" }}>Action</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={6} style={{ padding: "3rem", textAlign: "center", color: "#888" }}>
+                  <td colSpan={7} style={{ padding: "3rem", textAlign: "center", color: "#64748b" }}>
                     Loading leads data...
                   </td>
                 </tr>
               ) : filteredInquiries.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{ padding: "3rem", textAlign: "center", color: "#888" }}>
-                    No leads recorded yet.
+                  <td colSpan={7} style={{ padding: "3rem", textAlign: "center", color: "#64748b" }}>
+                    No leads found matching current filter.
                   </td>
                 </tr>
               ) : (
                 filteredInquiries.map((inq) => (
-                  <tr key={inq.id} style={{ borderBottom: "1px solid #222" }}>
-                    <td style={{ padding: "1rem", fontWeight: 700, color: "#fff" }}>{inq.name}</td>
-                    <td style={{ padding: "1rem" }}>
-                      <div style={{ color: "#60a5fa" }}>{inq.email}</div>
-                      <div style={{ color: "#aaa", fontSize: "0.8rem" }}>📞 {inq.phone}</div>
+                  <tr key={inq.id} style={{ borderBottom: "1px solid #f1f5f9", transition: "background 0.15s ease" }}>
+                    <td style={{ padding: "1rem 1.2rem", fontWeight: 700, color: "#1e293b" }}>{inq.name}</td>
+                    <td style={{ padding: "1rem 1.2rem" }}>
+                      <div style={{ color: "#8c764b", fontWeight: 600 }}>{inq.email}</div>
+                      <div style={{ color: "#64748b", fontSize: "0.85rem", marginTop: "2px" }}>📞 {inq.phone}</div>
                     </td>
-                    <td style={{ padding: "1rem" }}>
+                    <td style={{ padding: "1rem 1.2rem" }}>
                       <span
                         style={{
-                          padding: "0.3rem 0.6rem",
+                          padding: "0.35rem 0.75rem",
                           borderRadius: "4px",
                           fontSize: "0.75rem",
                           fontWeight: 700,
-                          background: inq.type === "Catalog PDF Gate" ? "rgba(132, 204, 22, 0.2)" : "rgba(59, 130, 246, 0.2)",
-                          color: inq.type === "Catalog PDF Gate" ? "#84cc16" : "#60a5fa",
+                          background: inq.type === "Catalog PDF Gate" ? "#fef3c7" : "#e0f2fe",
+                          color: inq.type === "Catalog PDF Gate" ? "#b45309" : "#0369a1",
+                          border: `1px solid ${inq.type === "Catalog PDF Gate" ? "#fde68a" : "#bae6fd"}`,
                         }}
                       >
                         {inq.type}
                       </span>
                     </td>
-                    <td style={{ padding: "1rem", color: "#ddd" }}>{inq.productOrBrand || "General Inquiry"}</td>
-                    <td style={{ padding: "1rem", color: "#aaa", maxWidth: "250px" }}>
-                      {inq.subject && <div style={{ color: "#fff", fontWeight: 600 }}>{inq.subject}</div>}
-                      {inq.message || "-"}
+                    <td style={{ padding: "1rem 1.2rem", color: "#334155" }}>{inq.productOrBrand || "General Inquiry"}</td>
+                    <td style={{ padding: "1rem 1.2rem", color: "#475569", maxWidth: "280px" }}>
+                      {inq.subject && <div style={{ color: "#1e293b", fontWeight: 700, marginBottom: "3px" }}>{inq.subject}</div>}
+                      <div style={{ fontSize: "0.85rem", lineHeight: 1.4 }}>{inq.message || "-"}</div>
                     </td>
-                    <td style={{ padding: "1rem", color: "#777", fontSize: "0.8rem" }}>
+                    <td style={{ padding: "1rem 1.2rem", color: "#64748b", fontSize: "0.8rem", whiteSpace: "nowrap" }}>
                       {new Date(inq.createdAt).toLocaleString()}
+                    </td>
+                    <td style={{ padding: "1rem 1.2rem", textAlign: "right" }}>
+                      <button
+                        onClick={() => handleDeleteInquiry(inq.id)}
+                        disabled={deletingId === inq.id}
+                        style={{
+                          padding: "0.4rem 0.8rem",
+                          background: "#fee2e2",
+                          color: "#dc2626",
+                          border: "1px solid #fca5a5",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          fontWeight: 600,
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        {deletingId === inq.id ? "Deleting..." : "Delete"}
+                      </button>
                     </td>
                   </tr>
                 ))

@@ -763,6 +763,19 @@ export async function logInquiryStore(data: {
   return full;
 }
 
+export async function deleteInquiryStore(id: string): Promise<boolean> {
+  try {
+    await prisma.inquiry.delete({ where: { id } });
+  } catch (e) {}
+
+  const json = readJsonStore();
+  if (json.inquiries) {
+    json.inquiries = json.inquiries.filter((i: any) => i.id !== id);
+    writeJsonStore(json);
+  }
+  return true;
+}
+
 export function generateInquiriesCSV(inquiries: InquiryItem[]): string {
   const headers = ["ID", "Name", "Email", "Phone", "Type", "Product / Brand", "Subject", "Message", "Created Date"];
   const rows = inquiries.map((i) => [
