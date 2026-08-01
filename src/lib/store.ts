@@ -685,8 +685,13 @@ export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & {
 
 // INQUIRIES STORE (LEADS & PROTECTED CATALOG GATE)
 export async function getInquiriesStore(): Promise<InquiryItem[]> {
+  const json = readJsonStore();
+  const fileInquiries = json.inquiries || [];
+
   try {
-    const db = await prisma.inquiry.findMany({ orderBy: { createdAt: "desc" } });
+    const dbPromise = prisma.inquiry.findMany({ orderBy: { createdAt: "desc" } });
+    const timeoutPromise = new Promise<any>((_, reject) => setTimeout(() => reject(new Error("DB Timeout")), 800));
+    const db = await Promise.race([dbPromise, timeoutPromise]);
     if (db && db.length > 0) {
       return db.map((i: any) => ({
         id: i.id,
@@ -702,8 +707,7 @@ export async function getInquiriesStore(): Promise<InquiryItem[]> {
     }
   } catch (e) {}
 
-  const json = readJsonStore();
-  return json.inquiries || [];
+  return fileInquiries;
 }
 
 export async function logInquiryStore(data: {
@@ -728,8 +732,15 @@ export async function logInquiryStore(data: {
     createdAt: new Date().toISOString(),
   };
 
-  try {
-    await prisma.inquiry.create({
+  // Always write to JSON store immediately
+  const json = readJsonStore();
+  if (!json.inquiries) json.inquiries = [];
+  json.inquiries.unshift(full);
+  writeJsonStore(json);
+
+  // Attempt Prisma insert asynchronously in background
+  prisma.inquiry
+    .create({
       data: {
         id,
         name: data.name,
@@ -740,25 +751,20 @@ export async function logInquiryStore(data: {
         message: data.message,
         productOrBrand: data.productOrBrand,
       },
-    });
-  } catch (e) {}
-
-  const json = readJsonStore();
-  if (!json.inquiries) json.inquiries = [];
-  json.inquiries.unshift(full);
-  writeJsonStore(json);
+    })
+    .catch(() => {});
 
   // Trigger Google Sheet Webhook if configured
-  const settings = await getSiteSettingsStore();
-  if (settings.webhookUrl && settings.webhookUrl.startsWith("http")) {
-    try {
+  try {
+    const settings = json.settings || DEFAULT_SETTINGS;
+    if (settings.webhookUrl && settings.webhookUrl.startsWith("http")) {
       fetch(settings.webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(full),
       }).catch((e) => console.error("Webhook trigger failed:", e));
-    } catch (e) {}
-  }
+    }
+  } catch (e) {}
 
   return full;
 }

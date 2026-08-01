@@ -4,12 +4,41 @@ import { useState } from "react";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 
 export default function Contact() {
-  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
+    setLoading(true);
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || "Not provided",
+          subject: formData.subject,
+          message: formData.message,
+          type: "Project Debrief",
+        }),
+      });
+
+      const json = await res.json();
+      if (json.success) {
+        setSent(true);
+      } else {
+        setErrorMsg(json.error || "Failed to submit message. Please try again.");
+      }
+    } catch (err: any) {
+      setErrorMsg("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -53,11 +82,7 @@ export default function Contact() {
               <div className="info-item__icon"><MapPin size={16} /></div>
               <div className="info-item__content">
                 <span className="info-item__label">Creative Office & Showroom</span>
-                <span className="info-item__value" style={{ lineHeight: 1.5 }}>
-                  <strong>AAREN INTPRO</strong><br />
-                  #342/8, NTY Layout, Mysore Road,<br />
-                  Bangalore - 560026
-                </span>
+                <span className="info-item__value">AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026</span>
               </div>
             </div>
           </div>
@@ -85,6 +110,12 @@ export default function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="contact-form">
+              {errorMsg && (
+                <div style={{ padding: "0.8rem", background: "#fee2e2", color: "#dc2626", borderRadius: "6px", fontSize: "0.9rem", marginBottom: "1rem" }}>
+                  {errorMsg}
+                </div>
+              )}
+              
               <div className="form-group">
                 <label className="form-label">Name</label>
                 <input
@@ -106,6 +137,18 @@ export default function Contact() {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="form-input"
                   placeholder="your.email@domain.com"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Phone Number</label>
+                <input
+                  type="tel"
+                  required
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="form-input"
+                  placeholder="+91 98800 12345"
                 />
               </div>
 
@@ -133,8 +176,8 @@ export default function Contact() {
                 />
               </div>
 
-              <button type="submit" className="form-submit-btn">
-                Send Message <Send size={14} style={{ marginLeft: "0.8rem" }} />
+              <button type="submit" className="form-submit-btn" disabled={loading}>
+                {loading ? "Sending..." : "Send Message"} <Send size={14} style={{ marginLeft: "0.8rem" }} />
               </button>
             </form>
           )}

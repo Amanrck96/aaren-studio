@@ -504,5 +504,16 @@
       "description": "Expanded into bespoke furniture, outdoor WPC decking cladding, and automated project specification PDF generators."
     }
   ],
-  "inquiries": []
+  "inquiries": [
+    {
+      "id": "inq-1785615326944",
+      "name": "Test Client",
+      "email": "testclient@example.com",
+      "phone": "+91 98765 43210",
+      "type": "Project Debrief",
+      "subject": "Villa Interior Surfaces",
+      "message": "Interested in Plywood and FENIX laminates for luxury villa",
+      "createdAt": "2026-08-01T20:15:26.944Z"
+    }
+  ]
 }
