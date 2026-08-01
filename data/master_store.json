@@ -163,13 +163,37 @@
       "description": "Architectural glass backlit mirrors",
       "shortCode": "MR 15",
       "sequenceNumber": 15
+    },
+    {
+      "id": "cladding",
+      "name": "Cladding",
+      "coverImage": "/categories/cat_1.png",
+      "description": "Architectural Cladding products collection",
+      "shortCode": "CL 16",
+      "sequenceNumber": 16
+    },
+    {
+      "id": "blockboard",
+      "name": "BlockBoard",
+      "coverImage": "https://lh3.googleusercontent.com/d/1kptnKOOfmGQbUN8GDKz5AWVmykkhjA7e",
+      "description": "Architectural BlockBoard products collection",
+      "shortCode": "BL 17",
+      "sequenceNumber": 17
+    },
+    {
+      "id": "decoratives",
+      "name": "Decoratives",
+      "coverImage": "https://lh3.googleusercontent.com/d/1HPYx9tN7X2I7gse38xGekSS52UcbipuP",
+      "description": "Architectural Decoratives products collection",
+      "shortCode": "DE 18",
+      "sequenceNumber": 18
     }
   ],
   "brands": [
     {
       "id": "slashform",
       "name": "Slashform",
-      "logoUrl": "/brands/brand_1_2.png",
+      "logoUrl": "https://lh3.googleusercontent.com/d/1HSFGOyjsOQcEo70URK3eW-M2N9d9PHPW",
       "bannerUrl": "/brands/brand_1_1.png",
       "description": "Italian precision living systems for kitchen & wardrobe",
       "shortCode": "SF 01",
@@ -199,7 +223,7 @@
     {
       "id": "formica",
       "name": "Formica",
-      "logoUrl": "/brands/brand_4_2.png",
+      "logoUrl": "https://lh3.googleusercontent.com/d/1LzBpXqLAQN9QH2vEriaV2KhFH6TKpaea",
       "bannerUrl": "/brands/brand_4_1.png",
       "description": "FENIX nano-tech surfaces and premium laminates",
       "shortCode": "FC 04",
@@ -209,7 +233,7 @@
     {
       "id": "loco",
       "name": "Loco",
-      "logoUrl": "/brands/brand_5_2.png",
+      "logoUrl": "https://lh3.googleusercontent.com/d/1ucIIfwhzlxY0GLJhuwpb69keZd0mA8a3",
       "bannerUrl": "/brands/brand_5_1.png",
       "description": "Bespoke Italian millwork and furniture sculpture",
       "shortCode": "LC 05",
@@ -218,7 +242,7 @@
     {
       "id": "falper",
       "name": "Falper",
-      "logoUrl": "/brands/brand_6_2.png",
+      "logoUrl": "https://lh3.googleusercontent.com/d/1xLHdJSwEHZeHBfIGRd2NuG94xtZwnurl",
       "bannerUrl": "/brands/brand_6_1.png",
       "description": "Luxury bath environments, vanities and freestanding tubs",
       "shortCode": "FP 06",
@@ -236,7 +260,7 @@
     {
       "id": "inkiostro-bianco",
       "name": "Inkiostro Bianco",
-      "logoUrl": "/brands/brand_8_2.png",
+      "logoUrl": "https://lh3.googleusercontent.com/d/14wcidzn1DSV54CtYS-rPA0eamikv-GGa",
       "bannerUrl": "/brands/brand_8_1.png",
       "description": "Creative decorative wallcoverings and printed surfaces",
       "shortCode": "IB 08",
@@ -246,7 +270,7 @@
     {
       "id": "mafi",
       "name": "Mafi",
-      "logoUrl": "/brands/brand_9_2.png",
+      "logoUrl": "https://lh3.googleusercontent.com/d/1PCiqmGhuP6opG4ZMLLRx7AP3C735bGjb",
       "bannerUrl": "/brands/brand_9_1.png",
       "description": "Austrian natural wood flooring with hand-rubbed oil finish",
       "shortCode": "MF 09",
@@ -255,12 +279,39 @@
     {
       "id": "mirage",
       "name": "Mirage",
-      "logoUrl": "/brands/brand_10_2.png",
+      "logoUrl": "https://lh3.googleusercontent.com/d/1ixtDzgY457r6tWrBRRmvJINSk34NqKHR",
       "bannerUrl": "/brands/brand_10_1.png",
       "description": "Italian porcelain tile mastery and marble slabs",
       "shortCode": "MG 10",
       "sequenceNumber": 10,
       "catalogPdfUrl": "/catalogues/Mirage/catalogue-elysian-pdf.pdf"
+    },
+    {
+      "id": "brand-1785617427424-4",
+      "name": "Fima",
+      "logoUrl": "https://lh3.googleusercontent.com/d/1IOVIZVPYtOky2JSqkLuJTKB075v3IYKd",
+      "bannerUrl": "https://lh3.googleusercontent.com/d/1IOVIZVPYtOky2JSqkLuJTKB075v3IYKd",
+      "description": "Fima Premium Architectural Brand",
+      "shortCode": "FIM",
+      "sequenceNumber": 11
+    },
+    {
+      "id": "brand-1785617427424-8",
+      "name": "Newtechwood",
+      "logoUrl": "https://lh3.googleusercontent.com/d/1q_dGyFu1tXAE_fa-AAUZqG3f4ni3Xg8b",
+      "bannerUrl": "https://lh3.googleusercontent.com/d/1q_dGyFu1tXAE_fa-AAUZqG3f4ni3Xg8b",
+      "description": "Newtechwood Premium Architectural Brand",
+      "shortCode": "NEW",
+      "sequenceNumber": 12
+    },
+    {
+      "id": "brand-1785617427424-9",
+      "name": "Waltz",
+      "logoUrl": "https://lh3.googleusercontent.com/d/1KoYCgyKZroVQM8XUXU_2vCsrXUNX2VOh",
+      "bannerUrl": "https://lh3.googleusercontent.com/d/1KoYCgyKZroVQM8XUXU_2vCsrXUNX2VOh",
+      "description": "Waltz Premium Architectural Brand",
+      "shortCode": "WAL",
+      "sequenceNumber": 13
     }
   ],
   "projects": [
@@ -310,6 +361,636 @@
     }
   ],
   "products": [
+    {
+      "name": "Acrylic",
+      "brand": "Tali Deck",
+      "category": "Decoratives",
+      "width": "1200",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "1.5",
+      "finish": "",
+      "description": "Tali Deck Acrylic",
+      "tags": [
+        "Decoratives"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1o3ipKKYAoNqOjkCRI3sj9-K-kkPBSrZk",
+      "qtyInStock": 10,
+      "id": "prod-1785617497138"
+    },
+    {
+      "name": "Stone finish",
+      "brand": "Inclass",
+      "category": "Decoratives",
+      "width": "1200",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "1mm",
+      "finish": "",
+      "description": "Inclass Stone finish",
+      "tags": [
+        "Decoratives"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/10JSH_PdVSSVgCTRBPvlATzauGQTdAVcX",
+      "qtyInStock": 10,
+      "id": "prod-1785617493079"
+    },
+    {
+      "name": "Uhhh",
+      "brand": "NewTech",
+      "category": "Decoratives",
+      "width": "63",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "NewTech Uhhh",
+      "tags": [
+        "Decoratives"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1HPYx9tN7X2I7gse38xGekSS52UcbipuP",
+      "qtyInStock": 10,
+      "id": "prod-1785617489002"
+    },
+    {
+      "name": "Acrylic",
+      "brand": "Tali Deck",
+      "category": "Decoratives",
+      "width": "1200",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "1.5",
+      "finish": "",
+      "description": "Tali Deck Acrylic",
+      "tags": [
+        "Decoratives"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1o3ipKKYAoNqOjkCRI3sj9-K-kkPBSrZk",
+      "qtyInStock": 10,
+      "id": "prod-1785617490523-370"
+    },
+    {
+      "name": "Stone finish",
+      "brand": "Inclass",
+      "category": "Decoratives",
+      "width": "1200",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "1mm",
+      "finish": "",
+      "description": "Inclass Stone finish",
+      "tags": [
+        "Decoratives"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/10JSH_PdVSSVgCTRBPvlATzauGQTdAVcX",
+      "qtyInStock": 10,
+      "id": "prod-1785617490515-733"
+    },
+    {
+      "name": "Uhhh",
+      "brand": "NewTech",
+      "category": "Decoratives",
+      "width": "63",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "NewTech Uhhh",
+      "tags": [
+        "Decoratives"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1HPYx9tN7X2I7gse38xGekSS52UcbipuP",
+      "qtyInStock": 10,
+      "id": "prod-1785617490474-90"
+    },
+    {
+      "name": "Iww",
+      "brand": "Mafi",
+      "category": "Cladding",
+      "width": "89",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Mafi Iww",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/14TaNfa2IQUsCSYYi3-Y_SNWdpLeFrecJ",
+      "qtyInStock": 10,
+      "id": "prod-1785617490445-334"
+    },
+    {
+      "name": "dasd",
+      "brand": "Madheke",
+      "category": "Cladding",
+      "width": "15",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Madheke dasd",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1IZBoty8980ZRrY0mvg6udj2tCI0t4hQP",
+      "qtyInStock": 10,
+      "id": "prod-1785617490421-981"
+    },
+    {
+      "name": "axc",
+      "brand": "Mafi",
+      "category": "BlockBoard",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Mafi axc",
+      "tags": [
+        "BlockBoard"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1RhVdOfFw3ahflJwT12sDQL9PxMFYy8Yb",
+      "qtyInStock": 10,
+      "id": "prod-1785617490401-384"
+    },
+    {
+      "name": "Motorised 80mm",
+      "brand": "Freedon Screens",
+      "category": "Plywood",
+      "width": "3000",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Freedon Screens Motorised 80mm",
+      "tags": [
+        "Plywood"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1nNNHaTcm8QD3U57vcqF3poyUOjkq74fa",
+      "qtyInStock": 10,
+      "id": "prod-1785617490354-238"
+    },
+    {
+      "name": "Infinity ZL1",
+      "brand": "Freedon Screens",
+      "category": "Plywood",
+      "width": "2600",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Freedon Screens Infinity ZL1",
+      "tags": [
+        "Plywood"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1AzMeNOS7uUvJE3vJxLanLpb5SWZ3qKhO",
+      "qtyInStock": 10,
+      "id": "prod-1785617490340-598"
+    },
+    {
+      "name": "Glide",
+      "brand": "Waltz",
+      "category": "Cladding",
+      "width": "1200",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Waltz Glide",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1x_lnoUoTgD0q6pz0Qg4osDtsN6wH47aA",
+      "qtyInStock": 10,
+      "id": "prod-1785617490295-440"
+    },
+    {
+      "name": "WALTZ slide",
+      "brand": "Waltz",
+      "category": "Plywood",
+      "width": "1205",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Waltz WALTZ slide",
+      "tags": [
+        "Plywood"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1pK2simS_q9I2q6SIufzKQlB3Gw_Z0tl5",
+      "qtyInStock": 10,
+      "id": "prod-1785617490285-601"
+    },
+    {
+      "name": "aasas",
+      "brand": "Becker",
+      "category": "BlockBoard",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Becker aasas",
+      "tags": [
+        "BlockBoard"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1e9W9o1NHjkWmee1gBXx_ioPPe_Ocx5Kq",
+      "qtyInStock": 10,
+      "id": "prod-1785617490279-164"
+    },
+    {
+      "name": "adad",
+      "brand": "Tali Deck",
+      "category": "BlockBoard",
+      "width": "1",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Tali Deck adad",
+      "tags": [
+        "BlockBoard"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1RnlkYLfA9ws-jBmmx4lypfFPOnMHbR1a",
+      "qtyInStock": 10,
+      "id": "prod-1785617490266-498"
+    },
+    {
+      "name": "aaaa",
+      "brand": "Mafi",
+      "category": "Plywood",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Mafi aaaa",
+      "tags": [
+        "Plywood"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1EQuzKH9tf5gRrzG80lbtWgEfxxRQMPHA",
+      "qtyInStock": 10,
+      "id": "prod-1785617490224-537"
+    },
+    {
+      "name": "xcv",
+      "brand": "Waltz",
+      "category": "BlockBoard",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "cm",
+      "thickness": "23",
+      "finish": "",
+      "description": "Waltz xcv",
+      "tags": [
+        "BlockBoard"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1kptnKOOfmGQbUN8GDKz5AWVmykkhjA7e",
+      "qtyInStock": 10,
+      "id": "prod-1785617490196-939"
+    },
+    {
+      "name": "asaDD",
+      "brand": "Mafi",
+      "category": "Cladding",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "cm",
+      "thickness": "23",
+      "finish": "",
+      "description": "Mafi asaDD",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "/brands/brand_1_1.png",
+      "qtyInStock": 10,
+      "id": "prod-1785617490158-413"
+    },
+    {
+      "name": "abc",
+      "brand": "Freedon Screens",
+      "category": "Cladding",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "2",
+      "finish": "",
+      "description": "Freedon Screens abc",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "/brands/brand_1_1.png",
+      "qtyInStock": 10,
+      "id": "prod-1785617490150-878"
+    },
+    {
+      "name": "adffg",
+      "brand": "Waltz",
+      "category": "Cladding",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "24",
+      "finish": "Matt",
+      "description": "adklfnk",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "/brands/brand_1_1.png",
+      "qtyInStock": 10,
+      "id": "prod-1785617490055-70"
+    },
+    {
+      "name": "abc",
+      "brand": "Freedon Screens",
+      "category": "Plywood",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "20",
+      "finish": "Matte",
+      "description": "Freedon Screens abc",
+      "tags": [
+        "Plywood"
+      ],
+      "imageUrl": "/brands/brand_1_1.png",
+      "qtyInStock": 10,
+      "id": "prod-1785617489998-964"
+    },
+    {
+      "name": "Iww",
+      "brand": "Mafi",
+      "category": "Cladding",
+      "width": "89",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Mafi Iww",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/14TaNfa2IQUsCSYYi3-Y_SNWdpLeFrecJ",
+      "qtyInStock": 10,
+      "id": "prod-1785617484915"
+    },
+    {
+      "name": "axc",
+      "brand": "Mafi",
+      "category": "BlockBoard",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Mafi axc",
+      "tags": [
+        "BlockBoard"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1RhVdOfFw3ahflJwT12sDQL9PxMFYy8Yb",
+      "qtyInStock": 10,
+      "id": "prod-1785617476772"
+    },
+    {
+      "name": "Motorised 80mm",
+      "brand": "Freedon Screens",
+      "category": "Plywood",
+      "width": "3000",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Freedon Screens Motorised 80mm",
+      "tags": [
+        "Plywood"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1nNNHaTcm8QD3U57vcqF3poyUOjkq74fa",
+      "qtyInStock": 10,
+      "id": "prod-1785617472631"
+    },
+    {
+      "name": "Infinity ZL1",
+      "brand": "Freedon Screens",
+      "category": "Plywood",
+      "width": "2600",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Freedon Screens Infinity ZL1",
+      "tags": [
+        "Plywood"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1AzMeNOS7uUvJE3vJxLanLpb5SWZ3qKhO",
+      "qtyInStock": 10,
+      "id": "prod-1785617468482"
+    },
+    {
+      "name": "Glide",
+      "brand": "Waltz",
+      "category": "Cladding",
+      "width": "1200",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Waltz Glide",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1x_lnoUoTgD0q6pz0Qg4osDtsN6wH47aA",
+      "qtyInStock": 10,
+      "id": "prod-1785617464418"
+    },
+    {
+      "name": "WALTZ slide",
+      "brand": "Waltz",
+      "category": "Plywood",
+      "width": "1205",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Waltz WALTZ slide",
+      "tags": [
+        "Plywood"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1pK2simS_q9I2q6SIufzKQlB3Gw_Z0tl5",
+      "qtyInStock": 10,
+      "id": "prod-1785617460331"
+    },
+    {
+      "name": "aasas",
+      "brand": "Becker",
+      "category": "BlockBoard",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Becker aasas",
+      "tags": [
+        "BlockBoard"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1e9W9o1NHjkWmee1gBXx_ioPPe_Ocx5Kq",
+      "qtyInStock": 10,
+      "id": "prod-1785617456241"
+    },
+    {
+      "name": "adad",
+      "brand": "Tali Deck",
+      "category": "BlockBoard",
+      "width": "1",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Tali Deck adad",
+      "tags": [
+        "BlockBoard"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1RnlkYLfA9ws-jBmmx4lypfFPOnMHbR1a",
+      "qtyInStock": 10,
+      "id": "prod-1785617452144"
+    },
+    {
+      "name": "aaaa",
+      "brand": "Mafi",
+      "category": "Plywood",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "",
+      "finish": "",
+      "description": "Mafi aaaa",
+      "tags": [
+        "Plywood"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1EQuzKH9tf5gRrzG80lbtWgEfxxRQMPHA",
+      "qtyInStock": 10,
+      "id": "prod-1785617448038"
+    },
+    {
+      "name": "xcv",
+      "brand": "Waltz",
+      "category": "BlockBoard",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "cm",
+      "thickness": "23",
+      "finish": "",
+      "description": "Waltz xcv",
+      "tags": [
+        "BlockBoard"
+      ],
+      "imageUrl": "https://lh3.googleusercontent.com/d/1kptnKOOfmGQbUN8GDKz5AWVmykkhjA7e",
+      "qtyInStock": 10,
+      "id": "prod-1785617443995"
+    },
+    {
+      "name": "asaDD",
+      "brand": "Mafi",
+      "category": "Cladding",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "cm",
+      "thickness": "23",
+      "finish": "",
+      "description": "Mafi asaDD",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "/brands/brand_1_1.png",
+      "qtyInStock": 10,
+      "id": "prod-1785617439929"
+    },
+    {
+      "name": "abc",
+      "brand": "Freedon Screens",
+      "category": "Cladding",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "2",
+      "finish": "",
+      "description": "Freedon Screens abc",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "/brands/brand_1_1.png",
+      "qtyInStock": 10,
+      "id": "prod-1785617435842"
+    },
+    {
+      "name": "adffg",
+      "brand": "Waltz",
+      "category": "Cladding",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "24",
+      "finish": "Matt",
+      "description": "adklfnk",
+      "tags": [
+        "Cladding"
+      ],
+      "imageUrl": "/brands/brand_1_1.png",
+      "qtyInStock": 10,
+      "id": "prod-1785617431734"
+    },
+    {
+      "name": "abc",
+      "brand": "Freedon Screens",
+      "category": "Plywood",
+      "width": "12",
+      "height": "",
+      "depth": "",
+      "measurementType": "mm",
+      "thickness": "20",
+      "finish": "Matte",
+      "description": "Freedon Screens abc",
+      "tags": [
+        "Plywood"
+      ],
+      "imageUrl": "/brands/brand_1_1.png",
+      "qtyInStock": 10,
+      "id": "prod-1785617427456"
+    },
     {
       "id": "prod-queen-sofa",
       "slNo": 1,

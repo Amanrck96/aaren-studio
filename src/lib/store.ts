@@ -418,11 +418,23 @@ export async function getAllProductsStore(): Promise<ProductItem[]> {
 }
 
 export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: string }): Promise<ProductItem> {
-  const id = product.id || `prod-${Date.now()}`;
+  const id = product.id || `prod-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const fullProduct: ProductItem = { ...product, id };
 
-  try {
-    await prisma.product.upsert({
+  // Synchronously update JSON store first for sub-millisecond execution
+  const json = readJsonStore();
+  if (!json.products) json.products = [...DEFAULT_PRODUCTS];
+  const idx = json.products.findIndex((p: any) => p.id === id);
+  if (idx >= 0) {
+    json.products[idx] = fullProduct;
+  } else {
+    json.products.unshift(fullProduct);
+  }
+  writeJsonStore(json);
+
+  // Background non-blocking Prisma sync
+  prisma.product
+    .upsert({
       where: { id },
       update: {
         name: product.name,
@@ -467,70 +479,157 @@ export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: 
         price: product.price,
         finishOptions: product.finishOptions ? JSON.stringify(product.finishOptions) : null,
       },
-    });
-  } catch (err) {}
+    })
+    .catch(() => {});
 
-  const json = readJsonStore();
-  const idx = json.products.findIndex((p: any) => p.id === id);
-  if (idx >= 0) json.products[idx] = fullProduct;
-  else json.products.unshift(fullProduct);
-  writeJsonStore(json);
   return fullProduct;
+}
+
+export function formatGoogleDriveUrl(url?: string): string {
+  if (!url) return "";
+  const str = String(url).trim();
+  const match = str.match(/\/d\/([a-zA-Z0-9_-]+)/) || str.match(/id=([a-zA-Z0-9_-]+)/);
+  return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : str;
 }
 
 export async function parseAndImportExcelProducts(fileBuffer: Buffer): Promise<ProductItem[]> {
   const workbook = xlsx.read(fileBuffer, { type: "buffer" });
-  const sheetName = workbook.SheetNames[0];
-  const worksheet = workbook.Sheets[sheetName];
-  const rawData: any[] = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
+  const importedProducts: ProductItem[] = [];
 
-  if (!rawData || rawData.length < 2) throw new Error("Invalid or empty Excel file");
-
-  let headerRowIndex = 0;
-  for (let i = 0; i < Math.min(5, rawData.length); i++) {
-    const rowStr = JSON.stringify(rawData[i]).toLowerCase();
-    if (rowStr.includes("product") || rowStr.includes("brand")) {
-      headerRowIndex = i;
-      break;
+  // 1. Process Brand Logos sheet if present
+  if (workbook.SheetNames.includes("Brand Logos")) {
+    try {
+      const sheet = workbook.Sheets["Brand Logos"];
+      const rawRows: any[] = xlsx.utils.sheet_to_json(sheet, { header: 1 });
+      if (rawRows.length > 1) {
+        const json = readJsonStore();
+        if (!json.brands) json.brands = DEFAULT_BRANDS;
+        for (let i = 1; i < rawRows.length; i++) {
+          const r = rawRows[i];
+          if (!r || r.length < 2) continue;
+          const bName = String(r[0] || "").trim();
+          const bLogo = formatGoogleDriveUrl(String(r[1] || "").trim());
+          if (bName && bLogo) {
+            const existingIdx = json.brands.findIndex((b: any) => b.name.toLowerCase() === bName.toLowerCase());
+            if (existingIdx >= 0) {
+              json.brands[existingIdx].logoUrl = bLogo;
+            } else {
+              json.brands.push({
+                id: `brand-${Date.now()}-${i}`,
+                name: bName,
+                logoUrl: bLogo,
+                bannerUrl: bLogo,
+                description: `${bName} Premium Architectural Brand`,
+                shortCode: bName.substring(0, 3).toUpperCase(),
+                sequenceNumber: json.brands.length + 1,
+              });
+            }
+          }
+        }
+        writeJsonStore(json);
+      }
+    } catch (e) {
+      console.error("Brand Logos import error:", e);
     }
   }
 
-  const headers: string[] = rawData[headerRowIndex].map((h: any) => String(h || "").trim());
-  const importedProducts: ProductItem[] = [];
+  // 2. Process product sheets (Products, Project, or first sheet)
+  const sheetsToProcess = workbook.SheetNames.filter(
+    (s) => !["_VersionData", "_ProjectVersions", "Brand Logos"].includes(s)
+  );
 
-  for (let i = headerRowIndex + 1; i < rawData.length; i++) {
-    const row = rawData[i];
-    if (!row || row.length === 0) continue;
+  if (sheetsToProcess.length === 0) sheetsToProcess.push(workbook.SheetNames[0]);
 
-    const rowObj: Record<string, any> = {};
-    headers.forEach((h, idx) => {
-      rowObj[h] = row[idx];
-    });
+  for (const sheetName of sheetsToProcess) {
+    const worksheet = workbook.Sheets[sheetName];
+    const rawData: any[] = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
+    if (!rawData || rawData.length < 2) continue;
 
-    const name = rowObj["Name of the Product"] || rowObj["Product Name"] || rowObj["Name"];
-    if (!name) continue;
+    let headerRowIndex = 0;
+    for (let i = 0; i < Math.min(5, rawData.length); i++) {
+      const rowStr = JSON.stringify(rawData[i]).toLowerCase();
+      if (rowStr.includes("product") || rowStr.includes("brand") || rowStr.includes("category")) {
+        headerRowIndex = i;
+        break;
+      }
+    }
 
-    const brand = rowObj["Brand"] || "Aaren";
-    const category = rowObj["Category"] || "General";
+    const headers: string[] = rawData[headerRowIndex].map((h: any) => String(h || "").trim());
 
-    const newProd: Omit<ProductItem, "id"> = {
-      name: String(name),
-      brand: String(brand),
-      category: String(category),
-      subcategory: rowObj["Subcategory"] ? String(rowObj["Subcategory"]) : undefined,
-      width: String(rowObj["Width"] || rowObj["Size"] || ""),
-      height: String(rowObj["Height"] || ""),
-      depth: String(rowObj["Depth"] || ""),
-      measurementType: String(rowObj["Measurement Type"] || "mm"),
-      thickness: String(rowObj["Thickness"] || ""),
-      finish: String(rowObj["Finish"] || ""),
-      description: String(rowObj["Description"] || `${brand} ${name}`),
-      imageUrl: String(rowObj["Image"] || "/brands/brand_1_1.png"),
-      qtyInStock: parseInt(rowObj["Qty in Stock"] || "10", 10),
-    };
+    for (let i = headerRowIndex + 1; i < rawData.length; i++) {
+      const row = rawData[i];
+      if (!row || row.length === 0) continue;
 
-    const created = await addProductStore(newProd);
-    importedProducts.push(created);
+      const rowObj: Record<string, any> = {};
+      headers.forEach((h, idx) => {
+        if (h) rowObj[h] = row[idx];
+      });
+
+      const name = rowObj["Name of the Product"] || rowObj["Product Name"] || rowObj["Name"];
+      if (!name || String(name).trim() === "") continue;
+
+      const brand = rowObj["Brand"] || "Aaren";
+      const category = String(rowObj["Category"] || "Plywood").trim();
+      const shortCode = String(rowObj["Unique Code"] || rowObj["Short Code"] || rowObj["Code"] || "").trim();
+
+      // Collect tags
+      const tags: string[] = [];
+      ["Tag 1", "Tag 2", "Tag 3", "Tag 4", "Tag 5", "Tags"].forEach((t) => {
+        if (rowObj[t] && String(rowObj[t]).trim() !== "") {
+          tags.push(String(rowObj[t]).trim());
+        }
+      });
+
+      // Images
+      const img1 = formatGoogleDriveUrl(rowObj["Image 1"] || rowObj["Image"]);
+      const img2 = formatGoogleDriveUrl(rowObj["Image 2"]);
+      const img3 = formatGoogleDriveUrl(rowObj["Image 3"]);
+      const galleryImages = [img2, img3].filter(Boolean);
+
+      const catalogPdfUrl = formatGoogleDriveUrl(rowObj["Catalog"] || rowObj["PDF"]);
+
+      const newProd: Omit<ProductItem, "id"> = {
+        name: String(name).trim(),
+        shortCode: shortCode || undefined,
+        brand: String(brand).trim(),
+        category: category,
+        subcategory: rowObj["Subcategory"] ? String(rowObj["Subcategory"]).trim() : undefined,
+        width: String(rowObj["Width"] || rowObj["Size"] || ""),
+        height: String(rowObj["Height"] || ""),
+        depth: String(rowObj["Depth"] || ""),
+        measurementType: String(rowObj["Measurement Type"] || "mm"),
+        thickness: String(rowObj["Thickness"] || ""),
+        finish: String(rowObj["Finish"] || ""),
+        description: String(rowObj["Description"] || `${brand} ${name}`),
+        tags: tags.length > 0 ? tags : [category],
+        imageUrl: img1 || "/brands/brand_1_1.png",
+        galleryImages: galleryImages.length > 0 ? galleryImages : undefined,
+        catalogPdfUrl: catalogPdfUrl || undefined,
+        qtyInStock: parseInt(rowObj["Qty in Stock"] || "10", 10),
+        price: rowObj["Price"] ? parseFloat(rowObj["Price"]) : undefined,
+      };
+
+      // Ensure category exists in store so product has a public page
+      const json = readJsonStore();
+      const existingCat = (json.categories || DEFAULT_CATEGORIES).find(
+        (c: any) => c.name.toLowerCase() === category.toLowerCase()
+      );
+      if (!existingCat) {
+        if (!json.categories) json.categories = [...DEFAULT_CATEGORIES];
+        json.categories.push({
+          id: category.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          name: category,
+          coverImage: img1 || "/categories/cat_1.png",
+          description: `Architectural ${category} products collection`,
+          shortCode: category.substring(0, 2).toUpperCase() + " " + (json.categories.length + 1),
+          sequenceNumber: json.categories.length + 1,
+        });
+        writeJsonStore(json);
+      }
+
+      const created = await addProductStore(newProd);
+      importedProducts.push(created);
+    }
   }
 
   return importedProducts;
