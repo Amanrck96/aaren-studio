@@ -1,4 +1,6 @@
-"use client";
+import os
+
+code = """"use client";
 
 import { useEffect } from "react";
 
@@ -431,3 +433,9 @@ export default function AboutPage() {
     </div>
   );
 }
+"""
+
+with open('src/app/about/page.tsx', 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("Updated src/app/about/page.tsx with exact HTML specification!")
