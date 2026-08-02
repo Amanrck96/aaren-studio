@@ -2,17 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Search, ArrowRight } from "lucide-react";
-import { ProductItem } from "@/lib/types";
 
 export type CatalogThumb = {
-  id?: string;
   title: string;
-  pdfUrl?: string;
-  pdfDownloadUrl?: string;
-  coverImage?: string;
-  fileId?: string;
   themeStyle?: React.CSSProperties;
   themeClass?: string;
 };
@@ -28,636 +21,200 @@ export type BrandItemData = {
   catalogs: CatalogThumb[];
 };
 
-const FILTER_PILLS = ["All", "Surfaces", "Flooring", "Bathroom", "Cladding", "Doors", "Furniture"];
-
 const DEFAULT_BRANDS: BrandItemData[] = [
   {
-    "id": "mirage",
-    "name": "MIRAGE",
-    "category": "Tiles & Surfaces \u00b7 Italy",
-    "origin": "Italy",
-    "estYear": "EST. 1976",
-    "catalogCount": "9 catalogs",
-    "filterTag": "Surfaces",
-    "catalogs": [
-      {
-        "id": "mirage-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b",
-        "coverImage": "https://lh3.googleusercontent.com/d/1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b=s800",
-        "fileId": "1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b"
-      },
-      {
-        "id": "mirage-cat-2",
-        "title": "CATALOG 02",
-        "pdfUrl": "https://drive.google.com/file/d/1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE",
-        "coverImage": "https://lh3.googleusercontent.com/d/1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE=s800",
-        "fileId": "1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE"
-      },
-      {
-        "id": "mirage-cat-3",
-        "title": "CATALOG 03",
-        "pdfUrl": "https://drive.google.com/file/d/1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4",
-        "coverImage": "https://lh3.googleusercontent.com/d/1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4=s800",
-        "fileId": "1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4"
-      },
-      {
-        "id": "mirage-cat-4",
-        "title": "CATALOG 04",
-        "pdfUrl": "https://drive.google.com/file/d/1oUtwekVav7no9FKYOe7E_X3bgMZa56y_/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1oUtwekVav7no9FKYOe7E_X3bgMZa56y_",
-        "coverImage": "https://lh3.googleusercontent.com/d/1oUtwekVav7no9FKYOe7E_X3bgMZa56y_=s800",
-        "fileId": "1oUtwekVav7no9FKYOe7E_X3bgMZa56y_"
-      },
-      {
-        "id": "mirage-cat-5",
-        "title": "CATALOG 05",
-        "pdfUrl": "https://drive.google.com/file/d/1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC",
-        "coverImage": "https://lh3.googleusercontent.com/d/1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC=s800",
-        "fileId": "1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC"
-      },
-      {
-        "id": "mirage-cat-6",
-        "title": "CATALOG 06",
-        "pdfUrl": "https://drive.google.com/file/d/1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6",
-        "coverImage": "https://lh3.googleusercontent.com/d/1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6=s800",
-        "fileId": "1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6"
-      },
-      {
-        "id": "mirage-cat-7",
-        "title": "CATALOG 07",
-        "pdfUrl": "https://drive.google.com/file/d/1mzWnr22zYzR0W57teiiohXtE0iU9zgtX/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1mzWnr22zYzR0W57teiiohXtE0iU9zgtX",
-        "coverImage": "https://lh3.googleusercontent.com/d/1mzWnr22zYzR0W57teiiohXtE0iU9zgtX=s800",
-        "fileId": "1mzWnr22zYzR0W57teiiohXtE0iU9zgtX"
-      },
-      {
-        "id": "mirage-cat-8",
-        "title": "CATALOG 08",
-        "pdfUrl": "https://drive.google.com/file/d/1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF",
-        "coverImage": "https://lh3.googleusercontent.com/d/1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF=s800",
-        "fileId": "1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF"
-      },
-      {
-        "id": "mirage-cat-9",
-        "title": "CATALOG 09",
-        "pdfUrl": "https://drive.google.com/file/d/1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp",
-        "coverImage": "https://lh3.googleusercontent.com/d/1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp=s800",
-        "fileId": "1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp"
-      }
-    ]
+    id: "mirage",
+    name: "MIRAGE",
+    category: "Tiles & Surfaces · Italy",
+    origin: "Italy",
+    estYear: "EST. 1976",
+    catalogCount: "9 catalogs",
+    filterTag: "Surfaces",
+    catalogs: [
+      { title: "CLAY", themeClass: "ct-cream" },
+      { title: "ELYSIAN", themeStyle: { background: "#d4cfc7", color: "#333" } },
+      { title: "TRAVERTINI", themeClass: "ct-sand" },
+      { title: "GLOCAL", themeClass: "ct-slate" },
+    ],
   },
   {
-    "id": "mafi",
-    "name": "mafi",
-    "category": "Wood Flooring \u00b7 Austria",
-    "origin": "Austria",
-    "estYear": "EST. 1997",
-    "catalogCount": "2 catalogs",
-    "filterTag": "Flooring",
-    "catalogs": [
-      {
-        "id": "mafi-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ",
-        "coverImage": "https://lh3.googleusercontent.com/d/1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ=s800",
-        "fileId": "1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ"
-      },
-      {
-        "id": "mafi-cat-2",
-        "title": "CATALOG 02",
-        "pdfUrl": "https://drive.google.com/file/d/1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ",
-        "coverImage": "https://lh3.googleusercontent.com/d/1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ=s800",
-        "fileId": "1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ"
-      }
-    ]
+    id: "mafi",
+    name: "mafi",
+    category: "Wood Flooring · Austria",
+    origin: "Austria",
+    estYear: "EST. 1997",
+    catalogCount: "2 catalogs",
+    filterTag: "Flooring",
+    catalogs: [
+      { title: "VOLUME 11", themeClass: "ct-dark", themeStyle: { flex: 1.4 } },
+      { title: "GOES OUTDOOR", themeClass: "ct-dark", themeStyle: { background: "#1a1a1a", flex: 1.4 } },
+    ],
   },
   {
-    "id": "inkiostro-bianco",
-    "name": "Inkiostro Bianco",
-    "category": "Wallcovering \u00b7 Italy",
-    "origin": "Italy",
-    "estYear": "EST. 2013",
-    "catalogCount": "2 catalogs",
-    "filterTag": "Surfaces",
-    "catalogs": [
-      {
-        "id": "inkiostro-bianco-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9",
-        "coverImage": "https://lh3.googleusercontent.com/d/1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9=s800",
-        "fileId": "1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9"
-      },
-      {
-        "id": "inkiostro-bianco-cat-2",
-        "title": "CATALOG 02",
-        "pdfUrl": "https://drive.google.com/file/d/1V546MuJR4xYlk3Oys6T9567beAP2MeTp/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1V546MuJR4xYlk3Oys6T9567beAP2MeTp",
-        "coverImage": "https://lh3.googleusercontent.com/d/1V546MuJR4xYlk3Oys6T9567beAP2MeTp=s800",
-        "fileId": "1V546MuJR4xYlk3Oys6T9567beAP2MeTp"
-      }
-    ]
+    id: "fima",
+    name: "fima Carlo Frattini",
+    category: "Bathroom · Italy",
+    origin: "Italy",
+    estYear: "EST. 1945",
+    catalogCount: "5 catalogs",
+    filterTag: "Bathroom",
+    catalogs: [
+      { title: "AES·THE·TIC", themeStyle: { background: "linear-gradient(135deg,#e0c8f0,#f0a0c0)", color: "#4a1060" } },
+      { title: "SO AQUA", themeClass: "ct-dark" },
+      { title: "SLIDE MAG", themeClass: "ct-slate" },
+      { title: "PARK LANE", themeStyle: { background: "#f5f0e8", color: "#333" } },
+    ],
   },
   {
-    "id": "fima",
-    "name": "fima Carlo Frattini",
-    "category": "Bathroom \u00b7 Italy",
-    "origin": "Italy",
-    "estYear": "EST. 1945",
-    "catalogCount": "5 catalogs",
-    "filterTag": "Bathroom",
-    "catalogs": [
-      {
-        "id": "fima-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ",
-        "coverImage": "https://lh3.googleusercontent.com/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ=s800",
-        "fileId": "1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ"
-      },
-      {
-        "id": "fima-cat-2",
-        "title": "CATALOG 02",
-        "pdfUrl": "https://drive.google.com/file/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx",
-        "coverImage": "https://lh3.googleusercontent.com/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx=s800",
-        "fileId": "1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx"
-      },
-      {
-        "id": "fima-cat-3",
-        "title": "CATALOG 03",
-        "pdfUrl": "https://drive.google.com/file/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g",
-        "coverImage": "https://lh3.googleusercontent.com/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g=s800",
-        "fileId": "11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g"
-      },
-      {
-        "id": "fima-cat-4",
-        "title": "CATALOG 04",
-        "pdfUrl": "https://drive.google.com/file/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr",
-        "coverImage": "https://lh3.googleusercontent.com/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr=s800",
-        "fileId": "1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr"
-      },
-      {
-        "id": "fima-cat-5",
-        "title": "CATALOG 05",
-        "pdfUrl": "https://drive.google.com/file/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz",
-        "coverImage": "https://lh3.googleusercontent.com/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz=s800",
-        "fileId": "1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz"
-      }
-    ]
+    id: "waltz",
+    name: "Waltz",
+    category: "Door & Partition · Italy",
+    origin: "Italy",
+    estYear: "EST. 2005",
+    catalogCount: "4 catalogs",
+    filterTag: "Doors",
+    catalogs: [
+      { title: "CLOSE NXT", themeClass: "ct-dark" },
+      { title: "GLIDE NXT", themeClass: "ct-dark" },
+      { title: "SLIDE NXT", themeClass: "ct-dark" },
+      { title: "WALLWAYS 2025", themeStyle: { background: "#f0ebe3", color: "#333" } },
+    ],
   },
   {
-    "id": "formica",
-    "name": "FORMICA\u00ae",
-    "category": "Laminates & Surfaces \u00b7 Global",
-    "origin": "Global",
-    "estYear": "EST. 1913",
-    "catalogCount": "5 catalogs",
-    "filterTag": "Surfaces",
-    "catalogs": [
-      {
-        "id": "formica-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR",
-        "coverImage": "https://lh3.googleusercontent.com/d/1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR=s800",
-        "fileId": "1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR"
-      },
-      {
-        "id": "formica-cat-2",
-        "title": "CATALOG 02",
-        "pdfUrl": "https://drive.google.com/file/d/1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60",
-        "coverImage": "https://lh3.googleusercontent.com/d/1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60=s800",
-        "fileId": "1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60"
-      },
-      {
-        "id": "formica-cat-3",
-        "title": "CATALOG 03",
-        "pdfUrl": "https://drive.google.com/file/d/1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff",
-        "coverImage": "https://lh3.googleusercontent.com/d/1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff=s800",
-        "fileId": "1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff"
-      },
-      {
-        "id": "formica-cat-4",
-        "title": "CATALOG 04",
-        "pdfUrl": "https://drive.google.com/file/d/1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U",
-        "coverImage": "https://lh3.googleusercontent.com/d/1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U=s800",
-        "fileId": "1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U"
-      },
-      {
-        "id": "formica-cat-5",
-        "title": "CATALOG 05",
-        "pdfUrl": "https://drive.google.com/file/d/1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai",
-        "coverImage": "https://lh3.googleusercontent.com/d/1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai=s800",
-        "fileId": "1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai"
-      }
-    ]
+    id: "newtechwood",
+    name: "NewTechWood",
+    category: "Cladding & Decking · USA",
+    origin: "USA",
+    estYear: "EST. 2005",
+    catalogCount: "2 catalogs",
+    filterTag: "Cladding",
+    catalogs: [
+      { title: "PRODUCT CATALOG 2025", themeClass: "ct-green", themeStyle: { background: "#1c3a28", flex: 1.5 } },
+      { title: "FULL CATALOG", themeClass: "ct-green", themeStyle: { background: "#1c3a28", flex: 1.5 } },
+    ],
   },
   {
-    "id": "newtech-wood",
-    "name": "NewTechWood",
-    "category": "Cladding & Decking \u00b7 USA",
-    "origin": "USA",
-    "estYear": "EST. 2005",
-    "catalogCount": "2 catalogs",
-    "filterTag": "Cladding",
-    "catalogs": [
-      {
-        "id": "newtechwood-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy",
-        "coverImage": "https://lh3.googleusercontent.com/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy=s800",
-        "fileId": "1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy"
-      },
-      {
-        "id": "newtechwood-cat-2",
-        "title": "CATALOG 02",
-        "pdfUrl": "https://drive.google.com/file/d/1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c",
-        "coverImage": "https://lh3.googleusercontent.com/d/1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c=s800",
-        "fileId": "1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c"
-      }
-    ]
+    id: "slashform",
+    name: "slashform™",
+    category: "Surfaces · Italy",
+    origin: "Italy",
+    estYear: "EST. 2012",
+    catalogCount: "2 catalogs",
+    filterTag: "Surfaces",
+    catalogs: [
+      { title: "THE GREIGE HARMONY", themeClass: "ct-taupe", themeStyle: { background: "#b0a898", color: "#fff" } },
+      { title: "THE TERRAIGE COLLECTION", themeClass: "ct-warm" },
+    ],
   },
   {
-    "id": "waltz",
-    "name": "Waltz",
-    "category": "Door & Partition \u00b7 Italy",
-    "origin": "Italy",
-    "estYear": "EST. 2005",
-    "catalogCount": "5 catalogs",
-    "filterTag": "Doors",
-    "catalogs": [
-      {
-        "id": "waltz-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7",
-        "coverImage": "https://lh3.googleusercontent.com/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7=s800",
-        "fileId": "1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7"
-      },
-      {
-        "id": "waltz-cat-2",
-        "title": "CATALOG 02",
-        "pdfUrl": "https://drive.google.com/file/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE",
-        "coverImage": "https://lh3.googleusercontent.com/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE=s800",
-        "fileId": "1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE"
-      },
-      {
-        "id": "waltz-cat-3",
-        "title": "CATALOG 03",
-        "pdfUrl": "https://drive.google.com/file/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1jFT0QU2G7tra71rUxRenbhekvXjvFGTs",
-        "coverImage": "https://lh3.googleusercontent.com/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs=s800",
-        "fileId": "1jFT0QU2G7tra71rUxRenbhekvXjvFGTs"
-      },
-      {
-        "id": "waltz-cat-4",
-        "title": "CATALOG 04",
-        "pdfUrl": "https://drive.google.com/file/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2",
-        "coverImage": "https://lh3.googleusercontent.com/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2=s800",
-        "fileId": "1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2"
-      },
-      {
-        "id": "waltz-cat-5",
-        "title": "CATALOG 05",
-        "pdfUrl": "https://drive.google.com/file/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=15P4PplYgb9PrPZlWudfHSiKbkexCBU1a",
-        "coverImage": "https://lh3.googleusercontent.com/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a=s800",
-        "fileId": "15P4PplYgb9PrPZlWudfHSiKbkexCBU1a"
-      }
-    ]
+    id: "wow",
+    name: "WOW",
+    category: "Decorative Tiles · Spain",
+    origin: "Spain",
+    estYear: "EST. 2010",
+    catalogCount: "10 catalogs",
+    filterTag: "Surfaces",
+    catalogs: [
+      { title: "3D BARS", themeStyle: { background: "#f0e8de", color: "#333" } },
+      { title: "SABIL", themeStyle: { background: "#7d9c88", color: "#fff" } },
+      { title: "TERRE", themeClass: "ct-sand" },
+      { title: "VESTIGE", themeClass: "ct-green" },
+    ],
   },
   {
-    "id": "slashform",
-    "name": "slashform\u2122",
-    "category": "Surfaces \u00b7 Italy",
-    "origin": "Italy",
-    "estYear": "EST. 2012",
-    "catalogCount": "2 catalogs",
-    "filterTag": "Surfaces",
-    "catalogs": [
-      {
-        "id": "slashform-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV",
-        "coverImage": "https://lh3.googleusercontent.com/d/11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV=s800",
-        "fileId": "11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV"
-      },
-      {
-        "id": "slashform-cat-2",
-        "title": "CATALOG 02",
-        "pdfUrl": "https://drive.google.com/file/d/19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd",
-        "coverImage": "https://lh3.googleusercontent.com/d/19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd=s800",
-        "fileId": "19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd"
-      }
-    ]
+    id: "formica",
+    name: "FORMICA®",
+    category: "Laminates · USA",
+    origin: "USA",
+    estYear: "EST. 1913",
+    catalogCount: "5 catalogs",
+    filterTag: "Surfaces",
+    catalogs: [
+      { title: "FENIX", themeClass: "ct-dark" },
+      { title: "VIS", themeStyle: { background: "#e2d9cc", color: "#333" } },
+      { title: "CORA", themeStyle: { background: "#c8b49a", color: "#2a1f0e" } },
+      { title: "COLLECTION 4", themeClass: "ct-green" },
+    ],
   },
   {
-    "id": "wow",
-    "name": "WOW",
-    "category": "Decorative Tiles \u00b7 Spain",
-    "origin": "Spain",
-    "estYear": "EST. 2010",
-    "catalogCount": "12 catalogs",
-    "filterTag": "Surfaces",
-    "catalogs": [
-      {
-        "id": "wow-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/1R1gSFNQFJRLKLw_XWTY3Y6TngOk3Vse2/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1R1gSFNQFJRLKLw_XWTY3Y6TngOk3Vse2",
-        "coverImage": "https://lh3.googleusercontent.com/d/1R1gSFNQFJRLKLw_XWTY3Y6TngOk3Vse2=s800",
-        "fileId": "1R1gSFNQFJRLKLw_XWTY3Y6TngOk3Vse2"
-      },
-      {
-        "id": "wow-cat-2",
-        "title": "CATALOG 02",
-        "pdfUrl": "https://drive.google.com/file/d/1awcMoYVr-IvlTcGG8cnCJUFSh9s8Dca0/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1awcMoYVr-IvlTcGG8cnCJUFSh9s8Dca0",
-        "coverImage": "https://lh3.googleusercontent.com/d/1awcMoYVr-IvlTcGG8cnCJUFSh9s8Dca0=s800",
-        "fileId": "1awcMoYVr-IvlTcGG8cnCJUFSh9s8Dca0"
-      },
-      {
-        "id": "wow-cat-3",
-        "title": "CATALOG 03",
-        "pdfUrl": "https://drive.google.com/file/d/1MGpG7ObE8R93Dp4ECaoDOhzxBhpxINWq/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1MGpG7ObE8R93Dp4ECaoDOhzxBhpxINWq",
-        "coverImage": "https://lh3.googleusercontent.com/d/1MGpG7ObE8R93Dp4ECaoDOhzxBhpxINWq=s800",
-        "fileId": "1MGpG7ObE8R93Dp4ECaoDOhzxBhpxINWq"
-      },
-      {
-        "id": "wow-cat-4",
-        "title": "CATALOG 04",
-        "pdfUrl": "https://drive.google.com/file/d/17NIm3CK1hJQegsyr0W15R1JyW9qPxtIY/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=17NIm3CK1hJQegsyr0W15R1JyW9qPxtIY",
-        "coverImage": "https://lh3.googleusercontent.com/d/17NIm3CK1hJQegsyr0W15R1JyW9qPxtIY=s800",
-        "fileId": "17NIm3CK1hJQegsyr0W15R1JyW9qPxtIY"
-      },
-      {
-        "id": "wow-cat-5",
-        "title": "CATALOG 05",
-        "pdfUrl": "https://drive.google.com/file/d/1UHpmBX4u4GJrAQpVAXsdHu8NbPWQAunN/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1UHpmBX4u4GJrAQpVAXsdHu8NbPWQAunN",
-        "coverImage": "https://lh3.googleusercontent.com/d/1UHpmBX4u4GJrAQpVAXsdHu8NbPWQAunN=s800",
-        "fileId": "1UHpmBX4u4GJrAQpVAXsdHu8NbPWQAunN"
-      },
-      {
-        "id": "wow-cat-6",
-        "title": "CATALOG 06",
-        "pdfUrl": "https://drive.google.com/file/d/1By7CJZOiwUjf-KePFU0Uzu-dyO2dAwN9/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1By7CJZOiwUjf-KePFU0Uzu-dyO2dAwN9",
-        "coverImage": "https://lh3.googleusercontent.com/d/1By7CJZOiwUjf-KePFU0Uzu-dyO2dAwN9=s800",
-        "fileId": "1By7CJZOiwUjf-KePFU0Uzu-dyO2dAwN9"
-      },
-      {
-        "id": "wow-cat-7",
-        "title": "CATALOG 07",
-        "pdfUrl": "https://drive.google.com/file/d/1CMSJMvIxpOWK8WAIvkYS7A5sF_Dr4K5-/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1CMSJMvIxpOWK8WAIvkYS7A5sF_Dr4K5-",
-        "coverImage": "https://lh3.googleusercontent.com/d/1CMSJMvIxpOWK8WAIvkYS7A5sF_Dr4K5-=s800",
-        "fileId": "1CMSJMvIxpOWK8WAIvkYS7A5sF_Dr4K5-"
-      },
-      {
-        "id": "wow-cat-8",
-        "title": "CATALOG 08",
-        "pdfUrl": "https://drive.google.com/file/d/1PXKLlUgojb27V2N13-HE_IVANUzHvl8p/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1PXKLlUgojb27V2N13-HE_IVANUzHvl8p",
-        "coverImage": "https://lh3.googleusercontent.com/d/1PXKLlUgojb27V2N13-HE_IVANUzHvl8p=s800",
-        "fileId": "1PXKLlUgojb27V2N13-HE_IVANUzHvl8p"
-      },
-      {
-        "id": "wow-cat-9",
-        "title": "CATALOG 09",
-        "pdfUrl": "https://drive.google.com/file/d/1WPSy9iHJmShxFztIfBirSpnP0Kgd1NFv/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1WPSy9iHJmShxFztIfBirSpnP0Kgd1NFv",
-        "coverImage": "https://lh3.googleusercontent.com/d/1WPSy9iHJmShxFztIfBirSpnP0Kgd1NFv=s800",
-        "fileId": "1WPSy9iHJmShxFztIfBirSpnP0Kgd1NFv"
-      },
-      {
-        "id": "wow-cat-10",
-        "title": "CATALOG 010",
-        "pdfUrl": "https://drive.google.com/file/d/1IYLmJCC20WC2RoqcnIKmdkPyltchzlx0/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1IYLmJCC20WC2RoqcnIKmdkPyltchzlx0",
-        "coverImage": "https://lh3.googleusercontent.com/d/1IYLmJCC20WC2RoqcnIKmdkPyltchzlx0=s800",
-        "fileId": "1IYLmJCC20WC2RoqcnIKmdkPyltchzlx0"
-      },
-      {
-        "id": "wow-cat-11",
-        "title": "CATALOG 011",
-        "pdfUrl": "https://drive.google.com/file/d/1JX0SFlcIelg8L7U8lhmNvLZqmKSICI_X/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1JX0SFlcIelg8L7U8lhmNvLZqmKSICI_X",
-        "coverImage": "https://lh3.googleusercontent.com/d/1JX0SFlcIelg8L7U8lhmNvLZqmKSICI_X=s800",
-        "fileId": "1JX0SFlcIelg8L7U8lhmNvLZqmKSICI_X"
-      },
-      {
-        "id": "wow-cat-12",
-        "title": "CATALOG 012",
-        "pdfUrl": "https://drive.google.com/file/d/1g45Ay-Fbj0cjyP2spKceZNE76s2fJOc_/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1g45Ay-Fbj0cjyP2spKceZNE76s2fJOc_",
-        "coverImage": "https://lh3.googleusercontent.com/d/1g45Ay-Fbj0cjyP2spKceZNE76s2fJOc_=s800",
-        "fileId": "1g45Ay-Fbj0cjyP2spKceZNE76s2fJOc_"
-      }
-    ]
+    id: "inkiostro-bianco",
+    name: "Inkiostro Bianco",
+    category: "Wallcovering & Surfaces · Italy",
+    origin: "Italy",
+    estYear: "EST. 2013",
+    catalogCount: "6 catalogs",
+    filterTag: "Surfaces",
+    catalogs: [
+      { title: "GOLDEN WALL", themeClass: "ct-warm" },
+      { title: "LINEADECK", themeClass: "ct-slate" },
+      { title: "SKIN", themeClass: "ct-taupe" },
+    ],
   },
   {
-    "id": "agape",
-    "name": "agape",
-    "category": "Bathroom Fittings \u00b7 Italy",
-    "origin": "Italy",
-    "estYear": "EST. 1973",
-    "catalogCount": "1 catalogs",
-    "filterTag": "Bathroom",
-    "catalogs": [
-      {
-        "id": "agape-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/17pDn2JO8OFlKXJMTUeRSGUuNvWQxkoHJ/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=17pDn2JO8OFlKXJMTUeRSGUuNvWQxkoHJ",
-        "coverImage": "https://lh3.googleusercontent.com/d/17pDn2JO8OFlKXJMTUeRSGUuNvWQxkoHJ=s800",
-        "fileId": "17pDn2JO8OFlKXJMTUeRSGUuNvWQxkoHJ"
-      }
-    ]
+    id: "falper",
+    name: "Falper",
+    category: "Bathroom · Italy",
+    origin: "Italy",
+    estYear: "EST. 1962",
+    catalogCount: "4 catalogs",
+    filterTag: "Bathroom",
+    catalogs: [
+      { title: "ECCE MOP", themeClass: "ct-dark" },
+      { title: "MINIMAL", themeClass: "ct-cream" },
+      { title: "PURA", themeClass: "ct-slate" },
+    ],
   },
   {
-    "id": "iww",
-    "name": "IWW",
-    "category": "Architectural Wood \u00b7 Germany",
-    "origin": "Germany",
-    "estYear": "EST. 1995",
-    "catalogCount": "10 catalogs",
-    "filterTag": "Flooring",
-    "catalogs": [
-      {
-        "id": "iww-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/17EMc8hcG4wKxirEgSvNC-qpXs3gpsI__/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=17EMc8hcG4wKxirEgSvNC-qpXs3gpsI__",
-        "coverImage": "https://lh3.googleusercontent.com/d/17EMc8hcG4wKxirEgSvNC-qpXs3gpsI__=s800",
-        "fileId": "17EMc8hcG4wKxirEgSvNC-qpXs3gpsI__"
-      },
-      {
-        "id": "iww-cat-2",
-        "title": "CATALOG 02",
-        "pdfUrl": "https://drive.google.com/file/d/17OK3By3LEj1JeUQCWOunJuXRWPEDFzts/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=17OK3By3LEj1JeUQCWOunJuXRWPEDFzts",
-        "coverImage": "https://lh3.googleusercontent.com/d/17OK3By3LEj1JeUQCWOunJuXRWPEDFzts=s800",
-        "fileId": "17OK3By3LEj1JeUQCWOunJuXRWPEDFzts"
-      },
-      {
-        "id": "iww-cat-3",
-        "title": "CATALOG 03",
-        "pdfUrl": "https://drive.google.com/file/d/1snN0WQMAI_wXStlfIfnE_a9C7lQRJYNi/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1snN0WQMAI_wXStlfIfnE_a9C7lQRJYNi",
-        "coverImage": "https://lh3.googleusercontent.com/d/1snN0WQMAI_wXStlfIfnE_a9C7lQRJYNi=s800",
-        "fileId": "1snN0WQMAI_wXStlfIfnE_a9C7lQRJYNi"
-      },
-      {
-        "id": "iww-cat-4",
-        "title": "CATALOG 04",
-        "pdfUrl": "https://drive.google.com/file/d/1t_qIyibYEUQoypj0-E5pBIEfL-feRCC9/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1t_qIyibYEUQoypj0-E5pBIEfL-feRCC9",
-        "coverImage": "https://lh3.googleusercontent.com/d/1t_qIyibYEUQoypj0-E5pBIEfL-feRCC9=s800",
-        "fileId": "1t_qIyibYEUQoypj0-E5pBIEfL-feRCC9"
-      },
-      {
-        "id": "iww-cat-5",
-        "title": "CATALOG 05",
-        "pdfUrl": "https://drive.google.com/file/d/1IIFaKNrX224sfhVBQs1PFZNCodtWb6PV/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1IIFaKNrX224sfhVBQs1PFZNCodtWb6PV",
-        "coverImage": "https://lh3.googleusercontent.com/d/1IIFaKNrX224sfhVBQs1PFZNCodtWb6PV=s800",
-        "fileId": "1IIFaKNrX224sfhVBQs1PFZNCodtWb6PV"
-      },
-      {
-        "id": "iww-cat-6",
-        "title": "CATALOG 06",
-        "pdfUrl": "https://drive.google.com/file/d/1hbazpk9aZOwqqK_xBZ7awRo-obdpxgHc/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1hbazpk9aZOwqqK_xBZ7awRo-obdpxgHc",
-        "coverImage": "https://lh3.googleusercontent.com/d/1hbazpk9aZOwqqK_xBZ7awRo-obdpxgHc=s800",
-        "fileId": "1hbazpk9aZOwqqK_xBZ7awRo-obdpxgHc"
-      },
-      {
-        "id": "iww-cat-7",
-        "title": "CATALOG 07",
-        "pdfUrl": "https://drive.google.com/file/d/1jOm7QX8_wnAe4pV5pD8KAQdeJjNeNWIt/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1jOm7QX8_wnAe4pV5pD8KAQdeJjNeNWIt",
-        "coverImage": "https://lh3.googleusercontent.com/d/1jOm7QX8_wnAe4pV5pD8KAQdeJjNeNWIt=s800",
-        "fileId": "1jOm7QX8_wnAe4pV5pD8KAQdeJjNeNWIt"
-      },
-      {
-        "id": "iww-cat-8",
-        "title": "CATALOG 08",
-        "pdfUrl": "https://drive.google.com/file/d/1Jkc4R5-p8Rmmo-9YckT8k0s_ycT2hXoI/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1Jkc4R5-p8Rmmo-9YckT8k0s_ycT2hXoI",
-        "coverImage": "https://lh3.googleusercontent.com/d/1Jkc4R5-p8Rmmo-9YckT8k0s_ycT2hXoI=s800",
-        "fileId": "1Jkc4R5-p8Rmmo-9YckT8k0s_ycT2hXoI"
-      },
-      {
-        "id": "iww-cat-9",
-        "title": "CATALOG 09",
-        "pdfUrl": "https://drive.google.com/file/d/1CAjfcQBs-ifcj4SNdsRnK4HM1zDAeQ-z/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1CAjfcQBs-ifcj4SNdsRnK4HM1zDAeQ-z",
-        "coverImage": "https://lh3.googleusercontent.com/d/1CAjfcQBs-ifcj4SNdsRnK4HM1zDAeQ-z=s800",
-        "fileId": "1CAjfcQBs-ifcj4SNdsRnK4HM1zDAeQ-z"
-      },
-      {
-        "id": "iww-cat-10",
-        "title": "CATALOG 010",
-        "pdfUrl": "https://drive.google.com/file/d/1BD5z3dOB6Y647bYx9lAu7S2uXWq9FY1d/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1BD5z3dOB6Y647bYx9lAu7S2uXWq9FY1d",
-        "coverImage": "https://lh3.googleusercontent.com/d/1BD5z3dOB6Y647bYx9lAu7S2uXWq9FY1d=s800",
-        "fileId": "1BD5z3dOB6Y647bYx9lAu7S2uXWq9FY1d"
-      }
-    ]
+    id: "loco",
+    name: "Loco Design",
+    category: "Bespoke Millwork · Italy",
+    origin: "Italy",
+    estYear: "EST. 2008",
+    catalogCount: "3 catalogs",
+    filterTag: "Flooring",
+    catalogs: [
+      { title: "WOOD & LEATHER", themeClass: "ct-taupe" },
+      { title: "SUITE 2025", themeClass: "ct-dark" },
+    ],
   },
   {
-    "id": "bodaq",
-    "name": "Bodaq",
-    "category": "Interior Film \u00b7 Korea",
-    "origin": "Korea",
-    "estYear": "EST. 2002",
-    "catalogCount": "1 catalogs",
-    "filterTag": "Surfaces",
-    "catalogs": [
-      {
-        "id": "bodaq-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/1RuXXaltZ_wTUu2nLD1OTIscfvw0-9CmC/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1RuXXaltZ_wTUu2nLD1OTIscfvw0-9CmC",
-        "coverImage": "https://lh3.googleusercontent.com/d/1RuXXaltZ_wTUu2nLD1OTIscfvw0-9CmC=s800",
-        "fileId": "1RuXXaltZ_wTUu2nLD1OTIscfvw0-9CmC"
-      }
-    ]
+    id: "fenix",
+    name: "FENIX NTM",
+    category: "Nano Surfaces · Italy",
+    origin: "Italy",
+    estYear: "EST. 2013",
+    catalogCount: "3 catalogs",
+    filterTag: "Surfaces",
+    catalogs: [
+      { title: "MATT NANO", themeClass: "ct-dark" },
+      { title: "BLOOM 2025", themeClass: "ct-taupe" },
+    ],
   },
-  {
-    "id": "inclass",
-    "name": "Inclass",
-    "category": "Design Furniture \u00b7 Spain",
-    "origin": "Spain",
-    "estYear": "EST. 1998",
-    "catalogCount": "1 catalogs",
-    "filterTag": "Furniture",
-    "catalogs": [
-      {
-        "id": "inclass-cat-1",
-        "title": "CATALOG 01",
-        "pdfUrl": "https://drive.google.com/file/d/1Jf3MZWsvoPwM0DpIIhGijSg4StaLoxg2/view?usp=drive_link",
-        "pdfDownloadUrl": "https://drive.google.com/uc?export=download&id=1Jf3MZWsvoPwM0DpIIhGijSg4StaLoxg2",
-        "coverImage": "https://lh3.googleusercontent.com/d/1Jf3MZWsvoPwM0DpIIhGijSg4StaLoxg2=s800",
-        "fileId": "1Jf3MZWsvoPwM0DpIIhGijSg4StaLoxg2"
-      }
-    ]
-  }
 ];
+
+const FILTER_PILLS = ["All", "Surfaces", "Cladding", "Bathroom", "Doors", "Flooring"];
 
 export default function BrandsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activePill, setActivePill] = useState("All");
   const [brands, setBrands] = useState<BrandItemData[]>(DEFAULT_BRANDS);
-  const [allProducts, setAllProducts] = useState<ProductItem[]>([]);
 
   useEffect(() => {
-    // Fetch Brands
     fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
         if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
-          const normalize = (str: string) => str.toLowerCase().replace(/[^a-z0-9]/g, "");
-
+          // Merge API brands into list if present
           const apiBrands: BrandItemData[] = json.data.map((b: any, idx: number) => {
-            const normName = normalize(b.name || "");
-            const normId = normalize(b.id || "");
             const defaultMatch = DEFAULT_BRANDS.find(
-              (db) => normalize(db.name) === normName || normalize(db.id) === normId || normName.includes(normalize(db.id)) || normalize(db.id).includes(normName)
+              (db) => db.name.toLowerCase() === b.name.toLowerCase() || db.id === b.id
             );
             return {
-              id: defaultMatch?.id || b.id || b.name.toLowerCase().replace(/\s+/g, "-"),
+              id: b.id || b.name.toLowerCase().replace(/\s+/g, "-"),
               name: b.name.toUpperCase(),
               category: b.description || defaultMatch?.category || "Surface Solution · Global",
               origin: defaultMatch?.origin || "Global",
-              estYear: defaultMatch?.estYear || `EST. ${1970 + ((idx * 3) % 45)}`,
+              estYear: defaultMatch?.estYear || `EST. ${1970 + (idx * 3 % 45)}`,
               catalogCount: defaultMatch?.catalogCount || "3 catalogs",
               filterTag: defaultMatch?.filterTag || "Surfaces",
               catalogs: defaultMatch?.catalogs || [
@@ -667,28 +224,14 @@ export default function BrandsPage() {
             };
           });
 
-          const seen = new Set<string>();
-          const merged: BrandItemData[] = [];
-
-          [...apiBrands, ...DEFAULT_BRANDS].forEach((item) => {
-            const key = normalize(item.id) || normalize(item.name);
-            if (!seen.has(key)) {
-              seen.add(key);
-              merged.push(item);
+          // Retain default brands that were not in API data
+          const merged = [...apiBrands];
+          DEFAULT_BRANDS.forEach((db) => {
+            if (!merged.some((m) => m.name.toLowerCase() === db.name.toLowerCase())) {
+              merged.push(db);
             }
           });
-
           setBrands(merged);
-        }
-      })
-      .catch((err) => console.error(err));
-
-    // Fetch Products
-    fetch("/api/products?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json && json.success && Array.isArray(json.data)) {
-          setAllProducts(json.data);
         }
       })
       .catch((err) => console.error(err));
@@ -704,44 +247,6 @@ export default function BrandsPage() {
   });
 
   const totalCatalogsCount = filteredBrands.reduce((acc, b) => acc + (parseInt(b.catalogCount) || b.catalogs.length), 0);
-
-  // Helper to get brand products
-  const getBrandProducts = (brand: BrandItemData): ProductItem[] => {
-    const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
-    const targetBrand = norm(brand.name);
-    const targetId = norm(brand.id);
-
-    let list = allProducts.filter((p) => {
-      const pBrand = norm(p.brand || "");
-      return pBrand.includes(targetBrand) || targetBrand.includes(pBrand) || pBrand.includes(targetId);
-    });
-
-    // If fewer than 10 products, generate synthetic catalog products for rich UI demonstration
-    if (list.length < 10) {
-      const needed = 12 - list.length;
-      const categories = ["Decking", "Cladding", "Surfaces", "Flooring", "Bathroom", "Tiles", "Doors"];
-      const colors = ["#2b3a4a", "#8c764b", "#3b4d3c", "#4a3b32", "#1e293b", "#d97706", "#475569", "#78350f", "#0f766e"];
-      
-      const extra: ProductItem[] = Array.from({ length: needed }).map((_, i) => {
-        const pIdx = list.length + i + 1;
-        const cat = categories[i % categories.length];
-        const hex = colors[i % colors.length];
-        return {
-          id: `${brand.id}-prod-${pIdx}`,
-          name: `${brand.name} Line ${pIdx}`,
-          brand: brand.name,
-          category: cat,
-          description: `${brand.name} architectural ${cat.toLowerCase()} series`,
-          imageUrl: pIdx % 2 === 0 ? "/brands/brand_1_1.png" : "",
-          coverColor: hex,
-          qtyInStock: 10,
-        } as ProductItem & { coverColor?: string };
-      });
-      return [...list, ...extra];
-    }
-
-    return list;
-  };
 
   return (
     <div className="page-wrapper">
@@ -785,254 +290,36 @@ export default function BrandsPage() {
 
         {/* ── Brands Grid ── */}
         <div className="brands-grid">
-          {filteredBrands.map((brand, idx) => {
-            const brandProds = getBrandProducts(brand);
-            const totalCount = Math.max(brandProds.length, parseInt(brand.catalogCount) * 2 || 12);
-            const showingProds = brandProds.slice(0, 10);
-            const hasMore = totalCount > 10;
-
-            return (
-              <div key={`${brand.id}-${idx}`} className="brand-card">
-                {/* Brand Header */}
-                <div className="brand-header">
-                  <div className="brand-logo-area">
-                    <div style={{ height: "36px", display: "flex", alignItems: "center", marginBottom: "4px" }}>
-                      <Image
-                        src={`/brand_logos/${brand.id}.png`}
-                        alt={brand.name}
-                        width={140}
-                        height={36}
-                        style={{ objectFit: "contain", objectPosition: "left center" }}
-                        onError={(e: any) => {
-                          // Fallback to text if image missing
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                    </div>
-                    <div className="brand-logo">{brand.name}</div>
-                    <div className="brand-category">{brand.category}</div>
-                  </div>
-                  <div className="brand-count">{brand.catalogCount}</div>
+          {filteredBrands.map((brand) => (
+            <Link href={`/brands/${brand.id}`} key={brand.id} className="brand-card">
+              <div className="brand-header">
+                <div className="brand-logo-area">
+                  <div className="brand-logo">{brand.name}</div>
+                  <div className="brand-category">{brand.category}</div>
                 </div>
-
-                {/* Catalogs Row — First Page PDF Previews from Excel */}
-                <div
-                  className="catalogs-row"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))",
-                    gap: "10px",
-                    marginTop: "14px",
-                  }}
-                >
-                  {brand.catalogs.map((cat, cIdx) => {
-                    const hasCover = Boolean(cat.coverImage);
-                    const pdfHref = cat.pdfUrl || cat.pdfDownloadUrl || "#";
-
-                    return (
-                      <a
-                        key={cIdx}
-                        href={pdfHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="catalog-pdf-card"
-                        title={`Open ${cat.title}`}
-                        style={{
-                          position: "relative",
-                          aspectRatio: "3/4",
-                          borderRadius: "6px",
-                          overflow: "hidden",
-                          border: "0.5px solid var(--border)",
-                          background: "var(--surface-1)",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "space-between",
-                          padding: "8px",
-                          textDecoration: "none",
-                          boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
-                          transition: "transform 0.2s ease, box-shadow 0.2s ease",
-                        }}
-                      >
-                        {hasCover ? (
-                          <Image
-                            src={cat.coverImage!}
-                            alt={cat.title}
-                            fill
-                            sizes="(max-width: 768px) 50vw, 20vw"
-                            style={{ objectFit: "cover", zIndex: 0 }}
-                            unoptimized
-                          />
-                        ) : (
-                          <div
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              background: "linear-gradient(135deg, #1f2937, #111827)",
-                              zIndex: 0,
-                            }}
-                          />
-                        )}
-
-                        {/* Top PDF Badge */}
-                        <div
-                          style={{
-                            position: "relative",
-                            zIndex: 2,
-                            alignSelf: "flex-start",
-                            background: "rgba(0,0,0,0.75)",
-                            color: "#fff",
-                            fontSize: "8px",
-                            fontWeight: 700,
-                            letterSpacing: "0.08em",
-                            padding: "3px 6px",
-                            borderRadius: "3px",
-                            backdropFilter: "blur(4px)",
-                            textTransform: "uppercase",
-                          }}
-                        >
-                          PDF · Pg 1
-                        </div>
-
-                        {/* Bottom Label Bar */}
-                        <div
-                          style={{
-                            position: "relative",
-                            zIndex: 2,
-                            background: "rgba(0,0,0,0.68)",
-                            color: "#ffffff",
-                            padding: "6px 8px",
-                            borderRadius: "4px",
-                            backdropFilter: "blur(6px)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <span
-                            style={{
-                              fontSize: "10px",
-                              fontWeight: 600,
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              letterSpacing: "0.02em",
-                            }}
-                          >
-                            {cat.title}
-                          </span>
-                          <span style={{ fontSize: "9px", opacity: 0.8 }}>↳</span>
-                        </div>
-                      </a>
-                    );
-                  })}
-                </div>
-
-                {/* Brand Link Footer */}
-                <div className="brand-footer">
-                  <Link href={`/brands/${brand.id}`} className="view-link">
-                    <ArrowRight size={12} style={{ marginRight: "4px" }} /> View brand
-                  </Link>
-                  <div className="origin-tag">{brand.estYear}</div>
-                </div>
-
-                {/* 1. HAIRLINE DIVIDER */}
-                <div className="brand-divider" style={{ height: "0.5px", background: "var(--border)", margin: "16px 0" }} />
-
-                {/* 2. PRODUCTS SECTION */}
-                <div className="brand-products-section" style={{ padding: "0 4px" }}>
-                  <div className="brand-products-header" style={{ marginBottom: "12px" }}>
-                    <span style={{ fontSize: "10px", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.1em", fontWeight: 600 }}>
-                      Products — {totalCount} total, showing {showingProds.length}
-                    </span>
-                  </div>
-
-                  {/* Mini Product Grid: 5 columns */}
-                  <div className="mini-product-grid">
-                    {showingProds.map((prod) => {
-                      const coverColor = (prod as any).coverColor || "#e2e8f0";
-                      const prodSlug = prod.id || prod.name.toLowerCase().replace(/\s+/g, "-");
-
-                      return (
-                        <Link
-                          key={prod.id}
-                          href={`/products/${prodSlug}`}
-                          className="mini-product-card"
-                        >
-                          <div
-                            className="mini-product-thumb"
-                            style={{
-                              aspectRatio: "1",
-                              borderRadius: "4px",
-                              overflow: "hidden",
-                              position: "relative",
-                              background: coverColor,
-                            }}
-                          >
-                            {prod.imageUrl && prod.imageUrl !== "/brands/brand_1_1.png" ? (
-                              <Image
-                                src={prod.imageUrl}
-                                alt={prod.name}
-                                fill
-                                sizes="100px"
-                                style={{ objectFit: "cover" }}
-                              />
-                            ) : null}
-                          </div>
-
-                          <div className="mini-product-info" style={{ marginTop: "6px" }}>
-                            <div className="mini-product-name" style={{ fontSize: "9px", fontWeight: 500, color: "var(--text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                              {prod.name}
-                            </div>
-                            <div className="mini-product-tag-wrap" style={{ marginTop: "3px" }}>
-                              <span className="mini-product-tag" style={{ fontSize: "8px", background: "var(--surface-2)", color: "var(--text-secondary)", padding: "2px 6px", borderRadius: "10px", display: "inline-block" }}>
-                                {prod.category}
-                              </span>
-                            </div>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* 3. MORE BAR (if > 10 products) */}
-                {hasMore && (
-                  <div
-                    className="brand-more-bar"
-                    style={{
-                      marginTop: "16px",
-                      background: "var(--surface-1)",
-                      border: "0.5px solid var(--border)",
-                      borderRadius: "6px",
-                      padding: "10px 14px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <span style={{ fontSize: "11px", color: "var(--text-muted)", fontWeight: 500 }}>
-                      Showing {showingProds.length} of {totalCount} products
-                    </span>
-                    <Link
-                      href={`/products?brand=${brand.id}`}
-                      className="brand-more-btn"
-                      style={{
-                        fontSize: "11px",
-                        fontWeight: 700,
-                        color: "#8c764b",
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                      }}
-                    >
-                      View all products →
-                    </Link>
-                  </div>
-                )}
+                <div className="brand-count">{brand.catalogCount}</div>
               </div>
-            );
-          })}
+
+              <div className="catalogs-row">
+                {brand.catalogs.map((cat, idx) => (
+                  <div
+                    key={idx}
+                    className={`catalog-thumb ${cat.themeClass || "ct-cream"}`}
+                    style={cat.themeStyle}
+                  >
+                    <span className="cat-title">{cat.title}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="brand-footer">
+                <div className="view-link">
+                  <ArrowRight size={12} style={{ marginRight: "4px" }} /> View brand
+                </div>
+                <div className="origin-tag">{brand.estYear}</div>
+              </div>
+            </Link>
+          ))}
 
           {/* Placeholder Footer Block */}
           <div className="placeholder-more">
@@ -1052,6 +339,7 @@ export default function BrandsPage() {
       </div>
 
       <style jsx global>{`
+        /* ── Design System Variables & Base ── */
         :root {
           --surface-0: #f8fafc;
           --surface-1: #ffffff;
@@ -1076,6 +364,7 @@ export default function BrandsPage() {
           max-width: 100%;
         }
 
+        /* ── Hero ── */
         .hero {
           padding: 64px 32px 40px;
           border-bottom: 0.5px solid var(--border);
@@ -1108,6 +397,7 @@ export default function BrandsPage() {
           line-height: 1.5;
         }
 
+        /* ── Controls Bar ── */
         .controls {
           display: flex;
           align-items: center;
@@ -1189,9 +479,10 @@ export default function BrandsPage() {
           font-weight: 600;
         }
 
+        /* ── Brands Grid ── */
         .brands-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
           gap: 1px;
           background: var(--border);
           padding: 0;
@@ -1200,19 +491,25 @@ export default function BrandsPage() {
         .brand-card {
           background: var(--surface-1);
           padding: 28px 24px 24px;
+          cursor: pointer;
           transition: background 0.2s ease, transform 0.2s ease;
           position: relative;
+          text-decoration: none;
           color: inherit;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
         }
 
+        .brand-card:hover {
+          background: #f8fafc;
+        }
+
         .brand-header {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
-          margin-bottom: 20px;
+          margin-bottom: 24px;
         }
 
         .brand-logo-area {
@@ -1248,10 +545,11 @@ export default function BrandsPage() {
           font-weight: 700;
         }
 
+        /* ── Catalogs Row ── */
         .catalogs-row {
           display: flex;
           gap: 8px;
-          margin-bottom: 16px;
+          margin-bottom: 20px;
         }
 
         .catalog-thumb {
@@ -1265,6 +563,11 @@ export default function BrandsPage() {
           position: relative;
           overflow: hidden;
           box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+          transition: transform 0.25s ease;
+        }
+
+        .brand-card:hover .catalog-thumb {
+          transform: translateY(-2px);
         }
 
         .catalog-thumb .cat-title {
@@ -1277,6 +580,7 @@ export default function BrandsPage() {
           text-transform: uppercase;
         }
 
+        /* Catalog Color Palette Themes */
         .ct-dark { background: #111111; }
         .ct-dark .cat-title { color: #ffffff; }
 
@@ -1304,11 +608,14 @@ export default function BrandsPage() {
         .ct-rose { background: #c44b6c; }
         .ct-rose .cat-title { color: #ffe0ea; }
 
+        /* ── Brand Footer ── */
         .brand-footer {
-          margin-top: 10px;
+          margin-top: 14px;
           display: flex;
           align-items: center;
           justify-content: space-between;
+          border-top: 1px solid var(--border);
+          padding-top: 14px;
         }
 
         .view-link {
@@ -1320,7 +627,10 @@ export default function BrandsPage() {
           align-items: center;
           gap: 4px;
           font-weight: 700;
-          text-decoration: none;
+        }
+
+        .brand-card:hover .view-link {
+          color: #0f172a;
         }
 
         .origin-tag {
@@ -1330,27 +640,7 @@ export default function BrandsPage() {
           letter-spacing: 0.05em;
         }
 
-        /* Mini Product Grid */
-        .mini-product-grid {
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 8px;
-        }
-
-        .mini-product-card {
-          border: 0.5px solid var(--border);
-          border-radius: 6px;
-          padding: 6px;
-          background: #ffffff;
-          text-decoration: none;
-          transition: border-color 0.2s ease, transform 0.2s ease;
-        }
-
-        .mini-product-card:hover {
-          border-color: var(--border-strong);
-          transform: translateY(-2px);
-        }
-
+        /* ── Placeholder Block ── */
         .placeholder-more {
           grid-column: 1 / -1;
           background: var(--surface-1);
@@ -1370,6 +660,7 @@ export default function BrandsPage() {
           text-align: center;
         }
 
+        /* ── Page Footer ── */
         .page-footer {
           padding: 28px 32px;
           border-top: 0.5px solid var(--border);
@@ -1398,7 +689,6 @@ export default function BrandsPage() {
           .hero { padding: 40px 16px 24px; }
           .controls { padding: 16px; }
           .brands-grid { grid-template-columns: 1fr; }
-          .mini-product-grid { grid-template-columns: repeat(3, 1fr); }
           .page-footer { padding: 20px 16px; }
         }
       `}</style>
