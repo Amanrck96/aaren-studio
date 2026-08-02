@@ -278,9 +278,9 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     finish: "Greige Silk & Smoked Oak",
     description: "Seamless architectural island and tall cabinetry unit in liquid-patterned ceramic surface.",
     tags: ["Kitchen", "Ceramic", "Italian"],
-    imageUrl: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
     galleryImages: [
-      "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
     ],
     qtyInStock: 6,
     price: 1200000
