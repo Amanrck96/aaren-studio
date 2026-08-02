@@ -473,9 +473,9 @@ export default function Home() {
             className="hero-wordmark"
             style={{
               fontFamily: "var(--font-jost), sans-serif",
-              fontSize: logoLetters.length > 6 ? "clamp(4rem, 12vw, 20rem)" : "clamp(6rem, 18vw, 35rem)",
-              fontWeight: 800,
-              letterSpacing: "-0.05em",
+              fontSize: logoLetters.length > 6 ? "clamp(3.5rem, 10vw, 16rem)" : "clamp(4.5rem, 14vw, 24rem)",
+              fontWeight: 200,
+              letterSpacing: "0.15em",
               textTransform: "uppercase",
               color: "#eaeef4",
               display: "flex",

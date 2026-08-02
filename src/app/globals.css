@@ -1190,8 +1190,9 @@ input, select, textarea {
 
   /* ── Hero AAREN wordmark — mobile fixes ── */
   .hero-wordmark {
-    font-size: clamp(5.5rem, 17.5vw, 10rem) !important;
-    letter-spacing: -0.03em !important;
+    font-weight: 200 !important;
+    font-size: clamp(3.5rem, 12vw, 8rem) !important;
+    letter-spacing: 0.12em !important;
   }
 
   /* ── Hero section — reduce top padding on mobile ── */

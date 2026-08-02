@@ -121,8 +121,9 @@ export default function Footer() {
         className="footer-wordmark"
         style={{
           fontFamily: "var(--font-jost), sans-serif",
-          fontSize: "clamp(6rem, 18vw, 35rem)",
-          fontWeight: 800,
+          fontSize: "clamp(4.5rem, 14vw, 24rem)",
+          fontWeight: 200,
+          letterSpacing: "0.15em",
           textTransform: "uppercase",
           color: "rgba(0,0,0,0.06)",
           display: "flex",

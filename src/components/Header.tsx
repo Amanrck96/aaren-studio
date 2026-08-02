@@ -64,9 +64,9 @@ export default function Header() {
           style={{
             color: path === "/" ? "#ffffff" : "#333333",
             mixBlendMode: "normal",
-            fontWeight: 700,
+            fontWeight: 300,
             fontSize: "1.3rem",
-            letterSpacing: "0.06em",
+            letterSpacing: "0.22em",
             textTransform: "uppercase",
             transition: "color 0.25s ease",
             textDecoration: "none",
