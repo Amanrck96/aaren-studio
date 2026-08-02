@@ -355,7 +355,7 @@ export default function AdminProductsPage() {
                         </td>
                         <td className="p-4 font-bold text-[#81663f]">{p.brand}</td>
                         <td className="p-4 font-medium">{p.category}</td>
-                        <td className="p-4 text-black/60">{p.subcategory || p.collection || "—"}</td>
+                        <td className="p-4 text-black/60">{p.subcategory || (p as any).collection || "—"}</td>
                         <td className="p-4 font-bold">
                           {p.price ? `₹${p.price.toLocaleString("en-IN")} ${p.priceUnit || ""}` : "Quote Request"}
                         </td>
