@@ -204,17 +204,20 @@ export default function BrandsPage() {
       .then((res) => res.json())
       .then((json) => {
         if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
-          // Merge API brands into list if present
+          const normalize = (str: string) => str.toLowerCase().replace(/[^a-z0-9]/g, "");
+
           const apiBrands: BrandItemData[] = json.data.map((b: any, idx: number) => {
+            const normName = normalize(b.name || "");
+            const normId = normalize(b.id || "");
             const defaultMatch = DEFAULT_BRANDS.find(
-              (db) => db.name.toLowerCase() === b.name.toLowerCase() || db.id === b.id
+              (db) => normalize(db.name) === normName || normalize(db.id) === normId || normName.includes(normalize(db.id)) || normalize(db.id).includes(normName)
             );
             return {
-              id: b.id || b.name.toLowerCase().replace(/\s+/g, "-"),
+              id: defaultMatch?.id || b.id || b.name.toLowerCase().replace(/\s+/g, "-"),
               name: b.name.toUpperCase(),
               category: b.description || defaultMatch?.category || "Surface Solution · Global",
               origin: defaultMatch?.origin || "Global",
-              estYear: defaultMatch?.estYear || `EST. ${1970 + (idx * 3 % 45)}`,
+              estYear: defaultMatch?.estYear || `EST. ${1970 + ((idx * 3) % 45)}`,
               catalogCount: defaultMatch?.catalogCount || "3 catalogs",
               filterTag: defaultMatch?.filterTag || "Surfaces",
               catalogs: defaultMatch?.catalogs || [
@@ -224,13 +227,18 @@ export default function BrandsPage() {
             };
           });
 
-          // Retain default brands that were not in API data
-          const merged = [...apiBrands];
-          DEFAULT_BRANDS.forEach((db) => {
-            if (!merged.some((m) => m.name.toLowerCase() === db.name.toLowerCase())) {
-              merged.push(db);
+          // Retain default brands that were not in API data, avoiding duplicates
+          const seen = new Set<string>();
+          const merged: BrandItemData[] = [];
+
+          [...apiBrands, ...DEFAULT_BRANDS].forEach((item) => {
+            const key = normalize(item.id) || normalize(item.name);
+            if (!seen.has(key)) {
+              seen.add(key);
+              merged.push(item);
             }
           });
+
           setBrands(merged);
         }
       })
@@ -290,8 +298,8 @@ export default function BrandsPage() {
 
         {/* ── Brands Grid ── */}
         <div className="brands-grid">
-          {filteredBrands.map((brand) => (
-            <Link href={`/brands/${brand.id}`} key={brand.id} className="brand-card">
+          {filteredBrands.map((brand, idx) => (
+            <Link href={`/brands/${brand.id}`} key={`${brand.id}-${idx}`} className="brand-card">
               <div className="brand-header">
                 <div className="brand-logo-area">
                   <div className="brand-logo">{brand.name}</div>
