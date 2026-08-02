@@ -459,7 +459,7 @@ export default function BrandsPage() {
                       padding: "10px 14px",
                       display: "flex",
                       alignItems: "center",
-                      justify-content: "space-between",
+                      justifyContent: "space-between",
                     }}
                   >
                     <span style={{ fontSize: "11px", color: "var(--text-muted)", fontWeight: 500 }}>
