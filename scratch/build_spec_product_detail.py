@@ -1,4 +1,6 @@
-"use client";
+import json
+
+page_code = """"use client";
 
 import { useState, useEffect, useRef, use } from "react";
 import Image from "next/image";
@@ -85,7 +87,7 @@ export default function ProductDetailPage({ params }: Props) {
               id: slug,
               name: slug
                 .replace(/-/g, " ")
-                .replace(/\b\w/g, (l) => l.toUpperCase()),
+                .replace(/\\b\\w/g, (l) => l.toUpperCase()),
               brand: "NewTechWood",
               category: "Decking",
               subcategory: "WPC Composite",
@@ -121,7 +123,7 @@ export default function ProductDetailPage({ params }: Props) {
 
     // Check wishlist state from localStorage
     try {
-      const saved = localStorage.getItem(`aaren_fav_${slug}`);
+      const saved = localStorage.getItem(`aaren_fav_\${slug}`);
       if (saved === "true") setIsSaved(true);
     } catch (e) {}
   }, [slug]);
@@ -277,7 +279,7 @@ export default function ProductDetailPage({ params }: Props) {
     const next = !isSaved;
     setIsSaved(next);
     try {
-      localStorage.setItem(`aaren_fav_${slug}`, String(next));
+      localStorage.setItem(`aaren_fav_\${slug}`, String(next));
     } catch (e) {}
     setToastMsg(next ? "Saved to your wishlist" : "Removed from wishlist");
     setTimeout(() => setToastMsg(null), 3000);
@@ -339,10 +341,10 @@ export default function ProductDetailPage({ params }: Props) {
             {allImages.map((img, idx) => (
               <button
                 key={idx}
-                className={`thumb-btn ${selectedImgIdx === idx ? "active" : ""}`}
+                className={`thumb-btn \${selectedImgIdx === idx ? "active" : ""}`}
                 onClick={() => setSelectedImgIdx(idx)}
               >
-                <Image src={img} alt={`Thumb ${idx}`} fill style={{ objectFit: "cover" }} />
+                <Image src={img} alt={`Thumb \${idx}`} fill style={{ objectFit: "cover" }} />
               </button>
             ))}
           </div>
@@ -403,7 +405,7 @@ export default function ProductDetailPage({ params }: Props) {
                 {finishList.map((f: any, idx: number) => (
                   <button
                     key={idx}
-                    className={`swatch-btn ${activeFinishIdx === idx ? "active" : ""}`}
+                    className={`swatch-btn \${activeFinishIdx === idx ? "active" : ""}`}
                     onClick={() => {
                       setActiveFinishIdx(idx);
                       if (allImages[idx]) setSelectedImgIdx(idx);
@@ -428,7 +430,7 @@ export default function ProductDetailPage({ params }: Props) {
             </button>
 
             <div className="icon-row">
-              <button className={`icon-btn ${isSaved ? "saved" : ""}`} onClick={handleSaveToggle}>
+              <button className={`icon-btn \${isSaved ? "saved" : ""}`} onClick={handleSaveToggle}>
                 <Heart size={14} fill={isSaved ? "#c44b6c" : "none"} color={isSaved ? "#c44b6c" : "currentColor"} />
                 <span>{isSaved ? "Saved" : "Save / Wishlist"}</span>
               </button>
@@ -452,13 +454,13 @@ export default function ProductDetailPage({ params }: Props) {
             return (
               <div
                 key={idx}
-                className={`gallery-tile ${idx === 0 ? "span-2" : ""}`}
+                className={`gallery-tile \${idx === 0 ? "span-2" : ""}`}
                 onClick={() => {
                   setLightboxIdx(idx);
                   setLightboxOpen(true);
                 }}
               >
-                <Image src={img} alt={`View ${idx}`} fill sizes="50vw" style={{ objectFit: "cover" }} />
+                <Image src={img} alt={`View \${idx}`} fill sizes="50vw" style={{ objectFit: "cover" }} />
                 <div className="tile-label">{labelText}</div>
               </div>
             );
@@ -541,7 +543,7 @@ export default function ProductDetailPage({ params }: Props) {
             {/* Navigation Arrow Controls */}
             <div className="slider-controls">
               <button
-                className={`slider-arrow-btn ${atStart ? "disabled" : ""}`}
+                className={`slider-arrow-btn \${atStart ? "disabled" : ""}`}
                 onClick={handleScrollLeft}
                 disabled={atStart}
                 aria-label="Previous"
@@ -549,7 +551,7 @@ export default function ProductDetailPage({ params }: Props) {
                 <ChevronLeft size={16} />
               </button>
               <button
-                className={`slider-arrow-btn ${atEnd ? "disabled" : ""}`}
+                className={`slider-arrow-btn \${atEnd ? "disabled" : ""}`}
                 onClick={handleScrollRight}
                 disabled={atEnd}
                 aria-label="Next"
@@ -570,7 +572,7 @@ export default function ProductDetailPage({ params }: Props) {
             onPointerLeave={handlePointerUp}
           >
             {relatedProducts.map((item) => {
-              const itemSlug = item.id || item.name.toLowerCase().replace(/\s+/g, "-");
+              const itemSlug = item.id || item.name.toLowerCase().replace(/\\s+/g, "-");
               return (
                 <div key={item.id} className="recommendation-card">
                   {/* Image Container Aspect 0.85 */}
@@ -591,7 +593,7 @@ export default function ProductDetailPage({ params }: Props) {
                     <span className="card-collection">{item.subcategory || item.category}</span>
 
                     <div className="card-actions">
-                      <Link href={`/products/${itemSlug}`} className="btn-card-view">
+                      <Link href={`/products/\${itemSlug}`} className="btn-card-view">
                         View
                       </Link>
                       <button className="btn-card-quick" onClick={() => setQuickViewProduct(item)}>
@@ -619,7 +621,7 @@ export default function ProductDetailPage({ params }: Props) {
 
           <div className="recommendation-grid-layout">
             {youMayAlsoLikeProducts.map((item) => {
-              const itemSlug = item.id || item.name.toLowerCase().replace(/\s+/g, "-");
+              const itemSlug = item.id || item.name.toLowerCase().replace(/\\s+/g, "-");
               return (
                 <div key={item.id} className="recommendation-card">
                   <div className="card-thumb-wrap">
@@ -638,7 +640,7 @@ export default function ProductDetailPage({ params }: Props) {
                     <span className="card-collection">{item.finish || item.subcategory || item.category}</span>
 
                     <div className="card-actions">
-                      <Link href={`/products/${itemSlug}`} className="btn-card-view">
+                      <Link href={`/products/\${itemSlug}`} className="btn-card-view">
                         View
                       </Link>
                       <button className="btn-card-quick" onClick={() => setQuickViewProduct(item)}>
@@ -689,7 +691,7 @@ export default function ProductDetailPage({ params }: Props) {
 
                 <div className="drawer-actions">
                   <Link
-                    href={`/products/${quickViewProduct.id}`}
+                    href={`/products/\${quickViewProduct.id}`}
                     className="drawer-btn-primary"
                     onClick={() => setQuickViewProduct(null)}
                   >
@@ -728,7 +730,7 @@ export default function ProductDetailPage({ params }: Props) {
           <div className="lightbox-content">
             <Image
               src={allImages[lightboxIdx]}
-              alt={`Lightbox ${lightboxIdx}`}
+              alt={`Lightbox \${lightboxIdx}`}
               width={1000}
               height={800}
               style={{ objectFit: "contain", maxHeight: "80vh" }}
@@ -746,7 +748,7 @@ export default function ProductDetailPage({ params }: Props) {
             {allImages.map((img, idx) => (
               <div
                 key={idx}
-                className={`lb-thumb ${lightboxIdx === idx ? "active" : ""}`}
+                className={`lb-thumb \${lightboxIdx === idx ? "active" : ""}`}
                 onClick={() => setLightboxIdx(idx)}
               >
                 <Image src={img} alt="Thumb" fill style={{ objectFit: "cover" }} />
@@ -776,7 +778,7 @@ export default function ProductDetailPage({ params }: Props) {
               <form onSubmit={handleQuoteSubmit} className="modal-form">
                 <div className="form-group">
                   <label>Product</label>
-                  <input type="text" value={`${product.brand} - ${product.name}`} readOnly className="inp-readonly" />
+                  <input type="text" value={`\${product.brand} - \${product.name}`} readOnly className="inp-readonly" />
                 </div>
 
                 <div className="form-group">
@@ -1752,3 +1754,9 @@ export default function ProductDetailPage({ params }: Props) {
     </div>
   );
 }
+"""
+
+with open('src/app/products/[slug]/page.tsx', 'w', encoding='utf-8') as f:
+    f.write(page_code)
+
+print("Successfully written pristine src/app/products/[slug]/page.tsx with spec recommendation sections & drawer!")
