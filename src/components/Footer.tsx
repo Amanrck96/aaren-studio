@@ -47,6 +47,8 @@ export default function Footer() {
                 ? "/brands"
                 : lower.includes("product")
                 ? "/products"
+                : lower.includes("history")
+                ? "/history"
                 : lower.includes("faq")
                 ? "/faq"
                 : lower.includes("blog")
@@ -57,7 +59,7 @@ export default function Footer() {
             };
 
             const col1 = ["All Projects", "Privacy Policy", "Products"];
-            const col2 = ["Brands", "Blog", "FAQ"];
+            const col2 = ["Brands", "History", "Blog", "FAQ"];
 
             return (
               <div
