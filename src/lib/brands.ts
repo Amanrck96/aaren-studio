@@ -251,7 +251,7 @@ const BRANDS: Brand[] = [
       { id: "ib-08", name: "Materia Prima — Legno", collection: "Materia Prima", finish: "Wood Grain" },
     ],
     catalogues: [
-      { title: "Materia Prima 2026", subtitle: "Complete Surface Collection", file: "Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf" },
+      { title: "Materia Prima 2026", subtitle: "Complete Surface Collection", file: "Formica/Formica-Global-Catalogue-V2.pdf" },
     ],
   },
   {

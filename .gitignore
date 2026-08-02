@@ -40,7 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/src/generated/prisma
+# Ignore large PDFs >40MB that exceed GitHub limits
+public/catalogues/Mirage/catalogue-jewels-2-0-pdf.pdf
+public/catalogues/Mirage/catalogue-jurupa-pdf.pdf
+public/catalogues/Mirage/catalogue-elysian-pdf.pdf
+public/catalogues/Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf
 
-# large catalogue PDFs — serve from external storage, not git
-/public/catalogues/**/*.pdf
