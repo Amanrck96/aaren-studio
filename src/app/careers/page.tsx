@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const positions = [
   { id: "1", title: "3D Generalist", department: "Motion Design", location: "Remote / Bangalore" },
