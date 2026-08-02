@@ -1,4 +1,6 @@
-"use client";
+import os
+
+code = """"use client";
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -331,7 +333,7 @@ export default function AdminProductsPage() {
         <div className="flex items-center gap-4 border-b border-black/10 mb-8 overflow-x-auto">
           <button
             onClick={() => setActiveTab("catalog")}
-            className={`pb-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+            className={`pb-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap \${
               activeTab === "catalog" ? "border-[#81663f] text-[#81663f]" : "border-transparent text-black/50 hover:text-black"
             }`}
           >
@@ -339,7 +341,7 @@ export default function AdminProductsPage() {
           </button>
           <button
             onClick={() => setActiveTab("bulk")}
-            className={`pb-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+            className={`pb-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap \${
               activeTab === "bulk" ? "border-[#81663f] text-[#81663f]" : "border-transparent text-black/50 hover:text-black"
             }`}
           >
@@ -368,7 +370,7 @@ export default function AdminProductsPage() {
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer \${
                       selectedCategory === cat ? "bg-[#1E1E1E] text-white" : "bg-black/5 text-black/70 hover:bg-black/10"
                     }`}
                   >
@@ -403,9 +405,9 @@ export default function AdminProductsPage() {
                       <td className="p-4 font-semibold text-[#81663f]">{p.brand}</td>
                       <td className="p-4 font-medium">{p.category}</td>
                       <td className="p-4 text-black/60">{p.collection || "—"}</td>
-                      <td className="p-4 font-bold">{p.price ? `₹${p.price.toLocaleString("en-IN")} ${p.priceUnit || ""}` : "Quote Request"}</td>
+                      <td className="p-4 font-bold">{p.price ? `₹\${p.price.toLocaleString("en-IN")} \${p.priceUnit || ""}` : "Quote Request"}</td>
                       <td className="p-4 flex items-center gap-3">
-                        <Link href={`/products/${p.id}`} className="p-2 rounded-lg bg-black/5 hover:bg-black/10 text-black/70 transition-colors">
+                        <Link href={`/products/\${p.id}`} className="p-2 rounded-lg bg-black/5 hover:bg-black/10 text-black/70 transition-colors">
                           <Eye className="w-4 h-4" />
                         </Link>
                         <button
@@ -440,16 +442,16 @@ export default function AdminProductsPage() {
                           {p.brand}
                         </span>
                         <h4 className="text-sm font-bold text-black truncate">{p.name}</h4>
-                        <span className="text-xs text-black/50">{p.category} {p.collection ? `• ${p.collection}` : ""}</span>
+                        <span className="text-xs text-black/50">{p.category} {p.collection ? `• \${p.collection}` : ""}</span>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between pt-2 border-t border-black/5 text-xs">
                       <span className="font-bold text-black">
-                        {p.price ? `₹${p.price.toLocaleString("en-IN")} ${p.priceUnit || ""}` : "Quote Request"}
+                        {p.price ? `₹\${p.price.toLocaleString("en-IN")} \${p.priceUnit || ""}` : "Quote Request"}
                       </span>
                       <div className="flex items-center gap-2">
-                        <Link href={`/products/${p.id}`} className="px-3 py-1.5 rounded-lg bg-black/5 text-black font-semibold">
+                        <Link href={`/products/\${p.id}`} className="px-3 py-1.5 rounded-lg bg-black/5 text-black font-semibold">
                           View
                         </Link>
                         <button
@@ -769,3 +771,9 @@ export default function AdminProductsPage() {
     </div>
   );
 }
+"""
+
+with open('src/app/admin/products/page.tsx', 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("Updated src/app/admin/products/page.tsx successfully!")
