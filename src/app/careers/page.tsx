@@ -9,6 +9,7 @@ const positions = [
 ];
 
 export default function Careers() {
+  const [positionsList, setPositionsList] = useState(positions);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,6 +18,17 @@ export default function Careers() {
     resume: "",
   });
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/careers?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
+          setPositionsList(data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +48,7 @@ export default function Careers() {
           <div>
             <h2 className="text-3xl font-black uppercase tracking-tight mb-8">OPEN POSITIONS</h2>
             <div className="space-y-6">
-              {positions.map((pos) => (
+              {positionsList.map((pos) => (
                 <div key={pos.id} className="border border-neutral-900 bg-neutral-950 p-6 flex justify-between items-center">
                   <div>
                     <h3 className="text-xl font-bold uppercase">{pos.title}</h3>
@@ -92,7 +104,7 @@ export default function Careers() {
                     onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                     className="w-full bg-[#080808] border border-neutral-800 p-4 text-white text-sm focus:border-accent outline-none"
                   >
-                    {positions.map((pos) => (
+                    {positionsList.map((pos) => (
                       <option key={pos.id} value={pos.id} className="bg-neutral-950">
                         {pos.title}
                       </option>

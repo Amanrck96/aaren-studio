@@ -323,15 +323,28 @@ const CATEGORIES = [
 ];
 
 export default function FaqPage() {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [faqList, setFaqList] = useState<FaqItem[]>(FAQ_DATA);
+  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({ "faq-1": true });
+
+  useEffect(() => {
+    fetch("/api/faq?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
+          setFaqList(data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
   const [searchQuery, setSearchQuery] = useState("");
 
   const toggleItem = (id: string) => {
     setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const filteredFaqs = FAQ_DATA.filter((item) => {
+  const filteredFaqs = faqList.filter((item) => {
     const matchesCategory = activeCategory === "All" || item.category === activeCategory;
     const matchesSearch =
       item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||

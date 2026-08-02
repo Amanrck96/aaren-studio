@@ -1,4 +1,6 @@
-"use client";
+import os
+
+code = """"use client";
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -120,7 +122,7 @@ export default function AdminProductsPage() {
     e.preventDefault();
     try {
       const payload = {
-        id: `prod-${Date.now()}`,
+        id: `prod-\${Date.now()}`,
         name: form.name,
         brand: form.brand,
         category: form.category,
@@ -277,7 +279,7 @@ export default function AdminProductsPage() {
         <div className="tabs flex items-center gap-7 border-b border-black/10 mb-7 overflow-x-auto">
           <button
             onClick={() => setActiveTab("catalog")}
-            className={`tab pb-3 text-xs font-bold uppercase tracking-wider border-b-2 cursor-pointer whitespace-nowrap ${
+            className={`tab pb-3 text-xs font-bold uppercase tracking-wider border-b-2 cursor-pointer whitespace-nowrap \${
               activeTab === "catalog" ? "active border-[#81663f] text-[#81663f]" : "border-transparent text-black/45"
             }`}
           >
@@ -285,7 +287,7 @@ export default function AdminProductsPage() {
           </button>
           <button
             onClick={() => setActiveTab("bulk")}
-            className={`tab pb-3 text-xs font-bold uppercase tracking-wider border-b-2 cursor-pointer whitespace-nowrap ${
+            className={`tab pb-3 text-xs font-bold uppercase tracking-wider border-b-2 cursor-pointer whitespace-nowrap \${
               activeTab === "bulk" ? "active border-[#81663f] text-[#81663f]" : "border-transparent text-black/45"
             }`}
           >
@@ -314,7 +316,7 @@ export default function AdminProductsPage() {
                   <button
                     key={c}
                     onClick={() => setActiveCategory(c)}
-                    className={`cat-pill px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap cursor-pointer ${
+                    className={`cat-pill px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap cursor-pointer \${
                       activeCategory === c ? "active bg-[#1E1E1E] text-white" : "bg-black/5 text-black/70 hover:bg-black/10"
                     }`}
                   >
@@ -357,10 +359,10 @@ export default function AdminProductsPage() {
                         <td className="p-4 font-medium">{p.category}</td>
                         <td className="p-4 text-black/60">{p.subcategory || p.collection || "—"}</td>
                         <td className="p-4 font-bold">
-                          {p.price ? `₹${p.price.toLocaleString("en-IN")} ${p.priceUnit || ""}` : "Quote Request"}
+                          {p.price ? `₹\${p.price.toLocaleString("en-IN")} \${p.priceUnit || ""}` : "Quote Request"}
                         </td>
                         <td className="p-4 flex items-center gap-3">
-                          <Link href={`/products/${p.id}`} className="text-black/60 hover:text-black">
+                          <Link href={`/products/\${p.id}`} className="text-black/60 hover:text-black">
                             <Eye className="w-4 h-4" />
                           </Link>
                           <button
@@ -642,3 +644,9 @@ export default function AdminProductsPage() {
     </div>
   );
 }
+"""
+
+with open('src/app/admin/products/page.tsx', 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("Updated Admin Products Page with exact HTML spec!")

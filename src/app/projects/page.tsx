@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -170,8 +170,35 @@ export default function AllProjectsPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [projectsList, setProjectsList] = useState<Project[]>(ALL_PROJECTS);
 
-  const filteredProjects = ALL_PROJECTS.filter((project) => {
+  // Live fetch from database (No-cache)
+  useEffect(() => {
+    fetch("/api/projects?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
+          const mapped = data.data.map((p: any, idx: number) => ({
+            id: p.id || `proj-${idx}`,
+            slug: p.slug || p.id || `proj-${idx}`,
+            client: p.client || p.name || "Client Project",
+            code: p.code || "AP",
+            num: String(idx + 1).padStart(2, "0"),
+            title: p.title || p.name || "Architectural Project",
+            year: p.year || "2025",
+            category: p.category || "Commercial",
+            location: p.location || "Bengaluru",
+            image: p.imageUrl || p.image || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
+            description: p.description || "Architectural space by Aaren Studio.",
+            tags: p.tags || ["Architecture", "Design"],
+          }));
+          setProjectsList(mapped);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const filteredProjects = projectsList.filter((project) => {
     const matchesCategory = activeFilter === "All" || project.category === activeFilter;
     const matchesSearch =
       project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
