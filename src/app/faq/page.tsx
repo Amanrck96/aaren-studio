@@ -338,7 +338,6 @@ export default function FaqPage() {
       })
       .catch(() => {});
   }, []);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleItem = (id: string) => {
     setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }));
