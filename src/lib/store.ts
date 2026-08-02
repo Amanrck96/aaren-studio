@@ -1053,14 +1053,15 @@ export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & {
 // INQUIRIES STORE (LEADS & PROTECTED CATALOG GATE)
 export async function getInquiriesStore(): Promise<InquiryItem[]> {
   const json = readJsonStore();
-  const fileInquiries = json.inquiries || [];
+  const fileInquiries: InquiryItem[] = json.inquiries || [];
 
+  let dbInquiries: InquiryItem[] = [];
   try {
     const dbPromise = prisma.inquiry.findMany({ orderBy: { createdAt: "desc" } });
     const timeoutPromise = new Promise<any>((_, reject) => setTimeout(() => reject(new Error("DB Timeout")), 800));
     const db = await Promise.race([dbPromise, timeoutPromise]);
     if (db && db.length > 0) {
-      return db.map((i: any) => ({
+      dbInquiries = db.map((i: any) => ({
         id: i.id,
         name: i.name,
         email: i.email,
@@ -1069,12 +1070,18 @@ export async function getInquiriesStore(): Promise<InquiryItem[]> {
         subject: i.subject || undefined,
         message: i.message || undefined,
         productOrBrand: i.productOrBrand || undefined,
-        createdAt: i.createdAt.toISOString(),
+        createdAt: typeof i.createdAt === "string" ? i.createdAt : i.createdAt.toISOString(),
       }));
     }
   } catch (e) {}
 
-  return fileInquiries;
+  const map = new Map<string, InquiryItem>();
+  fileInquiries.forEach((item) => map.set(item.id, item));
+  dbInquiries.forEach((item) => map.set(item.id, item));
+
+  const all = Array.from(map.values());
+  all.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return all;
 }
 
 export async function logInquiryStore(data: {

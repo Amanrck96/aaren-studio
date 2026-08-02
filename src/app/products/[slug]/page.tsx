@@ -1666,13 +1666,21 @@ export default function ProductDetailPage({ params }: Props) {
 
         /* Modals & Lightbox */
         .lightbox-overlay, .modal-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(0,0,0,0.85);
-          z-index: 9999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: 0 !important;
+          width: 100vw !important;
+          height: 100vh !important;
+          background: rgba(0, 0, 0, 0.88) !important;
+          backdrop-filter: blur(8px) !important;
+          -webkit-backdrop-filter: blur(8px) !important;
+          z-index: 999999 !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          padding: 16px !important;
         }
 
         .lightbox-close {
@@ -1688,92 +1696,122 @@ export default function ProductDetailPage({ params }: Props) {
           position: absolute;
           top: 20px;
           right: 20px;
-          background: rgba(0,0,0,0.06);
+          background: rgba(255, 255, 255, 0.1);
           border: none;
           border-radius: 50%;
-          width: 32px;
-          height: 32px;
+          width: 34px;
+          height: 34px;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #1e1e1e;
+          color: #ffffff;
           cursor: pointer;
           transition: background 0.2s ease;
         }
         .modal-close:hover { background: #e5484d; color: #fff; }
 
         .modal-card {
-          background: var(--surface-1);
-          padding: 32px;
-          border-radius: 12px;
-          max-width: 500px;
-          width: 90%;
-          color: var(--text-main);
-          position: relative;
+          background: #121316 !important;
+          border: 1px solid rgba(140, 118, 75, 0.4) !important;
+          padding: 36px 32px !important;
+          border-radius: 20px !important;
+          max-width: 540px !important;
+          width: 100% !important;
+          max-height: 90vh !important;
+          overflow-y: auto !important;
+          color: #ffffff !important;
+          position: relative !important;
+          box-shadow: 0 30px 80px rgba(0,0,0,0.8) !important;
         }
 
         .modal-title {
-          font-size: 20px;
-          font-weight: 600;
-          margin-bottom: 4px;
+          font-size: 22px !important;
+          font-weight: 800 !important;
+          text-transform: uppercase !important;
+          letter-spacing: -0.01em !important;
+          color: #ffffff !important;
+          margin-bottom: 4px !important;
         }
 
         .modal-sub {
-          font-size: 12px;
-          color: var(--text-muted);
-          margin-bottom: 20px;
+          font-size: 12px !important;
+          color: rgba(255, 255, 255, 0.6) !important;
+          margin-bottom: 24px !important;
         }
 
         .modal-form {
           display: flex;
           flex-direction: column;
-          gap: 14px;
+          gap: 16px;
         }
 
         .form-group {
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 6px;
         }
 
         .form-group label {
           font-size: 11px;
-          font-weight: 600;
-          color: var(--text-muted);
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: rgba(255, 255, 255, 0.75);
         }
 
         .form-group input, .form-group textarea {
-          padding: 10px;
-          border: 0.5px solid var(--border);
-          border-radius: 6px;
+          padding: 12px 14px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 10px;
           font-size: 13px;
-          background: var(--surface-0);
-          color: var(--text-main);
+          background: rgba(255, 255, 255, 0.08);
+          color: #ffffff;
+          font-family: inherit;
+        }
+
+        .form-group input::placeholder, .form-group textarea::placeholder {
+          color: rgba(255, 255, 255, 0.35);
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+          outline: none;
+          border-color: #8c764b;
         }
 
         .inp-readonly {
-          background: #e2e8f0;
-          font-weight: 600;
+          background: rgba(255, 255, 255, 0.15) !important;
+          font-weight: 700 !important;
+          color: #8c764b !important;
+          border-color: rgba(140, 118, 75, 0.5) !important;
         }
 
         .form-row {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 10px;
+          gap: 14px;
         }
 
         .btn-modal-submit {
-          background: var(--text-main);
+          background: #8c764b;
           color: #ffffff;
-          padding: 12px;
+          padding: 14px;
           border: none;
-          border-radius: 20px;
-          font-weight: 600;
+          border-radius: 999px;
+          font-weight: 800;
+          font-size: 12px;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 8px;
+          box-shadow: 0 8px 20px rgba(140, 118, 75, 0.3);
+          transition: background 0.25s ease;
+        }
+
+        .btn-modal-submit:hover {
+          background: #a38959;
         }
 
         .pdf-download-box {
