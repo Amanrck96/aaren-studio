@@ -28,6 +28,8 @@ export type BrandItemData = {
   catalogs: CatalogThumb[];
 };
 
+const FILTER_PILLS = ["All", "Surfaces", "Flooring", "Bathroom", "Cladding", "Doors", "Furniture"];
+
 const DEFAULT_BRANDS: BrandItemData[] = [
   {
     "id": "mirage",
