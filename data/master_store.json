@@ -41,7 +41,7 @@
       "https://linkedin.com",
       "https://youtube.com"
     ],
-    "copyrightText": "AAREN © 2026. All rights reserved."
+    "copyrightText": "AAREN \u00c2\u00a9 2026. All rights reserved."
   },
   "categories": [
     {
@@ -193,8 +193,8 @@
     {
       "id": "slashform",
       "name": "Slashform",
-      "logoUrl": "https://lh3.googleusercontent.com/d/1HSFGOyjsOQcEo70URK3eW-M2N9d9PHPW",
-      "bannerUrl": "/brands/brand_1_1.png",
+      "logoUrl": "/brand_logos/slashform.png",
+      "bannerUrl": "/brand_logos/slashform.png",
       "description": "Italian precision living systems for kitchen & wardrobe",
       "shortCode": "SF 01",
       "sequenceNumber": 1,
@@ -203,8 +203,8 @@
     {
       "id": "waltz",
       "name": "Waltz by JB Glass",
-      "logoUrl": "/brands/brand_2_2.png",
-      "bannerUrl": "/brands/brand_2_1.png",
+      "logoUrl": "/brand_logos/waltz.png",
+      "bannerUrl": "/brand_logos/waltz.png",
       "description": "Architectural glass partitions and zipline screens",
       "shortCode": "WB 02",
       "sequenceNumber": 2,
@@ -213,8 +213,8 @@
     {
       "id": "newtech-wood",
       "name": "Newtech Wood",
-      "logoUrl": "/brands/brand_3_2.png",
-      "bannerUrl": "/brands/brand_3_1.png",
+      "logoUrl": "/brand_logos/newtechwood.png",
+      "bannerUrl": "/brand_logos/newtechwood.png",
       "description": "WPC composite outdoor decking and architectural cladding",
       "shortCode": "NW 03",
       "sequenceNumber": 3,
@@ -223,8 +223,8 @@
     {
       "id": "formica",
       "name": "Formica",
-      "logoUrl": "https://lh3.googleusercontent.com/d/1LzBpXqLAQN9QH2vEriaV2KhFH6TKpaea",
-      "bannerUrl": "/brands/brand_4_1.png",
+      "logoUrl": "/brand_logos/formica.png",
+      "bannerUrl": "/brand_logos/formica.png",
       "description": "FENIX nano-tech surfaces and premium laminates",
       "shortCode": "FC 04",
       "sequenceNumber": 4,
@@ -233,8 +233,8 @@
     {
       "id": "loco",
       "name": "Loco",
-      "logoUrl": "https://lh3.googleusercontent.com/d/1ucIIfwhzlxY0GLJhuwpb69keZd0mA8a3",
-      "bannerUrl": "/brands/brand_5_1.png",
+      "logoUrl": "/brand_logos/loco.png",
+      "bannerUrl": "/brand_logos/loco.png",
       "description": "Bespoke Italian millwork and furniture sculpture",
       "shortCode": "LC 05",
       "sequenceNumber": 5
@@ -242,8 +242,8 @@
     {
       "id": "falper",
       "name": "Falper",
-      "logoUrl": "https://lh3.googleusercontent.com/d/1xLHdJSwEHZeHBfIGRd2NuG94xtZwnurl",
-      "bannerUrl": "/brands/brand_6_1.png",
+      "logoUrl": "/brand_logos/falper.png",
+      "bannerUrl": "/brand_logos/falper.png",
       "description": "Luxury bath environments, vanities and freestanding tubs",
       "shortCode": "FP 06",
       "sequenceNumber": 6
@@ -251,8 +251,8 @@
     {
       "id": "fima",
       "name": "Fima Carlo Frattini",
-      "logoUrl": "/brands/brand_7_2.png",
-      "bannerUrl": "/brands/brand_7_1.png",
+      "logoUrl": "/brand_logos/fima.png",
+      "bannerUrl": "/brand_logos/fima.png",
       "description": "Refined Italian tapware and thermostatic shower systems",
       "shortCode": "FM 07",
       "sequenceNumber": 7
@@ -260,8 +260,8 @@
     {
       "id": "inkiostro-bianco",
       "name": "Inkiostro Bianco",
-      "logoUrl": "https://lh3.googleusercontent.com/d/14wcidzn1DSV54CtYS-rPA0eamikv-GGa",
-      "bannerUrl": "/brands/brand_8_1.png",
+      "logoUrl": "/brand_logos/inkiostro-bianco.png",
+      "bannerUrl": "/brand_logos/inkiostro-bianco.png",
       "description": "Creative decorative wallcoverings and printed surfaces",
       "shortCode": "IB 08",
       "sequenceNumber": 8,
@@ -270,8 +270,8 @@
     {
       "id": "mafi",
       "name": "Mafi",
-      "logoUrl": "https://lh3.googleusercontent.com/d/1PCiqmGhuP6opG4ZMLLRx7AP3C735bGjb",
-      "bannerUrl": "/brands/brand_9_1.png",
+      "logoUrl": "/brand_logos/mafi.png",
+      "bannerUrl": "/brand_logos/mafi.png",
       "description": "Austrian natural wood flooring with hand-rubbed oil finish",
       "shortCode": "MF 09",
       "sequenceNumber": 9
@@ -279,8 +279,8 @@
     {
       "id": "mirage",
       "name": "Mirage",
-      "logoUrl": "https://lh3.googleusercontent.com/d/1ixtDzgY457r6tWrBRRmvJINSk34NqKHR",
-      "bannerUrl": "/brands/brand_10_1.png",
+      "logoUrl": "/brand_logos/mirage.png",
+      "bannerUrl": "/brand_logos/mirage.png",
       "description": "Italian porcelain tile mastery and marble slabs",
       "shortCode": "MG 10",
       "sequenceNumber": 10,
@@ -363,6 +363,7 @@
   "products": [
     {
       "id": "prod-antique-decking",
+      "slNo": 1,
       "name": "Antique Outdoor Pool Decking",
       "brand": "Newtech Wood",
       "category": "Cladding",
@@ -404,6 +405,7 @@
     },
     {
       "id": "prod-mirage-elysian",
+      "slNo": 2,
       "name": "MIRAGE Elysian Travertine Slab",
       "brand": "Mirage",
       "category": "Tiles",
@@ -439,6 +441,7 @@
     },
     {
       "id": "prod-mafi-oak",
+      "slNo": 3,
       "name": "Mafi Oak Vulcano Natural Plank",
       "brand": "mafi",
       "category": "Wooden Flooring",
@@ -474,6 +477,7 @@
     },
     {
       "id": "prod-fima-tapware",
+      "slNo": 4,
       "name": "FIMA Aesthetic Mixer Suite",
       "brand": "fima Carlo Frattini",
       "category": "Bathroom",
@@ -490,15 +494,16 @@
         "Italian Brass",
         "Rose Gold"
       ],
-      "imageUrl": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
       "galleryImages": [
-        "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80"
+        "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"
       ],
       "qtyInStock": 25,
       "price": 85000
     },
     {
       "id": "prod-waltz-glide",
+      "slNo": 5,
       "name": "Waltz Wallways Motorized Partition",
       "brand": "Waltz",
       "category": "Doors",
@@ -524,8 +529,9 @@
     },
     {
       "id": "prod-slashform-kitchen",
+      "slNo": 6,
       "name": "Slashform Terraige Living System",
-      "brand": "slashform™",
+      "brand": "slashform\u2122",
       "category": "Surfaces",
       "subcategory": "Modular Systems",
       "shortCode": "SF 08",
@@ -549,8 +555,9 @@
     },
     {
       "id": "prod-fenix-laminate",
+      "slNo": 7,
       "name": "FORMICA FENIX NTM Matte Surface",
-      "brand": "FORMICA®",
+      "brand": "FORMICA\u00ae",
       "category": "Surfaces",
       "subcategory": "Nano-Tech Laminate",
       "shortCode": "FC 04",
@@ -574,6 +581,7 @@
     },
     {
       "id": "prod-inkiostro-wallpaper",
+      "slNo": 8,
       "name": "Inkiostro Bianco Golden Wall Surface",
       "brand": "Inkiostro Bianco",
       "category": "Surfaces",

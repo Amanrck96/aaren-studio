@@ -360,6 +360,19 @@ export default function BrandsPage() {
                 {/* Brand Header */}
                 <div className="brand-header">
                   <div className="brand-logo-area">
+                    <div style={{ height: "36px", display: "flex", alignItems: "center", marginBottom: "4px" }}>
+                      <Image
+                        src={`/brand_logos/${brand.id}.png`}
+                        alt={brand.name}
+                        width={140}
+                        height={36}
+                        style={{ objectFit: "contain", objectPosition: "left center" }}
+                        onError={(e: any) => {
+                          // Fallback to text if image missing
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    </div>
                     <div className="brand-logo">{brand.name}</div>
                     <div className="brand-category">{brand.category}</div>
                   </div>
