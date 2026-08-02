@@ -362,717 +362,16 @@
   ],
   "products": [
     {
-      "name": "Acrylic",
-      "brand": "Tali Deck",
-      "category": "Decoratives",
-      "width": "1200",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "1.5",
-      "finish": "",
-      "description": "Tali Deck Acrylic",
-      "tags": [
-        "Decoratives"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1o3ipKKYAoNqOjkCRI3sj9-K-kkPBSrZk",
-      "qtyInStock": 10,
-      "id": "prod-1785617497138"
-    },
-    {
-      "name": "Stone finish",
-      "brand": "Inclass",
-      "category": "Decoratives",
-      "width": "1200",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "1mm",
-      "finish": "",
-      "description": "Inclass Stone finish",
-      "tags": [
-        "Decoratives"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/10JSH_PdVSSVgCTRBPvlATzauGQTdAVcX",
-      "qtyInStock": 10,
-      "id": "prod-1785617493079"
-    },
-    {
-      "name": "Uhhh",
-      "brand": "NewTech",
-      "category": "Decoratives",
-      "width": "63",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "NewTech Uhhh",
-      "tags": [
-        "Decoratives"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1HPYx9tN7X2I7gse38xGekSS52UcbipuP",
-      "qtyInStock": 10,
-      "id": "prod-1785617489002"
-    },
-    {
-      "name": "Acrylic",
-      "brand": "Tali Deck",
-      "category": "Decoratives",
-      "width": "1200",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "1.5",
-      "finish": "",
-      "description": "Tali Deck Acrylic",
-      "tags": [
-        "Decoratives"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1o3ipKKYAoNqOjkCRI3sj9-K-kkPBSrZk",
-      "qtyInStock": 10,
-      "id": "prod-1785617490523-370"
-    },
-    {
-      "name": "Stone finish",
-      "brand": "Inclass",
-      "category": "Decoratives",
-      "width": "1200",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "1mm",
-      "finish": "",
-      "description": "Inclass Stone finish",
-      "tags": [
-        "Decoratives"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/10JSH_PdVSSVgCTRBPvlATzauGQTdAVcX",
-      "qtyInStock": 10,
-      "id": "prod-1785617490515-733"
-    },
-    {
-      "name": "Uhhh",
-      "brand": "NewTech",
-      "category": "Decoratives",
-      "width": "63",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "NewTech Uhhh",
-      "tags": [
-        "Decoratives"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1HPYx9tN7X2I7gse38xGekSS52UcbipuP",
-      "qtyInStock": 10,
-      "id": "prod-1785617490474-90"
-    },
-    {
-      "name": "Iww",
-      "brand": "Mafi",
-      "category": "Cladding",
-      "width": "89",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Mafi Iww",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/14TaNfa2IQUsCSYYi3-Y_SNWdpLeFrecJ",
-      "qtyInStock": 10,
-      "id": "prod-1785617490445-334"
-    },
-    {
-      "name": "dasd",
-      "brand": "Madheke",
-      "category": "Cladding",
-      "width": "15",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Madheke dasd",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1IZBoty8980ZRrY0mvg6udj2tCI0t4hQP",
-      "qtyInStock": 10,
-      "id": "prod-1785617490421-981"
-    },
-    {
-      "name": "axc",
-      "brand": "Mafi",
-      "category": "BlockBoard",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Mafi axc",
-      "tags": [
-        "BlockBoard"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1RhVdOfFw3ahflJwT12sDQL9PxMFYy8Yb",
-      "qtyInStock": 10,
-      "id": "prod-1785617490401-384"
-    },
-    {
-      "name": "Motorised 80mm",
-      "brand": "Freedon Screens",
-      "category": "Plywood",
-      "width": "3000",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Freedon Screens Motorised 80mm",
-      "tags": [
-        "Plywood"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1nNNHaTcm8QD3U57vcqF3poyUOjkq74fa",
-      "qtyInStock": 10,
-      "id": "prod-1785617490354-238"
-    },
-    {
-      "name": "Infinity ZL1",
-      "brand": "Freedon Screens",
-      "category": "Plywood",
-      "width": "2600",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Freedon Screens Infinity ZL1",
-      "tags": [
-        "Plywood"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1AzMeNOS7uUvJE3vJxLanLpb5SWZ3qKhO",
-      "qtyInStock": 10,
-      "id": "prod-1785617490340-598"
-    },
-    {
-      "name": "Glide",
-      "brand": "Waltz",
-      "category": "Cladding",
-      "width": "1200",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Waltz Glide",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1x_lnoUoTgD0q6pz0Qg4osDtsN6wH47aA",
-      "qtyInStock": 10,
-      "id": "prod-1785617490295-440"
-    },
-    {
-      "name": "WALTZ slide",
-      "brand": "Waltz",
-      "category": "Plywood",
-      "width": "1205",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Waltz WALTZ slide",
-      "tags": [
-        "Plywood"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1pK2simS_q9I2q6SIufzKQlB3Gw_Z0tl5",
-      "qtyInStock": 10,
-      "id": "prod-1785617490285-601"
-    },
-    {
-      "name": "aasas",
-      "brand": "Becker",
-      "category": "BlockBoard",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Becker aasas",
-      "tags": [
-        "BlockBoard"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1e9W9o1NHjkWmee1gBXx_ioPPe_Ocx5Kq",
-      "qtyInStock": 10,
-      "id": "prod-1785617490279-164"
-    },
-    {
-      "name": "adad",
-      "brand": "Tali Deck",
-      "category": "BlockBoard",
-      "width": "1",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Tali Deck adad",
-      "tags": [
-        "BlockBoard"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1RnlkYLfA9ws-jBmmx4lypfFPOnMHbR1a",
-      "qtyInStock": 10,
-      "id": "prod-1785617490266-498"
-    },
-    {
-      "name": "aaaa",
-      "brand": "Mafi",
-      "category": "Plywood",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Mafi aaaa",
-      "tags": [
-        "Plywood"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1EQuzKH9tf5gRrzG80lbtWgEfxxRQMPHA",
-      "qtyInStock": 10,
-      "id": "prod-1785617490224-537"
-    },
-    {
-      "name": "xcv",
-      "brand": "Waltz",
-      "category": "BlockBoard",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "cm",
-      "thickness": "23",
-      "finish": "",
-      "description": "Waltz xcv",
-      "tags": [
-        "BlockBoard"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1kptnKOOfmGQbUN8GDKz5AWVmykkhjA7e",
-      "qtyInStock": 10,
-      "id": "prod-1785617490196-939"
-    },
-    {
-      "name": "asaDD",
-      "brand": "Mafi",
-      "category": "Cladding",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "cm",
-      "thickness": "23",
-      "finish": "",
-      "description": "Mafi asaDD",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "/brands/brand_1_1.png",
-      "qtyInStock": 10,
-      "id": "prod-1785617490158-413"
-    },
-    {
-      "name": "abc",
-      "brand": "Freedon Screens",
-      "category": "Cladding",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "2",
-      "finish": "",
-      "description": "Freedon Screens abc",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "/brands/brand_1_1.png",
-      "qtyInStock": 10,
-      "id": "prod-1785617490150-878"
-    },
-    {
-      "name": "adffg",
-      "brand": "Waltz",
-      "category": "Cladding",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "24",
-      "finish": "Matt",
-      "description": "adklfnk",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "/brands/brand_1_1.png",
-      "qtyInStock": 10,
-      "id": "prod-1785617490055-70"
-    },
-    {
-      "name": "abc",
-      "brand": "Freedon Screens",
-      "category": "Plywood",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "20",
-      "finish": "Matte",
-      "description": "Freedon Screens abc",
-      "tags": [
-        "Plywood"
-      ],
-      "imageUrl": "/brands/brand_1_1.png",
-      "qtyInStock": 10,
-      "id": "prod-1785617489998-964"
-    },
-    {
-      "name": "Iww",
-      "brand": "Mafi",
-      "category": "Cladding",
-      "width": "89",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Mafi Iww",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/14TaNfa2IQUsCSYYi3-Y_SNWdpLeFrecJ",
-      "qtyInStock": 10,
-      "id": "prod-1785617484915"
-    },
-    {
-      "name": "axc",
-      "brand": "Mafi",
-      "category": "BlockBoard",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Mafi axc",
-      "tags": [
-        "BlockBoard"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1RhVdOfFw3ahflJwT12sDQL9PxMFYy8Yb",
-      "qtyInStock": 10,
-      "id": "prod-1785617476772"
-    },
-    {
-      "name": "Motorised 80mm",
-      "brand": "Freedon Screens",
-      "category": "Plywood",
-      "width": "3000",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Freedon Screens Motorised 80mm",
-      "tags": [
-        "Plywood"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1nNNHaTcm8QD3U57vcqF3poyUOjkq74fa",
-      "qtyInStock": 10,
-      "id": "prod-1785617472631"
-    },
-    {
-      "name": "Infinity ZL1",
-      "brand": "Freedon Screens",
-      "category": "Plywood",
-      "width": "2600",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Freedon Screens Infinity ZL1",
-      "tags": [
-        "Plywood"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1AzMeNOS7uUvJE3vJxLanLpb5SWZ3qKhO",
-      "qtyInStock": 10,
-      "id": "prod-1785617468482"
-    },
-    {
-      "name": "Glide",
-      "brand": "Waltz",
-      "category": "Cladding",
-      "width": "1200",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Waltz Glide",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1x_lnoUoTgD0q6pz0Qg4osDtsN6wH47aA",
-      "qtyInStock": 10,
-      "id": "prod-1785617464418"
-    },
-    {
-      "name": "WALTZ slide",
-      "brand": "Waltz",
-      "category": "Plywood",
-      "width": "1205",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Waltz WALTZ slide",
-      "tags": [
-        "Plywood"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1pK2simS_q9I2q6SIufzKQlB3Gw_Z0tl5",
-      "qtyInStock": 10,
-      "id": "prod-1785617460331"
-    },
-    {
-      "name": "aasas",
-      "brand": "Becker",
-      "category": "BlockBoard",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Becker aasas",
-      "tags": [
-        "BlockBoard"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1e9W9o1NHjkWmee1gBXx_ioPPe_Ocx5Kq",
-      "qtyInStock": 10,
-      "id": "prod-1785617456241"
-    },
-    {
-      "name": "adad",
-      "brand": "Tali Deck",
-      "category": "BlockBoard",
-      "width": "1",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Tali Deck adad",
-      "tags": [
-        "BlockBoard"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1RnlkYLfA9ws-jBmmx4lypfFPOnMHbR1a",
-      "qtyInStock": 10,
-      "id": "prod-1785617452144"
-    },
-    {
-      "name": "aaaa",
-      "brand": "Mafi",
-      "category": "Plywood",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "",
-      "finish": "",
-      "description": "Mafi aaaa",
-      "tags": [
-        "Plywood"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1EQuzKH9tf5gRrzG80lbtWgEfxxRQMPHA",
-      "qtyInStock": 10,
-      "id": "prod-1785617448038"
-    },
-    {
-      "name": "xcv",
-      "brand": "Waltz",
-      "category": "BlockBoard",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "cm",
-      "thickness": "23",
-      "finish": "",
-      "description": "Waltz xcv",
-      "tags": [
-        "BlockBoard"
-      ],
-      "imageUrl": "https://lh3.googleusercontent.com/d/1kptnKOOfmGQbUN8GDKz5AWVmykkhjA7e",
-      "qtyInStock": 10,
-      "id": "prod-1785617443995"
-    },
-    {
-      "name": "asaDD",
-      "brand": "Mafi",
-      "category": "Cladding",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "cm",
-      "thickness": "23",
-      "finish": "",
-      "description": "Mafi asaDD",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "/brands/brand_1_1.png",
-      "qtyInStock": 10,
-      "id": "prod-1785617439929"
-    },
-    {
-      "name": "abc",
-      "brand": "Freedon Screens",
-      "category": "Cladding",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "2",
-      "finish": "",
-      "description": "Freedon Screens abc",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "/brands/brand_1_1.png",
-      "qtyInStock": 10,
-      "id": "prod-1785617435842"
-    },
-    {
-      "name": "adffg",
-      "brand": "Waltz",
-      "category": "Cladding",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "24",
-      "finish": "Matt",
-      "description": "adklfnk",
-      "tags": [
-        "Cladding"
-      ],
-      "imageUrl": "/brands/brand_1_1.png",
-      "qtyInStock": 10,
-      "id": "prod-1785617431734"
-    },
-    {
-      "name": "abc",
-      "brand": "Freedon Screens",
-      "category": "Plywood",
-      "width": "12",
-      "height": "",
-      "depth": "",
-      "measurementType": "mm",
-      "thickness": "20",
-      "finish": "Matte",
-      "description": "Freedon Screens abc",
-      "tags": [
-        "Plywood"
-      ],
-      "imageUrl": "/brands/brand_1_1.png",
-      "qtyInStock": 10,
-      "id": "prod-1785617427456"
-    },
-    {
-      "id": "prod-queen-sofa",
-      "slNo": 1,
-      "name": "Queen Sofa System",
-      "brand": "Madheke",
-      "category": "Furniture",
-      "subcategory": "Sofas",
-      "shortCode": "FF 01",
-      "width": "2800mm",
-      "height": "750mm",
-      "depth": "1050mm",
-      "measurementType": "mm",
-      "finish": "Bouclé Fabric & Solid Walnut",
-      "description": "The Queen sofa embodies the harmony of proportion and comfort. More stance in fabric with subtle curves, it invites conversation and repose.",
-      "tags": [
-        "Living",
-        "Sofa",
-        "Madheke"
-      ],
-      "imageUrl": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80",
-      "galleryImages": [
-        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80"
-      ],
-      "catalogPdfUrl": "/catalogues/Formica/2024-FENIX-brochure-digital.pdf",
-      "qtyInStock": 2,
-      "price": 480000,
-      "finishOptions": [
-        {
-          "name": "Cream Bouclé",
-          "hex": "#F3EFE6"
-        },
-        {
-          "name": "Palma Teal Leather",
-          "hex": "#2B4C59"
-        },
-        {
-          "name": "Tobacco Leather",
-          "hex": "#6F4E37"
-        }
-      ]
-    },
-    {
-      "id": "prod-senzafine",
-      "slNo": 2,
-      "name": "Falper Senzafine Vanity",
-      "brand": "Falper",
-      "category": "Bathroom Fittings",
-      "subcategory": "Vanities",
-      "shortCode": "BF 01",
-      "width": "1200mm",
-      "height": "850mm",
-      "depth": "500mm",
-      "measurementType": "mm",
-      "finish": "Matte White Lacquer",
-      "description": "Architectural Italian double vanity unit with integrated washbasin and soft-close drawers.",
-      "tags": [
-        "Luxury",
-        "Bathroom",
-        "Falper"
-      ],
-      "imageUrl": "/brands/brand_6_1.png",
-      "galleryImages": [
-        "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80"
-      ],
-      "catalogPdfUrl": "/catalogues/Formica/2024-FENIX-brochure-digital.pdf",
-      "qtyInStock": 5,
-      "price": 345000
-    },
-    {
       "id": "prod-antique-decking",
-      "slNo": 3,
       "name": "Antique Outdoor Pool Decking",
       "brand": "Newtech Wood",
-      "category": "Facade",
+      "category": "Cladding",
       "subcategory": "Decking",
       "shortCode": "NW 10",
       "width": "138mm",
       "height": "22.5mm",
       "depth": "2900mm",
-      "measurementType": "mm",
+      "thickness": "22.5mm",
       "finish": "Antique Grain",
       "description": "360-degree co-extruded capped composite decking with ultra-durable weather protection.",
       "tags": [
@@ -1080,14 +379,223 @@
         "WPC",
         "Outdoor"
       ],
-      "imageUrl": "/brands/newtechwood/product_p10_sa.png",
+      "imageUrl": "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?auto=format&fit=crop&w=1200&q=80",
       "galleryImages": [
-        "/brands/newtechwood/product_p14_eco.png",
-        "/brands/newtechwood/product_p14_ocean.png"
+        "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
       ],
       "catalogPdfUrl": "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf",
       "qtyInStock": 120,
-      "price": 680
+      "price": 680,
+      "finishOptions": [
+        {
+          "name": "Antique Ipe",
+          "hex": "#4a3b32"
+        },
+        {
+          "name": "Teak Wood",
+          "hex": "#8c764b"
+        },
+        {
+          "name": "Charcoal Grey",
+          "hex": "#2b3a4a"
+        }
+      ]
+    },
+    {
+      "id": "prod-mirage-elysian",
+      "name": "MIRAGE Elysian Travertine Slab",
+      "brand": "Mirage",
+      "category": "Tiles",
+      "subcategory": "Porcelain Slabs",
+      "shortCode": "MG 01",
+      "width": "1200mm",
+      "height": "2700mm",
+      "depth": "6mm",
+      "thickness": "6mm",
+      "finish": "Honed Travertine",
+      "description": "Italian porcelain marble slab reproducing authentic Roman travertine veining with matte honed tactile finish.",
+      "tags": [
+        "Porcelain",
+        "Travertine",
+        "Slab"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1200&q=80",
+      "galleryImages": [
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "qtyInStock": 45,
+      "price": 1250,
+      "finishOptions": [
+        {
+          "name": "Vein Cut Warm",
+          "hex": "#d4cfc7"
+        },
+        {
+          "name": "Cross Cut Light",
+          "hex": "#e8e2d9"
+        }
+      ]
+    },
+    {
+      "id": "prod-mafi-oak",
+      "name": "Mafi Oak Vulcano Natural Plank",
+      "brand": "mafi",
+      "category": "Wooden Flooring",
+      "subcategory": "Engineered Hardwood",
+      "shortCode": "MF 01",
+      "width": "240mm",
+      "height": "19mm",
+      "depth": "2400mm",
+      "thickness": "19mm",
+      "finish": "Natural White Oil",
+      "description": "Thermally treated Austrian oak plank with deep brushed texture and 100% natural oil finish.",
+      "tags": [
+        "Oak",
+        "Austrian Wood",
+        "Flooring"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?auto=format&fit=crop&w=1200&q=80",
+      "galleryImages": [
+        "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "qtyInStock": 80,
+      "price": 3400,
+      "finishOptions": [
+        {
+          "name": "Vulcano Medium",
+          "hex": "#6F4E37"
+        },
+        {
+          "name": "White Brushed",
+          "hex": "#D7C4B7"
+        }
+      ]
+    },
+    {
+      "id": "prod-fima-tapware",
+      "name": "FIMA Aesthetic Mixer Suite",
+      "brand": "fima Carlo Frattini",
+      "category": "Bathroom",
+      "subcategory": "Thermostatic Tapware",
+      "shortCode": "FM 02",
+      "width": "180mm",
+      "height": "220mm",
+      "depth": "150mm",
+      "thickness": "Brass",
+      "finish": "Rose Gold & Brushed Gunmetal",
+      "description": "Architectural thermostatic shower and basin mixer suite with progressive cartridge control.",
+      "tags": [
+        "Faucets",
+        "Italian Brass",
+        "Rose Gold"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+      "galleryImages": [
+        "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "qtyInStock": 25,
+      "price": 85000
+    },
+    {
+      "id": "prod-waltz-glide",
+      "name": "Waltz Wallways Motorized Partition",
+      "brand": "Waltz",
+      "category": "Doors",
+      "subcategory": "Sliding Systems",
+      "shortCode": "WB 05",
+      "width": "1500mm",
+      "height": "3000mm",
+      "depth": "45mm",
+      "thickness": "10mm Glass",
+      "finish": "Fluted Glass & Anodized Bronze",
+      "description": "Top-hung motorized architectural fluted glass partition system with soft magnetic closing.",
+      "tags": [
+        "Glass Door",
+        "Fluted",
+        "Motorized"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
+      "galleryImages": [
+        "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "qtyInStock": 12,
+      "price": 290000
+    },
+    {
+      "id": "prod-slashform-kitchen",
+      "name": "Slashform Terraige Living System",
+      "brand": "slashform™",
+      "category": "Surfaces",
+      "subcategory": "Modular Systems",
+      "shortCode": "SF 08",
+      "width": "3600mm",
+      "height": "2400mm",
+      "depth": "650mm",
+      "thickness": "20mm Ceramic",
+      "finish": "Greige Silk & Smoked Oak",
+      "description": "Seamless architectural island and tall cabinetry unit in liquid-patterned ceramic surface.",
+      "tags": [
+        "Kitchen",
+        "Ceramic",
+        "Italian"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80",
+      "galleryImages": [
+        "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "qtyInStock": 6,
+      "price": 1200000
+    },
+    {
+      "id": "prod-fenix-laminate",
+      "name": "FORMICA FENIX NTM Matte Surface",
+      "brand": "FORMICA®",
+      "category": "Surfaces",
+      "subcategory": "Nano-Tech Laminate",
+      "shortCode": "FC 04",
+      "width": "1300mm",
+      "height": "3050mm",
+      "depth": "1.2mm",
+      "thickness": "1.2mm",
+      "finish": "Anti-Fingerprint Super Matte",
+      "description": "Opaque matte nanotech material with thermal healing of superficial micro-scratches.",
+      "tags": [
+        "Nano Matte",
+        "HPL",
+        "Anti-Fingerprint"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
+      "galleryImages": [
+        "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "qtyInStock": 150,
+      "price": 4200
+    },
+    {
+      "id": "prod-inkiostro-wallpaper",
+      "name": "Inkiostro Bianco Golden Wall Surface",
+      "brand": "Inkiostro Bianco",
+      "category": "Surfaces",
+      "subcategory": "Decorative Wallcovering",
+      "shortCode": "IB 03",
+      "width": "Custom",
+      "height": "3000mm",
+      "depth": "1mm",
+      "thickness": "Fiberglass",
+      "finish": "Gold Leaf Texture",
+      "description": "Custom printed fiberglass wallcovering with waterproof coating for wet areas and feature walls.",
+      "tags": [
+        "Wallpaper",
+        "Gold Leaf",
+        "Waterproof"
+      ],
+      "imageUrl": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80",
+      "galleryImages": [
+        "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "qtyInStock": 30,
+      "price": 18500
     }
   ],
   "team": [
