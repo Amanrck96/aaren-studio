@@ -1,446 +1,917 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { Search, X, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ProductItem } from "@/lib/types";
 
-const PRODUCT_CATEGORIES = [
-  {
-    id: "plywood",
-    code: "PW",
-    num: "01",
-    name: "Plywood",
-    hero: "/categories/cat_1.png",
-    subcategories: ["Plywood PEEL PLY", "Blockboard PEEL PLY"],
-  },
-  {
-    id: "laminate",
-    code: "LM",
-    num: "02",
-    name: "Laminate",
-    hero: "/categories/cat_2.png",
-    subcategories: ["Veneers INCLASS", "Veneers ALPI", "Laminates INCLASS", "Decoratives INCLASS"],
-  },
-  {
-    id: "facade",
-    code: "FC",
-    num: "03",
-    name: "Facade",
-    hero: "/categories/cat_3.png",
-    subcategories: ["Wood Thermory", "Wood Tali Deck", "WPC NEWTECH"],
-  },
-  {
-    id: "wooden-flooring",
-    code: "WF",
-    num: "04",
-    name: "Wooden Flooring",
-    hero: "/categories/cat_4.png",
-    subcategories: ["Solid Curated", "Laminated Unique", "SPC Becker", "Engineered Mafi", "Designer Parkavanue"],
-  },
-  {
-    id: "screens",
-    code: "SS",
-    num: "05",
-    name: "Screens",
-    hero: "/categories/cat_5.png",
-    subcategories: ["Zipline"],
-  },
-  {
-    id: "door-system",
-    code: "DS",
-    num: "06",
-    name: "Door System",
-    hero: "/categories/cat_6.png",
-    subcategories: ["Aluminum System", "Slashform System"],
-  },
-  {
-    id: "doors",
-    code: "WD",
-    num: "07",
-    name: "Doors",
-    hero: "/categories/cat_7.png",
-    subcategories: ["Wooden Doors", "Laminated Doors"],
-  },
-  {
-    id: "windows",
-    code: "WW",
-    num: "08",
-    name: "Windows",
-    hero: "/categories/cat_8.png",
-    subcategories: ["Wooden Windows", "Aluminum Windows"],
-  },
-  {
-    id: "kitchen",
-    code: "KK",
-    num: "09",
-    name: "Kitchen",
-    hero: "/categories/cat_9.png",
-    subcategories: ["K+W", "Slashform K+W"],
-  },
-  {
-    id: "wardrobe",
-    code: "WW",
-    num: "10",
-    name: "Wardrobe",
-    hero: "/categories/cat_10.png",
-    subcategories: ["Freedom Screen", "Slashform D+W"],
-  },
-  {
-    id: "furniture",
-    code: "FF",
-    num: "11",
-    name: "Furniture",
-    hero: "/categories/cat_11.png",
-    subcategories: ["Furniture Madheke", "Furniture Tammma", "Millwork LOCO"],
-  },
-  {
-    id: "tiles",
-    code: "TL",
-    num: "12",
-    name: "Tiles",
-    hero: "/categories/cat_12.png",
-    subcategories: ["Floorings & Walls", "Decorative", "20mm Outdoor", "Terrazzo & Terracotta", "Swimming Pool", "Façade"],
-  },
-  {
-    id: "bathroom-fittings",
-    code: "BF",
-    num: "13",
-    name: "Bathroom Fittings",
-    hero: "/categories/cat_13.png",
-    subcategories: ["FIMA", "FALPER", "MILDUE"],
-  },
-  {
-    id: "sanitary-ware",
-    code: "SW",
-    num: "14",
-    name: "Sanitary Ware",
-    hero: "/categories/cat_14.png",
-    subcategories: ["IWW", "FLAMINIA", "ANTONIOLUPI"],
-  },
-  {
-    id: "mirrors",
-    code: "MR",
-    num: "15",
-    name: "Mirrors",
-    hero: "/categories/cat_15.png",
-    subcategories: ["Mira", "Accessories GELLI", "WALTZ by JB Glass"],
-  },
+// Categories data for Section 2
+const CATEGORIES_FILTER_LIST = [
+  { id: "All", label: "All", symbol: "A", count: 300 },
+  { id: "Decking", label: "Decking", symbol: "D", count: 45 },
+  { id: "Cladding", label: "Cladding", symbol: "C", count: 38 },
+  { id: "Surfaces", label: "Surfaces", symbol: "S", count: 90 },
+  { id: "Bathroom", label: "Bathroom", symbol: "B", count: 62 },
+  { id: "Flooring", label: "Flooring", symbol: "F", count: 55 },
+  { id: "Doors", label: "Doors", symbol: "W", count: 24 },
+  { id: "Kitchen", label: "Kitchen", symbol: "K", count: 18 },
+  { id: "Tiles", label: "Tiles", symbol: "T", count: 40 },
 ];
 
-export default function ProductsPage() {
-  const [categoriesList, setCategoriesList] = useState(PRODUCT_CATEGORIES);
+function ProductsContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  // URL state
+  const brandParam = searchParams.get("brand") || "";
+  const categoryParam = searchParams.get("category") || "All";
+  const queryParam = searchParams.get("q") || "";
+
+  // Local state
+  const [selectedBrands, setSelectedBrands] = useState<string[]>(
+    brandParam ? brandParam.split(",").map((s) => s.trim().toLowerCase()) : []
+  );
+  const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam);
+  const [searchQuery, setSearchQuery] = useState<string>(queryParam);
+  const [debouncedQuery, setDebouncedQuery] = useState<string>(queryParam);
+  const [sortOption, setSortOption] = useState<"featured" | "newest" | "az">("featured");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [showAllBrands, setShowAllBrands] = useState<boolean>(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
+
+  const [products, setProducts] = useState<ProductItem[]>([]);
+  const [brandsList, setBrandsList] = useState<{ id: string; name: string; count: number }[]>([]);
+
+  // Sync state with URL params when URL changes
   useEffect(() => {
-    fetch("/api/categories?t=" + Date.now(), { cache: "no-store" })
+    const bp = searchParams.get("brand") || "";
+    const cp = searchParams.get("category") || "All";
+    const qp = searchParams.get("q") || "";
+
+    setSelectedBrands(bp ? bp.split(",").map((s) => s.trim().toLowerCase()) : []);
+    setSelectedCategory(cp);
+    setSearchQuery(qp);
+    setDebouncedQuery(qp);
+  }, [searchParams]);
+
+  // Debounce search query 200ms
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 200);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  // Fetch products & brands from API
+  useEffect(() => {
+    fetch("/api/products?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
-        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setCategoriesList(
-            json.data.map((c: any, idx: number) => ({
-              id: c.slug || c.id || c.name.toLowerCase().replace(/\s+/g, "-"),
-              code: c.code ? c.code.split(" ")[0] : "PC",
-              num: c.sequenceNumber ? (c.sequenceNumber < 10 ? `0${c.sequenceNumber}` : `${c.sequenceNumber}`) : (idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`),
-              name: c.name,
-              hero: c.coverImage || c.hero || `/categories/cat_${(idx % 14) + 1}.png`,
-              subcategories: Array.isArray(c.subcategories) ? c.subcategories : ["Curated Collection"],
-            }))
-          );
+        if (json && json.success && Array.isArray(json.data)) {
+          setProducts(json.data);
+
+          // Calculate brand counts
+          const counts: Record<string, { name: string; count: number }> = {};
+          json.data.forEach((p: ProductItem) => {
+            const bName = p.brand || "Curated";
+            const bId = bName.toLowerCase().replace(/[^a-z0-9]/g, "-");
+            if (!counts[bId]) {
+              counts[bId] = { name: bName, count: 0 };
+            }
+            counts[bId].count += 1;
+          });
+
+          const list = Object.entries(counts).map(([id, val]) => ({
+            id,
+            name: val.name,
+            count: val.count,
+          }));
+          setBrandsList(list);
         }
       })
-      .catch((e) => console.error(e));
+      .catch((err) => console.error(err));
   }, []);
 
+  // Update URL params without page reload
+  const updateUrl = (newBrands: string[], newCat: string, newQ: string) => {
+    const params = new URLSearchParams();
+    if (newBrands.length > 0) params.set("brand", newBrands.join(","));
+    if (newCat && newCat !== "All") params.set("category", newCat);
+    if (newQ) params.set("q", newQ);
+
+    const queryString = params.toString();
+    const newPath = queryString ? `/products?${queryString}` : "/products";
+    router.push(newPath, { scroll: false });
+  };
+
+  // Toggle brand selection (multi-select)
+  const toggleBrand = (brandId: string) => {
+    const norm = brandId.toLowerCase();
+    let updated: string[];
+    if (selectedBrands.includes(norm)) {
+      updated = selectedBrands.filter((b) => b !== norm);
+    } else {
+      updated = [...selectedBrands, norm];
+    }
+    setSelectedBrands(updated);
+    setCurrentPage(1);
+    updateUrl(updated, selectedCategory, debouncedQuery);
+  };
+
+  // Single-select category
+  const selectCategory = (catId: string) => {
+    setSelectedCategory(catId);
+    setCurrentPage(1);
+    updateUrl(selectedBrands, catId, debouncedQuery);
+  };
+
+  // Search input change handler
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setCurrentPage(1);
+    updateUrl(selectedBrands, selectedCategory, val);
+  };
+
+  // Clear single filter
+  const removeBrandFilter = (brandId: string) => {
+    const updated = selectedBrands.filter((b) => b !== brandId);
+    setSelectedBrands(updated);
+    setCurrentPage(1);
+    updateUrl(updated, selectedCategory, debouncedQuery);
+  };
+
+  // Clear all filters
+  const clearAllFilters = () => {
+    setSelectedBrands([]);
+    setSelectedCategory("All");
+    setSearchQuery("");
+    setDebouncedQuery("");
+    setCurrentPage(1);
+    router.push("/products", { scroll: false });
+  };
+
+  // Filter products
+  const filteredProducts = useMemo(() => {
+    return products.filter((p) => {
+      const normBrand = (p.brand || "").toLowerCase().replace(/[^a-z0-9]/g, "-");
+      const normName = (p.name || "").toLowerCase();
+      const normCat = (p.category || "").toLowerCase();
+
+      // Brand filter
+      const matchesBrand =
+        selectedBrands.length === 0 ||
+        selectedBrands.some((sb) => normBrand.includes(sb) || sb.includes(normBrand));
+
+      // Category filter
+      const matchesCategory =
+        selectedCategory === "All" ||
+        normCat.includes(selectedCategory.toLowerCase()) ||
+        selectedCategory.toLowerCase().includes(normCat);
+
+      // Query filter
+      const matchesQuery =
+        !debouncedQuery ||
+        normName.includes(debouncedQuery.toLowerCase()) ||
+        p.brand.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+        normCat.includes(debouncedQuery.toLowerCase()) ||
+        (p.description && p.description.toLowerCase().includes(debouncedQuery.toLowerCase()));
+
+      return matchesBrand && matchesCategory && matchesQuery;
+    });
+  }, [products, selectedBrands, selectedCategory, debouncedQuery]);
+
+  // Sort products
+  const sortedProducts = useMemo(() => {
+    const list = [...filteredProducts];
+    if (sortOption === "newest") {
+      return list.reverse();
+    }
+    if (sortOption === "az") {
+      return list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return list;
+  }, [filteredProducts, sortOption]);
+
+  // Pagination (12 per page)
+  const pageSize = 12;
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / pageSize));
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return sortedProducts.slice(start, start + pageSize);
+  }, [sortedProducts, currentPage]);
+
+  const visibleBrands = showAllBrands ? brandsList : brandsList.slice(0, 7);
+
   return (
-    <div className="products-page">
-
-      {/* ── Page Header ── */}
-      <div className="products-header">
-        <div className="products-header__inner">
-          <div className="products-header__meta t-tag" style={{ color: "rgba(0,0,0,0.4)", marginBottom: "2.4rem" }}>
-            PRODUCT CATEGORIES — {categoriesList.length} CATEGORIES
-          </div>
-          <h1 className="products-header__title">Products</h1>
-          <p className="products-header__desc t-body" style={{ color: "rgba(0,0,0,0.5)", maxWidth: "52rem" }}>
-            A curated catalog of premium architectural materials, surfaces, hardware, and wellness solutions — sourced from the world&apos;s finest manufacturers.
-          </p>
-        </div>
-      </div>
-
-      {/* ── Category Grid — Madheke Editorial 2-Column Style ── */}
-      <div className="ma-container">
-        <div className="ma-grid">
-          {categoriesList.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/products/${cat.id}`}
-              className="ma-card"
-              id={`product-card-${cat.id}`}
-            >
-              {/* Image with hover overlay */}
-              <div className="ma-card-fig-wrap">
-                <Image
-                  src={cat.hero}
-                  alt={cat.name}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="ma-img"
-                  style={{ objectFit: "cover" }}
-                />
-                <div className="ma-hover-overlay">
-                  <span className="ma-view-btn">EXPLORE CATEGORY →</span>
-                </div>
-                <div className="ma-badge-num">{cat.num}</div>
-              </div>
-
-              {/* Editorial Info */}
-              <div className="ma-card-info">
-                <div className="ma-card-header">
-                  <h3 className="ma-card-title">{cat.name}</h3>
-                  <span className="ma-card-code">{cat.code}</span>
-                </div>
-                <span className="ma-card-meta">
-                  {cat.subcategories.length} LINES · {cat.subcategories.slice(0, 3).join(" · ")}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* ── CTA ── */}
-      <div className="products-cta">
-        <p className="products-cta__text">
-          Interested in our materials? Let&apos;s talk specifications, samples, and project timelines.
+    <div className="products-container">
+      {/* ── PAGE HEADER ── */}
+      <div className="products-page-header">
+        <div className="eyebrow">AAREN Studio</div>
+        <h1 className="title">Products</h1>
+        <p className="subtitle">
+          All materials, surfaces and systems — {products.length}+ products across {brandsList.length || 16} brands
         </p>
-        <Link href="/contact" className="ul-link t-cta-1" id="products-cta-consultation">
-          Request Consultation →
-        </Link>
       </div>
 
-      <style>{`
-        /* ── Approved 03 Madheke Editorial Products Page ── */
-        .products-page {
-          background: #faf8f5;
-          color: #1e1e1e;
+      {/* ── MOBILE FILTER TOGGLE BUTTON ── */}
+      <div className="mobile-filter-bar">
+        <button
+          className="mobile-filter-btn"
+          onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+        >
+          <SlidersHorizontal size={14} />
+          <span>Filters {selectedBrands.length > 0 || selectedCategory !== "All" ? `(${selectedBrands.length + (selectedCategory !== "All" ? 1 : 0)})` : ""}</span>
+        </button>
+      </div>
+
+      {/* ── LAYOUT: TWO-COLUMN (SIDEBAR + MAIN) ── */}
+      <div className="products-layout">
+        {/* ── LEFT SIDEBAR (200px fixed, sticky on scroll) ── */}
+        <aside className={`products-sidebar ${mobileSidebarOpen ? "is-open" : ""}`}>
+          {/* Section 1: BRAND FILTER */}
+          <div className="sidebar-section">
+            <div className="sidebar-label">Brand</div>
+            <div className="brand-list">
+              {visibleBrands.map((b) => {
+                const isActive = selectedBrands.includes(b.id);
+                return (
+                  <button
+                    key={b.id}
+                    className={`brand-item ${isActive ? "active" : ""}`}
+                    onClick={() => toggleBrand(b.id)}
+                  >
+                    <span className={`dot ${isActive ? "filled" : "hollow"}`} />
+                    <span className="brand-name">{b.name}</span>
+                    <span className="brand-count">{b.count}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {brandsList.length > 7 && (
+              <button
+                className="toggle-more-brands"
+                onClick={() => setShowAllBrands(!showAllBrands)}
+              >
+                {showAllBrands ? "— Show less" : `+ ${brandsList.length - 7} more brands`}
+              </button>
+            )}
+          </div>
+
+          {/* Section 2: CATEGORY FILTER */}
+          <div className="sidebar-section" style={{ marginTop: "24px" }}>
+            <div className="sidebar-label">Category</div>
+            <div className="category-stack">
+              {CATEGORIES_FILTER_LIST.map((cat) => {
+                const isActive = selectedCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    className={`cat-btn ${isActive ? "active" : ""}`}
+                    onClick={() => selectCategory(cat.id)}
+                  >
+                    <span className="cat-circle">{cat.symbol}</span>
+                    <span className="cat-text">{cat.label}</span>
+                    <span className="cat-badge">{cat.count}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </aside>
+
+        {/* ── MAIN AREA ── */}
+        <main className="products-main">
+          {/* Top Bar */}
+          <div className="top-bar">
+            <div className="search-box">
+              <Search size={14} className="search-icon" />
+              <input
+                className="search-input"
+                placeholder="Search products..."
+                type="text"
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
+              />
+            </div>
+
+            <div className="sort-box">
+              <select
+                className="sort-select"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value as any)}
+              >
+                <option value="featured">Featured</option>
+                <option value="newest">Newest</option>
+                <option value="az">A–Z</option>
+              </select>
+            </div>
+
+            <div className="result-count">
+              Showing {sortedProducts.length > 0 ? (currentPage - 1) * pageSize + 1 : 0}–
+              {Math.min(currentPage * pageSize, sortedProducts.length)} of {sortedProducts.length}
+            </div>
+          </div>
+
+          {/* Active Filter Tags */}
+          {(selectedBrands.length > 0 || selectedCategory !== "All" || debouncedQuery) && (
+            <div className="active-filter-tags">
+              {selectedBrands.map((bId) => {
+                const bObj = brandsList.find((b) => b.id === bId);
+                const label = bObj ? bObj.name : bId;
+                return (
+                  <span key={bId} className="filter-pill">
+                    {label}
+                    <X size={12} className="remove-icon" onClick={() => removeBrandFilter(bId)} />
+                  </span>
+                );
+              })}
+
+              {selectedCategory !== "All" && (
+                <span className="filter-pill">
+                  {selectedCategory}
+                  <X size={12} className="remove-icon" onClick={() => selectCategory("All")} />
+                </span>
+              )}
+
+              {debouncedQuery && (
+                <span className="filter-pill">
+                  &quot;{debouncedQuery}&quot;
+                  <X size={12} className="remove-icon" onClick={() => handleSearchChange("")} />
+                </span>
+              )}
+
+              <button className="clear-all-btn" onClick={clearAllFilters}>
+                Clear all
+              </button>
+            </div>
+          )}
+
+          {/* Product Grid */}
+          <div className="product-grid">
+            {paginatedProducts.length === 0 ? (
+              <div className="no-results">
+                <p>No products match your current filters.</p>
+                <button onClick={clearAllFilters} className="reset-btn">
+                  Clear Filters
+                </button>
+              </div>
+            ) : (
+              paginatedProducts.map((prod) => {
+                const prodSlug = prod.id || prod.name.toLowerCase().replace(/\s+/g, "-");
+                const coverColor = (prod as any).coverColor || "#e2e8f0";
+
+                return (
+                  <Link href={`/products/${prodSlug}`} key={prod.id} className="product-card">
+                    <div className="card-image-wrap" style={{ background: coverColor }}>
+                      {prod.imageUrl && prod.imageUrl !== "/brands/brand_1_1.png" ? (
+                        <Image
+                          src={prod.imageUrl}
+                          alt={prod.name}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="card-img"
+                          style={{ objectFit: "cover" }}
+                          loading="lazy"
+                        />
+                      ) : null}
+                    </div>
+
+                    <div className="card-content">
+                      <div className="brand-name-tag">{prod.brand || "AAREN"}</div>
+                      <div className="product-title">{prod.name}</div>
+                      <div className="category-pill">
+                        <span>{prod.category}</span>
+                        <ChevronRight size={10} />
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })
+            )}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className="page-btn"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              >
+                Prev
+              </button>
+
+              {Array.from({ length: totalPages }).map((_, i) => {
+                const pageNum = i + 1;
+                return (
+                  <button
+                    key={pageNum}
+                    className={`page-num-btn ${currentPage === pageNum ? "active" : ""}`}
+                    onClick={() => setCurrentPage(pageNum)}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
+              <button
+                className="page-btn"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </main>
+      </div>
+
+      <style jsx global>{`
+        :root {
+          --surface-0: #f8fafc;
+          --surface-1: #ffffff;
+          --surface-2: #f1f5f9;
+          --border: #e2e8f0;
+          --border-strong: #cbd5e1;
+          --text-primary: #0f172a;
+          --text-secondary: #475569;
+          --text-muted: #94a3b8;
+          --radius: 6px;
+        }
+
+        .products-container {
+          background: var(--surface-0);
+          color: var(--text-primary);
           min-height: 100vh;
-          padding-top: 8rem;
-          font-family: var(--font-jost), 'Jost', sans-serif !important;
+          padding-top: 5rem;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        .products-header {
-          padding: 6rem 1.6rem 3.5rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.1);
-          max-width: 1320px;
-          margin: 0 auto;
+        .products-page-header {
+          padding: 48px 32px 24px;
+          border-bottom: 0.5px solid var(--border);
+          background: #ffffff;
         }
 
-        @media (min-width: 768px) {
-          .products-header {
-            padding: 8rem 2rem 4rem;
-          }
-        }
-
-        .products-header__title {
-          font-family: var(--font-jost), 'Jost', sans-serif !important;
-          font-size: clamp(4.5rem, 12vw, 14rem);
-          font-weight: 400;
-          letter-spacing: -0.04em;
-          line-height: 0.9;
+        .products-page-header .eyebrow {
+          font-size: 11px;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: #1a1a1a;
-          margin-bottom: 2rem;
+          color: #8c764b;
+          font-weight: 700;
+          margin-bottom: 8px;
         }
 
-        .products-header__desc {
-          font-family: var(--font-jost), 'Jost', sans-serif !important;
-          font-size: clamp(1.5rem, 2.2vw, 2.1rem);
-          line-height: 1.5;
-          color: rgba(0,0,0,0.6);
-          font-style: italic;
-          max-width: 68rem;
+        .products-page-header .title {
+          font-size: 30px;
+          font-family: Georgia, serif;
+          font-weight: 500;
+          letter-spacing: -0.02em;
+          color: var(--text-primary);
         }
 
-        /* ── Madheke Grid Container ── */
-        .ma-container {
-          max-width: 1320px;
-          margin: 0 auto;
-          padding: 4rem 1.6rem 8rem;
+        .products-page-header .subtitle {
+          font-size: 13px;
+          color: var(--text-secondary);
+          margin-top: 6px;
         }
 
-        @media (min-width: 768px) {
-          .ma-container {
-            padding: 5rem 2rem 8rem;
-          }
+        .mobile-filter-bar {
+          display: none;
+          padding: 12px 16px;
+          border-bottom: 0.5px solid var(--border);
+          background: #ffffff;
         }
 
-        .ma-grid {
+        .mobile-filter-btn {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12px;
+          font-weight: 600;
+          padding: 8px 14px;
+          border: 0.5px solid var(--border);
+          border-radius: var(--radius);
+          background: var(--surface-2);
+          cursor: pointer;
+        }
+
+        .products-layout {
           display: grid;
-          grid-template-columns: 1fr;
-          gap: 4rem 3rem;
+          grid-template-columns: 200px 1fr;
+          min-height: 80vh;
         }
 
-        @media (min-width: 768px) {
-          .ma-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
+        /* ── SIDEBAR ── */
+        .products-sidebar {
+          width: 200px;
+          padding: 24px 16px;
+          border-right: 0.5px solid var(--border);
+          background: #ffffff;
+          position: sticky;
+          top: 5rem;
+          height: calc(100vh - 5rem);
+          overflow-y: auto;
         }
 
-        /* ── Madheke Card ── */
-        .ma-card {
+        .sidebar-label {
+          font-size: 10px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+          font-weight: 700;
+          margin-bottom: 12px;
+        }
+
+        .brand-list {
           display: flex;
           flex-direction: column;
-          text-decoration: none;
-          color: inherit;
-          background: #ffffff;
-          border: 0.1rem solid rgba(0,0,0,0.08);
-          overflow: hidden;
-          transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+          gap: 8px;
         }
 
-        .ma-card:hover {
-          transform: translateY(-0.4rem);
-          box-shadow: 0 1.6rem 4rem rgba(0,0,0,0.08);
+        .brand-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 4px 0;
+          text-align: left;
+          width: 100%;
         }
 
-        .ma-card-fig-wrap {
-          position: relative;
-          height: 32rem;
-          background: #1a1a1a;
-          overflow: hidden;
+        .brand-item .dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          flex-shrink: 0;
         }
 
-        @media (min-width: 768px) {
-          .ma-card-fig-wrap {
-            height: 38rem;
-          }
+        .brand-item .dot.filled {
+          background: var(--text-primary);
         }
 
-        @media (min-width: 1200px) {
-          .ma-card-fig-wrap {
-            height: 44rem;
-          }
+        .brand-item .dot.hollow {
+          border: 1px solid var(--text-muted);
         }
 
-        .ma-img {
-          transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) !important;
+        .brand-item .brand-name {
+          font-size: 12px;
+          color: var(--text-secondary);
+          flex: 1;
         }
 
-        .ma-card:hover .ma-img {
-          transform: scale(1.05);
+        .brand-item.active .brand-name {
+          color: var(--text-primary);
+          font-weight: 700;
         }
 
-        .ma-hover-overlay {
-          position: absolute;
-          inset: 0;
-          background: rgba(0,0,0,0.35);
+        .brand-item .brand-count {
+          font-size: 10px;
+          color: var(--text-muted);
+        }
+
+        .toggle-more-brands {
+          margin-top: 10px;
+          background: none;
+          border: none;
+          font-size: 11px;
+          color: #8c764b;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0;
+        }
+
+        /* Category Stack */
+        .category-stack {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .cat-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 6px 8px;
+          border-radius: 20px;
+          transition: background 0.15s ease;
+          width: 100%;
+          text-align: left;
+        }
+
+        .cat-btn:hover {
+          background: var(--surface-2);
+        }
+
+        .cat-btn.active {
+          background: var(--text-primary);
+          color: #ffffff;
+        }
+
+        .cat-circle {
+          width: 22px;
+          height: 22px;
+          border-radius: 50%;
+          border: 1px solid var(--border);
           display: flex;
           align-items: center;
           justify-content: center;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          backdrop-filter: blur(2px);
-        }
-
-        .ma-card:hover .ma-hover-overlay {
-          opacity: 1;
-        }
-
-        .ma-view-btn {
-          font-family: var(--font-jost), 'Jost', sans-serif !important;
-          font-size: 1.1rem;
+          font-size: 10px;
           font-weight: 700;
-          letter-spacing: 0.15em;
+          flex-shrink: 0;
+        }
+
+        .cat-btn.active .cat-circle {
+          background: #ffffff;
+          color: var(--text-primary);
+          border-color: #ffffff;
+        }
+
+        .cat-text {
+          font-size: 12px;
+          color: var(--text-secondary);
+          flex: 1;
+        }
+
+        .cat-btn.active .cat-text {
           color: #ffffff;
-          background: rgba(0,0,0,0.8);
-          padding: 1rem 2rem;
-          border: 0.1rem solid rgba(255,255,255,0.3);
-          border-radius: 999px;
+          font-weight: 600;
         }
 
-        .ma-badge-num {
+        .cat-badge {
+          font-size: 10px;
+          color: var(--text-muted);
+        }
+
+        .cat-btn.active .cat-badge {
+          color: rgba(255,255,255,0.7);
+        }
+
+        /* ── MAIN AREA ── */
+        .products-main {
+          padding: 24px 32px;
+          background: var(--surface-0);
+        }
+
+        .top-bar {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 16px;
+          flex-wrap: wrap;
+        }
+
+        .search-box {
+          flex: 1;
+          min-width: 200px;
+          position: relative;
+        }
+
+        .search-box :global(.search-icon) {
           position: absolute;
-          top: 1.6rem;
-          right: 1.6rem;
-          font-family: var(--font-jost), 'Jost', sans-serif !important;
-          font-size: 1.1rem;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          background: rgba(250, 248, 245, 0.92);
-          color: #000000;
-          padding: 0.4rem 1rem;
-          border-radius: 0.4rem;
+          left: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--text-muted);
         }
 
-        .ma-card-info {
-          padding: 2.4rem;
+        .search-input {
+          width: 100%;
+          padding: 8px 12px 8px 32px;
+          font-size: 13px;
+          border: 0.5px solid var(--border);
+          border-radius: var(--radius);
+          background: #ffffff;
+          outline: none;
+        }
+
+        .sort-select {
+          padding: 8px 12px;
+          font-size: 12px;
+          border: 0.5px solid var(--border);
+          border-radius: var(--radius);
+          background: #ffffff;
+          outline: none;
+          cursor: pointer;
+        }
+
+        .result-count {
+          font-size: 12px;
+          color: var(--text-muted);
+          margin-left: auto;
+          white-space: nowrap;
+        }
+
+        /* Filter Tags */
+        .active-filter-tags {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 20px;
+          flex-wrap: wrap;
+        }
+
+        .filter-pill {
+          font-size: 11px;
+          background: #ffffff;
+          border: 0.5px solid var(--border);
+          border-radius: 16px;
+          padding: 4px 10px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: var(--text-secondary);
+        }
+
+        .filter-pill :global(.remove-icon) {
+          cursor: pointer;
+          color: var(--text-muted);
+        }
+
+        .filter-pill :global(.remove-icon):hover {
+          color: var(--text-primary);
+        }
+
+        .clear-all-btn {
+          font-size: 11px;
+          color: #8c764b;
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-weight: 600;
+          margin-left: 4px;
+        }
+
+        /* Product Grid (Hairline Border 3 Columns) */
+        .product-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1px;
+          background: var(--border);
+          border: 0.5px solid var(--border);
+          border-radius: 6px;
+          overflow: hidden;
+        }
+
+        .product-card {
+          background: var(--surface-2);
+          text-decoration: none;
+          color: inherit;
           display: flex;
           flex-direction: column;
-          gap: 0.8rem;
+          transition: background 0.15s ease;
+        }
+
+        .product-card:hover {
+          background: var(--surface-1);
+        }
+
+        .card-image-wrap {
+          aspect-ratio: 1;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .card-img {
+          transition: transform 0.4s ease;
+        }
+
+        .product-card:hover .card-img {
+          transform: scale(1.04);
+        }
+
+        .card-content {
+          padding: 14px 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .brand-name-tag {
+          font-size: 9px;
+          text-transform: uppercase;
+          color: var(--text-muted);
+          letter-spacing: 0.08em;
+          font-weight: 600;
+        }
+
+        .product-title {
+          font-size: 13px;
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+
+        .category-pill {
+          margin-top: 6px;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 10px;
+          color: var(--text-secondary);
+          background: var(--surface-0);
+          border: 0.5px solid var(--border);
+          padding: 2px 8px;
+          border-radius: 12px;
+          width: fit-content;
+        }
+
+        /* Pagination */
+        .pagination {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          margin-top: 36px;
+        }
+
+        .page-btn, .page-num-btn {
+          font-size: 12px;
+          padding: 6px 12px;
+          border: 0.5px solid var(--border);
+          border-radius: var(--radius);
+          background: #ffffff;
+          cursor: pointer;
+          color: var(--text-secondary);
+        }
+
+        .page-btn:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+
+        .page-num-btn.active {
+          background: var(--text-primary);
+          color: #ffffff;
+          border-color: var(--text-primary);
+        }
+
+        .no-results {
+          grid-column: 1 / -1;
+          padding: 48px;
+          text-align: center;
           background: #ffffff;
         }
 
-        .ma-card-header {
-          display: flex;
-          align-items: baseline;
-          justify-content: space-between;
-          gap: 1.6rem;
+        .no-results p {
+          font-size: 14px;
+          color: var(--text-muted);
+          margin-bottom: 12px;
         }
 
-        .ma-card-title {
-          font-family: var(--font-jost), 'Jost', sans-serif !important;
-          font-size: clamp(2rem, 3.2vw, 2.8rem);
-          font-weight: 600;
-          letter-spacing: -0.02em;
-          color: #1a1a1a;
-          margin: 0;
+        .reset-btn {
+          font-size: 12px;
+          padding: 8px 16px;
+          background: #8c764b;
+          color: #ffffff;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
         }
 
-        .ma-card-code {
-          font-family: var(--font-jost), 'Jost', sans-serif !important;
-          font-size: 1.4rem;
-          font-weight: 800;
-          color: rgba(0,0,0,0.3);
-          letter-spacing: 0.05em;
+        @media (max-width: 1024px) {
+          .product-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        .ma-card-meta {
-          font-family: var(--font-jost), 'Jost', sans-serif !important;
-          font-size: 1.1rem;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: rgba(0,0,0,0.45);
-        }
+        @media (max-width: 768px) {
+          .products-layout { grid-template-columns: 1fr; }
+          .mobile-filter-bar { display: block; }
 
-        /* ── CTA ── */
-        .products-cta {
-          max-width: 1320px;
-          margin: 0 auto;
-          padding: 6rem 1.6rem 10rem;
-          border-top: 0.1rem solid rgba(0,0,0,0.1);
-          display: flex;
-          flex-direction: column;
-          gap: 2.4rem;
-        }
-
-        @media (min-width: 768px) {
-          .products-cta {
-            padding: 8rem 2rem 10rem;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
+          .products-sidebar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 100;
           }
-        }
 
-        .products-cta__text {
-          font-family: var(--font-jost), 'Jost', sans-serif !important;
-          font-size: clamp(1.6rem, 2.2vw, 2.2rem);
-          font-style: italic;
-          color: rgba(0,0,0,0.7);
-          max-width: 52rem;
-          line-height: 1.4;
+          .products-sidebar.is-open {
+            display: block;
+          }
+
+          .product-grid { grid-template-columns: 1fr; }
+          .products-main { padding: 16px; }
         }
       `}</style>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: "100px 32px", textAlign: "center" }}>Loading Products...</div>}>
+      <ProductsContent />
+    </Suspense>
   );
 }

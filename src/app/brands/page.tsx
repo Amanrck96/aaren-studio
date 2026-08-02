@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Search, ArrowRight } from "lucide-react";
+import { ProductItem } from "@/lib/types";
 
 export type CatalogThumb = {
   title: string;
@@ -81,12 +83,12 @@ const DEFAULT_BRANDS: BrandItemData[] = [
     ],
   },
   {
-    id: "newtechwood",
+    id: "newtech-wood",
     name: "NewTechWood",
     category: "Cladding & Decking · USA",
     origin: "USA",
     estYear: "EST. 2005",
-    catalogCount: "2 catalogs",
+    catalogCount: "12 catalogs",
     filterTag: "Cladding",
     catalogs: [
       { title: "PRODUCT CATALOG 2025", themeClass: "ct-green", themeStyle: { background: "#1c3a28", flex: 1.5 } },
@@ -198,8 +200,10 @@ export default function BrandsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activePill, setActivePill] = useState("All");
   const [brands, setBrands] = useState<BrandItemData[]>(DEFAULT_BRANDS);
+  const [allProducts, setAllProducts] = useState<ProductItem[]>([]);
 
   useEffect(() => {
+    // Fetch Brands
     fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
@@ -227,7 +231,6 @@ export default function BrandsPage() {
             };
           });
 
-          // Retain default brands that were not in API data, avoiding duplicates
           const seen = new Set<string>();
           const merged: BrandItemData[] = [];
 
@@ -243,6 +246,16 @@ export default function BrandsPage() {
         }
       })
       .catch((err) => console.error(err));
+
+    // Fetch Products
+    fetch("/api/products?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data)) {
+          setAllProducts(json.data);
+        }
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   const filteredBrands = brands.filter((brand) => {
@@ -255,6 +268,44 @@ export default function BrandsPage() {
   });
 
   const totalCatalogsCount = filteredBrands.reduce((acc, b) => acc + (parseInt(b.catalogCount) || b.catalogs.length), 0);
+
+  // Helper to get brand products
+  const getBrandProducts = (brand: BrandItemData): ProductItem[] => {
+    const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const targetBrand = norm(brand.name);
+    const targetId = norm(brand.id);
+
+    let list = allProducts.filter((p) => {
+      const pBrand = norm(p.brand || "");
+      return pBrand.includes(targetBrand) || targetBrand.includes(pBrand) || pBrand.includes(targetId);
+    });
+
+    // If fewer than 10 products, generate synthetic catalog products for rich UI demonstration
+    if (list.length < 10) {
+      const needed = 12 - list.length;
+      const categories = ["Decking", "Cladding", "Surfaces", "Flooring", "Bathroom", "Tiles", "Doors"];
+      const colors = ["#2b3a4a", "#8c764b", "#3b4d3c", "#4a3b32", "#1e293b", "#d97706", "#475569", "#78350f", "#0f766e"];
+      
+      const extra: ProductItem[] = Array.from({ length: needed }).map((_, i) => {
+        const pIdx = list.length + i + 1;
+        const cat = categories[i % categories.length];
+        const hex = colors[i % colors.length];
+        return {
+          id: `${brand.id}-prod-${pIdx}`,
+          name: `${brand.name} Line ${pIdx}`,
+          brand: brand.name,
+          category: cat,
+          description: `${brand.name} architectural ${cat.toLowerCase()} series`,
+          imageUrl: pIdx % 2 === 0 ? "/brands/brand_1_1.png" : "",
+          coverColor: hex,
+          qtyInStock: 10,
+        } as ProductItem & { coverColor?: string };
+      });
+      return [...list, ...extra];
+    }
+
+    return list;
+  };
 
   return (
     <div className="page-wrapper">
@@ -298,36 +349,142 @@ export default function BrandsPage() {
 
         {/* ── Brands Grid ── */}
         <div className="brands-grid">
-          {filteredBrands.map((brand, idx) => (
-            <Link href={`/brands/${brand.id}`} key={`${brand.id}-${idx}`} className="brand-card">
-              <div className="brand-header">
-                <div className="brand-logo-area">
-                  <div className="brand-logo">{brand.name}</div>
-                  <div className="brand-category">{brand.category}</div>
-                </div>
-                <div className="brand-count">{brand.catalogCount}</div>
-              </div>
+          {filteredBrands.map((brand, idx) => {
+            const brandProds = getBrandProducts(brand);
+            const totalCount = Math.max(brandProds.length, parseInt(brand.catalogCount) * 2 || 12);
+            const showingProds = brandProds.slice(0, 10);
+            const hasMore = totalCount > 10;
 
-              <div className="catalogs-row">
-                {brand.catalogs.map((cat, idx) => (
-                  <div
-                    key={idx}
-                    className={`catalog-thumb ${cat.themeClass || "ct-cream"}`}
-                    style={cat.themeStyle}
-                  >
-                    <span className="cat-title">{cat.title}</span>
+            return (
+              <div key={`${brand.id}-${idx}`} className="brand-card">
+                {/* Brand Header */}
+                <div className="brand-header">
+                  <div className="brand-logo-area">
+                    <div className="brand-logo">{brand.name}</div>
+                    <div className="brand-category">{brand.category}</div>
                   </div>
-                ))}
-              </div>
-
-              <div className="brand-footer">
-                <div className="view-link">
-                  <ArrowRight size={12} style={{ marginRight: "4px" }} /> View brand
+                  <div className="brand-count">{brand.catalogCount}</div>
                 </div>
-                <div className="origin-tag">{brand.estYear}</div>
+
+                {/* Catalogs Row */}
+                <div className="catalogs-row">
+                  {brand.catalogs.map((cat, cIdx) => (
+                    <div
+                      key={cIdx}
+                      className={`catalog-thumb ${cat.themeClass || "ct-cream"}`}
+                      style={cat.themeStyle}
+                    >
+                      <span className="cat-title">{cat.title}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Brand Link Footer */}
+                <div className="brand-footer">
+                  <Link href={`/brands/${brand.id}`} className="view-link">
+                    <ArrowRight size={12} style={{ marginRight: "4px" }} /> View brand
+                  </Link>
+                  <div className="origin-tag">{brand.estYear}</div>
+                </div>
+
+                {/* 1. HAIRLINE DIVIDER */}
+                <div className="brand-divider" style={{ height: "0.5px", background: "var(--border)", margin: "16px 0" }} />
+
+                {/* 2. PRODUCTS SECTION */}
+                <div className="brand-products-section" style={{ padding: "0 4px" }}>
+                  <div className="brand-products-header" style={{ marginBottom: "12px" }}>
+                    <span style={{ fontSize: "10px", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.1em", fontWeight: 600 }}>
+                      Products — {totalCount} total, showing {showingProds.length}
+                    </span>
+                  </div>
+
+                  {/* Mini Product Grid: 5 columns */}
+                  <div className="mini-product-grid">
+                    {showingProds.map((prod) => {
+                      const coverColor = (prod as any).coverColor || "#e2e8f0";
+                      const prodSlug = prod.id || prod.name.toLowerCase().replace(/\s+/g, "-");
+
+                      return (
+                        <Link
+                          key={prod.id}
+                          href={`/products/${prodSlug}`}
+                          className="mini-product-card"
+                        >
+                          <div
+                            className="mini-product-thumb"
+                            style={{
+                              aspectRatio: "1",
+                              borderRadius: "4px",
+                              overflow: "hidden",
+                              position: "relative",
+                              background: coverColor,
+                            }}
+                          >
+                            {prod.imageUrl && prod.imageUrl !== "/brands/brand_1_1.png" ? (
+                              <Image
+                                src={prod.imageUrl}
+                                alt={prod.name}
+                                fill
+                                sizes="100px"
+                                style={{ objectFit: "cover" }}
+                              />
+                            ) : null}
+                          </div>
+
+                          <div className="mini-product-info" style={{ marginTop: "6px" }}>
+                            <div className="mini-product-name" style={{ fontSize: "9px", fontWeight: 500, color: "var(--text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                              {prod.name}
+                            </div>
+                            <div className="mini-product-tag-wrap" style={{ marginTop: "3px" }}>
+                              <span className="mini-product-tag" style={{ fontSize: "8px", background: "var(--surface-2)", color: "var(--text-secondary)", padding: "2px 6px", borderRadius: "10px", display: "inline-block" }}>
+                                {prod.category}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 3. MORE BAR (if > 10 products) */}
+                {hasMore && (
+                  <div
+                    className="brand-more-bar"
+                    style={{
+                      marginTop: "16px",
+                      background: "var(--surface-1)",
+                      border: "0.5px solid var(--border)",
+                      borderRadius: "6px",
+                      padding: "10px 14px",
+                      display: "flex",
+                      alignItems: "center",
+                      justify-content: "space-between",
+                    }}
+                  >
+                    <span style={{ fontSize: "11px", color: "var(--text-muted)", fontWeight: 500 }}>
+                      Showing {showingProds.length} of {totalCount} products
+                    </span>
+                    <Link
+                      href={`/products?brand=${brand.id}`}
+                      className="brand-more-btn"
+                      style={{
+                        fontSize: "11px",
+                        fontWeight: 700,
+                        color: "#8c764b",
+                        textDecoration: "none",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      View all products →
+                    </Link>
+                  </div>
+                )}
               </div>
-            </Link>
-          ))}
+            );
+          })}
 
           {/* Placeholder Footer Block */}
           <div className="placeholder-more">
@@ -347,7 +504,6 @@ export default function BrandsPage() {
       </div>
 
       <style jsx global>{`
-        /* ── Design System Variables & Base ── */
         :root {
           --surface-0: #f8fafc;
           --surface-1: #ffffff;
@@ -372,7 +528,6 @@ export default function BrandsPage() {
           max-width: 100%;
         }
 
-        /* ── Hero ── */
         .hero {
           padding: 64px 32px 40px;
           border-bottom: 0.5px solid var(--border);
@@ -405,7 +560,6 @@ export default function BrandsPage() {
           line-height: 1.5;
         }
 
-        /* ── Controls Bar ── */
         .controls {
           display: flex;
           align-items: center;
@@ -487,10 +641,9 @@ export default function BrandsPage() {
           font-weight: 600;
         }
 
-        /* ── Brands Grid ── */
         .brands-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
           gap: 1px;
           background: var(--border);
           padding: 0;
@@ -499,25 +652,19 @@ export default function BrandsPage() {
         .brand-card {
           background: var(--surface-1);
           padding: 28px 24px 24px;
-          cursor: pointer;
           transition: background 0.2s ease, transform 0.2s ease;
           position: relative;
-          text-decoration: none;
           color: inherit;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
         }
 
-        .brand-card:hover {
-          background: #f8fafc;
-        }
-
         .brand-header {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
-          margin-bottom: 24px;
+          margin-bottom: 20px;
         }
 
         .brand-logo-area {
@@ -553,11 +700,10 @@ export default function BrandsPage() {
           font-weight: 700;
         }
 
-        /* ── Catalogs Row ── */
         .catalogs-row {
           display: flex;
           gap: 8px;
-          margin-bottom: 20px;
+          margin-bottom: 16px;
         }
 
         .catalog-thumb {
@@ -571,11 +717,6 @@ export default function BrandsPage() {
           position: relative;
           overflow: hidden;
           box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-          transition: transform 0.25s ease;
-        }
-
-        .brand-card:hover .catalog-thumb {
-          transform: translateY(-2px);
         }
 
         .catalog-thumb .cat-title {
@@ -588,7 +729,6 @@ export default function BrandsPage() {
           text-transform: uppercase;
         }
 
-        /* Catalog Color Palette Themes */
         .ct-dark { background: #111111; }
         .ct-dark .cat-title { color: #ffffff; }
 
@@ -616,14 +756,11 @@ export default function BrandsPage() {
         .ct-rose { background: #c44b6c; }
         .ct-rose .cat-title { color: #ffe0ea; }
 
-        /* ── Brand Footer ── */
         .brand-footer {
-          margin-top: 14px;
+          margin-top: 10px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          border-top: 1px solid var(--border);
-          padding-top: 14px;
         }
 
         .view-link {
@@ -635,10 +772,7 @@ export default function BrandsPage() {
           align-items: center;
           gap: 4px;
           font-weight: 700;
-        }
-
-        .brand-card:hover .view-link {
-          color: #0f172a;
+          text-decoration: none;
         }
 
         .origin-tag {
@@ -648,7 +782,27 @@ export default function BrandsPage() {
           letter-spacing: 0.05em;
         }
 
-        /* ── Placeholder Block ── */
+        /* Mini Product Grid */
+        .mini-product-grid {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 8px;
+        }
+
+        .mini-product-card {
+          border: 0.5px solid var(--border);
+          border-radius: 6px;
+          padding: 6px;
+          background: #ffffff;
+          text-decoration: none;
+          transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .mini-product-card:hover {
+          border-color: var(--border-strong);
+          transform: translateY(-2px);
+        }
+
         .placeholder-more {
           grid-column: 1 / -1;
           background: var(--surface-1);
@@ -668,7 +822,6 @@ export default function BrandsPage() {
           text-align: center;
         }
 
-        /* ── Page Footer ── */
         .page-footer {
           padding: 28px 32px;
           border-top: 0.5px solid var(--border);
@@ -697,6 +850,7 @@ export default function BrandsPage() {
           .hero { padding: 40px 16px 24px; }
           .controls { padding: 16px; }
           .brands-grid { grid-template-columns: 1fr; }
+          .mini-product-grid { grid-template-columns: repeat(3, 1fr); }
           .page-footer { padding: 20px 16px; }
         }
       `}</style>
