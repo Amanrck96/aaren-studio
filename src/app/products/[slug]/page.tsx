@@ -297,8 +297,30 @@ export default function ProductDetailPage({ params }: Props) {
     }
   };
 
-  const handleQuoteSubmit = (e: React.FormEvent) => {
+  const handleQuoteSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      const payload = {
+        id: `inq-${Date.now()}`,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.company,
+        message: formData.message,
+        productName: product ? `${product.brand} - ${product.name}` : "Product Quote",
+        productId: product?.id || slug,
+        type: "Product Quote Request",
+        status: "NEW",
+        createdAt: new Date().toISOString(),
+      };
+      await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.error("Failed to post live inquiry:", err);
+    }
     setFormSubmitted(true);
     setTimeout(() => {
       setQuoteModalOpen(false);
@@ -1653,7 +1675,7 @@ export default function ProductDetailPage({ params }: Props) {
           justify-content: center;
         }
 
-        .lightbox-close, .modal-close {
+        .lightbox-close {
           position: absolute;
           top: 20px;
           right: 20px;
@@ -1662,6 +1684,23 @@ export default function ProductDetailPage({ params }: Props) {
           color: #ffffff;
           cursor: pointer;
         }
+        .modal-close {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: rgba(0,0,0,0.06);
+          border: none;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #1e1e1e;
+          cursor: pointer;
+          transition: background 0.2s ease;
+        }
+        .modal-close:hover { background: #e5484d; color: #fff; }
 
         .modal-card {
           background: var(--surface-1);

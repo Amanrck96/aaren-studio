@@ -197,7 +197,7 @@ const BRANDS: Brand[] = [
       { id: "fp-06", name: "Edge Metal Basin Shelf", collection: "Edge Metal", finish: "Brushed Brass" },
     ],
     catalogues: [
-      { title: "Falper Luxury Bath Environments 2025", subtitle: "Italian Bathroom Furniture & Sanitaryware", file: "Mirage/catalogue-elysian-pdf.pdf" },
+      { title: "Falper Luxury Bath Environments 2025", subtitle: "Italian Bathroom Furniture & Sanitaryware", file: "Mirage/catalogue-elysian-travertini-pdf.pdf" },
     ],
   },
   {
@@ -308,7 +308,7 @@ const BRANDS: Brand[] = [
     ],
     catalogues: [
       { title: "Clay Collection", file: "Mirage/catalogue-clay-pdf.pdf" },
-      { title: "Elysian Collection", file: "Mirage/catalogue-elysian-pdf.pdf" },
+      { title: "Elysian Collection", file: "Mirage/catalogue-elysian-travertini-pdf.pdf" },
       { title: "Elysian Travertini", file: "Mirage/catalogue-elysian-travertini-pdf.pdf" },
       { title: "Glocal Collection", file: "Mirage/catalogue-glocal-pdf.pdf" },
       { title: "Indomita Collection", file: "Mirage/catalogue-indomita-pdf.pdf" },

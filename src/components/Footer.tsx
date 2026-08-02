@@ -59,7 +59,7 @@ export default function Footer() {
             };
 
             const col1 = ["All Projects", "Privacy Policy", "Products"];
-            const col2 = ["Brands", "History", "Blog", "FAQ"];
+            const col2 = ["Brands", "Blog", "FAQ"];
 
             return (
               <div
