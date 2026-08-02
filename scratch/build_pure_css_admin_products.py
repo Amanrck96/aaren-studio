@@ -1,4 +1,6 @@
-"use client";
+import os
+
+code = """"use client";
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -119,13 +121,13 @@ export default function AdminProductsPage() {
     e.preventDefault();
     try {
       const payload = {
-        id: `prod-${Date.now()}`,
+        id: `prod-\${Date.now()}`,
         name: form.name,
         brand: form.brand,
         category: form.category,
         subcategory: form.collection || form.category,
         finish: form.finish,
-        description: form.description || `${form.name} by ${form.brand}`,
+        description: form.description || `\${form.name} by \${form.brand}`,
         price: form.price ? parseFloat(form.price) : undefined,
         priceUnit: form.priceUnit,
         imageUrl: form.imageUrl,
@@ -227,16 +229,16 @@ export default function AdminProductsPage() {
 
       const result = await res.json();
       if (result.success) {
-        setUploadStatusMsg(`Import successful: ${result.importedCount || bulkSummary?.valid} products added!`);
+        setUploadStatusMsg(`Import successful: \${result.importedCount || bulkSummary?.valid} products added!`);
         fetchProducts();
         setPreviewRows([]);
         setBulkFile(null);
         showToast("Bulk import completed!");
       } else {
-        setUploadStatusMsg(`Upload error: ${result.error || "Failed to import"}`);
+        setUploadStatusMsg(`Upload error: \${result.error || "Failed to import"}`);
       }
     } catch (err: any) {
-      setUploadStatusMsg(`Import error: ${err.message}`);
+      setUploadStatusMsg(`Import error: \${err.message}`);
     } finally {
       setUploadingBulk(false);
     }
@@ -271,13 +273,13 @@ export default function AdminProductsPage() {
         {/* Tabs */}
         <div className="tabs">
           <button
-            className={`tab ${activeTab === "catalog" ? "active" : ""}`}
+            className={`tab \${activeTab === "catalog" ? "active" : ""}`}
             onClick={() => setActiveTab("catalog")}
           >
             Product Catalog ({products.length})
           </button>
           <button
-            className={`tab ${activeTab === "bulk" ? "active" : ""}`}
+            className={`tab \${activeTab === "bulk" ? "active" : ""}`}
             onClick={() => setActiveTab("bulk")}
           >
             Bulk Excel Upload
@@ -301,7 +303,7 @@ export default function AdminProductsPage() {
                 {CATEGORIES.map((c) => (
                   <button
                     key={c}
-                    className={`cat-pill ${activeCategory === c ? "active" : ""}`}
+                    className={`cat-pill \${activeCategory === c ? "active" : ""}`}
                     onClick={() => setActiveCategory(c)}
                   >
                     {c}
@@ -335,7 +337,7 @@ export default function AdminProductsPage() {
                             <div
                               className="prod-thumb"
                               style={{
-                                backgroundImage: p.imageUrl ? `url(${p.imageUrl})` : "linear-gradient(135deg,#d8d2c4,#a89b7f)"
+                                backgroundImage: p.imageUrl ? `url(\${p.imageUrl})` : "linear-gradient(135deg,#d8d2c4,#a89b7f)"
                               }}
                             />
                             <span>{p.name}</span>
@@ -345,11 +347,11 @@ export default function AdminProductsPage() {
                         <td>{p.category}</td>
                         <td>{p.subcategory || (p as any).collection || "—"}</td>
                         <td className="price-cell">
-                          {p.price ? `₹${p.price.toLocaleString("en-IN")} ${(p as any).priceUnit || ""}` : "Quote Request"}
+                          {p.price ? `₹\${p.price.toLocaleString("en-IN")} \${(p as any).priceUnit || ""}` : "Quote Request"}
                         </td>
                         <td>
                           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                            <Link href={`/products/${p.id}`} className="action-icon" title="View Product">
+                            <Link href={`/products/\${p.id}`} className="action-icon" title="View Product">
                               👁
                             </Link>
                             <span
@@ -457,7 +459,7 @@ export default function AdminProductsPage() {
       </main>
 
       {/* ADD PRODUCT MODAL */}
-      <div className={`overlay ${modalOpen ? "open" : ""}`}>
+      <div className={`overlay \${modalOpen ? "open" : ""}`}>
         <div className="modal">
           <button className="modal-close" onClick={() => setModalOpen(false)}>✕</button>
           <h3>Add New Architectural Product</h3>
@@ -561,7 +563,7 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Floating Toast */}
-      <div className={`toast ${toastMsg ? "show" : ""}`}>
+      <div className={`toast \${toastMsg ? "show" : ""}`}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#81663f" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
         <span>{toastMsg}</span>
       </div>
@@ -831,3 +833,9 @@ export default function AdminProductsPage() {
     </div>
   );
 }
+"""
+
+with open('src/app/admin/products/page.tsx', 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("Written pure CSS exact HTML spec into src/app/admin/products/page.tsx!")
