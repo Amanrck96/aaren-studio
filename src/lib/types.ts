@@ -216,6 +216,12 @@ export const DEFAULT_SETTINGS: SiteSettingsItem = {
   googleMapUrl: "https://maps.google.com/?q=Mysore+Road+Bangalore",
   webhookUrl: "",
   footerLinks: ["All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"],
-  socialLinks: ["https://instagram.com", "https://facebook.com", "https://linkedin.com", "https://youtube.com"],
+  socialLinks: [
+    "https://www.instagram.com/aaren_intpro",
+    "https://www.facebook.com/@aarenintproindia",
+    "https://www.linkedin.com/company/aaren-intpro/",
+    "https://x.com/mustbeaaren",
+    "https://youtube.com/@aaren_intpro"
+  ],
   copyrightText: "AAREN © 2026. All rights reserved.",
 };
