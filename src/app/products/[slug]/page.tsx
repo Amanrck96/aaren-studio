@@ -17,7 +17,7 @@ import {
   Check,
 } from "lucide-react";
 import { ProductItem } from "@/lib/types";
-import { DEFAULT_PRODUCTS } from "@/lib/store";
+import { DEFAULT_PRODUCTS } from "@/lib/client_constants";
 
 type Props = { params: Promise<{ slug: string }> };
 
