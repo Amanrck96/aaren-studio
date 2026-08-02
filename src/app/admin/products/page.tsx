@@ -357,7 +357,7 @@ export default function AdminProductsPage() {
                         <td className="p-4 font-medium">{p.category}</td>
                         <td className="p-4 text-black/60">{p.subcategory || (p as any).collection || "—"}</td>
                         <td className="p-4 font-bold">
-                          {p.price ? `₹${p.price.toLocaleString("en-IN")} ${p.priceUnit || ""}` : "Quote Request"}
+                          {p.price ? `₹${p.price.toLocaleString("en-IN")} ${(p as any).priceUnit || ""}` : "Quote Request"}
                         </td>
                         <td className="p-4 flex items-center gap-3">
                           <Link href={`/products/${p.id}`} className="text-black/60 hover:text-black">
