@@ -1,4 +1,6 @@
-"use client";
+import os
+
+code = """"use client";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -505,3 +507,9 @@ export default function AboutPage() {
     </div>
   );
 }
+"""
+
+with open('src/app/about/page.tsx', 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("Successfully written About Page with exact content and winding road map design!")

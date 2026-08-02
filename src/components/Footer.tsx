@@ -48,7 +48,7 @@ export default function Footer() {
                 : lower.includes("product")
                 ? "/products"
                 : lower.includes("history")
-                ? "/history"
+                ? "/about"
                 : lower.includes("faq")
                 ? "/faq"
                 : lower.includes("blog")
