@@ -63,10 +63,11 @@ export default function Header() {
           aria-label="Aaren Home Page"
           style={{
             color: path === "/" ? "#ffffff" : "#333333",
+            fontFamily: "var(--font-jost), 'Jost', sans-serif",
             mixBlendMode: "normal",
-            fontWeight: 300,
-            fontSize: "1.3rem",
-            letterSpacing: "0.22em",
+            fontWeight: 400,
+            fontSize: "1.4rem",
+            letterSpacing: "0.35em",
             textTransform: "uppercase",
             transition: "color 0.25s ease",
             textDecoration: "none",

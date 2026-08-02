@@ -472,12 +472,12 @@ export default function Home() {
           <div
             className="hero-wordmark"
             style={{
-              fontFamily: "var(--font-jost), sans-serif",
+              fontFamily: "var(--font-jost), 'Jost', sans-serif",
               fontSize: logoLetters.length > 6 ? "clamp(3.5rem, 10vw, 16rem)" : "clamp(4.5rem, 14vw, 24rem)",
-              fontWeight: 200,
-              letterSpacing: "0.15em",
+              fontWeight: 400,
+              letterSpacing: "0.25em",
               textTransform: "uppercase",
-              color: "#eaeef4",
+              color: "#ffffff",
               display: "flex",
               width: "100%",
               justifyContent: "space-between",

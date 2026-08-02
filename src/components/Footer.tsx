@@ -122,10 +122,10 @@ export default function Footer() {
       <div
         className="footer-wordmark"
         style={{
-          fontFamily: "var(--font-jost), sans-serif",
+          fontFamily: "var(--font-jost), 'Jost', sans-serif",
           fontSize: "clamp(4.5rem, 14vw, 24rem)",
-          fontWeight: 200,
-          letterSpacing: "0.15em",
+          fontWeight: 400,
+          letterSpacing: "0.25em",
           textTransform: "uppercase",
           color: "rgba(0,0,0,0.06)",
           display: "flex",
