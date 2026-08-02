@@ -45,7 +45,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  cursor: none;
 }
 
 /* Enforce Jost font across all text, headers, navigation and footer */
