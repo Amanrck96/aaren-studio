@@ -1,695 +1,433 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { Search, ArrowRight } from "lucide-react";
 
-export type CatalogThumb = {
-  title: string;
-  themeStyle?: React.CSSProperties;
-  themeClass?: string;
-};
-
-export type BrandItemData = {
-  id: string;
-  name: string;
-  category: string;
-  origin: string;
-  estYear: string;
-  catalogCount: string;
-  filterTag: string;
-  catalogs: CatalogThumb[];
-};
-
-const DEFAULT_BRANDS: BrandItemData[] = [
+const BRANDS = [
   {
-    id: "mirage",
-    name: "MIRAGE",
-    category: "Tiles & Surfaces · Italy",
+    id: "slashform",
+    name: "Slashform",
+    code: "SF",
+    num: "01",
+    hero: "/brands/brand_1_1.png",
+    logo: "/brands/brand_1_2.png",
+    category: "Kitchen & Wardrobe",
     origin: "Italy",
-    estYear: "EST. 1976",
-    catalogCount: "9 catalogs",
-    filterTag: "Surfaces",
-    catalogs: [
-      { title: "CLAY", themeClass: "ct-cream" },
-      { title: "ELYSIAN", themeStyle: { background: "#d4cfc7", color: "#333" } },
-      { title: "TRAVERTINI", themeClass: "ct-sand" },
-      { title: "GLOCAL", themeClass: "ct-slate" },
-    ],
-  },
-  {
-    id: "mafi",
-    name: "mafi",
-    category: "Wood Flooring · Austria",
-    origin: "Austria",
-    estYear: "EST. 1997",
-    catalogCount: "2 catalogs",
-    filterTag: "Flooring",
-    catalogs: [
-      { title: "VOLUME 11", themeClass: "ct-dark", themeStyle: { flex: 1.4 } },
-      { title: "GOES OUTDOOR", themeClass: "ct-dark", themeStyle: { background: "#1a1a1a", flex: 1.4 } },
-    ],
-  },
-  {
-    id: "fima",
-    name: "fima Carlo Frattini",
-    category: "Bathroom · Italy",
-    origin: "Italy",
-    estYear: "EST. 1945",
-    catalogCount: "5 catalogs",
-    filterTag: "Bathroom",
-    catalogs: [
-      { title: "AES·THE·TIC", themeStyle: { background: "linear-gradient(135deg,#e0c8f0,#f0a0c0)", color: "#4a1060" } },
-      { title: "SO AQUA", themeClass: "ct-dark" },
-      { title: "SLIDE MAG", themeClass: "ct-slate" },
-      { title: "PARK LANE", themeStyle: { background: "#f5f0e8", color: "#333" } },
-    ],
+    tagline: "Precision living systems",
   },
   {
     id: "waltz",
-    name: "Waltz",
-    category: "Door & Partition · Italy",
-    origin: "Italy",
-    estYear: "EST. 2005",
-    catalogCount: "4 catalogs",
-    filterTag: "Doors",
-    catalogs: [
-      { title: "CLOSE NXT", themeClass: "ct-dark" },
-      { title: "GLIDE NXT", themeClass: "ct-dark" },
-      { title: "SLIDE NXT", themeClass: "ct-dark" },
-      { title: "WALLWAYS 2025", themeStyle: { background: "#f0ebe3", color: "#333" } },
-    ],
+    name: "Waltz by JB Glass",
+    code: "WB",
+    num: "02",
+    hero: "/brands/brand_2_1.png",
+    logo: "/brands/brand_2_2.png",
+    category: "Screens & Partitions",
+    origin: "India",
+    tagline: "Architectural glass solutions",
   },
   {
-    id: "newtechwood",
-    name: "NewTechWood",
-    category: "Cladding & Decking · USA",
+    id: "newtech-wood",
+    name: "Newtech Wood",
+    code: "NW",
+    num: "03",
+    hero: "/brands/brand_3_1.png",
+    logo: "/brands/brand_3_2.png",
+    category: "Cladding & Decking",
     origin: "USA",
-    estYear: "EST. 2005",
-    catalogCount: "2 catalogs",
-    filterTag: "Cladding",
-    catalogs: [
-      { title: "PRODUCT CATALOG 2025", themeClass: "ct-green", themeStyle: { background: "#1c3a28", flex: 1.5 } },
-      { title: "FULL CATALOG", themeClass: "ct-green", themeStyle: { background: "#1c3a28", flex: 1.5 } },
-    ],
-  },
-  {
-    id: "slashform",
-    name: "slashform™",
-    category: "Surfaces · Italy",
-    origin: "Italy",
-    estYear: "EST. 2012",
-    catalogCount: "2 catalogs",
-    filterTag: "Surfaces",
-    catalogs: [
-      { title: "THE GREIGE HARMONY", themeClass: "ct-taupe", themeStyle: { background: "#b0a898", color: "#fff" } },
-      { title: "THE TERRAIGE COLLECTION", themeClass: "ct-warm" },
-    ],
-  },
-  {
-    id: "wow",
-    name: "WOW",
-    category: "Decorative Tiles · Spain",
-    origin: "Spain",
-    estYear: "EST. 2010",
-    catalogCount: "10 catalogs",
-    filterTag: "Surfaces",
-    catalogs: [
-      { title: "3D BARS", themeStyle: { background: "#f0e8de", color: "#333" } },
-      { title: "SABIL", themeStyle: { background: "#7d9c88", color: "#fff" } },
-      { title: "TERRE", themeClass: "ct-sand" },
-      { title: "VESTIGE", themeClass: "ct-green" },
-    ],
+    tagline: "WPC composite excellence",
   },
   {
     id: "formica",
-    name: "FORMICA®",
-    category: "Laminates · USA",
+    name: "Formica",
+    code: "FC",
+    num: "04",
+    hero: "/brands/brand_4_1.png",
+    logo: "/brands/brand_4_2.png",
+    category: "Laminates",
     origin: "USA",
-    estYear: "EST. 1913",
-    catalogCount: "5 catalogs",
-    filterTag: "Surfaces",
-    catalogs: [
-      { title: "FENIX", themeClass: "ct-dark" },
-      { title: "VIS", themeStyle: { background: "#e2d9cc", color: "#333" } },
-      { title: "CORA", themeStyle: { background: "#c8b49a", color: "#2a1f0e" } },
-      { title: "COLLECTION 4", themeClass: "ct-green" },
-    ],
+    tagline: "Iconic surface solutions",
   },
   {
-    id: "inkiostro-bianco",
-    name: "Inkiostro Bianco",
-    category: "Wallcovering & Surfaces · Italy",
+    id: "loco",
+    name: "Loco",
+    code: "LC",
+    num: "05",
+    hero: "/brands/brand_5_1.png",
+    logo: "/brands/brand_5_2.png",
+    category: "FF&E",
     origin: "Italy",
-    estYear: "EST. 2013",
-    catalogCount: "6 catalogs",
-    filterTag: "Surfaces",
-    catalogs: [
-      { title: "GOLDEN WALL", themeClass: "ct-warm" },
-      { title: "LINEADECK", themeClass: "ct-slate" },
-      { title: "SKIN", themeClass: "ct-taupe" },
-    ],
+    tagline: "Bespoke millwork & furniture",
   },
   {
     id: "falper",
     name: "Falper",
-    category: "Bathroom · Italy",
+    code: "FP",
+    num: "06",
+    hero: "/brands/brand_6_1.png",
+    logo: "/brands/brand_6_2.png",
+    category: "Bathroom Fittings",
     origin: "Italy",
-    estYear: "EST. 1962",
-    catalogCount: "4 catalogs",
-    filterTag: "Bathroom",
-    catalogs: [
-      { title: "ECCE MOP", themeClass: "ct-dark" },
-      { title: "MINIMAL", themeClass: "ct-cream" },
-      { title: "PURA", themeClass: "ct-slate" },
-    ],
+    tagline: "Luxury bath environments",
   },
   {
-    id: "loco",
-    name: "Loco Design",
-    category: "Bespoke Millwork · Italy",
+    id: "fima",
+    name: "Fima Carlo Frattini",
+    code: "FM",
+    num: "07",
+    hero: "/brands/brand_7_1.png",
+    logo: "/brands/brand_7_2.png",
+    category: "Sanitary Fittings",
     origin: "Italy",
-    estYear: "EST. 2008",
-    catalogCount: "3 catalogs",
-    filterTag: "Flooring",
-    catalogs: [
-      { title: "WOOD & LEATHER", themeClass: "ct-taupe" },
-      { title: "SUITE 2025", themeClass: "ct-dark" },
-    ],
+    tagline: "Refined tapware & accessories",
   },
   {
-    id: "fenix",
-    name: "FENIX NTM",
-    category: "Nano Surfaces · Italy",
+    id: "inkiostro-bianco",
+    name: "Inkiostro Bianco",
+    code: "IB",
+    num: "08",
+    hero: "/brands/brand_8_1.png",
+    logo: "/brands/brand_8_2.png",
+    category: "Decorative Surfaces",
     origin: "Italy",
-    estYear: "EST. 2013",
-    catalogCount: "3 catalogs",
-    filterTag: "Surfaces",
-    catalogs: [
-      { title: "MATT NANO", themeClass: "ct-dark" },
-      { title: "BLOOM 2025", themeClass: "ct-taupe" },
-    ],
+    tagline: "Creative thinking surfaces",
+  },
+  {
+    id: "mafi",
+    name: "Mafi",
+    code: "MF",
+    num: "09",
+    hero: "/brands/brand_9_1.png",
+    logo: "/brands/brand_9_2.png",
+    category: "Wooden Flooring",
+    origin: "Austria",
+    tagline: "Natural wood flooring",
+  },
+  {
+    id: "mirage",
+    name: "Mirage",
+    code: "MG",
+    num: "10",
+    hero: "/brands/brand_10_1.png",
+    logo: "/brands/brand_10_2.png",
+    category: "Tiles",
+    origin: "Italy",
+    tagline: "Porcelain tile mastery",
   },
 ];
 
-const FILTER_PILLS = ["All", "Surfaces", "Cladding", "Bathroom", "Doors", "Flooring"];
+import { useEffect, useState } from "react";
 
 export default function BrandsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activePill, setActivePill] = useState("All");
-  const [brands, setBrands] = useState<BrandItemData[]>(DEFAULT_BRANDS);
+  const [brandsList, setBrandsList] = useState(BRANDS);
 
   useEffect(() => {
     fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
         if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
-          // Merge API brands into list if present
-          const apiBrands: BrandItemData[] = json.data.map((b: any, idx: number) => {
-            const defaultMatch = DEFAULT_BRANDS.find(
-              (db) => db.name.toLowerCase() === b.name.toLowerCase() || db.id === b.id
-            );
-            return {
+          setBrandsList(
+            json.data.map((b: any, idx: number) => ({
               id: b.id || b.name.toLowerCase().replace(/\s+/g, "-"),
-              name: b.name.toUpperCase(),
-              category: b.description || defaultMatch?.category || "Surface Solution · Global",
-              origin: defaultMatch?.origin || "Global",
-              estYear: defaultMatch?.estYear || `EST. ${1970 + (idx * 3 % 45)}`,
-              catalogCount: defaultMatch?.catalogCount || "3 catalogs",
-              filterTag: defaultMatch?.filterTag || "Surfaces",
-              catalogs: defaultMatch?.catalogs || [
-                { title: "COLLECTION 2025", themeClass: "ct-dark" },
-                { title: "PRODUCT SPEC", themeClass: "ct-cream" },
-              ],
-            };
-          });
-
-          // Retain default brands that were not in API data
-          const merged = [...apiBrands];
-          DEFAULT_BRANDS.forEach((db) => {
-            if (!merged.some((m) => m.name.toLowerCase() === db.name.toLowerCase())) {
-              merged.push(db);
-            }
-          });
-          setBrands(merged);
+              name: b.name,
+              code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
+              num: b.sequenceNumber ? (b.sequenceNumber < 10 ? `0${b.sequenceNumber}` : `${b.sequenceNumber}`) : `0${idx + 1}`,
+              hero: b.bannerUrl || b.logoUrl || "/brands/brand_1_1.png",
+              logo: b.logoUrl || "/brands/brand_1_2.png",
+              category: b.description || "Surface Solution",
+              origin: "Global",
+              tagline: b.description || "Exclusive brand partner",
+            }))
+          );
         }
       })
-      .catch((err) => console.error(err));
+      .catch((e) => console.error(e));
   }, []);
 
-  const filteredBrands = brands.filter((brand) => {
-    const matchesPill = activePill === "All" || brand.filterTag.toLowerCase() === activePill.toLowerCase() || brand.category.toLowerCase().includes(activePill.toLowerCase());
-    const matchesQuery =
-      !searchQuery ||
-      brand.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      brand.category.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesPill && matchesQuery;
-  });
-
-  const totalCatalogsCount = filteredBrands.reduce((acc, b) => acc + (parseInt(b.catalogCount) || b.catalogs.length), 0);
-
   return (
-    <div className="page-wrapper">
-      <div className="page">
-        {/* ── Hero Section ── */}
-        <div className="hero">
-          <div className="hero-label">AAREN Studio — Material House</div>
-          <h1 className="hero-title">Brands</h1>
-          <p className="hero-sub">Curated luxury materials, surfaces &amp; systems from the world&apos;s finest manufacturers</p>
-        </div>
-
-        {/* ── Controls Bar ── */}
-        <div className="controls">
-          <div className="search-wrap">
-            <Search className="search-icon" size={15} />
-            <input
-              className="search-inp"
-              placeholder="Search brands..."
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+    <div className="brands-page">
+      {/* ── Page Header ── */}
+      <div className="brands-header">
+        <div className="brands-header__inner">
+          <div className="brands-header__meta t-tag" style={{ color: "rgba(0,0,0,0.4)", marginBottom: "2.4rem" }}>
+            Exclusive Partners — {brandsList.length} Brands
           </div>
-
-          <div className="filter-pills">
-            {FILTER_PILLS.map((pill) => (
-              <button
-                key={pill}
-                className={`pill${activePill === pill ? " active" : ""}`}
-                onClick={() => setActivePill(pill)}
-              >
-                {pill}
-              </button>
-            ))}
-          </div>
-
-          <div className="count-label">
-            {filteredBrands.length} Brands · {totalCatalogsCount} Catalogs
-          </div>
-        </div>
-
-        {/* ── Brands Grid ── */}
-        <div className="brands-grid">
-          {filteredBrands.map((brand) => (
-            <Link href={`/brands/${brand.id}`} key={brand.id} className="brand-card">
-              <div className="brand-header">
-                <div className="brand-logo-area">
-                  <div className="brand-logo">{brand.name}</div>
-                  <div className="brand-category">{brand.category}</div>
-                </div>
-                <div className="brand-count">{brand.catalogCount}</div>
-              </div>
-
-              <div className="catalogs-row">
-                {brand.catalogs.map((cat, idx) => (
-                  <div
-                    key={idx}
-                    className={`catalog-thumb ${cat.themeClass || "ct-cream"}`}
-                    style={cat.themeStyle}
-                  >
-                    <span className="cat-title">{cat.title}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="brand-footer">
-                <div className="view-link">
-                  <ArrowRight size={12} style={{ marginRight: "4px" }} /> View brand
-                </div>
-                <div className="origin-tag">{brand.estYear}</div>
-              </div>
-            </Link>
-          ))}
-
-          {/* Placeholder Footer Block */}
-          <div className="placeholder-more">
-            <span>+ 8 more brands — Agape, IW, Bodaq, Inclass Veneer, Inkiostro Bianco, Falper, Loco Design, Fenix</span>
-          </div>
-        </div>
-
-        {/* ── Page Footer ── */}
-        <div className="page-footer">
-          <div className="left">AAREN © 2026 · Creative Studio &amp; Material House</div>
-          <div className="right">
-            <span>{brands.length} Brands</span>
-            <span>{totalCatalogsCount}+ Catalogs</span>
-            <span>300+ Products</span>
-          </div>
+          <h1 className="brands-header__title">Brands</h1>
+          <p className="brands-header__desc t-body" style={{ color: "rgba(0,0,0,0.5)", maxWidth: "52rem" }}>
+            A curated selection of the world&apos;s finest material and design brands — each chosen for their craft, innovation, and alignment with the Aaren philosophy.
+          </p>
         </div>
       </div>
 
-      <style jsx global>{`
-        /* ── Design System Variables & Base ── */
-        :root {
-          --surface-0: #f8fafc;
-          --surface-1: #ffffff;
-          --surface-2: #f1f5f9;
-          --border: #e2e8f0;
-          --border-strong: #cbd5e1;
-          --text-primary: #0f172a;
-          --text-secondary: #475569;
-          --text-muted: #94a3b8;
-          --radius: 6px;
-        }
+      {/* ── Brand Grid ── */}
+      <div className="brands-grid">
+        {brandsList.map((brand) => (
+          <Link
+            key={brand.id}
+            href={`/brands/${brand.id}`}
+            className="brand-card"
+            id={`brand-card-${brand.id}`}
+          >
+            {/* Hero Image */}
+            <div className="brand-card__fig-wrapper">
+              <div className="brand-card__fig">
+                <Image
+                  src={brand.hero}
+                  alt={brand.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="brand-card__img"
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
 
-        .page-wrapper {
-          background: var(--surface-0);
-          color: var(--text-primary);
+              {/* Logo overlay — bottom-left of image */}
+              <div className="brand-card__logo-wrap">
+                <Image
+                  src={brand.logo}
+                  alt={`${brand.name} logo`}
+                  width={80}
+                  height={40}
+                  className="brand-card__logo"
+                  style={{ objectFit: "contain", objectPosition: "left center" }}
+                />
+              </div>
+            </div>
+
+            {/* Bottom caption bar — ticket style */}
+            <div className="brand-card__caption">
+              <div className="brand-card__caption-left">
+                <span className="brand-card__caption-name">{brand.name}</span>
+                <span className="brand-card__caption-cat t-tag">{brand.category}</span>
+              </div>
+              <div className="brand-card__caption-right">
+                <span className="brand-card__caption-code">{brand.code}</span>
+                <span className="brand-card__caption-num">{brand.num}</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* ── CTA ── */}
+      <div className="brands-cta">
+        <p className="brands-cta__text">
+          Interested in a specific brand or product line? Let&apos;s discuss your project requirements.
+        </p>
+        <Link href="/contact" className="ul-link t-cta-1" id="brands-cta-enquire">
+          Enquire Now →
+        </Link>
+      </div>
+
+      <style>{`
+        /* ── Brands Page ── */
+        .brands-page {
+          background: #eaeef4;
+          color: #000;
           min-height: 100vh;
-          padding-top: 5rem;
-          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          padding-top: 8rem;
         }
 
-        .page {
-          max-width: 100%;
+        .brands-header {
+          padding: 6rem 0.8rem 4rem;
+          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
         }
 
-        /* ── Hero ── */
-        .hero {
-          padding: 64px 32px 40px;
-          border-bottom: 0.5px solid var(--border);
-          background: #ffffff;
+        @media (min-width: 768px) {
+          .brands-header {
+            padding: 8rem 1.2rem 4rem;
+          }
         }
 
-        .hero-label {
-          font-size: 11px;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #8c764b;
+        .brands-header__title {
+          font-size: clamp(6rem, 15vw, 22rem);
           font-weight: 700;
-          margin-bottom: 12px;
-        }
-
-        .hero-title {
-          font-size: clamp(36px, 6vw, 64px);
-          font-weight: 700;
-          line-height: 0.95;
-          letter-spacing: -0.03em;
-          color: var(--text-primary);
+          letter-spacing: -0.05em;
+          line-height: 0.88;
           text-transform: uppercase;
+          color: #000;
+          margin-bottom: 3.2rem;
         }
 
-        .hero-sub {
-          font-size: 15px;
-          color: var(--text-secondary);
-          margin-top: 12px;
-          max-width: 600px;
+        .brands-header__desc {
+          font-size: 1.5rem;
           line-height: 1.5;
+          letter-spacing: -0.01em;
         }
 
-        /* ── Controls Bar ── */
-        .controls {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          padding: 20px 32px;
-          border-bottom: 0.5px solid var(--border);
-          background: #ffffff;
-          flex-wrap: wrap;
-        }
-
-        .search-wrap {
-          flex: 1;
-          min-width: 220px;
-          position: relative;
-        }
-
-        .search-wrap :global(.search-icon) {
-          position: absolute;
-          left: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: var(--text-muted);
-          pointer-events: none;
-        }
-
-        .search-inp {
-          width: 100%;
-          padding: 9px 12px 9px 36px;
-          font-size: 13px;
-          border: 1px solid var(--border);
-          border-radius: var(--radius);
-          background: var(--surface-2);
-          color: var(--text-primary);
-          outline: none;
-          transition: border-color 0.2s, background 0.2s;
-        }
-
-        .search-inp:focus {
-          border-color: #8c764b;
-          background: #ffffff;
-        }
-
-        .filter-pills {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-        }
-
-        .pill {
-          font-size: 11px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          padding: 6px 14px;
-          border-radius: 20px;
-          border: 1px solid var(--border);
-          cursor: pointer;
-          color: var(--text-secondary);
-          background: transparent;
-          font-weight: 600;
-          transition: all 0.2s ease;
-        }
-
-        .pill:hover {
-          border-color: #8c764b;
-          color: #8c764b;
-        }
-
-        .pill.active {
-          background: #8c764b;
-          color: #ffffff;
-          border-color: #8c764b;
-        }
-
-        .count-label {
-          font-size: 12px;
-          color: var(--text-muted);
-          margin-left: auto;
-          white-space: nowrap;
-          font-weight: 600;
-        }
-
-        /* ── Brands Grid ── */
+        /* ── Grid ── */
         .brands-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-          gap: 1px;
-          background: var(--border);
-          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
+          width: 100%;
         }
 
+        /* ── Brand Card ── */
         .brand-card {
-          background: var(--surface-1);
-          padding: 28px 24px 24px;
-          cursor: pointer;
-          transition: background 0.2s ease, transform 0.2s ease;
-          position: relative;
+          display: flex;
+          flex-direction: column;
+          flex: 0 0 100%;
+          width: 100%;
+          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
           text-decoration: none;
           color: inherit;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
+          overflow: hidden;
         }
 
-        .brand-card:hover {
-          background: #f8fafc;
+        @media (min-width: 768px) {
+          .brand-card {
+            flex: 0 0 50%;
+            width: 50%;
+            border-right: 0.1rem solid rgba(0,0,0,0.12);
+          }
+          .brand-card:nth-child(2n) {
+            border-right: none;
+          }
         }
 
-        .brand-header {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          margin-bottom: 24px;
-        }
-
-        .brand-logo-area {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-
-        .brand-logo {
-          font-size: 20px;
-          font-weight: 800;
-          letter-spacing: -0.02em;
-          color: var(--text-primary);
-          text-transform: uppercase;
-        }
-
-        .brand-category {
-          font-size: 11px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: var(--text-muted);
-          font-weight: 600;
-        }
-
-        .brand-count {
-          font-size: 11px;
-          color: #8c764b;
-          background: #fef3c7;
-          border: 1px solid #fde68a;
-          border-radius: 20px;
-          padding: 4px 10px;
-          white-space: nowrap;
-          font-weight: 700;
-        }
-
-        /* ── Catalogs Row ── */
-        .catalogs-row {
-          display: flex;
-          gap: 8px;
-          margin-bottom: 20px;
-        }
-
-        .catalog-thumb {
-          flex: 1;
-          aspect-ratio: 0.7;
-          border-radius: 4px;
-          border: 0.5px solid rgba(0,0,0,0.1);
-          display: flex;
-          align-items: flex-end;
-          padding: 10px;
+        /* Image wrapper */
+        .brand-card__fig-wrapper {
           position: relative;
           overflow: hidden;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-          transition: transform 0.25s ease;
+          height: 26rem;
+          background: #111;
         }
 
-        .brand-card:hover .catalog-thumb {
-          transform: translateY(-2px);
+        @media (min-width: 768px) {
+          .brand-card__fig-wrapper {
+            height: 38rem;
+          }
         }
 
-        .catalog-thumb .cat-title {
-          position: relative;
-          z-index: 1;
-          font-size: 10px;
-          letter-spacing: 0.05em;
-          font-weight: 800;
-          line-height: 1.3;
-          text-transform: uppercase;
+        @media (min-width: 1240px) {
+          .brand-card__fig-wrapper {
+            height: 44vw;
+            max-height: 64rem;
+          }
         }
 
-        /* Catalog Color Palette Themes */
-        .ct-dark { background: #111111; }
-        .ct-dark .cat-title { color: #ffffff; }
-
-        .ct-cream { background: #e8e2d9; }
-        .ct-cream .cat-title { color: #333333; }
-
-        .ct-sand { background: #c9b89a; }
-        .ct-sand .cat-title { color: #2a1f0e; }
-
-        .ct-slate { background: #4a5568; }
-        .ct-slate .cat-title { color: #e2e8f0; }
-
-        .ct-green { background: #1a3d2b; }
-        .ct-green .cat-title { color: #a8d5b5; }
-
-        .ct-taupe { background: #8d7b6a; }
-        .ct-taupe .cat-title { color: #f5f0eb; }
-
-        .ct-warm { background: #8c764b; }
-        .ct-warm .cat-title { color: #ffffff; }
-
-        .ct-navy { background: #1e2d4e; }
-        .ct-navy .cat-title { color: #b8c8e8; }
-
-        .ct-rose { background: #c44b6c; }
-        .ct-rose .cat-title { color: #ffe0ea; }
-
-        /* ── Brand Footer ── */
-        .brand-footer {
-          margin-top: 14px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-top: 1px solid var(--border);
-          padding-top: 14px;
+        .brand-card__fig {
+          position: absolute;
+          inset: 0;
         }
 
-        .view-link {
-          font-size: 11px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #8c764b;
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          font-weight: 700;
+        .brand-card__img {
+          transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
         }
 
-        .brand-card:hover .view-link {
-          color: #0f172a;
+        .brand-card:hover .brand-card__img {
+          transform: scale(1.04);
         }
 
-        .origin-tag {
-          font-size: 10px;
-          color: var(--text-muted);
-          font-weight: 600;
-          letter-spacing: 0.05em;
-        }
-
-        /* ── Placeholder Block ── */
-        .placeholder-more {
-          grid-column: 1 / -1;
-          background: var(--surface-1);
-          padding: 36px 24px;
+        /* Logo overlay */
+        .brand-card__logo-wrap {
+          position: absolute;
+          bottom: 1.6rem;
+          left: 1.6rem;
+          background: rgba(255,255,255,0.9);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          padding: 0.8rem 1.2rem;
           display: flex;
           align-items: center;
           justify-content: center;
+          max-width: 14rem;
+          height: 4.8rem;
         }
 
-        .placeholder-more span {
-          font-size: 13px;
-          color: var(--text-secondary);
-          border: 1px dashed var(--border-strong);
-          border-radius: 6px;
-          padding: 16px 32px;
-          font-weight: 600;
-          text-align: center;
+        /* Caption bar — ticket style */
+        .brand-card__caption {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 1.6rem;
+          padding: 1.6rem 0.8rem;
+          background: #eaeef4;
+          transition: background 0.25s ease;
         }
 
-        /* ── Page Footer ── */
-        .page-footer {
-          padding: 28px 32px;
-          border-top: 0.5px solid var(--border);
-          background: #ffffff;
+        @media (min-width: 1240px) {
+          .brand-card__caption {
+            padding: 1.2rem 0.71429vw;
+          }
+        }
+
+        .brand-card:hover .brand-card__caption {
+          background: #dfe3e9;
+        }
+
+        .brand-card__caption-left {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+        }
+
+        .brand-card__caption-name {
+          font-size: clamp(1.3rem, 1.6vw, 1.5rem);
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          line-height: 1.0;
+          text-transform: uppercase;
+          color: #000;
+        }
+
+        .brand-card__caption-cat {
+          font-size: 1.1rem;
+          color: rgba(0,0,0,0.4);
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
+        .brand-card__caption-right {
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          gap: 12px;
+          gap: 2rem;
+          flex-shrink: 0;
         }
 
-        .page-footer .left {
-          font-size: 12px;
-          color: var(--text-muted);
+        .brand-card__caption-code {
+          font-size: clamp(2rem, 4vw, 4rem);
+          font-weight: 700;
+          letter-spacing: -0.04em;
+          line-height: 1;
+          color: #000;
+          font-family: var(--font-geist), sans-serif;
         }
 
-        .page-footer .right {
-          font-size: 12px;
-          color: var(--text-secondary);
+        .brand-card__caption-num {
+          font-size: clamp(1.8rem, 3.5vw, 3.6rem);
+          font-weight: 700;
+          letter-spacing: -0.04em;
+          line-height: 1;
+          color: rgba(0,0,0,0.2);
+          font-family: var(--font-geist), sans-serif;
+        }
+
+        /* ── CTA ── */
+        .brands-cta {
+          padding: 8rem 0.8rem 10rem;
+          border-top: 0.1rem solid rgba(0,0,0,0.12);
           display: flex;
-          gap: 20px;
-          font-weight: 600;
+          flex-direction: column;
+          gap: 2.4rem;
         }
 
-        @media (max-width: 640px) {
-          .hero { padding: 40px 16px 24px; }
-          .controls { padding: 16px; }
-          .brands-grid { grid-template-columns: 1fr; }
-          .page-footer { padding: 20px 16px; }
+        @media (min-width: 768px) {
+          .brands-cta {
+            padding: 8rem 1.2rem 10rem;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+          }
+        }
+
+        .brands-cta__text {
+          font-size: clamp(1.4rem, 2vw, 2rem);
+          font-weight: 600;
+          letter-spacing: -0.02em;
+          color: #000;
+          max-width: 48rem;
+          line-height: 1.3;
         }
       `}</style>
     </div>
