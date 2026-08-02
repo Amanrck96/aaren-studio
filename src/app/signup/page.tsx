@@ -219,7 +219,7 @@ export default function SignupPage() {
           font-size: 2.4rem;
           font-weight: 700;
           color: rgba(0,0,0,0.25);
-          font-family: var(--font-geist-mono), monospace;
+          font-family: var(--font-jost), 'Jost', sans-serif;
           line-height: 1.0;
         }
 

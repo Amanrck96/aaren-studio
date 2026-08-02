@@ -378,7 +378,7 @@ export default function AllProjectsPage() {
           color: #f2f2f2;
           min-height: 100vh;
           padding-top: 9rem;
-          font-family: var(--font-geist), sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif;
         }
 
         .projects-float-preview {

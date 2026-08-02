@@ -279,7 +279,7 @@ export default function InstagramPage() {
           color: #ffffff;
           min-height: 100vh;
           padding-top: 9rem;
-          font-family: var(--font-geist), sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif;
         }
 
         .insta-header {

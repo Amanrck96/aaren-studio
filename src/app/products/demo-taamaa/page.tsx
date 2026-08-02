@@ -95,7 +95,7 @@ export default function TaamaaDemo() {
           min-height: 100vh;
           padding-top: 13rem;
           color: #000000;
-          font-family: "Courier New", Courier, monospace;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
         }
 
         /* Swither Bar Style */
@@ -105,15 +105,16 @@ export default function TaamaaDemo() {
           left: 0;
           right: 0;
           height: 5rem;
-          background: #000000;
-          color: #fff;
+          background: #111;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0 2rem;
+          padding: 1.2rem 3rem;
           z-index: 100;
-          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-          font-size: 1.2rem;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
+          font-size: 0.85rem;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
           border-bottom: 0.1rem solid rgba(255,255,255,0.1);
         }
 

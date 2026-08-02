@@ -142,7 +142,7 @@ export default function ArchiproductsDemo() {
           min-height: 100vh;
           padding-top: 13rem;
           color: #1e293b;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
         }
 
         /* Swither Bar Style */

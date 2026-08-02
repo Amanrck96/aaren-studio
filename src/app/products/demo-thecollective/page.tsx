@@ -118,7 +118,7 @@ export default function TheCollectiveDemo() {
           min-height: 100vh;
           padding-top: 13rem;
           color: #1a1a1a;
-          font-family: "Futura", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
         }
 
         /* Swither Bar Style */
@@ -135,7 +135,7 @@ export default function TheCollectiveDemo() {
           justify-content: space-between;
           padding: 0 2rem;
           z-index: 100;
-          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 1.2rem;
           border-bottom: 0.1rem solid rgba(255,255,255,0.1);
         }

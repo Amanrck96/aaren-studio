@@ -224,7 +224,7 @@ export default function ProductsPage() {
           color: #1e1e1e;
           min-height: 100vh;
           padding-top: 8rem;
-          font-family: serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
         }
 
         .products-header {
@@ -241,7 +241,7 @@ export default function ProductsPage() {
         }
 
         .products-header__title {
-          font-family: "Playfair Display", Georgia, serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: clamp(4.5rem, 12vw, 14rem);
           font-weight: 400;
           letter-spacing: -0.04em;
@@ -252,7 +252,7 @@ export default function ProductsPage() {
         }
 
         .products-header__desc {
-          font-family: serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: clamp(1.5rem, 2.2vw, 2.1rem);
           line-height: 1.5;
           color: rgba(0,0,0,0.6);
@@ -346,7 +346,7 @@ export default function ProductsPage() {
         }
 
         .ma-view-btn {
-          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 1.1rem;
           font-weight: 700;
           letter-spacing: 0.15em;
@@ -361,7 +361,7 @@ export default function ProductsPage() {
           position: absolute;
           top: 1.6rem;
           right: 1.6rem;
-          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 1.1rem;
           font-weight: 700;
           letter-spacing: 0.1em;
@@ -387,7 +387,7 @@ export default function ProductsPage() {
         }
 
         .ma-card-title {
-          font-family: "Playfair Display", Georgia, serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: clamp(2rem, 3.2vw, 2.8rem);
           font-weight: 600;
           letter-spacing: -0.02em;
@@ -396,7 +396,7 @@ export default function ProductsPage() {
         }
 
         .ma-card-code {
-          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 1.4rem;
           font-weight: 800;
           color: rgba(0,0,0,0.3);
@@ -404,7 +404,7 @@ export default function ProductsPage() {
         }
 
         .ma-card-meta {
-          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 1.1rem;
           font-weight: 700;
           letter-spacing: 0.08em;
@@ -433,7 +433,7 @@ export default function ProductsPage() {
         }
 
         .products-cta__text {
-          font-family: serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: clamp(1.6rem, 2.2vw, 2.2rem);
           font-style: italic;
           color: rgba(0,0,0,0.7);

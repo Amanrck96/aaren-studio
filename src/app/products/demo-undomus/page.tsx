@@ -144,7 +144,7 @@ export default function UndomusDemo() {
           min-height: 100vh;
           padding-top: 13rem;
           color: #e5e5e5;
-          font-family: "Geist Sans", sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
         }
 
         /* Swither Bar Style */

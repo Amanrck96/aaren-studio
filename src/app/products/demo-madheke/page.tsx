@@ -309,7 +309,7 @@ export default function MadhekeProductDetailPage() {
           color: #1a1a1a;
           min-height: 100vh;
           padding-top: 8rem;
-          font-family: serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
         }
 
         .madheke-bar {
@@ -319,7 +319,7 @@ export default function MadhekeProductDetailPage() {
           padding: 1.2rem 3rem;
           border-bottom: 1px solid rgba(0,0,0,0.08);
           background: #f4efe6;
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.85rem;
           letter-spacing: 0.08em;
         }
@@ -398,7 +398,7 @@ export default function MadhekeProductDetailPage() {
         }
 
         .madheke-designer {
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.8rem;
           letter-spacing: 0.1em;
           color: #888;
@@ -422,7 +422,7 @@ export default function MadhekeProductDetailPage() {
         }
 
         .section-label {
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.75rem;
           font-weight: 700;
           letter-spacing: 0.1em;
@@ -447,7 +447,7 @@ export default function MadhekeProductDetailPage() {
           background: #fff;
           cursor: pointer;
           text-align: left;
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.8rem;
         }
 
@@ -476,7 +476,7 @@ export default function MadhekeProductDetailPage() {
           background: #000;
           color: #fff;
           border: none;
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.85rem;
           font-weight: 700;
           letter-spacing: 0.1em;
@@ -489,7 +489,7 @@ export default function MadhekeProductDetailPage() {
           background: transparent;
           color: #000;
           border: 1px solid #000;
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.85rem;
           font-weight: 700;
           letter-spacing: 0.1em;
@@ -507,7 +507,7 @@ export default function MadhekeProductDetailPage() {
           padding: 1rem 0;
           background: none;
           border: none;
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.85rem;
           font-weight: 700;
           letter-spacing: 0.08em;
@@ -516,7 +516,7 @@ export default function MadhekeProductDetailPage() {
 
         .accordion-body {
           padding-bottom: 1rem;
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.9rem;
           color: #555;
           line-height: 1.5;
@@ -535,7 +535,7 @@ export default function MadhekeProductDetailPage() {
         }
 
         .related-sub {
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.85rem;
           color: #777;
           margin-bottom: 2rem;
@@ -565,7 +565,7 @@ export default function MadhekeProductDetailPage() {
         }
 
         .related-card-brand {
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.75rem;
           color: #888;
           letter-spacing: 0.08em;
@@ -601,7 +601,7 @@ export default function MadhekeProductDetailPage() {
           padding: 0.8rem;
           margin-bottom: 0.8rem;
           border: 1px solid #ccc;
-          font-family: sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif !important;
           font-size: 0.9rem;
         }
 

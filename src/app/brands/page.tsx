@@ -389,9 +389,7 @@ export default function BrandsPage() {
           font-size: clamp(2rem, 4vw, 4rem);
           font-weight: 700;
           letter-spacing: -0.04em;
-          line-height: 1;
-          color: #000;
-          font-family: var(--font-geist), sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif;
         }
 
         .brand-card__caption-num {
@@ -400,7 +398,7 @@ export default function BrandsPage() {
           letter-spacing: -0.04em;
           line-height: 1;
           color: rgba(0,0,0,0.2);
-          font-family: var(--font-geist), sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif;
         }
 
         /* ── CTA ── */

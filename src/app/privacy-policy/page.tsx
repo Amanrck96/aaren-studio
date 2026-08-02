@@ -120,7 +120,7 @@ export default function PrivacyPolicyPage() {
           min-height: 100vh;
           padding-top: 10rem;
           padding-bottom: 8rem;
-          font-family: var(--font-geist), sans-serif;
+          font-family: var(--font-jost), 'Jost', sans-serif;
         }
 
         .privacy-container {

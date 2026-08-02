@@ -23,14 +23,24 @@ const geistMono = Geist_Mono({
 
 const jost = localFont({
   src: [
-    {
-      path: "./fonts/Jost-VariableFont_wght.ttf",
-      style: "normal",
-    },
-    {
-      path: "./fonts/Jost-Italic-VariableFont_wght.ttf",
-      style: "italic",
-    }
+    { path: "./fonts/Jost-Thin.ttf", weight: "100", style: "normal" },
+    { path: "./fonts/Jost-ThinItalic.ttf", weight: "100", style: "italic" },
+    { path: "./fonts/Jost-ExtraLight.ttf", weight: "200", style: "normal" },
+    { path: "./fonts/Jost-ExtraLightItalic.ttf", weight: "200", style: "italic" },
+    { path: "./fonts/Jost-Light.ttf", weight: "300", style: "normal" },
+    { path: "./fonts/Jost-LightItalic.ttf", weight: "300", style: "italic" },
+    { path: "./fonts/Jost-Regular.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/Jost-Italic.ttf", weight: "400", style: "italic" },
+    { path: "./fonts/Jost-Medium.ttf", weight: "500", style: "normal" },
+    { path: "./fonts/Jost-MediumItalic.ttf", weight: "500", style: "italic" },
+    { path: "./fonts/Jost-SemiBold.ttf", weight: "600", style: "normal" },
+    { path: "./fonts/Jost-SemiBoldItalic.ttf", weight: "600", style: "italic" },
+    { path: "./fonts/Jost-Bold.ttf", weight: "700", style: "normal" },
+    { path: "./fonts/Jost-BoldItalic.ttf", weight: "700", style: "italic" },
+    { path: "./fonts/Jost-ExtraBold.ttf", weight: "800", style: "normal" },
+    { path: "./fonts/Jost-ExtraBoldItalic.ttf", weight: "800", style: "italic" },
+    { path: "./fonts/Jost-Black.ttf", weight: "900", style: "normal" },
+    { path: "./fonts/Jost-BlackItalic.ttf", weight: "900", style: "italic" },
   ],
   variable: "--font-jost",
   display: "swap",
@@ -64,7 +74,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable} ${jost.variable}`} suppressHydrationWarning>
-      <body>
+      <body className={jost.className} suppressHydrationWarning>
         <SmoothScroll>
           <CustomCursor />
           <Header />
