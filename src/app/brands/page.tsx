@@ -7,7 +7,12 @@ import { Search, ArrowRight } from "lucide-react";
 import { ProductItem } from "@/lib/types";
 
 export type CatalogThumb = {
+  id?: string;
   title: string;
+  pdfUrl?: string;
+  pdfDownloadUrl?: string;
+  coverImage?: string;
+  fileId?: string;
   themeStyle?: React.CSSProperties;
   themeClass?: string;
 };
