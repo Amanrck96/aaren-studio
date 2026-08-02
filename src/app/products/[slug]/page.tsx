@@ -17,6 +17,7 @@ import {
   Check,
 } from "lucide-react";
 import { ProductItem } from "@/lib/types";
+import { DEFAULT_PRODUCTS } from "@/lib/store";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -25,7 +26,7 @@ export default function ProductDetailPage({ params }: Props) {
 
   // Core States
   const [product, setProduct] = useState<ProductItem | null>(null);
-  const [allProducts, setAllProducts] = useState<ProductItem[]>([]);
+  const [allProducts, setAllProducts] = useState<ProductItem[]>(DEFAULT_PRODUCTS);
   const [quickViewProduct, setQuickViewProduct] = useState<ProductItem | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -67,9 +68,14 @@ export default function ProductDetailPage({ params }: Props) {
       .then((res) => res.json())
       .then((json) => {
         if (json && json.success && Array.isArray(json.data)) {
-          setAllProducts(json.data);
+          const mergedMap = new Map<string, ProductItem>();
+          DEFAULT_PRODUCTS.forEach((p) => mergedMap.set(p.id, p));
+          json.data.forEach((p: ProductItem) => mergedMap.set(p.id, p));
+          const mergedList = Array.from(mergedMap.values());
+          setAllProducts(mergedList);
+
           const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
-          const match = json.data.find(
+          const match = mergedList.find(
             (p: ProductItem) =>
               p.id === slug ||
               norm(p.id) === norm(slug) ||

@@ -168,8 +168,30 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     ]
   },
   {
-    id: "prod-mirage-elysian",
+    id: "prod-newtech-ultrashield",
     slNo: 2,
+    name: "UltraShield Composite Facade Slat",
+    brand: "Newtech Wood",
+    category: "Cladding",
+    subcategory: "Facade Slats",
+    shortCode: "NW 14",
+    width: "160mm",
+    height: "25mm",
+    depth: "3600mm",
+    thickness: "25mm",
+    finish: "Walnut Slat Grain",
+    description: "Architectural outdoor composite wall cladding slat system with UV stabilization and zero maintenance requirement.",
+    tags: ["Facade", "WPC", "Wall Cladding"],
+    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?auto=format&fit=crop&w=1200&q=80"
+    ],
+    qtyInStock: 85,
+    price: 820
+  },
+  {
+    id: "prod-mirage-elysian",
+    slNo: 3,
     name: "MIRAGE Elysian Travertine Slab",
     brand: "Mirage",
     category: "Tiles",
@@ -194,8 +216,30 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     ]
   },
   {
+    id: "prod-mirage-glocal",
+    slNo: 4,
+    name: "MIRAGE Glocal Concrete Slab",
+    brand: "Mirage",
+    category: "Tiles",
+    subcategory: "Porcelain Slabs",
+    shortCode: "MG 05",
+    width: "1200mm",
+    height: "2700mm",
+    depth: "9mm",
+    thickness: "9mm",
+    finish: "Industrial Concrete Matte",
+    description: "Minimalist Italian architectural porcelain slab capturing the raw tactile beauty of smooth poured concrete.",
+    tags: ["Concrete", "Porcelain", "Italian"],
+    imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1200&q=80"
+    ],
+    qtyInStock: 60,
+    price: 1180
+  },
+  {
     id: "prod-mafi-oak",
-    slNo: 3,
+    slNo: 5,
     name: "Mafi Oak Vulcano Natural Plank",
     brand: "mafi",
     category: "Wooden Flooring",
@@ -220,8 +264,30 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     ]
   },
   {
+    id: "prod-mafi-tiger",
+    slNo: 6,
+    name: "Mafi Tiger Oak Brushed Plank",
+    brand: "mafi",
+    category: "Wooden Flooring",
+    subcategory: "Engineered Hardwood",
+    shortCode: "MF 04",
+    width: "280mm",
+    height: "19mm",
+    depth: "2400mm",
+    thickness: "19mm",
+    finish: "Brushed Grey Oil",
+    description: "Deeply textured Austrian tiger oak with dark natural grain accents and non-toxic natural oil finish.",
+    tags: ["Tiger Oak", "Flooring", "Austrian"],
+    imageUrl: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?auto=format&fit=crop&w=1200&q=80"
+    ],
+    qtyInStock: 55,
+    price: 3800
+  },
+  {
     id: "prod-fima-tapware",
-    slNo: 4,
+    slNo: 7,
     name: "FIMA Aesthetic Mixer Suite",
     brand: "fima Carlo Frattini",
     category: "Bathroom",
@@ -234,16 +300,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     finish: "Rose Gold & Brushed Gunmetal",
     description: "Architectural thermostatic shower and basin mixer suite with progressive cartridge control.",
     tags: ["Faucets", "Italian Brass", "Rose Gold"],
-    imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
     galleryImages: [
-      "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"
     ],
     qtyInStock: 25,
     price: 85000
   },
   {
+    id: "prod-fima-shower",
+    slNo: 8,
+    name: "FIMA Thermostatic Rain Shower Column",
+    brand: "fima Carlo Frattini",
+    category: "Bathroom",
+    subcategory: "Shower Fittings",
+    shortCode: "FM 08",
+    width: "300mm",
+    height: "1100mm",
+    depth: "450mm",
+    thickness: "Brass",
+    finish: "Matte Black & Rose Gold",
+    description: "Wall-mounted thermostatic rain shower head with integrated hand shower and water-saving aerator.",
+    tags: ["Shower", "Tapware", "Italian"],
+    imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80"
+    ],
+    qtyInStock: 18,
+    price: 115000
+  },
+  {
     id: "prod-waltz-glide",
-    slNo: 5,
+    slNo: 9,
     name: "Waltz Wallways Motorized Partition",
     brand: "Waltz",
     category: "Doors",
@@ -264,8 +352,30 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     price: 290000
   },
   {
+    id: "prod-waltz-slide",
+    slNo: 10,
+    name: "Waltz Glide Fluted Glass Door",
+    brand: "Waltz",
+    category: "Doors",
+    subcategory: "Glass Doors",
+    shortCode: "WB 08",
+    width: "1000mm",
+    height: "2400mm",
+    depth: "40mm",
+    thickness: "8mm Glass",
+    finish: "Smoked Fluted Glass & Black Frame",
+    description: "Minimalist interior glass sliding door system with ultra-slim aluminum perimeter frame.",
+    tags: ["Door", "Fluted Glass", "Interior"],
+    imageUrl: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80"
+    ],
+    qtyInStock: 20,
+    price: 185000
+  },
+  {
     id: "prod-slashform-kitchen",
-    slNo: 6,
+    slNo: 11,
     name: "Slashform Terraige Living System",
     brand: "slashform™",
     category: "Surfaces",
@@ -287,7 +397,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   },
   {
     id: "prod-fenix-laminate",
-    slNo: 7,
+    slNo: 12,
     name: "FORMICA FENIX NTM Matte Surface",
     brand: "FORMICA®",
     category: "Surfaces",
@@ -309,7 +419,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   },
   {
     id: "prod-inkiostro-wallpaper",
-    slNo: 8,
+    slNo: 13,
     name: "Inkiostro Bianco Golden Wall Surface",
     brand: "Inkiostro Bianco",
     category: "Surfaces",
@@ -328,6 +438,50 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     ],
     qtyInStock: 30,
     price: 18500
+  },
+  {
+    id: "prod-wow-3dbars",
+    slNo: 14,
+    name: "WOW 3D Bars Decorative Ceramic Tile",
+    brand: "WOW",
+    category: "Tiles",
+    subcategory: "3D Tiles",
+    shortCode: "WW 02",
+    width: "125mm",
+    height: "250mm",
+    depth: "15mm",
+    thickness: "15mm",
+    finish: "Gloss Terracotta 3D",
+    description: "Spanish 3D dimensional ceramic tile with fluted bar relief effect for architectural feature walls.",
+    tags: ["3D Tiles", "Spanish", "Ceramic"],
+    imageUrl: "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1200&q=80"
+    ],
+    qtyInStock: 200,
+    price: 450
+  },
+  {
+    id: "prod-falper-senzafine",
+    slNo: 15,
+    name: "Falper Senzafine Architectural Vanity",
+    brand: "Falper",
+    category: "Bathroom",
+    subcategory: "Vanities",
+    shortCode: "FL 01",
+    width: "1400mm",
+    height: "850mm",
+    depth: "520mm",
+    thickness: "Solid Surface",
+    finish: "Matte White Cristalplant",
+    description: "Italian double washbasin vanity unit in matte white solid surface material with soft-close oak drawers.",
+    tags: ["Vanity", "Italian Bath", "Cristalplant"],
+    imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80"
+    ],
+    qtyInStock: 8,
+    price: 380000
   }
 ];
 
