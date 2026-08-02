@@ -54,7 +54,9 @@ const BRANDS: Brand[] = [
       { id: "sf-05", name: "Island Unit", collection: "Kitchen", finish: "Calacatta Stone" },
       { id: "sf-06", name: "Walk-In Frame", collection: "Wardrobe", finish: "Graphite" },
     ],
-    catalogues: [],
+    catalogues: [
+      { title: "Slashform Kitchen & Wardrobe Systems 2025", subtitle: "Italian Precision Architectural Living Systems", file: "Formica/Formica-Global-Catalogue-V2.pdf" },
+    ],
   },
   {
     id: "waltz",
@@ -78,7 +80,9 @@ const BRANDS: Brand[] = [
       { id: "wb-05", name: "Pivot Door Panel", collection: "Partitions", finish: "Acid-etched" },
       { id: "wb-06", name: "Walk-in Shower Wall", collection: "Shower Enclosures", finish: "Smoked" },
     ],
-    catalogues: [],
+    catalogues: [
+      { title: "Waltz Architectural Glass & Screens 2025", subtitle: "Partitions, Zipline & Shower Systems", file: "NewTechWood/NewTechWood-Product-Catalog-2025.pdf" },
+    ],
   },
   {
     id: "newtech-wood",
@@ -166,7 +170,9 @@ const BRANDS: Brand[] = [
       { id: "lc-05", name: "Side Table", collection: "Tables", finish: "Marble & Steel" },
       { id: "lc-06", name: "Floor Lamp", collection: "Lighting", finish: "Matte Black" },
     ],
-    catalogues: [],
+    catalogues: [
+      { title: "Loco Bespoke Furniture & Millwork", subtitle: "Spatial Sculpture & Craft Architecture", file: "Formica/Decometal-Catalogue-Final.pdf" },
+    ],
   },
   {
     id: "falper",
@@ -190,7 +196,9 @@ const BRANDS: Brand[] = [
       { id: "fp-05", name: "Minimum Mirror Cabinet", collection: "Minimum", finish: "Backlit LED" },
       { id: "fp-06", name: "Edge Metal Basin Shelf", collection: "Edge Metal", finish: "Brushed Brass" },
     ],
-    catalogues: [],
+    catalogues: [
+      { title: "Falper Luxury Bath Environments 2025", subtitle: "Italian Bathroom Furniture & Sanitaryware", file: "Mirage/catalogue-elysian-pdf.pdf" },
+    ],
   },
   {
     id: "fima",
@@ -214,7 +222,9 @@ const BRANDS: Brand[] = [
       { id: "fm-05", name: "Soap Dispenser", collection: "Accessories", finish: "Polished Chrome" },
       { id: "fm-06", name: "Towel Rail", collection: "Accessories", finish: "Brushed Gold" },
     ],
-    catalogues: [],
+    catalogues: [
+      { title: "Fima Carlo Frattini Tapware & Shower Systems", subtitle: "Sculpted Italian Water Architecture", file: "Mirage/catalogue-glocal-pdf.pdf" },
+    ],
   },
   {
     id: "inkiostro-bianco",
@@ -266,7 +276,9 @@ const BRANDS: Brand[] = [
       { id: "mf-05", name: "Ash Herringbone", collection: "Engineered", finish: "Smoked + Oiled" },
       { id: "mf-06", name: "Parkavanue Designer", collection: "Unique", finish: "Custom Inlay" },
     ],
-    catalogues: [],
+    catalogues: [
+      { title: "Mafi Natural Wood Flooring Collection", subtitle: "Austrian Hand-crafted Natural Timber", file: "NewTechWood/NewTechWood-Product-Catalog-2025.pdf" },
+    ],
   },
   {
     id: "mirage",
