@@ -475,10 +475,6 @@ export default function ProductDetailPage({ params }: Props) {
         </div>
       </div>
 
-      
-        </div>
-      </div>
-
       {/* ── SECTION 5 — DESIGNER / COLLECTION STORY ── */}
       <div className="section-container story-section">
         <h2 className="section-title">Designer &amp; Collection Story</h2>
