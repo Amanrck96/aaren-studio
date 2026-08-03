@@ -141,7 +141,7 @@ export default function BrandsPage() {
                     : `${b.sequenceNumber}`
                   : matchedStatic?.num || `0${idx + 1}`,
                 hero:
-                  b.bannerUrl && !b.bannerUrl.includes("logo")
+                  b.bannerUrl && !b.bannerUrl.includes("brand_logos") && !b.bannerUrl.includes("logo")
                     ? b.bannerUrl
                     : matchedStatic?.hero || `/brands/brand_${(idx % 10) + 1}_1.png`,
                 logo: b.logoUrl || matchedStatic?.logo || `/brands/brand_${(idx % 10) + 1}_2.png`,
