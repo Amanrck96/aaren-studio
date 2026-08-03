@@ -1056,6 +1056,8 @@ export default function BrandsPage() {
           <div className="right">
             <span>{brands.length} Brands</span>
             <span>{totalCatalogsCount}+ Catalogs</span>
+            <span>300+ Products</span>
+          </div>
         </div>
       </div>
 
