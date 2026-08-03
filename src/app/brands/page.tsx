@@ -125,19 +125,31 @@ export default function BrandsPage() {
     fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
-        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
           setBrandsList(
-            json.data.map((b: any, idx: number) => ({
-              id: b.id || b.name.toLowerCase().replace(/\s+/g, "-"),
-              name: b.name,
-              code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
-              num: b.sequenceNumber ? (b.sequenceNumber < 10 ? `0${b.sequenceNumber}` : `${b.sequenceNumber}`) : `0${idx + 1}`,
-              hero: b.bannerUrl || b.logoUrl || "/brands/brand_1_1.png",
-              logo: b.logoUrl || "/brands/brand_1_2.png",
-              category: b.description || "Surface Solution",
-              origin: "Global",
-              tagline: b.description || "Exclusive brand partner",
-            }))
+            json.data.map((b: any, idx: number) => {
+              const matchedStatic = BRANDS.find(
+                (sb) => sb.id === b.id || sb.name.toLowerCase() === b.name.toLowerCase()
+              );
+              return {
+                id: b.id || b.name.toLowerCase().replace(/\s+/g, "-"),
+                name: b.name,
+                code: b.shortCode ? b.shortCode.split(" ")[0] : matchedStatic?.code || "BR",
+                num: b.sequenceNumber
+                  ? b.sequenceNumber < 10
+                    ? `0${b.sequenceNumber}`
+                    : `${b.sequenceNumber}`
+                  : matchedStatic?.num || `0${idx + 1}`,
+                hero:
+                  b.bannerUrl && !b.bannerUrl.includes("logo")
+                    ? b.bannerUrl
+                    : matchedStatic?.hero || `/brands/brand_${(idx % 10) + 1}_1.png`,
+                logo: b.logoUrl || matchedStatic?.logo || `/brands/brand_${(idx % 10) + 1}_2.png`,
+                category: b.description || matchedStatic?.category || "Surface Solution",
+                origin: matchedStatic?.origin || "Global",
+                tagline: b.description || matchedStatic?.tagline || "Exclusive brand partner",
+              };
+            })
           );
         }
       })
