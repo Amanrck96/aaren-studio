@@ -347,6 +347,10 @@ export default function BrandDetailPage({ params }: Props) {
             <Link href="/contact" className="ul-link t-cta-1" id={`brand-${brand.id}-enquire`}>
               Enquire Now →
             </Link>
+            <Link href="/brands" className="bd-cta__back">
+              ← All Brands
+            </Link>
+          </div>
         </div>
       </div>
 
