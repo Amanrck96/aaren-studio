@@ -244,14 +244,10 @@ export default function BrandDetailPage({ params }: Props) {
             {brand.catalogues.map((cat, i) => {
               const pdfUrl = `/catalogues/${cat.file}`;
               return (
-                <a
+                <div
                   key={i}
-                  href={pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="bd-pdf-luxury-card"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     setSelectedPdf({ url: pdfUrl, title: `${brand.name} - ${cat.title}` });
                   }}
                   style={{
@@ -262,11 +258,21 @@ export default function BrandDetailPage({ params }: Props) {
                     overflow: "hidden",
                     border: "1px solid rgba(0,0,0,0.12)",
                     boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
-                    textDecoration: "none",
                     position: "relative",
+                    cursor: "pointer",
                     transition: "transform 0.3s ease, box-shadow 0.3s ease",
                   }}
                 >
+                  {/* Click Overlay - Prevents direct PDF opening */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      zIndex: 15,
+                      cursor: "pointer",
+                    }}
+                  />
+
                   {/* Red Luxury PDF Tag */}
                   <span
                     style={{
@@ -281,10 +287,10 @@ export default function BrandDetailPage({ params }: Props) {
                       borderRadius: "4px",
                       letterSpacing: "0.08em",
                       boxShadow: "0 4px 12px rgba(239, 68, 68, 0.4)",
-                      zIndex: 10,
+                      zIndex: 25,
                     }}
                   >
-                    PDF
+                    LOCKED PDF
                   </span>
 
                   {/* 1st Page Cover Preview Display */}
@@ -312,7 +318,7 @@ export default function BrandDetailPage({ params }: Props) {
                   </div>
 
                   {/* Card Title & Meta Info */}
-                  <div style={{ padding: "1.4rem 1.2rem", background: "#ffffff", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                  <div style={{ padding: "1.4rem 1.2rem", background: "#ffffff", display: "flex", flexDirection: "column", gap: "0.4rem", position: "relative", zIndex: 20 }}>
                     <span style={{ fontSize: "1.15rem", fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>
                       {cat.title}
                     </span>
@@ -321,11 +327,32 @@ export default function BrandDetailPage({ params }: Props) {
                         {cat.subtitle}
                       </span>
                     )}
-                    <span style={{ fontSize: "0.85rem", color: "#d4af37", fontWeight: 800, marginTop: "0.4rem", display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                      📄 Download 1st Page & Full PDF ↗
-                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedPdf({ url: pdfUrl, title: `${brand.name} - ${cat.title}` });
+                      }}
+                      style={{
+                        fontSize: "0.85rem",
+                        color: "#ffffff",
+                        background: "#0f172a",
+                        border: "none",
+                        borderRadius: "6px",
+                        padding: "8px 12px",
+                        fontWeight: 700,
+                        marginTop: "0.6rem",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.4rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      📄 Request Access &amp; Download PDF ↗
+                    </button>
                   </div>
-                </a>
+                </div>
               );
             })}
           </div>
