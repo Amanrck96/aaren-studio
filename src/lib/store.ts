@@ -1050,15 +1050,21 @@ export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & {
   return full;
 }
 
+declare global {
+  var __AAREN_MEMORY_STORE__: any;
+  var __AAREN_INQUIRIES_CACHE__: InquiryItem[];
+}
+
 // INQUIRIES STORE (LEADS & PROTECTED CATALOG GATE)
 export async function getInquiriesStore(): Promise<InquiryItem[]> {
   const json = readJsonStore();
   const fileInquiries: InquiryItem[] = json.inquiries || [];
+  const memoryInquiries: InquiryItem[] = globalThis.__AAREN_INQUIRIES_CACHE__ || [];
 
   let dbInquiries: InquiryItem[] = [];
   try {
     const dbPromise = prisma.inquiry.findMany({ orderBy: { createdAt: "desc" } });
-    const timeoutPromise = new Promise<any>((_, reject) => setTimeout(() => reject(new Error("DB Timeout")), 800));
+    const timeoutPromise = new Promise<any>((_, reject) => setTimeout(() => reject(new Error("DB Timeout")), 1200));
     const db = await Promise.race([dbPromise, timeoutPromise]);
     if (db && db.length > 0) {
       dbInquiries = db.map((i: any) => ({
@@ -1077,6 +1083,7 @@ export async function getInquiriesStore(): Promise<InquiryItem[]> {
 
   const map = new Map<string, InquiryItem>();
   fileInquiries.forEach((item) => map.set(item.id, item));
+  memoryInquiries.forEach((item) => map.set(item.id, item));
   dbInquiries.forEach((item) => map.set(item.id, item));
 
   const all = Array.from(map.values());
@@ -1106,15 +1113,21 @@ export async function logInquiryStore(data: {
     createdAt: new Date().toISOString(),
   };
 
-  // Always write to JSON store immediately
+  // 1. Memory Cache
+  if (!globalThis.__AAREN_INQUIRIES_CACHE__) {
+    globalThis.__AAREN_INQUIRIES_CACHE__ = [];
+  }
+  globalThis.__AAREN_INQUIRIES_CACHE__.unshift(full);
+
+  // 2. JSON Store File (Local + /tmp)
   const json = readJsonStore();
   if (!json.inquiries) json.inquiries = [];
   json.inquiries.unshift(full);
   writeJsonStore(json);
 
-  // Attempt Prisma insert asynchronously in background
-  prisma.inquiry
-    .create({
+  // 3. Await Prisma DB Insert (Crucial for Vercel Serverless Functions)
+  try {
+    await prisma.inquiry.create({
       data: {
         id,
         name: data.name,
@@ -1125,8 +1138,10 @@ export async function logInquiryStore(data: {
         message: data.message,
         productOrBrand: data.productOrBrand,
       },
-    })
-    .catch(() => {});
+    });
+  } catch (e) {
+    console.error("Prisma inquiry insert error:", e);
+  }
 
   // Trigger Google Sheet Webhook if configured
   try {
