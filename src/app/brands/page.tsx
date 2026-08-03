@@ -116,45 +116,8 @@ const BRANDS = [
   },
 ];
 
-import { useEffect, useState } from "react";
-
 export default function BrandsPage() {
-  const [brandsList, setBrandsList] = useState(BRANDS);
-
-  useEffect(() => {
-    fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setBrandsList(
-            json.data.map((b: any, idx: number) => {
-              const matchedStatic = BRANDS.find(
-                (sb) => sb.id === b.id || sb.name.toLowerCase() === b.name.toLowerCase()
-              );
-              return {
-                id: b.id || b.name.toLowerCase().replace(/\s+/g, "-"),
-                name: b.name,
-                code: b.shortCode ? b.shortCode.split(" ")[0] : matchedStatic?.code || "BR",
-                num: b.sequenceNumber
-                  ? b.sequenceNumber < 10
-                    ? `0${b.sequenceNumber}`
-                    : `${b.sequenceNumber}`
-                  : matchedStatic?.num || `0${idx + 1}`,
-                hero:
-                  b.bannerUrl && !b.bannerUrl.includes("brand_logos") && !b.bannerUrl.includes("logo")
-                    ? b.bannerUrl
-                    : matchedStatic?.hero || `/brands/brand_${(idx % 10) + 1}_1.png`,
-                logo: b.logoUrl || matchedStatic?.logo || `/brands/brand_${(idx % 10) + 1}_2.png`,
-                category: b.description || matchedStatic?.category || "Surface Solution",
-                origin: matchedStatic?.origin || "Global",
-                tagline: b.description || matchedStatic?.tagline || "Exclusive brand partner",
-              };
-            })
-          );
-        }
-      })
-      .catch((e) => console.error(e));
-  }, []);
+  const brandsList = BRANDS;
 
   return (
     <div className="brands-page">
