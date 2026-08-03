@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState, useEffect, use } from "react";
 import { getBrandById } from "@/lib/brands";
 import { notFound } from "next/navigation";
-import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -17,7 +16,6 @@ export default function BrandDetailPage({ params }: Props) {
 
   const [activeCollection, setActiveCollection] = useState("All");
   const [mounted, setMounted] = useState(false);
-  const [selectedPdf, setSelectedPdf] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -243,12 +241,12 @@ export default function BrandDetailPage({ params }: Props) {
           <div className="bd-catalogue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "2rem" }}>
             {brand.catalogues.map((cat, i) => {
               const pdfUrl = `/catalogues/${cat.file}`;
-              const fullTitle = `${brand.name} - ${cat.title}`;
-
               return (
-                <div
+                <a
                   key={i}
-                  onClick={() => setSelectedPdf({ url: pdfUrl, title: fullTitle })}
+                  href={pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bd-pdf-luxury-card"
                   style={{
                     display: "flex",
@@ -258,13 +256,12 @@ export default function BrandDetailPage({ params }: Props) {
                     overflow: "hidden",
                     border: "1px solid rgba(0,0,0,0.12)",
                     boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
-                    cursor: "pointer",
+                    textDecoration: "none",
                     position: "relative",
-                    transition: "all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
                   }}
-                  id={`brand-pdf-${i}`}
                 >
-                  {/* Red Luxury PDF Tag — Top Right */}
+                  {/* Red Luxury PDF Tag */}
                   <span
                     style={{
                       position: "absolute",
@@ -274,7 +271,7 @@ export default function BrandDetailPage({ params }: Props) {
                       color: "#ffffff",
                       fontSize: "0.75rem",
                       fontWeight: 900,
-                      padding: "0.3rem 0.75rem",
+                      padding: "0.25rem 0.65rem",
                       borderRadius: "4px",
                       letterSpacing: "0.08em",
                       boxShadow: "0 4px 12px rgba(239, 68, 68, 0.4)",
@@ -287,14 +284,13 @@ export default function BrandDetailPage({ params }: Props) {
                   {/* 1st Page Cover Preview Display */}
                   <div
                     style={{
-                      height: "340px",
-                      background: "#f8fafc",
+                      height: "320px",
+                      background: "#f1f5f9",
                       position: "relative",
                       overflow: "hidden",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      borderBottom: "1px solid rgba(0,0,0,0.06)",
                     }}
                   >
                     <iframe
@@ -307,30 +303,6 @@ export default function BrandDetailPage({ params }: Props) {
                         pointerEvents: "none",
                       }}
                     />
-                    {/* Hover overlay hint */}
-                    <div
-                      className="bd-pdf-overlay-hint"
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        background: "rgba(15, 23, 42, 0.4)",
-                        backdropFilter: "blur(2px)",
-                        WebkitBackdropFilter: "blur(2px)",
-                        opacity: 0,
-                        transition: "opacity 0.25s ease",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#ffffff",
-                        fontWeight: 700,
-                        fontSize: "0.95rem",
-                        gap: "0.4rem",
-                      }}
-                    >
-                      <span style={{ fontSize: "1.8rem" }}>🔒</span>
-                      <span>Click to Submit Enquiry & View</span>
-                    </div>
                   </div>
 
                   {/* Card Title & Meta Info */}
@@ -343,24 +315,15 @@ export default function BrandDetailPage({ params }: Props) {
                         {cat.subtitle}
                       </span>
                     )}
-                    <span style={{ fontSize: "0.85rem", color: "#d4af37", fontWeight: 800, marginTop: "0.5rem", display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                      📩 Fill Enquiry Form to Download PDF ↗
+                    <span style={{ fontSize: "0.85rem", color: "#d4af37", fontWeight: 800, marginTop: "0.4rem", display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                      📄 Download 1st Page & Full PDF ↗
                     </span>
                   </div>
-                </div>
+                </a>
               );
             })}
           </div>
         </div>
-      )}
-
-      {/* Protected Catalog PDF Enquiry Modal */}
-      {selectedPdf && (
-        <CatalogPdfGateModal
-          catalogPdfUrl={selectedPdf.url}
-          itemTitle={selectedPdf.title}
-          onClose={() => setSelectedPdf(null)}
-        />
       )}
 
       {/* ── CTA ── */}
@@ -860,18 +823,8 @@ export default function BrandDetailPage({ params }: Props) {
 
         .bd-catalogues__sub {
           font-size: 1.4rem;
-          color: rgba(0,0,0,0.5);
+          color: rgba(0,0,0,0.45);
           letter-spacing: -0.01em;
-        }
-
-        .bd-pdf-luxury-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
-          border-color: rgba(212, 175, 55, 0.5) !important;
-        }
-
-        .bd-pdf-luxury-card:hover .bd-pdf-overlay-hint {
-          opacity: 1 !important;
         }
 
         .bd-catalogue-grid {
