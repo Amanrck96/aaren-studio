@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, use } from "react";
 import { getBrandById } from "@/lib/brands";
 import { notFound } from "next/navigation";
+import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -16,6 +17,7 @@ export default function BrandDetailPage({ params }: Props) {
 
   const [activeCollection, setActiveCollection] = useState("All");
   const [mounted, setMounted] = useState(false);
+  const [selectedPdf, setSelectedPdf] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -248,6 +250,10 @@ export default function BrandDetailPage({ params }: Props) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bd-pdf-luxury-card"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedPdf({ url: pdfUrl, title: `${brand.name} - ${cat.title}` });
+                  }}
                   style={{
                     display: "flex",
                     flexDirection: "column",
@@ -341,12 +347,17 @@ export default function BrandDetailPage({ params }: Props) {
             <Link href="/contact" className="ul-link t-cta-1" id={`brand-${brand.id}-enquire`}>
               Enquire Now →
             </Link>
-            <Link href="/brands" className="bd-cta__back">
-              ← All Brands
-            </Link>
-          </div>
         </div>
       </div>
+
+      {/* ── PDF Gate Modal ── */}
+      {selectedPdf && (
+        <CatalogPdfGateModal
+          catalogPdfUrl={selectedPdf.url}
+          itemTitle={selectedPdf.title}
+          onClose={() => setSelectedPdf(null)}
+        />
+      )}
 
       <style>{`
         /* ── Brand Detail Page ── */
