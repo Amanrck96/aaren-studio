@@ -1,3 +1,376 @@
+export const BRAND_EXCEL_CATALOGS: Record<string, { title: string; subtitle?: string; file: string; url?: string }[]> = {
+  "mirage": [
+    {
+      "title": "Mirage Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b",
+      "url": "https://drive.google.com/uc?export=download&id=1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b"
+    },
+    {
+      "title": "Mirage Official Catalogue 2",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE",
+      "url": "https://drive.google.com/uc?export=download&id=1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE"
+    },
+    {
+      "title": "Mirage Official Catalogue 3",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4",
+      "url": "https://drive.google.com/uc?export=download&id=1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4"
+    },
+    {
+      "title": "Mirage Official Catalogue 4",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1oUtwekVav7no9FKYOe7E_X3bgMZa56y_",
+      "url": "https://drive.google.com/uc?export=download&id=1oUtwekVav7no9FKYOe7E_X3bgMZa56y_"
+    },
+    {
+      "title": "Mirage Official Catalogue 5",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC",
+      "url": "https://drive.google.com/uc?export=download&id=1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC"
+    },
+    {
+      "title": "Mirage Official Catalogue 6",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6",
+      "url": "https://drive.google.com/uc?export=download&id=1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6"
+    },
+    {
+      "title": "Mirage Official Catalogue 7",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1mzWnr22zYzR0W57teiiohXtE0iU9zgtX",
+      "url": "https://drive.google.com/uc?export=download&id=1mzWnr22zYzR0W57teiiohXtE0iU9zgtX"
+    },
+    {
+      "title": "Mirage Official Catalogue 8",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF",
+      "url": "https://drive.google.com/uc?export=download&id=1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF"
+    },
+    {
+      "title": "Mirage Official Catalogue 9",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp",
+      "url": "https://drive.google.com/uc?export=download&id=1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp"
+    }
+  ],
+  "mafi": [
+    {
+      "title": "Mafi Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ",
+      "url": "https://drive.google.com/uc?export=download&id=1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ"
+    },
+    {
+      "title": "Mafi Official Catalogue 2",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ",
+      "url": "https://drive.google.com/uc?export=download&id=1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ"
+    }
+  ],
+  "inkiostrobianco": [
+    {
+      "title": "Inkiostro Bianco Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9",
+      "url": "https://drive.google.com/uc?export=download&id=1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9"
+    },
+    {
+      "title": "Inkiostro Bianco Official Catalogue 2",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1V546MuJR4xYlk3Oys6T9567beAP2MeTp",
+      "url": "https://drive.google.com/uc?export=download&id=1V546MuJR4xYlk3Oys6T9567beAP2MeTp"
+    }
+  ],
+  "fima": [
+    {
+      "title": "Fima Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ",
+      "url": "https://drive.google.com/uc?export=download&id=1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ"
+    },
+    {
+      "title": "Fima Official Catalogue 2",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx",
+      "url": "https://drive.google.com/uc?export=download&id=1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx"
+    },
+    {
+      "title": "Fima Official Catalogue 3",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g",
+      "url": "https://drive.google.com/uc?export=download&id=11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g"
+    },
+    {
+      "title": "Fima Official Catalogue 4",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr",
+      "url": "https://drive.google.com/uc?export=download&id=1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr"
+    },
+    {
+      "title": "Fima Official Catalogue 5",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz",
+      "url": "https://drive.google.com/uc?export=download&id=1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz"
+    }
+  ],
+  "falper": [],
+  "loco": [],
+  "formica": [
+    {
+      "title": "Formica Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR",
+      "url": "https://drive.google.com/uc?export=download&id=1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR"
+    },
+    {
+      "title": "Formica Official Catalogue 2",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60",
+      "url": "https://drive.google.com/uc?export=download&id=1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60"
+    },
+    {
+      "title": "Formica Official Catalogue 3",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff",
+      "url": "https://drive.google.com/uc?export=download&id=1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff"
+    },
+    {
+      "title": "Formica Official Catalogue 4",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U",
+      "url": "https://drive.google.com/uc?export=download&id=1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U"
+    },
+    {
+      "title": "Formica Official Catalogue 5",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai",
+      "url": "https://drive.google.com/uc?export=download&id=1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai"
+    }
+  ],
+  "newtechwood": [
+    {
+      "title": "Newtechwood Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy",
+      "url": "https://drive.google.com/uc?export=download&id=1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy"
+    },
+    {
+      "title": "Newtechwood Official Catalogue 2",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c",
+      "url": "https://drive.google.com/uc?export=download&id=1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c"
+    }
+  ],
+  "waltz": [
+    {
+      "title": "Waltz Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7",
+      "url": "https://drive.google.com/uc?export=download&id=1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7"
+    },
+    {
+      "title": "Waltz Official Catalogue 2",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE",
+      "url": "https://drive.google.com/uc?export=download&id=1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE"
+    },
+    {
+      "title": "Waltz Official Catalogue 3",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1jFT0QU2G7tra71rUxRenbhekvXjvFGTs",
+      "url": "https://drive.google.com/uc?export=download&id=1jFT0QU2G7tra71rUxRenbhekvXjvFGTs"
+    },
+    {
+      "title": "Waltz Official Catalogue 4",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2",
+      "url": "https://drive.google.com/uc?export=download&id=1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2"
+    },
+    {
+      "title": "Waltz Official Catalogue 5",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=15P4PplYgb9PrPZlWudfHSiKbkexCBU1a",
+      "url": "https://drive.google.com/uc?export=download&id=15P4PplYgb9PrPZlWudfHSiKbkexCBU1a"
+    }
+  ],
+  "slashform": [
+    {
+      "title": "Slashform Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV",
+      "url": "https://drive.google.com/uc?export=download&id=11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV"
+    },
+    {
+      "title": "Slashform Official Catalogue 2",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd",
+      "url": "https://drive.google.com/uc?export=download&id=19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd"
+    }
+  ],
+  "wow": [
+    {
+      "title": "WOW Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1R1gSFNQFJRLKLw_XWTY3Y6TngOk3Vse2",
+      "url": "https://drive.google.com/uc?export=download&id=1R1gSFNQFJRLKLw_XWTY3Y6TngOk3Vse2"
+    },
+    {
+      "title": "WOW Official Catalogue 2",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1awcMoYVr-IvlTcGG8cnCJUFSh9s8Dca0",
+      "url": "https://drive.google.com/uc?export=download&id=1awcMoYVr-IvlTcGG8cnCJUFSh9s8Dca0"
+    },
+    {
+      "title": "WOW Official Catalogue 3",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1MGpG7ObE8R93Dp4ECaoDOhzxBhpxINWq",
+      "url": "https://drive.google.com/uc?export=download&id=1MGpG7ObE8R93Dp4ECaoDOhzxBhpxINWq"
+    },
+    {
+      "title": "WOW Official Catalogue 4",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=17NIm3CK1hJQegsyr0W15R1JyW9qPxtIY",
+      "url": "https://drive.google.com/uc?export=download&id=17NIm3CK1hJQegsyr0W15R1JyW9qPxtIY"
+    },
+    {
+      "title": "WOW Official Catalogue 5",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1UHpmBX4u4GJrAQpVAXsdHu8NbPWQAunN",
+      "url": "https://drive.google.com/uc?export=download&id=1UHpmBX4u4GJrAQpVAXsdHu8NbPWQAunN"
+    },
+    {
+      "title": "WOW Official Catalogue 6",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1By7CJZOiwUjf-KePFU0Uzu-dyO2dAwN9",
+      "url": "https://drive.google.com/uc?export=download&id=1By7CJZOiwUjf-KePFU0Uzu-dyO2dAwN9"
+    },
+    {
+      "title": "WOW Official Catalogue 7",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1CMSJMvIxpOWK8WAIvkYS7A5sF_Dr4K5-",
+      "url": "https://drive.google.com/uc?export=download&id=1CMSJMvIxpOWK8WAIvkYS7A5sF_Dr4K5-"
+    },
+    {
+      "title": "WOW Official Catalogue 8",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1PXKLlUgojb27V2N13-HE_IVANUzHvl8p",
+      "url": "https://drive.google.com/uc?export=download&id=1PXKLlUgojb27V2N13-HE_IVANUzHvl8p"
+    },
+    {
+      "title": "WOW Official Catalogue 9",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1WPSy9iHJmShxFztIfBirSpnP0Kgd1NFv",
+      "url": "https://drive.google.com/uc?export=download&id=1WPSy9iHJmShxFztIfBirSpnP0Kgd1NFv"
+    },
+    {
+      "title": "WOW Official Catalogue 10",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1IYLmJCC20WC2RoqcnIKmdkPyltchzlx0",
+      "url": "https://drive.google.com/uc?export=download&id=1IYLmJCC20WC2RoqcnIKmdkPyltchzlx0"
+    },
+    {
+      "title": "WOW Official Catalogue 11",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1JX0SFlcIelg8L7U8lhmNvLZqmKSICI_X",
+      "url": "https://drive.google.com/uc?export=download&id=1JX0SFlcIelg8L7U8lhmNvLZqmKSICI_X"
+    },
+    {
+      "title": "WOW Official Catalogue 12",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1g45Ay-Fbj0cjyP2spKceZNE76s2fJOc_",
+      "url": "https://drive.google.com/uc?export=download&id=1g45Ay-Fbj0cjyP2spKceZNE76s2fJOc_"
+    }
+  ],
+  "agape": [
+    {
+      "title": "agape Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=17pDn2JO8OFlKXJMTUeRSGUuNvWQxkoHJ",
+      "url": "https://drive.google.com/uc?export=download&id=17pDn2JO8OFlKXJMTUeRSGUuNvWQxkoHJ"
+    }
+  ],
+  "iww": [
+    {
+      "title": "IWW Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=17EMc8hcG4wKxirEgSvNC-qpXs3gpsI__",
+      "url": "https://drive.google.com/uc?export=download&id=17EMc8hcG4wKxirEgSvNC-qpXs3gpsI__"
+    },
+    {
+      "title": "IWW Official Catalogue 2",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=17OK3By3LEj1JeUQCWOunJuXRWPEDFzts",
+      "url": "https://drive.google.com/uc?export=download&id=17OK3By3LEj1JeUQCWOunJuXRWPEDFzts"
+    },
+    {
+      "title": "IWW Official Catalogue 3",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1snN0WQMAI_wXStlfIfnE_a9C7lQRJYNi",
+      "url": "https://drive.google.com/uc?export=download&id=1snN0WQMAI_wXStlfIfnE_a9C7lQRJYNi"
+    },
+    {
+      "title": "IWW Official Catalogue 4",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1t_qIyibYEUQoypj0-E5pBIEfL-feRCC9",
+      "url": "https://drive.google.com/uc?export=download&id=1t_qIyibYEUQoypj0-E5pBIEfL-feRCC9"
+    },
+    {
+      "title": "IWW Official Catalogue 5",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1IIFaKNrX224sfhVBQs1PFZNCodtWb6PV",
+      "url": "https://drive.google.com/uc?export=download&id=1IIFaKNrX224sfhVBQs1PFZNCodtWb6PV"
+    },
+    {
+      "title": "IWW Official Catalogue 6",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1hbazpk9aZOwqqK_xBZ7awRo-obdpxgHc",
+      "url": "https://drive.google.com/uc?export=download&id=1hbazpk9aZOwqqK_xBZ7awRo-obdpxgHc"
+    },
+    {
+      "title": "IWW Official Catalogue 7",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1jOm7QX8_wnAe4pV5pD8KAQdeJjNeNWIt",
+      "url": "https://drive.google.com/uc?export=download&id=1jOm7QX8_wnAe4pV5pD8KAQdeJjNeNWIt"
+    },
+    {
+      "title": "IWW Official Catalogue 8",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1Jkc4R5-p8Rmmo-9YckT8k0s_ycT2hXoI",
+      "url": "https://drive.google.com/uc?export=download&id=1Jkc4R5-p8Rmmo-9YckT8k0s_ycT2hXoI"
+    },
+    {
+      "title": "IWW Official Catalogue 9",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1CAjfcQBs-ifcj4SNdsRnK4HM1zDAeQ-z",
+      "url": "https://drive.google.com/uc?export=download&id=1CAjfcQBs-ifcj4SNdsRnK4HM1zDAeQ-z"
+    },
+    {
+      "title": "IWW Official Catalogue 10",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1BD5z3dOB6Y647bYx9lAu7S2uXWq9FY1d",
+      "url": "https://drive.google.com/uc?export=download&id=1BD5z3dOB6Y647bYx9lAu7S2uXWq9FY1d"
+    }
+  ],
+  "bodaq": [
+    {
+      "title": "Bodaq Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1RuXXaltZ_wTUu2nLD1OTIscfvw0-9CmC",
+      "url": "https://drive.google.com/uc?export=download&id=1RuXXaltZ_wTUu2nLD1OTIscfvw0-9CmC"
+    }
+  ],
+  "inclass": [
+    {
+      "title": "Inclass Official Catalogue 1",
+      "subtitle": "Official Architectural Specification PDF",
+      "file": "https://drive.google.com/uc?export=download&id=1Jf3MZWsvoPwM0DpIIhGijSg4StaLoxg2",
+      "url": "https://drive.google.com/uc?export=download&id=1Jf3MZWsvoPwM0DpIIhGijSg4StaLoxg2"
+    }
+  ]
+};
+
 export type BrandCatalogue = {
   title: string;
   subtitle?: string;
@@ -324,7 +697,17 @@ export function getAllBrands(): Brand[] {
 }
 
 export function getBrandById(id: string): Brand | undefined {
-  return BRANDS.find((b) => b.id === id);
+  const brand = BRANDS.find((b) => b.id === id || b.name.toLowerCase() === id.toLowerCase());
+  if (!brand) return undefined;
+  const key = brand.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const excelCats = BRAND_EXCEL_CATALOGS[key] || BRAND_EXCEL_CATALOGS[id.toLowerCase().replace(/[^a-z0-9]/g, "")];
+  if (excelCats && excelCats.length > 0) {
+    return {
+      ...brand,
+      catalogues: excelCats,
+    };
+  }
+  return brand;
 }
 
 export function getBrandSlugs(): string[] {

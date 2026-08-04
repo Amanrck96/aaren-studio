@@ -242,7 +242,8 @@ export default function BrandDetailPage({ params }: Props) {
 
           <div className="bd-catalogue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "2rem" }}>
             {brand.catalogues.map((cat, i) => {
-              const pdfUrl = `/catalogues/${cat.file}`;
+              const rawPdf = (cat as any).url || cat.file || "";
+              const pdfUrl = rawPdf.startsWith("http") ? rawPdf : (rawPdf.startsWith("/") ? rawPdf : `/catalogues/${rawPdf}`);
               return (
                 <div
                   key={i}

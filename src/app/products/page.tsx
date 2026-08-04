@@ -164,11 +164,13 @@ function ProductsContent() {
         selectedBrands.length === 0 ||
         selectedBrands.some((sb) => normBrand.includes(sb) || sb.includes(normBrand));
 
-      // Category filter
+      // Category & Collection/Tags filter
       const matchesCategory =
         selectedCategory === "All" ||
         normCat.includes(selectedCategory.toLowerCase()) ||
-        selectedCategory.toLowerCase().includes(normCat);
+        selectedCategory.toLowerCase().includes(normCat) ||
+        (p.subcategory && p.subcategory.toLowerCase().includes(selectedCategory.toLowerCase())) ||
+        (p.tags && p.tags.some((t) => t.toLowerCase().includes(selectedCategory.toLowerCase())));
 
       // Query filter
       const matchesQuery =

@@ -30,8 +30,23 @@ export default function Careers() {
       .catch(() => {});
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: "Career Applicant",
+          type: "Career Application",
+          subject: `Career Application: ${formData.position}`,
+          message: `Portfolio: ${formData.portfolio || "N/A"}\nResume: ${formData.resume}`,
+          productOrBrand: formData.position,
+        }),
+      });
+    } catch (e) {}
     setSuccess(true);
   };
 

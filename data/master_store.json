@@ -42,7 +42,7 @@
       "https://x.com/mustbeaaren",
       "https://youtube.com/@aaren_intpro"
     ],
-    "copyrightText": "AAREN \u00c2\u00a9 2026. All rights reserved."
+    "copyrightText": "AAREN Â© 2026. All rights reserved."
   },
   "categories": [
     {
@@ -199,7 +199,7 @@
       "description": "Italian precision living systems for kitchen & wardrobe",
       "shortCode": "SF 01",
       "sequenceNumber": 1,
-      "catalogPdfUrl": "/catalogues/Slashform/Slashform_2025.pdf",
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV",
       "catalogs": [
         {
           "id": "slashform-cat-1",
@@ -218,7 +218,21 @@
           "fileId": "19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd"
         }
       ],
-      "catalogCount": "2 catalogs"
+      "catalogCount": "2 catalogs",
+      "catalogues": [
+        {
+          "title": "Slashform Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV",
+          "url": "https://drive.google.com/uc?export=download&id=11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV"
+        },
+        {
+          "title": "Slashform Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd",
+          "url": "https://drive.google.com/uc?export=download&id=19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd"
+        }
+      ]
     },
     {
       "id": "waltz",
@@ -228,7 +242,7 @@
       "description": "Architectural glass partitions and zipline screens",
       "shortCode": "WB 02",
       "sequenceNumber": 2,
-      "catalogPdfUrl": "/catalogues/Waltz/Waltz_Glass.pdf",
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7",
       "catalogs": [
         {
           "id": "waltz-cat-1",
@@ -271,7 +285,39 @@
           "fileId": "15P4PplYgb9PrPZlWudfHSiKbkexCBU1a"
         }
       ],
-      "catalogCount": "5 catalogs"
+      "catalogCount": "5 catalogs",
+      "catalogues": [
+        {
+          "title": "Waltz by JB Glass Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7",
+          "url": "https://drive.google.com/uc?export=download&id=1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7"
+        },
+        {
+          "title": "Waltz by JB Glass Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE",
+          "url": "https://drive.google.com/uc?export=download&id=1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE"
+        },
+        {
+          "title": "Waltz by JB Glass Official Catalogue Vol. 3",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1jFT0QU2G7tra71rUxRenbhekvXjvFGTs",
+          "url": "https://drive.google.com/uc?export=download&id=1jFT0QU2G7tra71rUxRenbhekvXjvFGTs"
+        },
+        {
+          "title": "Waltz by JB Glass Official Catalogue Vol. 4",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2",
+          "url": "https://drive.google.com/uc?export=download&id=1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2"
+        },
+        {
+          "title": "Waltz by JB Glass Official Catalogue Vol. 5",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=15P4PplYgb9PrPZlWudfHSiKbkexCBU1a",
+          "url": "https://drive.google.com/uc?export=download&id=15P4PplYgb9PrPZlWudfHSiKbkexCBU1a"
+        }
+      ]
     },
     {
       "id": "newtech-wood",
@@ -281,7 +327,21 @@
       "description": "WPC composite outdoor decking and architectural cladding",
       "shortCode": "NW 03",
       "sequenceNumber": 3,
-      "catalogPdfUrl": "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf"
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy",
+      "catalogues": [
+        {
+          "title": "Newtech Wood Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy",
+          "url": "https://drive.google.com/uc?export=download&id=1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy"
+        },
+        {
+          "title": "Newtech Wood Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c",
+          "url": "https://drive.google.com/uc?export=download&id=1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c"
+        }
+      ]
     },
     {
       "id": "formica",
@@ -291,7 +351,7 @@
       "description": "FENIX nano-tech surfaces and premium laminates",
       "shortCode": "FC 04",
       "sequenceNumber": 4,
-      "catalogPdfUrl": "/catalogues/Formica/2024-FENIX-brochure-digital.pdf",
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR",
       "catalogs": [
         {
           "id": "formica-cat-1",
@@ -334,7 +394,39 @@
           "fileId": "1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai"
         }
       ],
-      "catalogCount": "5 catalogs"
+      "catalogCount": "5 catalogs",
+      "catalogues": [
+        {
+          "title": "Formica Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR",
+          "url": "https://drive.google.com/uc?export=download&id=1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR"
+        },
+        {
+          "title": "Formica Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60",
+          "url": "https://drive.google.com/uc?export=download&id=1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60"
+        },
+        {
+          "title": "Formica Official Catalogue Vol. 3",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff",
+          "url": "https://drive.google.com/uc?export=download&id=1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff"
+        },
+        {
+          "title": "Formica Official Catalogue Vol. 4",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U",
+          "url": "https://drive.google.com/uc?export=download&id=1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U"
+        },
+        {
+          "title": "Formica Official Catalogue Vol. 5",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai",
+          "url": "https://drive.google.com/uc?export=download&id=1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai"
+        }
+      ]
     },
     {
       "id": "loco",
@@ -404,7 +496,40 @@
           "fileId": "1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz"
         }
       ],
-      "catalogCount": "5 catalogs"
+      "catalogCount": "5 catalogs",
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ",
+      "catalogues": [
+        {
+          "title": "Fima Carlo Frattini Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ",
+          "url": "https://drive.google.com/uc?export=download&id=1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ"
+        },
+        {
+          "title": "Fima Carlo Frattini Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx",
+          "url": "https://drive.google.com/uc?export=download&id=1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx"
+        },
+        {
+          "title": "Fima Carlo Frattini Official Catalogue Vol. 3",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g",
+          "url": "https://drive.google.com/uc?export=download&id=11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g"
+        },
+        {
+          "title": "Fima Carlo Frattini Official Catalogue Vol. 4",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr",
+          "url": "https://drive.google.com/uc?export=download&id=1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr"
+        },
+        {
+          "title": "Fima Carlo Frattini Official Catalogue Vol. 5",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz",
+          "url": "https://drive.google.com/uc?export=download&id=1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz"
+        }
+      ]
     },
     {
       "id": "inkiostro-bianco",
@@ -414,7 +539,7 @@
       "description": "Creative decorative wallcoverings and printed surfaces",
       "shortCode": "IB 08",
       "sequenceNumber": 8,
-      "catalogPdfUrl": "/catalogues/Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf",
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9",
       "catalogs": [
         {
           "id": "inkiostro-bianco-cat-1",
@@ -433,7 +558,21 @@
           "fileId": "1V546MuJR4xYlk3Oys6T9567beAP2MeTp"
         }
       ],
-      "catalogCount": "2 catalogs"
+      "catalogCount": "2 catalogs",
+      "catalogues": [
+        {
+          "title": "Inkiostro Bianco Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9",
+          "url": "https://drive.google.com/uc?export=download&id=1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9"
+        },
+        {
+          "title": "Inkiostro Bianco Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1V546MuJR4xYlk3Oys6T9567beAP2MeTp",
+          "url": "https://drive.google.com/uc?export=download&id=1V546MuJR4xYlk3Oys6T9567beAP2MeTp"
+        }
+      ]
     },
     {
       "id": "mafi",
@@ -461,7 +600,22 @@
           "fileId": "1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ"
         }
       ],
-      "catalogCount": "2 catalogs"
+      "catalogCount": "2 catalogs",
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ",
+      "catalogues": [
+        {
+          "title": "Mafi Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ",
+          "url": "https://drive.google.com/uc?export=download&id=1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ"
+        },
+        {
+          "title": "Mafi Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ",
+          "url": "https://drive.google.com/uc?export=download&id=1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ"
+        }
+      ]
     },
     {
       "id": "mirage",
@@ -471,7 +625,7 @@
       "description": "Italian porcelain tile mastery and marble slabs",
       "shortCode": "MG 10",
       "sequenceNumber": 10,
-      "catalogPdfUrl": "/catalogues/Mirage/catalogue-elysian-pdf.pdf",
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b",
       "catalogs": [
         {
           "id": "mirage-cat-1",
@@ -546,7 +700,63 @@
           "fileId": "1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp"
         }
       ],
-      "catalogCount": "9 catalogs"
+      "catalogCount": "9 catalogs",
+      "catalogues": [
+        {
+          "title": "Mirage Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b",
+          "url": "https://drive.google.com/uc?export=download&id=1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b"
+        },
+        {
+          "title": "Mirage Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE",
+          "url": "https://drive.google.com/uc?export=download&id=1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE"
+        },
+        {
+          "title": "Mirage Official Catalogue Vol. 3",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4",
+          "url": "https://drive.google.com/uc?export=download&id=1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4"
+        },
+        {
+          "title": "Mirage Official Catalogue Vol. 4",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1oUtwekVav7no9FKYOe7E_X3bgMZa56y_",
+          "url": "https://drive.google.com/uc?export=download&id=1oUtwekVav7no9FKYOe7E_X3bgMZa56y_"
+        },
+        {
+          "title": "Mirage Official Catalogue Vol. 5",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC",
+          "url": "https://drive.google.com/uc?export=download&id=1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC"
+        },
+        {
+          "title": "Mirage Official Catalogue Vol. 6",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6",
+          "url": "https://drive.google.com/uc?export=download&id=1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6"
+        },
+        {
+          "title": "Mirage Official Catalogue Vol. 7",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1mzWnr22zYzR0W57teiiohXtE0iU9zgtX",
+          "url": "https://drive.google.com/uc?export=download&id=1mzWnr22zYzR0W57teiiohXtE0iU9zgtX"
+        },
+        {
+          "title": "Mirage Official Catalogue Vol. 8",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF",
+          "url": "https://drive.google.com/uc?export=download&id=1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF"
+        },
+        {
+          "title": "Mirage Official Catalogue Vol. 9",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp",
+          "url": "https://drive.google.com/uc?export=download&id=1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp"
+        }
+      ]
     },
     {
       "id": "brand-1785617427424-4",
@@ -598,7 +808,40 @@
           "fileId": "1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz"
         }
       ],
-      "catalogCount": "5 catalogs"
+      "catalogCount": "5 catalogs",
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ",
+      "catalogues": [
+        {
+          "title": "Fima Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ",
+          "url": "https://drive.google.com/uc?export=download&id=1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ"
+        },
+        {
+          "title": "Fima Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx",
+          "url": "https://drive.google.com/uc?export=download&id=1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx"
+        },
+        {
+          "title": "Fima Official Catalogue Vol. 3",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g",
+          "url": "https://drive.google.com/uc?export=download&id=11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g"
+        },
+        {
+          "title": "Fima Official Catalogue Vol. 4",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr",
+          "url": "https://drive.google.com/uc?export=download&id=1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr"
+        },
+        {
+          "title": "Fima Official Catalogue Vol. 5",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz",
+          "url": "https://drive.google.com/uc?export=download&id=1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz"
+        }
+      ]
     },
     {
       "id": "brand-1785617427424-8",
@@ -626,7 +869,22 @@
           "fileId": "1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c"
         }
       ],
-      "catalogCount": "2 catalogs"
+      "catalogCount": "2 catalogs",
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy",
+      "catalogues": [
+        {
+          "title": "Newtechwood Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy",
+          "url": "https://drive.google.com/uc?export=download&id=1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy"
+        },
+        {
+          "title": "Newtechwood Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c",
+          "url": "https://drive.google.com/uc?export=download&id=1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c"
+        }
+      ]
     },
     {
       "id": "brand-1785617427424-9",
@@ -678,7 +936,40 @@
           "fileId": "15P4PplYgb9PrPZlWudfHSiKbkexCBU1a"
         }
       ],
-      "catalogCount": "5 catalogs"
+      "catalogCount": "5 catalogs",
+      "catalogPdfUrl": "https://drive.google.com/uc?export=download&id=1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7",
+      "catalogues": [
+        {
+          "title": "Waltz Official Catalogue Vol. 1",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7",
+          "url": "https://drive.google.com/uc?export=download&id=1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7"
+        },
+        {
+          "title": "Waltz Official Catalogue Vol. 2",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE",
+          "url": "https://drive.google.com/uc?export=download&id=1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE"
+        },
+        {
+          "title": "Waltz Official Catalogue Vol. 3",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1jFT0QU2G7tra71rUxRenbhekvXjvFGTs",
+          "url": "https://drive.google.com/uc?export=download&id=1jFT0QU2G7tra71rUxRenbhekvXjvFGTs"
+        },
+        {
+          "title": "Waltz Official Catalogue Vol. 4",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2",
+          "url": "https://drive.google.com/uc?export=download&id=1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2"
+        },
+        {
+          "title": "Waltz Official Catalogue Vol. 5",
+          "subtitle": "Architectural & Material Specification PDF",
+          "file": "https://drive.google.com/uc?export=download&id=15P4PplYgb9PrPZlWudfHSiKbkexCBU1a",
+          "url": "https://drive.google.com/uc?export=download&id=15P4PplYgb9PrPZlWudfHSiKbkexCBU1a"
+        }
+      ]
     }
   ],
   "projects": [
@@ -1028,7 +1319,7 @@
       "id": "prod-slashform-kitchen",
       "slNo": 11,
       "name": "Slashform Terraige Living System",
-      "brand": "slashform\u2122",
+      "brand": "slashform™",
       "category": "Surfaces",
       "subcategory": "Modular Systems",
       "shortCode": "SF 08",
@@ -1054,7 +1345,7 @@
       "id": "prod-fenix-laminate",
       "slNo": 12,
       "name": "FORMICA FENIX NTM Matte Surface",
-      "brand": "FORMICA\u00ae",
+      "brand": "FORMICA®",
       "category": "Surfaces",
       "subcategory": "Nano-Tech Laminate",
       "shortCode": "FC 04",
