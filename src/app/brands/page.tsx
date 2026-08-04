@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
-const BRANDS = [
+const DEFAULT_BRANDS = [
   {
     id: "slashform",
     name: "Slashform",
@@ -117,7 +118,29 @@ const BRANDS = [
 ];
 
 export default function BrandsPage() {
-  const brandsList = BRANDS;
+  const [brandsList, setBrandsList] = useState(DEFAULT_BRANDS);
+
+  useEffect(() => {
+    fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data)) {
+          const mapped = json.data.map((b: any) => ({
+            id: b.id,
+            name: b.name,
+            code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
+            num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : "01",
+            hero: b.bannerUrl || "/brands/brand_1_1.png",
+            logo: b.logoUrl || "/brands/brand_1_2.png",
+            category: b.description || "Architectural Brand",
+            origin: "Global",
+            tagline: b.description || "Partner Brand",
+          }));
+          setBrandsList(mapped);
+        }
+      })
+      .catch((e) => console.error("Dynamic brand fetch error:", e));
+  }, []);
 
   return (
     <div className="brands-page">
