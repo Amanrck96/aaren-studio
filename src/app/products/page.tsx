@@ -368,7 +368,7 @@ function ProductsContent() {
                 return (
                   <Link href={`/products/${prodSlug}`} key={prod.id} className="product-card">
                     <div className="card-image-wrap" style={{ background: coverColor }}>
-                      {prod.imageUrl && prod.imageUrl !== "/brands/brand_1_1.png" ? (
+                      {prod.imageUrl ? (
                         <Image
                           src={prod.imageUrl}
                           alt={prod.name}
@@ -378,7 +378,13 @@ function ProductsContent() {
                           style={{ objectFit: "cover" }}
                           loading="lazy"
                         />
-                      ) : null}
+                      ) : (
+                        <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#f8fafc", color: "#64748b", padding: "1.5rem", textAlign: "center", border: "1px solid rgba(0,0,0,0.06)" }}>
+                          <span style={{ fontSize: "1.8rem", marginBottom: "0.4rem", opacity: 0.6 }}>📦</span>
+                          <span style={{ fontSize: "0.75rem", fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "#8c764b" }}>{prod.brand || "AAREN"}</span>
+                          <span style={{ fontSize: "0.7rem", color: "#94a3b8", marginTop: "2px", fontWeight: 600 }}>Image Pending Upload</span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="card-content">

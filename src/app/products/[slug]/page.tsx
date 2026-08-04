@@ -336,14 +336,22 @@ export default function ProductDetailPage({ params }: Props) {
         {/* LEFT 58%: GALLERY & LIGHTBOX */}
         <div className="gallery-left-col">
           <div className="main-image-viewport">
-            <Image
-              src={allImages[selectedImgIdx] || product.imageUrl}
-              alt={product.name}
-              fill
-              priority
-              sizes="60vw"
-              style={{ objectFit: "cover" }}
-            />
+            {allImages.length > 0 ? (
+              <Image
+                src={allImages[selectedImgIdx] || product.imageUrl}
+                alt={product.name}
+                fill
+                priority
+                sizes="60vw"
+                style={{ objectFit: "cover" }}
+              />
+            ) : (
+              <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#f8fafc", color: "#64748b", padding: "2rem", textAlign: "center" }}>
+                <span style={{ fontSize: "3rem", marginBottom: "0.8rem", opacity: 0.5 }}>📦</span>
+                <span style={{ fontSize: "0.9rem", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", color: "#8c764b" }}>{product.brand || "AAREN"}</span>
+                <span style={{ fontSize: "0.85rem", color: "#94a3b8", marginTop: "4px" }}>Product Photo Pending Upload</span>
+              </div>
+            )}
 
             <div className="pdf-page-badge">PDF PAGE {selectedImgIdx + 1}</div>
 
