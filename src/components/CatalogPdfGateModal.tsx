@@ -8,6 +8,23 @@ type Props = {
   onClose: () => void;
 };
 
+function getProtectedPdfViewerUrl(url: string): string {
+  if (!url) return "";
+  const trimmed = url.trim();
+  const driveMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/id=([a-zA-Z0-9_-]+)/);
+  if (driveMatch && driveMatch[1]) {
+    return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+  }
+  if (trimmed.startsWith("http")) {
+    return `https://docs.google.com/viewer?url=${encodeURIComponent(trimmed)}&embedded=true`;
+  }
+  if (typeof window !== "undefined") {
+    const originUrl = window.location.origin + (trimmed.startsWith("/") ? trimmed : `/${trimmed}`);
+    return `https://docs.google.com/viewer?url=${encodeURIComponent(originUrl)}&embedded=true`;
+  }
+  return trimmed;
+}
+
 export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose }: Props) {
   const [formData, setFormData] = useState({
     name: "",
@@ -44,32 +61,29 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
       }
 
       setUnlocked(true);
-
-      // Trigger instant PDF download / view in new tab
-      setTimeout(() => {
-        window.open(catalogPdfUrl, "_blank");
-      }, 300);
     } catch (e) {
       console.error("Enquiry submission error:", e);
-      window.open(catalogPdfUrl, "_blank");
+      setUnlocked(true);
     } finally {
       setSubmitting(false);
     }
   }
+
+  const viewerUrl = getProtectedPdfViewerUrl(catalogPdfUrl);
 
   return (
     <div
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0, 0, 0, 0.85)",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
+        background: "rgba(0, 0, 0, 0.92)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         zIndex: 99999,
-        padding: "1.2rem",
+        padding: unlocked ? "1rem" : "1.2rem",
       }}
       onClick={onClose}
     >
@@ -80,21 +94,23 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
           border: "1px solid rgba(212, 175, 55, 0.3)",
           borderRadius: "16px",
           width: "100%",
-          maxWidth: "520px",
-          maxHeight: "90vh",
-          overflowY: "auto",
-          padding: "2.4rem",
+          maxWidth: unlocked ? "1100px" : "520px",
+          maxHeight: "92vh",
+          overflowY: unlocked ? "hidden" : "auto",
+          padding: unlocked ? "1.5rem" : "2.4rem",
           color: "#ffffff",
           position: "relative",
-          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.8)",
+          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.9)",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <button
           onClick={onClose}
           style={{
             position: "absolute",
-            top: "20px",
-            right: "20px",
+            top: "16px",
+            right: "16px",
             background: "rgba(255, 255, 255, 0.08)",
             border: "none",
             color: "#aaa",
@@ -106,6 +122,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            zIndex: 10,
             transition: "all 0.2s ease",
           }}
           onMouseEnter={(e) => {
@@ -147,7 +164,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                 letterSpacing: "-0.02em",
               }}
             >
-              Download {itemTitle}
+              Unlock {itemTitle} Catalogue
             </h3>
             <p
               style={{
@@ -157,7 +174,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                 marginBottom: "1.8rem",
               }}
             >
-              Please submit your enquiry details below to instantly view and download the full high-resolution PDF catalogue.
+              Submit your details below to unlock on-screen digital viewing access for this official architectural specification PDF.
             </p>
 
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
@@ -298,52 +315,49 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                   transition: "transform 0.2s ease, boxShadow 0.2s ease",
                 }}
               >
-                {submitting ? "Submitting Enquiry..." : "📩 Submit Enquiry & View PDF"}
+                {submitting ? "Submitting Enquiry..." : "📩 View Catalogue On-Screen"}
               </button>
             </form>
           </>
         ) : (
-          <div style={{ textAlign: "center", padding: "1.5rem 0" }}>
-            <div style={{ fontSize: "3.5rem", marginBottom: "0.5rem" }}>📄✨</div>
-            <h3 style={{ fontSize: "1.6rem", fontWeight: 700, marginBottom: "0.5rem", color: "#ffffff" }}>
-              Enquiry Submitted!
-            </h3>
-            <p style={{ color: "#94a3b8", fontSize: "0.95rem", lineHeight: 1.5, marginBottom: "1.8rem" }}>
-              Thank you, <strong>{formData.name}</strong>. Your enquiry has been received and the PDF catalogue is opening in a new tab.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-              <a
-                href={catalogPdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: "inline-block",
-                  padding: "0.9rem 1.8rem",
-                  background: "#d4af37",
-                  color: "#000000",
-                  borderRadius: "8px",
-                  textDecoration: "none",
-                  fontWeight: 800,
-                  fontSize: "1rem",
-                  boxShadow: "0 8px 20px rgba(212, 175, 55, 0.3)",
-                }}
-              >
-                ⬇️ Re-open PDF Catalogue
-              </a>
+          <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "0.8rem" }}>
+              <div>
+                <span style={{ fontSize: "0.75rem", background: "#d4af37", color: "#000", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  🔒 View-Only Mode
+                </span>
+                <h3 style={{ fontSize: "1.3rem", fontWeight: 700, margin: "0.4rem 0 0 0", color: "#ffffff" }}>
+                  {itemTitle} Official Digital Catalogue
+                </h3>
+              </div>
               <button
                 onClick={onClose}
                 style={{
-                  background: "transparent",
-                  border: "1px solid rgba(255,255,255,0.2)",
-                  color: "#aaa",
-                  padding: "0.7rem",
-                  borderRadius: "8px",
+                  background: "#ef4444",
+                  color: "#ffffff",
+                  border: "none",
+                  padding: "0.5rem 1.2rem",
+                  borderRadius: "6px",
+                  fontWeight: 700,
                   cursor: "pointer",
-                  fontWeight: 600,
+                  fontSize: "0.85rem",
+                  marginRight: "40px",
                 }}
               >
-                Close Window
+                Close Viewer
               </button>
+            </div>
+
+            {/* Protected PDF Reader Iframe */}
+            <div style={{ flex: 1, minHeight: "72vh", background: "#0a0a0c", borderRadius: "8px", overflow: "hidden", border: "1px solid #333" }}>
+              <iframe
+                title={`${itemTitle} View-Only PDF Catalogue`}
+                src={viewerUrl}
+                width="100%"
+                height="100%"
+                style={{ border: 0, minHeight: "72vh" }}
+                allowFullScreen={false}
+              />
             </div>
           </div>
         )}

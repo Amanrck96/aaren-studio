@@ -11,7 +11,7 @@ function parseGoogleDriveUrl(url: string): string {
   const trimmed = url.trim();
   const match = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/id=([a-zA-Z0-9_-]+)/);
   if (match && match[1]) {
-    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+    return `https://drive.google.com/file/d/${match[1]}/preview`;
   }
   return trimmed;
 }
