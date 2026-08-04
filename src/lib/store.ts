@@ -1055,11 +1055,26 @@ declare global {
   var __AAREN_INQUIRIES_CACHE__: InquiryItem[];
 }
 
+const FIREBASE_RTDB_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || "https://aarenintpro-1c09f-default-rtdb.firebaseio.com";
+
 // INQUIRIES STORE (LEADS & PROTECTED CATALOG GATE)
 export async function getInquiriesStore(): Promise<InquiryItem[]> {
   const json = readJsonStore();
   const fileInquiries: InquiryItem[] = json.inquiries || [];
   const memoryInquiries: InquiryItem[] = globalThis.__AAREN_INQUIRIES_CACHE__ || [];
+
+  let firebaseInquiries: InquiryItem[] = [];
+  try {
+    const res = await fetch(`${FIREBASE_RTDB_URL}/inquiries.json`, { cache: "no-store" });
+    if (res.ok) {
+      const fbData = await res.json();
+      if (fbData && typeof fbData === "object") {
+        firebaseInquiries = Object.values(fbData).filter((i: any) => i && i.id && i.name) as InquiryItem[];
+      }
+    }
+  } catch (e) {
+    console.error("Firebase RTDB fetch inquiries error:", e);
+  }
 
   let dbInquiries: InquiryItem[] = [];
   try {
@@ -1084,6 +1099,7 @@ export async function getInquiriesStore(): Promise<InquiryItem[]> {
   const map = new Map<string, InquiryItem>();
   fileInquiries.forEach((item) => map.set(item.id, item));
   memoryInquiries.forEach((item) => map.set(item.id, item));
+  firebaseInquiries.forEach((item) => map.set(item.id, item));
   dbInquiries.forEach((item) => map.set(item.id, item));
 
   const all = Array.from(map.values());
@@ -1125,7 +1141,18 @@ export async function logInquiryStore(data: {
   json.inquiries.unshift(full);
   writeJsonStore(json);
 
-  // 3. Await Prisma DB Insert (Crucial for Vercel Serverless Functions)
+  // 3. Firebase Realtime Database Cloud Sync (Ensures leads persist across Vercel serverless cold-starts)
+  try {
+    await fetch(`${FIREBASE_RTDB_URL}/inquiries/${id}.json`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(full),
+    });
+  } catch (fbErr) {
+    console.error("Firebase inquiry insert error:", fbErr);
+  }
+
+  // 4. Prisma DB Insert (Local PostgreSQL if available)
   try {
     await prisma.inquiry.create({
       data: {
@@ -1159,10 +1186,22 @@ export async function logInquiryStore(data: {
 }
 
 export async function deleteInquiryStore(id: string): Promise<boolean> {
+  // Delete from Firebase Cloud DB
+  try {
+    await fetch(`${FIREBASE_RTDB_URL}/inquiries/${id}.json`, { method: "DELETE" });
+  } catch (e) {}
+
+  // Delete from Prisma DB
   try {
     await prisma.inquiry.delete({ where: { id } });
   } catch (e) {}
 
+  // Delete from Memory Cache
+  if (globalThis.__AAREN_INQUIRIES_CACHE__) {
+    globalThis.__AAREN_INQUIRIES_CACHE__ = globalThis.__AAREN_INQUIRIES_CACHE__.filter((i) => i.id !== id);
+  }
+
+  // Delete from JSON file
   const json = readJsonStore();
   if (json.inquiries) {
     json.inquiries = json.inquiries.filter((i: any) => i.id !== id);

@@ -301,17 +301,14 @@ export default function ProductDetailPage({ params }: Props) {
     e.preventDefault();
     try {
       const payload = {
-        id: `inq-${Date.now()}`,
         name: formData.name,
         email: formData.email,
-        phone: formData.phone,
+        phone: formData.phone || "Not provided",
         company: formData.company,
         message: formData.message,
-        productName: product ? `${product.brand} - ${product.name}` : "Product Quote",
-        productId: product?.id || slug,
+        productOrBrand: product ? `${product.brand} - ${product.name}` : "Product Quote",
+        subject: `Product Quote Request for ${product ? product.name : "Product"}${formData.company ? ` (${formData.company})` : ""}`,
         type: "Product Quote Request",
-        status: "NEW",
-        createdAt: new Date().toISOString(),
       };
       await fetch("/api/inquiries", {
         method: "POST",

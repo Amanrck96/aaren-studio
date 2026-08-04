@@ -79,9 +79,15 @@ export default function AdminInquiriesPage() {
             <span style={{ color: "#8c764b", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>
               LEAD MANAGEMENT & BACKEND
             </span>
-            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.4rem 0", color: "#8c764b" }}>
-              Inquiries & Customer Leads ({inquiries.length})
-            </h1>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flexWrap: "wrap" }}>
+              <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.4rem 0", color: "#8c764b" }}>
+                Inquiries & Customer Leads ({inquiries.length})
+              </h1>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", padding: "0.3rem 0.75rem", background: "#dcfce7", color: "#166534", borderRadius: "20px", fontSize: "0.75rem", fontWeight: 700, border: "1px solid #bbf7d0" }}>
+                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 8px #22c55e" }}></span>
+                Live Cloud Sync Active
+              </span>
+            </div>
             <p style={{ color: "#475569", fontSize: "0.95rem" }}>
               All inquiries submitted via Contact Forms, Project Debriefs, and Catalog PDF Downloads. Live synchronized with email dispatches.
             </p>
