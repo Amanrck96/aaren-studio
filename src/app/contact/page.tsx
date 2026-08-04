@@ -87,12 +87,31 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Premium Abstract Map Block */}
-          <div className="mock-map">
-            <div className="mock-map__grid"></div>
-            <div className="mock-map__overlay">
-              <span className="mock-map__tag">MAP NAVIGATION ROUTE</span>
-              <span className="mock-map__address">AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026</span>
+          {/* Live Google Map Embedded Block */}
+          <div className="google-map-container" style={{ position: "relative", height: "28rem", width: "100%", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(0,0,0,0.12)", boxShadow: "0 10px 30px rgba(0,0,0,0.06)" }}>
+            <iframe
+              title="AAREN INTPRO Google Map Location"
+              src="https://maps.google.com/maps?q=AAREN%20INTPRO%2C%20%23342%2F8%2C%20NTY%20Layout%2C%20Mysore%20Road%2C%20Bangalore%20-%20560026&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen={true}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+            <div style={{ position: "absolute", bottom: "12px", left: "12px", right: "12px", background: "rgba(17, 17, 17, 0.92)", backdropFilter: "blur(8px)", padding: "0.8rem 1.2rem", borderRadius: "6px", color: "#ffffff", display: "flex", justifyContent: "space-between", alignItems: "center", pointerEvents: "auto", flexWrap: "wrap", gap: "0.5rem" }}>
+              <div>
+                <div style={{ fontSize: "0.7rem", color: "#c8a96e", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>SHOWROOM & MATERIAL LAB</div>
+                <div style={{ fontSize: "0.85rem", fontWeight: 700, marginTop: "2px" }}>AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026</div>
+              </div>
+              <a
+                href="https://maps.google.com/?q=AAREN+INTPRO,+#342/8,+NTY+Layout,+Mysore+Road,+Bangalore+-+560026"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ padding: "0.4rem 0.86rem", background: "#8c764b", color: "#ffffff", borderRadius: "4px", fontSize: "0.75rem", fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" }}
+              >
+                📍 Open Directions ↗
+              </a>
             </div>
           </div>
         </div>
