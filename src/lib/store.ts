@@ -1364,17 +1364,78 @@ export async function deleteBlogStore(id: string) {
   writeJsonStore(json);
 }
 
-// MEDIA LIBRARY STORE
+// MEDIA LIBRARY STORE (AGGREGATES ALL PDFS, VIDEOS, SWATCHES, LOGOS & SITE ASSETS)
 export async function getMediaStore(): Promise<MediaAsset[]> {
+  const json = readJsonStore();
+  const manualMedia: MediaAsset[] = json.media || [];
+
+  let dbMedia: MediaAsset[] = [];
   try {
     const db = await prisma.mediaItem.findMany({ orderBy: { createdAt: "desc" } });
-    if (db && db.length > 0) return db as any;
+    if (db && db.length > 0) dbMedia = db as any;
   } catch (e) {}
-  const json = readJsonStore();
-  return json.media || [
-    { id: "m-1", fileName: "Slashform_Kitchen_Catalog.pdf", fileUrl: "/catalogues/Slashform/Slashform_2025.pdf", fileType: "PDF", folder: "Catalogs", size: "12.4 MB" },
-    { id: "m-2", fileName: "FENIX_Brochure_2024.pdf", fileUrl: "/catalogues/Formica/2024-FENIX-brochure-digital.pdf", fileType: "PDF", folder: "Catalogs", size: "8.2 MB" },
-  ];
+
+  const assets: MediaAsset[] = [];
+  const addedUrls = new Set<string>();
+
+  function addAsset(fileName: string, url: string, fileType: string, folder: string, size?: string) {
+    if (!url || addedUrls.has(url)) return;
+    addedUrls.add(url);
+    assets.push({
+      id: `media-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      fileName,
+      fileUrl: url,
+      fileType: fileType as any,
+      folder,
+      size: size || "Cloud Asset",
+      createdAt: new Date().toISOString(),
+    });
+  }
+
+  // 1. Manual & DB Media Items
+  manualMedia.forEach((m) => addAsset(m.fileName, m.fileUrl, m.fileType, m.folder, m.size));
+  dbMedia.forEach((m) => addAsset(m.fileName, m.fileUrl, m.fileType, m.folder, m.size));
+
+  // 2. All Brand Catalog PDFs & Logos/Banners
+  (json.brands || DEFAULT_BRANDS || []).forEach((b: any) => {
+    if (b.catalogPdfUrl) addAsset(`${b.name} Catalog PDF`, b.catalogPdfUrl, "PDF", "Brand Catalogs");
+    if (b.catalogues) {
+      b.catalogues.forEach((c: any) => addAsset(c.title || `${b.name} Catalog PDF`, c.url || c.file, "PDF", "Brand Catalogs"));
+    }
+    if (b.logoUrl) addAsset(`${b.name} Logo`, b.logoUrl, "Image", "Logos & Banners");
+    if (b.bannerUrl) addAsset(`${b.name} Banner Photo`, b.bannerUrl, "Image", "Logos & Banners");
+  });
+
+  // 3. Products
+  (json.products || DEFAULT_PRODUCTS || []).forEach((p: any) => {
+    if (p.catalogPdfUrl) addAsset(`${p.name} Catalog PDF`, p.catalogPdfUrl, "PDF", "Product Catalogs");
+    if (p.imageUrl) addAsset(`${p.name} Main Photo`, p.imageUrl, "Image", "Products");
+    if (p.galleryImages) p.galleryImages.forEach((g: string, idx: number) => addAsset(`${p.name} Photo ${idx + 1}`, g, "Image", "Products"));
+  });
+
+  // 4. Hero Videos & Settings
+  const settings = json.settings || DEFAULT_SETTINGS;
+  if (settings.heroVideoUrl) {
+    addAsset("Hero Video Banner (MP4)", settings.heroVideoUrl, "Video", "Hero & Videos");
+  }
+
+  // 5. Showcase Projects
+  (json.projects || DEFAULT_PROJECTS || []).forEach((pr: any) => {
+    if (pr.imageUrl) addAsset(`${pr.title} Cover Photo`, pr.imageUrl, "Image", "Projects");
+    if (pr.pdfUrl) addAsset(`${pr.title} Specification PDF`, pr.pdfUrl, "PDF", "Projects");
+  });
+
+  // 6. Categories
+  (json.categories || DEFAULT_CATEGORIES || []).forEach((c: any) => {
+    if (c.coverImage) addAsset(`${c.name} Category Cover`, c.coverImage, "Image", "Categories");
+  });
+
+  // 7. Team
+  (json.team || DEFAULT_TEAM || []).forEach((t: any) => {
+    if (t.photoUrl) addAsset(`${t.name} Member Profile Photo`, t.photoUrl, "Image", "Team");
+  });
+
+  return assets;
 }
 
 export async function saveMediaStore(media: Omit<MediaAsset, "id"> & { id?: string }): Promise<MediaAsset> {
