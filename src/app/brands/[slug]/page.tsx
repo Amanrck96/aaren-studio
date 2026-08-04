@@ -244,6 +244,12 @@ export default function BrandDetailPage({ params }: Props) {
             {brand.catalogues.map((cat, i) => {
               const rawPdf = (cat as any).url || cat.file || "";
               const pdfUrl = rawPdf.startsWith("http") ? rawPdf : (rawPdf.startsWith("/") ? rawPdf : `/catalogues/${rawPdf}`);
+
+              // Extract 1st Page Cover Thumbnail Image from Google Drive ID
+              const driveMatch = rawPdf.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawPdf.match(/id=([a-zA-Z0-9_-]+)/);
+              const driveId = driveMatch ? driveMatch[1] : null;
+              const coverThumbUrl = driveId ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w800` : null;
+
               return (
                 <div
                   key={i}
@@ -291,14 +297,14 @@ export default function BrandDetailPage({ params }: Props) {
                       zIndex: 25,
                     }}
                   >
-                    LOCKED PDF
+                    🔒 LOCKED PDF
                   </span>
 
-                  {/* 1st Page Cover Preview Display */}
+                  {/* 1st Page Cover Preview Image Container */}
                   <div
                     style={{
                       height: "320px",
-                      background: "#f1f5f9",
+                      background: "#0f172a",
                       position: "relative",
                       overflow: "hidden",
                       display: "flex",
@@ -306,25 +312,49 @@ export default function BrandDetailPage({ params }: Props) {
                       justifyContent: "center",
                     }}
                   >
-                    <iframe
-                      src={`${pdfUrl}#page=1&view=FitH&toolbar=0&navpanes=0`}
-                      title={cat.title}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        border: "none",
-                        pointerEvents: "none",
-                      }}
-                    />
+                    {coverThumbUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={coverThumbUrl}
+                        alt={`${cat.title} Cover 1st Page`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          objectPosition: "top center",
+                          transition: "transform 0.5s ease",
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+                          color: "#ffffff",
+                          padding: "2rem",
+                          textAlign: "center",
+                        }}
+                      >
+                        <div style={{ fontSize: "2.5rem", marginBottom: "0.6rem" }}>📄</div>
+                        <span style={{ fontSize: "0.75rem", color: "#d4af37", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>{brand.name}</span>
+                        <span style={{ fontSize: "1rem", fontWeight: 700, marginTop: "0.3rem", color: "#fff" }}>{cat.title}</span>
+                        <span style={{ fontSize: "0.7rem", color: "#94a3b8", marginTop: "0.5rem" }}>Official 1st Page Specification PDF</span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Card Title & Meta Info */}
                   <div style={{ padding: "1.4rem 1.2rem", background: "#ffffff", display: "flex", flexDirection: "column", gap: "0.4rem", position: "relative", zIndex: 20 }}>
-                    <span style={{ fontSize: "1.15rem", fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>
+                    <span style={{ fontSize: "1.05rem", fontWeight: 800, color: "#0f172a", lineHeight: 1.3 }}>
                       {cat.title}
                     </span>
                     {cat.subtitle && (
-                      <span style={{ fontSize: "0.9rem", color: "#64748b", fontWeight: 500 }}>
+                      <span style={{ fontSize: "0.85rem", color: "#64748b", fontWeight: 500 }}>
                         {cat.subtitle}
                       </span>
                     )}
@@ -340,17 +370,18 @@ export default function BrandDetailPage({ params }: Props) {
                         background: "#0f172a",
                         border: "none",
                         borderRadius: "6px",
-                        padding: "8px 12px",
+                        padding: "0.65rem 1rem",
                         fontWeight: 700,
+                        cursor: "pointer",
                         marginTop: "0.6rem",
-                        display: "inline-flex",
+                        display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: "0.4rem",
-                        cursor: "pointer",
+                        gap: "0.5rem",
+                        boxShadow: "0 4px 12px rgba(15, 23, 42, 0.15)",
                       }}
                     >
-                      📄 Request Access &amp; Download PDF ↗
+                      🔒 Unlock & View PDF ↗
                     </button>
                   </div>
                 </div>
