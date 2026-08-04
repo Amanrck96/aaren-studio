@@ -61,6 +61,20 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
       }
 
       setUnlocked(true);
+
+      // Extract Drive View URL or Direct PDF URL
+      const trimmed = catalogPdfUrl.trim();
+      const driveMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/id=([a-zA-Z0-9_-]+)/);
+      const directViewUrl = driveMatch && driveMatch[1] 
+        ? `https://drive.google.com/file/d/${driveMatch[1]}/view`
+        : catalogPdfUrl;
+
+      // Auto-open PDF Catalogue in View-Only Player Window
+      setTimeout(() => {
+        if (typeof window !== "undefined") {
+          window.open(directViewUrl, "_blank");
+        }
+      }, 200);
     } catch (e) {
       console.error("Enquiry submission error:", e);
       setUnlocked(true);
@@ -69,7 +83,17 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
     }
   }
 
-  const viewerUrl = getProtectedPdfViewerUrl(catalogPdfUrl);
+  const trimmed = catalogPdfUrl.trim();
+  const driveMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/id=([a-zA-Z0-9_-]+)/);
+  const driveId = driveMatch ? driveMatch[1] : null;
+
+  const directViewUrl = driveId 
+    ? `https://drive.google.com/file/d/${driveId}/view`
+    : catalogPdfUrl;
+
+  const docsEmbedUrl = driveId
+    ? `https://docs.google.com/viewer?url=${encodeURIComponent(`https://drive.google.com/uc?export=download&id=${driveId}`)}&embedded=true`
+    : (trimmed.startsWith("http") ? `https://docs.google.com/viewer?url=${encodeURIComponent(trimmed)}&embedded=true` : trimmed);
 
   return (
     <div
@@ -321,42 +345,63 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
           </>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "0.8rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "0.8rem", flexWrap: "wrap", gap: "0.5rem" }}>
               <div>
                 <span style={{ fontSize: "0.75rem", background: "#d4af37", color: "#000", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  🔒 View-Only Mode
+                  🔓 Catalogue Unlocked
                 </span>
                 <h3 style={{ fontSize: "1.3rem", fontWeight: 700, margin: "0.4rem 0 0 0", color: "#ffffff" }}>
                   {itemTitle} Official Digital Catalogue
                 </h3>
               </div>
-              <button
-                onClick={onClose}
-                style={{
-                  background: "#ef4444",
-                  color: "#ffffff",
-                  border: "none",
-                  padding: "0.5rem 1.2rem",
-                  borderRadius: "6px",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  fontSize: "0.85rem",
-                  marginRight: "40px",
-                }}
-              >
-                Close Viewer
-              </button>
+              <div style={{ display: "flex", gap: "0.8rem", alignItems: "center", marginRight: "35px" }}>
+                <a
+                  href={directViewUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)",
+                    color: "#000000",
+                    border: "none",
+                    padding: "0.55rem 1.2rem",
+                    borderRadius: "6px",
+                    fontWeight: 800,
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                    textDecoration: "none",
+                    whiteSpace: "nowrap",
+                    boxShadow: "0 4px 14px rgba(212, 175, 55, 0.35)",
+                  }}
+                >
+                  👁️ Open Full PDF Reader ↗
+                </a>
+                <button
+                  onClick={onClose}
+                  style={{
+                    background: "#ef4444",
+                    color: "#ffffff",
+                    border: "none",
+                    padding: "0.55rem 1rem",
+                    borderRadius: "6px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                  }}
+                >
+                  Close
+                </button>
+              </div>
             </div>
 
-            {/* Protected PDF Reader Iframe */}
-            <div style={{ flex: 1, minHeight: "72vh", background: "#0a0a0c", borderRadius: "8px", overflow: "hidden", border: "1px solid #333" }}>
+            {/* Embedded Docs PDF Viewer Iframe */}
+            <div style={{ flex: 1, minHeight: "68vh", background: "#0a0a0c", borderRadius: "8px", overflow: "hidden", border: "1px solid #333" }}>
               <iframe
                 title={`${itemTitle} View-Only PDF Catalogue`}
-                src={viewerUrl}
+                src={docsEmbedUrl}
                 width="100%"
                 height="100%"
-                style={{ border: 0, minHeight: "72vh" }}
-                allowFullScreen={false}
+                style={{ border: 0, minHeight: "68vh" }}
+                allowFullScreen={true}
               />
             </div>
           </div>
