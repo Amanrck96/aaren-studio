@@ -1183,13 +1183,31 @@ export function generateInquiriesCSV(inquiries: InquiryItem[]): string {
 export const createProjectStore = saveProjectStore;
 
 export async function getAllFAQsStore() {
-  try {
-    const faqs = await prisma.fAQ.findMany({ orderBy: { id: "asc" } });
-    if (faqs && faqs.length > 0) return faqs;
-  } catch (e) {}
+  const json = readJsonStore();
+  if (json.faqs && Array.isArray(json.faqs) && json.faqs.length > 0) {
+    return json.faqs;
+  }
   return [
-    { id: "faq-1", question: "What materials does Aaren Studio specialize in?", answer: "We specialize in Italian FENIX nano-tech surfaces, Falper luxury vanities, Mafi natural wood flooring, and NewTechWood architectural cladding." },
-    { id: "faq-2", question: "Where is the Aaren Studio Material Lab located?", answer: "Our Material Lab is located on Mysore Road, Bangalore, India." }
+    { id: "faq-1", category: "General & Showroom", question: "What is Aaren Intpro?", answer: "Aaren Intpro is a premium interior solutions company in Bangalore offering luxury surfaces, architectural hardware, modular kitchens, wardrobes, and flooring." },
+    { id: "faq-2", category: "General & Showroom", question: "Where is Aaren Intpro located?", answer: "Aaren Intpro is located at #342/8, NTY Layout, Mysore Road, Bangalore - 560026." },
+    { id: "faq-3", category: "Surfaces & Materials", question: "What products are available at Aaren Intpro?", answer: "Aaren Intpro offers luxury laminates, veneers, modular kitchens, wardrobe solutions, architectural hardware, bathroom fittings, hardwood flooring, and decorative panels." },
+    { id: "faq-4", category: "Kitchens & Wardrobes", question: "Does Aaren Intpro provide modular kitchen solutions?", answer: "Yes. Aaren Intpro offers customized modular kitchen solutions with premium finishes and international accessories." },
+    { id: "faq-5", category: "Kitchens & Wardrobes", question: "Does Aaren Intpro offer wardrobe solutions?", answer: "Yes. Aaren Intpro provides stylish wardrobe solutions with customized layouts and storage accessories." },
+    { id: "faq-6", category: "Surfaces & Materials", question: "What types of surface materials are available at Aaren Intpro?", answer: "Aaren Intpro offers FENIX nano-tech laminates, veneers, decorative surfaces, hardwood flooring, and designer materials." },
+    { id: "faq-7", category: "Hardware & Fittings", question: "Does Aaren Intpro supply architectural hardware?", answer: "Yes. Aaren Intpro provides high-quality door hardware, furniture fittings, handles, hinges, and drawer systems." },
+    { id: "faq-8", category: "Architects & Commercial", question: "Can architects and interior designers collaborate with Aaren Intpro?", answer: "Yes. Aaren Intpro works closely with architects, interior designers, builders, and developers." },
+    { id: "faq-9", category: "Hardware & Fittings", question: "Does Aaren Intpro offer bathroom solutions?", answer: "Yes. Aaren Intpro offers luxury bathroom fittings, sanitaryware, shower systems, and Falper vanities." },
+    { id: "faq-10", category: "Architects & Commercial", question: "Does Aaren Intpro provide products for commercial projects?", answer: "Yes. Aaren Intpro caters to residential, commercial, hospitality, and architectural projects." },
+    { id: "faq-11", category: "General & Showroom", question: "Why choose Aaren Intpro for luxury interior products in Bangalore?", answer: "Aaren Intpro represents top global brands, supplying high-quality materials under one roof with expert consultation." },
+    { id: "faq-12", category: "Surfaces & Materials", question: "Does Aaren Intpro offer imported interior products?", answer: "Yes. Aaren Intpro brings internationally recognized brands from Italy, Austria, USA, and global markets." },
+    { id: "faq-13", category: "General & Showroom", question: "Can homeowners visit the Aaren Intpro showroom?", answer: "Yes. Homeowners can visit our Mysore Road Bangalore showroom to explore interior products and finishes." },
+    { id: "faq-14", category: "General & Showroom", question: "Does Aaren Intpro help with product selection?", answer: "Yes. Our expert advisory team assists customers in selecting materials, finishes, hardware, and interior products." },
+    { id: "faq-15", category: "Architects & Commercial", question: "What industries does Aaren Intpro serve?", answer: "Aaren Intpro serves residential penthouses, villas, hospitality projects, corporate offices, and commercial developments." },
+    { id: "faq-16", category: "Surfaces & Materials", question: "Does Aaren Intpro offer flooring solutions?", answer: "Yes. Aaren Intpro provides Mafi Austrian hardwood flooring, engineered wood, SPC, and porcelain tile slabs." },
+    { id: "faq-17", category: "Surfaces & Materials", question: "What brands are available at Aaren Intpro?", answer: "Aaren Intpro offers FENIX Formica, Mirage, Falper, FIMA, Mafi, NewTechWood, Inkiostro Bianco, Waltz, and Slashform." },
+    { id: "faq-18", category: "Architects & Commercial", question: "Can Aaren Intpro handle custom interior requirements?", answer: "Yes. Aaren Intpro offers customized solutions tailored to specific architectural specifications." },
+    { id: "faq-19", category: "General & Showroom", question: "Does Aaren Intpro provide solutions for luxury homes?", answer: "Yes. We specialize in luxury interior products for penthouses, villas, and upscale residential spaces." },
+    { id: "faq-20", category: "General & Showroom", question: "How can I contact Aaren Intpro?", answer: "Call +91 888 446 4444 or email hello@aarenstudio.com / info@aarenintpro.com." }
   ];
 }
 

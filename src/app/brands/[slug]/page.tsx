@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, useMemo, use } from "react";
 import { getBrandById } from "@/lib/brands";
 import { notFound } from "next/navigation";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
@@ -18,15 +18,47 @@ export default function BrandDetailPage({ params }: Props) {
   const [activeCollection, setActiveCollection] = useState("All");
   const [mounted, setMounted] = useState(false);
   const [selectedPdf, setSelectedPdf] = useState<{ url: string; title: string } | null>(null);
+  const [apiProducts, setApiProducts] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 20;
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    fetch(`/api/products?brand=${encodeURIComponent(brand.name)}&t=${Date.now()}`)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setApiProducts(json.data);
+        }
+      })
+      .catch((e) => console.error("Brand products API error:", e));
+  }, [brand.name]);
 
-  const filteredProducts =
-    activeCollection === "All"
-      ? brand.products
-      : brand.products.filter((p) => p.collection === activeCollection);
+  // Combine hardcoded samples with API products
+  const allBrandProducts = useMemo(() => {
+    if (apiProducts.length > 0) {
+      return apiProducts.map((p) => ({
+        id: p.id,
+        name: p.name,
+        collection: p.subcategory || p.category || "Collection",
+        finish: p.finish || p.description || "",
+        image: p.imageUrl,
+        tag: p.shortCode || p.category,
+      }));
+    }
+    return brand.products;
+  }, [apiProducts, brand.products]);
+
+  const filteredProducts = useMemo(() => {
+    if (activeCollection === "All") return allBrandProducts;
+    return allBrandProducts.filter((p) => p.collection.toLowerCase() === activeCollection.toLowerCase());
+  }, [activeCollection, allBrandProducts]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredProducts.slice(start, start + pageSize);
+  }, [filteredProducts, currentPage]);
 
   /* Accent colours per brand for subtle identity */
   const accentMap: Record<string, string> = {
@@ -115,7 +147,7 @@ export default function BrandDetailPage({ params }: Props) {
           )}
           <div className="bd-info-stat">
             <span className="bd-info-stat__label">Products</span>
-            <span className="bd-info-stat__value">{brand.products.length}</span>
+            <span className="bd-info-stat__value">{allBrandProducts.length}</span>
           </div>
         </div>
       </div>
@@ -132,28 +164,35 @@ export default function BrandDetailPage({ params }: Props) {
       </div>
 
       {/* ── Products / Collection ── */}
-      {brand.products.length > 0 && (
+      {allBrandProducts.length > 0 && (
         <div className="bd-products">
-          <div className="bd-products__header">
+          <div className="bd-products__header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <h2 className="bd-products__heading">Collection</h2>
+            <span style={{ fontSize: "0.9rem", color: "#64748b", fontWeight: 600 }}>
+              Showing {paginatedProducts.length > 0 ? (currentPage - 1) * pageSize + 1 : 0}–
+              {Math.min(currentPage * pageSize, filteredProducts.length)} of {filteredProducts.length} Products
+            </span>
           </div>
 
-          {/* Circular Category Cards Row (Image 1 & user layout specification) */}
+          {/* Circular Category Cards Row */}
           <div className="bd-category-circles-bar">
             {brand.collections.map((col) => {
-              const catSampleProduct = brand.products.find((p) => col === "All" || p.collection === col);
+              const catSampleProduct = allBrandProducts.find((p) => col === "All" || p.collection.toLowerCase() === col.toLowerCase());
               const thumbUrl = catSampleProduct?.image || brand.hero;
               const count =
                 col === "All"
-                  ? brand.products.length
-                  : brand.products.filter((p) => p.collection === col).length;
+                  ? allBrandProducts.length
+                  : allBrandProducts.filter((p) => p.collection.toLowerCase() === col.toLowerCase()).length;
 
               const isActive = activeCollection === col;
 
               return (
                 <button
                   key={col}
-                  onClick={() => setActiveCollection(col)}
+                  onClick={() => {
+                    setActiveCollection(col);
+                    setCurrentPage(1);
+                  }}
                   className={`bd-cat-circle-card${isActive ? " is-active" : ""}`}
                   id={`brand-filter-${brand.id}-${col.toLowerCase().replace(/\s+/g, "-")}`}
                 >
@@ -177,56 +216,84 @@ export default function BrandDetailPage({ params }: Props) {
             })}
           </div>
 
-          {/* Product grid or Empty state */}
-          {filteredProducts.length > 0 ? (
-            <div className={`bd-product-grid${mounted ? " is-mounted" : ""}`}>
-              {filteredProducts.map((product, i) => (
-                <div
-                  key={product.id}
-                  className="bd-product-card"
-                  style={{ animationDelay: `${i * 0.06}s` }}
-                  id={`brand-product-${product.id}`}
-                >
-                  {/* Image area — product image if available, else coloured swatch */}
-                  <div className="bd-product-card__swatch">
-                    {product.image ? (
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        sizes="(max-width: 768px) 50vw, 25vw"
-                        style={{ objectFit: "cover" }}
-                      />
-                    ) : (
-                      <div
-                        className="bd-product-card__swatch-inner"
-                        style={{
-                          background: `linear-gradient(135deg, ${accent}22 0%, ${accent}44 100%)`,
-                        }}
-                      >
-                        {/* abstract pattern overlay */}
-                        <div className="bd-product-card__swatch-pattern" />
-                      </div>
-                    )}
-                    {product.tag && (
-                      <span className="bd-product-card__tag">{product.tag}</span>
-                    )}
-                  </div>
+          {/* Product grid (4 items per row, 20 items per page) */}
+          {paginatedProducts.length > 0 ? (
+            <>
+              <div
+                className={`bd-product-grid${mounted ? " is-mounted" : ""}`}
+                style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "1.5rem" }}
+              >
+                {paginatedProducts.map((product, i) => (
+                  <Link
+                    href={`/products/${product.id}`}
+                    key={product.id}
+                    className="bd-product-card"
+                    style={{ animationDelay: `${i * 0.04}s`, textDecoration: "none", color: "inherit" }}
+                    id={`brand-product-${product.id}`}
+                  >
+                    {/* Image area */}
+                    <div className="bd-product-card__swatch" style={{ height: "260px", position: "relative" }}>
+                      {product.image ? (
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          sizes="(max-width: 768px) 50vw, 25vw"
+                          style={{ objectFit: "cover" }}
+                        />
+                      ) : (
+                        <div
+                          className="bd-product-card__swatch-inner"
+                          style={{
+                            background: `linear-gradient(135deg, ${accent}22 0%, ${accent}44 100%)`,
+                          }}
+                        >
+                          <div className="bd-product-card__swatch-pattern" />
+                        </div>
+                      )}
+                      {product.tag && (
+                        <span className="bd-product-card__tag">{product.tag}</span>
+                      )}
+                    </div>
 
-                  {/* Info */}
-                  <div className="bd-product-card__info">
-                    <span className="bd-product-card__collection">{product.collection}</span>
-                    <span className="bd-product-card__name">{product.name}</span>
-                    {product.finish && (
-                      <span className="bd-product-card__finish">{product.finish}</span>
-                    )}
-                  </div>
+                    {/* Info */}
+                    <div className="bd-product-card__info" style={{ padding: "1rem" }}>
+                      <span className="bd-product-card__collection" style={{ fontSize: "0.75rem", color: "#8c764b", fontWeight: 700, textTransform: "uppercase" }}>{product.collection}</span>
+                      <h3 className="bd-product-card__name" style={{ fontSize: "0.95rem", fontWeight: 700, margin: "0.2rem 0" }}>{product.name}</h3>
+                      {product.finish && (
+                        <span className="bd-product-card__finish" style={{ fontSize: "0.8rem", color: "#64748b" }}>{product.finish}</span>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Pagination (20 products per page) */}
+              {totalPages > 1 && (
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem", marginTop: "2.5rem" }}>
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                    style={{ padding: "0.6rem 1.2rem", background: currentPage === 1 ? "#e2e8f0" : "#0f172a", color: currentPage === 1 ? "#94a3b8" : "#fff", border: "none", borderRadius: "6px", cursor: currentPage === 1 ? "not-allowed" : "pointer", fontWeight: 700 }}
+                  >
+                    ← Prev
+                  </button>
+                  <span style={{ fontSize: "0.9rem", color: "#475569", fontWeight: 700, padding: "0 0.8rem" }}>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                    style={{ padding: "0.6rem 1.2rem", background: currentPage === totalPages ? "#e2e8f0" : "#0f172a", color: currentPage === totalPages ? "#94a3b8" : "#fff", border: "none", borderRadius: "6px", cursor: currentPage === totalPages ? "not-allowed" : "pointer", fontWeight: 700 }}
+                  >
+                    Next →
+                  </button>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           ) : (
             <div className="bd-empty-collection" style={{ padding: "4rem 1.2rem", textAlign: "center", color: "rgba(0,0,0,0.4)" }}>
-              <p style={{ fontSize: "1.4rem" }}>No items listed in <strong>{activeCollection}</strong> for this catalog edition.</p>
+              <p style={{ fontSize: "1.4rem" }}>No items listed in <strong>{activeCollection}</strong> for this brand.</p>
             </div>
           )}
         </div>
