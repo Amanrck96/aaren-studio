@@ -69,6 +69,27 @@ export default function AdminHeroPage() {
     setSettings({ ...settings, heroCategories: settings.heroCategories.filter((c) => c !== tag) });
   }
 
+  const handleVideoUpload = async (file: File) => {
+    if (!file || !settings) return;
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "Hero Videos");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      if (json.success && json.url) {
+        setSettings((prev) => (prev ? { ...prev, heroVideoUrl: json.url } : null));
+        alert("✅ Background MP4 Video uploaded successfully to " + json.url);
+      } else alert("Upload failed: " + json.error);
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    }
+  };
+
   if (loading || !settings) {
     return (
       <div style={{ background: "#0a0a0c", color: "#fff", minHeight: "100vh" }}>
@@ -124,14 +145,40 @@ export default function AdminHeroPage() {
 
           <div>
             <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>Background MP4 Video URL *</label>
-            <input
-              type="url"
-              required
-              value={settings.heroVideoUrl}
-              onChange={(e) => setSettings({ ...settings, heroVideoUrl: e.target.value })}
-              style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.95rem" }}
-            />
-            <p style={{ fontSize: "0.8rem", color: "#777", marginTop: "0.4rem" }}>Direct link to MP4 video file or Cloudinary hosted background video.</p>
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              <input
+                type="text"
+                required
+                value={settings.heroVideoUrl}
+                onChange={(e) => setSettings({ ...settings, heroVideoUrl: e.target.value })}
+                style={{ flex: 1, padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.95rem" }}
+              />
+              <input
+                type="file"
+                accept="video/mp4,video/webm,video/*"
+                id="heroVideoUpload"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) handleVideoUpload(e.target.files[0]);
+                }}
+              />
+              <label
+                htmlFor="heroVideoUpload"
+                style={{
+                  padding: "0.8rem 1.2rem",
+                  background: "#2563eb",
+                  color: "#fff",
+                  borderRadius: "6px",
+                  fontSize: "0.85rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                💻 Upload Video From Computer
+              </label>
+            </div>
+            <p style={{ fontSize: "0.8rem", color: "#777", marginTop: "0.4rem" }}>Direct link to MP4 video file or select any MP4 video directly from your computer.</p>
           </div>
 
           {/* Categories Bar Control */}

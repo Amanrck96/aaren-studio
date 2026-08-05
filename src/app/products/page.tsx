@@ -196,8 +196,27 @@ function ProductsContent() {
     return list;
   }, [filteredProducts, sortOption]);
 
-  // Pagination (12 per page)
-  const pageSize = 12;
+  // Calculate dynamic category counts from loaded products
+  const categoriesList = useMemo(() => {
+    const counts: Record<string, number> = { All: products.length };
+    products.forEach((p) => {
+      const c = (p.category || "Other").trim();
+      counts[c] = (counts[c] || 0) + 1;
+    });
+
+    const defaultCategories = ["All", "Decking", "Cladding", "Surfaces", "Bathroom", "Flooring", "Doors", "Kitchen", "Tiles"];
+    const allCatNames = Array.from(new Set([...defaultCategories, ...Object.keys(counts)]));
+
+    return allCatNames.map((catName) => ({
+      id: catName,
+      label: catName,
+      symbol: catName.charAt(0).toUpperCase(),
+      count: counts[catName] || 0,
+    }));
+  }, [products]);
+
+  // Pagination (20 per page)
+  const pageSize = 20;
   const totalPages = Math.max(1, Math.ceil(sortedProducts.length / pageSize));
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
@@ -293,7 +312,7 @@ function ProductsContent() {
             <div className="sidebar-section" style={{ marginTop: "24px" }}>
               <div className="sidebar-label">Category</div>
               <div className="category-stack">
-                {CATEGORIES_FILTER_LIST.map((cat) => {
+                {categoriesList.map((cat) => {
                   const isActive = selectedCategory === cat.id;
                   return (
                     <button
@@ -389,8 +408,8 @@ function ProductsContent() {
             </div>
           )}
 
-          {/* Product Grid */}
-          <div className="product-grid">
+          {/* Product Grid (4 items per row, 20 items per page) */}
+          <div className="product-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "1.5rem" }}>
             {paginatedProducts.length === 0 ? (
               <div className="no-results">
                 <p>No products match your current filters.</p>
@@ -794,109 +813,6 @@ function ProductsContent() {
           cursor: pointer;
           font-weight: 600;
           margin-left: 4px;
-        }
-
-        /* Product Grid (Hairline Border 3 Columns) */
-        .product-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1px;
-          background: var(--border);
-          border: 0.5px solid var(--border);
-          border-radius: 6px;
-          overflow: hidden;
-        }
-
-        .product-card {
-          background: var(--surface-2);
-          text-decoration: none;
-          color: inherit;
-          display: flex;
-          flex-direction: column;
-          transition: background 0.15s ease;
-        }
-
-        .product-card:hover {
-          background: var(--surface-1);
-        }
-
-        .card-image-wrap {
-          aspect-ratio: 1;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .card-img {
-          transition: transform 0.4s ease;
-        }
-
-        .product-card:hover .card-img {
-          transform: scale(1.04);
-        }
-
-        .card-content {
-          padding: 14px 16px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .brand-name-tag {
-          font-size: 9px;
-          text-transform: uppercase;
-          color: var(--text-muted);
-          letter-spacing: 0.08em;
-          font-weight: 600;
-        }
-
-        .product-title {
-          font-size: 13px;
-          font-weight: 500;
-          color: var(--text-primary);
-        }
-
-        .category-pill {
-          margin-top: 6px;
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          font-size: 10px;
-          color: var(--text-secondary);
-          background: var(--surface-0);
-          border: 0.5px solid var(--border);
-          padding: 2px 8px;
-          border-radius: 12px;
-          width: fit-content;
-        }
-
-        /* Pagination */
-        .pagination {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          margin-top: 36px;
-        }
-
-        .page-btn, .page-num-btn {
-          font-size: 12px;
-          padding: 6px 12px;
-          border: 0.5px solid var(--border);
-          border-radius: var(--radius);
-          background: #ffffff;
-          cursor: pointer;
-          color: var(--text-secondary);
-        }
-
-        .page-btn:disabled {
-          opacity: 0.4;
-          cursor: not-allowed;
-        }
-
-        .page-num-btn.active {
-          background: var(--text-primary);
-          color: #ffffff;
-          border-color: var(--text-primary);
         }
 
         .no-results {

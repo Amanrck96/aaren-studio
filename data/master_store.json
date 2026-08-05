@@ -757,219 +757,6 @@
           "url": "https://drive.google.com/file/d/1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp/view"
         }
       ]
-    },
-    {
-      "id": "brand-1785617427424-4",
-      "name": "Fima",
-      "logoUrl": "https://lh3.googleusercontent.com/d/1IOVIZVPYtOky2JSqkLuJTKB075v3IYKd",
-      "bannerUrl": "https://lh3.googleusercontent.com/d/1IOVIZVPYtOky2JSqkLuJTKB075v3IYKd",
-      "description": "Fima Premium Architectural Brand",
-      "shortCode": "FIM",
-      "sequenceNumber": 11,
-      "catalogs": [
-        {
-          "id": "fima-cat-1",
-          "title": "CATALOG 01",
-          "pdfUrl": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ",
-          "coverImage": "https://lh3.googleusercontent.com/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ=s800",
-          "fileId": "1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ"
-        },
-        {
-          "id": "fima-cat-2",
-          "title": "CATALOG 02",
-          "pdfUrl": "https://drive.google.com/file/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx",
-          "coverImage": "https://lh3.googleusercontent.com/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx=s800",
-          "fileId": "1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx"
-        },
-        {
-          "id": "fima-cat-3",
-          "title": "CATALOG 03",
-          "pdfUrl": "https://drive.google.com/file/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g",
-          "coverImage": "https://lh3.googleusercontent.com/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g=s800",
-          "fileId": "11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g"
-        },
-        {
-          "id": "fima-cat-4",
-          "title": "CATALOG 04",
-          "pdfUrl": "https://drive.google.com/file/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr",
-          "coverImage": "https://lh3.googleusercontent.com/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr=s800",
-          "fileId": "1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr"
-        },
-        {
-          "id": "fima-cat-5",
-          "title": "CATALOG 05",
-          "pdfUrl": "https://drive.google.com/file/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz",
-          "coverImage": "https://lh3.googleusercontent.com/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz=s800",
-          "fileId": "1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz"
-        }
-      ],
-      "catalogCount": "5 catalogs",
-      "catalogPdfUrl": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ/view",
-      "catalogues": [
-        {
-          "title": "Fima Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ/view",
-          "url": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ/view"
-        },
-        {
-          "title": "Fima Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx/view",
-          "url": "https://drive.google.com/file/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx/view"
-        },
-        {
-          "title": "Fima Official Catalogue Vol. 3",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g/view",
-          "url": "https://drive.google.com/file/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g/view"
-        },
-        {
-          "title": "Fima Official Catalogue Vol. 4",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr/view",
-          "url": "https://drive.google.com/file/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr/view"
-        },
-        {
-          "title": "Fima Official Catalogue Vol. 5",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz/view",
-          "url": "https://drive.google.com/file/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz/view"
-        }
-      ]
-    },
-    {
-      "id": "brand-1785617427424-8",
-      "name": "Newtechwood",
-      "logoUrl": "https://lh3.googleusercontent.com/d/1q_dGyFu1tXAE_fa-AAUZqG3f4ni3Xg8b",
-      "bannerUrl": "https://lh3.googleusercontent.com/d/1q_dGyFu1tXAE_fa-AAUZqG3f4ni3Xg8b",
-      "description": "Newtechwood Premium Architectural Brand",
-      "shortCode": "NEW",
-      "sequenceNumber": 12,
-      "catalogs": [
-        {
-          "id": "newtechwood-cat-1",
-          "title": "CATALOG 01",
-          "pdfUrl": "https://drive.google.com/file/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy",
-          "coverImage": "https://lh3.googleusercontent.com/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy=s800",
-          "fileId": "1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy"
-        },
-        {
-          "id": "newtechwood-cat-2",
-          "title": "CATALOG 02",
-          "pdfUrl": "https://drive.google.com/file/d/1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c",
-          "coverImage": "https://lh3.googleusercontent.com/d/1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c=s800",
-          "fileId": "1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c"
-        }
-      ],
-      "catalogCount": "2 catalogs",
-      "catalogPdfUrl": "https://drive.google.com/file/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy/view",
-      "catalogues": [
-        {
-          "title": "Newtechwood Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy/view",
-          "url": "https://drive.google.com/file/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy/view"
-        },
-        {
-          "title": "Newtechwood Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c/view",
-          "url": "https://drive.google.com/file/d/1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c/view"
-        }
-      ]
-    },
-    {
-      "id": "brand-1785617427424-9",
-      "name": "Waltz",
-      "logoUrl": "https://lh3.googleusercontent.com/d/1KoYCgyKZroVQM8XUXU_2vCsrXUNX2VOh",
-      "bannerUrl": "https://lh3.googleusercontent.com/d/1KoYCgyKZroVQM8XUXU_2vCsrXUNX2VOh",
-      "description": "Waltz Premium Architectural Brand",
-      "shortCode": "WAL",
-      "sequenceNumber": 13,
-      "catalogs": [
-        {
-          "id": "waltz-cat-1",
-          "title": "CATALOG 01",
-          "pdfUrl": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7",
-          "coverImage": "https://lh3.googleusercontent.com/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7=s800",
-          "fileId": "1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7"
-        },
-        {
-          "id": "waltz-cat-2",
-          "title": "CATALOG 02",
-          "pdfUrl": "https://drive.google.com/file/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE",
-          "coverImage": "https://lh3.googleusercontent.com/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE=s800",
-          "fileId": "1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE"
-        },
-        {
-          "id": "waltz-cat-3",
-          "title": "CATALOG 03",
-          "pdfUrl": "https://drive.google.com/file/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs",
-          "coverImage": "https://lh3.googleusercontent.com/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs=s800",
-          "fileId": "1jFT0QU2G7tra71rUxRenbhekvXjvFGTs"
-        },
-        {
-          "id": "waltz-cat-4",
-          "title": "CATALOG 04",
-          "pdfUrl": "https://drive.google.com/file/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2",
-          "coverImage": "https://lh3.googleusercontent.com/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2=s800",
-          "fileId": "1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2"
-        },
-        {
-          "id": "waltz-cat-5",
-          "title": "CATALOG 05",
-          "pdfUrl": "https://drive.google.com/file/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a",
-          "coverImage": "https://lh3.googleusercontent.com/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a=s800",
-          "fileId": "15P4PplYgb9PrPZlWudfHSiKbkexCBU1a"
-        }
-      ],
-      "catalogCount": "5 catalogs",
-      "catalogPdfUrl": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7/view",
-      "catalogues": [
-        {
-          "title": "Waltz Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7/view",
-          "url": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7/view"
-        },
-        {
-          "title": "Waltz Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE/view",
-          "url": "https://drive.google.com/file/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE/view"
-        },
-        {
-          "title": "Waltz Official Catalogue Vol. 3",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs/view",
-          "url": "https://drive.google.com/file/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs/view"
-        },
-        {
-          "title": "Waltz Official Catalogue Vol. 4",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2/view",
-          "url": "https://drive.google.com/file/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2/view"
-        },
-        {
-          "title": "Waltz Official Catalogue Vol. 5",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a/view",
-          "url": "https://drive.google.com/file/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a/view"
-        }
-      ]
     }
   ],
   "projects": [
@@ -24308,6 +24095,17 @@
       "createdAt": "2026-08-05T11:02:28.889Z"
     },
     {
+      "id": "inq-1785926823538",
+      "name": "Vikram Mehta",
+      "email": "vikram.mehta@studio.com",
+      "phone": "+91 98765 43210",
+      "type": "Catalog PDF Gate",
+      "subject": "PDF Downloaded: AQUARELLE Collection",
+      "message": "Catalog PDF Downloaded: AQUARELLE Collection\nProfession: Principal Architect\nCity: Bangalore",
+      "productOrBrand": "AQUARELLE Collection (AQUARELLE.pdf)",
+      "createdAt": "2026-08-05T10:47:03.538Z"
+    },
+    {
       "id": "inq-1785674698085",
       "name": "AMAN SAH",
       "email": "amanrck69@gmail.com",
@@ -24337,6 +24135,272 @@
       "subject": "Villa Interior Surfaces",
       "message": "Interested in Plywood and FENIX laminates for luxury villa",
       "createdAt": "2026-08-01T20:15:26.944Z"
+    }
+  ],
+  "pdfCatalogs": [
+    {
+      "id": "cat-pdf-aquarelle",
+      "title": "AQUARELLE Collection",
+      "fileName": "AQUARELLE.pdf",
+      "primaryFileName": "AQUARELLE.pdf",
+      "fileUrl": "/catalogs/aquarelle.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/aquarelle_thumb.jpg",
+      "brand": "WOW Design",
+      "category": "Tiles & Ceramics",
+      "subcategory": "Glazed Wall Tiles",
+      "description": "Translucent water-color effect ceramic tiles in fluid translucent layers (7.5x30 cm).",
+      "tags": [
+        "Ceramic",
+        "Glazed Tile",
+        "Watercolor",
+        "WOW Design"
+      ],
+      "fileSize": "2.13 MB",
+      "sizeBytes": 2231442,
+      "pageCount": 19,
+      "isLocked": true,
+      "downloadCount": 1,
+      "createdAt": "2026-08-05T16:00:00.000Z"
+    },
+    {
+      "id": "cat-pdf-bits",
+      "title": "BITS Architectural Fragment Collection",
+      "fileName": "BITS.pdf",
+      "primaryFileName": "BITS.pdf",
+      "fileUrl": "/catalogs/bits.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/bits_thumb.jpg",
+      "brand": "WOW Design",
+      "category": "Tiles & Ceramics",
+      "subcategory": "Geometric Tiles",
+      "description": "Minimalist geometric ceramic construction units with vibrant colors in matte and gloss finishes.",
+      "tags": [
+        "Geometric",
+        "Minimalist",
+        "Matte & Gloss",
+        "WOW Design"
+      ],
+      "fileSize": "2.13 MB",
+      "sizeBytes": 2229722,
+      "pageCount": 16,
+      "isLocked": true,
+      "downloadCount": 0,
+      "createdAt": "2026-08-05T16:00:00.000Z"
+    },
+    {
+      "id": "cat-pdf-catalogo_materiaprima_2026_2a",
+      "title": "MATERIA PRIMA 2026 Collection",
+      "fileName": "CATALOGO_MATERIAPRIMA_2026_2a_compressed.pdf",
+      "primaryFileName": "CATALOGO_MATERIAPRIMA_2026_2a_compressed.pdf",
+      "fileUrl": "/catalogs/catalogo_materiaprima_2026_2a.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/catalogo_materiaprima_2026_2a_thumb.jpg",
+      "brand": "Inkiostro Bianco",
+      "category": "Wallcoverings & Murals",
+      "subcategory": "Decorative Wallpaper",
+      "description": "Master collection featuring Geometric Line-Art, Neo Heritage Botanica, and Wabi Sabi tactile surfaces.",
+      "tags": [
+        "Wallpaper",
+        "Murals",
+        "Wabi Sabi",
+        "Inkiostro Bianco"
+      ],
+      "fileSize": "6.29 MB",
+      "sizeBytes": 6599975,
+      "pageCount": 103,
+      "isLocked": true,
+      "downloadCount": 0,
+      "createdAt": "2026-08-05T16:00:00.000Z"
+    },
+    {
+      "id": "cat-pdf-catalogo-nouvelle",
+      "title": "NOUVELLE Art Deco Collection",
+      "fileName": "Catalogo-Nouvelle-baja.pdf",
+      "primaryFileName": "Catalogo-Nouvelle-baja.pdf",
+      "fileUrl": "/catalogs/catalogo-nouvelle.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg",
+      "brand": "WOW Design",
+      "category": "Tiles & Ceramics",
+      "subcategory": "Art Deco Tiles",
+      "description": "Art Deco inspired elongated ornamental ceramic tiles with precious stone color palettes.",
+      "tags": [
+        "Art Deco",
+        "Precious Stone",
+        "Ornamental",
+        "WOW Design"
+      ],
+      "fileSize": "7.34 MB",
+      "sizeBytes": 7694858,
+      "pageCount": 25,
+      "isLocked": true,
+      "downloadCount": 0,
+      "createdAt": "2026-08-05T16:00:00.000Z"
+    },
+    {
+      "id": "cat-pdf-catalogo-sabil",
+      "title": "SABIL Artisanal Collection",
+      "fileName": "Catalogo-Sabil-baja.pdf",
+      "primaryFileName": "Catalogo-Sabil-baja.pdf",
+      "fileUrl": "/catalogs/catalogo-sabil.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/catalogo-sabil_thumb.jpg",
+      "brand": "WOW Design",
+      "category": "Terracotta & Zellige",
+      "subcategory": "Handcrafted Tiles",
+      "description": "Artisanal hand-crafted textured ceramic tiles with natural earthy tones and tactile surfaces.",
+      "tags": [
+        "Terracotta",
+        "Handcrafted",
+        "Tactile",
+        "WOW Design"
+      ],
+      "fileSize": "5.77 MB",
+      "sizeBytes": 6049531,
+      "pageCount": 27,
+      "isLocked": true,
+      "downloadCount": 0,
+      "createdAt": "2026-08-05T16:00:00.000Z"
+    },
+    {
+      "id": "cat-pdf-catalogo-terre",
+      "title": "TERRE Geological Clay Collection",
+      "fileName": "Catalogo-Terre.pdf",
+      "primaryFileName": "Catalogo-Terre.pdf",
+      "fileUrl": "/catalogs/catalogo-terre.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/catalogo-terre_thumb.jpg",
+      "brand": "WOW Design",
+      "category": "Terracotta & Zellige",
+      "subcategory": "Clay & Mineral Tiles",
+      "description": "Geological clay and mineral strata ceramics with reactive glaze granules and crystalline depth.",
+      "tags": [
+        "Clay",
+        "Mineral Strata",
+        "Reactive Glaze",
+        "WOW Design"
+      ],
+      "fileSize": "10.62 MB",
+      "sizeBytes": 11132095,
+      "pageCount": 31,
+      "isLocked": true,
+      "downloadCount": 0,
+      "createdAt": "2026-08-05T16:00:00.000Z"
+    },
+    {
+      "id": "cat-pdf-catalogo-vestige",
+      "title": "VESTIGE Antiqued Marble Collection",
+      "fileName": "Catalogo-Vestige-baja (1).pdf",
+      "primaryFileName": "Catalogo-Vestige-baja.pdf",
+      "fileUrl": "/catalogs/catalogo-vestige.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/catalogo-vestige_thumb.jpg",
+      "brand": "WOW Design",
+      "category": "Marble & Stone Porcelain",
+      "subcategory": "Antiqued Marble",
+      "description": "Reinterpreted vision of marble with time-worn textures, rounded irregular contours, and matte patina.",
+      "tags": [
+        "Marble",
+        "Antiqued",
+        "Porcelain",
+        "WOW Design"
+      ],
+      "fileSize": "7.53 MB",
+      "sizeBytes": 7892776,
+      "pageCount": 33,
+      "isLocked": true,
+      "downloadCount": 0,
+      "createdAt": "2026-08-05T16:00:00.000Z"
+    },
+    {
+      "id": "cat-pdf-arpa-vis-brochure_250122",
+      "title": "ARPA VIS Technology High-Wear Surfaces",
+      "fileName": "arpa-vis-brochure_250122 (1).pdf",
+      "primaryFileName": "arpa-vis-brochure_250122.pdf",
+      "fileUrl": "/catalogs/arpa-vis-brochure_250122.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/arpa-vis-brochure_250122_thumb.jpg",
+      "brand": "Arpa / FENIX",
+      "category": "High-Pressure Laminates & Surfaces",
+      "subcategory": "Engineered HPL Surfaces",
+      "description": "High-wear mineral engineered HPL surface for interior design with 20x wear resistance.",
+      "tags": [
+        "HPL",
+        "Nano-Tech",
+        "Engineered Surface",
+        "Arpa"
+      ],
+      "fileSize": "3.9 MB",
+      "sizeBytes": 4086907,
+      "pageCount": 13,
+      "isLocked": true,
+      "downloadCount": 0,
+      "createdAt": "2026-08-05T16:00:00.000Z"
+    },
+    {
+      "id": "cat-pdf-catalogo60grados",
+      "title": "60º Chevron & Wood-Stone Hybrid",
+      "fileName": "catalogo60Grados (1).pdf",
+      "primaryFileName": "catalogo60Grados.pdf",
+      "fileUrl": "/catalogs/catalogo60grados.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/catalogo60grados_thumb.jpg",
+      "brand": "WOW Design",
+      "category": "Wood & Chevron Flooring",
+      "subcategory": "Chevron & Trapezoid Tiles",
+      "description": "Fluid dialogue between natural wood and Calacatta stone with 60-degree chevron and trapezoid tile shapes.",
+      "tags": [
+        "Chevron",
+        "Wood Effect",
+        "Calacatta",
+        "WOW Design"
+      ],
+      "fileSize": "2.97 MB",
+      "sizeBytes": 3111786,
+      "pageCount": 27,
+      "isLocked": true,
+      "downloadCount": 0,
+      "createdAt": "2026-08-05T16:00:00.000Z"
+    },
+    {
+      "id": "cat-pdf-catalogobejmat",
+      "title": "BEJMAT Moorish Zellige Collection",
+      "fileName": "catalogoBejmat.pdf",
+      "primaryFileName": "catalogoBejmat.pdf",
+      "fileUrl": "/catalogs/catalogobejmat.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/catalogobejmat_thumb.jpg",
+      "brand": "WOW Design",
+      "category": "Terracotta & Zellige",
+      "subcategory": "Moorish Zellige",
+      "description": "Traditional 10th-century Moorish Zellige rectangular paving stones in shaded colors for indoor & outdoor spaces.",
+      "tags": [
+        "Zellige",
+        "Moorish",
+        "Terracotta",
+        "WOW Design"
+      ],
+      "fileSize": "11.02 MB",
+      "sizeBytes": 11555854,
+      "pageCount": 31,
+      "isLocked": true,
+      "downloadCount": 0,
+      "createdAt": "2026-08-05T16:00:00.000Z"
+    },
+    {
+      "id": "cat-pdf-catalogue-clay-pdf",
+      "title": "CLAY Resin Effect Porcelain Slabs",
+      "fileName": "catalogue-clay-pdf.pdf",
+      "primaryFileName": "catalogue-clay-pdf.pdf",
+      "fileUrl": "/catalogs/catalogue-clay-pdf.pdf",
+      "thumbnailUrl": "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg",
+      "brand": "Mirage Ceramic",
+      "category": "Resin & Large Slabs",
+      "subcategory": "Resin Slabs",
+      "description": "Resin spread effect porcelain tiles with subtle gloss contrast on matte finish in large architectural formats (1200x2780mm).",
+      "tags": [
+        "Resin Slabs",
+        "Porcelain",
+        "Large Format",
+        "Mirage"
+      ],
+      "fileSize": "16.77 MB",
+      "sizeBytes": 17587126,
+      "pageCount": 31,
+      "isLocked": true,
+      "downloadCount": 0,
+      "createdAt": "2026-08-05T16:00:00.000Z"
     }
   ]
 }

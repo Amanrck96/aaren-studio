@@ -52,25 +52,24 @@ export default function AdminMediaPage() {
     if (!file) return;
     setUploading(true);
     try {
-      const res = await uploadFileToFirebase(file);
-      if (res && res.url) {
-        const type = file.type.includes("pdf") ? "PDF" : file.type.includes("video") ? "Video" : "Image";
-        await fetch("/api/media", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            fileName: file.name,
-            fileUrl: res.url,
-            fileType: type,
-            folder: "Uploaded Files",
-            size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
-          }),
-        });
-        alert("✅ File uploaded & saved to Central Media Library!");
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "PC Uploads");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = await res.json();
+      if (json.success) {
+        alert("✅ File uploaded successfully from computer to " + json.url);
         fetchMedia();
+      } else {
+        alert("❌ Upload failed: " + json.error);
       }
     } catch (err: any) {
-      alert("❌ Upload failed: " + (err.message || err));
+      alert("❌ Upload error: " + (err.message || err));
     } finally {
       setUploading(false);
     }

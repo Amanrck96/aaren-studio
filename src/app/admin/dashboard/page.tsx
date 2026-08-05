@@ -15,6 +15,7 @@ export default function AdminDashboardPage() {
     blogs: 0,
     media: 0,
     inquiries: 0,
+    catalogs: 0,
   });
 
   useEffect(() => {
@@ -28,7 +29,8 @@ export default function AdminDashboardPage() {
       fetch("/api/blogs").then((res) => res.json()),
       fetch("/api/media").then((res) => res.json()),
       fetch("/api/inquiries").then((res) => res.json()),
-    ]).then(([p, c, b, pr, s, t, bl, m, inq]) => {
+      fetch("/api/catalogs").then((res) => res.json()),
+    ]).then(([p, c, b, pr, s, t, bl, m, inq, cat]) => {
       setStats({
         projects: p.count || p.data?.length || 0,
         categories: c.count || c.data?.length || 0,
@@ -39,11 +41,14 @@ export default function AdminDashboardPage() {
         blogs: bl.count || bl.data?.length || 0,
         media: m.count || m.data?.length || 0,
         inquiries: inq.count || inq.data?.length || 0,
+        catalogs: cat.count || cat.data?.length || 0,
       });
     }).catch((e) => console.error(e));
   }, []);
 
   const statCards = [
+    { label: "Total PDF Catalogs", count: stats.catalogs, color: "#8c764b", href: "/catalogs" },
+    { label: "Inquiries & PDF Leads", count: stats.inquiries, color: "#f43f5e", href: "/admin/inquiries" },
     { label: "Total Projects", count: stats.projects, color: "#d4af37", href: "/admin/projects" },
     { label: "Total Categories", count: stats.categories, color: "#10b981", href: "/admin/categories" },
     { label: "Total Partner Brands", count: stats.brands, color: "#a855f7", href: "/admin/brands" },
@@ -51,8 +56,6 @@ export default function AdminDashboardPage() {
     { label: "Total Services", count: stats.services, color: "#f59e0b", href: "/admin/services" },
     { label: "Client Testimonials", count: stats.testimonials, color: "#14b8a6", href: "/admin/testimonials" },
     { label: "Blog Articles", count: stats.blogs, color: "#6366f1", href: "/admin/blogs" },
-    { label: "Media Assets", count: stats.media, color: "#eab308", href: "/admin/media" },
-    { label: "Inquiries & PDF Leads", count: stats.inquiries, color: "#f43f5e", href: "/admin/inquiries" },
   ];
 
   const modules = [
