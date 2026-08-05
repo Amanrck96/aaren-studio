@@ -210,7 +210,15 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
 
                 <div style={{ width: "100%", height: "340px", background: "#000", borderRadius: "8px", overflow: "hidden", marginBottom: "0.8rem" }}>
                   <iframe
-                    src={downloadUrl.startsWith("http") ? `https://docs.google.com/viewer?url=${encodeURIComponent(downloadUrl)}&embedded=true` : downloadUrl}
+                    src={
+                      downloadUrl.includes("/d/") || downloadUrl.includes("id=")
+                        ? `https://drive.google.com/file/d/${(downloadUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || downloadUrl.match(/id=([a-zA-Z0-9_-]+)/))?.[1]}/preview`
+                        : (downloadUrl.startsWith("http")
+                            ? `https://docs.google.com/viewer?url=${encodeURIComponent(downloadUrl)}&embedded=true`
+                            : (typeof window !== "undefined"
+                                ? `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + (downloadUrl.startsWith("/") ? downloadUrl : `/${downloadUrl}`))}&embedded=true`
+                                : downloadUrl))
+                    }
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

@@ -397,7 +397,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
             <div style={{ flex: 1, minHeight: "68vh", background: "#0a0a0c", borderRadius: "8px", overflow: "hidden", border: "1px solid #333", position: "relative" }}>
               <iframe
                 title={`${itemTitle} View-Only PDF Catalogue`}
-                src={driveId ? `https://drive.google.com/file/d/${driveId}/preview` : catalogPdfUrl}
+                src={getProtectedPdfViewerUrl(catalogPdfUrl)}
                 width="100%"
                 height="100%"
                 style={{ border: 0, minHeight: "68vh" }}
