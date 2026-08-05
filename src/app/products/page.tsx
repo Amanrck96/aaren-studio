@@ -223,6 +223,34 @@ function ProductsContent() {
     return sortedProducts.slice(start, start + pageSize);
   }, [sortedProducts, currentPage]);
 
+  // Truncated pagination range with dots (...)
+  const paginationRange = useMemo(() => {
+    const delta = 2;
+    const range: (number | string)[] = [];
+    const rangeWithDots: (number | string)[] = [];
+    let l: number | undefined;
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) {
+        range.push(i);
+      }
+    }
+
+    for (const i of range) {
+      if (l !== undefined) {
+        if (typeof i === "number" && i - l === 2) {
+          rangeWithDots.push(l + 1);
+        } else if (typeof i === "number" && i - l !== 1) {
+          rangeWithDots.push("...");
+        }
+      }
+      rangeWithDots.push(i);
+      if (typeof i === "number") l = i;
+    }
+
+    return rangeWithDots;
+  }, [currentPage, totalPages]);
+
   const visibleBrands = showAllBrands ? brandsList : brandsList.slice(0, 7);
 
   return (
@@ -408,8 +436,8 @@ function ProductsContent() {
             </div>
           )}
 
-          {/* Product Grid (4 items per row, 20 items per page) */}
-          <div className="product-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "1.5rem" }}>
+          {/* Product Grid (4 columns on desktop, 3 on tablet, 2 on mobile) */}
+          <div className="product-grid">
             {paginatedProducts.length === 0 ? (
               <div className="no-results">
                 <p>No products match your current filters.</p>
@@ -430,16 +458,18 @@ function ProductsContent() {
                           src={prod.imageUrl}
                           alt={prod.name}
                           fill
-                          sizes="(max-width: 768px) 100vw, 33vw"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
                           className="card-img"
                           style={{ objectFit: "cover" }}
                           loading="lazy"
                         />
                       ) : (
-                        <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#f8fafc", color: "#64748b", padding: "1.5rem", textAlign: "center", border: "1px solid rgba(0,0,0,0.06)" }}>
-                          <span style={{ fontSize: "1.8rem", marginBottom: "0.4rem", opacity: 0.6 }}>📦</span>
-                          <span style={{ fontSize: "0.75rem", fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "#8c764b" }}>{prod.brand || "AAREN"}</span>
-                          <span style={{ fontSize: "0.7rem", color: "#94a3b8", marginTop: "2px", fontWeight: 600 }}>Image Pending Upload</span>
+                        <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%)", color: "#64748b", padding: "1.2rem", textAlign: "center" }}>
+                          <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "rgba(140,118,75,0.12)", display: "flex", alignItems: "center", justifyContent: "center", color: "#8c764b", fontSize: "1.1rem", fontWeight: 800, marginBottom: "0.5rem" }}>
+                            {(prod.brand || "A")[0].toUpperCase()}
+                          </div>
+                          <span style={{ fontSize: "0.72rem", fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "#8c764b" }}>{prod.brand || "AAREN"}</span>
+                          <span style={{ fontSize: "0.68rem", color: "#94a3b8", marginTop: "2px", fontWeight: 600 }}>Material Surface</span>
                         </div>
                       )}
                     </div>
@@ -458,24 +488,37 @@ function ProductsContent() {
             )}
           </div>
 
-          {/* Pagination */}
+          {/* Clean Truncated Pagination */}
           {totalPages > 1 && (
             <div className="pagination">
               <button
                 className="page-btn"
                 disabled={currentPage === 1}
-                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                onClick={() => {
+                  setCurrentPage((prev) => Math.max(1, prev - 1));
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
               >
                 Prev
               </button>
 
-              {Array.from({ length: totalPages }).map((_, i) => {
-                const pageNum = i + 1;
+              {paginationRange.map((item, idx) => {
+                if (item === "...") {
+                  return (
+                    <span key={`dots-${idx}`} className="page-dots">
+                      ...
+                    </span>
+                  );
+                }
+                const pageNum = item as number;
                 return (
                   <button
                     key={pageNum}
                     className={`page-num-btn ${currentPage === pageNum ? "active" : ""}`}
-                    onClick={() => setCurrentPage(pageNum)}
+                    onClick={() => {
+                      setCurrentPage(pageNum);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   >
                     {pageNum}
                   </button>
@@ -485,7 +528,10 @@ function ProductsContent() {
               <button
                 className="page-btn"
                 disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                onClick={() => {
+                  setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
               >
                 Next
               </button>
@@ -730,19 +776,19 @@ function ProductsContent() {
           display: flex;
           align-items: center;
           gap: 16px;
-          margin-bottom: 16px;
+          margin-bottom: 20px;
           flex-wrap: wrap;
         }
 
         .search-box {
           flex: 1;
-          min-width: 200px;
+          min-width: 220px;
           position: relative;
         }
 
         .search-box :global(.search-icon) {
           position: absolute;
-          left: 10px;
+          left: 12px;
           top: 50%;
           transform: translateY(-50%);
           color: var(--text-muted);
@@ -750,18 +796,19 @@ function ProductsContent() {
 
         .search-input {
           width: 100%;
-          padding: 8px 12px 8px 32px;
+          padding: 10px 14px 10px 36px;
           font-size: 13px;
-          border: 0.5px solid var(--border);
+          border: 1px solid var(--border);
           border-radius: var(--radius);
           background: #ffffff;
           outline: none;
         }
 
         .sort-select {
-          padding: 8px 12px;
+          padding: 10px 14px;
           font-size: 12px;
-          border: 0.5px solid var(--border);
+          font-weight: 600;
+          border: 1px solid var(--border);
           border-radius: var(--radius);
           background: #ffffff;
           outline: none;
@@ -773,6 +820,7 @@ function ProductsContent() {
           color: var(--text-muted);
           margin-left: auto;
           white-space: nowrap;
+          font-weight: 600;
         }
 
         /* Filter Tags */
@@ -780,20 +828,21 @@ function ProductsContent() {
           display: flex;
           align-items: center;
           gap: 8px;
-          margin-bottom: 20px;
+          margin-bottom: 24px;
           flex-wrap: wrap;
         }
 
         .filter-pill {
           font-size: 11px;
           background: #ffffff;
-          border: 0.5px solid var(--border);
+          border: 1px solid var(--border);
           border-radius: 16px;
-          padding: 4px 10px;
+          padding: 5px 12px;
           display: flex;
           align-items: center;
           gap: 6px;
           color: var(--text-secondary);
+          font-weight: 600;
         }
 
         .filter-pill :global(.remove-icon) {
@@ -811,8 +860,147 @@ function ProductsContent() {
           background: none;
           border: none;
           cursor: pointer;
-          font-weight: 600;
+          font-weight: 700;
           margin-left: 4px;
+        }
+
+        /* ── PRODUCT GRID (Clean 4-column layout) ── */
+        .product-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+        }
+
+        .product-card {
+          background: #ffffff;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          overflow: hidden;
+          text-decoration: none;
+          color: inherit;
+          display: flex;
+          flex-direction: column;
+          transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .product-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+          border-color: rgba(140, 118, 75, 0.4);
+        }
+
+        .card-image-wrap {
+          aspect-ratio: 1.1;
+          position: relative;
+          overflow: hidden;
+          background: #f8fafc;
+        }
+
+        .card-img {
+          transition: transform 0.5s ease !important;
+        }
+
+        .product-card:hover .card-img {
+          transform: scale(1.05);
+        }
+
+        .card-content {
+          padding: 14px 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          background: #ffffff;
+          flex: 1;
+        }
+
+        .brand-name-tag {
+          font-size: 10px;
+          text-transform: uppercase;
+          color: #8c764b;
+          letter-spacing: 0.08em;
+          font-weight: 800;
+        }
+
+        .product-title {
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--text-primary);
+          line-height: 1.35;
+
+          /* Ellipsis after 2 lines */
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .category-pill {
+          margin-top: 8px;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 10px;
+          color: var(--text-secondary);
+          background: var(--surface-2);
+          border: 1px solid var(--border);
+          padding: 3px 8px;
+          border-radius: 12px;
+          width: fit-content;
+          font-weight: 600;
+        }
+
+        /* ── CLEAN PAGINATION ── */
+        .pagination {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          margin-top: 40px;
+          padding-top: 24px;
+          border-top: 1px solid var(--border);
+          flex-wrap: wrap;
+        }
+
+        .page-btn, .page-num-btn {
+          font-size: 13px;
+          font-weight: 600;
+          padding: 8px 14px;
+          min-width: 38px;
+          height: 38px;
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          background: #ffffff;
+          cursor: pointer;
+          color: var(--text-secondary);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+        }
+
+        .page-btn:hover:not(:disabled), .page-num-btn:hover {
+          border-color: #8c764b;
+          color: #8c764b;
+        }
+
+        .page-btn:disabled {
+          opacity: 0.35;
+          cursor: not-allowed;
+        }
+
+        .page-num-btn.active {
+          background: #8c764b;
+          color: #ffffff;
+          border-color: #8c764b;
+          box-shadow: 0 2px 8px rgba(140, 118, 75, 0.25);
+        }
+
+        .page-dots {
+          font-size: 14px;
+          color: var(--text-muted);
+          padding: 0 6px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
         }
 
         .no-results {
@@ -820,6 +1008,8 @@ function ProductsContent() {
           padding: 48px;
           text-align: center;
           background: #ffffff;
+          border-radius: 8px;
+          border: 1px solid var(--border);
         }
 
         .no-results p {
@@ -836,6 +1026,7 @@ function ProductsContent() {
           border: none;
           border-radius: 4px;
           cursor: pointer;
+          font-weight: 700;
         }
 
         .mobile-sidebar-header,
@@ -850,7 +1041,11 @@ function ProductsContent() {
           font-weight: 600;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
+          .product-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 840px) {
           .product-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
@@ -975,8 +1170,11 @@ function ProductsContent() {
             box-shadow: 0 4px 14px rgba(140, 118, 75, 0.35);
           }
 
-          .product-grid { grid-template-columns: 1fr; }
           .products-main { padding: 16px; }
+        }
+
+        @media (max-width: 520px) {
+          .product-grid { grid-template-columns: repeat(1, 1fr); }
         }
       `}</style>
     </div>
