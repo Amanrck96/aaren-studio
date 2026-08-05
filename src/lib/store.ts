@@ -986,20 +986,38 @@ export async function getTeamStore(): Promise<TeamMemberItem[]> {
 }
 
 export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & { id?: string }) {
-  const id = member.id || `tm-${Date.now()}`;
-  const full = { ...member, id };
   const json = readJsonStore();
-  if (!json.team) json.team = [];
-  const idx = json.team.findIndex((t: any) => t.id === id);
-  if (idx >= 0) json.team[idx] = full;
-  else json.team.push(full);
+  if (!json.team) json.team = [...DEFAULT_TEAM];
+
+  let targetId = member.id;
+  let idx = -1;
+  if (targetId) {
+    idx = json.team.findIndex((t: any) => t.id === targetId);
+  }
+  if (idx === -1 && member.name) {
+    idx = json.team.findIndex((t: any) => t.name.trim().toLowerCase() === member.name.trim().toLowerCase());
+  }
+
+  if (idx >= 0) {
+    targetId = json.team[idx].id;
+  } else {
+    targetId = targetId || `tm-${Date.now()}`;
+  }
+
+  const full: TeamMemberItem = { ...json.team[idx], ...member, id: targetId };
+  if (idx >= 0) {
+    json.team[idx] = full;
+  } else {
+    json.team.push(full);
+  }
+
   writeJsonStore(json);
 
   try {
     await prisma.teamMember.upsert({
-      where: { id },
-      update: member,
-      create: { id, ...member },
+      where: { id: targetId },
+      update: full,
+      create: full,
     });
   } catch (e) {}
 

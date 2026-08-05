@@ -120,8 +120,8 @@ export default function TeamPage() {
             setTeamMembers(
               list.map((m: any, idx: number) => ({
                 name: m.name,
-                role: m.designation || m.role,
-                category: m.category || (m.role?.includes("Founder") || m.designation?.includes("Founder") ? "Leadership" : "Sales"),
+                role: m.designation || m.role || "Team Member",
+                category: m.category || "Sales",
                 code: m.memberCode ? m.memberCode.split(" ")[0] : "MM",
                 num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : String(idx + 1).padStart(2, "0"),
                 image: m.photoUrl || m.image,
