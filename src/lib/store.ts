@@ -10,6 +10,7 @@ import {
   ProjectShowcaseItem,
   TeamMemberItem,
   RoadmapStepItem,
+  TeamJoinBanner,
   InquiryItem,
   ServiceItem,
   TestimonialItem,
@@ -1051,6 +1052,26 @@ export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & {
   else json.roadmap.push(full);
   writeJsonStore(json);
   return full;
+}
+export const DEFAULT_TEAM_JOIN_BANNER: TeamJoinBanner = {
+  title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
+  fontSize: "medium",
+  hoursText: "Open 9am to 9pm (All days)",
+  phone: "+91 88844 64444",
+  email: "info@aarenintpro.com",
+  address: "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026",
+};
+
+export async function getTeamJoinBannerStore(): Promise<TeamJoinBanner> {
+  const json = readJsonStore();
+  return json.joinBanner || DEFAULT_TEAM_JOIN_BANNER;
+}
+
+export async function saveTeamJoinBannerStore(banner: TeamJoinBanner): Promise<TeamJoinBanner> {
+  const json = readJsonStore();
+  json.joinBanner = { ...DEFAULT_TEAM_JOIN_BANNER, ...json.joinBanner, ...banner };
+  writeJsonStore(json);
+  return json.joinBanner;
 }
 
 declare global {

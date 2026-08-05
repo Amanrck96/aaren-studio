@@ -171,6 +171,15 @@ export type RoadmapStepItem = {
   year?: string;
 };
 
+export type TeamJoinBanner = {
+  title: string;
+  fontSize: "small" | "medium" | "large";
+  hoursText: string;
+  phone: string;
+  email: string;
+  address: string;
+};
+
 export type CustomPageSection = {
   id: string;
   type: "Hero" | "Banner" | "Services" | "Portfolio" | "Gallery" | "Testimonials" | "FAQ" | "RichText";

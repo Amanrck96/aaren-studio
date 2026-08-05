@@ -101,6 +101,14 @@ const CATEGORIES = ["ALL", "Sales", "Operations", "Installation", "Support Staff
 export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState(INITIAL_TEAM);
   const [activeCategory, setActiveCategory] = useState("ALL");
+  const [joinBanner, setJoinBanner] = useState({
+    title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
+    fontSize: "medium",
+    hoursText: "Open 9am to 9pm (All days)",
+    phone: "+91 88844 64444",
+    email: "info@aarenintpro.com",
+    address: "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026",
+  });
 
   useEffect(() => {
     fetch("/api/team?t=" + Date.now(), { cache: "no-store" })
@@ -120,6 +128,9 @@ export default function TeamPage() {
                 bio: m.bio,
               }))
             );
+          }
+          if (json.joinBanner || (json.data && json.data.joinBanner)) {
+            setJoinBanner(json.joinBanner || json.data.joinBanner);
           }
         }
       })
@@ -241,14 +252,16 @@ export default function TeamPage() {
 
       {/* ── Call to Action Join Section ── */}
       <div className="team-join-section">
-        <h2 className="team-join-title">DO YOU WANT TO JOIN THE CREATIVE TEAM?</h2>
+        <h2 className={`team-join-title size-${joinBanner.fontSize || "medium"}`}>
+          {joinBanner.title || "DO YOU WANT TO JOIN THE CREATIVE TEAM?"}
+        </h2>
         <div className="team-join-info">
           <div className="team-join-circle-icon">i</div>
-          <p className="team-join-hours">Open 9am to 9pm (All days)</p>
+          <p className="team-join-hours">{joinBanner.hoursText || "Open 9am to 9pm (All days)"}</p>
           <div className="team-join-contacts">
-            <a href="tel:+918884464444" className="team-join-link">+91 88844 64444</a>
-            <a href="mailto:info@aarenintpro.com" className="team-join-link">info@aarenintpro.com</a>
-            <p className="team-join-address">NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026</p>
+            <a href={`tel:${(joinBanner.phone || "+918884464444").replace(/[^+0-9]/g, "")}`} className="team-join-link">{joinBanner.phone || "+91 88844 64444"}</a>
+            <a href={`mailto:${joinBanner.email || "info@aarenintpro.com"}`} className="team-join-link">{joinBanner.email || "info@aarenintpro.com"}</a>
+            <p className="team-join-address">{joinBanner.address || "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026"}</p>
           </div>
         </div>
       </div>
@@ -529,6 +542,92 @@ export default function TeamPage() {
           letter-spacing: -0.04em;
           line-height: 1;
           color: rgba(0,0,0,0.25);
+        }
+
+        /* ── Team Join Section Styling & Font Sizing ── */
+        .team-join-section {
+          padding: 6rem 2.4rem;
+          background: #ffffff;
+          border-top: 1px solid rgba(0,0,0,0.1);
+          text-align: center;
+        }
+
+        .team-join-title {
+          color: #8c764b;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          line-height: 1.25;
+          text-transform: uppercase;
+          margin: 0 auto 2.5rem;
+          max-width: 900px;
+        }
+
+        .team-join-title.size-small {
+          font-size: clamp(1.6rem, 3vw, 2.2rem);
+        }
+
+        .team-join-title.size-medium {
+          font-size: clamp(2rem, 3.8vw, 3rem);
+        }
+
+        .team-join-title.size-large {
+          font-size: clamp(2.6rem, 5vw, 4.2rem);
+        }
+
+        .team-join-info {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1.6rem;
+        }
+
+        .team-join-circle-icon {
+          width: 3.6rem;
+          height: 3.6rem;
+          border-radius: 50%;
+          border: 1px solid #8c764b;
+          color: #8c764b;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: Georgia, serif;
+          font-style: italic;
+          font-size: 1.8rem;
+          font-weight: 700;
+        }
+
+        .team-join-hours {
+          font-size: 1.4rem;
+          color: rgba(0,0,0,0.6);
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .team-join-contacts {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.8rem;
+        }
+
+        .team-join-link {
+          font-size: 1.6rem;
+          color: #8c764b;
+          font-weight: 700;
+          text-decoration: none;
+          transition: opacity 0.2s ease;
+        }
+
+        .team-join-link:hover {
+          opacity: 0.8;
+        }
+
+        .team-join-address {
+          font-size: 1.2rem;
+          color: rgba(0,0,0,0.45);
+          letter-spacing: 0.05em;
+          margin-top: 0.8rem;
+          max-width: 500px;
         }
       `}</style>
     </div>

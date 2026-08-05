@@ -12,6 +12,17 @@ export default function AdminTeamPage() {
   const [editing, setEditing] = useState<Partial<TeamMemberItem> | null>(null);
   const [selectedFilter, setSelectedFilter] = useState("ALL");
 
+  const [joinBanner, setJoinBanner] = useState({
+    title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
+    fontSize: "medium",
+    hoursText: "Open 9am to 9pm (All days)",
+    phone: "+91 88844 64444",
+    email: "info@aarenintpro.com",
+    address: "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026",
+  });
+  const [showBannerForm, setShowBannerForm] = useState(false);
+  const [savingBanner, setSavingBanner] = useState(false);
+
   const fetchTeam = () => {
     fetch("/api/team")
       .then((res) => res.json())
@@ -19,6 +30,9 @@ export default function AdminTeamPage() {
         if (json && json.success) {
           const teamList = json.team || (json.data && json.data.team) || (Array.isArray(json.data) ? json.data : []);
           setTeam(teamList);
+          if (json.joinBanner || (json.data && json.data.joinBanner)) {
+            setJoinBanner(json.joinBanner || json.data.joinBanner);
+          }
         }
         setLoading(false);
       })
@@ -51,6 +65,31 @@ export default function AdminTeamPage() {
     } else alert("Error: " + json.error);
   };
 
+  const handleSaveBanner = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingBanner(true);
+    try {
+      const res = await fetch("/api/team", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "joinBanner", data: joinBanner }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("Join Team Banner settings saved!");
+        setShowBannerForm(false);
+        fetchTeam();
+      } else {
+        alert("Error: " + json.error);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error saving banner settings.");
+    } finally {
+      setSavingBanner(false);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure?")) return;
     await fetch(`/api/team?id=${id}`, { method: "DELETE" });
@@ -70,15 +109,114 @@ export default function AdminTeamPage() {
           <div>
             <span style={{ color: "#d4af37", fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>TEAM MANAGEMENT</span>
             <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.2rem 0", color: "#fff" }}>Our Team CMS</h1>
-            <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Manage team members across Sales, Operations, Installation, and Support Staff sub-categories.</p>
+            <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Manage team members across Sales, Operations, Installation, and Support Staff, plus Join Banner settings.</p>
           </div>
-          <button
-            onClick={() => setEditing({ name: "", designation: "Sales Specialist", category: "Sales", memberCode: "TM 01", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", bio: "", sequenceNumber: team.length + 1 })}
-            style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
-          >
-            + Add Team Member
-          </button>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <button
+              onClick={() => setShowBannerForm(!showBannerForm)}
+              style={{ padding: "0.7rem 1.4rem", background: "#1e2230", color: "#d4af37", border: "1px solid rgba(212,175,55,0.4)", borderRadius: "8px", fontWeight: 700, cursor: "pointer" }}
+            >
+              ⚙️ Join Banner Settings
+            </button>
+            <button
+              onClick={() => setEditing({ name: "", designation: "Sales Specialist", category: "Sales", memberCode: "TM 01", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", bio: "", sequenceNumber: team.length + 1 })}
+              style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
+            >
+              + Add Team Member
+            </button>
+          </div>
         </div>
+
+        {/* Join Banner Settings Drawer/Form */}
+        {showBannerForm && (
+          <form onSubmit={handleSaveBanner} style={{ background: "#12141c", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.3)", marginBottom: "2rem" }}>
+            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "0.4rem", color: "#d4af37" }}>Join Creative Team Banner Settings</h2>
+            <p style={{ fontSize: "0.85rem", color: "#94a3b8", marginBottom: "1.5rem" }}>Customize the title text, font size, and contact details shown at the bottom of the Team page.</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Banner Heading Text *</label>
+                <input
+                  type="text"
+                  required
+                  value={joinBanner.title}
+                  onChange={(e) => setJoinBanner({ ...joinBanner, title: e.target.value })}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Heading Font Size *</label>
+                <select
+                  value={joinBanner.fontSize || "medium"}
+                  onChange={(e) => setJoinBanner({ ...joinBanner, fontSize: e.target.value as any })}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                >
+                  <option value="small">Small (Compact & Subtle)</option>
+                  <option value="medium">Medium (Normal / Balanced - Recommended)</option>
+                  <option value="large">Large (Prominent)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Working Hours</label>
+                <input
+                  type="text"
+                  value={joinBanner.hoursText}
+                  onChange={(e) => setJoinBanner({ ...joinBanner, hoursText: e.target.value })}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Phone Number</label>
+                <input
+                  type="text"
+                  value={joinBanner.phone}
+                  onChange={(e) => setJoinBanner({ ...joinBanner, phone: e.target.value })}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Email Address</label>
+                <input
+                  type="text"
+                  value={joinBanner.email}
+                  onChange={(e) => setJoinBanner({ ...joinBanner, email: e.target.value })}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+            </div>
+
+            <div style={{ marginBottom: "1.5rem" }}>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Physical Address</label>
+              <input
+                type="text"
+                value={joinBanner.address}
+                onChange={(e) => setJoinBanner({ ...joinBanner, address: e.target.value })}
+                style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+              />
+            </div>
+
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <button
+                type="submit"
+                disabled={savingBanner}
+                style={{ padding: "0.75rem 1.6rem", background: "#d4af37", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}
+              >
+                {savingBanner ? "Saving..." : "Save Banner Settings"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowBannerForm(false)}
+                style={{ padding: "0.75rem 1.6rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
 
         {/* Sub Category Filter Bar */}
         <div style={{ display: "flex", gap: "0.8rem", marginBottom: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>

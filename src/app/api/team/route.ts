@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getTeamStore, saveTeamMemberStore, deleteTeamMemberStore, getRoadmapStore, saveRoadmapStepStore } from "@/lib/store";
+import { getTeamStore, saveTeamMemberStore, deleteTeamMemberStore, getRoadmapStore, saveRoadmapStepStore, getTeamJoinBannerStore, saveTeamJoinBannerStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -14,8 +14,9 @@ export async function GET() {
   try {
     const team = await getTeamStore();
     const roadmap = await getRoadmapStore();
+    const joinBanner = await getTeamJoinBannerStore();
     return NextResponse.json(
-      { success: true, team, roadmap, data: { team, roadmap } },
+      { success: true, team, roadmap, joinBanner, data: { team, roadmap, joinBanner } },
       { headers: NO_CACHE_HEADERS }
     );
   } catch (err: any) {
@@ -30,6 +31,9 @@ export async function POST(request: Request) {
 
     if (body.type === "roadmap") {
       const saved = await saveRoadmapStepStore(memberData);
+      return NextResponse.json({ success: true, data: saved });
+    } else if (body.type === "joinBanner") {
+      const saved = await saveTeamJoinBannerStore(memberData);
       return NextResponse.json({ success: true, data: saved });
     } else {
       const saved = await saveTeamMemberStore(memberData);
