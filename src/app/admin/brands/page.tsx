@@ -107,7 +107,7 @@ export default function AdminBrandsPage() {
         if (brandId) {
           setBulkPdfMap((prev) => ({ ...prev, [brandId]: json.url }));
         } else {
-          setEditingBrand((prev) => ({ ...prev, [fieldName]: json.url }));
+          setEditingBrand((prev) => ({ ...prev, [fieldName]: json.dataUrl || json.url }));
         }
         alert("✅ File uploaded successfully from computer to storage: " + json.url);
       } else {

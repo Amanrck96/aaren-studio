@@ -290,13 +290,41 @@ export default function AdminTeamPage() {
             </div>
 
             <div style={{ marginTop: "1rem" }}>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Photo URL (Direct image link)</label>
-              <input
-                type="text"
-                value={editing.photoUrl || ""}
-                onChange={(e) => setEditing({ ...editing, photoUrl: e.target.value })}
-                style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
-              />
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Member Photo (Upload file or paste URL)</label>
+              <div style={{ display: "flex", gap: "0.8rem", alignItems: "center" }}>
+                <input
+                  type="text"
+                  placeholder="https://... or choose file on right ->"
+                  value={editing.photoUrl || ""}
+                  onChange={(e) => setEditing({ ...editing, photoUrl: e.target.value })}
+                  style={{ flex: 1, padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+                <label style={{ padding: "0.75rem 1.2rem", background: "#d4af37", color: "#000", borderRadius: "6px", cursor: "pointer", fontWeight: 800, whiteSpace: "nowrap", fontSize: "0.85rem" }}>
+                  📁 Choose File
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const formData = new FormData();
+                      formData.append("file", file);
+                      formData.append("folder", "Team");
+                      try {
+                        const res = await fetch("/api/upload", { method: "POST", body: formData });
+                        const json = await res.json();
+                        if (json.success) {
+                          setEditing((prev) => prev ? { ...prev, photoUrl: json.dataUrl || json.url } : null);
+                          alert("Photo uploaded successfully!");
+                        } else alert("Upload error: " + json.error);
+                      } catch (err: any) {
+                        alert("Upload failed: " + err.message);
+                      }
+                    }}
+                  />
+                </label>
+              </div>
             </div>
 
             <div style={{ marginTop: "1rem" }}>

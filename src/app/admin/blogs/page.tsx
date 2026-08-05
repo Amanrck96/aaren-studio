@@ -114,7 +114,7 @@ export default function AdminBlogsPage() {
                       formData.append("folder", "Blogs");
                       const res = await fetch("/api/upload", { method: "POST", body: formData });
                       const json = await res.json();
-                      if (json.success && json.url) setEditing({ ...editing, featuredImage: json.url });
+                      if (json.success && json.url) setEditing({ ...editing, featuredImage: json.dataUrl || json.url });
                     }
                   }}
                 />

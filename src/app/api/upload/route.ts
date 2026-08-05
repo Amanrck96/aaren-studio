@@ -18,32 +18,46 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Save to public/uploads
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-
-    // Sanitize file name
+    let publicUrl = "";
     const sanitizedName = file.name.replace(/[^a-zA-Z0-9_.-]/g, "_");
     const filename = `${Date.now()}-${sanitizedName}`;
-    const filePath = path.join(uploadsDir, filename);
-
-    fs.writeFileSync(filePath, buffer);
-
-    const publicUrl = `/uploads/${filename}`;
     const ext = path.extname(file.name).toLowerCase();
+
+    // Try writing to public/uploads
+    try {
+      const uploadsDir = path.join(process.cwd(), "public", "uploads");
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+      const filePath = path.join(uploadsDir, filename);
+      fs.writeFileSync(filePath, buffer);
+      publicUrl = `/uploads/${filename}`;
+    } catch (fsErr) {
+      console.warn("FS write failed, using data URL fallback:", fsErr);
+    }
+
     let fileType: "PDF" | "Image" | "Video" | "Document" = "Document";
-    if ([".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg", ".avif"].includes(ext)) fileType = "Image";
+    const isImage = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg", ".avif"].includes(ext);
+    if (isImage) fileType = "Image";
     else if (ext === ".pdf") fileType = "PDF";
     else if ([".mp4", ".webm", ".mov", ".mkv"].includes(ext)) fileType = "Video";
 
     const kbSize = (file.size / 1024).toFixed(1) + " KB";
 
+    // For images, if under 4MB, generate a base64 data URL to guarantee permanent display on Vercel serverless
+    let dataUrl = "";
+    if (isImage && buffer.length < 4 * 1024 * 1024) {
+      const mime = file.type || (ext === ".png" ? "image/png" : ext === ".webp" ? "image/webp" : "image/jpeg");
+      dataUrl = `data:${mime};base64,${buffer.toString("base64")}`;
+      if (!publicUrl) publicUrl = dataUrl;
+    }
+
+    const finalUrl = dataUrl || publicUrl;
+
     // Register in Media Store
     await saveMediaStore({
       fileName: file.name,
-      fileUrl: publicUrl,
+      fileUrl: finalUrl,
       fileType,
       folder,
       size: kbSize,
@@ -51,7 +65,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      url: publicUrl,
+      url: finalUrl,
+      dataUrl: dataUrl || publicUrl,
       fileName: file.name,
       fileType,
       size: kbSize,

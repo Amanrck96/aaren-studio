@@ -304,17 +304,16 @@ export default function TeamPage() {
         /* ── Sub Category Filter Navigation Bar ── */
         .team-category-nav-wrapper {
           border-bottom: 1px solid rgba(0,0,0,0.12);
-          background: #e2e7ee;
-          position: sticky;
-          top: 7rem;
-          z-index: 20;
-          padding: 1.2rem 2.4rem;
+          background: #eaeef4;
+          position: relative;
+          z-index: 10;
+          padding: 1.6rem 2.4rem;
+          margin-top: 1rem;
         }
 
         @media (max-width: 768px) {
           .team-category-nav-wrapper {
-            padding: 0.8rem 1.2rem;
-            top: 4.5rem;
+            padding: 1rem 1.2rem;
           }
         }
 

@@ -254,8 +254,8 @@ export default function AdminProductsPage() {
         body: formData,
       });
       const json = await res.json();
-      if (json.success && json.url) {
-        setForm((prev) => ({ ...prev, imageUrl: json.url }));
+      if (json.success && (json.dataUrl || json.url)) {
+        setForm((prev) => ({ ...prev, imageUrl: json.dataUrl || json.url }));
         showToast("Product image uploaded successfully!");
       } else {
         alert("Upload error: " + json.error);
