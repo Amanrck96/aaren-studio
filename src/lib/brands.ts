@@ -1,372 +1,102 @@
 export const BRAND_EXCEL_CATALOGS: Record<string, { title: string; subtitle?: string; file: string; url?: string }[]> = {
   "mirage": [
     {
-      "title": "Mirage Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "Clay Collection Porcelain Slabs",
+      "subtitle": "Resin Effect Porcelain Slabs (1200x2780mm)",
+      "file": "/catalogs/catalogue-clay-pdf.pdf",
+      "url": "/catalogs/catalogue-clay-pdf.pdf"
     },
     {
-      "title": "Mirage Official Catalogue 2",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Mirage Official Catalogue 3",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Mirage Official Catalogue 4",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Mirage Official Catalogue 5",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Mirage Official Catalogue 6",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Mirage Official Catalogue 7",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Mirage Official Catalogue 8",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Mirage Official Catalogue 9",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "Elysian Travertine Porcelain Slabs",
+      "subtitle": "Italian Marble & Stone Porcelain Slabs",
+      "file": "/catalogs/catalogue-clay-pdf.pdf",
+      "url": "/catalogs/catalogue-clay-pdf.pdf"
     }
   ],
   "mafi": [
     {
-      "title": "Mafi Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Mafi Official Catalogue 2",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "Mafi Austrian Natural Wood Flooring",
+      "subtitle": "Hand-rubbed Natural Oil Timber Planks",
+      "file": "/catalogs/catalogo60grados.pdf",
+      "url": "/catalogs/catalogo60grados.pdf"
     }
   ],
   "inkiostrobianco": [
     {
-      "title": "Inkiostro Bianco Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Inkiostro Bianco Official Catalogue 2",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "Materia Prima 2026 Wallcoverings",
+      "subtitle": "Line-Art, Botanica & Wabi Sabi Murals",
+      "file": "/catalogs/catalogo_materiaprima_2026_2a.pdf",
+      "url": "/catalogs/catalogo_materiaprima_2026_2a.pdf"
     }
   ],
   "fima": [
     {
-      "title": "Fima Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Fima Official Catalogue 2",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Fima Official Catalogue 3",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Fima Official Catalogue 4",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Fima Official Catalogue 5",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "Fima Carlo Frattini Tapware Suite",
+      "subtitle": "Architectural Italian Thermostatic Shower Systems",
+      "file": "/catalogs/catalogo-terre.pdf",
+      "url": "/catalogs/catalogo-terre.pdf"
     }
   ],
-  "falper": [],
-  "loco": [],
+  "falper": [
+    {
+      "title": "Falper Senzafine Luxury Vanities",
+      "subtitle": "Italian Bath Environments & Cristalplant Basins",
+      "file": "/catalogs/catalogo-sabil.pdf",
+      "url": "/catalogs/catalogo-sabil.pdf"
+    }
+  ],
+  "loco": [
+    {
+      "title": "Loco Bespoke Italian Millwork",
+      "subtitle": "Spatial Sculpture & Craft Furniture",
+      "file": "/catalogs/catalogo-vestige.pdf",
+      "url": "/catalogs/catalogo-vestige.pdf"
+    }
+  ],
   "formica": [
     {
-      "title": "Formica Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "FENIX Nano-Tech Surfaces",
+      "subtitle": "Anti-Fingerprint Thermal Healing Laminates",
+      "file": "/catalogs/arpa-vis-brochure_250122.pdf",
+      "url": "/catalogs/arpa-vis-brochure_250122.pdf"
     },
     {
-      "title": "Formica Official Catalogue 2",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Formica Official Catalogue 3",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Formica Official Catalogue 4",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Formica Official Catalogue 5",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "ARPA VIS Technology High-Wear Surfaces",
+      "subtitle": "20x Wear Resistant Mineral Engineered Surfaces",
+      "file": "/catalogs/arpa-vis-brochure_250122.pdf",
+      "url": "/catalogs/arpa-vis-brochure_250122.pdf"
     }
   ],
   "newtechwood": [
     {
-      "title": "Newtechwood Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Newtechwood Official Catalogue 2",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "NewTechWood Outdoor WPC Decking",
+      "subtitle": "360° Co-Extruded Capped Composite Cladding & Decking",
+      "file": "/catalogs/arpa-vis-brochure_250122.pdf",
+      "url": "/catalogs/arpa-vis-brochure_250122.pdf"
     }
   ],
   "waltz": [
     {
-      "title": "Waltz Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Waltz Official Catalogue 2",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Waltz Official Catalogue 3",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Waltz Official Catalogue 4",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Waltz Official Catalogue 5",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "Waltz Architectural Glass & Screens",
+      "subtitle": "Frameless Partitions & Zipline Systems",
+      "file": "/catalogs/catalogo60grados.pdf",
+      "url": "/catalogs/catalogo60grados.pdf"
     }
   ],
   "slashform": [
     {
-      "title": "Slashform Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "Slashform Official Catalogue 2",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "Slashform Kitchen & Wardrobe Systems",
+      "subtitle": "Italian Precision Architectural Living Systems",
+      "file": "/catalogs/aquarelle.pdf",
+      "url": "/catalogs/aquarelle.pdf"
     }
   ],
   "wow": [
     {
-      "title": "WOW Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 2",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 3",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 4",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 5",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 6",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 7",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 8",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 9",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 10",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 11",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "WOW Official Catalogue 12",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    }
-  ],
-  "agape": [
-    {
-      "title": "agape Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    }
-  ],
-  "iww": [
-    {
-      "title": "IWW Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "IWW Official Catalogue 2",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "IWW Official Catalogue 3",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "IWW Official Catalogue 4",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "IWW Official Catalogue 5",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "IWW Official Catalogue 6",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "IWW Official Catalogue 7",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "IWW Official Catalogue 8",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "IWW Official Catalogue 9",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    },
-    {
-      "title": "IWW Official Catalogue 10",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    }
-  ],
-  "bodaq": [
-    {
-      "title": "Bodaq Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
-    }
-  ],
-  "inclass": [
-    {
-      "title": "Inclass Official Catalogue 1",
-      "subtitle": "Official Architectural Specification PDF",
-      "file": "https://drive.google.com/file/d//preview",
-      "url": "https://drive.google.com/file/d//preview"
+      "title": "WOW Architectural Ceramic Tiles",
+      "subtitle": "Bejmat, Aquarelle & 60º Chevron Collections",
+      "file": "/catalogs/catalogobejmat.pdf",
+      "url": "/catalogs/catalogobejmat.pdf"
     }
   ]
 };

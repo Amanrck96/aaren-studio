@@ -504,6 +504,14 @@ export const DEFAULT_ROADMAP: RoadmapStepItem[] = [
 
 // SITE SETTINGS STORE
 export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
+  const json = readJsonStore();
+  if (json.settings) {
+    return {
+      ...json.settings,
+      footerLinks: Array.from(new Set([...(json.settings.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
+    };
+  }
+
   try {
     const db = await prisma.siteSettings.findUnique({ where: { id: "default" } });
     if (db) {
@@ -525,11 +533,9 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
     }
   } catch (e) {}
 
-  const json = readJsonStore();
-  const settings = json.settings || DEFAULT_SETTINGS;
   return {
-    ...settings,
-    footerLinks: Array.from(new Set([...(settings.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
+    ...DEFAULT_SETTINGS,
+    footerLinks: Array.from(new Set([...(DEFAULT_SETTINGS.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
   };
 }
 
@@ -553,27 +559,23 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
 
 // CATEGORIES STORE
 export async function getCategoriesStore(): Promise<CategoryItem[]> {
-  try {
-    const db = await prisma.category.findMany({ orderBy: { sequenceNumber: "asc" } });
-    if (db && db.length > 0) {
-      return db.map((c: any) => ({
-        id: c.id,
-        name: c.name,
-        coverImage: c.coverImage,
-        description: c.description,
-        shortCode: c.shortCode,
-        sequenceNumber: c.sequenceNumber,
-      }));
-    }
-  } catch (e) {}
-
   const json = readJsonStore();
-  return json.categories || DEFAULT_CATEGORIES;
+  if (json.categories && Array.isArray(json.categories) && json.categories.length > 0) {
+    return json.categories;
+  }
+  return DEFAULT_CATEGORIES;
 }
 
 export async function saveCategoryStore(category: Omit<CategoryItem, "id"> & { id?: string }): Promise<CategoryItem> {
   const id = category.id || `cat-${Date.now()}`;
   const full: CategoryItem = { ...category, id };
+
+  const json = readJsonStore();
+  if (!json.categories) json.categories = [];
+  const idx = json.categories.findIndex((c: any) => c.id === id);
+  if (idx >= 0) json.categories[idx] = full;
+  else json.categories.push(full);
+  writeJsonStore(json);
 
   try {
     await prisma.category.upsert({
@@ -583,48 +585,40 @@ export async function saveCategoryStore(category: Omit<CategoryItem, "id"> & { i
     });
   } catch (e) {}
 
-  const json = readJsonStore();
-  const idx = json.categories.findIndex((c: any) => c.id === id);
-  if (idx >= 0) json.categories[idx] = full;
-  else json.categories.push(full);
-  writeJsonStore(json);
   return full;
 }
 
 export async function deleteCategoryStore(id: string) {
+  const json = readJsonStore();
+  if (json.categories) {
+    json.categories = json.categories.filter((c: any) => c.id !== id);
+    writeJsonStore(json);
+  }
+
   try {
     await prisma.category.delete({ where: { id } });
   } catch (e) {}
-  const json = readJsonStore();
-  json.categories = json.categories.filter((c: any) => c.id !== id);
-  writeJsonStore(json);
 }
 
 // BRANDS STORE
 export async function getBrandsStore(): Promise<BrandItem[]> {
-  try {
-    const db = await prisma.brand.findMany({ orderBy: { sequenceNumber: "asc" } });
-    if (db && db.length > 0) {
-      return db.map((b: any) => ({
-        id: b.id,
-        name: b.name,
-        logoUrl: b.logoUrl,
-        bannerUrl: b.bannerUrl,
-        description: b.description,
-        shortCode: b.shortCode,
-        sequenceNumber: b.sequenceNumber,
-        catalogPdfUrl: b.catalogPdfUrl || undefined,
-      }));
-    }
-  } catch (e) {}
-
   const json = readJsonStore();
-  return json.brands || DEFAULT_BRANDS;
+  if (json.brands && Array.isArray(json.brands) && json.brands.length > 0) {
+    return json.brands;
+  }
+  return DEFAULT_BRANDS;
 }
 
 export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: string }): Promise<BrandItem> {
   const id = brand.id || brand.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full: BrandItem = { ...brand, id };
+
+  const json = readJsonStore();
+  if (!json.brands) json.brands = [];
+  const idx = json.brands.findIndex((b: any) => b.id === id);
+  if (idx >= 0) json.brands[idx] = full;
+  else json.brands.push(full);
+  writeJsonStore(json);
 
   try {
     await prisma.brand.upsert({
@@ -634,56 +628,28 @@ export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: strin
     });
   } catch (e) {}
 
-  const json = readJsonStore();
-  const idx = json.brands.findIndex((b: any) => b.id === id);
-  if (idx >= 0) json.brands[idx] = full;
-  else json.brands.push(full);
-  writeJsonStore(json);
   return full;
 }
 
 export async function deleteBrandStore(id: string) {
+  const json = readJsonStore();
+  if (json.brands) {
+    json.brands = json.brands.filter((b: any) => b.id !== id);
+    writeJsonStore(json);
+  }
+
   try {
     await prisma.brand.delete({ where: { id } });
   } catch (e) {}
-  const json = readJsonStore();
-  json.brands = json.brands.filter((b: any) => b.id !== id);
-  writeJsonStore(json);
 }
 
 // PRODUCTS STORE
 export async function getAllProductsStore(): Promise<ProductItem[]> {
-  try {
-    const dbProducts = await prisma.product.findMany({ orderBy: { createdAt: "desc" } });
-    if (dbProducts && dbProducts.length > 0) {
-      return dbProducts.map((p: any) => ({
-        id: p.id,
-        slNo: p.slNo || undefined,
-        name: p.name,
-        brand: p.brand,
-        category: p.category,
-        subcategory: p.subcategory || undefined,
-        shortCode: p.shortCode || undefined,
-        width: p.width || undefined,
-        height: p.height || undefined,
-        depth: p.depth || undefined,
-        measurementType: p.measurementType || undefined,
-        thickness: p.thickness || undefined,
-        finish: p.finish || undefined,
-        description: p.description,
-        tags: p.tags,
-        imageUrl: p.imageUrl,
-        galleryImages: p.galleryImages,
-        catalogPdfUrl: p.catalogPdfUrl || undefined,
-        qtyInStock: p.qtyInStock || 0,
-        price: p.price || undefined,
-        finishOptions: p.finishOptions ? JSON.parse(p.finishOptions) : undefined,
-      }));
-    }
-  } catch (err) {}
-
   const json = readJsonStore();
-  return json.products || DEFAULT_PRODUCTS;
+  if (json.products && Array.isArray(json.products) && json.products.length > 0) {
+    return json.products;
+  }
+  return DEFAULT_PRODUCTS;
 }
 
 export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: string }): Promise<ProductItem> {
@@ -906,31 +872,11 @@ export async function parseAndImportExcelProducts(fileBuffer: Buffer): Promise<P
 
 // SHOWCASE PROJECTS STORE
 export async function getAllProjectsStore(): Promise<ProjectShowcaseItem[]> {
-  try {
-    const dbProjects = await prisma.project.findMany({
-      include: { items: true },
-      orderBy: { sequenceNumber: "asc" },
-    });
-    if (dbProjects && dbProjects.length > 0) {
-      return dbProjects.map((p: any) => ({
-        id: p.id,
-        title: p.title,
-        slug: p.slug,
-        description: p.description,
-        category: p.category,
-        client: p.client,
-        projectCode: p.projectCode || "OB 01",
-        sequenceNumber: p.sequenceNumber || 1,
-        imageUrl: p.imageUrl,
-        gallery: p.gallery,
-        pdfUrl: p.pdfUrl || undefined,
-        createdAt: p.createdAt.toISOString(),
-      }));
-    }
-  } catch (err) {}
-
   const json = readJsonStore();
-  return json.projects || DEFAULT_PROJECTS;
+  if (json.projects && Array.isArray(json.projects) && json.projects.length > 0) {
+    return json.projects;
+  }
+  return DEFAULT_PROJECTS;
 }
 
 export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "id"> & { id?: string }): Promise<ProjectShowcaseItem> {
@@ -939,6 +885,13 @@ export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "i
   const mainImg = projectData.imageUrl || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80";
   const galleryImgs = projectData.gallery || [mainImg];
   const full: ProjectShowcaseItem = { ...projectData, id, slug, imageUrl: mainImg, gallery: galleryImgs };
+
+  const json = readJsonStore();
+  if (!json.projects) json.projects = [];
+  const idx = json.projects.findIndex((p: any) => p.id === id);
+  if (idx >= 0) json.projects[idx] = full;
+  else json.projects.push(full);
+  writeJsonStore(json);
 
   try {
     await prisma.project.upsert({
@@ -969,37 +922,39 @@ export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "i
     });
   } catch (err) {}
 
-  const json = readJsonStore();
-  const idx = json.projects.findIndex((p: any) => p.id === id);
-  if (idx >= 0) json.projects[idx] = full;
-  else json.projects.push(full);
-  writeJsonStore(json);
-
   return full;
 }
 
 export async function deleteProjectStore(id: string) {
+  const json = readJsonStore();
+  if (json.projects) {
+    json.projects = json.projects.filter((p: any) => p.id !== id);
+    writeJsonStore(json);
+  }
   try {
     await prisma.project.delete({ where: { id } });
   } catch (e) {}
-  const json = readJsonStore();
-  json.projects = json.projects.filter((p: any) => p.id !== id);
-  writeJsonStore(json);
 }
 
 // TEAM & ROADMAP STORE
 export async function getTeamStore(): Promise<TeamMemberItem[]> {
-  try {
-    const db = await prisma.teamMember.findMany({ orderBy: { sequenceNumber: "asc" } });
-    if (db && db.length > 0) return db as any;
-  } catch (e) {}
   const json = readJsonStore();
-  return json.team || DEFAULT_TEAM;
+  if (json.team && Array.isArray(json.team) && json.team.length > 0) {
+    return json.team;
+  }
+  return DEFAULT_TEAM;
 }
 
 export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & { id?: string }) {
   const id = member.id || `tm-${Date.now()}`;
   const full = { ...member, id };
+  const json = readJsonStore();
+  if (!json.team) json.team = [];
+  const idx = json.team.findIndex((t: any) => t.id === id);
+  if (idx >= 0) json.team[idx] = full;
+  else json.team.push(full);
+  writeJsonStore(json);
+
   try {
     await prisma.teamMember.upsert({
       where: { id },
@@ -1007,30 +962,27 @@ export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & {
       create: { id, ...member },
     });
   } catch (e) {}
-  const json = readJsonStore();
-  const idx = json.team.findIndex((t: any) => t.id === id);
-  if (idx >= 0) json.team[idx] = full;
-  else json.team.push(full);
-  writeJsonStore(json);
+
   return full;
 }
 
 export async function deleteTeamMemberStore(id: string) {
+  const json = readJsonStore();
+  if (json.team) {
+    json.team = json.team.filter((t: any) => t.id !== id);
+    writeJsonStore(json);
+  }
   try {
     await prisma.teamMember.delete({ where: { id } });
   } catch (e) {}
-  const json = readJsonStore();
-  json.team = json.team.filter((t: any) => t.id !== id);
-  writeJsonStore(json);
 }
 
 export async function getRoadmapStore(): Promise<RoadmapStepItem[]> {
-  try {
-    const db = await prisma.roadmapStep.findMany({ orderBy: { stepNumber: "asc" } });
-    if (db && db.length > 0) return db as any;
-  } catch (e) {}
   const json = readJsonStore();
-  return json.roadmap || DEFAULT_ROADMAP;
+  if (json.roadmap && Array.isArray(json.roadmap) && json.roadmap.length > 0) {
+    return json.roadmap;
+  }
+  return DEFAULT_ROADMAP;
 }
 
 export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & { id?: string }) {
@@ -1243,12 +1195,11 @@ export async function getAllFAQsStore() {
 
 // SERVICES STORE
 export async function getServicesStore(): Promise<ServiceItem[]> {
-  try {
-    const db = await prisma.service.findMany({ orderBy: { sequenceNumber: "asc" } });
-    if (db && db.length > 0) return db as any;
-  } catch (e) {}
   const json = readJsonStore();
-  return json.services || [
+  if (json.services && Array.isArray(json.services) && json.services.length > 0) {
+    return json.services;
+  }
+  return [
     { id: "srv-1", title: "Material Curation & Sourcing", description: "Exclusive European surfaces, FENIX nano-laminates, and natural wood cladding.", icon: "💎", sequenceNumber: 1 },
     { id: "srv-2", title: "Architectural Specification & Detailing", description: "Bespoke CAD drawings, technical joinery, and material sample kits.", icon: "📐", sequenceNumber: 2 },
     { id: "srv-3", title: "Italian Modular Living Systems", description: "Precision engineered Slashform kitchen and wardrobe systems.", icon: "🏛️", sequenceNumber: 3 },
@@ -1258,6 +1209,13 @@ export async function getServicesStore(): Promise<ServiceItem[]> {
 export async function saveServiceStore(service: Omit<ServiceItem, "id"> & { id?: string }): Promise<ServiceItem> {
   const id = service.id || `srv-${Date.now()}`;
   const full = { ...service, id };
+  const json = readJsonStore();
+  if (!json.services) json.services = [];
+  const idx = json.services.findIndex((s: any) => s.id === id);
+  if (idx >= 0) json.services[idx] = full;
+  else json.services.push(full);
+  writeJsonStore(json);
+
   try {
     await prisma.service.upsert({
       where: { id },
@@ -1265,32 +1223,28 @@ export async function saveServiceStore(service: Omit<ServiceItem, "id"> & { id?:
       create: { id, ...service },
     });
   } catch (e) {}
-  const json = readJsonStore();
-  if (!json.services) json.services = [];
-  const idx = json.services.findIndex((s: any) => s.id === id);
-  if (idx >= 0) json.services[idx] = full;
-  else json.services.push(full);
-  writeJsonStore(json);
+
   return full;
 }
 
 export async function deleteServiceStore(id: string) {
+  const json = readJsonStore();
+  if (json.services) {
+    json.services = json.services.filter((s: any) => s.id !== id);
+    writeJsonStore(json);
+  }
   try {
     await prisma.service.delete({ where: { id } });
   } catch (e) {}
-  const json = readJsonStore();
-  if (json.services) json.services = json.services.filter((s: any) => s.id !== id);
-  writeJsonStore(json);
 }
 
 // TESTIMONIALS STORE
 export async function getTestimonialsStore(): Promise<TestimonialItem[]> {
-  try {
-    const db = await prisma.testimonial.findMany({ orderBy: { sequenceNumber: "asc" } });
-    if (db && db.length > 0) return db as any;
-  } catch (e) {}
   const json = readJsonStore();
-  return json.testimonials || [
+  if (json.testimonials && Array.isArray(json.testimonials) && json.testimonials.length > 0) {
+    return json.testimonials;
+  }
+  return [
     { id: "t-1", clientName: "Vikramaditya Rao", company: "Oberoi Penthouse Owner", rating: 5, review: "Aaren Studio transformed our penthouse with incredible FENIX surfaces and Mafi oak floors.", sequenceNumber: 1 },
     { id: "t-2", clientName: "Ananya Deshmukh", company: "Principal Architect, Studio AD", rating: 5, review: "The material sample kits and Italian joinery precision from Aaren are unmatched in India.", sequenceNumber: 2 },
   ];
@@ -1299,6 +1253,13 @@ export async function getTestimonialsStore(): Promise<TestimonialItem[]> {
 export async function saveTestimonialStore(testimonial: Omit<TestimonialItem, "id"> & { id?: string }): Promise<TestimonialItem> {
   const id = testimonial.id || `t-${Date.now()}`;
   const full = { ...testimonial, id };
+  const json = readJsonStore();
+  if (!json.testimonials) json.testimonials = [];
+  const idx = json.testimonials.findIndex((t: any) => t.id === id);
+  if (idx >= 0) json.testimonials[idx] = full;
+  else json.testimonials.push(full);
+  writeJsonStore(json);
+
   try {
     await prisma.testimonial.upsert({
       where: { id },
@@ -1306,32 +1267,28 @@ export async function saveTestimonialStore(testimonial: Omit<TestimonialItem, "i
       create: { id, ...testimonial },
     });
   } catch (e) {}
-  const json = readJsonStore();
-  if (!json.testimonials) json.testimonials = [];
-  const idx = json.testimonials.findIndex((t: any) => t.id === id);
-  if (idx >= 0) json.testimonials[idx] = full;
-  else json.testimonials.push(full);
-  writeJsonStore(json);
+
   return full;
 }
 
 export async function deleteTestimonialStore(id: string) {
+  const json = readJsonStore();
+  if (json.testimonials) {
+    json.testimonials = json.testimonials.filter((t: any) => t.id !== id);
+    writeJsonStore(json);
+  }
   try {
     await prisma.testimonial.delete({ where: { id } });
   } catch (e) {}
-  const json = readJsonStore();
-  if (json.testimonials) json.testimonials = json.testimonials.filter((t: any) => t.id !== id);
-  writeJsonStore(json);
 }
 
 // BLOGS STORE
 export async function getBlogsStore(): Promise<BlogItem[]> {
-  try {
-    const db = await prisma.blog.findMany({ orderBy: { createdAt: "desc" } });
-    if (db && db.length > 0) return db as any;
-  } catch (e) {}
   const json = readJsonStore();
-  return json.blogs || [
+  if (json.blogs && Array.isArray(json.blogs) && json.blogs.length > 0) {
+    return json.blogs;
+  }
+  return [
     { id: "b-1", title: "The Evolution of FENIX Nano-Tech Surfaces in Indian Homes", slug: "fenix-surfaces-guide", category: "Surfaces", tags: ["FENIX", "Laminate", "Interior Design"], content: "FENIX nano-technology represents a breakthrough in thermal healing and ultra-matte surface aesthetics...", featuredImage: "/brands/brand_4_1.png", author: "Aaren Studio", publishDate: "2026-02-15", status: "Published" }
   ];
 }
@@ -1340,6 +1297,13 @@ export async function saveBlogStore(blog: Omit<BlogItem, "id"> & { id?: string }
   const id = blog.id || `blog-${Date.now()}`;
   const slug = blog.slug || blog.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full = { ...blog, id, slug };
+  const json = readJsonStore();
+  if (!json.blogs) json.blogs = [];
+  const idx = json.blogs.findIndex((b: any) => b.id === id);
+  if (idx >= 0) json.blogs[idx] = full;
+  else json.blogs.unshift(full);
+  writeJsonStore(json);
+
   try {
     await prisma.blog.upsert({
       where: { id },
@@ -1347,22 +1311,19 @@ export async function saveBlogStore(blog: Omit<BlogItem, "id"> & { id?: string }
       create: full,
     });
   } catch (e) {}
-  const json = readJsonStore();
-  if (!json.blogs) json.blogs = [];
-  const idx = json.blogs.findIndex((b: any) => b.id === id);
-  if (idx >= 0) json.blogs[idx] = full;
-  else json.blogs.unshift(full);
-  writeJsonStore(json);
+
   return full;
 }
 
 export async function deleteBlogStore(id: string) {
+  const json = readJsonStore();
+  if (json.blogs) {
+    json.blogs = json.blogs.filter((b: any) => b.id !== id);
+    writeJsonStore(json);
+  }
   try {
     await prisma.blog.delete({ where: { id } });
   } catch (e) {}
-  const json = readJsonStore();
-  if (json.blogs) json.blogs = json.blogs.filter((b: any) => b.id !== id);
-  writeJsonStore(json);
 }
 
 // MEDIA LIBRARY STORE (AGGREGATES ALL PDFS, VIDEOS, SWATCHES, LOGOS & SITE ASSETS)
