@@ -218,7 +218,13 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                 </div>
 
                 <a
-                  href={downloadUrl.startsWith("http") ? `https://docs.google.com/viewer?url=${encodeURIComponent(downloadUrl)}` : downloadUrl}
+                  href={
+                    downloadUrl.startsWith("http")
+                      ? `https://docs.google.com/viewer?url=${encodeURIComponent(downloadUrl)}`
+                      : (typeof window !== "undefined"
+                          ? `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + (downloadUrl.startsWith("/") ? downloadUrl : `/${downloadUrl}`))}`
+                          : downloadUrl)
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{

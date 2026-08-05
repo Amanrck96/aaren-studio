@@ -304,7 +304,7 @@ export default function BrandDetailPage({ params }: Props) {
         <div className="bd-catalogues">
           <div className="bd-catalogues__header">
             <h2 className="bd-catalogues__heading">Catalogues</h2>
-            <p className="bd-catalogues__sub">Explore & download official luxury product catalogues in PDF format.</p>
+            <p className="bd-catalogues__sub">Explore & view official luxury product catalogues online (Enquiry required to unlock viewing access).</p>
           </div>
 
           <div className="bd-catalogue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "2rem" }}>

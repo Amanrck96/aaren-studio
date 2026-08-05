@@ -272,8 +272,8 @@ export default function CatalogsPage() {
                         transition: "all 0.2s ease",
                       }}
                     >
-                      <span>📥 Download Catalog PDF</span>
-                      <span style={{ fontSize: "0.8rem", opacity: 0.8 }}>(Form Required)</span>
+                      <span>🔒 View PDF Catalog</span>
+                      <span style={{ fontSize: "0.8rem", opacity: 0.8 }}>(Enquiry Required)</span>
                     </button>
                   </div>
                 </div>

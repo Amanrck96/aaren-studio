@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { ProductItem } from "@/lib/types";
 import { DEFAULT_PRODUCTS } from "@/lib/client_constants";
+import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -401,10 +402,7 @@ export default function ProductDetailPage({ params }: Props) {
             {product.shortCode && <span className="code-pill">{product.shortCode}</span>}
           </div>
 
-          <div className="stock-badge">
-            <span className="green-dot" />
-            <span>In Stock ({product.qtyInStock || 120} units available)</span>
-          </div>
+          {/* Stock badge hidden as per user directive */}
 
           <p className="product-desc">{product.description}</p>
 
@@ -875,34 +873,13 @@ export default function ProductDetailPage({ params }: Props) {
         </div>
       )}
 
-      {/* ── BROCHURE DOWNLOAD MODAL ── */}
+      {/* ── BROCHURE LEAD GATE & VIEW-ONLY MODAL ── */}
       {pdfModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-card">
-            <button className="modal-close" onClick={() => setPdfModalOpen(false)}>
-              <X size={18} />
-            </button>
-
-            <h3 className="modal-title">Download Architectural Brochure</h3>
-            <p className="modal-sub">Get technical specifications &amp; installation guide for {product.name}</p>
-
-            <div className="pdf-download-box">
-              <div className="pdf-icon-wrap">
-                <Download size={32} color="#8c764b" />
-              </div>
-
-              <a
-                href={product.catalogPdfUrl || "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-download-now"
-                onClick={() => setPdfModalOpen(false)}
-              >
-                Download PDF Brochure Now &rarr;
-              </a>
-            </div>
-          </div>
-        </div>
+        <CatalogPdfGateModal
+          catalogPdfUrl={product.catalogPdfUrl || "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf"}
+          itemTitle={product.name}
+          onClose={() => setPdfModalOpen(false)}
+        />
       )}
 
       {/* ── STYLES ── */}
