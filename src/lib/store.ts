@@ -81,6 +81,39 @@ function readJsonStore() {
   return initial;
 }
 
+async function syncStoreToGitHub(data: any) {
+  const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+  if (!token) return;
+
+  const repo = process.env.GITHUB_REPOSITORY || "Amanrck96/aaren-studio";
+  try {
+    const filePath = "data/master_store.json";
+    const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
+      headers: { Authorization: `Bearer ${token}`, "User-Agent": "Aaren-Studio-CMS" },
+    });
+    const getJson = await getRes.json();
+    const sha = getJson.sha;
+
+    const content = Buffer.from(JSON.stringify(data, null, 2)).toString("base64");
+    await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "User-Agent": "Aaren-Studio-CMS",
+      },
+      body: JSON.stringify({
+        message: "cms: auto-sync admin content updates to master_store.json [skip ci]",
+        content,
+        sha,
+        branch: "master",
+      }),
+    });
+  } catch (err) {
+    console.error("GitHub auto-sync error:", err);
+  }
+}
+
 function writeJsonStore(data: any) {
   globalThis.__AAREN_MEMORY_STORE__ = data;
 
@@ -97,6 +130,9 @@ function writeJsonStore(data: any) {
       console.warn("FileSystem write fallback to memory:", e);
     }
   }
+
+  // Trigger GitHub persistent auto-sync if token present
+  syncStoreToGitHub(data).catch(() => {});
 }
 
 // Default Data Definitions

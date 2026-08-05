@@ -58,7 +58,7 @@ export default function AdminCategoriesPage() {
       });
       const json = await res.json();
       if (json.success && json.url) {
-        setEditingCat((prev) => (prev ? { ...prev, coverImage: json.url } : null));
+        setEditingCat((prev) => (prev ? { ...prev, coverImage: json.dataUrl || json.url } : null));
         alert("✅ Category Cover Image uploaded to " + json.url);
       } else alert("Upload failed: " + json.error);
     } catch (err: any) {
