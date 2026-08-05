@@ -192,6 +192,8 @@ function useInView(threshold = 0.15) {
 
 export default function Home() {
   const [siteSettings, setSiteSettings] = useState<SiteSettingsItem | null>(null);
+  const [categoriesList, setCategoriesList] = useState(HOME_CATEGORIES);
+  const [brandsList, setBrandsList] = useState(HOME_BRANDS);
 
   useEffect(() => {
     fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" })
@@ -199,6 +201,42 @@ export default function Home() {
       .then((json) => {
         if (json.success && json.data) {
           setSiteSettings(json.data);
+        }
+      })
+      .catch((err) => console.error(err));
+
+    fetch("/api/categories?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setCategoriesList(
+            json.data.map((c: any) => ({
+              id: c.id,
+              code: c.shortCode ? c.shortCode.split(" ")[0] : "CAT",
+              num: c.sequenceNumber ? String(c.sequenceNumber).padStart(2, "0") : "01",
+              name: c.name,
+              sub: c.description || "Architectural Surface",
+              img: c.coverImage || "/categories/cat_1.png",
+            }))
+          );
+        }
+      })
+      .catch((err) => console.error(err));
+
+    fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setBrandsList(
+            json.data.map((b: any) => ({
+              id: b.id,
+              code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
+              num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : "01",
+              name: b.name,
+              sub: b.description || "Partner Brand",
+              img: b.bannerUrl || "/brands/brand_1_1.png",
+            }))
+          );
         }
       })
       .catch((err) => console.error(err));
@@ -222,7 +260,7 @@ export default function Home() {
 
   /* ── Category full-width carousel state ── */
   const [catIdx, setCatIdx] = useState(0);
-  const catTotal = HOME_CATEGORIES.length;
+  const catTotal = categoriesList.length;
   useEffect(() => {
     const t = setInterval(() => setCatIdx((p) => (p + 1) % catTotal), 2800);
     return () => clearInterval(t);
@@ -680,7 +718,7 @@ export default function Home() {
               {String(catIdx + 1).padStart(2, "0")} / {String(catTotal).padStart(2, "0")}
             </span>
             <div className="cat-header-dots" style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
-              {HOME_CATEGORIES.map((_, i) => (
+              {categoriesList.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCatIdx(i)}
@@ -710,7 +748,7 @@ export default function Home() {
               transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
-            {HOME_CATEGORIES.map((cat) => (
+            {categoriesList.map((cat) => (
               <Link
                 key={cat.id}
                 href="/products"
@@ -801,7 +839,7 @@ export default function Home() {
 
         {/* TOP ROW: 4 small columns */}
         <div className="brands-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", width: "100%", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
-          {HOME_BRANDS.slice(0, 4).map((brand, i) => (
+          {brandsList.slice(0, 4).map((brand, i) => (
             <Link
               key={brand.id}
               href="/brands"
@@ -836,7 +874,7 @@ export default function Home() {
 
         {/* BOTTOM ROW: 2 large columns with fast photo carousel */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", width: "100%" }}>
-          {HOME_BRANDS.slice(4, 6).map((brand, i) => (
+          {brandsList.slice(4, 6).map((brand, i) => (
             <Link
               key={brand.id}
               href="/brands"

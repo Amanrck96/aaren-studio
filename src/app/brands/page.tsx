@@ -118,7 +118,7 @@ const DEFAULT_BRANDS = [
 ];
 
 export default function BrandsPage() {
-  const [brandsList, setBrandsList] = useState(DEFAULT_BRANDS);
+  const [brandsList, setBrandsList] = useState<any[]>([]);
 
   useEffect(() => {
     fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
