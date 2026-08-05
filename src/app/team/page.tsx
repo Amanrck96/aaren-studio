@@ -3,103 +3,11 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const INITIAL_TEAM = [
-  { 
-    name: "MOHANLAL MP", 
-    role: "Founder", 
-    category: "Leadership",
-    code: "MM", 
-    num: "01", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", 
-    bio: "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team." 
-  },
-  { 
-    name: "RAMNIKLAL M VAGADIYA", 
-    role: "Founder & Chairman", 
-    category: "Leadership",
-    code: "RV", 
-    num: "02", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg", 
-    bio: "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision." 
-  },
-  { 
-    name: "MADHUSUDHAN MP", 
-    role: "Envisioner & Chief Planner", 
-    category: "Leadership",
-    code: "MP", 
-    num: "03", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg", 
-    bio: "He is the vision of AAREN. Responsible for creating the strategy, driving the business and scouting for world class products." 
-  },
-  { 
-    name: "KOU SHIK", 
-    role: "Sales Specialist", 
-    category: "Sales",
-    code: "KS", 
-    num: "04", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg", 
-    bio: "He guides customers to optimize space utility, is abreast with market trends, and coordinates layouts for luxury projects." 
-  },
-  { 
-    name: "ASHWIN", 
-    role: "Architectural Sales Consultant", 
-    category: "Sales",
-    code: "AW", 
-    num: "05", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", 
-    bio: "Consults with architects and developers to find surface and material solutions, manages customer relations and outreach." 
-  },
-  { 
-    name: "MUKUND", 
-    role: "Sales & Curation", 
-    category: "Sales",
-    code: "MK", 
-    num: "06", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", 
-    bio: "Curates the products, educates customers on the product mix and manages the store display." 
-  },
-  { 
-    name: "JIGNESH", 
-    role: "Channel Sales Manager", 
-    category: "Sales",
-    code: "JG", 
-    num: "07", 
-    image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg", 
-    bio: "Maintains communication narratives, manages sales channels, and reaches out to clients for Bagno & Surface solutions." 
-  },
-  { 
-    name: "SURESH KUMAR", 
-    role: "Operations Head", 
-    category: "Operations",
-    code: "SK", 
-    num: "08", 
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80", 
-    bio: "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites." 
-  },
-  { 
-    name: "PRAVEEN NAIR", 
-    role: "Lead Installation Specialist", 
-    category: "Installation",
-    code: "PN", 
-    num: "09", 
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", 
-    bio: "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations." 
-  },
-  { 
-    name: "ANITHA REDDY", 
-    role: "Client Support & Relations", 
-    category: "Support Staff",
-    code: "AR", 
-    num: "10", 
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80", 
-    bio: "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction." 
-  },
-];
-
 const CATEGORIES = ["ALL", "Sales", "Operations", "Installation", "Support Staff", "Leadership"];
 
 export default function TeamPage() {
-  const [teamMembers, setTeamMembers] = useState(INITIAL_TEAM);
+  const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("ALL");
   const [joinBanner, setJoinBanner] = useState({
     title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
@@ -134,7 +42,8 @@ export default function TeamPage() {
           }
         }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => console.error(e))
+      .finally(() => setLoading(false));
   }, []);
 
   const filteredMembers = activeCategory === "ALL" 
