@@ -45,6 +45,27 @@ export default function AdminCategoriesPage() {
     fetchCategories();
   };
 
+  const handleFileUpload = async (file: File) => {
+    if (!file || !editingCat) return;
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "Categories");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      if (json.success && json.url) {
+        setEditingCat((prev) => (prev ? { ...prev, coverImage: json.url } : null));
+        alert("✅ Category Cover Image uploaded to " + json.url);
+      } else alert("Upload failed: " + json.error);
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    }
+  };
+
   return (
     <div style={{ background: "#0b0c10", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
@@ -91,12 +112,38 @@ export default function AdminCategoriesPage() {
 
             <div style={{ marginTop: "1rem" }}>
               <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Cover Image URL</label>
-              <input
-                type="text"
-                value={editingCat.coverImage || ""}
-                onChange={(e) => setEditingCat({ ...editingCat, coverImage: e.target.value })}
-                style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
-              />
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <input
+                  type="text"
+                  value={editingCat.coverImage || ""}
+                  onChange={(e) => setEditingCat({ ...editingCat, coverImage: e.target.value })}
+                  style={{ flex: 1, padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="catCoverUpload"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) handleFileUpload(e.target.files[0]);
+                  }}
+                />
+                <label
+                  htmlFor="catCoverUpload"
+                  style={{
+                    padding: "0.75rem 1.2rem",
+                    background: "#2563eb",
+                    color: "#fff",
+                    borderRadius: "6px",
+                    fontSize: "0.85rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  💻 Upload Image From Computer
+                </label>
+              </div>
             </div>
 
             <div style={{ marginTop: "1rem" }}>

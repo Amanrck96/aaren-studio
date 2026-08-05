@@ -242,6 +242,29 @@ export default function AdminProductsPage() {
     }
   };
 
+  const handleProductImageUpload = async (file: File) => {
+    if (!file) return;
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "Products");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      if (json.success && json.url) {
+        setForm((prev) => ({ ...prev, imageUrl: json.url }));
+        showToast("Product image uploaded successfully!");
+      } else {
+        alert("Upload error: " + json.error);
+      }
+    } catch (e: any) {
+      alert("Error: " + e.message);
+    }
+  };
+
   const filteredProducts = products.filter((p) => {
     const matchesCat = activeCategory === "All" || p.category === activeCategory;
     const matchesQ =
@@ -539,12 +562,39 @@ export default function AdminProductsPage() {
             <div className="field">
               <label>Hero Image URL *</label>
               <input
-                type="url"
+                type="text"
                 required
                 placeholder="https://..."
                 value={form.imageUrl}
                 onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                style={{ marginBottom: "0.4rem" }}
               />
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span style={{ fontSize: "0.8rem", color: "#666" }}>OR Upload Image from computer:</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="prodImgUpload"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) handleProductImageUpload(e.target.files[0]);
+                  }}
+                />
+                <label
+                  htmlFor="prodImgUpload"
+                  style={{
+                    padding: "0.4rem 0.8rem",
+                    background: "#2563eb",
+                    color: "#fff",
+                    borderRadius: "4px",
+                    fontSize: "0.8rem",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                  }}
+                >
+                  💻 Select Product Image
+                </label>
+              </div>
             </div>
             <div className="field">
               <label>Description</label>

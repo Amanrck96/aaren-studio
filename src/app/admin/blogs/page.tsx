@@ -94,6 +94,49 @@ export default function AdminBlogsPage() {
             </div>
 
             <div style={{ marginTop: "1rem" }}>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Featured Cover Image URL</label>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <input
+                  type="text"
+                  value={editing.featuredImage || ""}
+                  onChange={(e) => setEditing({ ...editing, featuredImage: e.target.value })}
+                  style={{ flex: 1, padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="blogCoverUpload"
+                  style={{ display: "none" }}
+                  onChange={async (e) => {
+                    if (e.target.files && e.target.files[0] && editing) {
+                      const formData = new FormData();
+                      formData.append("file", e.target.files[0]);
+                      formData.append("folder", "Blogs");
+                      const res = await fetch("/api/upload", { method: "POST", body: formData });
+                      const json = await res.json();
+                      if (json.success && json.url) setEditing({ ...editing, featuredImage: json.url });
+                    }
+                  }}
+                />
+                <label
+                  htmlFor="blogCoverUpload"
+                  style={{
+                    padding: "0.7rem 1rem",
+                    background: "#2563eb",
+                    color: "#fff",
+                    borderRadius: "6px",
+                    fontSize: "0.8rem",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  💻 Upload Image
+                </label>
+              </div>
+            </div>
+
+            <div style={{ marginTop: "1rem" }}>
               <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Article Content *</label>
               <textarea
                 rows={6}

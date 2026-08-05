@@ -53,14 +53,6 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
         setUnlocked(true);
         setDownloadUrl(data.fileUrl || catalog.fileUrl);
 
-        // Automatically trigger browser file download
-        const link = document.createElement("a");
-        link.href = data.fileUrl || catalog.fileUrl;
-        link.download = catalog.fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
         if (onSuccess) onSuccess();
       } else {
         alert("Form submission failed: " + data.error);
@@ -202,36 +194,45 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
             {unlocked ? (
               <div
                 style={{
-                  background: "#f0fdf4",
-                  border: "1px solid #bbf7d0",
+                  background: "#f8fafc",
+                  border: "1px solid #cbd5e1",
                   borderRadius: "10px",
-                  padding: "1.5rem",
+                  padding: "1.2rem",
                   textAlign: "center",
-                  margin: "1rem 0",
+                  margin: "0.8rem 0",
                 }}
               >
-                <div style={{ fontSize: "2rem", marginBottom: "0.4rem" }}>🎉</div>
-                <h3 style={{ color: "#166534", margin: "0 0 0.4rem 0", fontSize: "1.1rem" }}>Catalog Unlocked!</h3>
-                <p style={{ color: "#15803d", fontSize: "0.85rem", margin: "0 0 1rem 0" }}>
-                  Your download has started automatically. If it didn&apos;t open, click below:
+                <div style={{ fontSize: "1.8rem", marginBottom: "0.2rem" }}>📖</div>
+                <h3 style={{ color: "#0f172a", margin: "0 0 0.2rem 0", fontSize: "1.05rem", fontWeight: 800 }}>Catalog Unlocked!</h3>
+                <p style={{ color: "#64748b", fontSize: "0.8rem", margin: "0 0 0.8rem 0" }}>
+                  Digital view-only access activated. Explore the catalogue pages below:
                 </p>
+
+                <div style={{ width: "100%", height: "340px", background: "#000", borderRadius: "8px", overflow: "hidden", marginBottom: "0.8rem" }}>
+                  <iframe
+                    src={downloadUrl.startsWith("http") ? `https://docs.google.com/viewer?url=${encodeURIComponent(downloadUrl)}&embedded=true` : downloadUrl}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                  />
+                </div>
+
                 <a
-                  href={downloadUrl}
-                  download={catalog.fileName}
+                  href={downloadUrl.startsWith("http") ? `https://docs.google.com/viewer?url=${encodeURIComponent(downloadUrl)}` : downloadUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
                     display: "inline-block",
-                    background: "#15803d",
+                    background: "#0f172a",
                     color: "#ffffff",
-                    padding: "0.75rem 1.4rem",
-                    borderRadius: "8px",
+                    padding: "0.6rem 1.2rem",
+                    borderRadius: "6px",
                     fontWeight: 700,
                     textDecoration: "none",
-                    fontSize: "0.9rem",
+                    fontSize: "0.85rem",
                   }}
                 >
-                  📥 Download PDF ({catalog.fileSize})
+                  👁️ Open Fullscreen Reader ↗
                 </a>
               </div>
             ) : (
@@ -366,7 +367,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                     transition: "all 0.2s ease",
                   }}
                 >
-                  {loading ? "Unlocking PDF Catalog..." : "🔓 Unlock & Download Catalog PDF"}
+                  {loading ? "Unlocking Catalog..." : "🔓 Unlock & View Catalog On-Screen"}
                 </button>
               </form>
             )}

@@ -90,21 +90,31 @@ export default function AdminBrandsPage() {
     }
   }
 
-  async function handleLocalPdfUpload(file: File, brandId?: string) {
+  async function handleFileUpload(file: File, fieldName: "logoUrl" | "bannerUrl" | "catalogPdfUrl", brandId?: string) {
     if (!file) return;
     setUploadingPdf(true);
     try {
-      const res = await uploadFileToFirebase(file, "catalogues");
-      if (res && res.url) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "Brand Assets");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      if (json.success && json.url) {
         if (brandId) {
-          setBulkPdfMap((prev) => ({ ...prev, [brandId]: res.url }));
+          setBulkPdfMap((prev) => ({ ...prev, [brandId]: json.url }));
         } else {
-          setEditingBrand((prev) => ({ ...prev, catalogPdfUrl: res.url }));
+          setEditingBrand((prev) => ({ ...prev, [fieldName]: json.url }));
         }
-        alert("✅ PDF uploaded successfully to Cloud Storage!");
+        alert("✅ File uploaded successfully from computer to storage: " + json.url);
+      } else {
+        alert("❌ Upload failed: " + (json.error || "Unknown error"));
       }
     } catch (err: any) {
-      alert("❌ Upload failed: " + (err.message || err));
+      alert("❌ Upload error: " + err.message);
     } finally {
       setUploadingPdf(false);
     }
@@ -262,8 +272,34 @@ export default function AdminBrandsPage() {
                     required
                     value={editingBrand.logoUrl || ""}
                     onChange={(e) => setEditingBrand({ ...editingBrand, logoUrl: e.target.value })}
-                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", marginBottom: "0.4rem" }}
                   />
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <span style={{ fontSize: "0.8rem", color: "#888" }}>OR Upload Logo from computer:</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="brandLogoUpload"
+                      style={{ display: "none" }}
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) handleFileUpload(e.target.files[0], "logoUrl");
+                      }}
+                    />
+                    <label
+                      htmlFor="brandLogoUpload"
+                      style={{
+                        padding: "0.4rem 0.8rem",
+                        background: "#2563eb",
+                        color: "#fff",
+                        borderRadius: "4px",
+                        fontSize: "0.8rem",
+                        cursor: "pointer",
+                        fontWeight: 600,
+                      }}
+                    >
+                      💻 Select Logo Image
+                    </label>
+                  </div>
                 </div>
 
                 <div>
@@ -273,8 +309,34 @@ export default function AdminBrandsPage() {
                     required
                     value={editingBrand.bannerUrl || ""}
                     onChange={(e) => setEditingBrand({ ...editingBrand, bannerUrl: e.target.value })}
-                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", marginBottom: "0.4rem" }}
                   />
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <span style={{ fontSize: "0.8rem", color: "#888" }}>OR Upload Banner from computer:</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="brandBannerUpload"
+                      style={{ display: "none" }}
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) handleFileUpload(e.target.files[0], "bannerUrl");
+                      }}
+                    />
+                    <label
+                      htmlFor="brandBannerUpload"
+                      style={{
+                        padding: "0.4rem 0.8rem",
+                        background: "#2563eb",
+                        color: "#fff",
+                        borderRadius: "4px",
+                        fontSize: "0.8rem",
+                        cursor: "pointer",
+                        fontWeight: 600,
+                      }}
+                    >
+                      💻 Select Banner Photo
+                    </label>
+                  </div>
                 </div>
 
                 <div>
@@ -283,12 +345,12 @@ export default function AdminBrandsPage() {
                   </label>
                   <input
                     type="text"
-                    placeholder="https://drive.google.com/file/d/.../view or /catalogues/pdf"
+                    placeholder="https://drive.google.com/file/d/.../view or /uploads/pdf"
                     value={editingBrand.catalogPdfUrl || ""}
                     onChange={(e) => setEditingBrand({ ...editingBrand, catalogPdfUrl: parseGoogleDriveUrl(e.target.value) })}
                     style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", marginBottom: "0.4rem" }}
                   />
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.4rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                     <span style={{ fontSize: "0.8rem", color: "#888" }}>OR Upload PDF from computer:</span>
                     <input
                       type="file"
@@ -296,7 +358,7 @@ export default function AdminBrandsPage() {
                       id="brandPdfUpload"
                       style={{ display: "none" }}
                       onChange={(e) => {
-                        if (e.target.files && e.target.files[0]) handleLocalPdfUpload(e.target.files[0]);
+                        if (e.target.files && e.target.files[0]) handleFileUpload(e.target.files[0], "catalogPdfUrl");
                       }}
                     />
                     <label
@@ -311,7 +373,7 @@ export default function AdminBrandsPage() {
                         fontWeight: 600,
                       }}
                     >
-                      {uploadingPdf ? "Uploading..." : "💻 Select PDF File"}
+                      💻 Select PDF File
                     </label>
                   </div>
                 </div>
@@ -374,7 +436,7 @@ export default function AdminBrandsPage() {
                         id={`bulkPdf_${b.id}`}
                         style={{ display: "none" }}
                         onChange={(e) => {
-                          if (e.target.files && e.target.files[0]) handleLocalPdfUpload(e.target.files[0], b.id);
+                          if (e.target.files && e.target.files[0]) handleFileUpload(e.target.files[0], "catalogPdfUrl", b.id);
                         }}
                       />
                       <label

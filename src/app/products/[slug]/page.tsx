@@ -457,7 +457,7 @@ export default function ProductDetailPage({ params }: Props) {
             </button>
 
             <button className="btn-secondary" onClick={() => setPdfModalOpen(true)}>
-              <Download size={14} /> Download Brochure
+              <Eye size={14} /> View Digital Catalogue
             </button>
 
             <div className="icon-row">
