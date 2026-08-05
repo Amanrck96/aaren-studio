@@ -1,8 +1,9 @@
-import type { NextConfig } from "next";
+import path from "path";
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   turbopack: {
-    root: ".",
+    root: process.cwd(),
   },
   images: {
     remotePatterns: [

@@ -192,6 +192,26 @@ export type CustomPageItem = {
   createdAt?: string;
 };
 
+export type PdfCatalogItem = {
+  id: string;
+  title: string;
+  fileName: string;
+  primaryFileName?: string;
+  fileUrl: string;
+  thumbnailUrl: string;
+  brand: string;
+  category: string;
+  subcategory?: string;
+  description: string;
+  tags?: string[];
+  fileSize: string;
+  sizeBytes?: number;
+  pageCount: number;
+  isLocked: boolean;
+  downloadCount: number;
+  createdAt: string;
+};
+
 export type InquiryItem = {
   id: string;
   name: string;
@@ -201,6 +221,10 @@ export type InquiryItem = {
   subject?: string;
   message?: string;
   productOrBrand?: string;
+  downloadedFileName?: string;
+  catalogId?: string;
+  profession?: string;
+  city?: string;
   createdAt: string;
 };
 

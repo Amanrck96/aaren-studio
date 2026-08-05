@@ -19,6 +19,7 @@ import {
   NavItem,
   SeoItem,
   CustomPageItem,
+  PdfCatalogItem,
   DEFAULT_SETTINGS,
 } from "./types";
 
@@ -1546,5 +1547,54 @@ export async function deletePageStore(id: string) {
   if (json.pages) json.pages = json.pages.filter((p: any) => p.id !== id);
   writeJsonStore(json);
 }
+
+// PDF CATALOGS STORE
+export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
+  const json = readJsonStore();
+  if (json.pdfCatalogs && Array.isArray(json.pdfCatalogs) && json.pdfCatalogs.length > 0) {
+    return json.pdfCatalogs;
+  }
+
+  // Fallback read from data/catalogs.json if available
+  const catalogsPath = path.join(process.cwd(), "data", "catalogs.json");
+  try {
+    if (fs.existsSync(catalogsPath)) {
+      const data = JSON.parse(fs.readFileSync(catalogsPath, "utf-8"));
+      json.pdfCatalogs = data;
+      writeJsonStore(json);
+      return data;
+    }
+  } catch (e) {}
+
+  return [];
+}
+
+export async function saveCatalogStore(catalog: PdfCatalogItem): Promise<PdfCatalogItem> {
+  const json = readJsonStore();
+  if (!json.pdfCatalogs) json.pdfCatalogs = [];
+  const idx = json.pdfCatalogs.findIndex((c: any) => c.id === catalog.id);
+  if (idx >= 0) {
+    json.pdfCatalogs[idx] = catalog;
+  } else {
+    json.pdfCatalogs.push(catalog);
+  }
+  writeJsonStore(json);
+  return catalog;
+}
+
+export async function incrementCatalogDownloadCount(id: string): Promise<number> {
+  const json = readJsonStore();
+  let count = 1;
+  if (json.pdfCatalogs) {
+    const idx = json.pdfCatalogs.findIndex((c: any) => c.id === id);
+    if (idx >= 0) {
+      json.pdfCatalogs[idx].downloadCount = (json.pdfCatalogs[idx].downloadCount || 0) + 1;
+      count = json.pdfCatalogs[idx].downloadCount;
+    }
+  }
+  writeJsonStore(json);
+  return count;
+}
+
 
 
