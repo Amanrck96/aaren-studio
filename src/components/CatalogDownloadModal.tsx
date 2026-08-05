@@ -23,6 +23,8 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!catalog) return;
+
     if (!name.trim() || !email.trim() || !phone.trim()) {
       alert("Please fill in your Name, Email, and Phone number.");
       return;
