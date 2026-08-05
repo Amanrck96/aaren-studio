@@ -1,11 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
-const TEAM = [
+const INITIAL_TEAM = [
   { 
     name: "MOHANLAL MP", 
     role: "Founder", 
+    category: "Leadership",
     code: "MM", 
     num: "01", 
     image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", 
@@ -14,6 +16,7 @@ const TEAM = [
   { 
     name: "RAMNIKLAL M VAGADIYA", 
     role: "Founder & Chairman", 
+    category: "Leadership",
     code: "RV", 
     num: "02", 
     image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg", 
@@ -22,6 +25,7 @@ const TEAM = [
   { 
     name: "MADHUSUDHAN MP", 
     role: "Envisioner & Chief Planner", 
+    category: "Leadership",
     code: "MP", 
     num: "03", 
     image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg", 
@@ -29,15 +33,17 @@ const TEAM = [
   },
   { 
     name: "KOU SHIK", 
-    role: "Sales", 
+    role: "Sales Specialist", 
+    category: "Sales",
     code: "KS", 
     num: "04", 
     image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg", 
-    bio: "He guides customers to optimize the space utility, is abreast with market trends, and coordinates layouts for projects." 
+    bio: "He guides customers to optimize space utility, is abreast with market trends, and coordinates layouts for luxury projects." 
   },
   { 
     name: "ASHWIN", 
-    role: "Sales", 
+    role: "Architectural Sales Consultant", 
+    category: "Sales",
     code: "AW", 
     num: "05", 
     image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", 
@@ -45,7 +51,8 @@ const TEAM = [
   },
   { 
     name: "MUKUND", 
-    role: "Sales", 
+    role: "Sales & Curation", 
+    category: "Sales",
     code: "MK", 
     num: "06", 
     image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", 
@@ -53,18 +60,47 @@ const TEAM = [
   },
   { 
     name: "JIGNESH", 
-    role: "Sales", 
+    role: "Channel Sales Manager", 
+    category: "Sales",
     code: "JG", 
     num: "07", 
     image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg", 
-    bio: "Maintains communication narratives, manages the sales channels, and reaches out to customers for Bagno & Surface solutions." 
+    bio: "Maintains communication narratives, manages sales channels, and reaches out to clients for Bagno & Surface solutions." 
+  },
+  { 
+    name: "SURESH KUMAR", 
+    role: "Operations Head", 
+    category: "Operations",
+    code: "SK", 
+    num: "08", 
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80", 
+    bio: "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites." 
+  },
+  { 
+    name: "PRAVEEN NAIR", 
+    role: "Lead Installation Specialist", 
+    category: "Installation",
+    code: "PN", 
+    num: "09", 
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", 
+    bio: "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations." 
+  },
+  { 
+    name: "ANITHA REDDY", 
+    role: "Client Support & Relations", 
+    category: "Support Staff",
+    code: "AR", 
+    num: "10", 
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80", 
+    bio: "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction." 
   },
 ];
 
-import { useEffect, useState } from "react";
+const CATEGORIES = ["ALL", "Sales", "Operations", "Installation", "Support Staff", "Leadership"];
 
 export default function TeamPage() {
-  const [teamMembers, setTeamMembers] = useState(TEAM);
+  const [teamMembers, setTeamMembers] = useState(INITIAL_TEAM);
+  const [activeCategory, setActiveCategory] = useState("ALL");
 
   useEffect(() => {
     fetch("/api/team?t=" + Date.now(), { cache: "no-store" })
@@ -77,8 +113,9 @@ export default function TeamPage() {
               list.map((m: any, idx: number) => ({
                 name: m.name,
                 role: m.designation || m.role,
+                category: m.category || (m.role?.includes("Founder") || m.designation?.includes("Founder") ? "Leadership" : "Sales"),
                 code: m.memberCode ? m.memberCode.split(" ")[0] : "MM",
-                num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : `0${idx + 1}`,
+                num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : String(idx + 1).padStart(2, "0"),
                 image: m.photoUrl || m.image,
                 bio: m.bio,
               }))
@@ -88,6 +125,15 @@ export default function TeamPage() {
       })
       .catch((e) => console.error(e));
   }, []);
+
+  const filteredMembers = activeCategory === "ALL" 
+    ? teamMembers 
+    : teamMembers.filter((m) => m.category?.toLowerCase() === activeCategory.toLowerCase());
+
+  const getCategoryCount = (cat: string) => {
+    if (cat === "ALL") return teamMembers.length;
+    return teamMembers.filter((m) => m.category?.toLowerCase() === cat.toLowerCase()).length;
+  };
 
   return (
     <div className="team-page">
@@ -99,65 +145,98 @@ export default function TeamPage() {
           </div>
           <h1 className="team-header__title" style={{ color: "#8c764b" }}>OUR TEAM</h1>
           <p className="team-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
-            Aaren Intpro is built by a family of people who are united by a common dream to create a luxury brand that serves the global customer by providing world class products under one roof.
+            Aaren Intpro is built by a family of dedicated professionals across Sales, Operations, Installation, and Support Staff, united by a common passion for luxury spatial design.
           </p>
         </div>
       </div>
 
-      {/* ── Team Grid ── */}
-      <div className="team-grid">
-        {teamMembers.map((member) => (
-          <div key={member.name} className="team-card">
-            <div className="team-card__fig-wrapper">
-              <div className="team-card__fig">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="team-card__img"
-                  style={{ objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(100%)" }}
-                />
-              </div>
-            </div>
-            <div className="team-card__caption" style={{ display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2.4rem 2rem 3rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: "1.6rem" }}>
-                <div className="team-card__caption-left">
-                  <span className="team-card__caption-name" style={{ color: "#8c764b", fontSize: "1.7rem", fontWeight: 700, letterSpacing: "0.02em" }}>{member.name}</span>
-                  <span className="team-card__caption-role t-tag" style={{ marginTop: "0.4rem", color: "#000", fontWeight: 700, fontSize: "1.2rem" }}>{member.role}</span>
-                </div>
-                <div className="team-card__caption-right">
-                  <span className="team-card__caption-code">{member.code}</span>
-                  <span className="team-card__caption-num">{member.num}</span>
-                </div>
-              </div>
-              <p style={{ fontSize: "1.35rem", lineHeight: 1.6, color: "rgba(0,0,0,0.6)", margin: 0, fontWeight: 400 }}>
-                {member.bio}
-              </p>
+      {/* ── Sub Category Filter Navigation ── */}
+      <div className="team-category-nav-wrapper">
+        <div className="team-category-nav">
+          <span className="team-category-label">SUB CATEGORIES:</span>
+          {CATEGORIES.map((cat) => {
+            const count = getCategoryCount(cat);
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`team-cat-btn ${isActive ? "active" : ""}`}
+              >
+                <span>{cat.toUpperCase()}</span>
+                <span className="team-cat-count">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-              {/* Minimal sharing/profile social media icons */}
-              <div style={{ display: "flex", gap: "1rem", marginTop: "0.6rem" }}>
-                <a href="#" className="team-member-social-icon" aria-label="Facebook">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                  </svg>
-                </a>
-                <a href="#" className="team-member-social-icon" aria-label="Twitter">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                  </svg>
-                </a>
-                <a href="#" className="team-member-social-icon" aria-label="LinkedIn">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                    <rect x="2" y="9" width="4" height="12"></rect>
-                    <circle cx="4" cy="4" r="2"></circle>
-                  </svg>
-                </a>
-              </div>
-            </div>
+      {/* ── Team Grid ── */}
+      <div className="team-grid-container">
+        {filteredMembers.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "6rem 2rem", color: "rgba(0,0,0,0.5)", fontSize: "1.6rem" }}>
+            No team members found in the <strong>{activeCategory}</strong> sub category.
           </div>
-        ))}
+        ) : (
+          <div className="team-grid">
+            {filteredMembers.map((member) => (
+              <div key={member.name} className="team-card">
+                <div className="team-card__fig-wrapper">
+                  <div className="team-card__fig">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="team-card__img"
+                      style={{ objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(100%)" }}
+                    />
+                  </div>
+                  {/* Category Pill Overlay */}
+                  <div className="team-card__category-badge">
+                    {member.category || "Sales"}
+                  </div>
+                </div>
+                <div className="team-card__caption" style={{ display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2.4rem 2rem 3rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: "1.6rem" }}>
+                    <div className="team-card__caption-left">
+                      <span className="team-card__caption-name" style={{ color: "#8c764b", fontSize: "1.7rem", fontWeight: 700, letterSpacing: "0.02em" }}>{member.name}</span>
+                      <span className="team-card__caption-role t-tag" style={{ marginTop: "0.4rem", color: "#000", fontWeight: 700, fontSize: "1.2rem" }}>{member.role}</span>
+                    </div>
+                    <div className="team-card__caption-right">
+                      <span className="team-card__caption-code">{member.code}</span>
+                      <span className="team-card__caption-num">{member.num}</span>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: "1.35rem", lineHeight: 1.6, color: "rgba(0,0,0,0.6)", margin: 0, fontWeight: 400 }}>
+                    {member.bio}
+                  </p>
+
+                  {/* Minimal sharing/profile social media icons */}
+                  <div style={{ display: "flex", gap: "1rem", marginTop: "0.6rem" }}>
+                    <a href="#" className="team-member-social-icon" aria-label="Facebook">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                      </svg>
+                    </a>
+                    <a href="#" className="team-member-social-icon" aria-label="Twitter">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                      </svg>
+                    </a>
+                    <a href="#" className="team-member-social-icon" aria-label="LinkedIn">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Call to Action Join Section ── */}
@@ -209,14 +288,118 @@ export default function TeamPage() {
           letter-spacing: -0.01em;
         }
 
+        /* ── Sub Category Filter Navigation Bar ── */
+        .team-category-nav-wrapper {
+          border-bottom: 1px solid rgba(0,0,0,0.12);
+          background: #e2e7ee;
+          position: sticky;
+          top: 7rem;
+          z-index: 20;
+          padding: 1.2rem 2.4rem;
+        }
+
+        @media (max-width: 768px) {
+          .team-category-nav-wrapper {
+            padding: 0.8rem 1.2rem;
+            top: 4.5rem;
+          }
+        }
+
+        .team-category-nav {
+          max-width: 1600px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          gap: 1.2rem;
+          flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+          .team-category-nav {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 0.4rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .team-category-nav::-webkit-scrollbar {
+            display: none;
+          }
+          .team-category-label {
+            white-space: nowrap;
+            flex-shrink: 0;
+          }
+          .team-cat-btn {
+            white-space: nowrap;
+            flex-shrink: 0;
+          }
+        }
+
+        .team-category-label {
+          font-size: 1.1rem;
+          font-weight: 800;
+          letter-spacing: 0.12em;
+          color: #8c764b;
+          margin-right: 0.8rem;
+        }
+
+        .team-cat-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.7rem 1.4rem;
+          border-radius: 9999px;
+          border: 1px solid rgba(0,0,0,0.15);
+          background: #fff;
+          color: #222;
+          font-size: 1.2rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+
+        .team-cat-btn:hover {
+          border-color: #8c764b;
+          color: #8c764b;
+          transform: translateY(-1px);
+        }
+
+        .team-cat-btn.active {
+          background: #8c764b;
+          color: #fff;
+          border-color: #8c764b;
+          box-shadow: 0 4px 14px rgba(140, 118, 75, 0.25);
+        }
+
+        .team-cat-count {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0,0,0,0.06);
+          color: inherit;
+          padding: 0.15rem 0.6rem;
+          border-radius: 9999px;
+          font-size: 1rem;
+          font-weight: 800;
+        }
+
+        .team-cat-btn.active .team-cat-count {
+          background: rgba(255,255,255,0.25);
+          color: #fff;
+        }
+
         /* ── Team Grid with Sturdy-style Spacing & Row Gaps ── */
+        .team-grid-container {
+          max-width: 1600px;
+          margin: 0 auto;
+        }
+
         .team-grid {
           display: grid;
           grid-template-columns: 1fr;
           gap: 4rem 2.4rem;
           padding: 4rem 1.2rem 8rem;
-          max-width: 1600px;
-          margin: 0 auto;
         }
 
         @media (min-width: 768px) {
@@ -264,6 +447,23 @@ export default function TeamPage() {
         .team-card__fig {
           position: absolute;
           inset: 0;
+        }
+
+        .team-card__category-badge {
+          position: absolute;
+          top: 1.2rem;
+          right: 1.2rem;
+          z-index: 2;
+          background: rgba(0, 0, 0, 0.75);
+          backdrop-filter: blur(8px);
+          color: #d4af37;
+          border: 1px solid rgba(212, 175, 55, 0.4);
+          font-size: 1rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 0.4rem 1rem;
+          border-radius: 4px;
         }
 
         .team-card__img {

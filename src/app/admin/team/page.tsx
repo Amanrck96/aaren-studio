@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import AdminNav from "@/components/AdminNav";
 import { TeamMemberItem } from "@/lib/types";
 
+const SUB_CATEGORIES = ["Sales", "Operations", "Installation", "Support Staff", "Leadership"];
+
 export default function AdminTeamPage() {
   const [team, setTeam] = useState<TeamMemberItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Partial<TeamMemberItem> | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState("ALL");
 
   const fetchTeam = () => {
     fetch("/api/team")
@@ -35,6 +38,7 @@ export default function AdminTeamPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...editing,
+        category: editing.category || "Sales",
         memberCode: editing.memberCode || "MM 01",
         photoUrl: editing.photoUrl || "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg",
       }),
@@ -53,6 +57,10 @@ export default function AdminTeamPage() {
     fetchTeam();
   };
 
+  const filteredTeam = selectedFilter === "ALL" 
+    ? team 
+    : team.filter((m) => (m.category || "Sales").toLowerCase() === selectedFilter.toLowerCase());
+
   return (
     <div style={{ background: "#0b0c10", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
@@ -62,20 +70,44 @@ export default function AdminTeamPage() {
           <div>
             <span style={{ color: "#d4af37", fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>TEAM MANAGEMENT</span>
             <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.2rem 0", color: "#fff" }}>Our Team CMS</h1>
-            <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Manage official Aaren Intpro team members, designations, member codes, and profile photos.</p>
+            <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Manage team members across Sales, Operations, Installation, and Support Staff sub-categories.</p>
           </div>
           <button
-            onClick={() => setEditing({ name: "", designation: "Sales", memberCode: "MM 08", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", bio: "", sequenceNumber: team.length + 1 })}
+            onClick={() => setEditing({ name: "", designation: "Sales Specialist", category: "Sales", memberCode: "TM 01", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", bio: "", sequenceNumber: team.length + 1 })}
             style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
           >
             + Add Team Member
           </button>
         </div>
 
+        {/* Sub Category Filter Bar */}
+        <div style={{ display: "flex", gap: "0.8rem", marginBottom: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>
+          <span style={{ color: "#94a3b8", fontSize: "0.85rem", fontWeight: 700, marginRight: "0.5rem" }}>Filter Sub Category:</span>
+          {["ALL", ...SUB_CATEGORIES].map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedFilter(cat)}
+              style={{
+                padding: "0.4rem 1rem",
+                borderRadius: "6px",
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                border: "1px solid " + (selectedFilter === cat ? "#d4af37" : "rgba(255,255,255,0.1)"),
+                background: selectedFilter === cat ? "#d4af37" : "#12141c",
+                color: selectedFilter === cat ? "#000" : "#94a3b8",
+                transition: "all 0.2s ease"
+              }}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
         {editing && (
           <form onSubmit={handleSave} style={{ background: "#12141c", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.2)", marginBottom: "2rem" }}>
             <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "1.2rem", color: "#d4af37" }}>{editing.id ? "Edit Team Member" : "Add Team Member"}</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem" }}>
               <div>
                 <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Full Name *</label>
                 <input
@@ -85,6 +117,18 @@ export default function AdminTeamPage() {
                   onChange={(e) => setEditing({ ...editing, name: e.target.value })}
                   style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
                 />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Sub Category *</label>
+                <select
+                  value={editing.category || "Sales"}
+                  onChange={(e) => setEditing({ ...editing, category: e.target.value })}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                >
+                  {SUB_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Designation / Role *</label>
@@ -139,7 +183,7 @@ export default function AdminTeamPage() {
         )}
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-          {team.map((m) => (
+          {filteredTeam.map((m) => (
             <div key={m.id || m.name} style={{ background: "#12141c", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "1.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
               <div>
                 <div style={{ display: "flex", gap: "1.2rem", alignItems: "center", marginBottom: "1rem" }}>
@@ -149,9 +193,14 @@ export default function AdminTeamPage() {
                     style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: "2px solid #d4af37" }}
                   />
                   <div>
-                    <span style={{ fontSize: "0.75rem", background: "rgba(212,175,55,0.15)", color: "#d4af37", padding: "0.15rem 0.5rem", borderRadius: "4px", fontWeight: 800 }}>
-                      {m.memberCode || "MM"}
-                    </span>
+                    <div style={{ display: "flex", gap: "0.4rem", alignItems: "center", flexWrap: "wrap", marginBottom: "0.3rem" }}>
+                      <span style={{ fontSize: "0.7rem", background: "rgba(212,175,55,0.15)", color: "#d4af37", padding: "0.15rem 0.5rem", borderRadius: "4px", fontWeight: 800 }}>
+                        {m.memberCode || "MM"}
+                      </span>
+                      <span style={{ fontSize: "0.7rem", background: "rgba(59, 130, 246, 0.15)", color: "#60a5fa", padding: "0.15rem 0.5rem", borderRadius: "4px", fontWeight: 800 }}>
+                        {m.category || "Sales"}
+                      </span>
+                    </div>
                     <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#fff", margin: "0.2rem 0" }}>{m.name}</h3>
                     <div style={{ color: "#94a3b8", fontSize: "0.85rem", fontWeight: 600 }}>{m.designation}</div>
                   </div>

@@ -217,7 +217,12 @@ function ProductsContent() {
         </p>
       </div>
 
-      {/* ── MOBILE FILTER TOGGLE BUTTON ── */}
+      {/* ── MOBILE FILTER BACKDROP & TOGGLE ── */}
+      <div 
+        className={`mobile-sidebar-backdrop ${mobileSidebarOpen ? "is-open" : ""}`}
+        onClick={() => setMobileSidebarOpen(false)}
+      />
+
       <div className="mobile-filter-bar">
         <button
           className="mobile-filter-btn"
@@ -226,61 +231,94 @@ function ProductsContent() {
           <SlidersHorizontal size={14} />
           <span>Filters {selectedBrands.length > 0 || selectedCategory !== "All" ? `(${selectedBrands.length + (selectedCategory !== "All" ? 1 : 0)})` : ""}</span>
         </button>
+        <span className="mobile-filter-count-label">
+          {sortedProducts.length} items
+        </span>
       </div>
 
       {/* ── LAYOUT: TWO-COLUMN (SIDEBAR + MAIN) ── */}
       <div className="products-layout">
-        {/* ── LEFT SIDEBAR (200px fixed, sticky on scroll) ── */}
+        {/* ── LEFT SIDEBAR (200px fixed on desktop, drawer on mobile) ── */}
         <aside className={`products-sidebar ${mobileSidebarOpen ? "is-open" : ""}`}>
-          {/* Section 1: BRAND FILTER */}
-          <div className="sidebar-section">
-            <div className="sidebar-label">Brand</div>
-            <div className="brand-list">
-              {visibleBrands.map((b) => {
-                const isActive = selectedBrands.includes(b.id);
-                return (
-                  <button
-                    key={b.id}
-                    className={`brand-item ${isActive ? "active" : ""}`}
-                    onClick={() => toggleBrand(b.id)}
-                  >
-                    <span className={`dot ${isActive ? "filled" : "hollow"}`} />
-                    <span className="brand-name">{b.name}</span>
-                    <span className="brand-count">{b.count}</span>
-                  </button>
-                );
-              })}
+          {/* Mobile Drawer Header */}
+          <div className="mobile-sidebar-header">
+            <div className="mobile-sidebar-title">
+              <SlidersHorizontal size={14} />
+              <span>FILTERS</span>
             </div>
-
-            {brandsList.length > 7 && (
-              <button
-                className="toggle-more-brands"
-                onClick={() => setShowAllBrands(!showAllBrands)}
-              >
-                {showAllBrands ? "— Show less" : `+ ${brandsList.length - 7} more brands`}
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              {(selectedBrands.length > 0 || selectedCategory !== "All" || debouncedQuery) && (
+                <button className="mobile-clear-btn" onClick={clearAllFilters}>
+                  Clear all
+                </button>
+              )}
+              <button className="mobile-close-btn" onClick={() => setMobileSidebarOpen(false)} aria-label="Close filters">
+                <X size={18} />
               </button>
-            )}
+            </div>
           </div>
 
-          {/* Section 2: CATEGORY FILTER */}
-          <div className="sidebar-section" style={{ marginTop: "24px" }}>
-            <div className="sidebar-label">Category</div>
-            <div className="category-stack">
-              {CATEGORIES_FILTER_LIST.map((cat) => {
-                const isActive = selectedCategory === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    className={`cat-btn ${isActive ? "active" : ""}`}
-                    onClick={() => selectCategory(cat.id)}
-                  >
-                    <span className="cat-circle">{cat.symbol}</span>
-                    <span className="cat-text">{cat.label}</span>
-                    <span className="cat-badge">{cat.count}</span>
-                  </button>
-                );
-              })}
+          <div className="sidebar-inner-scroll">
+            {/* Section 1: BRAND FILTER */}
+            <div className="sidebar-section">
+              <div className="sidebar-label">Brand</div>
+              <div className="brand-list">
+                {visibleBrands.map((b) => {
+                  const isActive = selectedBrands.includes(b.id);
+                  return (
+                    <button
+                      key={b.id}
+                      className={`brand-item ${isActive ? "active" : ""}`}
+                      onClick={() => toggleBrand(b.id)}
+                    >
+                      <span className={`dot ${isActive ? "filled" : "hollow"}`} />
+                      <span className="brand-name">{b.name}</span>
+                      <span className="brand-count">{b.count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {brandsList.length > 7 && (
+                <button
+                  className="toggle-more-brands"
+                  onClick={() => setShowAllBrands(!showAllBrands)}
+                >
+                  {showAllBrands ? "— Show less" : `+ ${brandsList.length - 7} more brands`}
+                </button>
+              )}
             </div>
+
+            {/* Section 2: CATEGORY FILTER */}
+            <div className="sidebar-section" style={{ marginTop: "24px" }}>
+              <div className="sidebar-label">Category</div>
+              <div className="category-stack">
+                {CATEGORIES_FILTER_LIST.map((cat) => {
+                  const isActive = selectedCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      className={`cat-btn ${isActive ? "active" : ""}`}
+                      onClick={() => selectCategory(cat.id)}
+                    >
+                      <span className="cat-circle">{cat.symbol}</span>
+                      <span className="cat-text">{cat.label}</span>
+                      <span className="cat-badge">{cat.count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Drawer Footer CTA */}
+          <div className="mobile-sidebar-footer">
+            <button 
+              className="mobile-apply-btn"
+              onClick={() => setMobileSidebarOpen(false)}
+            >
+              Show {sortedProducts.length} Results
+            </button>
           </div>
         </aside>
 
@@ -884,28 +922,141 @@ function ProductsContent() {
           cursor: pointer;
         }
 
+        .mobile-sidebar-header,
+        .mobile-sidebar-footer,
+        .mobile-sidebar-backdrop {
+          display: none;
+        }
+
+        .mobile-filter-count-label {
+          font-size: 11px;
+          color: var(--text-muted);
+          font-weight: 600;
+        }
+
         @media (max-width: 1024px) {
           .product-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 768px) {
           .products-layout { grid-template-columns: 1fr; }
-          .mobile-filter-bar { display: block; }
+          .mobile-filter-bar { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 12px 16px;
+            border-bottom: 0.5px solid var(--border);
+            background: #ffffff;
+            position: sticky;
+            top: 4.5rem;
+            z-index: 10;
+          }
+
+          .mobile-sidebar-backdrop.is-open {
+            display: block;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99;
+          }
 
           .products-sidebar {
-            display: none;
+            display: flex;
+            flex-direction: column;
             position: fixed;
             top: 0;
-            left: 0;
             right: 0;
             bottom: 0;
-            width: 100%;
+            width: 85%;
+            max-width: 340px;
             height: 100vh;
+            height: 100dvh;
             z-index: 100;
+            background: #ffffff;
+            border-left: 1px solid var(--border);
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+            padding: 0;
+            overflow: hidden;
           }
 
           .products-sidebar.is-open {
+            transform: translateX(0);
+          }
+
+          .mobile-sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            background: #ffffff;
+            flex-shrink: 0;
+          }
+
+          .mobile-sidebar-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: #8c764b;
+          }
+
+          .mobile-clear-btn {
+            background: none;
+            border: none;
+            color: #8c764b;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: underline;
+          }
+
+          .mobile-close-btn {
+            background: rgba(0,0,0,0.05);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            cursor: pointer;
+          }
+
+          .sidebar-inner-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .mobile-sidebar-footer {
             display: block;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            background: #ffffff;
+            flex-shrink: 0;
+          }
+
+          .mobile-apply-btn {
+            width: 100%;
+            padding: 12px;
+            background: #8c764b;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(140, 118, 75, 0.35);
           }
 
           .product-grid { grid-template-columns: 1fr; }

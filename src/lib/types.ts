@@ -153,6 +153,7 @@ export type TeamMemberItem = {
   id: string;
   name: string;
   designation: string;
+  category?: "Sales" | "Operations" | "Installation" | "Support Staff" | "Leadership" | string;
   memberCode: string;
   photoUrl: string;
   phone?: string;

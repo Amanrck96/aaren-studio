@@ -148,6 +148,7 @@ model TeamMember {
   id             String   @id @default(cuid())
   name           String
   designation    String
+  category       String?  @default("Sales")
   memberCode     String   // e.g. MM 01, RV 02
   photoUrl       String
   phone          String?
