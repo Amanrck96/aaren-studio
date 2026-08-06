@@ -25,6 +25,19 @@ const nextConfig = {
       },
     ],
   },
+  // Force all API routes and pages to never be cached by Vercel CDN
+  async headers() {
+    return [
+      {
+        source: "/api/:path*",
+        headers: [
+          { key: "Cache-Control", value: "no-store, no-cache, must-revalidate, proxy-revalidate" },
+          { key: "Pragma", value: "no-cache" },
+          { key: "Expires", value: "0" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
