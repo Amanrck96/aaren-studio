@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAllProductsStore, addProductStore } from "@/lib/store";
+import { getAllProductsStore, addProductStore, deleteProductStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -50,6 +50,19 @@ export async function POST(request: Request) {
 
     const created = await addProductStore(body);
     return NextResponse.json({ success: true, data: created });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
+
+    await deleteProductStore(id);
+    return NextResponse.json({ success: true });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

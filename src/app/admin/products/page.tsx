@@ -103,14 +103,21 @@ export default function AdminProductsPage() {
     setTimeout(() => setToastMsg(null), 3000);
   };
 
-  // Delete product live
+  // Delete product - calls API so it is permanently removed from DB
   const handleDeleteProduct = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
     try {
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-      showToast("Product deleted from catalog");
+      const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" });
+      const json = await res.json();
+      if (json.success) {
+        setProducts((prev) => prev.filter((p) => p.id !== id));
+        showToast("Product permanently deleted from catalog");
+      } else {
+        showToast("Delete failed: " + (json.error || "Unknown error"));
+      }
     } catch (err) {
       console.error(err);
+      showToast("Delete failed. Please try again.");
     }
   };
 

@@ -848,6 +848,20 @@ export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: 
   return fullProduct;
 }
 
+export async function deleteProductStore(id: string) {
+  // Delete from Prisma DB (permanent)
+  try {
+    await prisma.product.delete({ where: { id } });
+  } catch (e) {}
+
+  // Delete from JSON store cache
+  const json = readJsonStore();
+  if (json.products) {
+    json.products = json.products.filter((p: any) => p.id !== id);
+    writeJsonStore(json);
+  }
+}
+
 export function formatGoogleDriveUrl(url?: string): string {
   if (!url) return "";
   const str = String(url).trim();
