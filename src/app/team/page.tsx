@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Support Staff"];
+const CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Support Staff", "Accounts"];
 
 export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
@@ -100,14 +100,20 @@ export default function TeamPage() {
               <div key={member.name} className="team-card">
                 <div className="team-card__fig-wrapper">
                   <div className="team-card__fig">
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="team-card__img"
-                      style={{ objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(100%)" }}
-                    />
+                    {member.image ? (
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="team-card__img"
+                        style={{ objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(100%)" }}
+                      />
+                    ) : (
+                      <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #1e2230 0%, #0b0c10 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#8c764b", fontSize: "4rem", fontWeight: 800, letterSpacing: "0.05em" }}>
+                        {member.name ? member.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "AA"}
+                      </div>
+                    )}
                   </div>
                   {/* Category Pill Overlay */}
                   <div className="team-card__category-badge">

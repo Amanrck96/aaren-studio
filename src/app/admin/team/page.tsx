@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import AdminNav from "@/components/AdminNav";
 import { TeamMemberItem } from "@/lib/types";
 
-const SUB_CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Support Staff"];
+const SUB_CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Support Staff", "Accounts"];
 
 export default function AdminTeamPage() {
   const [team, setTeam] = useState<TeamMemberItem[]>([]);
