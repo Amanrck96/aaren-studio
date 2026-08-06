@@ -544,18 +544,11 @@ export const DEFAULT_ROADMAP: RoadmapStepItem[] = [
 
 // SITE SETTINGS STORE
 export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
-  const json = readJsonStore();
-  if (json.settings) {
-    return {
-      ...json.settings,
-      footerLinks: Array.from(new Set([...(json.settings.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
-    };
-  }
-
+  // PRIMARY: Always read from Prisma DB first (persistent across Vercel restarts)
   try {
     const db = await prisma.siteSettings.findUnique({ where: { id: "default" } });
     if (db) {
-      return {
+      const result = {
         heroTitle: db.heroTitle,
         heroTagline: db.heroTagline,
         heroSubtext: db.heroSubtext,
@@ -570,8 +563,22 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
         socialLinks: db.socialLinks,
         copyrightText: db.copyrightText,
       };
+      // Update in-memory cache
+      const json = readJsonStore();
+      json.settings = result;
+      globalThis.__AAREN_MEMORY_STORE__ = json;
+      return result;
     }
   } catch (e) {}
+
+  // FALLBACK: JSON store (volatile on Vercel, but used locally)
+  const json = readJsonStore();
+  if (json.settings) {
+    return {
+      ...json.settings,
+      footerLinks: Array.from(new Set([...(json.settings.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
+    };
+  }
 
   return {
     ...DEFAULT_SETTINGS,
@@ -599,6 +606,27 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
 
 // CATEGORIES STORE
 export async function getCategoriesStore(): Promise<CategoryItem[]> {
+  // PRIMARY: Always read from Prisma DB first
+  try {
+    const dbCats = await prisma.category.findMany({ orderBy: { sequenceNumber: "asc" } });
+    if (dbCats && dbCats.length > 0) {
+      const mapped: CategoryItem[] = dbCats.map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        coverImage: c.coverImage || "",
+        description: c.description || "",
+        shortCode: c.shortCode || "",
+        sequenceNumber: c.sequenceNumber || 1,
+      }));
+      // Update memory cache
+      const json = readJsonStore();
+      json.categories = mapped;
+      globalThis.__AAREN_MEMORY_STORE__ = json;
+      return mapped;
+    }
+  } catch (e) {}
+
+  // FALLBACK: JSON store
   const json = readJsonStore();
   if (json.categories && Array.isArray(json.categories) && json.categories.length > 0) {
     return json.categories;
@@ -642,6 +670,30 @@ export async function deleteCategoryStore(id: string) {
 
 // BRANDS STORE
 export async function getBrandsStore(): Promise<BrandItem[]> {
+  // PRIMARY: Always read from Prisma DB first
+  try {
+    const dbBrands = await prisma.brand.findMany({ orderBy: { sequenceNumber: "asc" } });
+    if (dbBrands && dbBrands.length > 0) {
+      const mapped: BrandItem[] = dbBrands.map((b: any) => ({
+        id: b.id,
+        name: b.name,
+        logoUrl: b.logoUrl || "",
+        bannerUrl: b.bannerUrl || "",
+        description: b.description || "",
+        shortCode: b.shortCode || "",
+        sequenceNumber: b.sequenceNumber || 1,
+        catalogPdfUrl: b.catalogPdfUrl || undefined,
+        galleryImages: b.galleryImages || undefined,
+      }));
+      // Update memory cache
+      const json = readJsonStore();
+      json.brands = mapped;
+      globalThis.__AAREN_MEMORY_STORE__ = json;
+      return mapped;
+    }
+  } catch (e) {}
+
+  // FALLBACK: JSON store
   const json = readJsonStore();
   if (json.brands && Array.isArray(json.brands) && json.brands.length > 0) {
     return json.brands;
@@ -685,6 +737,42 @@ export async function deleteBrandStore(id: string) {
 
 // PRODUCTS STORE
 export async function getAllProductsStore(): Promise<ProductItem[]> {
+  // PRIMARY: Always read from Prisma DB first
+  try {
+    const dbProducts = await prisma.product.findMany({ orderBy: { slNo: "asc" } });
+    if (dbProducts && dbProducts.length > 0) {
+      const mapped: ProductItem[] = dbProducts.map((p: any) => ({
+        id: p.id,
+        slNo: p.slNo || undefined,
+        name: p.name,
+        brand: p.brand,
+        category: p.category,
+        subcategory: p.subcategory || undefined,
+        shortCode: p.shortCode || undefined,
+        width: p.width || undefined,
+        height: p.height || undefined,
+        depth: p.depth || undefined,
+        measurementType: p.measurementType || undefined,
+        thickness: p.thickness || undefined,
+        finish: p.finish || undefined,
+        description: p.description || "",
+        tags: p.tags || [],
+        imageUrl: p.imageUrl || "",
+        galleryImages: p.galleryImages || undefined,
+        catalogPdfUrl: p.catalogPdfUrl || undefined,
+        qtyInStock: p.qtyInStock || 0,
+        price: p.price || undefined,
+        finishOptions: p.finishOptions ? (typeof p.finishOptions === "string" ? JSON.parse(p.finishOptions) : p.finishOptions) : undefined,
+      }));
+      // Update memory cache
+      const json = readJsonStore();
+      json.products = mapped;
+      globalThis.__AAREN_MEMORY_STORE__ = json;
+      return mapped;
+    }
+  } catch (e) {}
+
+  // FALLBACK: JSON store
   const json = readJsonStore();
   if (json.products && Array.isArray(json.products) && json.products.length > 0) {
     return json.products;
@@ -912,6 +1000,31 @@ export async function parseAndImportExcelProducts(fileBuffer: Buffer): Promise<P
 
 // SHOWCASE PROJECTS STORE
 export async function getAllProjectsStore(): Promise<ProjectShowcaseItem[]> {
+  // PRIMARY: Always read from Prisma DB first
+  try {
+    const dbProjects = await prisma.project.findMany({ orderBy: { sequenceNumber: "asc" } });
+    if (dbProjects && dbProjects.length > 0) {
+      const mapped: ProjectShowcaseItem[] = dbProjects.map((p: any) => ({
+        id: p.id,
+        title: p.title,
+        slug: p.slug,
+        description: p.description || "",
+        category: p.category || "",
+        client: p.client || "",
+        projectCode: p.projectCode || "",
+        sequenceNumber: p.sequenceNumber || 1,
+        imageUrl: p.imageUrl || "",
+        gallery: p.gallery || [],
+      }));
+      // Update memory cache
+      const json = readJsonStore();
+      json.projects = mapped;
+      globalThis.__AAREN_MEMORY_STORE__ = json;
+      return mapped;
+    }
+  } catch (e) {}
+
+  // FALLBACK: JSON store
   const json = readJsonStore();
   if (json.projects && Array.isArray(json.projects) && json.projects.length > 0) {
     return json.projects;
@@ -978,6 +1091,30 @@ export async function deleteProjectStore(id: string) {
 
 // TEAM & ROADMAP STORE
 export async function getTeamStore(): Promise<TeamMemberItem[]> {
+  // PRIMARY: Always read from Prisma DB first
+  try {
+    const dbTeam = await prisma.teamMember.findMany({ orderBy: { sequenceNumber: "asc" } });
+    if (dbTeam && dbTeam.length > 0) {
+      const mapped: TeamMemberItem[] = dbTeam.map((m: any) => ({
+        id: m.id,
+        name: m.name,
+        designation: m.designation || "",
+        category: m.category || "Team",
+        memberCode: m.memberCode || "",
+        photoUrl: m.photoUrl || "",
+        phone: m.phone || "",
+        bio: m.bio || "",
+        sequenceNumber: m.sequenceNumber || 1,
+      }));
+      // Update memory cache
+      const json = readJsonStore();
+      json.team = mapped;
+      globalThis.__AAREN_MEMORY_STORE__ = json;
+      return mapped;
+    }
+  } catch (e) {}
+
+  // FALLBACK: JSON store
   const json = readJsonStore();
   if (json.team && Array.isArray(json.team) && json.team.length > 0) {
     return json.team;
@@ -1336,6 +1473,26 @@ export async function deleteServiceStore(id: string) {
 
 // TESTIMONIALS STORE
 export async function getTestimonialsStore(): Promise<TestimonialItem[]> {
+  // PRIMARY: Always read from Prisma DB first
+  try {
+    const dbTestimonials = await prisma.testimonial.findMany({ orderBy: { sequenceNumber: "asc" } });
+    if (dbTestimonials && dbTestimonials.length > 0) {
+      const mapped: TestimonialItem[] = dbTestimonials.map((t: any) => ({
+        id: t.id,
+        clientName: t.clientName,
+        company: t.company || "",
+        rating: t.rating || 5,
+        review: t.review || "",
+        sequenceNumber: t.sequenceNumber || 1,
+      }));
+      const json = readJsonStore();
+      json.testimonials = mapped;
+      globalThis.__AAREN_MEMORY_STORE__ = json;
+      return mapped;
+    }
+  } catch (e) {}
+
+  // FALLBACK: JSON store
   const json = readJsonStore();
   if (json.testimonials && Array.isArray(json.testimonials) && json.testimonials.length > 0) {
     return json.testimonials;
@@ -1380,6 +1537,30 @@ export async function deleteTestimonialStore(id: string) {
 
 // BLOGS STORE
 export async function getBlogsStore(): Promise<BlogItem[]> {
+  // PRIMARY: Always read from Prisma DB first
+  try {
+    const dbBlogs = await prisma.blog.findMany({ orderBy: { publishDate: "desc" } });
+    if (dbBlogs && dbBlogs.length > 0) {
+      const mapped: BlogItem[] = dbBlogs.map((b: any) => ({
+        id: b.id,
+        title: b.title,
+        slug: b.slug,
+        category: b.category || "",
+        tags: b.tags || [],
+        content: b.content || "",
+        featuredImage: b.featuredImage || "",
+        author: b.author || "Aaren Studio",
+        publishDate: b.publishDate || "",
+        status: b.status || "Draft",
+      }));
+      const json = readJsonStore();
+      json.blogs = mapped;
+      globalThis.__AAREN_MEMORY_STORE__ = json;
+      return mapped;
+    }
+  } catch (e) {}
+
+  // FALLBACK: JSON store
   const json = readJsonStore();
   if (json.blogs && Array.isArray(json.blogs) && json.blogs.length > 0) {
     return json.blogs;
