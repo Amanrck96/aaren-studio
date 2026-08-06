@@ -3,12 +3,12 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const CATEGORIES = ["ALL", "Sales", "Operations", "Installation", "Support Staff", "Leadership"];
+const CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Support Staff"];
 
 export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("ALL");
+  const [activeCategory, setActiveCategory] = useState("Leadership");
   const [joinBanner, setJoinBanner] = useState({
     title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
     fontSize: "medium",
@@ -29,7 +29,7 @@ export default function TeamPage() {
               list.map((m: any, idx: number) => ({
                 name: m.name,
                 role: m.designation || m.role || "Team Member",
-                category: m.category || "Sales",
+                category: m.category || "Leadership",
                 code: m.memberCode ? m.memberCode.split(" ")[0] : "MM",
                 num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : String(idx + 1).padStart(2, "0"),
                 image: m.photoUrl || m.image,
@@ -46,12 +46,9 @@ export default function TeamPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filteredMembers = activeCategory === "ALL" 
-    ? teamMembers 
-    : teamMembers.filter((m) => m.category?.toLowerCase() === activeCategory.toLowerCase());
+  const filteredMembers = teamMembers.filter((m) => m.category?.toLowerCase() === activeCategory.toLowerCase());
 
   const getCategoryCount = (cat: string) => {
-    if (cat === "ALL") return teamMembers.length;
     return teamMembers.filter((m) => m.category?.toLowerCase() === cat.toLowerCase()).length;
   };
 

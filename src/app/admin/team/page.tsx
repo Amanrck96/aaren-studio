@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import AdminNav from "@/components/AdminNav";
 import { TeamMemberItem } from "@/lib/types";
 
-const SUB_CATEGORIES = ["Sales", "Operations", "Installation", "Support Staff", "Leadership"];
+const SUB_CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Support Staff"];
 
 export default function AdminTeamPage() {
   const [team, setTeam] = useState<TeamMemberItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Partial<TeamMemberItem> | null>(null);
-  const [selectedFilter, setSelectedFilter] = useState("ALL");
+  const [selectedFilter, setSelectedFilter] = useState("Leadership");
 
   const [joinBanner, setJoinBanner] = useState({
     title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
@@ -52,7 +52,7 @@ export default function AdminTeamPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...editing,
-        category: editing.category || "Sales",
+        category: editing.category || "Leadership",
         memberCode: editing.memberCode || "MM 01",
         photoUrl: editing.photoUrl || "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg",
       }),
@@ -96,9 +96,7 @@ export default function AdminTeamPage() {
     fetchTeam();
   };
 
-  const filteredTeam = selectedFilter === "ALL" 
-    ? team 
-    : team.filter((m) => (m.category || "Sales").toLowerCase() === selectedFilter.toLowerCase());
+  const filteredTeam = team.filter((m) => (m.category || "Leadership").toLowerCase() === selectedFilter.toLowerCase());
 
   return (
     <div style={{ background: "#0b0c10", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
@@ -221,7 +219,7 @@ export default function AdminTeamPage() {
         {/* Sub Category Filter Bar */}
         <div style={{ display: "flex", gap: "0.8rem", marginBottom: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>
           <span style={{ color: "#94a3b8", fontSize: "0.85rem", fontWeight: 700, marginRight: "0.5rem" }}>Filter Sub Category:</span>
-          {["ALL", ...SUB_CATEGORIES].map((cat) => (
+          {SUB_CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedFilter(cat)}
