@@ -4,10 +4,18 @@ import { useEffect, useState } from "react";
 import AdminNav from "@/components/AdminNav";
 import { CategoryItem } from "@/lib/types";
 
+const CARD_THEMES = [
+  { id: "navy", label: "Midnight Navy", bg: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "rgba(212,175,55,0.3)" },
+  { id: "obsidian", label: "Luxury Obsidian", bg: "linear-gradient(145deg, #181920 0%, #0b0c10 100%)", border: "rgba(212,175,55,0.4)" },
+  { id: "charcoal", label: "Deep Charcoal", bg: "linear-gradient(145deg, #252836 0%, #1a1c26 100%)", border: "rgba(255,255,255,0.15)" },
+  { id: "gold-glow", label: "Golden Glow", bg: "linear-gradient(145deg, #2a2215 0%, #141009 100%)", border: "#d4af37" },
+];
+
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingCat, setEditingCat] = useState<Partial<CategoryItem> | null>(null);
+  const [cardTheme, setCardTheme] = useState("navy");
 
   const fetchCategories = () => {
     fetch("/api/categories")
@@ -66,6 +74,8 @@ export default function AdminCategoriesPage() {
     }
   };
 
+  const activeThemeObj = CARD_THEMES.find((t) => t.id === cardTheme) || CARD_THEMES[0];
+
   return (
     <div style={{ background: "#0b0c10", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
@@ -85,8 +95,41 @@ export default function AdminCategoriesPage() {
           </button>
         </div>
 
+        {/* Card Background Theme Controls */}
+        <div style={{ background: "#12141c", padding: "1rem 1.5rem", borderRadius: "10px", border: "1px solid rgba(212,175,55,0.2)", marginBottom: "1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+            <span style={{ fontSize: "1.1rem" }}>🎨</span>
+            <div>
+              <span style={{ color: "#d4af37", fontSize: "0.85rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>Card Background Theme Option:</span>
+              <p style={{ color: "#94a3b8", fontSize: "0.8rem", margin: 0 }}>Choose background style & contrast for category boxes.</p>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: "0.6rem" }}>
+            {CARD_THEMES.map((theme) => (
+              <button
+                key={theme.id}
+                onClick={() => setCardTheme(theme.id)}
+                style={{
+                  padding: "0.45rem 0.9rem",
+                  borderRadius: "6px",
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  border: "1px solid " + (cardTheme === theme.id ? "#d4af37" : "rgba(255,255,255,0.15)"),
+                  background: cardTheme === theme.id ? "#d4af37" : "#1e2230",
+                  color: cardTheme === theme.id ? "#000" : "#fff",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                {theme.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {editingCat && (
-          <form onSubmit={handleSave} style={{ background: "#12141c", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.2)", marginBottom: "2rem" }}>
+          <form onSubmit={handleSave} style={{ background: "#12141c", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.3)", marginBottom: "2rem" }}>
             <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "1.2rem", color: "#d4af37" }}>{editingCat.id ? "Edit Category" : "Add Category"}</h2>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
               <div>
@@ -167,23 +210,73 @@ export default function AdminCategoriesPage() {
           </form>
         )}
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1.5rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
           {categories.map((cat) => (
-            <div key={cat.id} style={{ background: "#12141c", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "1.5rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.8rem" }}>
-                <span style={{ fontSize: "0.75rem", background: "rgba(212,175,55,0.15)", color: "#d4af37", border: "1px solid rgba(212,175,55,0.3)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800 }}>
+            <div
+              key={cat.id}
+              style={{
+                background: activeThemeObj.bg,
+                border: "1px solid " + activeThemeObj.border,
+                borderRadius: "14px",
+                padding: "1.8rem",
+                boxShadow: "0 10px 25px rgba(0,0,0,0.4)",
+                transition: "all 0.3s ease",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+                <span
+                  style={{
+                    fontSize: "0.8rem",
+                    background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)",
+                    color: "#000",
+                    padding: "0.3rem 0.8rem",
+                    borderRadius: "6px",
+                    fontWeight: 900,
+                    letterSpacing: "0.05em",
+                    boxShadow: "0 2px 8px rgba(212,175,55,0.3)",
+                  }}
+                >
                   {cat.shortCode || "CAT"}
                 </span>
-                <span style={{ color: "#64748b", fontSize: "0.8rem" }}>Order: #{cat.sequenceNumber}</span>
+                <span style={{ color: "#d4af37", fontSize: "0.85rem", fontWeight: 700 }}>Order: #{cat.sequenceNumber}</span>
               </div>
-              <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "#fff" }}>{cat.name}</h3>
-              <p style={{ color: "#94a3b8", fontSize: "0.88rem", margin: "0.5rem 0 1.2rem", lineHeight: 1.5 }}>{cat.description || "Architectural interior product category."}</p>
+              <h3 style={{ fontSize: "1.4rem", fontWeight: 900, color: "#ffffff", letterSpacing: "0.02em", margin: "0.4rem 0" }}>
+                {cat.name}
+              </h3>
+              <p style={{ color: "#e2e8f0", fontSize: "0.92rem", margin: "0.6rem 0 1.5rem", lineHeight: 1.6, fontWeight: 400 }}>
+                {cat.description || "Architectural interior product category."}
+              </p>
               <div style={{ display: "flex", gap: "0.8rem" }}>
-                <button onClick={() => setEditingCat(cat)} style={{ padding: "0.45rem 1rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
-                  Edit
+                <button
+                  onClick={() => setEditingCat(cat)}
+                  style={{
+                    padding: "0.5rem 1.2rem",
+                    background: "#2563eb",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontSize: "0.88rem",
+                    fontWeight: 700,
+                    boxShadow: "0 2px 6px rgba(37,99,235,0.4)",
+                  }}
+                >
+                  ✏️ Edit
                 </button>
-                <button onClick={() => handleDelete(cat.id)} style={{ padding: "0.45rem 1rem", background: "rgba(239, 68, 68, 0.15)", color: "#f87171", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
-                  Delete
+                <button
+                  onClick={() => handleDelete(cat.id)}
+                  style={{
+                    padding: "0.5rem 1.2rem",
+                    background: "rgba(239, 68, 68, 0.2)",
+                    color: "#f87171",
+                    border: "1px solid rgba(239, 68, 68, 0.4)",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontSize: "0.88rem",
+                    fontWeight: 700,
+                  }}
+                >
+                  🗑️ Delete
                 </button>
               </div>
             </div>
