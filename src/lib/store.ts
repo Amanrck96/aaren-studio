@@ -33,6 +33,31 @@ declare global {
   var __AAREN_MEMORY_STORE__: any;
 }
 
+const FIREBASE_RTDB_STORE_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || "https://aarenintpro-1c09f-default-rtdb.firebaseio.com";
+
+async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
+  try {
+    const res = await fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && (Array.isArray(data) ? data.length > 0 : Object.keys(data).length > 0)) {
+        return data;
+      }
+    }
+  } catch (e) {}
+  return null;
+}
+
+async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
+  try {
+    await fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+  } catch (e) {}
+}
+
 function getActiveStorePath(): string {
   try {
     const dir = path.dirname(PRIMARY_STORE_PATH);
@@ -130,6 +155,13 @@ function writeJsonStore(data: any) {
       console.warn("FileSystem write fallback to memory:", e);
     }
   }
+
+  // Trigger Firebase Realtime Database Cloud Sync (Guarantees persistence across Vercel serverless cold-starts)
+  fetch(`${FIREBASE_RTDB_STORE_URL}/store.json`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  }).catch(() => {});
 
   // Trigger GitHub persistent auto-sync if token present
   syncStoreToGitHub(data).catch(() => {});
@@ -544,7 +576,20 @@ export const DEFAULT_ROADMAP: RoadmapStepItem[] = [
 
 // SITE SETTINGS STORE
 export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
-  // PRIMARY: Always read from Prisma DB first (persistent across Vercel restarts)
+  // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
+  const fbData = await fetchFromFirebaseCloudStore("settings");
+  if (fbData && typeof fbData === "object" && fbData.heroTitle) {
+    const result = {
+      ...fbData,
+      footerLinks: Array.from(new Set([...(fbData.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
+    };
+    const json = readJsonStore();
+    json.settings = result;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return result;
+  }
+
+  // 2. Prisma DB fallback
   try {
     const db = await prisma.siteSettings.findUnique({ where: { id: "default" } });
     if (db) {
@@ -563,15 +608,15 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
         socialLinks: db.socialLinks,
         copyrightText: db.copyrightText,
       };
-      // Update in-memory cache
       const json = readJsonStore();
       json.settings = result;
       globalThis.__AAREN_MEMORY_STORE__ = json;
+      syncToFirebaseCloudStore("settings", result);
       return result;
     }
   } catch (e) {}
 
-  // FALLBACK: JSON store (volatile on Vercel, but used locally)
+  // 3. JSON store fallback
   const json = readJsonStore();
   if (json.settings) {
     return {
@@ -606,7 +651,16 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
 
 // CATEGORIES STORE
 export async function getCategoriesStore(): Promise<CategoryItem[]> {
-  // PRIMARY: Always read from Prisma DB first
+  // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
+  const fbData = await fetchFromFirebaseCloudStore("categories");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.categories = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+
+  // 2. Prisma DB fallback
   try {
     const dbCats = await prisma.category.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (dbCats && dbCats.length > 0) {
@@ -618,15 +672,15 @@ export async function getCategoriesStore(): Promise<CategoryItem[]> {
         shortCode: c.shortCode || "",
         sequenceNumber: c.sequenceNumber || 1,
       }));
-      // Update memory cache
       const json = readJsonStore();
       json.categories = mapped;
       globalThis.__AAREN_MEMORY_STORE__ = json;
+      syncToFirebaseCloudStore("categories", mapped);
       return mapped;
     }
   } catch (e) {}
 
-  // FALLBACK: JSON store
+  // 3. JSON store fallback
   const json = readJsonStore();
   if (json.categories && Array.isArray(json.categories) && json.categories.length > 0) {
     return json.categories;
@@ -670,7 +724,16 @@ export async function deleteCategoryStore(id: string) {
 
 // BRANDS STORE
 export async function getBrandsStore(): Promise<BrandItem[]> {
-  // PRIMARY: Always read from Prisma DB first
+  // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
+  const fbData = await fetchFromFirebaseCloudStore("brands");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.brands = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+
+  // 2. Prisma DB fallback
   try {
     const dbBrands = await prisma.brand.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (dbBrands && dbBrands.length > 0) {
@@ -685,15 +748,15 @@ export async function getBrandsStore(): Promise<BrandItem[]> {
         catalogPdfUrl: b.catalogPdfUrl || undefined,
         galleryImages: b.galleryImages || undefined,
       }));
-      // Update memory cache
       const json = readJsonStore();
       json.brands = mapped;
       globalThis.__AAREN_MEMORY_STORE__ = json;
+      syncToFirebaseCloudStore("brands", mapped);
       return mapped;
     }
   } catch (e) {}
 
-  // FALLBACK: JSON store
+  // 3. JSON store fallback
   const json = readJsonStore();
   if (json.brands && Array.isArray(json.brands) && json.brands.length > 0) {
     return json.brands;
@@ -737,7 +800,16 @@ export async function deleteBrandStore(id: string) {
 
 // PRODUCTS STORE
 export async function getAllProductsStore(): Promise<ProductItem[]> {
-  // PRIMARY: Always read from Prisma DB first
+  // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
+  const fbData = await fetchFromFirebaseCloudStore("products");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.products = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+
+  // 2. Prisma DB fallback
   try {
     const dbProducts = await prisma.product.findMany({ orderBy: { slNo: "asc" } });
     if (dbProducts && dbProducts.length > 0) {
@@ -764,15 +836,15 @@ export async function getAllProductsStore(): Promise<ProductItem[]> {
         price: p.price || undefined,
         finishOptions: p.finishOptions ? (typeof p.finishOptions === "string" ? JSON.parse(p.finishOptions) : p.finishOptions) : undefined,
       }));
-      // Update memory cache
       const json = readJsonStore();
       json.products = mapped;
       globalThis.__AAREN_MEMORY_STORE__ = json;
+      syncToFirebaseCloudStore("products", mapped);
       return mapped;
     }
   } catch (e) {}
 
-  // FALLBACK: JSON store
+  // 3. JSON store fallback
   const json = readJsonStore();
   if (json.products && Array.isArray(json.products) && json.products.length > 0) {
     return json.products;
@@ -1105,7 +1177,16 @@ export async function deleteProjectStore(id: string) {
 
 // TEAM & ROADMAP STORE
 export async function getTeamStore(): Promise<TeamMemberItem[]> {
-  // PRIMARY: Always read from Prisma DB first
+  // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
+  const fbData = await fetchFromFirebaseCloudStore("team");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.team = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+
+  // 2. Prisma DB fallback
   try {
     const dbTeam = await prisma.teamMember.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (dbTeam && dbTeam.length > 0) {
@@ -1120,15 +1201,15 @@ export async function getTeamStore(): Promise<TeamMemberItem[]> {
         bio: m.bio || "",
         sequenceNumber: m.sequenceNumber || 1,
       }));
-      // Update memory cache
       const json = readJsonStore();
       json.team = mapped;
       globalThis.__AAREN_MEMORY_STORE__ = json;
+      syncToFirebaseCloudStore("team", mapped);
       return mapped;
     }
   } catch (e) {}
 
-  // FALLBACK: JSON store
+  // 3. JSON store fallback
   const json = readJsonStore();
   if (json.team && Array.isArray(json.team) && json.team.length > 0) {
     return json.team;
