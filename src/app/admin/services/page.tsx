@@ -112,16 +112,16 @@ export default function AdminServicesPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
           {services.map((s) => (
-            <div key={s.id} style={{ background: "#141418", border: "1px solid #222", borderRadius: "10px", padding: "1.5rem" }}>
-              <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>{s.icon || "✨"}</div>
-              <h3 style={{ fontSize: "1.2rem", fontWeight: 700 }}>{s.title}</h3>
-              <p style={{ color: "#aaa", fontSize: "0.9rem", margin: "0.5rem 0 1.2rem" }}>{s.description}</p>
+            <div key={s.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "1.8rem", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
+              <div style={{ fontSize: "2.4rem", marginBottom: "0.8rem" }}>{s.icon || "✨"}</div>
+              <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0.4rem 0" }}>{s.title}</h3>
+              <p style={{ color: "#cbd5e1", fontSize: "0.92rem", margin: "0.6rem 0 1.5rem", lineHeight: 1.6 }}>{s.description}</p>
               <div style={{ display: "flex", gap: "0.8rem" }}>
-                <button onClick={() => setEditing(s)} style={{ padding: "0.4rem 0.9rem", background: "#333", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}>
-                  Edit
+                <button onClick={() => setEditing(s)} style={{ padding: "0.5rem 1.2rem", background: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
+                  ✏️ Edit
                 </button>
-                <button onClick={() => handleDelete(s.id)} style={{ padding: "0.4rem 0.9rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "none", borderRadius: "4px", cursor: "pointer" }}>
-                  Delete
+                <button onClick={() => handleDelete(s.id)} style={{ padding: "0.5rem 1.2rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
+                  🗑️ Delete
                 </button>
               </div>
             </div>

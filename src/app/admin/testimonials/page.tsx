@@ -110,17 +110,17 @@ export default function AdminTestimonialsPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
           {testimonials.map((t) => (
-            <div key={t.id} style={{ background: "#141418", border: "1px solid #222", borderRadius: "10px", padding: "1.5rem" }}>
-              <div style={{ color: "#f59e0b", fontSize: "1.1rem", marginBottom: "0.5rem" }}>{"★".repeat(t.rating || 5)}</div>
-              <p style={{ color: "#ddd", fontSize: "0.95rem", fontStyle: "italic", marginBottom: "1rem" }}>"{t.review}"</p>
-              <div style={{ fontWeight: 700, fontSize: "0.95rem" }}>{t.clientName}</div>
-              <div style={{ color: "#888", fontSize: "0.85rem", marginBottom: "1.2rem" }}>{t.company}</div>
+            <div key={t.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "1.8rem", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
+              <div style={{ color: "#d4af37", fontSize: "1.2rem", marginBottom: "0.8rem", letterSpacing: "0.1em" }}>{"★".repeat(t.rating || 5)}</div>
+              <p style={{ color: "#f1f5f9", fontSize: "0.98rem", fontStyle: "italic", marginBottom: "1.2rem", lineHeight: 1.6 }}>"{t.review}"</p>
+              <div style={{ fontWeight: 900, fontSize: "1.2rem", color: "#ffffff" }}>{t.clientName}</div>
+              <div style={{ color: "#d4af37", fontSize: "0.88rem", fontWeight: 700, marginBottom: "1.4rem" }}>{t.company}</div>
               <div style={{ display: "flex", gap: "0.8rem" }}>
-                <button onClick={() => setEditing(t)} style={{ padding: "0.4rem 0.9rem", background: "#333", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}>
-                  Edit
+                <button onClick={() => setEditing(t)} style={{ padding: "0.5rem 1.2rem", background: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
+                  ✏️ Edit
                 </button>
-                <button onClick={() => handleDelete(t.id)} style={{ padding: "0.4rem 0.9rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "none", borderRadius: "4px", cursor: "pointer" }}>
-                  Delete
+                <button onClick={() => handleDelete(t.id)} style={{ padding: "0.5rem 1.2rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
+                  🗑️ Delete
                 </button>
               </div>
             </div>

@@ -348,28 +348,34 @@ export default function AdminTeamPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
           {filteredTeam.map((m) => (
-            <div key={m.id || m.name} style={{ background: "#12141c", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "1.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <div key={m.id || m.name} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "1.6rem", display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
               <div>
                 <div style={{ display: "flex", gap: "1.2rem", alignItems: "center", marginBottom: "1rem" }}>
-                  <img
-                    src={m.photoUrl}
-                    alt={m.name}
-                    style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: "2px solid #d4af37" }}
-                  />
+                  {m.photoUrl ? (
+                    <img
+                      src={m.photoUrl}
+                      alt={m.name}
+                      style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: "2px solid #d4af37" }}
+                    />
+                  ) : (
+                    <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: "1.3rem" }}>
+                      {m.name ? m.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "TM"}
+                    </div>
+                  )}
                   <div>
                     <div style={{ display: "flex", gap: "0.4rem", alignItems: "center", flexWrap: "wrap", marginBottom: "0.3rem" }}>
-                      <span style={{ fontSize: "0.7rem", background: "rgba(212,175,55,0.15)", color: "#d4af37", padding: "0.15rem 0.5rem", borderRadius: "4px", fontWeight: 800 }}>
+                      <span style={{ fontSize: "0.75rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 900 }}>
                         {m.memberCode || "MM"}
                       </span>
-                      <span style={{ fontSize: "0.7rem", background: "rgba(59, 130, 246, 0.15)", color: "#60a5fa", padding: "0.15rem 0.5rem", borderRadius: "4px", fontWeight: 800 }}>
+                      <span style={{ fontSize: "0.75rem", background: "rgba(59, 130, 246, 0.2)", color: "#60a5fa", border: "1px solid rgba(59,130,246,0.4)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800 }}>
                         {m.category || "Sales"}
                       </span>
                     </div>
-                    <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#fff", margin: "0.2rem 0" }}>{m.name}</h3>
-                    <div style={{ color: "#94a3b8", fontSize: "0.85rem", fontWeight: 600 }}>{m.designation}</div>
+                    <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0.3rem 0" }}>{m.name}</h3>
+                    <div style={{ color: "#d4af37", fontSize: "0.88rem", fontWeight: 700 }}>{m.designation}</div>
                   </div>
                 </div>
-                <p style={{ color: "#94a3b8", fontSize: "0.88rem", lineHeight: 1.5, marginBottom: "1.2rem" }}>{m.bio}</p>
+                <p style={{ color: "#cbd5e1", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1.2rem", fontWeight: 400 }}>{m.bio}</p>
               </div>
 
               <div style={{ display: "flex", gap: "0.8rem", paddingTop: "0.8rem", borderTop: "1px solid rgba(255,255,255,0.06)" }}>

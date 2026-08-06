@@ -295,26 +295,26 @@ export default function AdminProjectsPage() {
         </div>
 
         {/* RIGHT COLUMN: Existing Projects List & PDF Downloads */}
-        <div style={{ background: "#141418", border: "1px solid #222", borderRadius: "12px", padding: "2rem" }}>
-          <h2 style={{ fontSize: "1.4rem", marginBottom: "1.5rem", borderBottom: "1px solid #222", paddingBottom: "0.8rem" }}>Existing Projects & PDF Downloads</h2>
+        <div style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "2rem", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
+          <h2 style={{ fontSize: "1.4rem", fontWeight: 900, color: "#d4af37", marginBottom: "1.5rem", borderBottom: "1px solid rgba(212,175,55,0.2)", paddingBottom: "0.8rem" }}>Existing Projects & PDF Downloads</h2>
 
           {loading ? (
-            <div style={{ color: "#888", textAlign: "center", padding: "2rem" }}>Loading projects...</div>
+            <div style={{ color: "#94a3b8", textAlign: "center", padding: "2rem" }}>Loading projects...</div>
           ) : projects.length === 0 ? (
-            <div style={{ color: "#888", textAlign: "center", padding: "2rem" }}>No projects created yet. Create one above to test PDF generation.</div>
+            <div style={{ color: "#94a3b8", textAlign: "center", padding: "2rem" }}>No projects created yet. Create one above to test PDF generation.</div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               {projects.map((proj) => (
-                <div key={proj.id} style={{ background: "#0a0a0c", border: "1px solid #222", borderRadius: "8px", padding: "1.2rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div key={proj.id} style={{ background: "#0b0c10", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", padding: "1.4rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: "1.05rem", color: "#fff" }}>{proj.title}</div>
-                    <div style={{ fontSize: "0.82rem", color: "#aaa", marginTop: "0.2rem" }}>
-                      Client: <strong>{proj.client}</strong> | {proj.category} | {proj.selectedProducts?.length || 0} products
+                    <div style={{ fontWeight: 900, fontSize: "1.2rem", color: "#ffffff" }}>{proj.title}</div>
+                    <div style={{ fontSize: "0.88rem", color: "#cbd5e1", marginTop: "0.3rem" }}>
+                      Client: <strong style={{ color: "#d4af37" }}>{proj.client}</strong> | Category: <span style={{ color: "#60a5fa" }}>{proj.category}</span> | Products: {proj.selectedProducts?.length || 0}
                     </div>
                   </div>
                   <button
                     onClick={() => downloadExistingProjectPDF(proj)}
-                    style={{ padding: "0.6rem 1.1rem", background: "#333", color: "#fff", border: "1px solid #444", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.4rem" }}
+                    style={{ padding: "0.6rem 1.2rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 900, display: "flex", alignItems: "center", gap: "0.4rem" }}
                   >
                     📄 Export PDF
                   </button>

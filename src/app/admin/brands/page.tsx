@@ -179,21 +179,21 @@ export default function AdminBrandsPage() {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
             {brands.map((b) => (
-              <div key={b.id} style={{ background: "#141418", border: "1px solid #222", borderRadius: "10px", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+              <div key={b.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "12px", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
                 <div style={{ position: "relative", height: "140px", background: "#1a1a20" }}>
                   <Image src={b.bannerUrl || "/brands/brand_1_1.png"} alt={b.name} fill style={{ objectFit: "cover" }} />
                   <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.4)" }} />
                   <div style={{ position: "absolute", bottom: "10px", left: "15px", background: "rgba(255,255,255,0.9)", padding: "0.4rem 0.8rem", borderRadius: "4px" }}>
                     <Image src={b.logoUrl} alt={b.name} width={80} height={28} style={{ objectFit: "contain" }} />
                   </div>
-                  <span style={{ position: "absolute", top: "10px", right: "10px", background: "rgba(0,0,0,0.8)", color: "#8b5cf6", padding: "0.3rem 0.6rem", borderRadius: "4px", fontSize: "0.75rem", fontWeight: 700 }}>
+                  <span style={{ position: "absolute", top: "10px", right: "10px", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.3rem 0.7rem", borderRadius: "4px", fontSize: "0.8rem", fontWeight: 900 }}>
                     {b.shortCode}
                   </span>
                 </div>
-                <div style={{ padding: "1.2rem", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                <div style={{ padding: "1.4rem", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                   <div>
-                    <h3 style={{ fontSize: "1.2rem", fontWeight: 700, margin: "0 0 0.4rem" }}>{b.name}</h3>
-                    <p style={{ color: "#888", fontSize: "0.85rem", lineHeight: 1.4, margin: "0 0 0.8rem" }}>{b.description}</p>
+                    <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0 0 0.5rem", letterSpacing: "0.02em" }}>{b.name}</h3>
+                    <p style={{ color: "#cbd5e1", fontSize: "0.9rem", lineHeight: 1.5, margin: "0 0 0.8rem", fontWeight: 400 }}>{b.description}</p>
                     {b.catalogPdfUrl ? (
                       <div style={{ fontSize: "0.78rem", color: "#60a5fa", marginBottom: "0.8rem", wordBreak: "break-all" }}>
                         📄 <a href={b.catalogPdfUrl} target="_blank" rel="noopener noreferrer" style={{ color: "#60a5fa", textDecoration: "underline" }}>Catalog PDF Active</a>
