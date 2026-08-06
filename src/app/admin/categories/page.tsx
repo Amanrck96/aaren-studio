@@ -240,10 +240,10 @@ export default function AdminCategoriesPage() {
                 </span>
                 <span style={{ color: "#d4af37", fontSize: "0.85rem", fontWeight: 700 }}>Order: #{cat.sequenceNumber}</span>
               </div>
-              <h3 style={{ fontSize: "1.4rem", fontWeight: 900, color: "#ffffff", letterSpacing: "0.02em", margin: "0.4rem 0" }}>
+              <h3 style={{ fontSize: "1.4rem", fontWeight: 900, color: "#ffffff", letterSpacing: "0.03em", margin: "0.5rem 0", textTransform: "uppercase" }}>
                 {cat.name}
               </h3>
-              <p style={{ color: "#e2e8f0", fontSize: "0.92rem", margin: "0.6rem 0 1.5rem", lineHeight: 1.6, fontWeight: 400 }}>
+              <p style={{ color: "#f1f5f9", fontSize: "0.95rem", margin: "0.6rem 0 1.5rem", lineHeight: 1.6, fontWeight: 500 }}>
                 {cat.description || "Architectural interior product category."}
               </p>
               <div style={{ display: "flex", gap: "0.8rem" }}>
