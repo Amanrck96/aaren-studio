@@ -635,6 +635,15 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
   const current = await getSiteSettingsStore();
   const updated = { ...current, ...data };
 
+  // 1. PRIMARY: Save directly to Firebase Cloud
+  await syncToFirebaseCloudStore("settings", updated);
+
+  // 2. Update local memory
+  const json = readJsonStore();
+  json.settings = updated;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  // 3. Background Prisma (fails silently on Vercel with local DB)
   try {
     await prisma.siteSettings.upsert({
       where: { id: "default" },
@@ -643,9 +652,6 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
     });
   } catch (e) {}
 
-  const json = readJsonStore();
-  json.settings = updated;
-  writeJsonStore(json);
   return updated;
 }
 
@@ -688,39 +694,8 @@ export async function getCategoriesStore(): Promise<CategoryItem[]> {
   return DEFAULT_CATEGORIES;
 }
 
-export async function saveCategoryStore(category: Omit<CategoryItem, "id"> & { id?: string }): Promise<CategoryItem> {
-  const id = category.id || `cat-${Date.now()}`;
-  const full: CategoryItem = { ...category, id };
 
-  const json = readJsonStore();
-  if (!json.categories) json.categories = [];
-  const idx = json.categories.findIndex((c: any) => c.id === id);
-  if (idx >= 0) json.categories[idx] = full;
-  else json.categories.push(full);
-  writeJsonStore(json);
 
-  try {
-    await prisma.category.upsert({
-      where: { id },
-      update: category,
-      create: { id, ...category },
-    });
-  } catch (e) {}
-
-  return full;
-}
-
-export async function deleteCategoryStore(id: string) {
-  const json = readJsonStore();
-  if (json.categories) {
-    json.categories = json.categories.filter((c: any) => c.id !== id);
-    writeJsonStore(json);
-  }
-
-  try {
-    await prisma.category.delete({ where: { id } });
-  } catch (e) {}
-}
 
 // BRANDS STORE
 export async function getBrandsStore(): Promise<BrandItem[]> {
@@ -768,34 +743,44 @@ export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: strin
   const id = brand.id || brand.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full: BrandItem = { ...brand, id };
 
-  const json = readJsonStore();
-  if (!json.brands) json.brands = [];
-  const idx = json.brands.findIndex((b: any) => b.id === id);
-  if (idx >= 0) json.brands[idx] = full;
-  else json.brands.push(full);
-  writeJsonStore(json);
+  // 1. Get current brands from Firebase
+  let current: BrandItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("brands");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.brands || []; }
 
-  try {
-    await prisma.brand.upsert({
-      where: { id },
-      update: brand,
-      create: { id, ...brand },
-    });
-  } catch (e) {}
+  const idx = current.findIndex((b: any) => b.id === id);
+  if (idx >= 0) current[idx] = full;
+  else current.push(full);
+
+  // 2. Save directly to Firebase
+  await syncToFirebaseCloudStore("brands", current);
+
+  // 3. Local cache
+  const json = readJsonStore();
+  json.brands = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  // 4. Background Prisma
+  try { await prisma.brand.upsert({ where: { id }, update: brand, create: { id, ...brand } }); } catch (e) {}
 
   return full;
 }
 
 export async function deleteBrandStore(id: string) {
-  const json = readJsonStore();
-  if (json.brands) {
-    json.brands = json.brands.filter((b: any) => b.id !== id);
-    writeJsonStore(json);
-  }
+  let current: BrandItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("brands");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.brands || []; }
 
-  try {
-    await prisma.brand.delete({ where: { id } });
-  } catch (e) {}
+  current = current.filter((b: any) => b.id !== id);
+  await syncToFirebaseCloudStore("brands", current);
+
+  const json = readJsonStore();
+  json.brands = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  try { await prisma.brand.delete({ where: { id } }); } catch (e) {}
 }
 
 // PRODUCTS STORE
@@ -856,83 +841,78 @@ export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: 
   const id = product.id || `prod-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const fullProduct: ProductItem = { ...product, id };
 
-  // Synchronously update JSON store first for sub-millisecond execution
-  const json = readJsonStore();
-  if (!json.products) json.products = [...DEFAULT_PRODUCTS];
-  const idx = json.products.findIndex((p: any) => p.id === id);
-  if (idx >= 0) {
-    json.products[idx] = fullProduct;
-  } else {
-    json.products.unshift(fullProduct);
-  }
-  writeJsonStore(json);
+  // 1. Get current products from Firebase
+  let current: ProductItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("products");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.products || []; }
 
-  // Background non-blocking Prisma sync
-  prisma.product
-    .upsert({
-      where: { id },
-      update: {
-        name: product.name,
-        brand: product.brand,
-        category: product.category,
-        subcategory: product.subcategory,
-        shortCode: product.shortCode,
-        width: product.width,
-        height: product.height,
-        depth: product.depth,
-        measurementType: product.measurementType,
-        thickness: product.thickness,
-        finish: product.finish,
-        description: product.description,
-        tags: product.tags || [],
-        imageUrl: product.imageUrl,
-        galleryImages: product.galleryImages || [],
-        catalogPdfUrl: product.catalogPdfUrl,
-        qtyInStock: product.qtyInStock || 0,
-        price: product.price,
-        finishOptions: product.finishOptions ? JSON.stringify(product.finishOptions) : null,
-      },
-      create: {
-        id,
-        name: product.name,
-        brand: product.brand,
-        category: product.category,
-        subcategory: product.subcategory,
-        shortCode: product.shortCode,
-        width: product.width,
-        height: product.height,
-        depth: product.depth,
-        measurementType: product.measurementType,
-        thickness: product.thickness,
-        finish: product.finish,
-        description: product.description,
-        tags: product.tags || [],
-        imageUrl: product.imageUrl,
-        galleryImages: product.galleryImages || [],
-        catalogPdfUrl: product.catalogPdfUrl,
-        qtyInStock: product.qtyInStock || 0,
-        price: product.price,
-        finishOptions: product.finishOptions ? JSON.stringify(product.finishOptions) : null,
-      },
-    })
-    .catch(() => {});
+  const idx = current.findIndex((p: any) => p.id === id);
+  if (idx >= 0) current[idx] = fullProduct;
+  else current.unshift(fullProduct);
+
+  // 2. Save directly to Firebase
+  await syncToFirebaseCloudStore("products", current);
+
+  // 3. Local cache
+  const json = readJsonStore();
+  json.products = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  // 4. Background Prisma sync
+  prisma.product.upsert({
+    where: { id },
+    update: {
+      name: product.name, brand: product.brand, category: product.category,
+      subcategory: product.subcategory, shortCode: product.shortCode,
+      width: product.width, height: product.height, depth: product.depth,
+      measurementType: product.measurementType, thickness: product.thickness,
+      finish: product.finish, description: product.description,
+      tags: product.tags || [], imageUrl: product.imageUrl,
+      galleryImages: product.galleryImages || [],
+      catalogPdfUrl: product.catalogPdfUrl,
+      qtyInStock: product.qtyInStock || 0, price: product.price,
+      finishOptions: product.finishOptions ? JSON.stringify(product.finishOptions) : null,
+    },
+    create: {
+      id, name: product.name, brand: product.brand, category: product.category,
+      subcategory: product.subcategory, shortCode: product.shortCode,
+      width: product.width, height: product.height, depth: product.depth,
+      measurementType: product.measurementType, thickness: product.thickness,
+      finish: product.finish, description: product.description,
+      tags: product.tags || [], imageUrl: product.imageUrl,
+      galleryImages: product.galleryImages || [],
+      catalogPdfUrl: product.catalogPdfUrl,
+      qtyInStock: product.qtyInStock || 0, price: product.price,
+      finishOptions: product.finishOptions ? JSON.stringify(product.finishOptions) : null,
+    },
+  }).catch(() => {});
 
   return fullProduct;
 }
 
 export async function deleteProductStore(id: string) {
-  // Delete from Prisma DB (permanent)
-  try {
-    await prisma.product.delete({ where: { id } });
-  } catch (e) {}
+  let current: ProductItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("products");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.products || []; }
 
-  // Delete from JSON store cache
+  current = current.filter((p: any) => p.id !== id);
+  await syncToFirebaseCloudStore("products", current);
+
   const json = readJsonStore();
-  if (json.products) {
-    json.products = json.products.filter((p: any) => p.id !== id);
-    writeJsonStore(json);
-  }
+  json.products = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  try { await prisma.product.delete({ where: { id } }); } catch (e) {}
 }
+
+
+
+
+
+
+
 
 export function formatGoogleDriveUrl(url?: string): string {
   if (!url) return "";
@@ -1118,6 +1098,50 @@ export async function getAllProjectsStore(): Promise<ProjectShowcaseItem[]> {
   return DEFAULT_PROJECTS;
 }
 
+export async function saveCategoryStore(cat: Omit<CategoryItem, "id"> & { id?: string }): Promise<CategoryItem> {
+  const id = cat.id || cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const full: CategoryItem = { ...cat, id };
+
+  // 1. Get current from Firebase
+  let current: CategoryItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("categories");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.categories || []; }
+
+  const idx = current.findIndex((c: any) => c.id === id);
+  if (idx >= 0) current[idx] = full;
+  else current.push(full);
+
+  // 2. Save to Firebase directly
+  await syncToFirebaseCloudStore("categories", current);
+
+  // 3. Local cache update
+  const json = readJsonStore();
+  json.categories = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  // 4. Background Prisma
+  try { await prisma.category.upsert({ where: { id }, update: cat, create: { id, ...cat } }); } catch (e) {}
+
+  return full;
+}
+
+export async function deleteCategoryStore(id: string) {
+  let current: CategoryItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("categories");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.categories || []; }
+
+  current = current.filter((c: any) => c.id !== id);
+  await syncToFirebaseCloudStore("categories", current);
+
+  const json = readJsonStore();
+  json.categories = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  try { await prisma.category.delete({ where: { id } }); } catch (e) {}
+}
+
 export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "id"> & { id?: string }): Promise<ProjectShowcaseItem> {
   const id = projectData.id || `proj-${Date.now()}`;
   const slug = projectData.slug || projectData.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -1218,33 +1242,48 @@ export async function getTeamStore(): Promise<TeamMemberItem[]> {
 }
 
 export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & { id?: string }) {
-  const json = readJsonStore();
-  if (!json.team) json.team = [...DEFAULT_TEAM];
+  // 1. Get current team from Firebase Cloud (most up-to-date source)
+  let currentTeam: TeamMemberItem[] = [];
+  const fbTeam = await fetchFromFirebaseCloudStore("team");
+  if (fbTeam && Array.isArray(fbTeam) && fbTeam.length > 0) {
+    currentTeam = fbTeam;
+  } else {
+    // Fallback: read from local JSON
+    const json = readJsonStore();
+    currentTeam = json.team || [...DEFAULT_TEAM];
+  }
 
   let targetId = member.id;
   let idx = -1;
   if (targetId) {
-    idx = json.team.findIndex((t: any) => t.id === targetId);
+    idx = currentTeam.findIndex((t: any) => t.id === targetId);
   }
   if (idx === -1 && member.name) {
-    idx = json.team.findIndex((t: any) => t.name.trim().toLowerCase() === member.name.trim().toLowerCase());
+    idx = currentTeam.findIndex((t: any) => t.name.trim().toLowerCase() === member.name.trim().toLowerCase());
   }
 
   if (idx >= 0) {
-    targetId = json.team[idx].id;
+    targetId = currentTeam[idx].id;
   } else {
     targetId = targetId || `tm-${Date.now()}`;
   }
 
-  const full: TeamMemberItem = { ...json.team[idx], ...member, id: targetId };
+  const full: TeamMemberItem = { ...(currentTeam[idx] || {}), ...member, id: targetId };
   if (idx >= 0) {
-    json.team[idx] = full;
+    currentTeam[idx] = full;
   } else {
-    json.team.push(full);
+    currentTeam.push(full);
   }
 
-  writeJsonStore(json);
+  // 2. PRIMARY SAVE: Directly sync updated team to Firebase Cloud (immediate, permanent)
+  await syncToFirebaseCloudStore("team", currentTeam);
 
+  // 3. Update local memory cache
+  const json = readJsonStore();
+  json.team = currentTeam;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  // 4. Background: try Prisma (will fail on Vercel with local DB, that's OK)
   try {
     await prisma.teamMember.upsert({
       where: { id: targetId },
@@ -1257,14 +1296,28 @@ export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & {
 }
 
 export async function deleteTeamMemberStore(id: string) {
-  const json = readJsonStore();
-  if (json.team) {
-    json.team = json.team.filter((t: any) => t.id !== id);
-    writeJsonStore(json);
+  // 1. Get current team from Firebase
+  let currentTeam: TeamMemberItem[] = [];
+  const fbTeam = await fetchFromFirebaseCloudStore("team");
+  if (fbTeam && Array.isArray(fbTeam) && fbTeam.length > 0) {
+    currentTeam = fbTeam;
+  } else {
+    const json = readJsonStore();
+    currentTeam = json.team || [];
   }
-  try {
-    await prisma.teamMember.delete({ where: { id } });
-  } catch (e) {}
+
+  currentTeam = currentTeam.filter((t: any) => t.id !== id);
+
+  // 2. Sync deleted list back to Firebase immediately
+  await syncToFirebaseCloudStore("team", currentTeam);
+
+  // 3. Update local memory
+  const json = readJsonStore();
+  json.team = currentTeam;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  // 4. Background Prisma (fails silently on Vercel)
+  try { await prisma.teamMember.delete({ where: { id } }); } catch (e) {}
 }
 
 export async function getRoadmapStore(): Promise<RoadmapStepItem[]> {
