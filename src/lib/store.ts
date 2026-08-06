@@ -1066,35 +1066,25 @@ export async function parseAndImportExcelProducts(fileBuffer: Buffer): Promise<P
 
 // SHOWCASE PROJECTS STORE
 export async function getAllProjectsStore(): Promise<ProjectShowcaseItem[]> {
-  // PRIMARY: Always read from Prisma DB first
+  // 1. Firebase Cloud (primary persistent source)
+  const fbData = await fetchFromFirebaseCloudStore("projects");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore(); json.projects = fbData; globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+  // 2. Prisma fallback
   try {
     const dbProjects = await prisma.project.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (dbProjects && dbProjects.length > 0) {
-      const mapped: ProjectShowcaseItem[] = dbProjects.map((p: any) => ({
-        id: p.id,
-        title: p.title,
-        slug: p.slug,
-        description: p.description || "",
-        category: p.category || "",
-        client: p.client || "",
-        projectCode: p.projectCode || "",
-        sequenceNumber: p.sequenceNumber || 1,
-        imageUrl: p.imageUrl || "",
-        gallery: p.gallery || [],
-      }));
-      // Update memory cache
-      const json = readJsonStore();
-      json.projects = mapped;
-      globalThis.__AAREN_MEMORY_STORE__ = json;
+      const mapped: ProjectShowcaseItem[] = dbProjects.map((p: any) => ({ id: p.id, title: p.title, slug: p.slug, description: p.description || "", category: p.category || "", client: p.client || "", projectCode: p.projectCode || "", sequenceNumber: p.sequenceNumber || 1, imageUrl: p.imageUrl || "", gallery: p.gallery || [] }));
+      const json = readJsonStore(); json.projects = mapped; globalThis.__AAREN_MEMORY_STORE__ = json;
+      syncToFirebaseCloudStore("projects", mapped);
       return mapped;
     }
   } catch (e) {}
-
-  // FALLBACK: JSON store
+  // 3. JSON fallback
   const json = readJsonStore();
-  if (json.projects && Array.isArray(json.projects) && json.projects.length > 0) {
-    return json.projects;
-  }
+  if (json.projects && Array.isArray(json.projects) && json.projects.length > 0) return json.projects;
   return DEFAULT_PROJECTS;
 }
 
@@ -1145,59 +1135,44 @@ export async function deleteCategoryStore(id: string) {
 export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "id"> & { id?: string }): Promise<ProjectShowcaseItem> {
   const id = projectData.id || `proj-${Date.now()}`;
   const slug = projectData.slug || projectData.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-  const mainImg = projectData.imageUrl || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80";
-  const galleryImgs = projectData.gallery || [mainImg];
+  const mainImg = projectData.imageUrl || "";
+  const galleryImgs = projectData.gallery || (mainImg ? [mainImg] : []);
   const full: ProjectShowcaseItem = { ...projectData, id, slug, imageUrl: mainImg, gallery: galleryImgs };
 
-  const json = readJsonStore();
-  if (!json.projects) json.projects = [];
-  const idx = json.projects.findIndex((p: any) => p.id === id);
-  if (idx >= 0) json.projects[idx] = full;
-  else json.projects.push(full);
-  writeJsonStore(json);
+  // 1. Get current from Firebase
+  let current: ProjectShowcaseItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("projects");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.projects || []; }
+  const idx = current.findIndex((p: any) => p.id === id);
+  if (idx >= 0) current[idx] = full; else current.push(full);
 
-  try {
-    await prisma.project.upsert({
-      where: { id },
-      update: {
-        title: projectData.title,
-        slug,
-        description: projectData.description,
-        category: projectData.category,
-        client: projectData.client,
-        projectCode: projectData.projectCode || "OB 01",
-        sequenceNumber: projectData.sequenceNumber || 1,
-        imageUrl: mainImg,
-        gallery: galleryImgs,
-      },
-      create: {
-        id,
-        title: projectData.title,
-        slug,
-        description: projectData.description,
-        category: projectData.category,
-        client: projectData.client,
-        projectCode: projectData.projectCode || "OB 01",
-        sequenceNumber: projectData.sequenceNumber || 1,
-        imageUrl: mainImg,
-        gallery: galleryImgs,
-      },
-    });
-  } catch (err) {}
+  // 2. Save to Firebase directly
+  await syncToFirebaseCloudStore("projects", current);
+
+  // 3. Local memory
+  const json = readJsonStore(); json.projects = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  // 4. Background Prisma
+  try { await prisma.project.upsert({ where: { id }, update: { title: projectData.title, slug, description: projectData.description, category: projectData.category, client: projectData.client, projectCode: projectData.projectCode || "OB 01", sequenceNumber: projectData.sequenceNumber || 1, imageUrl: mainImg, gallery: galleryImgs }, create: { id, title: projectData.title, slug, description: projectData.description, category: projectData.category, client: projectData.client, projectCode: projectData.projectCode || "OB 01", sequenceNumber: projectData.sequenceNumber || 1, imageUrl: mainImg, gallery: galleryImgs } }); } catch (err) {}
 
   return full;
 }
 
 export async function deleteProjectStore(id: string) {
-  const json = readJsonStore();
-  if (json.projects) {
-    json.projects = json.projects.filter((p: any) => p.id !== id);
-    writeJsonStore(json);
-  }
-  try {
-    await prisma.project.delete({ where: { id } });
-  } catch (e) {}
+  let current: ProjectShowcaseItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("projects");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.projects || []; }
+  current = current.filter((p: any) => p.id !== id);
+  await syncToFirebaseCloudStore("projects", current);
+  const json = readJsonStore(); json.projects = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  try { await prisma.project.delete({ where: { id } }); } catch (e) {}
 }
+
+
+
+
 
 // TEAM & ROADMAP STORE
 export async function getTeamStore(): Promise<TeamMemberItem[]> {
@@ -1576,10 +1551,12 @@ export async function getAllFAQsStore() {
 
 // SERVICES STORE
 export async function getServicesStore(): Promise<ServiceItem[]> {
+  // 1. Firebase Cloud
+  const fbData = await fetchFromFirebaseCloudStore("services");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  // 2. JSON fallback
   const json = readJsonStore();
-  if (json.services && Array.isArray(json.services) && json.services.length > 0) {
-    return json.services;
-  }
+  if (json.services && Array.isArray(json.services) && json.services.length > 0) return json.services;
   return [
     { id: "srv-1", title: "Material Curation & Sourcing", description: "Exclusive European surfaces, FENIX nano-laminates, and natural wood cladding.", icon: "💎", sequenceNumber: 1 },
     { id: "srv-2", title: "Architectural Specification & Detailing", description: "Bespoke CAD drawings, technical joinery, and material sample kits.", icon: "📐", sequenceNumber: 2 },
@@ -1590,61 +1567,45 @@ export async function getServicesStore(): Promise<ServiceItem[]> {
 export async function saveServiceStore(service: Omit<ServiceItem, "id"> & { id?: string }): Promise<ServiceItem> {
   const id = service.id || `srv-${Date.now()}`;
   const full = { ...service, id };
-  const json = readJsonStore();
-  if (!json.services) json.services = [];
-  const idx = json.services.findIndex((s: any) => s.id === id);
-  if (idx >= 0) json.services[idx] = full;
-  else json.services.push(full);
-  writeJsonStore(json);
-
-  try {
-    await prisma.service.upsert({
-      where: { id },
-      update: service,
-      create: { id, ...service },
-    });
-  } catch (e) {}
-
+  let current: ServiceItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("services");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.services || []; }
+  const idx = current.findIndex((s: any) => s.id === id);
+  if (idx >= 0) current[idx] = full; else current.push(full);
+  await syncToFirebaseCloudStore("services", current);
+  const json = readJsonStore(); json.services = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  try { await prisma.service.upsert({ where: { id }, update: service, create: { id, ...service } }); } catch (e) {}
   return full;
 }
 
 export async function deleteServiceStore(id: string) {
-  const json = readJsonStore();
-  if (json.services) {
-    json.services = json.services.filter((s: any) => s.id !== id);
-    writeJsonStore(json);
-  }
-  try {
-    await prisma.service.delete({ where: { id } });
-  } catch (e) {}
+  let current: ServiceItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("services");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.services || []; }
+  current = current.filter((s: any) => s.id !== id);
+  await syncToFirebaseCloudStore("services", current);
+  const json = readJsonStore(); json.services = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  try { await prisma.service.delete({ where: { id } }); } catch (e) {}
 }
 
-// TESTIMONIALS STORE
 export async function getTestimonialsStore(): Promise<TestimonialItem[]> {
-  // PRIMARY: Always read from Prisma DB first
+  // 1. Firebase Cloud
+  const fbData = await fetchFromFirebaseCloudStore("testimonials");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  // 2. Prisma fallback
   try {
-    const dbTestimonials = await prisma.testimonial.findMany({ orderBy: { sequenceNumber: "asc" } });
-    if (dbTestimonials && dbTestimonials.length > 0) {
-      const mapped: TestimonialItem[] = dbTestimonials.map((t: any) => ({
-        id: t.id,
-        clientName: t.clientName,
-        company: t.company || "",
-        rating: t.rating || 5,
-        review: t.review || "",
-        sequenceNumber: t.sequenceNumber || 1,
-      }));
-      const json = readJsonStore();
-      json.testimonials = mapped;
-      globalThis.__AAREN_MEMORY_STORE__ = json;
+    const dbT = await prisma.testimonial.findMany({ orderBy: { sequenceNumber: "asc" } });
+    if (dbT && dbT.length > 0) {
+      const mapped: TestimonialItem[] = dbT.map((t: any) => ({ id: t.id, clientName: t.clientName, company: t.company || "", rating: t.rating || 5, review: t.review || "", sequenceNumber: t.sequenceNumber || 1 }));
+      syncToFirebaseCloudStore("testimonials", mapped);
       return mapped;
     }
   } catch (e) {}
-
-  // FALLBACK: JSON store
+  // 3. JSON fallback
   const json = readJsonStore();
-  if (json.testimonials && Array.isArray(json.testimonials) && json.testimonials.length > 0) {
-    return json.testimonials;
-  }
+  if (json.testimonials && Array.isArray(json.testimonials) && json.testimonials.length > 0) return json.testimonials;
   return [
     { id: "t-1", clientName: "Vikramaditya Rao", company: "Oberoi Penthouse Owner", rating: 5, review: "Aaren Studio transformed our penthouse with incredible FENIX surfaces and Mafi oak floors.", sequenceNumber: 1 },
     { id: "t-2", clientName: "Ananya Deshmukh", company: "Principal Architect, Studio AD", rating: 5, review: "The material sample kits and Italian joinery precision from Aaren are unmatched in India.", sequenceNumber: 2 },
@@ -1654,101 +1615,76 @@ export async function getTestimonialsStore(): Promise<TestimonialItem[]> {
 export async function saveTestimonialStore(testimonial: Omit<TestimonialItem, "id"> & { id?: string }): Promise<TestimonialItem> {
   const id = testimonial.id || `t-${Date.now()}`;
   const full = { ...testimonial, id };
-  const json = readJsonStore();
-  if (!json.testimonials) json.testimonials = [];
-  const idx = json.testimonials.findIndex((t: any) => t.id === id);
-  if (idx >= 0) json.testimonials[idx] = full;
-  else json.testimonials.push(full);
-  writeJsonStore(json);
-
-  try {
-    await prisma.testimonial.upsert({
-      where: { id },
-      update: testimonial,
-      create: { id, ...testimonial },
-    });
-  } catch (e) {}
-
+  let current: TestimonialItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("testimonials");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.testimonials || []; }
+  const idx = current.findIndex((t: any) => t.id === id);
+  if (idx >= 0) current[idx] = full; else current.push(full);
+  await syncToFirebaseCloudStore("testimonials", current);
+  const json = readJsonStore(); json.testimonials = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  try { await prisma.testimonial.upsert({ where: { id }, update: testimonial, create: { id, ...testimonial } }); } catch (e) {}
   return full;
 }
 
 export async function deleteTestimonialStore(id: string) {
-  const json = readJsonStore();
-  if (json.testimonials) {
-    json.testimonials = json.testimonials.filter((t: any) => t.id !== id);
-    writeJsonStore(json);
-  }
-  try {
-    await prisma.testimonial.delete({ where: { id } });
-  } catch (e) {}
+  let current: TestimonialItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("testimonials");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.testimonials || []; }
+  current = current.filter((t: any) => t.id !== id);
+  await syncToFirebaseCloudStore("testimonials", current);
+  const json = readJsonStore(); json.testimonials = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  try { await prisma.testimonial.delete({ where: { id } }); } catch (e) {}
 }
 
-// BLOGS STORE
+
+
+
 export async function getBlogsStore(): Promise<BlogItem[]> {
-  // PRIMARY: Always read from Prisma DB first
+  // 1. Firebase Cloud
+  const fbData = await fetchFromFirebaseCloudStore("blogs");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  // 2. Prisma fallback
   try {
     const dbBlogs = await prisma.blog.findMany({ orderBy: { publishDate: "desc" } });
     if (dbBlogs && dbBlogs.length > 0) {
-      const mapped: BlogItem[] = dbBlogs.map((b: any) => ({
-        id: b.id,
-        title: b.title,
-        slug: b.slug,
-        category: b.category || "",
-        tags: b.tags || [],
-        content: b.content || "",
-        featuredImage: b.featuredImage || "",
-        author: b.author || "Aaren Studio",
-        publishDate: b.publishDate || "",
-        status: b.status || "Draft",
-      }));
-      const json = readJsonStore();
-      json.blogs = mapped;
-      globalThis.__AAREN_MEMORY_STORE__ = json;
+      const mapped: BlogItem[] = dbBlogs.map((b: any) => ({ id: b.id, title: b.title, slug: b.slug, category: b.category || "", tags: b.tags || [], content: b.content || "", featuredImage: b.featuredImage || "", author: b.author || "Aaren Studio", publishDate: b.publishDate || "", status: b.status || "Draft" }));
+      syncToFirebaseCloudStore("blogs", mapped);
       return mapped;
     }
   } catch (e) {}
-
-  // FALLBACK: JSON store
+  // 3. JSON fallback
   const json = readJsonStore();
-  if (json.blogs && Array.isArray(json.blogs) && json.blogs.length > 0) {
-    return json.blogs;
-  }
-  return [
-    { id: "b-1", title: "The Evolution of FENIX Nano-Tech Surfaces in Indian Homes", slug: "fenix-surfaces-guide", category: "Surfaces", tags: ["FENIX", "Laminate", "Interior Design"], content: "FENIX nano-technology represents a breakthrough in thermal healing and ultra-matte surface aesthetics...", featuredImage: "/brands/brand_4_1.png", author: "Aaren Studio", publishDate: "2026-02-15", status: "Published" }
-  ];
+  if (json.blogs && Array.isArray(json.blogs) && json.blogs.length > 0) return json.blogs;
+  return [{ id: "b-1", title: "The Evolution of FENIX Nano-Tech Surfaces in Indian Homes", slug: "fenix-surfaces-guide", category: "Surfaces", tags: ["FENIX", "Laminate", "Interior Design"], content: "FENIX nano-technology represents a breakthrough in thermal healing and ultra-matte surface aesthetics...", featuredImage: "/brands/brand_4_1.png", author: "Aaren Studio", publishDate: "2026-02-15", status: "Published" }];
 }
 
 export async function saveBlogStore(blog: Omit<BlogItem, "id"> & { id?: string }): Promise<BlogItem> {
   const id = blog.id || `blog-${Date.now()}`;
   const slug = blog.slug || blog.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full = { ...blog, id, slug };
-  const json = readJsonStore();
-  if (!json.blogs) json.blogs = [];
-  const idx = json.blogs.findIndex((b: any) => b.id === id);
-  if (idx >= 0) json.blogs[idx] = full;
-  else json.blogs.unshift(full);
-  writeJsonStore(json);
-
-  try {
-    await prisma.blog.upsert({
-      where: { id },
-      update: full,
-      create: full,
-    });
-  } catch (e) {}
-
+  let current: BlogItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("blogs");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.blogs || []; }
+  const idx = current.findIndex((b: any) => b.id === id);
+  if (idx >= 0) current[idx] = full; else current.unshift(full);
+  await syncToFirebaseCloudStore("blogs", current);
+  const json = readJsonStore(); json.blogs = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  try { await prisma.blog.upsert({ where: { id }, update: full, create: full }); } catch (e) {}
   return full;
 }
 
 export async function deleteBlogStore(id: string) {
-  const json = readJsonStore();
-  if (json.blogs) {
-    json.blogs = json.blogs.filter((b: any) => b.id !== id);
-    writeJsonStore(json);
-  }
-  try {
-    await prisma.blog.delete({ where: { id } });
-  } catch (e) {}
+  let current: BlogItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("blogs");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.blogs || []; }
+  current = current.filter((b: any) => b.id !== id);
+  await syncToFirebaseCloudStore("blogs", current);
+  const json = readJsonStore(); json.blogs = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  try { await prisma.blog.delete({ where: { id } }); } catch (e) {}
 }
 
 // MEDIA LIBRARY STORE (AGGREGATES ALL PDFS, VIDEOS, SWATCHES, LOGOS & SITE ASSETS)
