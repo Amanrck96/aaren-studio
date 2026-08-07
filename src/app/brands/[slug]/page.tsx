@@ -72,8 +72,19 @@ export default function BrandDetailPage({ params }: Props) {
     waltz: "#7a9bab",
     "newtech-wood": "#8a9e78",
     loco: "#b89a6e",
+    "freedom-screens": "#6b9e7a",
+    peelply: "#a07850",
+    inclass: "#7a8fa0",
+    wow: "#c87a5a",
+    iww: "#8a7aab",
+    "living-ceramica": "#9ab08a",
+    florim: "#7a9ab0",
+    gelli: "#b09a7a",
+    jacuzzi: "#6a9ab0",
+    "alex-turco": "#c8a06a",
   };
-  const accent = accentMap[brand.id] || "#888";
+  const accent = accentMap[brand.id] || "#d4af37";
+
 
   return (
     <div className="brand-detail">
