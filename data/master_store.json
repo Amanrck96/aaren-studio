@@ -192,571 +192,210 @@
   ],
   "brands": [
     {
-      "id": "slashform",
-      "name": "Slashform",
-      "logoUrl": "/brand_logos/slashform.png",
       "bannerUrl": "/brands/brand_1_1.png",
+      "catalogPdfUrl": "/catalogues/Slashform/Slashform_2025.pdf",
+      "category": "Doors & Windows",
       "description": "Italian precision living systems for kitchen & wardrobe",
-      "shortCode": "SF 01",
+      "id": "slashform",
+      "logoUrl": "/brands/brand_1_2.png",
+      "name": "Slashform",
       "sequenceNumber": 1,
-      "catalogPdfUrl": "https://drive.google.com/file/d/11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV/view",
-      "catalogs": [
-        {
-          "id": "slashform-cat-1",
-          "title": "CATALOG 01",
-          "pdfUrl": "https://drive.google.com/file/d/11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV",
-          "coverImage": "https://lh3.googleusercontent.com/d/11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV=s800",
-          "fileId": "11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV"
-        },
-        {
-          "id": "slashform-cat-2",
-          "title": "CATALOG 02",
-          "pdfUrl": "https://drive.google.com/file/d/19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd",
-          "coverImage": "https://lh3.googleusercontent.com/d/19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd=s800",
-          "fileId": "19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd"
-        }
-      ],
-      "catalogCount": "2 catalogs",
-      "catalogues": [
-        {
-          "title": "Slashform Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV/view",
-          "url": "https://drive.google.com/file/d/11b9LnBC1UrF4QvFXYDGnewCUtWd_BphV/view"
-        },
-        {
-          "title": "Slashform Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd/view",
-          "url": "https://drive.google.com/file/d/19n39_OGbW16iHUcAqeaxX9WhXLHKIrkd/view"
-        }
-      ]
+      "shortCode": "SF 01"
     },
     {
-      "id": "waltz",
-      "name": "Waltz by JB Glass",
-      "logoUrl": "/brand_logos/waltz.png",
       "bannerUrl": "/brands/brand_2_1.png",
+      "catalogPdfUrl": "/catalogues/Waltz/Waltz_Glass.pdf",
+      "category": "Glide NXT",
       "description": "Architectural glass partitions and zipline screens",
-      "shortCode": "WB 02",
+      "id": "waltz",
+      "logoUrl": "/brands/brand_2_2.png",
+      "name": "Waltz by JB Glass",
       "sequenceNumber": 2,
-      "catalogPdfUrl": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7/view",
-      "catalogs": [
-        {
-          "id": "waltz-cat-1",
-          "title": "CATALOG 01",
-          "pdfUrl": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7",
-          "coverImage": "https://lh3.googleusercontent.com/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7=s800",
-          "fileId": "1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7"
-        },
-        {
-          "id": "waltz-cat-2",
-          "title": "CATALOG 02",
-          "pdfUrl": "https://drive.google.com/file/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE",
-          "coverImage": "https://lh3.googleusercontent.com/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE=s800",
-          "fileId": "1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE"
-        },
-        {
-          "id": "waltz-cat-3",
-          "title": "CATALOG 03",
-          "pdfUrl": "https://drive.google.com/file/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs",
-          "coverImage": "https://lh3.googleusercontent.com/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs=s800",
-          "fileId": "1jFT0QU2G7tra71rUxRenbhekvXjvFGTs"
-        },
-        {
-          "id": "waltz-cat-4",
-          "title": "CATALOG 04",
-          "pdfUrl": "https://drive.google.com/file/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2",
-          "coverImage": "https://lh3.googleusercontent.com/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2=s800",
-          "fileId": "1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2"
-        },
-        {
-          "id": "waltz-cat-5",
-          "title": "CATALOG 05",
-          "pdfUrl": "https://drive.google.com/file/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a",
-          "coverImage": "https://lh3.googleusercontent.com/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a=s800",
-          "fileId": "15P4PplYgb9PrPZlWudfHSiKbkexCBU1a"
-        }
-      ],
-      "catalogCount": "5 catalogs",
-      "catalogues": [
-        {
-          "title": "Waltz by JB Glass Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7/view",
-          "url": "https://drive.google.com/file/d/1JA_g_CemCX3fTMNxCgwUnvTDz7V5pjq7/view"
-        },
-        {
-          "title": "Waltz by JB Glass Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE/view",
-          "url": "https://drive.google.com/file/d/1PKQ4DMTHtrBwlVsLXW5M_RLhiHkzUHCE/view"
-        },
-        {
-          "title": "Waltz by JB Glass Official Catalogue Vol. 3",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs/view",
-          "url": "https://drive.google.com/file/d/1jFT0QU2G7tra71rUxRenbhekvXjvFGTs/view"
-        },
-        {
-          "title": "Waltz by JB Glass Official Catalogue Vol. 4",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2/view",
-          "url": "https://drive.google.com/file/d/1zNW6M4EKtsw3UUH6Hoyq1zihXo2ALki2/view"
-        },
-        {
-          "title": "Waltz by JB Glass Official Catalogue Vol. 5",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a/view",
-          "url": "https://drive.google.com/file/d/15P4PplYgb9PrPZlWudfHSiKbkexCBU1a/view"
-        }
-      ]
+      "shortCode": "WB 02"
     },
     {
-      "id": "newtech-wood",
-      "name": "Newtech Wood",
-      "logoUrl": "/brand_logos/newtechwood.png",
       "bannerUrl": "/brands/brand_3_1.png",
+      "catalogPdfUrl": "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf",
+      "category": "Decking",
       "description": "WPC composite outdoor decking and architectural cladding",
-      "shortCode": "NW 03",
+      "id": "newtech-wood",
+      "logoUrl": "/brands/brand_3_2.png",
+      "name": "Newtech Wood",
       "sequenceNumber": 3,
-      "catalogPdfUrl": "https://drive.google.com/file/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy/view",
-      "catalogues": [
-        {
-          "title": "Newtech Wood Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy/view",
-          "url": "https://drive.google.com/file/d/1PzAS2CRZQGMIZJjLfaJKchaq1wfIeJxy/view"
-        },
-        {
-          "title": "Newtech Wood Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c/view",
-          "url": "https://drive.google.com/file/d/1TJ8_oYGc3P-R0E96aD-tmthbg7aTg3-c/view"
-        }
-      ]
+      "shortCode": "NW 03"
     },
     {
-      "id": "formica",
-      "name": "Formica",
-      "logoUrl": "/brand_logos/formica.png",
       "bannerUrl": "/brands/brand_4_1.png",
+      "catalogPdfUrl": "/catalogues/Formica/2024-FENIX-brochure-digital.pdf",
+      "category": "Laminates",
       "description": "FENIX nano-tech surfaces and premium laminates",
-      "shortCode": "FC 04",
+      "id": "formica",
+      "logoUrl": "/brands/brand_4_2.png",
+      "name": "Formica",
       "sequenceNumber": 4,
-      "catalogPdfUrl": "https://drive.google.com/file/d/1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR/view",
-      "catalogs": [
-        {
-          "id": "formica-cat-1",
-          "title": "CATALOG 01",
-          "pdfUrl": "https://drive.google.com/file/d/1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR",
-          "coverImage": "https://lh3.googleusercontent.com/d/1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR=s800",
-          "fileId": "1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR"
-        },
-        {
-          "id": "formica-cat-2",
-          "title": "CATALOG 02",
-          "pdfUrl": "https://drive.google.com/file/d/1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60",
-          "coverImage": "https://lh3.googleusercontent.com/d/1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60=s800",
-          "fileId": "1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60"
-        },
-        {
-          "id": "formica-cat-3",
-          "title": "CATALOG 03",
-          "pdfUrl": "https://drive.google.com/file/d/1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff",
-          "coverImage": "https://lh3.googleusercontent.com/d/1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff=s800",
-          "fileId": "1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff"
-        },
-        {
-          "id": "formica-cat-4",
-          "title": "CATALOG 04",
-          "pdfUrl": "https://drive.google.com/file/d/1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U",
-          "coverImage": "https://lh3.googleusercontent.com/d/1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U=s800",
-          "fileId": "1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U"
-        },
-        {
-          "id": "formica-cat-5",
-          "title": "CATALOG 05",
-          "pdfUrl": "https://drive.google.com/file/d/1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai",
-          "coverImage": "https://lh3.googleusercontent.com/d/1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai=s800",
-          "fileId": "1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai"
-        }
-      ],
-      "catalogCount": "5 catalogs",
-      "catalogues": [
-        {
-          "title": "Formica Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR/view",
-          "url": "https://drive.google.com/file/d/1aDtHurtIb3rwATLdoa9kFWPGu1nXKfaR/view"
-        },
-        {
-          "title": "Formica Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60/view",
-          "url": "https://drive.google.com/file/d/1qJedyaeLI_EoZqNBXNj4K5uYn7ji7N60/view"
-        },
-        {
-          "title": "Formica Official Catalogue Vol. 3",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff/view",
-          "url": "https://drive.google.com/file/d/1q8I_ygpc4Zb-grGss6bIlaqG61cYtnff/view"
-        },
-        {
-          "title": "Formica Official Catalogue Vol. 4",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U/view",
-          "url": "https://drive.google.com/file/d/1uqAJ9f3LrOA6RnmTSOs3a98iPopMxr_U/view"
-        },
-        {
-          "title": "Formica Official Catalogue Vol. 5",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai/view",
-          "url": "https://drive.google.com/file/d/1a2C5H0pvPxSxkVOVXEnJvw_ZULv3rxai/view"
-        }
-      ]
+      "shortCode": "FC 04"
     },
     {
-      "id": "loco",
-      "name": "Loco",
-      "logoUrl": "/brand_logos/loco.png",
       "bannerUrl": "/brands/brand_5_1.png",
+      "category": "Furniture",
       "description": "Bespoke Italian millwork and furniture sculpture",
-      "shortCode": "LC 05",
-      "sequenceNumber": 5
+      "id": "loco",
+      "logoUrl": "/brands/brand_5_2.png",
+      "name": "Loco",
+      "sequenceNumber": 5,
+      "shortCode": "LC 05"
     },
     {
-      "id": "falper",
-      "name": "Falper",
-      "logoUrl": "/brand_logos/falper.png",
       "bannerUrl": "/brands/brand_6_1.png",
+      "category": "Wash Basins",
       "description": "Luxury bath environments, vanities and freestanding tubs",
-      "shortCode": "FP 06",
-      "sequenceNumber": 6
+      "id": "falper",
+      "logoUrl": "/brands/brand_6_2.png",
+      "name": "Falper",
+      "sequenceNumber": 6,
+      "shortCode": "FP 06"
     },
     {
-      "id": "fima",
-      "name": "Fima Carlo Frattini",
-      "logoUrl": "/brand_logos/fima.png",
       "bannerUrl": "/brands/brand_7_1.png",
+      "category": "Bathroom Fittings",
       "description": "Refined Italian tapware and thermostatic shower systems",
-      "shortCode": "FM 07",
+      "id": "fima",
+      "logoUrl": "/brands/brand_7_2.png",
+      "name": "Fima Carlo Frattini",
       "sequenceNumber": 7,
-      "catalogs": [
-        {
-          "id": "fima-cat-1",
-          "title": "CATALOG 01",
-          "pdfUrl": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ",
-          "coverImage": "https://lh3.googleusercontent.com/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ=s800",
-          "fileId": "1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ"
-        },
-        {
-          "id": "fima-cat-2",
-          "title": "CATALOG 02",
-          "pdfUrl": "https://drive.google.com/file/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx",
-          "coverImage": "https://lh3.googleusercontent.com/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx=s800",
-          "fileId": "1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx"
-        },
-        {
-          "id": "fima-cat-3",
-          "title": "CATALOG 03",
-          "pdfUrl": "https://drive.google.com/file/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g",
-          "coverImage": "https://lh3.googleusercontent.com/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g=s800",
-          "fileId": "11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g"
-        },
-        {
-          "id": "fima-cat-4",
-          "title": "CATALOG 04",
-          "pdfUrl": "https://drive.google.com/file/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr",
-          "coverImage": "https://lh3.googleusercontent.com/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr=s800",
-          "fileId": "1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr"
-        },
-        {
-          "id": "fima-cat-5",
-          "title": "CATALOG 05",
-          "pdfUrl": "https://drive.google.com/file/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz",
-          "coverImage": "https://lh3.googleusercontent.com/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz=s800",
-          "fileId": "1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz"
-        }
-      ],
-      "catalogCount": "5 catalogs",
-      "catalogPdfUrl": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ/view",
-      "catalogues": [
-        {
-          "title": "Fima Carlo Frattini Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ/view",
-          "url": "https://drive.google.com/file/d/1MyDRmFqLK2vrEdE7Q3WhWKWQKerugPHQ/view"
-        },
-        {
-          "title": "Fima Carlo Frattini Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx/view",
-          "url": "https://drive.google.com/file/d/1FYHt8bOnM3KpPv7_zTHKkwf30fqTAcVx/view"
-        },
-        {
-          "title": "Fima Carlo Frattini Official Catalogue Vol. 3",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g/view",
-          "url": "https://drive.google.com/file/d/11r4Vl2V7vZPILHCrhFDvlOCKsbCbdJ0g/view"
-        },
-        {
-          "title": "Fima Carlo Frattini Official Catalogue Vol. 4",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr/view",
-          "url": "https://drive.google.com/file/d/1KqtUlci2ec0smM6FiAMP7pKZitTV_Ddr/view"
-        },
-        {
-          "title": "Fima Carlo Frattini Official Catalogue Vol. 5",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz/view",
-          "url": "https://drive.google.com/file/d/1fq7QFQ5pTbYNf3N7VHdrDRSBal86jeZz/view"
-        }
-      ]
+      "shortCode": "FM 07"
     },
     {
-      "id": "inkiostro-bianco",
-      "name": "Inkiostro Bianco",
-      "logoUrl": "/brand_logos/inkiostro-bianco.png",
       "bannerUrl": "/brands/brand_8_1.png",
+      "catalogPdfUrl": "/catalogues/Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf",
+      "category": "Wall Covering",
       "description": "Creative decorative wallcoverings and printed surfaces",
-      "shortCode": "IB 08",
+      "id": "inkiostro-bianco",
+      "logoUrl": "/brands/brand_8_2.png",
+      "name": "Inkiostro Bianco",
       "sequenceNumber": 8,
-      "catalogPdfUrl": "https://drive.google.com/file/d/1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9/view",
-      "catalogs": [
-        {
-          "id": "inkiostro-bianco-cat-1",
-          "title": "CATALOG 01",
-          "pdfUrl": "https://drive.google.com/file/d/1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9",
-          "coverImage": "https://lh3.googleusercontent.com/d/1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9=s800",
-          "fileId": "1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9"
-        },
-        {
-          "id": "inkiostro-bianco-cat-2",
-          "title": "CATALOG 02",
-          "pdfUrl": "https://drive.google.com/file/d/1V546MuJR4xYlk3Oys6T9567beAP2MeTp/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1V546MuJR4xYlk3Oys6T9567beAP2MeTp",
-          "coverImage": "https://lh3.googleusercontent.com/d/1V546MuJR4xYlk3Oys6T9567beAP2MeTp=s800",
-          "fileId": "1V546MuJR4xYlk3Oys6T9567beAP2MeTp"
-        }
-      ],
-      "catalogCount": "2 catalogs",
-      "catalogues": [
-        {
-          "title": "Inkiostro Bianco Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9/view",
-          "url": "https://drive.google.com/file/d/1rTnaBdoFETY-zluvOsJ3DEPL1lFN7iM9/view"
-        },
-        {
-          "title": "Inkiostro Bianco Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1V546MuJR4xYlk3Oys6T9567beAP2MeTp/view",
-          "url": "https://drive.google.com/file/d/1V546MuJR4xYlk3Oys6T9567beAP2MeTp/view"
-        }
-      ]
+      "shortCode": "IB 08"
     },
     {
-      "id": "mafi",
-      "name": "Mafi",
-      "logoUrl": "/brand_logos/mafi.png",
       "bannerUrl": "/brands/brand_9_1.png",
+      "category": "Wooden Flooring",
       "description": "Austrian natural wood flooring with hand-rubbed oil finish",
-      "shortCode": "MF 09",
+      "id": "mafi",
+      "logoUrl": "/brands/brand_9_2.png",
+      "name": "Mafi",
       "sequenceNumber": 9,
-      "catalogs": [
-        {
-          "id": "mafi-cat-1",
-          "title": "CATALOG 01",
-          "pdfUrl": "https://drive.google.com/file/d/1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ",
-          "coverImage": "https://lh3.googleusercontent.com/d/1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ=s800",
-          "fileId": "1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ"
-        },
-        {
-          "id": "mafi-cat-2",
-          "title": "CATALOG 02",
-          "pdfUrl": "https://drive.google.com/file/d/1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ",
-          "coverImage": "https://lh3.googleusercontent.com/d/1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ=s800",
-          "fileId": "1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ"
-        }
-      ],
-      "catalogCount": "2 catalogs",
-      "catalogPdfUrl": "https://drive.google.com/file/d/1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ/view",
-      "catalogues": [
-        {
-          "title": "Mafi Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ/view",
-          "url": "https://drive.google.com/file/d/1HbG9pFhTJN0NmbcbdXK4VI5LrmCc8EvQ/view"
-        },
-        {
-          "title": "Mafi Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ/view",
-          "url": "https://drive.google.com/file/d/1g_r9kE4eZEnuPfUU69jLHlSiXoDY-fKQ/view"
-        }
-      ]
+      "shortCode": "MF 09"
     },
     {
-      "id": "mirage",
-      "name": "Mirage",
-      "logoUrl": "/brand_logos/mirage.png",
       "bannerUrl": "/brands/brand_10_1.png",
+      "catalogPdfUrl": "/catalogues/Mirage/catalogue-elysian-pdf.pdf",
+      "category": "Surface Tiles",
       "description": "Italian porcelain tile mastery and marble slabs",
-      "shortCode": "MG 10",
+      "id": "mirage",
+      "logoUrl": "/brands/brand_10_2.png",
+      "name": "Mirage",
       "sequenceNumber": 10,
-      "catalogPdfUrl": "https://drive.google.com/file/d/1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b/view",
-      "catalogs": [
-        {
-          "id": "mirage-cat-1",
-          "title": "CATALOG 01",
-          "pdfUrl": "https://drive.google.com/file/d/1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b",
-          "coverImage": "https://lh3.googleusercontent.com/d/1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b=s800",
-          "fileId": "1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b"
-        },
-        {
-          "id": "mirage-cat-2",
-          "title": "CATALOG 02",
-          "pdfUrl": "https://drive.google.com/file/d/1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE",
-          "coverImage": "https://lh3.googleusercontent.com/d/1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE=s800",
-          "fileId": "1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE"
-        },
-        {
-          "id": "mirage-cat-3",
-          "title": "CATALOG 03",
-          "pdfUrl": "https://drive.google.com/file/d/1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4",
-          "coverImage": "https://lh3.googleusercontent.com/d/1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4=s800",
-          "fileId": "1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4"
-        },
-        {
-          "id": "mirage-cat-4",
-          "title": "CATALOG 04",
-          "pdfUrl": "https://drive.google.com/file/d/1oUtwekVav7no9FKYOe7E_X3bgMZa56y_/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1oUtwekVav7no9FKYOe7E_X3bgMZa56y_",
-          "coverImage": "https://lh3.googleusercontent.com/d/1oUtwekVav7no9FKYOe7E_X3bgMZa56y_=s800",
-          "fileId": "1oUtwekVav7no9FKYOe7E_X3bgMZa56y_"
-        },
-        {
-          "id": "mirage-cat-5",
-          "title": "CATALOG 05",
-          "pdfUrl": "https://drive.google.com/file/d/1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC",
-          "coverImage": "https://lh3.googleusercontent.com/d/1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC=s800",
-          "fileId": "1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC"
-        },
-        {
-          "id": "mirage-cat-6",
-          "title": "CATALOG 06",
-          "pdfUrl": "https://drive.google.com/file/d/1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6",
-          "coverImage": "https://lh3.googleusercontent.com/d/1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6=s800",
-          "fileId": "1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6"
-        },
-        {
-          "id": "mirage-cat-7",
-          "title": "CATALOG 07",
-          "pdfUrl": "https://drive.google.com/file/d/1mzWnr22zYzR0W57teiiohXtE0iU9zgtX/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1mzWnr22zYzR0W57teiiohXtE0iU9zgtX",
-          "coverImage": "https://lh3.googleusercontent.com/d/1mzWnr22zYzR0W57teiiohXtE0iU9zgtX=s800",
-          "fileId": "1mzWnr22zYzR0W57teiiohXtE0iU9zgtX"
-        },
-        {
-          "id": "mirage-cat-8",
-          "title": "CATALOG 08",
-          "pdfUrl": "https://drive.google.com/file/d/1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF",
-          "coverImage": "https://lh3.googleusercontent.com/d/1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF=s800",
-          "fileId": "1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF"
-        },
-        {
-          "id": "mirage-cat-9",
-          "title": "CATALOG 09",
-          "pdfUrl": "https://drive.google.com/file/d/1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp/view?usp=drive_link",
-          "pdfDownloadUrl": "https://drive.google.com/file/d/1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp",
-          "coverImage": "https://lh3.googleusercontent.com/d/1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp=s800",
-          "fileId": "1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp"
-        }
-      ],
-      "catalogCount": "9 catalogs",
-      "catalogues": [
-        {
-          "title": "Mirage Official Catalogue Vol. 1",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b/view",
-          "url": "https://drive.google.com/file/d/1P2XBvLeeL6eFmvwT-sBvaX1qQuqm_43b/view"
-        },
-        {
-          "title": "Mirage Official Catalogue Vol. 2",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE/view",
-          "url": "https://drive.google.com/file/d/1V5bEiUABaE5BF4JagbAF0uC-iiJvwtXE/view"
-        },
-        {
-          "title": "Mirage Official Catalogue Vol. 3",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4/view",
-          "url": "https://drive.google.com/file/d/1x6q3rb1Z9k-HWxDXjA4c5h_sC3TKQNP4/view"
-        },
-        {
-          "title": "Mirage Official Catalogue Vol. 4",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1oUtwekVav7no9FKYOe7E_X3bgMZa56y_/view",
-          "url": "https://drive.google.com/file/d/1oUtwekVav7no9FKYOe7E_X3bgMZa56y_/view"
-        },
-        {
-          "title": "Mirage Official Catalogue Vol. 5",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC/view",
-          "url": "https://drive.google.com/file/d/1zHDdS7V0FSgbNbiVc9tIqqKUxfMyVecC/view"
-        },
-        {
-          "title": "Mirage Official Catalogue Vol. 6",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6/view",
-          "url": "https://drive.google.com/file/d/1D7Es1HNyuXAxrsLNv4omdCaG3bK3y9I6/view"
-        },
-        {
-          "title": "Mirage Official Catalogue Vol. 7",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1mzWnr22zYzR0W57teiiohXtE0iU9zgtX/view",
-          "url": "https://drive.google.com/file/d/1mzWnr22zYzR0W57teiiohXtE0iU9zgtX/view"
-        },
-        {
-          "title": "Mirage Official Catalogue Vol. 8",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF/view",
-          "url": "https://drive.google.com/file/d/1PD6O5PW1tjdRjGzn0uPC0_qC5BDO4nLF/view"
-        },
-        {
-          "title": "Mirage Official Catalogue Vol. 9",
-          "subtitle": "Architectural & Material Specification PDF",
-          "file": "https://drive.google.com/file/d/1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp/view",
-          "url": "https://drive.google.com/file/d/1LbasBJrHWJccRKL_wD5CxtnGnqVhwTtp/view"
-        }
-      ]
+      "shortCode": "MG 10"
+    },
+    {
+      "bannerUrl": "/brands/brand_1_1.png",
+      "category": "Infinite Zip line",
+      "description": "Advanced motorised and manual outdoor retractable screen systems",
+      "id": "freedom-screens",
+      "logoUrl": "/brands/brand_1_2.png",
+      "name": "Freedom Screens",
+      "sequenceNumber": 11,
+      "shortCode": "FS 11"
+    },
+    {
+      "bannerUrl": "/brands/brand_2_1.png",
+      "category": "Plywood",
+      "description": "High-quality plywood and blockboard products for premium interiors",
+      "id": "peelply",
+      "logoUrl": "/brands/brand_2_2.png",
+      "name": "Peelply",
+      "sequenceNumber": 12,
+      "shortCode": "PP 12"
+    },
+    {
+      "bannerUrl": "/brands/brand_3_1.png",
+      "category": "MillWork",
+      "description": "Innovative seating and furniture solutions for hospitality spaces",
+      "id": "inclass",
+      "logoUrl": "/brands/brand_3_2.png",
+      "name": "Inclass",
+      "sequenceNumber": 13,
+      "shortCode": "IC 13"
+    },
+    {
+      "bannerUrl": "/brands/brand_4_1.png",
+      "category": "Highlighter Tiles",
+      "description": "Spanish decorative ceramic and 3D tile collections",
+      "id": "wow",
+      "logoUrl": "/brands/brand_4_2.png",
+      "name": "WOW",
+      "sequenceNumber": 14,
+      "shortCode": "WW 14"
+    },
+    {
+      "bannerUrl": "/brands/brand_5_1.png",
+      "category": "Surface Tiles",
+      "description": "Italian stone surfaces and premium wall covering systems",
+      "id": "iww",
+      "logoUrl": "/brands/brand_5_2.png",
+      "name": "IWW",
+      "sequenceNumber": 15,
+      "shortCode": "IW 15"
+    },
+    {
+      "bannerUrl": "/brands/brand_6_1.png",
+      "category": "Surface Tiles",
+      "description": "Contemporary ceramic surface and sanitaryware collections",
+      "id": "living-ceramica",
+      "logoUrl": "/brands/brand_6_2.png",
+      "name": "Living Ceramica",
+      "sequenceNumber": 16,
+      "shortCode": "LC 16"
+    },
+    {
+      "bannerUrl": "/brands/brand_7_1.png",
+      "category": "Surface Tiles",
+      "description": "Large format Italian porcelain slabs and architectural surfaces",
+      "id": "florim",
+      "logoUrl": "/brands/brand_7_2.png",
+      "name": "Florim",
+      "sequenceNumber": 17,
+      "shortCode": "FL 17"
+    },
+    {
+      "bannerUrl": "/brands/brand_8_1.png",
+      "category": "Bathroom Accessories",
+      "description": "Premium bathroom accessories and wellness products",
+      "id": "gelli",
+      "logoUrl": "/brands/brand_8_2.png",
+      "name": "Gelli",
+      "sequenceNumber": 18,
+      "shortCode": "GL 18"
+    },
+    {
+      "bannerUrl": "/brands/brand_9_1.png",
+      "category": "Wellness",
+      "description": "World-renowned wellness systems, whirlpool baths and spa products",
+      "id": "jacuzzi",
+      "logoUrl": "/brands/brand_9_2.png",
+      "name": "Jacuzzi",
+      "sequenceNumber": 19,
+      "shortCode": "JZ 19"
+    },
+    {
+      "bannerUrl": "/brands/brand_10_1.png",
+      "category": "Wall Art Panels",
+      "description": "Exclusive wall art panels and decorative surface installations",
+      "id": "alex-turco",
+      "logoUrl": "/brands/brand_10_2.png",
+      "name": "Alex Turco",
+      "sequenceNumber": 20,
+      "shortCode": "AT 20"
     }
   ],
   "projects": [
@@ -24164,7 +23803,7 @@
       "pageCount": 19,
       "isLocked": true,
       "downloadCount": 1,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     },
     {
       "id": "cat-pdf-bits",
@@ -24188,7 +23827,7 @@
       "pageCount": 16,
       "isLocked": true,
       "downloadCount": 0,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     },
     {
       "id": "cat-pdf-catalogo_materiaprima_2026_2a",
@@ -24212,7 +23851,7 @@
       "pageCount": 103,
       "isLocked": true,
       "downloadCount": 0,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     },
     {
       "id": "cat-pdf-catalogo-nouvelle",
@@ -24236,7 +23875,7 @@
       "pageCount": 25,
       "isLocked": true,
       "downloadCount": 0,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     },
     {
       "id": "cat-pdf-catalogo-sabil",
@@ -24260,7 +23899,7 @@
       "pageCount": 27,
       "isLocked": true,
       "downloadCount": 0,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     },
     {
       "id": "cat-pdf-catalogo-terre",
@@ -24284,7 +23923,7 @@
       "pageCount": 31,
       "isLocked": true,
       "downloadCount": 0,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     },
     {
       "id": "cat-pdf-catalogo-vestige",
@@ -24308,7 +23947,7 @@
       "pageCount": 33,
       "isLocked": true,
       "downloadCount": 0,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     },
     {
       "id": "cat-pdf-arpa-vis-brochure_250122",
@@ -24332,7 +23971,7 @@
       "pageCount": 13,
       "isLocked": true,
       "downloadCount": 0,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     },
     {
       "id": "cat-pdf-catalogo60grados",
@@ -24356,7 +23995,7 @@
       "pageCount": 27,
       "isLocked": true,
       "downloadCount": 0,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     },
     {
       "id": "cat-pdf-catalogobejmat",
@@ -24380,7 +24019,7 @@
       "pageCount": 31,
       "isLocked": true,
       "downloadCount": 0,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     },
     {
       "id": "cat-pdf-catalogue-clay-pdf",
@@ -24404,7 +24043,7 @@
       "pageCount": 31,
       "isLocked": true,
       "downloadCount": 0,
-      "createdAt": "2026-08-05T16:00:00.000Z"
+      "createdAt": "2026-08-05T16:00:00Z"
     }
   ]
 }
