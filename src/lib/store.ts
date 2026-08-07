@@ -140,6 +140,10 @@ async function syncStoreToGitHub(data: any) {
 }
 
 function writeJsonStore(data: any) {
+  // ONLY update local memory and filesystem.
+  // WARNING: Do NOT do a full Firebase PUT here — that would overwrite ALL collections
+  // (brands, team, categories, etc.) with stale local memory data, causing data resets.
+  // Firebase writes must happen via syncToFirebaseCloudStore(key, data) on individual keys.
   globalThis.__AAREN_MEMORY_STORE__ = data;
 
   try {
@@ -155,16 +159,7 @@ function writeJsonStore(data: any) {
       console.warn("FileSystem write fallback to memory:", e);
     }
   }
-
-  // Trigger Firebase Realtime Database Cloud Sync (Guarantees persistence across Vercel serverless cold-starts)
-  fetch(`${FIREBASE_RTDB_STORE_URL}/store.json`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  }).catch(() => {});
-
-  // Trigger GitHub persistent auto-sync if token present
-  syncStoreToGitHub(data).catch(() => {});
+  // GitHub sync intentionally removed from here too — only sync individual collection writes
 }
 
 // Default Data Definitions
