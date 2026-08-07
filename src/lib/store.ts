@@ -1323,6 +1323,8 @@ export async function deleteTeamMemberStore(id: string) {
 }
 
 export async function getRoadmapStore(): Promise<RoadmapStepItem[]> {
+  const fbData = await fetchFromFirebaseCloudStore("roadmap");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
   const json = readJsonStore();
   if (json.roadmap && Array.isArray(json.roadmap) && json.roadmap.length > 0) {
     return json.roadmap;
@@ -1333,20 +1335,24 @@ export async function getRoadmapStore(): Promise<RoadmapStepItem[]> {
 export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & { id?: string }) {
   const id = step.id || `rm-${Date.now()}`;
   const full = { ...step, id };
-  try {
-    await prisma.roadmapStep.upsert({
-      where: { id },
-      update: step,
-      create: { id, ...step },
-    });
-  } catch (e) {}
+  let current: RoadmapStepItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("roadmap");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.roadmap || [...DEFAULT_ROADMAP]; }
+
+  const idx = current.findIndex((r: any) => r.id === id);
+  if (idx >= 0) current[idx] = full;
+  else current.push(full);
+
+  await syncToFirebaseCloudStore("roadmap", current);
   const json = readJsonStore();
-  const idx = json.roadmap.findIndex((r: any) => r.id === id);
-  if (idx >= 0) json.roadmap[idx] = full;
-  else json.roadmap.push(full);
-  writeJsonStore(json);
+  json.roadmap = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  try { await prisma.roadmapStep.upsert({ where: { id }, update: step, create: { id, ...step } }); } catch (e) {}
   return full;
 }
+
 export const DEFAULT_TEAM_JOIN_BANNER: TeamJoinBanner = {
   title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
   fontSize: "medium",
@@ -1357,15 +1363,20 @@ export const DEFAULT_TEAM_JOIN_BANNER: TeamJoinBanner = {
 };
 
 export async function getTeamJoinBannerStore(): Promise<TeamJoinBanner> {
+  const fbData = await fetchFromFirebaseCloudStore("joinBanner");
+  if (fbData && typeof fbData === "object" && fbData.title) return fbData;
   const json = readJsonStore();
   return json.joinBanner || DEFAULT_TEAM_JOIN_BANNER;
 }
 
 export async function saveTeamJoinBannerStore(banner: TeamJoinBanner): Promise<TeamJoinBanner> {
+  const current = await getTeamJoinBannerStore();
+  const updated = { ...DEFAULT_TEAM_JOIN_BANNER, ...current, ...banner };
+  await syncToFirebaseCloudStore("joinBanner", updated);
   const json = readJsonStore();
-  json.joinBanner = { ...DEFAULT_TEAM_JOIN_BANNER, ...json.joinBanner, ...banner };
-  writeJsonStore(json);
-  return json.joinBanner;
+  json.joinBanner = updated;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  return updated;
 }
 
 declare global {
@@ -1816,6 +1827,9 @@ export async function deleteMediaStore(id: string) {
 
 // TAXONOMIES & DROPDOWNS STORE
 export async function getTaxonomiesStore(): Promise<TaxonomyItem[]> {
+  const fbData = await fetchFromFirebaseCloudStore("taxonomies");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+
   try {
     const db = await prisma.taxonomy.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (db && db.length > 0) return db as any;
@@ -1831,33 +1845,36 @@ export async function getTaxonomiesStore(): Promise<TaxonomyItem[]> {
 export async function saveTaxonomyStore(taxonomy: Omit<TaxonomyItem, "id"> & { id?: string }): Promise<TaxonomyItem> {
   const id = taxonomy.id || `tax-${Date.now()}`;
   const full = { ...taxonomy, id };
-  try {
-    await prisma.taxonomy.upsert({
-      where: { id },
-      update: full,
-      create: full,
-    });
-  } catch (e) {}
-  const json = readJsonStore();
-  if (!json.taxonomies) json.taxonomies = [];
-  const idx = json.taxonomies.findIndex((t: any) => t.id === id);
-  if (idx >= 0) json.taxonomies[idx] = full;
-  else json.taxonomies.push(full);
-  writeJsonStore(json);
+  let current: TaxonomyItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("taxonomies");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.taxonomies || []; }
+
+  const idx = current.findIndex((t: any) => t.id === id);
+  if (idx >= 0) current[idx] = full;
+  else current.push(full);
+
+  await syncToFirebaseCloudStore("taxonomies", current);
+  const json = readJsonStore(); json.taxonomies = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  try { await prisma.taxonomy.upsert({ where: { id }, update: full, create: full }); } catch (e) {}
   return full;
 }
 
 export async function deleteTaxonomyStore(id: string) {
-  try {
-    await prisma.taxonomy.delete({ where: { id } });
-  } catch (e) {}
-  const json = readJsonStore();
-  if (json.taxonomies) json.taxonomies = json.taxonomies.filter((t: any) => t.id !== id);
-  writeJsonStore(json);
+  let current: TaxonomyItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("taxonomies");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.taxonomies || []; }
+  current = current.filter((t: any) => t.id !== id);
+  await syncToFirebaseCloudStore("taxonomies", current);
+  const json = readJsonStore(); json.taxonomies = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  try { await prisma.taxonomy.delete({ where: { id } }); } catch (e) {}
 }
 
 // DYNAMIC PAGE BUILDER STORE
 export async function getPagesStore(): Promise<CustomPageItem[]> {
+  const fbData = await fetchFromFirebaseCloudStore("pages");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
   const json = readJsonStore();
   return json.pages || [
     {
@@ -1882,23 +1899,34 @@ export async function savePageStore(page: Omit<CustomPageItem, "id"> & { id?: st
   const slug = page.slug || page.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full = { ...page, id, slug, createdAt: new Date().toISOString() };
 
-  const json = readJsonStore();
-  if (!json.pages) json.pages = [];
-  const idx = json.pages.findIndex((p: any) => p.id === id);
-  if (idx >= 0) json.pages[idx] = full;
-  else json.pages.push(full);
-  writeJsonStore(json);
+  let current: CustomPageItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("pages");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.pages || []; }
+
+  const idx = current.findIndex((p: any) => p.id === id);
+  if (idx >= 0) current[idx] = full;
+  else current.push(full);
+
+  await syncToFirebaseCloudStore("pages", current);
+  const json = readJsonStore(); json.pages = current; globalThis.__AAREN_MEMORY_STORE__ = json;
   return full;
 }
 
 export async function deletePageStore(id: string) {
-  const json = readJsonStore();
-  if (json.pages) json.pages = json.pages.filter((p: any) => p.id !== id);
-  writeJsonStore(json);
+  let current: CustomPageItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("pages");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.pages || []; }
+  current = current.filter((p: any) => p.id !== id);
+  await syncToFirebaseCloudStore("pages", current);
+  const json = readJsonStore(); json.pages = current; globalThis.__AAREN_MEMORY_STORE__ = json;
 }
 
 // PDF CATALOGS STORE
 export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
+  const fbData = await fetchFromFirebaseCloudStore("pdfCatalogs");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
   const json = readJsonStore();
   if (json.pdfCatalogs && Array.isArray(json.pdfCatalogs) && json.pdfCatalogs.length > 0) {
     return json.pdfCatalogs;
@@ -1910,7 +1938,7 @@ export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
     if (fs.existsSync(catalogsPath)) {
       const data = JSON.parse(fs.readFileSync(catalogsPath, "utf-8"));
       json.pdfCatalogs = data;
-      writeJsonStore(json);
+      syncToFirebaseCloudStore("pdfCatalogs", data);
       return data;
     }
   } catch (e) {}
@@ -1919,29 +1947,34 @@ export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
 }
 
 export async function saveCatalogStore(catalog: PdfCatalogItem): Promise<PdfCatalogItem> {
-  const json = readJsonStore();
-  if (!json.pdfCatalogs) json.pdfCatalogs = [];
-  const idx = json.pdfCatalogs.findIndex((c: any) => c.id === catalog.id);
-  if (idx >= 0) {
-    json.pdfCatalogs[idx] = catalog;
-  } else {
-    json.pdfCatalogs.push(catalog);
-  }
-  writeJsonStore(json);
+  let current: PdfCatalogItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("pdfCatalogs");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.pdfCatalogs || []; }
+
+  const idx = current.findIndex((c: any) => c.id === catalog.id);
+  if (idx >= 0) current[idx] = catalog;
+  else current.push(catalog);
+
+  await syncToFirebaseCloudStore("pdfCatalogs", current);
+  const json = readJsonStore(); json.pdfCatalogs = current; globalThis.__AAREN_MEMORY_STORE__ = json;
   return catalog;
 }
 
 export async function incrementCatalogDownloadCount(id: string): Promise<number> {
-  const json = readJsonStore();
+  let current: PdfCatalogItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("pdfCatalogs");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.pdfCatalogs || []; }
+
   let count = 1;
-  if (json.pdfCatalogs) {
-    const idx = json.pdfCatalogs.findIndex((c: any) => c.id === id);
-    if (idx >= 0) {
-      json.pdfCatalogs[idx].downloadCount = (json.pdfCatalogs[idx].downloadCount || 0) + 1;
-      count = json.pdfCatalogs[idx].downloadCount;
-    }
+  const idx = current.findIndex((c: any) => c.id === id);
+  if (idx >= 0) {
+    current[idx].downloadCount = (current[idx].downloadCount || 0) + 1;
+    count = current[idx].downloadCount;
+    await syncToFirebaseCloudStore("pdfCatalogs", current);
   }
-  writeJsonStore(json);
+  const json = readJsonStore(); json.pdfCatalogs = current; globalThis.__AAREN_MEMORY_STORE__ = json;
   return count;
 }
 
