@@ -81,7 +81,7 @@ export default function BlogPage() {
               date: b.publishedAt || b.date || "July 2026",
               readTime: b.readTime || "5 MIN READ",
               author: b.author || "AAREN ATELIER",
-              image: b.coverImage || b.image || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+              image: b.featuredImage || b.coverImage || b.image || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
               featured: idx === 0,
             }))
           );
