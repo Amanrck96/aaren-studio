@@ -666,9 +666,9 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
 
 // CATEGORIES STORE
 export async function getCategoriesStore(): Promise<CategoryItem[]> {
-  // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
+  // 1. PRIMARY: Firebase Cloud Database
   const fbData = await fetchFromFirebaseCloudStore("categories");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
     const json = readJsonStore();
     json.categories = fbData;
     globalThis.__AAREN_MEMORY_STORE__ = json;
@@ -708,9 +708,9 @@ export async function getCategoriesStore(): Promise<CategoryItem[]> {
 
 // BRANDS STORE
 export async function getBrandsStore(): Promise<BrandItem[]> {
-  // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
+  // 1. PRIMARY: Firebase Cloud Database
   const fbData = await fetchFromFirebaseCloudStore("brands");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
     const json = readJsonStore();
     json.brands = fbData;
     globalThis.__AAREN_MEMORY_STORE__ = json;
@@ -794,9 +794,9 @@ export async function deleteBrandStore(id: string) {
 
 // PRODUCTS STORE
 export async function getAllProductsStore(): Promise<ProductItem[]> {
-  // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
+  // 1. PRIMARY: Firebase Cloud Database
   const fbData = await fetchFromFirebaseCloudStore("products");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
     const json = readJsonStore();
     json.products = fbData;
     globalThis.__AAREN_MEMORY_STORE__ = json;
@@ -1077,7 +1077,7 @@ export async function parseAndImportExcelProducts(fileBuffer: Buffer): Promise<P
 export async function getAllProjectsStore(): Promise<ProjectShowcaseItem[]> {
   // 1. Firebase Cloud (primary persistent source)
   const fbData = await fetchFromFirebaseCloudStore("projects");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
     const json = readJsonStore(); json.projects = fbData; globalThis.__AAREN_MEMORY_STORE__ = json;
     return fbData;
   }
@@ -1277,7 +1277,7 @@ export async function deleteTeamMemberStore(id: string) {
 
 export async function getRoadmapStore(): Promise<RoadmapStepItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("roadmap");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  if (fbData && Array.isArray(fbData)) return fbData;
   const json = readJsonStore();
   if (json.roadmap && Array.isArray(json.roadmap) && json.roadmap.length > 0) {
     return json.roadmap;
@@ -1544,7 +1544,7 @@ export async function getAllFAQsStore() {
 export async function getServicesStore(): Promise<ServiceItem[]> {
   // 1. Firebase Cloud
   const fbData = await fetchFromFirebaseCloudStore("services");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  if (fbData && Array.isArray(fbData)) return fbData;
   // 2. JSON fallback
   const json = readJsonStore();
   if (json.services && Array.isArray(json.services) && json.services.length > 0) return json.services;
@@ -1584,7 +1584,7 @@ export async function deleteServiceStore(id: string) {
 export async function getTestimonialsStore(): Promise<TestimonialItem[]> {
   // 1. Firebase Cloud
   const fbData = await fetchFromFirebaseCloudStore("testimonials");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  if (fbData && Array.isArray(fbData)) return fbData;
   // 2. Prisma fallback
   try {
     const dbT = await prisma.testimonial.findMany({ orderBy: { sequenceNumber: "asc" } });
@@ -1635,7 +1635,7 @@ export async function deleteTestimonialStore(id: string) {
 export async function getBlogsStore(): Promise<BlogItem[]> {
   // 1. Firebase Cloud
   const fbData = await fetchFromFirebaseCloudStore("blogs");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  if (fbData && Array.isArray(fbData)) return fbData;
   // 2. Prisma fallback
   try {
     const dbBlogs = await prisma.blog.findMany({ orderBy: { publishDate: "desc" } });
@@ -1781,7 +1781,7 @@ export async function deleteMediaStore(id: string) {
 // TAXONOMIES & DROPDOWNS STORE
 export async function getTaxonomiesStore(): Promise<TaxonomyItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("taxonomies");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  if (fbData && Array.isArray(fbData)) return fbData;
 
   try {
     const db = await prisma.taxonomy.findMany({ orderBy: { sequenceNumber: "asc" } });
@@ -1827,7 +1827,7 @@ export async function deleteTaxonomyStore(id: string) {
 // DYNAMIC PAGE BUILDER STORE
 export async function getPagesStore(): Promise<CustomPageItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("pages");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  if (fbData && Array.isArray(fbData)) return fbData;
   const json = readJsonStore();
   return json.pages || [
     {
@@ -1879,7 +1879,7 @@ export async function deletePageStore(id: string) {
 // PDF CATALOGS STORE
 export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("pdfCatalogs");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  if (fbData && Array.isArray(fbData)) return fbData;
   const json = readJsonStore();
   if (json.pdfCatalogs && Array.isArray(json.pdfCatalogs) && json.pdfCatalogs.length > 0) {
     return json.pdfCatalogs;
