@@ -563,9 +563,23 @@ export const DEFAULT_TEAM: TeamMemberItem[] = [
   { id: "tm-05", name: "ASHWIN", designation: "Architectural Sales Consultant", category: "Sales", memberCode: "AW 05", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", phone: "+91 88844 64444", bio: "Consults with architects and developers to find surface and material solutions, manages customer relations and outreach.", sequenceNumber: 5 },
   { id: "tm-06", name: "MUKUND", designation: "Sales & Curation", category: "Sales", memberCode: "MK 06", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", phone: "+91 88844 64444", bio: "Curates the products, educates customers on the product mix and manages the store display.", sequenceNumber: 6 },
   { id: "tm-07", name: "JIGNESH", designation: "Channel Sales Manager", category: "Sales", memberCode: "JG 07", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg", phone: "+91 88844 64444", bio: "Maintains communication narratives, manages sales channels, and reaches out to clients for Bagno & Surface solutions.", sequenceNumber: 7 },
-  { id: "tm-08", name: "SURESH KUMAR", designation: "Operations Head", category: "Operations", memberCode: "SK 08", photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites.", sequenceNumber: 8 },
-  { id: "tm-09", name: "PRAVEEN NAIR", designation: "Lead Installation Specialist", category: "Installation", memberCode: "PN 09", photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations.", sequenceNumber: 9 },
-  { id: "tm-10", name: "ANITHA REDDY", designation: "Client Support & Relations", category: "Support Staff", memberCode: "AR 10", photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction.", sequenceNumber: 10 },
+  { id: "tm-08", name: "SURESH KUMAR", designation: "Operations Head", category: "Operations", memberCode: "SK 08", photoUrl: "", phone: "+91 88844 64444", bio: "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites.", sequenceNumber: 8 },
+  { id: "tm-09", name: "PRAVEEN NAIR", designation: "Lead Installation Specialist", category: "Installation", memberCode: "PN 09", photoUrl: "", phone: "+91 88844 64444", bio: "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations.", sequenceNumber: 9 },
+  { id: "tm-10", name: "ANITHA REDDY", designation: "Client Support & Relations", category: "Support Staff", memberCode: "AR 10", photoUrl: "", phone: "+91 88844 64444", bio: "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction.", sequenceNumber: 10 },
+  { id: "tm-11", name: "HARSHITHA N", designation: "Sales Executive", category: "Sales", memberCode: "HN 11", photoUrl: "", phone: "+91 88844 64444", bio: "Dedicated sales professional specializing in luxury surface presentations and client consultations.", sequenceNumber: 11 },
+  { id: "tm-12", name: "VISHWAS GEORGE", designation: "Sales Consultant", category: "Sales", memberCode: "VG 12", photoUrl: "", phone: "+91 88844 64444", bio: "Experienced consultant guiding clients through premium architectural product selections.", sequenceNumber: 12 },
+  { id: "tm-13", name: "PRASHANTH M S", designation: "Support Staff", category: "Support Staff", memberCode: "PM 13", photoUrl: "", phone: "+91 88844 64444", bio: "Provides comprehensive after-sales support and technical assistance to clients.", sequenceNumber: 13 },
+  { id: "tm-14", name: "LOKESH G V", designation: "Support Staff", category: "Support Staff", memberCode: "LG 14", photoUrl: "", phone: "+91 88844 64444", bio: "Ensures seamless client experience through dedicated support and coordination.", sequenceNumber: 14 },
+  { id: "tm-15", name: "KISHORE P", designation: "Accounts Manager", category: "Accounts", memberCode: "KP 15", photoUrl: "", phone: "+91 88844 64444", bio: "Manages financial operations, billing, and accounts to ensure smooth business transactions.", sequenceNumber: 15 },
+  { id: "tm-16", name: "NARASIMHA PRASAD B S", designation: "Sales Executive", category: "Sales", memberCode: "NP 16", photoUrl: "", phone: "+91 88844 64444", bio: "Proactive sales executive focused on building client relationships and driving revenue growth.", sequenceNumber: 16 },
+  { id: "tm-17", name: "ROOPA C B", designation: "Accounts Executive", category: "Accounts", memberCode: "RC 17", photoUrl: "", phone: "+91 88844 64444", bio: "Handles financial records, invoicing, and accounting processes with precision and accuracy.", sequenceNumber: 17 },
+  { id: "tm-18", name: "ABDUL REHMAN KHAN", designation: "Sales Executive", category: "Sales", memberCode: "AR 18", photoUrl: "", phone: "+91 88844 64444", bio: "Dynamic sales professional with expertise in luxury material presentations and client engagement.", sequenceNumber: 18 },
+  { id: "tm-19", name: "UTKALIKA NAYAK", designation: "Sales Executive", category: "Sales", memberCode: "UN 19", photoUrl: "", phone: "+91 88844 64444", bio: "Result-oriented sales professional dedicated to delivering exceptional client experiences.", sequenceNumber: 19 },
+  { id: "tm-20", name: "AMBUJA MATHAPATI", designation: "Sales Executive", category: "Sales", memberCode: "AM 20", photoUrl: "", phone: "+91 88844 64444", bio: "Passionate about connecting clients with world-class architectural solutions.", sequenceNumber: 20 },
+  { id: "tm-21", name: "SAWAN VISHWAKARMA", designation: "Operations Executive", category: "Operations", memberCode: "SV 21", photoUrl: "", phone: "+91 88844 64444", bio: "Manages day-to-day operational workflows ensuring timely delivery and project coordination.", sequenceNumber: 21 },
+  { id: "tm-22", name: "D S SHANKAR", designation: "Operations Coordinator", category: "Operations", memberCode: "DS 22", photoUrl: "", phone: "+91 88844 64444", bio: "Coordinates operational activities and logistics to maintain smooth project execution.", sequenceNumber: 22 },
+  { id: "tm-23", name: "JABIR KHAN", designation: "Operations Staff", category: "Operations", memberCode: "JK 23", photoUrl: "", phone: "+91 88844 64444", bio: "Supports operations with efficient handling and coordination of project requirements.", sequenceNumber: 23 },
+  { id: "tm-24", name: "NARASIMHA RAJU", designation: "Accounts Executive", category: "Accounts", memberCode: "NR 24", photoUrl: "", phone: "+91 88844 64444", bio: "Manages financial records and supports the accounts team with diligent accounting operations.", sequenceNumber: 24 },
 ];
 
 export const DEFAULT_ROADMAP: RoadmapStepItem[] = [
@@ -1175,14 +1189,32 @@ export async function deleteProjectStore(id: string) {
 
 
 // TEAM & ROADMAP STORE
+// Leadership IDs that must always have category="Leadership" even if Firebase has stale data
+const LEADERSHIP_IDS = ["tm-01", "tm-02", "tm-03"];
+
 export async function getTeamStore(): Promise<TeamMemberItem[]> {
   // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
   const fbData = await fetchFromFirebaseCloudStore("team");
   if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    // Auto-fix: ensure category is never missing (guard against stale data)
+    let needsRepair = false;
+    const fixed = fbData.map((m: any) => {
+      if (!m.category || m.category === "") {
+        needsRepair = true;
+        // Leadership members are the first 3 by sequenceNumber or known IDs
+        const isLeadership = LEADERSHIP_IDS.includes(m.id) || m.sequenceNumber <= 3;
+        return { ...m, category: isLeadership ? "Leadership" : "Team" };
+      }
+      return m;
+    });
+    if (needsRepair) {
+      // Silently repair Firebase with corrected data
+      syncToFirebaseCloudStore("team", fixed).catch(() => {});
+    }
     const json = readJsonStore();
-    json.team = fbData;
+    json.team = fixed;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+    return fixed;
   }
 
   // 2. Prisma DB fallback
@@ -1193,7 +1225,7 @@ export async function getTeamStore(): Promise<TeamMemberItem[]> {
         id: m.id,
         name: m.name,
         designation: m.designation || "",
-        category: m.category || "Team",
+        category: m.category || (LEADERSHIP_IDS.includes(m.id) ? "Leadership" : "Team"),
         memberCode: m.memberCode || "",
         photoUrl: m.photoUrl || "",
         phone: m.phone || "",
