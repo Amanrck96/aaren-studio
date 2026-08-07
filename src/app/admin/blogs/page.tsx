@@ -33,7 +33,7 @@ export default function AdminBlogsPage() {
         tags: typeof editing.tags === "string" ? (editing.tags as string).split(",").map((t) => t.trim()) : editing.tags || [],
         status: editing.status || "Published",
         author: editing.author || "Aaren Studio",
-        featuredImage: editing.featuredImage || "/brands/brand_4_1.png",
+        featuredImage: editing.featuredImage || "",
       }),
     });
     const json = await res.json();

@@ -26,8 +26,8 @@ export default function AdminBrandsPage() {
 
   const [editingBrand, setEditingBrand] = useState<Partial<BrandItem>>({
     name: "",
-    logoUrl: "/brands/brand_1_2.png",
-    bannerUrl: "/brands/brand_1_1.png",
+    logoUrl: "",
+    bannerUrl: "",
     description: "",
     shortCode: "SF 01",
     sequenceNumber: 1,
@@ -163,7 +163,7 @@ export default function AdminBrandsPage() {
             </button>
             <button
               onClick={() => {
-                setEditingBrand({ name: "", logoUrl: "/brands/brand_1_2.png", bannerUrl: "/brands/brand_1_1.png", description: "", shortCode: "SF 01", sequenceNumber: brands.length + 1, catalogPdfUrl: "" });
+                setEditingBrand({ name: "", logoUrl: "", bannerUrl: "", description: "", shortCode: "BR 01", sequenceNumber: brands.length + 1, catalogPdfUrl: "" });
                 setShowModal(true);
               }}
               style={{ padding: "0.8rem 1.4rem", background: "#8b5cf6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 700 }}

@@ -1188,72 +1188,35 @@ export async function deleteProjectStore(id: string) {
 const LEADERSHIP_IDS = ["tm-01", "tm-02", "tm-03"];
 
 export async function getTeamStore(): Promise<TeamMemberItem[]> {
-  // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
   const fbData = await fetchFromFirebaseCloudStore("team");
+
+  // Create a map starting with default team members so default members are never lost
+  const memberMap = new Map<string, TeamMemberItem>();
+  DEFAULT_TEAM.forEach((m) => memberMap.set(m.id, m));
+
   if (fbData && Array.isArray(fbData) && fbData.length > 0) {
-    // Auto-fix: ensure category is never missing (guard against stale data)
-    let needsRepair = false;
-    const fixed = fbData.map((m: any) => {
-      if (!m.category || m.category === "") {
-        needsRepair = true;
-        // Leadership members are the first 3 by sequenceNumber or known IDs
-        const isLeadership = LEADERSHIP_IDS.includes(m.id) || m.sequenceNumber <= 3;
-        return { ...m, category: isLeadership ? "Leadership" : "Team" };
+    fbData.forEach((m: any) => {
+      if (m && (m.id || m.name)) {
+        const key = m.id || m.name;
+        const existing = memberMap.get(key);
+        const category = m.category || (LEADERSHIP_IDS.includes(m.id) ? "Leadership" : (existing?.category || "Sales"));
+        memberMap.set(key, { ...(existing || {}), ...m, category });
       }
-      return m;
     });
-    if (needsRepair) {
-      // Silently repair Firebase with corrected data
-      syncToFirebaseCloudStore("team", fixed).catch(() => {});
-    }
-    const json = readJsonStore();
-    json.team = fixed;
-    globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fixed;
   }
 
-  // 2. Prisma DB fallback
-  try {
-    const dbTeam = await prisma.teamMember.findMany({ orderBy: { sequenceNumber: "asc" } });
-    if (dbTeam && dbTeam.length > 0) {
-      const mapped: TeamMemberItem[] = dbTeam.map((m: any) => ({
-        id: m.id,
-        name: m.name,
-        designation: m.designation || "",
-        category: m.category || (LEADERSHIP_IDS.includes(m.id) ? "Leadership" : "Team"),
-        memberCode: m.memberCode || "",
-        photoUrl: m.photoUrl || "",
-        phone: m.phone || "",
-        bio: m.bio || "",
-        sequenceNumber: m.sequenceNumber || 1,
-      }));
-      const json = readJsonStore();
-      json.team = mapped;
-      globalThis.__AAREN_MEMORY_STORE__ = json;
-      syncToFirebaseCloudStore("team", mapped);
-      return mapped;
-    }
-  } catch (e) {}
+  const teamList = Array.from(memberMap.values());
+  teamList.sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
 
-  // 3. JSON store fallback
   const json = readJsonStore();
-  if (json.team && Array.isArray(json.team) && json.team.length > 0) {
-    return json.team;
-  }
-  return DEFAULT_TEAM;
+  json.team = teamList;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  return teamList;
 }
 
 export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & { id?: string }) {
-  // 1. Get current team from Firebase Cloud (most up-to-date source)
-  let currentTeam: TeamMemberItem[] = [];
-  const fbTeam = await fetchFromFirebaseCloudStore("team");
-  if (fbTeam && Array.isArray(fbTeam) && fbTeam.length > 0) {
-    currentTeam = fbTeam;
-  } else {
-    // Fallback: read from local JSON
-    const json = readJsonStore();
-    currentTeam = json.team || [...DEFAULT_TEAM];
-  }
+  // 1. Get complete current team (defaults + custom additions)
+  let currentTeam = await getTeamStore();
 
   let targetId = member.id;
   let idx = -1;
