@@ -54,7 +54,7 @@ export default function AdminTeamPage() {
         ...editing,
         category: editing.category || "Leadership",
         memberCode: editing.memberCode || "MM 01",
-        photoUrl: editing.photoUrl || "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg",
+        photoUrl: editing.photoUrl || "",
       }),
     });
     const json = await res.json();
@@ -117,7 +117,7 @@ export default function AdminTeamPage() {
               ⚙️ Join Banner Settings
             </button>
             <button
-              onClick={() => setEditing({ name: "", designation: "Sales Specialist", category: "Sales", memberCode: "TM 01", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", bio: "", sequenceNumber: team.length + 1 })}
+              onClick={() => setEditing({ name: "", designation: "Sales Specialist", category: "Sales", memberCode: "TM 01", photoUrl: "", bio: "", sequenceNumber: team.length + 1 })}
               style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
             >
               + Add Team Member
