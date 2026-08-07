@@ -1189,29 +1189,19 @@ const LEADERSHIP_IDS = ["tm-01", "tm-02", "tm-03"];
 
 export async function getTeamStore(): Promise<TeamMemberItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("team");
-
-  // Create a map starting with default team members so default members are never lost
-  const memberMap = new Map<string, TeamMemberItem>();
-  DEFAULT_TEAM.forEach((m) => memberMap.set(m.id, m));
-
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
-    fbData.forEach((m: any) => {
-      if (m && (m.id || m.name)) {
-        const key = m.id || m.name;
-        const existing = memberMap.get(key);
-        const category = m.category || (LEADERSHIP_IDS.includes(m.id) ? "Leadership" : (existing?.category || "Sales"));
-        memberMap.set(key, { ...(existing || {}), ...m, category });
-      }
-    });
+  if (fbData && Array.isArray(fbData)) {
+    const json = readJsonStore();
+    json.team = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
   }
 
-  const teamList = Array.from(memberMap.values());
-  teamList.sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
-
   const json = readJsonStore();
-  json.team = teamList;
-  globalThis.__AAREN_MEMORY_STORE__ = json;
-  return teamList;
+  if (json.team && Array.isArray(json.team)) {
+    return json.team;
+  }
+
+  return DEFAULT_TEAM;
 }
 
 export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & { id?: string }) {
