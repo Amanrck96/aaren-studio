@@ -66,6 +66,11 @@ export default function BlogPage() {
   const [postsList, setPostsList] = useState<BlogPost[]>(BLOG_POSTS);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [fontSettings, setFontSettings] = useState<any>({
+    cardTitleSize: "1.05rem",
+    cardBodySize: "0.85rem",
+    cardImageHeight: "200px",
+  });
 
   useEffect(() => {
     fetch("/api/blogs?t=" + Date.now(), { cache: "no-store" })
@@ -88,6 +93,13 @@ export default function BlogPage() {
         }
       })
       .catch((e) => console.error(e));
+
+    fetch("/api/blog-settings")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && json.data) setFontSettings(json.data);
+      })
+      .catch(() => {});
   }, []);
 
   const featuredPost = postsList.find((post) => post.featured) || postsList[0];
@@ -109,15 +121,26 @@ export default function BlogPage() {
           <span className="blog-tag">JOURNAL & INSIGHTS</span>
           <h1 className="blog-title">THE JOURNAL</h1>
           <p className="blog-desc">
-            Perspectives on spatial design, material engineering, digital architecture, and bespoke craftsmanship from the Aaren Studio team.
+            Explore curated design journals, architectural surface developments, and sustainable timber material guides from our Mysore Road Experience Centre.
           </p>
 
-          {/* Search */}
           <div className="blog-controls">
+            <div className="category-pills">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`cat-pill ${selectedCategory === cat ? "is-active" : ""}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
             <div className="search-box">
               <input
                 type="text"
-                placeholder="Search journal articles..."
+                placeholder="Search articles..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input"
@@ -131,8 +154,8 @@ export default function BlogPage() {
           </div>
         </header>
 
-        {/* Featured Hero Post */}
-        {!searchQuery && selectedCategory === "All" && featuredPost && (
+        {/* Featured Post Hero */}
+        {featuredPost && (
           <section className="featured-post-section">
             <Link href={`/blog/${featuredPost.slug}`} className="featured-card">
               <div className="featured-fig">
@@ -140,7 +163,8 @@ export default function BlogPage() {
                   src={featuredPost.image}
                   alt={featuredPost.title}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="featured-img"
                 />
                 <span className="featured-badge">FEATURED ARTICLE</span>
@@ -176,7 +200,7 @@ export default function BlogPage() {
               {filteredPosts.map((post) => (
                 <article key={post.slug} className="post-card">
                   <Link href={`/blog/${post.slug}`} className="post-card__link">
-                    <div className="post-card__fig">
+                    <div style={{ height: fontSettings.cardImageHeight || "200px" }} className="post-card__fig">
                       <Image
                         src={post.image}
                         alt={post.title}
@@ -191,8 +215,8 @@ export default function BlogPage() {
                         <span>•</span>
                         <span>{post.date}</span>
                       </div>
-                      <h3 className="post-title">{post.title}</h3>
-                      <p className="post-summary">{post.summary}</p>
+                      <h3 style={{ fontSize: fontSettings.cardTitleSize || "1.05rem" }} className="post-title">{post.title}</h3>
+                      <p style={{ fontSize: fontSettings.cardBodySize || "0.85rem" }} className="post-summary">{post.summary}</p>
                       <div className="post-footer">
                         <span className="post-author">By {post.author}</span>
                         <span className="post-read-time">{post.readTime}</span>

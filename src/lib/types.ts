@@ -77,6 +77,8 @@ export type BlogSettingsItem = {
   articleBodySize: string;
   cardTitleSize: string;
   cardBodySize: string;
+  articleImageHeight?: string;
+  cardImageHeight?: string;
 };
 
 export type MediaAsset = {

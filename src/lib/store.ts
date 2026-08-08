@@ -1975,6 +1975,8 @@ export async function getBlogSettingsStore(): Promise<any> {
     articleBodySize: "0.95rem",
     cardTitleSize: "1.1rem",
     cardBodySize: "0.85rem",
+    articleImageHeight: "320px",
+    cardImageHeight: "200px",
   };
 }
 

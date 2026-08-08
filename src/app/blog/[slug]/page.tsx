@@ -118,7 +118,10 @@ export default function BlogDetail({ params }: PageProps) {
             {displayTitle}
           </h1>
 
-          <div className="w-full aspect-[21/9] bg-neutral-100 overflow-hidden mb-10 rounded-lg border border-neutral-200 shadow-sm">
+          <div
+            style={{ height: (fontSettings as any).articleImageHeight || "320px" }}
+            className="w-full bg-neutral-100 overflow-hidden mb-10 rounded-lg border border-neutral-200 shadow-sm relative"
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={displayImage} alt={displayTitle} className="w-full h-full object-cover" />
           </div>

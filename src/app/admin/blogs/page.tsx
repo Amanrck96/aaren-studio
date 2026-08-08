@@ -12,11 +12,13 @@ export default function AdminBlogsPage() {
 
   // Blog Font Settings
   const [showTypographyModal, setShowTypographyModal] = useState(false);
-  const [fontSettings, setFontSettings] = useState({
+  const [fontSettings, setFontSettings] = useState<any>({
     articleTitleSize: "1.75rem",
     articleBodySize: "0.9rem",
     cardTitleSize: "1.05rem",
     cardBodySize: "0.85rem",
+    articleImageHeight: "320px",
+    cardImageHeight: "200px",
   });
 
   const fetchBlogs = () => {
@@ -241,12 +243,95 @@ export default function AdminBlogsPage() {
                   />
                 </div>
 
+                {/* Article Cover Image Height */}
+                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
+                  <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
+                    🖼️ Article Cover Banner Image Height (Default: 320px)
+                  </label>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
+                    {[
+                      { label: "Compact (240px)", value: "240px" },
+                      { label: "Standard (320px)", value: "320px" },
+                      { label: "Tall (380px)", value: "380px" },
+                      { label: "Cinematic (460px)", value: "460px" },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setFontSettings({ ...fontSettings, articleImageHeight: opt.value })}
+                        style={{
+                          padding: "0.4rem 0.8rem",
+                          borderRadius: "4px",
+                          border: fontSettings.articleImageHeight === opt.value ? "2px solid #d4af37" : "1px solid #333",
+                          background: fontSettings.articleImageHeight === opt.value ? "#80673f" : "#141418",
+                          color: "#fff",
+                          fontSize: "0.8rem",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="e.g. 320px or 250px"
+                    value={fontSettings.articleImageHeight || "320px"}
+                    onChange={(e) => setFontSettings({ ...fontSettings, articleImageHeight: e.target.value })}
+                    style={{ width: "100%", padding: "0.5rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                  />
+                </div>
+
+                {/* Blog Card Image Height */}
+                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
+                  <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
+                    🃏 Blog Grid Cards Image Height (Default: 200px)
+                  </label>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
+                    {[
+                      { label: "Compact (160px)", value: "160px" },
+                      { label: "Standard (200px)", value: "200px" },
+                      { label: "Tall (250px)", value: "250px" },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setFontSettings({ ...fontSettings, cardImageHeight: opt.value })}
+                        style={{
+                          padding: "0.4rem 0.8rem",
+                          borderRadius: "4px",
+                          border: fontSettings.cardImageHeight === opt.value ? "2px solid #d4af37" : "1px solid #333",
+                          background: fontSettings.cardImageHeight === opt.value ? "#80673f" : "#141418",
+                          color: "#fff",
+                          fontSize: "0.8rem",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="e.g. 200px or 180px"
+                    value={fontSettings.cardImageHeight || "200px"}
+                    onChange={(e) => setFontSettings({ ...fontSettings, cardImageHeight: e.target.value })}
+                    style={{ width: "100%", padding: "0.5rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                  />
+                </div>
+
                 {/* LIVE PREVIEW BOX */}
                 <div style={{ background: "#ffffff", padding: "1.2rem", borderRadius: "8px", color: "#111" }}>
-                  <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#80673f", textTransform: "uppercase" }}>Live Preview</span>
+                  <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#80673f", textTransform: "uppercase" }}>Live Text & Image Preview</span>
                   <h3 style={{ fontSize: fontSettings.articleTitleSize, fontWeight: 800, color: "#80673f", margin: "0.4rem 0 0.6rem", lineHeight: 1.25 }}>
                     NewTechWood Decking: Creating Beautiful Outdoor Living Spaces
                   </h3>
+                  <div style={{ height: fontSettings.articleImageHeight || "180px", background: "#eee", borderRadius: "6px", overflow: "hidden", marginBottom: "0.8rem", position: "relative" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  </div>
                   <p style={{ fontSize: fontSettings.articleBodySize, lineHeight: 1.6, color: "#444", margin: 0 }}>
                     NewTechWood represents the pinnacle of composite wood technology for luxury outdoor living spaces. Engineered with an advanced Ultrashield co-extrusion technology.
                   </p>
