@@ -70,6 +70,10 @@ export type BlogItem = {
   publishDate?: string;
   status: "Draft" | "Published";
   createdAt?: string;
+  sequenceNumber?: number;
+  titleSize?: string;
+  bodySize?: string;
+  imageHeight?: string;
 };
 
 export type BlogSettingsItem = {

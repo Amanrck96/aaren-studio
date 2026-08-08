@@ -10,7 +10,7 @@ export default function AdminBlogsPage() {
   const [editing, setEditing] = useState<Partial<BlogItem> | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  // Blog Font Settings
+  // Global Blog Font Settings Modal State
   const [showTypographyModal, setShowTypographyModal] = useState(false);
   const [fontSettings, setFontSettings] = useState<any>({
     articleTitleSize: "1.75rem",
@@ -21,11 +21,18 @@ export default function AdminBlogsPage() {
     cardImageHeight: "200px",
   });
 
+  // Blog Rearrange Modal State
+  const [showRearrangeModal, setShowRearrangeModal] = useState(false);
+  const [reorderingList, setReorderingList] = useState<BlogItem[]>([]);
+
   const fetchBlogs = () => {
     fetch("/api/blogs")
       .then((res) => res.json())
       .then((json) => {
-        if (json.success) setBlogs(json.data);
+        if (json.success) {
+          setBlogs(json.data);
+          setReorderingList(json.data);
+        }
       });
   };
 
@@ -79,9 +86,46 @@ export default function AdminBlogsPage() {
       });
       const json = await res.json();
       if (json.success) {
-        alert("✅ Font Size Preferences Saved System-Wide & Synced to Firebase!");
+        alert("✅ Font & Image Settings Saved System-Wide & Synced to Firebase!");
         setShowTypographyModal(false);
-      } else alert("❌ Failed to save font settings.");
+      } else alert("❌ Failed to save settings.");
+    } catch (e: any) {
+      alert("❌ Error: " + e.message);
+    }
+  };
+
+  const handleMoveArticle = async (index: number, direction: "up" | "down") => {
+    const targetIdx = direction === "up" ? index - 1 : index + 1;
+    if (targetIdx < 0 || targetIdx >= blogs.length) return;
+
+    const newList = [...blogs];
+    const [moved] = newList.splice(index, 1);
+    newList.splice(targetIdx, 0, moved);
+
+    setBlogs(newList);
+    setReorderingList(newList);
+
+    // Save reordered list to backend
+    await fetch("/api/blogs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "reorder", blogs: newList }),
+    });
+  };
+
+  const handleSaveReorder = async () => {
+    try {
+      const res = await fetch("/api/blogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "reorder", blogs: reorderingList }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("✅ Article Display Order Rearranged & Saved Live!");
+        setShowRearrangeModal(false);
+        fetchBlogs();
+      } else alert("❌ Failed to reorder articles.");
     } catch (e: any) {
       alert("❌ Error: " + e.message);
     }
@@ -119,14 +163,20 @@ export default function AdminBlogsPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #222", paddingBottom: "1rem" }}>
           <div>
             <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>✍️ Blog Articles & Journal CMS</h1>
-            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Create, edit, and manage all blog articles and customize font size display across the website.</p>
+            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Create, edit, rearrange article order, and customize font/image sizes dynamically.</p>
           </div>
-          <div style={{ display: "flex", gap: "1rem" }}>
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            <button
+              onClick={() => { setReorderingList([...blogs]); setShowRearrangeModal(true); }}
+              style={{ padding: "0.7rem 1.4rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 900, cursor: "pointer" }}
+            >
+              🔀 Rearrange Blog Order ({blogs.length})
+            </button>
             <button
               onClick={() => setShowTypographyModal(true)}
               style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", fontWeight: 900, cursor: "pointer" }}
             >
-              🎨 Font Size & Typography Settings
+              🎨 Global Font & Image Size Settings
             </button>
             <button
               onClick={() => setEditing({ title: "", slug: "", content: "", category: "Surfaces & Architecture", author: "Aaren Studio", status: "Published" })}
@@ -137,14 +187,74 @@ export default function AdminBlogsPage() {
           </div>
         </div>
 
-        {/* TYPOGRAPHY SETTINGS MODAL */}
+        {/* ARTICLE REARRANGE MODAL */}
+        {showRearrangeModal && (
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
+            <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "650px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+                <div>
+                  <h2 style={{ fontSize: "1.4rem", fontWeight: 800, margin: 0, color: "#3b82f6" }}>🔀 Rearrange Blog Display Order</h2>
+                  <p style={{ color: "#aaa", fontSize: "0.85rem", margin: "0.2rem 0 0" }}>Move articles up or down to set their exact sequence on the public blog page.</p>
+                </div>
+                <button onClick={() => setShowRearrangeModal(false)} style={{ background: "none", border: "none", color: "#aaa", fontSize: "1.5rem", cursor: "pointer" }}>✕</button>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", marginBottom: "1.5rem" }}>
+                {reorderingList.map((item, idx) => (
+                  <div key={item.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#0a0a0c", padding: "0.9rem 1.2rem", borderRadius: "8px", border: "1px solid #222" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                      <span style={{ fontSize: "0.85rem", fontWeight: 900, color: "#d4af37", background: "#1e1e24", padding: "0.2rem 0.6rem", borderRadius: "4px" }}>#{idx + 1}</span>
+                      <div>
+                        <h4 style={{ fontSize: "0.95rem", fontWeight: 700, margin: 0, color: "#fff" }}>{item.title}</h4>
+                        <span style={{ fontSize: "0.75rem", color: "#aaa" }}>{item.category}</span>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: "0.4rem" }}>
+                      <button
+                        disabled={idx === 0}
+                        onClick={() => {
+                          const copy = [...reorderingList];
+                          const [m] = copy.splice(idx, 1);
+                          copy.splice(idx - 1, 0, m);
+                          setReorderingList(copy);
+                        }}
+                        style={{ padding: "0.4rem 0.8rem", background: idx === 0 ? "#222" : "#2563eb", color: "#fff", border: "none", borderRadius: "4px", cursor: idx === 0 ? "not-allowed" : "pointer", fontSize: "0.8rem", fontWeight: 700 }}
+                      >
+                        ⬆️ Up
+                      </button>
+                      <button
+                        disabled={idx === reorderingList.length - 1}
+                        onClick={() => {
+                          const copy = [...reorderingList];
+                          const [m] = copy.splice(idx, 1);
+                          copy.splice(idx + 1, 0, m);
+                          setReorderingList(copy);
+                        }}
+                        style={{ padding: "0.4rem 0.8rem", background: idx === reorderingList.length - 1 ? "#222" : "#2563eb", color: "#fff", border: "none", borderRadius: "4px", cursor: idx === reorderingList.length - 1 ? "not-allowed" : "pointer", fontSize: "0.8rem", fontWeight: 700 }}
+                      >
+                        ⬇️ Down
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+                <button onClick={() => setShowRearrangeModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>Cancel</button>
+                <button onClick={handleSaveReorder} style={{ padding: "0.7rem 1.5rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 900, cursor: "pointer" }}>💾 Save Rearranged Order</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* GLOBAL TYPOGRAPHY SETTINGS MODAL */}
         {showTypographyModal && (
           <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
             <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "600px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
                 <div>
-                  <h2 style={{ fontSize: "1.4rem", fontWeight: 800, margin: 0, color: "#d4af37" }}>🎨 Blog Font Size & Text Scale Manager</h2>
-                  <p style={{ color: "#aaa", fontSize: "0.85rem", margin: "0.2rem 0 0" }}>Adjust and reduce/increase the font sizes for article titles, body paragraphs, and cards live!</p>
+                  <h2 style={{ fontSize: "1.4rem", fontWeight: 800, margin: 0, color: "#d4af37" }}>🎨 Global Font & Image Size Manager</h2>
+                  <p style={{ color: "#aaa", fontSize: "0.85rem", margin: "0.2rem 0 0" }}>Adjust default text sizes and image heights across all blog pages live!</p>
                 </div>
                 <button onClick={() => setShowTypographyModal(false)} style={{ background: "none", border: "none", color: "#aaa", fontSize: "1.5rem", cursor: "pointer" }}>✕</button>
               </div>
@@ -153,7 +263,7 @@ export default function AdminBlogsPage() {
                 {/* Article Title Font Size */}
                 <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
                   <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
-                    📰 Article Title Font Size (Default: 1.75rem / 28px)
+                    📰 Default Article Title Font Size (Default: 1.75rem / 28px)
                   </label>
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
                     {[
@@ -193,7 +303,7 @@ export default function AdminBlogsPage() {
                 {/* Article Content Body Text Size */}
                 <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
                   <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
-                    📖 Article Body Paragraph Text Size (Default: 0.9rem / 14.4px)
+                    📖 Default Article Body Paragraph Text Size (Default: 0.9rem / 14.4px)
                   </label>
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
                     {[
@@ -230,23 +340,10 @@ export default function AdminBlogsPage() {
                   />
                 </div>
 
-                {/* Card Title Size */}
-                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
-                  <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
-                    🎴 Blog Card Title Font Size (Default: 1.05rem / 16.8px)
-                  </label>
-                  <input
-                    type="text"
-                    value={fontSettings.cardTitleSize}
-                    onChange={(e) => setFontSettings({ ...fontSettings, cardTitleSize: e.target.value })}
-                    style={{ width: "100%", padding: "0.5rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
-                  />
-                </div>
-
                 {/* Article Cover Image Height */}
                 <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
                   <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
-                    🖼️ Article Cover Banner Image Height (Default: 320px)
+                    🖼️ Default Article Cover Banner Image Height (Default: 320px)
                   </label>
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
                     {[
@@ -354,10 +451,11 @@ export default function AdminBlogsPage() {
           </div>
         )}
 
+        {/* CREATE / EDIT BLOG FORM WITH PER-ARTICLE CUSTOM SIZING OVERRIDES */}
         {editing && (
           <form onSubmit={handleSave} style={{ background: "#141418", padding: "2rem", borderRadius: "10px", border: "1px solid #333", marginBottom: "2rem" }}>
             <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#6366f1", marginBottom: "1.2rem" }}>
-              {editing.id ? "✏️ Edit Blog Article Text & Content" : "✨ Create New Blog Article"}
+              {editing.id ? "✏️ Edit Blog Article Text, Image Size & Content" : "✨ Create New Blog Article"}
             </h2>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
@@ -373,7 +471,7 @@ export default function AdminBlogsPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>URL Slug (e.g. 5-reasons-to-choose-newtechwood-for-outdoor-spaces)</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>URL Slug (e.g. newtechwood-decking-creating-beautiful-outdoor-living-spaces)</label>
                 <input
                   type="text"
                   placeholder="auto-generated-from-title"
@@ -412,6 +510,45 @@ export default function AdminBlogsPage() {
                   onChange={(e) => setEditing({ ...editing, publishDate: e.target.value })}
                   style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
                 />
+              </div>
+            </div>
+
+            {/* PER-ARTICLE CUSTOM TEXT & IMAGE SIZE OVERRIDES */}
+            <div style={{ background: "#0a0a0c", border: "1px solid #282834", borderRadius: "8px", padding: "1.2rem", marginBottom: "1.2rem" }}>
+              <h4 style={{ fontSize: "0.95rem", fontWeight: 800, color: "#d4af37", margin: "0 0 0.8rem" }}>
+                🎨 Custom Font & Image Size Overrides for THIS Article Only (Optional)
+              </h4>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Title Font Size Override</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 1.6rem or default"
+                    value={editing.titleSize || ""}
+                    onChange={(e) => setEditing({ ...editing, titleSize: e.target.value })}
+                    style={{ width: "100%", padding: "0.6rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Body Text Size Override</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 0.85rem or default"
+                    value={editing.bodySize || ""}
+                    onChange={(e) => setEditing({ ...editing, bodySize: e.target.value })}
+                    style={{ width: "100%", padding: "0.6rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Cover Image Height Override</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 260px or default"
+                    value={editing.imageHeight || ""}
+                    onChange={(e) => setEditing({ ...editing, imageHeight: e.target.value })}
+                    style={{ width: "100%", padding: "0.6rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -473,19 +610,42 @@ export default function AdminBlogsPage() {
           </form>
         )}
 
+        {/* BLOG CARDS GRID WITH QUICK REARRANGE BUTTONS */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-          {blogs.map((b) => (
-            <div key={b.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "1.8rem", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
-              <span style={{ fontSize: "0.78rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.25rem 0.7rem", borderRadius: "4px", fontWeight: 900 }}>{b.category || "General"}</span>
-              <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0.8rem 0 0.5rem" }}>{b.title}</h3>
+          {blogs.map((b, index) => (
+            <div key={b.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "1.8rem", boxShadow: "0 10px 25px rgba(0,0,0,0.4)", position: "relative" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.8rem" }}>
+                <span style={{ fontSize: "0.78rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.25rem 0.7rem", borderRadius: "4px", fontWeight: 900 }}>{b.category || "General"}</span>
+                <span style={{ fontSize: "0.75rem", color: "#d4af37", fontWeight: 800 }}>Sequence #{index + 1}</span>
+              </div>
+              <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0.4rem 0 0.5rem" }}>{b.title}</h3>
               <p style={{ color: "#cbd5e1", fontSize: "0.9rem", margin: "0.5rem 0 1.4rem", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{b.content}</p>
-              <div style={{ display: "flex", gap: "0.8rem" }}>
-                <button onClick={() => setEditing(b)} style={{ padding: "0.5rem 1.2rem", background: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
-                  ✏️ Edit Content
-                </button>
-                <button onClick={() => handleDelete(b.id)} style={{ padding: "0.5rem 1.2rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
-                  🗑️ Delete
-                </button>
+              
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #252836", paddingTop: "1rem" }}>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <button onClick={() => setEditing(b)} style={{ padding: "0.45rem 1rem", background: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.82rem", fontWeight: 700 }}>
+                    ✏️ Edit
+                  </button>
+                  <button onClick={() => handleDelete(b.id)} style={{ padding: "0.45rem 1rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "6px", cursor: "pointer", fontSize: "0.82rem", fontWeight: 700 }}>
+                    🗑️ Delete
+                  </button>
+                </div>
+                <div style={{ display: "flex", gap: "0.3rem" }}>
+                  <button
+                    disabled={index === 0}
+                    onClick={() => handleMoveArticle(index, "up")}
+                    style={{ padding: "0.35rem 0.6rem", background: index === 0 ? "#1a1a24" : "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", cursor: index === 0 ? "not-allowed" : "pointer", fontSize: "0.78rem", fontWeight: 700 }}
+                  >
+                    ⬆️ Up
+                  </button>
+                  <button
+                    disabled={index === blogs.length - 1}
+                    onClick={() => handleMoveArticle(index, "down")}
+                    style={{ padding: "0.35rem 0.6rem", background: index === blogs.length - 1 ? "#1a1a24" : "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", cursor: index === blogs.length - 1 ? "not-allowed" : "pointer", fontSize: "0.78rem", fontWeight: 700 }}
+                  >
+                    ⬇️ Down
+                  </button>
+                </div>
               </div>
             </div>
           ))}

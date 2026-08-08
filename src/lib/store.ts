@@ -1711,6 +1711,15 @@ export async function deleteBlogStore(id: string) {
   try { await prisma.blog.delete({ where: { id } }); } catch (e) {}
 }
 
+export async function reorderBlogsStore(blogsList: BlogItem[]): Promise<BlogItem[]> {
+  const indexed = blogsList.map((b, idx) => ({ ...b, sequenceNumber: idx + 1 }));
+  await syncToFirebaseCloudStore("blogs", indexed);
+  const json = readJsonStore();
+  json.blogs = indexed;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  return indexed;
+}
+
 // MEDIA LIBRARY STORE (AGGREGATES ALL PDFS, VIDEOS, SWATCHES, LOGOS & SITE ASSETS)
 export async function getMediaStore(): Promise<MediaAsset[]> {
   const json = readJsonStore();

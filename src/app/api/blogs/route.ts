@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getBlogsStore, saveBlogStore, deleteBlogStore } from "@/lib/store";
+import { getBlogsStore, saveBlogStore, deleteBlogStore, reorderBlogsStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -7,7 +7,9 @@ export const revalidate = 0;
 export async function GET() {
   try {
     const blogs = await getBlogsStore();
-    return NextResponse.json({ success: true, count: blogs.length, data: blogs });
+    // Sort by sequenceNumber if available
+    const sorted = [...blogs].sort((a: any, b: any) => (a.sequenceNumber || 9999) - (b.sequenceNumber || 9999));
+    return NextResponse.json({ success: true, count: sorted.length, data: sorted });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
@@ -16,6 +18,13 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+
+    // Check if bulk reorder action
+    if (body.type === "reorder" && Array.isArray(body.blogs)) {
+      const reordered = await reorderBlogsStore(body.blogs);
+      return NextResponse.json({ success: true, data: reordered });
+    }
+
     if (!body.title || !body.content) {
       return NextResponse.json({ success: false, error: "Title and Content are required" }, { status: 400 });
     }

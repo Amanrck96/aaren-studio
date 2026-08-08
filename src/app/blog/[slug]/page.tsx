@@ -112,14 +112,14 @@ export default function BlogDetail({ params }: PageProps) {
 
           {/* Dynamic Article Title Font Size */}
           <h1
-            style={{ fontSize: fontSettings.articleTitleSize || "1.75rem" }}
+            style={{ fontSize: article?.titleSize || fontSettings.articleTitleSize || "1.75rem" }}
             className="font-extrabold tracking-tight mt-2 mb-6 leading-tight text-[#80673f]"
           >
             {displayTitle}
           </h1>
 
           <div
-            style={{ height: (fontSettings as any).articleImageHeight || "320px" }}
+            style={{ height: article?.imageHeight || (fontSettings as any).articleImageHeight || "320px" }}
             className="w-full bg-neutral-100 overflow-hidden mb-10 rounded-lg border border-neutral-200 shadow-sm relative"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -146,7 +146,7 @@ export default function BlogDetail({ params }: PageProps) {
               return (
                 <p
                   key={idx}
-                  style={{ fontSize: fontSettings.articleBodySize || "0.9rem" }}
+                  style={{ fontSize: article?.bodySize || fontSettings.articleBodySize || "0.9rem" }}
                   className="text-neutral-700 leading-relaxed font-normal whitespace-pre-line"
                 >
                   {block}
