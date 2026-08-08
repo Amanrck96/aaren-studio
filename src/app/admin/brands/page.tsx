@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import AdminNav from "@/components/AdminNav";
-import { BrandItem } from "@/lib/types";
-import { uploadFileToFirebase } from "@/lib/firebaseStorage";
+import { BrandItem, PdfCatalogItem } from "@/lib/types";
+import { uploadFileWithCompression } from "@/lib/uploadHelper";
 
 function parseGoogleDriveUrl(url: string): string {
   if (!url) return "";
@@ -23,6 +23,7 @@ export default function AdminBrandsPage() {
   const [showBulkPdfModal, setShowBulkPdfModal] = useState(false);
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const [bulkPdfMap, setBulkPdfMap] = useState<Record<string, string>>({});
+  const [pdfCatalogs, setPdfCatalogs] = useState<{ id: string; title: string; pdfUrl: string }[]>([]);
 
   const [editingBrand, setEditingBrand] = useState<Partial<BrandItem>>({
     name: "",
@@ -32,6 +33,7 @@ export default function AdminBrandsPage() {
     shortCode: "SF 01",
     sequenceNumber: 1,
     catalogPdfUrl: "",
+    pdfCatalogs: [],
   });
 
   const [showCatalogThemeModal, setShowCatalogThemeModal] = useState(false);
@@ -63,9 +65,9 @@ export default function AdminBrandsPage() {
   async function fetchBrands() {
     setLoading(true);
     try {
-      const res = await fetch("/api/brands?t=" + Date.now());
+      const res = await fetch("/api/brands");
       const json = await res.json();
-      if (json.success && Array.isArray(json.data)) {
+      if (json.success) {
         setBrands(json.data);
         const map: Record<string, string> = {};
         json.data.forEach((b: BrandItem) => {
@@ -86,6 +88,10 @@ export default function AdminBrandsPage() {
       const formattedBrand = {
         ...editingBrand,
         catalogPdfUrl: parseGoogleDriveUrl(editingBrand.catalogPdfUrl || ""),
+        pdfCatalogs: pdfCatalogs.map((c) => ({
+          ...c,
+          pdfUrl: parseGoogleDriveUrl(c.pdfUrl || ""),
+        })),
       };
       const res = await fetch("/api/brands", {
         method: "POST",
@@ -112,28 +118,26 @@ export default function AdminBrandsPage() {
     }
   }
 
-  async function handleFileUpload(file: File, fieldName: "logoUrl" | "bannerUrl" | "catalogPdfUrl", brandId?: string) {
+  async function handleFileUpload(file: File, fieldName: "logoUrl" | "bannerUrl" | "catalogPdfUrl", brandId?: string, catalogIndex?: number) {
     if (!file) return;
     setUploadingPdf(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "Brand Assets");
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const json = await res.json();
-      if (json.success && json.url) {
-        if (brandId) {
-          setBulkPdfMap((prev) => ({ ...prev, [brandId]: json.url }));
+      const result = await uploadFileWithCompression(file, "Brand Assets");
+      if (result.success && result.url) {
+        if (typeof catalogIndex === "number") {
+          setPdfCatalogs((prev) => {
+            const next = [...prev];
+            if (next[catalogIndex]) next[catalogIndex].pdfUrl = result.url!;
+            return next;
+          });
+        } else if (brandId) {
+          setBulkPdfMap((prev) => ({ ...prev, [brandId]: result.url! }));
         } else {
-          setEditingBrand((prev) => ({ ...prev, [fieldName]: json.dataUrl || json.url }));
+          setEditingBrand((prev) => ({ ...prev, [fieldName]: result.url! }));
         }
-        alert("✅ File uploaded successfully from computer to storage: " + json.url);
+        alert("✅ File uploaded successfully from computer: " + result.url);
       } else {
-        alert("❌ Upload failed: " + (json.error || "Unknown error"));
+        alert("❌ Upload failed: " + (result.error || "Unknown error"));
       }
     } catch (err: any) {
       alert("❌ Upload error: " + err.message);
@@ -234,6 +238,7 @@ export default function AdminBrandsPage() {
                     <button
                       onClick={() => {
                         setEditingBrand(b);
+                        setPdfCatalogs(b.pdfCatalogs || (b.catalogPdfUrl ? [{ id: "cat-1", title: `${b.name} Specification Catalog`, pdfUrl: b.catalogPdfUrl }] : []));
                         setShowModal(true);
                       }}
                       style={{ flex: 1, padding: "0.5rem", background: "#222", color: "#fff", border: "1px solid #333", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}
@@ -367,43 +372,77 @@ export default function AdminBrandsPage() {
                   </div>
                 </div>
 
-                <div>
-                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>
-                    Catalog PDF (Google Drive Link or Direct URL)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="https://drive.google.com/file/d/.../view or /uploads/pdf"
-                    value={editingBrand.catalogPdfUrl || ""}
-                    onChange={(e) => setEditingBrand({ ...editingBrand, catalogPdfUrl: parseGoogleDriveUrl(e.target.value) })}
-                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", marginBottom: "0.4rem" }}
-                  />
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span style={{ fontSize: "0.8rem", color: "#888" }}>OR Upload PDF from computer:</span>
-                    <input
-                      type="file"
-                      accept=".pdf"
-                      id="brandPdfUpload"
-                      style={{ display: "none" }}
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files[0]) handleFileUpload(e.target.files[0], "catalogPdfUrl");
-                      }}
-                    />
-                    <label
-                      htmlFor="brandPdfUpload"
-                      style={{
-                        padding: "0.4rem 0.8rem",
-                        background: "#2563eb",
-                        color: "#fff",
-                        borderRadius: "4px",
-                        fontSize: "0.8rem",
-                        cursor: "pointer",
-                        fontWeight: 600,
-                      }}
+                {/* MULTIPLE PDF CATALOGS MANAGER */}
+                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #333", marginTop: "0.5rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.8rem" }}>
+                    <label style={{ fontSize: "0.9rem", color: "#60a5fa", fontWeight: 800 }}>📚 Brand PDF Catalogs (Multiple Allowed)</label>
+                    <button
+                      type="button"
+                      onClick={() => setPdfCatalogs([...pdfCatalogs, { id: `cat-${Date.now()}`, title: `Catalog ${pdfCatalogs.length + 1}`, pdfUrl: "" }])}
+                      style={{ padding: "0.3rem 0.7rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", fontSize: "0.8rem", fontWeight: 700, cursor: "pointer" }}
                     >
-                      💻 Select PDF File
-                    </label>
+                      + Add Another PDF Catalog
+                    </button>
                   </div>
+
+                  {pdfCatalogs.length === 0 ? (
+                    <div style={{ fontSize: "0.8rem", color: "#888", fontStyle: "italic", marginBottom: "0.5rem" }}>No PDF catalogs added yet. Click above to add multiple PDF catalogs!</div>
+                  ) : (
+                    pdfCatalogs.map((cat, cIdx) => (
+                      <div key={cat.id || cIdx} style={{ background: "#141418", border: "1px solid #222", padding: "0.8rem", borderRadius: "6px", marginBottom: "0.6rem" }}>
+                        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.4rem" }}>
+                          <input
+                            type="text"
+                            placeholder="Catalog Title (e.g. 2026 Collection PDF)"
+                            value={cat.title}
+                            onChange={(e) => {
+                              const next = [...pdfCatalogs];
+                              next[cIdx].title = e.target.value;
+                              setPdfCatalogs(next);
+                            }}
+                            style={{ flex: 1, padding: "0.5rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setPdfCatalogs(pdfCatalogs.filter((_, i) => i !== cIdx))}
+                            style={{ padding: "0.5rem", background: "rgba(239, 68, 68, 0.2)", color: "#f87171", border: "none", borderRadius: "4px", cursor: "pointer" }}
+                          >
+                            🗑️
+                          </button>
+                        </div>
+
+                        <input
+                          type="text"
+                          placeholder="PDF Link (Google Drive / Direct URL)"
+                          value={cat.pdfUrl}
+                          onChange={(e) => {
+                            const next = [...pdfCatalogs];
+                            next[cIdx].pdfUrl = e.target.value;
+                            setPdfCatalogs(next);
+                          }}
+                          style={{ width: "100%", padding: "0.5rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem", marginBottom: "0.3rem" }}
+                        />
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <span style={{ fontSize: "0.75rem", color: "#888" }}>OR Upload PDF File:</span>
+                          <input
+                            type="file"
+                            accept=".pdf"
+                            id={`catUpload_${cIdx}`}
+                            style={{ display: "none" }}
+                            onChange={(e) => {
+                              if (e.target.files && e.target.files[0]) handleFileUpload(e.target.files[0], "catalogPdfUrl", undefined, cIdx);
+                            }}
+                          />
+                          <label
+                            htmlFor={`catUpload_${cIdx}`}
+                            style={{ padding: "0.2rem 0.6rem", background: "#2563eb", color: "#fff", borderRadius: "4px", fontSize: "0.75rem", cursor: "pointer" }}
+                          >
+                            💻 Upload PDF
+                          </label>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
 
                 <div>

@@ -32,6 +32,7 @@ export type BrandItem = {
   shortCode: string;
   sequenceNumber: number;
   catalogPdfUrl?: string;
+  pdfCatalogs?: { id: string; title: string; pdfUrl: string }[];
 };
 
 export type ServiceItem = {
@@ -208,6 +209,7 @@ export type PdfCatalogItem = {
   fileName: string;
   primaryFileName?: string;
   fileUrl: string;
+  pdfUrl?: string;
   thumbnailUrl: string;
   brand: string;
   category: string;

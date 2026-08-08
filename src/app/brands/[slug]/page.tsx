@@ -19,6 +19,7 @@ export default function BrandDetailPage({ params }: Props) {
   const [mounted, setMounted] = useState(false);
   const [selectedPdf, setSelectedPdf] = useState<{ url: string; title: string } | null>(null);
   const [apiProducts, setApiProducts] = useState<any[]>([]);
+  const [apiBrand, setApiBrand] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
 
@@ -32,7 +33,41 @@ export default function BrandDetailPage({ params }: Props) {
         }
       })
       .catch((e) => console.error("Brand products API error:", e));
-  }, [brand.name]);
+
+    fetch("/api/brands")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data)) {
+          const found = json.data.find((b: any) => b.id === brand.id || b.name.toLowerCase() === brand.name.toLowerCase());
+          if (found) setApiBrand(found);
+        }
+      })
+      .catch(() => {});
+  }, [brand.id, brand.name]);
+
+  const displayCatalogues = useMemo(() => {
+    if (apiBrand?.pdfCatalogs && apiBrand.pdfCatalogs.length > 0) {
+      return apiBrand.pdfCatalogs.map((c: any) => ({
+        title: c.title || `${brand.name} Specification Catalog`,
+        url: c.pdfUrl,
+        year: "2026",
+        pages: "Full Edition",
+        category: "PDF Catalog",
+        featured: true,
+      }));
+    }
+    if (apiBrand?.catalogPdfUrl) {
+      return [{
+        title: `${brand.name} Specification Catalog`,
+        url: apiBrand.catalogPdfUrl,
+        year: "2026",
+        pages: "Full Edition",
+        category: "PDF Catalog",
+        featured: true,
+      }];
+    }
+    return brand.catalogues;
+  }, [apiBrand, brand]);
 
   // Combine hardcoded samples with API products
   const allBrandProducts = useMemo(() => {
@@ -311,7 +346,7 @@ export default function BrandDetailPage({ params }: Props) {
       )}
 
       {/* ── Catalogues (Archiproducts Luxury PDF Card Display) ── */}
-      {brand.catalogues.length > 0 && (
+      {displayCatalogues.length > 0 && (
         <div className="bd-catalogues">
           <div className="bd-catalogues__header">
             <h2 className="bd-catalogues__heading">Catalogues</h2>
@@ -319,7 +354,7 @@ export default function BrandDetailPage({ params }: Props) {
           </div>
 
           <div className="bd-catalogue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "2rem" }}>
-            {brand.catalogues.map((cat, i) => {
+            {displayCatalogues.map((cat: any, i: number) => {
               const rawPdf = (cat as any).url || cat.file || "";
               const pdfUrl = rawPdf.startsWith("http") ? rawPdf : (rawPdf.startsWith("/") ? rawPdf : `/catalogues/${rawPdf}`);
 

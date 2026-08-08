@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import AdminNav from "@/components/AdminNav";
 import { BlogItem } from "@/lib/types";
+import { uploadFileWithCompression } from "@/lib/uploadHelper";
 
 export default function AdminBlogsPage() {
   const [blogs, setBlogs] = useState<BlogItem[]>([]);
   const [editing, setEditing] = useState<Partial<BlogItem> | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const fetchBlogs = () => {
     fetch("/api/blogs")
@@ -24,11 +26,14 @@ export default function AdminBlogsPage() {
     e.preventDefault();
     if (!editing?.title || !editing?.content) return alert("Title and Content are required.");
 
+    const generatedSlug = editing.slug || editing.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
     const res = await fetch("/api/blogs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...editing,
+        slug: generatedSlug,
         category: editing.category || "Surfaces",
         tags: typeof editing.tags === "string" ? (editing.tags as string).split(",").map((t) => t.trim()) : editing.tags || [],
         status: editing.status || "Published",
@@ -38,16 +43,34 @@ export default function AdminBlogsPage() {
     });
     const json = await res.json();
     if (json.success) {
-      alert("Blog article saved successfully!");
+      alert("✅ Blog article saved successfully to database!");
       setEditing(null);
       fetchBlogs();
-    } else alert("Error: " + json.error);
+    } else alert("❌ Error saving blog: " + json.error);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure?")) return;
+    if (!confirm("Are you sure you want to delete this blog post?")) return;
     await fetch(`/api/blogs?id=${id}`, { method: "DELETE" });
     fetchBlogs();
+  };
+
+  const handleImageUpload = async (file: File) => {
+    if (!file || !editing) return;
+    setUploading(true);
+    try {
+      const res = await uploadFileWithCompression(file, "Blogs");
+      if (res.success && res.url) {
+        setEditing({ ...editing, featuredImage: res.url });
+        alert("✅ Cover photo uploaded successfully: " + res.url);
+      } else {
+        alert("❌ Image upload failed: " + (res.error || "Unknown error"));
+      }
+    } catch (e: any) {
+      alert("❌ Upload error: " + e.message);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -57,23 +80,26 @@ export default function AdminBlogsPage() {
       <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #222", paddingBottom: "1rem" }}>
           <div>
-            <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>✍️ Blog Articles CMS</h1>
-            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Write and publish material guides & design blogs.</p>
+            <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>✍️ Blog Articles & Journal CMS</h1>
+            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Create, edit, and manage all blog articles and text content for the website journal.</p>
           </div>
           <button
-            onClick={() => setEditing({ title: "", content: "", category: "Surfaces", author: "Aaren Studio", status: "Published" })}
+            onClick={() => setEditing({ title: "", slug: "", content: "", category: "Surfaces & Architecture", author: "Aaren Studio", status: "Published" })}
             style={{ padding: "0.7rem 1.4rem", background: "#6366f1", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}
           >
-            + Create Blog Post
+            + Create New Blog Post
           </button>
         </div>
 
         {editing && (
           <form onSubmit={handleSave} style={{ background: "#141418", padding: "2rem", borderRadius: "10px", border: "1px solid #333", marginBottom: "2rem" }}>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "1.2rem" }}>{editing.id ? "Edit Blog Article" : "Create Blog Article"}</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#6366f1", marginBottom: "1.2rem" }}>
+              {editing.id ? "✏️ Edit Blog Article Text & Content" : "✨ Create New Blog Article"}
+            </h2>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Title *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Article Title *</label>
                 <input
                   type="text"
                   required
@@ -82,18 +108,51 @@ export default function AdminBlogsPage() {
                   style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
                 />
               </div>
+
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Category</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>URL Slug (e.g. 5-reasons-to-choose-newtechwood-for-outdoor-spaces)</label>
                 <input
                   type="text"
-                  value={editing.category || "Surfaces"}
-                  onChange={(e) => setEditing({ ...editing, category: e.target.value })}
+                  placeholder="auto-generated-from-title"
+                  value={editing.slug || ""}
+                  onChange={(e) => setEditing({ ...editing, slug: e.target.value })}
                   style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
                 />
               </div>
             </div>
 
-            <div style={{ marginTop: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Category</label>
+                <input
+                  type="text"
+                  value={editing.category || "Surfaces & Architecture"}
+                  onChange={(e) => setEditing({ ...editing, category: e.target.value })}
+                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Author</label>
+                <input
+                  type="text"
+                  value={editing.author || "Aaren Studio"}
+                  onChange={(e) => setEditing({ ...editing, author: e.target.value })}
+                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Publish Date</label>
+                <input
+                  type="text"
+                  placeholder="e.g. August 8, 2026"
+                  value={editing.publishDate || ""}
+                  onChange={(e) => setEditing({ ...editing, publishDate: e.target.value })}
+                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+            </div>
+
+            <div style={{ marginBottom: "1rem" }}>
               <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Featured Cover Image URL</label>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <input
@@ -107,15 +166,8 @@ export default function AdminBlogsPage() {
                   accept="image/*"
                   id="blogCoverUpload"
                   style={{ display: "none" }}
-                  onChange={async (e) => {
-                    if (e.target.files && e.target.files[0] && editing) {
-                      const formData = new FormData();
-                      formData.append("file", e.target.files[0]);
-                      formData.append("folder", "Blogs");
-                      const res = await fetch("/api/upload", { method: "POST", body: formData });
-                      const json = await res.json();
-                      if (json.success && json.url) setEditing({ ...editing, featuredImage: json.dataUrl || json.url });
-                    }
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) handleImageUpload(e.target.files[0]);
                   }}
                 />
                 <label
@@ -131,25 +183,25 @@ export default function AdminBlogsPage() {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  💻 Upload Image
+                  {uploading ? "⏳ Uploading..." : "💻 Upload Cover Image"}
                 </label>
               </div>
             </div>
 
-            <div style={{ marginTop: "1rem" }}>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Article Content *</label>
+            <div style={{ marginBottom: "1rem" }}>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Full Article Text & Content *</label>
               <textarea
-                rows={6}
+                rows={10}
                 required
                 value={editing.content || ""}
                 onChange={(e) => setEditing({ ...editing, content: e.target.value })}
-                style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontFamily: "inherit", lineHeight: 1.6 }}
               />
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
               <button type="submit" style={{ padding: "0.7rem 1.5rem", background: "#6366f1", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}>
-                Publish Article
+                💾 Save & Publish Article
               </button>
               <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.7rem 1.5rem", background: "#333", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
                 Cancel
@@ -166,7 +218,7 @@ export default function AdminBlogsPage() {
               <p style={{ color: "#cbd5e1", fontSize: "0.9rem", margin: "0.5rem 0 1.4rem", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{b.content}</p>
               <div style={{ display: "flex", gap: "0.8rem" }}>
                 <button onClick={() => setEditing(b)} style={{ padding: "0.5rem 1.2rem", background: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
-                  ✏️ Edit
+                  ✏️ Edit Content
                 </button>
                 <button onClick={() => handleDelete(b.id)} style={{ padding: "0.5rem 1.2rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
                   🗑️ Delete
