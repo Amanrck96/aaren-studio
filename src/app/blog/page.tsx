@@ -117,26 +117,11 @@ export default function BlogPage() {
     <div className="blog-page">
       <div className="blog-container">
         {/* Header */}
-        <header className="blog-header">
+        <header className="blog-header mb-8">
           <span className="blog-tag">JOURNAL & INSIGHTS</span>
           <h1 className="blog-title">THE JOURNAL</h1>
-          <p className="blog-desc">
-            Explore curated design journals, architectural surface developments, and sustainable timber material guides from our Mysore Road Experience Centre.
-          </p>
 
           <div className="blog-controls">
-            <div className="category-pills">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`cat-pill ${selectedCategory === cat ? "is-active" : ""}`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
             <div className="search-box">
               <input
                 type="text"
