@@ -42,7 +42,7 @@
       "https://x.com/mustbeaaren",
       "https://youtube.com/@aaren_intpro"
     ],
-    "copyrightText": "AAREN Â© 2026. All rights reserved."
+    "copyrightText": "AAREN \u00c2\u00a9 2026. All rights reserved."
   },
   "categories": [
     {
@@ -197,7 +197,7 @@
       "category": "Doors & Windows",
       "description": "Italian precision living systems for kitchen & wardrobe",
       "id": "slashform",
-      "logoUrl": "/brands/brand_1_2.png",
+      "logoUrl": "/brands/logos/slashform_logo.png",
       "name": "Slashform",
       "sequenceNumber": 1,
       "shortCode": "SF 01"
@@ -208,7 +208,7 @@
       "category": "Glide NXT",
       "description": "Architectural glass partitions and zipline screens",
       "id": "waltz",
-      "logoUrl": "/brands/brand_2_2.png",
+      "logoUrl": "/brands/logos/waltz_logo.png",
       "name": "Waltz by JB Glass",
       "sequenceNumber": 2,
       "shortCode": "WB 02"
@@ -219,7 +219,7 @@
       "category": "Decking",
       "description": "WPC composite outdoor decking and architectural cladding",
       "id": "newtech-wood",
-      "logoUrl": "/brands/brand_3_2.png",
+      "logoUrl": "/brands/logos/newtechwood_logo.png",
       "name": "Newtech Wood",
       "sequenceNumber": 3,
       "shortCode": "NW 03"
@@ -230,7 +230,7 @@
       "category": "Laminates",
       "description": "FENIX nano-tech surfaces and premium laminates",
       "id": "formica",
-      "logoUrl": "/brands/brand_4_2.png",
+      "logoUrl": "/brands/logos/formica_logo.png",
       "name": "Formica",
       "sequenceNumber": 4,
       "shortCode": "FC 04"
@@ -240,7 +240,7 @@
       "category": "Furniture",
       "description": "Bespoke Italian millwork and furniture sculpture",
       "id": "loco",
-      "logoUrl": "/brands/brand_5_2.png",
+      "logoUrl": "/brands/logos/loco_logo.png",
       "name": "Loco",
       "sequenceNumber": 5,
       "shortCode": "LC 05"
@@ -250,7 +250,7 @@
       "category": "Wash Basins",
       "description": "Luxury bath environments, vanities and freestanding tubs",
       "id": "falper",
-      "logoUrl": "/brands/brand_6_2.png",
+      "logoUrl": "/brands/logos/falper_logo.png",
       "name": "Falper",
       "sequenceNumber": 6,
       "shortCode": "FP 06"
@@ -260,7 +260,7 @@
       "category": "Bathroom Fittings",
       "description": "Refined Italian tapware and thermostatic shower systems",
       "id": "fima",
-      "logoUrl": "/brands/brand_7_2.png",
+      "logoUrl": "/brands/logos/fima_logo.png",
       "name": "Fima Carlo Frattini",
       "sequenceNumber": 7,
       "shortCode": "FM 07"
@@ -271,7 +271,7 @@
       "category": "Wall Covering",
       "description": "Creative decorative wallcoverings and printed surfaces",
       "id": "inkiostro-bianco",
-      "logoUrl": "/brands/brand_8_2.png",
+      "logoUrl": "/brands/logos/inkiostro_bianco_logo.png",
       "name": "Inkiostro Bianco",
       "sequenceNumber": 8,
       "shortCode": "IB 08"
@@ -281,7 +281,7 @@
       "category": "Wooden Flooring",
       "description": "Austrian natural wood flooring with hand-rubbed oil finish",
       "id": "mafi",
-      "logoUrl": "/brands/brand_9_2.png",
+      "logoUrl": "/brands/logos/mafi_logo.png",
       "name": "Mafi",
       "sequenceNumber": 9,
       "shortCode": "MF 09"
@@ -292,7 +292,7 @@
       "category": "Surface Tiles",
       "description": "Italian porcelain tile mastery and marble slabs",
       "id": "mirage",
-      "logoUrl": "/brands/brand_10_2.png",
+      "logoUrl": "/brands/logos/mirage_logo.png",
       "name": "Mirage",
       "sequenceNumber": 10,
       "shortCode": "MG 10"
@@ -312,7 +312,7 @@
       "category": "Plywood",
       "description": "High-quality plywood and blockboard products for premium interiors",
       "id": "peelply",
-      "logoUrl": "/brands/brand_2_2.png",
+      "logoUrl": "/brands/logos/peelply_logo.png",
       "name": "Peelply",
       "sequenceNumber": 12,
       "shortCode": "PP 12"
@@ -322,7 +322,7 @@
       "category": "MillWork",
       "description": "Innovative seating and furniture solutions for hospitality spaces",
       "id": "inclass",
-      "logoUrl": "/brands/brand_3_2.png",
+      "logoUrl": "/brands/logos/inclass_logo.png",
       "name": "Inclass",
       "sequenceNumber": 13,
       "shortCode": "IC 13"
@@ -332,7 +332,7 @@
       "category": "Highlighter Tiles",
       "description": "Spanish decorative ceramic and 3D tile collections",
       "id": "wow",
-      "logoUrl": "/brands/brand_4_2.png",
+      "logoUrl": "/brands/logos/wow_logo.png",
       "name": "WOW",
       "sequenceNumber": 14,
       "shortCode": "WW 14"
@@ -342,7 +342,7 @@
       "category": "Surface Tiles",
       "description": "Italian stone surfaces and premium wall covering systems",
       "id": "iww",
-      "logoUrl": "/brands/brand_5_2.png",
+      "logoUrl": "/brands/logos/iww_logo.png",
       "name": "IWW",
       "sequenceNumber": 15,
       "shortCode": "IW 15"
@@ -3223,7 +3223,7 @@
     },
     {
       "id": "prod-excel-129",
-      "name": "FIMA - Elizabeth/Epoque - Volume Control Valve 1/2”",
+      "name": "FIMA - Elizabeth/Epoque - Volume Control Valve 1/2\u201d",
       "brand": "Fima Carlo Frattini",
       "category": "Bathroom",
       "subcategory": "Fittings",
@@ -3399,7 +3399,7 @@
     },
     {
       "id": "prod-excel-137",
-      "name": "FIMA - Fluid - Volume Control Valve 1/2”",
+      "name": "FIMA - Fluid - Volume Control Valve 1/2\u201d",
       "brand": "Fima Carlo Frattini",
       "category": "Bathroom",
       "subcategory": "Fittings",
@@ -3971,7 +3971,7 @@
     },
     {
       "id": "prod-excel-163",
-      "name": "FIMA - Shower complements - Brass Holder With Water Connection 1/2”",
+      "name": "FIMA - Shower complements - Brass Holder With Water Connection 1/2\u201d",
       "brand": "Fima Carlo Frattini",
       "category": "Bathroom",
       "subcategory": "Fittings",
@@ -3993,7 +3993,7 @@
     },
     {
       "id": "prod-excel-164",
-      "name": "FIMA - Shower complements - Brass Shower Holder With Water Connection 1/2”",
+      "name": "FIMA - Shower complements - Brass Shower Holder With Water Connection 1/2\u201d",
       "brand": "Fima Carlo Frattini",
       "category": "Bathroom",
       "subcategory": "Fittings",
@@ -4103,7 +4103,7 @@
     },
     {
       "id": "prod-excel-169",
-      "name": "FIMA - Shower heads - Ceiling Mounted Bracket 300 Mm - 1/2”",
+      "name": "FIMA - Shower heads - Ceiling Mounted Bracket 300 Mm - 1/2\u201d",
       "brand": "Fima Carlo Frattini",
       "category": "Bathroom",
       "subcategory": "Fittings",
@@ -4301,7 +4301,7 @@
     },
     {
       "id": "prod-excel-178",
-      "name": "FIMA - Shower heads - Wall Mounted Bracket  350 Mm - 1/2”",
+      "name": "FIMA - Shower heads - Wall Mounted Bracket  350 Mm - 1/2\u201d",
       "brand": "Fima Carlo Frattini",
       "category": "Bathroom",
       "subcategory": "Fittings",
@@ -4345,7 +4345,7 @@
     },
     {
       "id": "prod-excel-180",
-      "name": "FIMA - Shower heads - Wall Mounted Bracket 350 Mm - 1/2”",
+      "name": "FIMA - Shower heads - Wall Mounted Bracket 350 Mm - 1/2\u201d",
       "brand": "Fima Carlo Frattini",
       "category": "Bathroom",
       "subcategory": "Fittings",
@@ -4785,7 +4785,7 @@
     },
     {
       "id": "prod-excel-200",
-      "name": "FIMA - So - Volume Control Valve 1/2”",
+      "name": "FIMA - So - Volume Control Valve 1/2\u201d",
       "brand": "Fima Carlo Frattini",
       "category": "Bathroom",
       "subcategory": "Fittings",
@@ -5027,7 +5027,7 @@
     },
     {
       "id": "prod-excel-211",
-      "name": "FIMA - Spillo Steel - Wall Mounted Bracket 350 Mm - 1/2”",
+      "name": "FIMA - Spillo Steel - Wall Mounted Bracket 350 Mm - 1/2\u201d",
       "brand": "Fima Carlo Frattini",
       "category": "Bathroom",
       "subcategory": "Fittings",
@@ -22273,7 +22273,7 @@
     },
     {
       "id": "prod-excel-1000",
-      "name": "MIRAGE - Rêve - Fumèe 9mm 120 x 240 PETTINATE",
+      "name": "MIRAGE - R\u00eave - Fum\u00e8e 9mm 120 x 240 PETTINATE",
       "brand": "Mirage",
       "category": "Tiles",
       "subcategory": "",
@@ -23585,7 +23585,7 @@
     },
     {
       "id": "prod-excel-1061",
-      "name": "⁠ WOW - GRACE - TEAL - MATT - 124914(W07)",
+      "name": "\u2060 WOW - GRACE - TEAL - MATT - 124914(W07)",
       "brand": "Mirage",
       "category": "Tiles",
       "subcategory": "",
@@ -23606,7 +23606,7 @@
     },
     {
       "id": "prod-excel-1062",
-      "name": "⁠MIRAGE - Viceversa - VV 06 - 120 x 278 cm - 6 mm",
+      "name": "\u2060MIRAGE - Viceversa - VV 06 - 120 x 278 cm - 6 mm",
       "brand": "Mirage",
       "category": "Tiles",
       "subcategory": "",
@@ -23975,7 +23975,7 @@
     },
     {
       "id": "cat-pdf-catalogo60grados",
-      "title": "60º Chevron & Wood-Stone Hybrid",
+      "title": "60\u00ba Chevron & Wood-Stone Hybrid",
       "fileName": "catalogo60Grados (1).pdf",
       "primaryFileName": "catalogo60Grados.pdf",
       "fileUrl": "/catalogs/catalogo60grados.pdf",
