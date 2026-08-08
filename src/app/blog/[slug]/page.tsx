@@ -128,11 +128,66 @@ export default function BlogDetail({ params }: PageProps) {
 
           {/* Formatted Article Body (Supports Rich Text HTML & Plain Text) */}
           {rawContent.includes("<") && rawContent.includes(">") ? (
-            <div
-              style={{ fontSize: article?.bodySize || fontSettings.articleBodySize || "0.9rem" }}
-              className="article-rich-content text-neutral-800 leading-relaxed font-normal space-y-4"
-              dangerouslySetInnerHTML={{ __html: rawContent }}
-            />
+            <>
+              <style jsx global>{`
+                .article-rich-content img {
+                  display: block;
+                  max-width: 100%;
+                  height: auto;
+                  margin: 1.5rem auto;
+                  transition: all 0.3s ease;
+                }
+                .article-rich-content img.img-float-left {
+                  float: left;
+                  margin: 0.5rem 1.5rem 1.5rem 0;
+                  max-width: 50%;
+                }
+                .article-rich-content img.img-float-right {
+                  float: right;
+                  margin: 0.5rem 0 1.5rem 1.5rem;
+                  max-width: 50%;
+                }
+                .article-rich-content img.img-center {
+                  margin: 1.5rem auto;
+                  clear: both;
+                }
+                .article-rich-content .pic-style-frame {
+                  border: 4px solid #ffffff;
+                  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+                  padding: 4px;
+                  background: #fff;
+                }
+                .article-rich-content .pic-style-rounded {
+                  border-radius: 14px;
+                  overflow: hidden;
+                }
+                .article-rich-content .pic-style-gold {
+                  border: 2px solid #80673f;
+                  box-shadow: 0 10px 30px rgba(128, 103, 63, 0.25);
+                  border-radius: 8px;
+                }
+                .article-rich-content .pic-style-shadow {
+                  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+                  border-radius: 6px;
+                }
+                .article-rich-content figure {
+                  margin: 1.5rem 0;
+                  text-align: center;
+                }
+                .article-rich-content figcaption {
+                  font-size: 0.825rem;
+                  color: #80673f;
+                  font-weight: 600;
+                  margin-top: 0.4rem;
+                  font-style: italic;
+                }
+              `}</style>
+              <div
+                style={{ fontSize: article?.bodySize || fontSettings.articleBodySize || "0.9rem" }}
+                className="article-rich-content text-neutral-800 leading-relaxed font-normal space-y-4"
+                dangerouslySetInnerHTML={{ __html: rawContent }}
+              />
+            </>
           ) : (
             <div className="article-body space-y-4">
               {blocks.map((block, idx) => {

@@ -5,7 +5,7 @@ import AdminNav from "@/components/AdminNav";
 import { BlogItem } from "@/lib/types";
 import { uploadFileWithCompression } from "@/lib/uploadHelper";
 
-// WORD-STYLE RICH TEXT EDITOR TOOLBAR COMPONENT
+// WORD-STYLE RICH TEXT EDITOR TOOLBAR COMPONENT WITH WORD PICTURE FORMATTING TOOLBAR
 function BlogRichTextEditor({
   value,
   onChange,
@@ -20,6 +20,19 @@ function BlogRichTextEditor({
   const [textColor, setTextColor] = useState("#80673f");
   const [highlightColor, setHighlightColor] = useState("#fef08a");
 
+  // Picture Formatting State for Selected Image
+  const [selectedImg, setSelectedImg] = useState<HTMLImageElement | null>(null);
+  const [showInsertImgModal, setShowInsertImgModal] = useState(false);
+  const [imgInput, setImgInput] = useState({
+    url: "",
+    style: "pic-style-rounded",
+    width: "100%",
+    height: "auto",
+    align: "img-center",
+    caption: "",
+  });
+  const [uploadingImg, setUploadingImg] = useState(false);
+
   // Sync initial content to contentEditable on load or change if out of sync
   useEffect(() => {
     if (editorRef.current && editorRef.current.innerHTML !== value) {
@@ -27,11 +40,25 @@ function BlogRichTextEditor({
     }
   }, [value]);
 
-  const execCmd = (command: string, arg: string | undefined = undefined) => {
-    document.execCommand(command, false, arg);
+  // Click handler to detect selected images inside editor
+  const handleEditorClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target && target.tagName === "IMG") {
+      setSelectedImg(target as HTMLImageElement);
+    } else {
+      setSelectedImg(null);
+    }
+  };
+
+  const syncContent = () => {
     if (editorRef.current) {
       onChange(editorRef.current.innerHTML);
     }
+  };
+
+  const execCmd = (command: string, arg: string | undefined = undefined) => {
+    document.execCommand(command, false, arg);
+    syncContent();
   };
 
   const handleApplyFontFamily = (family: string) => {
@@ -41,14 +68,13 @@ function BlogRichTextEditor({
 
   const handleApplyFontSize = (sizePx: string) => {
     setFontSize(sizePx);
-    // Wrap selection in a styled span with exact px size
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
       const range = selection.getRangeAt(0);
       const span = document.createElement("span");
       span.style.fontSize = sizePx;
       range.surroundContents(span);
-      if (editorRef.current) onChange(editorRef.current.innerHTML);
+      syncContent();
     } else {
       execCmd("fontSize", "4");
     }
@@ -64,9 +90,80 @@ function BlogRichTextEditor({
     execCmd("hiliteColor", color);
   };
 
+  // Picture Formatting Actions on Selected Image
+  const handleSetPictureStyle = (styleClass: string) => {
+    if (!selectedImg) return;
+    selectedImg.classList.remove("pic-style-frame", "pic-style-rounded", "pic-style-gold", "pic-style-shadow");
+    if (styleClass) selectedImg.classList.add(styleClass);
+    syncContent();
+  };
+
+  const handleSetPictureAlign = (alignClass: string) => {
+    if (!selectedImg) return;
+    selectedImg.classList.remove("img-float-left", "img-float-right", "img-center");
+    selectedImg.classList.add(alignClass);
+    syncContent();
+  };
+
+  const handleSetPictureWidth = (widthVal: string) => {
+    if (!selectedImg) return;
+    selectedImg.style.width = widthVal;
+    syncContent();
+  };
+
+  const handleSetPictureHeight = (heightVal: string) => {
+    if (!selectedImg) return;
+    selectedImg.style.height = heightVal;
+    syncContent();
+  };
+
+  const handleDeleteSelectedPicture = () => {
+    if (!selectedImg) return;
+    selectedImg.remove();
+    setSelectedImg(null);
+    syncContent();
+  };
+
+  // Insert New Image Modal Action
+  const handleInsertNewPicture = () => {
+    if (!imgInput.url) return alert("Please enter or upload an image URL.");
+    
+    const figHtml = `
+      <figure class="article-figure" style="text-align: center; margin: 1.5rem 0;">
+        <img src="${imgInput.url}" class="${imgInput.style} ${imgInput.align}" style="width: ${imgInput.width}; height: ${imgInput.height};" alt="${imgInput.caption || 'Article Image'}" />
+        ${imgInput.caption ? `<figcaption style="font-size: 0.825rem; color: #80673f; font-style: italic; margin-top: 0.4rem;">${imgInput.caption}</figcaption>` : ""}
+      </figure><p></p>
+    `;
+
+    if (editorRef.current) {
+      editorRef.current.focus();
+      document.execCommand("insertHTML", false, figHtml);
+      syncContent();
+    }
+    setShowInsertImgModal(false);
+    setImgInput({ url: "", style: "pic-style-rounded", width: "100%", height: "auto", align: "img-center", caption: "" });
+  };
+
+  const handleUploadInlineImg = async (file: File) => {
+    setUploadingImg(true);
+    try {
+      const res = await uploadFileWithCompression(file, "BlogBodyImages");
+      if (res.success && res.url) {
+        setImgInput({ ...imgInput, url: res.url });
+        alert("✅ Content image uploaded successfully!");
+      } else {
+        alert("❌ Image upload failed: " + (res.error || "Unknown error"));
+      }
+    } catch (e: any) {
+      alert("❌ Upload error: " + e.message);
+    } finally {
+      setUploadingImg(false);
+    }
+  };
+
   return (
     <div style={{ border: "1px solid #333", borderRadius: "8px", overflow: "hidden", background: "#141418" }}>
-      {/* WORD-STYLE TOOLBAR */}
+      {/* MAIN WORD-STYLE TEXT TOOLBAR */}
       <div
         style={{
           background: "#1e1e24",
@@ -109,121 +206,50 @@ function BlogRichTextEditor({
 
         <span style={{ color: "#444" }}>|</span>
 
-        {/* Text Formatting Buttons: Bold, Italic, Underline, Strikethrough */}
-        <button
-          type="button"
-          onClick={() => execCmd("bold")}
-          title="Bold (Ctrl+B)"
-          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontWeight: 900, cursor: "pointer" }}
-        >
-          B
-        </button>
-        <button
-          type="button"
-          onClick={() => execCmd("italic")}
-          title="Italic (Ctrl+I)"
-          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontStyle: "italic", cursor: "pointer" }}
-        >
-          I
-        </button>
-        <button
-          type="button"
-          onClick={() => execCmd("underline")}
-          title="Underline (Ctrl+U)"
-          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", textDecoration: "underline", cursor: "pointer" }}
-        >
-          U
-        </button>
-        <button
-          type="button"
-          onClick={() => execCmd("strikeThrough")}
-          title="Strikethrough"
-          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", textDecoration: "line-through", cursor: "pointer" }}
-        >
-          S
-        </button>
+        {/* Text Formatting Buttons */}
+        <button type="button" onClick={() => execCmd("bold")} title="Bold (Ctrl+B)" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontWeight: 900, cursor: "pointer" }}>B</button>
+        <button type="button" onClick={() => execCmd("italic")} title="Italic (Ctrl+I)" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontStyle: "italic", cursor: "pointer" }}>I</button>
+        <button type="button" onClick={() => execCmd("underline")} title="Underline (Ctrl+U)" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", textDecoration: "underline", cursor: "pointer" }}>U</button>
+        <button type="button" onClick={() => execCmd("strikeThrough")} title="Strikethrough" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", textDecoration: "line-through", cursor: "pointer" }}>S</button>
 
         <span style={{ color: "#444" }}>|</span>
 
         {/* Text Color Picker */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.2rem" }} title="Text Color">
           <span style={{ fontSize: "0.75rem", color: "#aaa", fontWeight: 700 }}>A</span>
-          <input
-            type="color"
-            value={textColor}
-            onChange={(e) => handleApplyTextColor(e.target.value)}
-            style={{ width: "24px", height: "24px", padding: 0, border: "none", borderRadius: "4px", background: "none", cursor: "pointer" }}
-          />
+          <input type="color" value={textColor} onChange={(e) => handleApplyTextColor(e.target.value)} style={{ width: "24px", height: "24px", padding: 0, border: "none", borderRadius: "4px", background: "none", cursor: "pointer" }} />
         </div>
 
         {/* Highlight Color Picker */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.2rem" }} title="Highlight Text Color">
           <span style={{ fontSize: "0.75rem", color: "#aaa", fontWeight: 700 }}>🖍️</span>
-          <input
-            type="color"
-            value={highlightColor}
-            onChange={(e) => handleApplyHighlightColor(e.target.value)}
-            style={{ width: "24px", height: "24px", padding: 0, border: "none", borderRadius: "4px", background: "none", cursor: "pointer" }}
-          />
+          <input type="color" value={highlightColor} onChange={(e) => handleApplyHighlightColor(e.target.value)} style={{ width: "24px", height: "24px", padding: 0, border: "none", borderRadius: "4px", background: "none", cursor: "pointer" }} />
         </div>
 
         <span style={{ color: "#444" }}>|</span>
 
         {/* List Formatting */}
-        <button
-          type="button"
-          onClick={() => execCmd("insertUnorderedList")}
-          title="Bullet List"
-          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem" }}
-        >
-          • Bullet List
-        </button>
-        <button
-          type="button"
-          onClick={() => execCmd("insertOrderedList")}
-          title="Numbered List"
-          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem" }}
-        >
-          1. Numbered List
-        </button>
+        <button type="button" onClick={() => execCmd("insertUnorderedList")} title="Bullet List" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem" }}>• Bullet List</button>
+        <button type="button" onClick={() => execCmd("insertOrderedList")} title="Numbered List" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem" }}>1. Numbered List</button>
 
         <span style={{ color: "#444" }}>|</span>
 
         {/* Alignments */}
-        <button
-          type="button"
-          onClick={() => execCmd("justifyLeft")}
-          title="Align Left"
-          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}
-        >
-          ⫷ Left
-        </button>
-        <button
-          type="button"
-          onClick={() => execCmd("justifyCenter")}
-          title="Align Center"
-          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}
-        >
-          ≡ Center
-        </button>
-        <button
-          type="button"
-          onClick={() => execCmd("justifyRight")}
-          title="Align Right"
-          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}
-        >
-          ⫸ Right
-        </button>
-        <button
-          type="button"
-          onClick={() => execCmd("justifyFull")}
-          title="Justify"
-          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}
-        >
-          ≣ Justify
-        </button>
+        <button type="button" onClick={() => execCmd("justifyLeft")} title="Align Left" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}>⫷ Left</button>
+        <button type="button" onClick={() => execCmd("justifyCenter")} title="Align Center" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}>≡ Center</button>
+        <button type="button" onClick={() => execCmd("justifyRight")} title="Align Right" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}>⫸ Right</button>
+        <button type="button" onClick={() => execCmd("justifyFull")} title="Justify" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}>≣ Justify</button>
 
         <span style={{ color: "#444" }}>|</span>
+
+        {/* WORD PICTURE INSERT BUTTON */}
+        <button
+          type="button"
+          onClick={() => setShowInsertImgModal(true)}
+          style={{ padding: "0.35rem 0.8rem", background: "#059669", color: "#fff", border: "none", borderRadius: "4px", fontWeight: 800, cursor: "pointer", fontSize: "0.8rem" }}
+        >
+          🖼️ + Insert Picture
+        </button>
 
         {/* Code / Visual View Toggle */}
         <button
@@ -234,6 +260,216 @@ function BlogRichTextEditor({
           {showRawHtml ? "📝 Visual Editor" : "💻 Edit HTML Code"}
         </button>
       </div>
+
+      {/* MICROSOFT WORD PICTURE FORMAT TOOLBAR (Appears when any image inside article is clicked!) */}
+      {selectedImg && (
+        <div
+          style={{
+            background: "linear-gradient(90deg, #1e293b 0%, #0f172a 100%)",
+            borderBottom: "2px solid #38bdf8",
+            padding: "0.6rem 1rem",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "0.8rem",
+            alignItems: "center",
+            boxShadow: "inset 0 -2px 10px rgba(0,0,0,0.5)",
+          }}
+        >
+          <span style={{ fontSize: "0.8rem", fontWeight: 900, color: "#38bdf8", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "0.3rem" }}>
+            📷 Picture Format:
+          </span>
+
+          {/* Picture Frame / Border Style */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+            <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Style:</span>
+            {[
+              { label: "Clean", value: "" },
+              { label: "Frame", value: "pic-style-frame" },
+              { label: "Rounded", value: "pic-style-rounded" },
+              { label: "Gold Frame", value: "pic-style-gold" },
+              { label: "Shadow Card", value: "pic-style-shadow" },
+            ].map((st) => (
+              <button
+                key={st.value}
+                type="button"
+                onClick={() => handleSetPictureStyle(st.value)}
+                style={{
+                  padding: "0.25rem 0.5rem",
+                  fontSize: "0.75rem",
+                  background: selectedImg.classList.contains(st.value) ? "#0284c7" : "#1e293b",
+                  color: "#fff",
+                  border: "1px solid #475569",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                }}
+              >
+                {st.label}
+              </button>
+            ))}
+          </div>
+
+          <span style={{ color: "#475569" }}>|</span>
+
+          {/* Picture Wrap & Alignment */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+            <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Position:</span>
+            <button type="button" onClick={() => handleSetPictureAlign("img-float-left")} style={{ padding: "0.25rem 0.5rem", fontSize: "0.75rem", background: "#1e293b", color: "#fff", border: "1px solid #475569", borderRadius: "4px", cursor: "pointer" }}>
+              ⫷ Float Left (Text Wraps)
+            </button>
+            <button type="button" onClick={() => handleSetPictureAlign("img-center")} style={{ padding: "0.25rem 0.5rem", fontSize: "0.75rem", background: "#1e293b", color: "#fff", border: "1px solid #475569", borderRadius: "4px", cursor: "pointer" }}>
+              ≡ Center
+            </button>
+            <button type="button" onClick={() => handleSetPictureAlign("img-float-right")} style={{ padding: "0.25rem 0.5rem", fontSize: "0.75rem", background: "#1e293b", color: "#fff", border: "1px solid #475569", borderRadius: "4px", cursor: "pointer" }}>
+              ⫸ Float Right (Text Wraps)
+            </button>
+          </div>
+
+          <span style={{ color: "#475569" }}>|</span>
+
+          {/* Picture Width & Height Controls */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+            <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Width:</span>
+            <select
+              value={selectedImg.style.width || "100%"}
+              onChange={(e) => handleSetPictureWidth(e.target.value)}
+              style={{ padding: "0.2rem 0.4rem", background: "#0f172a", color: "#fff", border: "1px solid #475569", borderRadius: "4px", fontSize: "0.75rem" }}
+            >
+              <option value="100%">100% (Full Width)</option>
+              <option value="75%">75%</option>
+              <option value="50%">50% (Half Width)</option>
+              <option value="300px">300px</option>
+              <option value="400px">400px</option>
+            </select>
+
+            <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Height:</span>
+            <select
+              value={selectedImg.style.height || "auto"}
+              onChange={(e) => handleSetPictureHeight(e.target.value)}
+              style={{ padding: "0.2rem 0.4rem", background: "#0f172a", color: "#fff", border: "1px solid #475569", borderRadius: "4px", fontSize: "0.75rem" }}
+            >
+              <option value="auto">Auto</option>
+              <option value="200px">200px</option>
+              <option value="300px">300px</option>
+              <option value="400px">400px</option>
+            </select>
+          </div>
+
+          <span style={{ color: "#475569" }}>|</span>
+
+          {/* Delete Picture Button */}
+          <button
+            type="button"
+            onClick={handleDeleteSelectedPicture}
+            style={{ padding: "0.25rem 0.6rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "4px", cursor: "pointer", fontSize: "0.75rem", fontWeight: 700 }}
+          >
+            🗑️ Remove Picture
+          </button>
+        </div>
+      )}
+
+      {/* INSERT NEW PICTURE MODAL */}
+      {showInsertImgModal && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000, padding: "1rem" }}>
+          <div style={{ background: "#141418", border: "1px solid #38bdf8", borderRadius: "12px", width: "100%", maxWidth: "520px", padding: "1.8rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem" }}>
+              <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: 0, color: "#38bdf8" }}>🖼️ Insert Picture into Article</h3>
+              <button onClick={() => setShowInsertImgModal(false)} style={{ background: "none", border: "none", color: "#aaa", fontSize: "1.4rem", cursor: "pointer" }}>✕</button>
+            </div>
+
+            <div style={{ marginBottom: "1rem" }}>
+              <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Image URL</label>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <input
+                  type="text"
+                  placeholder="https://..."
+                  value={imgInput.url}
+                  onChange={(e) => setImgInput({ ...imgInput, url: e.target.value })}
+                  style={{ flex: 1, padding: "0.6rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="inlineImgFile"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) handleUploadInlineImg(e.target.files[0]);
+                  }}
+                />
+                <label
+                  htmlFor="inlineImgFile"
+                  style={{ padding: "0.6rem 0.9rem", background: "#2563eb", color: "#fff", borderRadius: "6px", fontSize: "0.8rem", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}
+                >
+                  {uploadingImg ? "⏳ Uploading..." : "💻 Pick File"}
+                </label>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Picture Style / Frame</label>
+                <select
+                  value={imgInput.style}
+                  onChange={(e) => setImgInput({ ...imgInput, style: e.target.value })}
+                  style={{ width: "100%", padding: "0.6rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                >
+                  <option value="">Clean Standard</option>
+                  <option value="pic-style-frame">Simple Frame (Border)</option>
+                  <option value="pic-style-rounded">Rounded Corners</option>
+                  <option value="pic-style-gold">Gold Luxury Border</option>
+                  <option value="pic-style-shadow">Shadow Card</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Position & Text Wrap</label>
+                <select
+                  value={imgInput.align}
+                  onChange={(e) => setImgInput({ ...imgInput, align: e.target.value })}
+                  style={{ width: "100%", padding: "0.6rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                >
+                  <option value="img-center">Center Inline</option>
+                  <option value="img-float-left">Float Left (Text Wraps Right)</option>
+                  <option value="img-float-right">Float Right (Text Wraps Left)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Initial Width</label>
+                <select
+                  value={imgInput.width}
+                  onChange={(e) => setImgInput({ ...imgInput, width: e.target.value })}
+                  style={{ width: "100%", padding: "0.6rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                >
+                  <option value="100%">100% (Full Width)</option>
+                  <option value="75%">75%</option>
+                  <option value="50%">50% (Half Width)</option>
+                  <option value="300px">300px</option>
+                  <option value="400px">400px</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Image Caption (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. NewTechWood Terrace Deck Mysore Road"
+                  value={imgInput.caption}
+                  onChange={(e) => setImgInput({ ...imgInput, caption: e.target.value })}
+                  style={{ width: "100%", padding: "0.6rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.8rem", marginTop: "1.2rem" }}>
+              <button type="button" onClick={() => setShowInsertImgModal(false)} style={{ padding: "0.6rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>Cancel</button>
+              <button type="button" onClick={handleInsertNewPicture} style={{ padding: "0.6rem 1.4rem", background: "#059669", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}>🖼️ Insert Picture</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* EDITING AREA */}
       {showRawHtml ? (
@@ -247,6 +483,7 @@ function BlogRichTextEditor({
         <div
           ref={editorRef}
           contentEditable
+          onClick={handleEditorClick}
           onInput={() => {
             if (editorRef.current) onChange(editorRef.current.innerHTML);
           }}
@@ -426,7 +663,7 @@ export default function AdminBlogsPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #222", paddingBottom: "1rem" }}>
           <div>
             <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>✍️ Blog Articles & Journal CMS</h1>
-            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Create, edit, format individual text sizes/styles with Word toolbar, rearrange order, and manage blog media.</p>
+            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Create, edit, format individual text/images with Word toolbar, rearrange order, and manage blog media.</p>
           </div>
           <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
             <button
@@ -714,7 +951,7 @@ export default function AdminBlogsPage() {
           </div>
         )}
 
-        {/* CREATE / EDIT BLOG FORM WITH WORD-STYLE RICH TEXT EDITOR TOOLBAR */}
+        {/* CREATE / EDIT BLOG FORM WITH WORD-STYLE RICH TEXT & WORD PICTURE FORMATTING TOOLBAR */}
         {editing && (
           <form onSubmit={handleSave} style={{ background: "#141418", padding: "2rem", borderRadius: "10px", border: "1px solid #333", marginBottom: "2rem" }}>
             <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#6366f1", marginBottom: "1.2rem" }}>
@@ -851,10 +1088,10 @@ export default function AdminBlogsPage() {
               </div>
             </div>
 
-            {/* WORD-STYLE RICH TEXT EDITOR TOOLBAR */}
+            {/* WORD-STYLE RICH TEXT EDITOR & PICTURE FORMATTING TOOLBAR */}
             <div style={{ marginBottom: "1.5rem" }}>
               <label style={{ display: "block", fontSize: "0.9rem", color: "#d4af37", fontWeight: 800, marginBottom: "0.4rem" }}>
-                📝 Article Body Text & Rich Content Formatting (Word-Style Toolbar) *
+                📝 Article Text & Word Picture Formatting Toolbar *
               </label>
               <BlogRichTextEditor
                 value={editing.content || ""}
