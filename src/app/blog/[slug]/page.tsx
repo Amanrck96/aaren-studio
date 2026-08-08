@@ -91,16 +91,16 @@ export default function BlogDetail({ params }: PageProps) {
           <span className="text-xs font-bold uppercase tracking-widest text-[#80673f]">
             {displayCategory} • {displayDate}
           </span>
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight mt-4 mb-8 leading-tight text-[#80673f]">
+          <h1 className="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mt-3 mb-6 leading-tight text-[#80673f]">
             {displayTitle}
           </h1>
 
-          <div className="w-full aspect-[21/9] bg-neutral-100 overflow-hidden mb-12 rounded-lg border border-neutral-200 shadow-lg">
+          <div className="w-full aspect-[21/9] bg-neutral-100 overflow-hidden mb-10 rounded-lg border border-neutral-200 shadow-md">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={displayImage} alt={displayTitle} className="w-full h-full object-cover" />
           </div>
 
-          <div className="text-neutral-800 text-lg leading-relaxed font-normal whitespace-pre-line mb-12 space-y-4">
+          <div className="text-neutral-800 text-base md:text-lg leading-relaxed font-normal whitespace-pre-line mb-12 space-y-4">
             {displayContent}
           </div>
         </article>

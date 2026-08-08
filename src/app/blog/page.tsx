@@ -241,37 +241,37 @@ export default function BlogPage() {
         }
 
         .blog-tag {
-          font-size: 1.1rem;
+          font-size: 0.85rem;
           font-weight: 700;
-          letter-spacing: 0.12em;
+          letter-spacing: 0.15em;
           color: #80673f;
           display: block;
-          margin-bottom: 1.6rem;
+          margin-bottom: 1rem;
         }
 
         .blog-title {
-          font-size: clamp(4rem, 11vw, 15rem);
+          font-size: clamp(2.4rem, 5.5vw, 4.2rem);
           font-weight: 800;
-          letter-spacing: -0.05em;
-          line-height: 0.9;
+          letter-spacing: -0.03em;
+          line-height: 1.05;
           color: #80673f;
           text-transform: uppercase;
-          margin-bottom: 2.4rem;
+          margin-bottom: 1.5rem;
         }
 
         .blog-desc {
-          font-size: clamp(1.5rem, 2.2vw, 2rem);
-          line-height: 1.5;
+          font-size: clamp(1rem, 1.4vw, 1.25rem);
+          line-height: 1.6;
           color: rgba(0,0,0,0.7);
-          max-width: 72rem;
-          margin-bottom: 4rem;
+          max-width: 54rem;
+          margin-bottom: 3rem;
           font-weight: 400;
         }
 
         .blog-controls {
           display: flex;
           flex-direction: column;
-          gap: 2rem;
+          gap: 1.5rem;
         }
 
         @media (min-width: 1024px) {
@@ -292,9 +292,9 @@ export default function BlogPage() {
           background: #f4f5f7;
           border: 1px solid rgba(0,0,0,0.15);
           color: #111111;
-          padding: 1.2rem 2rem;
+          padding: 0.75rem 1.4rem;
           border-radius: 999px;
-          font-size: 1.3rem;
+          font-size: 0.95rem;
           outline: none;
         }
 
@@ -304,7 +304,7 @@ export default function BlogPage() {
 
         .search-clear {
           position: absolute;
-          right: 1.6rem;
+          right: 1.2rem;
           top: 50%;
           transform: translateY(-50%);
           background: none;
@@ -315,7 +315,7 @@ export default function BlogPage() {
 
         .category-pills {
           display: flex;
-          gap: 0.8rem;
+          gap: 0.6rem;
           flex-wrap: wrap;
         }
 
@@ -323,9 +323,9 @@ export default function BlogPage() {
           background: #f0f2f5;
           border: 1px solid rgba(0,0,0,0.12);
           color: #333333;
-          padding: 0.8rem 1.8rem;
+          padding: 0.55rem 1.4rem;
           border-radius: 999px;
-          font-size: 1.2rem;
+          font-size: 0.85rem;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.25s ease;
@@ -344,7 +344,7 @@ export default function BlogPage() {
 
         /* Featured Section */
         .featured-post-section {
-          margin-bottom: 6rem;
+          margin-bottom: 5rem;
         }
 
         .featured-card {
@@ -371,7 +371,7 @@ export default function BlogPage() {
 
         .featured-fig {
           position: relative;
-          min-height: 380px;
+          min-height: 340px;
           background: #f4f5f7;
         }
 
@@ -386,30 +386,30 @@ export default function BlogPage() {
 
         .featured-badge {
           position: absolute;
-          top: 2rem;
-          left: 2rem;
+          top: 1.5rem;
+          left: 1.5rem;
           background: #80673f;
           color: #ffffff;
-          font-size: 1rem;
+          font-size: 0.75rem;
           font-weight: 800;
           letter-spacing: 0.1em;
-          padding: 0.6rem 1.4rem;
+          padding: 0.4rem 1rem;
           border-radius: 0.4rem;
         }
 
         .featured-content {
-          padding: 4rem 3.2rem;
+          padding: 3rem 2.4rem;
           display: flex;
           flex-direction: column;
           justify-content: center;
-          gap: 1.6rem;
+          gap: 1.2rem;
         }
 
         .meta-line {
           display: flex;
-          gap: 0.8rem;
+          gap: 0.6rem;
           align-items: center;
-          font-size: 1.1rem;
+          font-size: 0.8rem;
           font-weight: 700;
           letter-spacing: 0.08em;
           color: #80673f;
@@ -417,38 +417,38 @@ export default function BlogPage() {
         }
 
         .featured-content h2 {
-          font-size: clamp(2.4rem, 3.5vw, 4rem);
+          font-size: clamp(1.6rem, 2.5vw, 2.4rem);
           font-weight: 800;
-          line-height: 1.1;
+          line-height: 1.25;
           color: #80673f;
           margin: 0;
           text-transform: uppercase;
         }
 
         .featured-content p {
-          font-size: 1.5rem;
+          font-size: 1rem;
           line-height: 1.6;
-          color: #222222;
+          color: #444444;
           font-weight: 400;
         }
 
         .read-more-link {
-          font-size: 1.2rem;
+          font-size: 0.85rem;
           font-weight: 800;
           letter-spacing: 0.1em;
           color: #80673f;
-          margin-top: 1rem;
+          margin-top: 0.5rem;
         }
 
         /* Posts Grid */
         .blog-grid-section {
-          margin-bottom: 8rem;
+          margin-bottom: 6rem;
         }
 
         .posts-grid {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 3.2rem;
+          gap: 2rem;
         }
 
         @media (min-width: 768px) {
@@ -486,7 +486,7 @@ export default function BlogPage() {
 
         .post-card__fig {
           position: relative;
-          height: 240px;
+          height: 220px;
           background: #f4f5f7;
           overflow: hidden;
         }
@@ -501,38 +501,38 @@ export default function BlogPage() {
         }
 
         .post-card__body {
-          padding: 2.4rem;
+          padding: 1.8rem;
           display: flex;
           flex-direction: column;
-          gap: 1.2rem;
+          gap: 0.9rem;
           flex: 1;
         }
 
         .post-title {
-          font-size: 1.8rem;
+          font-size: 1.25rem;
           font-weight: 700;
-          line-height: 1.3;
+          line-height: 1.35;
           color: #111111;
           margin: 0;
           text-transform: uppercase;
         }
 
         .post-summary {
-          font-size: 1.3rem;
+          font-size: 0.925rem;
           line-height: 1.6;
-          color: #333333;
+          color: #555555;
           font-weight: 400;
           margin: 0;
         }
 
         .post-footer {
           margin-top: auto;
-          padding-top: 1.6rem;
+          padding-top: 1.2rem;
           border-top: 1px solid rgba(0,0,0,0.08);
           display: flex;
           justify-content: space-between;
-          font-size: 1.1rem;
-          color: rgba(0,0,0,0.5);
+          font-size: 0.8rem;
+          color: #777777;
         }
 
         /* Newsletter */
