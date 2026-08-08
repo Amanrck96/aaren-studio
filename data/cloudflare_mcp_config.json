@@ -2,6 +2,9 @@
   "connectorId": "scl_FjvC9khywW8Gs3l1kj1z6g",
   "clientName": "aarenstudio",
   "clientId": "https://connect.vercel.com/connectors/scl_FjvC9khywW8Gs3l1kj1z6g",
+  "tokenId": "stk_FGqjViXvW3nT8rcJTNfeGs",
+  "tokenExpires": "2026-08-08T18:08:05Z",
+  "refreshTokenAvailable": true,
   "serverUrl": "https://mcp.cloudflare.com/mcp",
   "authorizationEndpoint": "https://mcp.cloudflare.com/authorize",
   "tokenEndpoint": "https://mcp.cloudflare.com/token",
@@ -16,5 +19,5 @@
   "responseTypesSupported": ["code"],
   "revocationEndpoint": "https://mcp.cloudflare.com/token",
   "tokenEndpointAuthMethodsSupported": ["client_secret_basic", "client_secret_post", "none"],
-  "updatedAt": "2026-08-08T17:51:27Z"
+  "updatedAt": "2026-08-08T17:53:27Z"
 }
