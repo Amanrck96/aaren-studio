@@ -1964,5 +1964,27 @@ export async function incrementCatalogDownloadCount(id: string): Promise<number>
   return count;
 }
 
+// BLOG SETTINGS STORE
+export async function getBlogSettingsStore(): Promise<any> {
+  const fbData = await fetchFromFirebaseCloudStore("blogSettings");
+  if (fbData && typeof fbData === "object" && !Array.isArray(fbData)) return fbData;
+  const json = readJsonStore();
+  if (json.blogSettings) return json.blogSettings;
+  return {
+    articleTitleSize: "1.75rem",
+    articleBodySize: "0.95rem",
+    cardTitleSize: "1.1rem",
+    cardBodySize: "0.85rem",
+  };
+}
+
+export async function saveBlogSettingsStore(settings: any): Promise<any> {
+  await syncToFirebaseCloudStore("blogSettings", settings);
+  const json = readJsonStore();
+  json.blogSettings = settings;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  return settings;
+}
+
 
 

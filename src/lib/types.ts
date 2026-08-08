@@ -72,6 +72,13 @@ export type BlogItem = {
   createdAt?: string;
 };
 
+export type BlogSettingsItem = {
+  articleTitleSize: string;
+  articleBodySize: string;
+  cardTitleSize: string;
+  cardBodySize: string;
+};
+
 export type MediaAsset = {
   id: string;
   fileName: string;

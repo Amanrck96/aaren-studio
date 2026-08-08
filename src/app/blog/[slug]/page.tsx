@@ -15,6 +15,10 @@ export default function BlogDetail({ params }: PageProps) {
 
   const [article, setArticle] = useState<BlogItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const [fontSettings, setFontSettings] = useState({
+    articleTitleSize: "1.75rem",
+    articleBodySize: "0.9rem",
+  });
 
   const [comments, setComments] = useState<{ author: string; text: string }[]>([
     { author: "Ethan Pierce", text: "Stunning analysis of outdoor materials and design performance." },
@@ -39,6 +43,15 @@ export default function BlogDetail({ params }: PageProps) {
       })
       .catch((e) => console.error(e))
       .finally(() => setLoading(false));
+
+    fetch("/api/blog-settings")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && json.data) {
+          setFontSettings(json.data);
+        }
+      })
+      .catch(() => {});
   }, [targetSlug]);
 
   const handleCommentSubmit = (e: React.FormEvent) => {
@@ -97,7 +110,11 @@ export default function BlogDetail({ params }: PageProps) {
             </span>
           </div>
 
-          <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight mt-2 mb-6 leading-tight text-[#80673f]">
+          {/* Dynamic Article Title Font Size */}
+          <h1
+            style={{ fontSize: fontSettings.articleTitleSize || "1.75rem" }}
+            className="font-extrabold tracking-tight mt-2 mb-6 leading-tight text-[#80673f]"
+          >
             {displayTitle}
           </h1>
 
@@ -106,7 +123,7 @@ export default function BlogDetail({ params }: PageProps) {
             <img src={displayImage} alt={displayTitle} className="w-full h-full object-cover" />
           </div>
 
-          {/* Formatted Article Body */}
+          {/* Dynamic Article Body Content Font Size */}
           <div className="article-body space-y-4">
             {blocks.map((block, idx) => {
               const isHeading =
@@ -117,14 +134,18 @@ export default function BlogDetail({ params }: PageProps) {
 
               if (isHeading) {
                 return (
-                  <h3 key={idx} className="text-lg md:text-xl font-bold text-neutral-900 mt-8 mb-3 leading-snug">
+                  <h3 key={idx} className="text-base md:text-lg font-bold text-neutral-900 mt-6 mb-2 leading-snug">
                     {block}
                   </h3>
                 );
               }
 
               return (
-                <p key={idx} className="text-sm md:text-base text-neutral-700 leading-relaxed font-normal whitespace-pre-line">
+                <p
+                  key={idx}
+                  style={{ fontSize: fontSettings.articleBodySize || "0.9rem" }}
+                  className="text-neutral-700 leading-relaxed font-normal whitespace-pre-line"
+                >
                   {block}
                 </p>
               );

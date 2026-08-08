@@ -10,6 +10,15 @@ export default function AdminBlogsPage() {
   const [editing, setEditing] = useState<Partial<BlogItem> | null>(null);
   const [uploading, setUploading] = useState(false);
 
+  // Blog Font Settings
+  const [showTypographyModal, setShowTypographyModal] = useState(false);
+  const [fontSettings, setFontSettings] = useState({
+    articleTitleSize: "1.75rem",
+    articleBodySize: "0.9rem",
+    cardTitleSize: "1.05rem",
+    cardBodySize: "0.85rem",
+  });
+
   const fetchBlogs = () => {
     fetch("/api/blogs")
       .then((res) => res.json())
@@ -18,8 +27,18 @@ export default function AdminBlogsPage() {
       });
   };
 
+  const fetchFontSettings = () => {
+    fetch("/api/blog-settings")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) setFontSettings(json.data);
+      })
+      .catch(() => {});
+  };
+
   useEffect(() => {
     fetchBlogs();
+    fetchFontSettings();
   }, []);
 
   const handleSave = async (e: React.FormEvent) => {
@@ -47,6 +66,23 @@ export default function AdminBlogsPage() {
       setEditing(null);
       fetchBlogs();
     } else alert("❌ Error saving blog: " + json.error);
+  };
+
+  const handleSaveFontSettings = async () => {
+    try {
+      const res = await fetch("/api/blog-settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fontSettings),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("✅ Font Size Preferences Saved System-Wide & Synced to Firebase!");
+        setShowTypographyModal(false);
+      } else alert("❌ Failed to save font settings.");
+    } catch (e: any) {
+      alert("❌ Error: " + e.message);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -81,15 +117,157 @@ export default function AdminBlogsPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #222", paddingBottom: "1rem" }}>
           <div>
             <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>✍️ Blog Articles & Journal CMS</h1>
-            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Create, edit, and manage all blog articles and text content for the website journal.</p>
+            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Create, edit, and manage all blog articles and customize font size display across the website.</p>
           </div>
-          <button
-            onClick={() => setEditing({ title: "", slug: "", content: "", category: "Surfaces & Architecture", author: "Aaren Studio", status: "Published" })}
-            style={{ padding: "0.7rem 1.4rem", background: "#6366f1", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}
-          >
-            + Create New Blog Post
-          </button>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <button
+              onClick={() => setShowTypographyModal(true)}
+              style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", fontWeight: 900, cursor: "pointer" }}
+            >
+              🎨 Font Size & Typography Settings
+            </button>
+            <button
+              onClick={() => setEditing({ title: "", slug: "", content: "", category: "Surfaces & Architecture", author: "Aaren Studio", status: "Published" })}
+              style={{ padding: "0.7rem 1.4rem", background: "#6366f1", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}
+            >
+              + Create New Blog Post
+            </button>
+          </div>
         </div>
+
+        {/* TYPOGRAPHY SETTINGS MODAL */}
+        {showTypographyModal && (
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
+            <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "600px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+                <div>
+                  <h2 style={{ fontSize: "1.4rem", fontWeight: 800, margin: 0, color: "#d4af37" }}>🎨 Blog Font Size & Text Scale Manager</h2>
+                  <p style={{ color: "#aaa", fontSize: "0.85rem", margin: "0.2rem 0 0" }}>Adjust and reduce/increase the font sizes for article titles, body paragraphs, and cards live!</p>
+                </div>
+                <button onClick={() => setShowTypographyModal(false)} style={{ background: "none", border: "none", color: "#aaa", fontSize: "1.5rem", cursor: "pointer" }}>✕</button>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", marginBottom: "1.5rem" }}>
+                {/* Article Title Font Size */}
+                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
+                  <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
+                    📰 Article Title Font Size (Default: 1.75rem / 28px)
+                  </label>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
+                    {[
+                      { label: "Compact (1.4rem / 22px)", value: "1.4rem" },
+                      { label: "Small (1.6rem / 25px)", value: "1.6rem" },
+                      { label: "Standard (1.75rem / 28px)", value: "1.75rem" },
+                      { label: "Medium (2.1rem / 33px)", value: "2.1rem" },
+                      { label: "Large (2.5rem / 40px)", value: "2.5rem" },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setFontSettings({ ...fontSettings, articleTitleSize: opt.value })}
+                        style={{
+                          padding: "0.4rem 0.8rem",
+                          borderRadius: "4px",
+                          border: fontSettings.articleTitleSize === opt.value ? "2px solid #d4af37" : "1px solid #333",
+                          background: fontSettings.articleTitleSize === opt.value ? "#80673f" : "#141418",
+                          color: "#fff",
+                          fontSize: "0.8rem",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    value={fontSettings.articleTitleSize}
+                    onChange={(e) => setFontSettings({ ...fontSettings, articleTitleSize: e.target.value })}
+                    style={{ width: "100%", padding: "0.5rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                  />
+                </div>
+
+                {/* Article Content Body Text Size */}
+                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
+                  <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
+                    📖 Article Body Paragraph Text Size (Default: 0.9rem / 14.4px)
+                  </label>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
+                    {[
+                      { label: "Very Small (0.8rem / 12.8px)", value: "0.8rem" },
+                      { label: "Compact (0.875rem / 14px)", value: "0.875rem" },
+                      { label: "Small / Standard (0.925rem / 14.8px)", value: "0.925rem" },
+                      { label: "Medium (1.05rem / 16.8px)", value: "1.05rem" },
+                      { label: "Large (1.2rem / 19px)", value: "1.2rem" },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setFontSettings({ ...fontSettings, articleBodySize: opt.value })}
+                        style={{
+                          padding: "0.4rem 0.8rem",
+                          borderRadius: "4px",
+                          border: fontSettings.articleBodySize === opt.value ? "2px solid #d4af37" : "1px solid #333",
+                          background: fontSettings.articleBodySize === opt.value ? "#80673f" : "#141418",
+                          color: "#fff",
+                          fontSize: "0.8rem",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    value={fontSettings.articleBodySize}
+                    onChange={(e) => setFontSettings({ ...fontSettings, articleBodySize: e.target.value })}
+                    style={{ width: "100%", padding: "0.5rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                  />
+                </div>
+
+                {/* Card Title Size */}
+                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
+                  <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
+                    🎴 Blog Card Title Font Size (Default: 1.05rem / 16.8px)
+                  </label>
+                  <input
+                    type="text"
+                    value={fontSettings.cardTitleSize}
+                    onChange={(e) => setFontSettings({ ...fontSettings, cardTitleSize: e.target.value })}
+                    style={{ width: "100%", padding: "0.5rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                  />
+                </div>
+
+                {/* LIVE PREVIEW BOX */}
+                <div style={{ background: "#ffffff", padding: "1.2rem", borderRadius: "8px", color: "#111" }}>
+                  <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#80673f", textTransform: "uppercase" }}>Live Preview</span>
+                  <h3 style={{ fontSize: fontSettings.articleTitleSize, fontWeight: 800, color: "#80673f", margin: "0.4rem 0 0.6rem", lineHeight: 1.25 }}>
+                    NewTechWood Decking: Creating Beautiful Outdoor Living Spaces
+                  </h3>
+                  <p style={{ fontSize: fontSettings.articleBodySize, lineHeight: 1.6, color: "#444", margin: 0 }}>
+                    NewTechWood represents the pinnacle of composite wood technology for luxury outdoor living spaces. Engineered with an advanced Ultrashield co-extrusion technology.
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+                <button type="button" onClick={() => setShowTypographyModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveFontSettings}
+                  style={{ padding: "0.7rem 1.5rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", fontWeight: 900, cursor: "pointer" }}
+                >
+                  💾 Save & Apply System-Wide
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {editing && (
           <form onSubmit={handleSave} style={{ background: "#141418", padding: "2rem", borderRadius: "10px", border: "1px solid #333", marginBottom: "2rem" }}>
