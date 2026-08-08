@@ -1229,6 +1229,14 @@ export async function getTeamStore(): Promise<TeamMemberItem[]> {
   return DEFAULT_TEAM;
 }
 
+export async function reorderTeamStore(teamList: TeamMemberItem[]): Promise<TeamMemberItem[]> {
+  await syncToFirebaseCloudStore("team", teamList);
+  const json = readJsonStore();
+  json.team = teamList;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  return teamList;
+}
+
 export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & { id?: string }) {
   // 1. Get complete current team (defaults + custom additions)
   let currentTeam = await getTeamStore();

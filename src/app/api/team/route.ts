@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getTeamStore, saveTeamMemberStore, deleteTeamMemberStore, getRoadmapStore, saveRoadmapStepStore, getTeamJoinBannerStore, saveTeamJoinBannerStore } from "@/lib/store";
+import { getTeamStore, saveTeamMemberStore, reorderTeamStore, deleteTeamMemberStore, getRoadmapStore, saveRoadmapStepStore, getTeamJoinBannerStore, saveTeamJoinBannerStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -29,7 +29,11 @@ export async function POST(request: Request) {
     const body = await request.json();
     const memberData = body.data || body;
 
-    if (body.type === "roadmap") {
+    if (body.type === "reorder") {
+      const teamList = body.team || memberData;
+      const saved = await reorderTeamStore(teamList);
+      return NextResponse.json({ success: true, data: saved });
+    } else if (body.type === "roadmap") {
       const saved = await saveRoadmapStepStore(memberData);
       return NextResponse.json({ success: true, data: saved });
     } else if (body.type === "joinBanner") {

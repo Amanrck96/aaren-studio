@@ -23,12 +23,18 @@ export default function AdminTeamPage() {
   const [showBannerForm, setShowBannerForm] = useState(false);
   const [savingBanner, setSavingBanner] = useState(false);
 
+  const [showRearrangeModal, setShowRearrangeModal] = useState(false);
+  const [rearrangeCategory, setRearrangeCategory] = useState("Leadership");
+  const [rearrangeList, setRearrangeList] = useState<TeamMemberItem[]>([]);
+
   const fetchTeam = () => {
     fetch("/api/team")
       .then((res) => res.json())
       .then((json) => {
         if (json && json.success) {
           const teamList = json.team || (json.data && json.data.team) || (Array.isArray(json.data) ? json.data : []);
+          // Sort team list by sequenceNumber ascending
+          teamList.sort((a: any, b: any) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
           setTeam(teamList);
           if (json.joinBanner || (json.data && json.data.joinBanner)) {
             setJoinBanner(json.joinBanner || json.data.joinBanner);
@@ -42,6 +48,49 @@ export default function AdminTeamPage() {
   useEffect(() => {
     fetchTeam();
   }, []);
+
+  // Quick 1-click Move Up / Move Down handler
+  const handleMoveMember = async (memberId: string, direction: "up" | "down") => {
+    const categoryMembers = team
+      .filter((m) => (m.category || "Leadership").toLowerCase() === selectedFilter.toLowerCase())
+      .sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+
+    const index = categoryMembers.findIndex((m) => m.id === memberId);
+    if (index === -1) return;
+    if (direction === "up" && index === 0) return;
+    if (direction === "down" && index === categoryMembers.length - 1) return;
+
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    const itemA = { ...categoryMembers[index] };
+    const itemB = { ...categoryMembers[targetIndex] };
+
+    // Swap sequence numbers
+    const seqA = itemA.sequenceNumber ?? (index + 1);
+    const seqB = itemB.sequenceNumber ?? (targetIndex + 1);
+
+    itemA.sequenceNumber = seqB;
+    itemB.sequenceNumber = seqA;
+
+    if (itemA.sequenceNumber === itemB.sequenceNumber) {
+      itemA.sequenceNumber = targetIndex + 1;
+      itemB.sequenceNumber = index + 1;
+    }
+
+    const updatedTeam = team.map((m) => {
+      if (m.id === itemA.id) return itemA;
+      if (m.id === itemB.id) return itemB;
+      return m;
+    });
+
+    updatedTeam.sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+    setTeam(updatedTeam);
+
+    await fetch("/api/team", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "reorder", team: updatedTeam }),
+    });
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,7 +158,16 @@ export default function AdminTeamPage() {
             <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.2rem 0", color: "#fff" }}>Our Team CMS</h1>
             <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Manage team members across Sales, Operations, Installation, and Support Staff, plus Join Banner settings.</p>
           </div>
-          <div style={{ display: "flex", gap: "1rem" }}>
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            <button
+              onClick={() => {
+                setRearrangeList([...team].sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99)));
+                setShowRearrangeModal(true);
+              }}
+              style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: "#fff", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
+            >
+              🔀 Rearrange Team Order
+            </button>
             <button
               onClick={() => setShowBannerForm(!showBannerForm)}
               style={{ padding: "0.7rem 1.4rem", background: "#1e2230", color: "#d4af37", border: "1px solid rgba(212,175,55,0.4)", borderRadius: "8px", fontWeight: 700, cursor: "pointer" }}
@@ -243,7 +301,7 @@ export default function AdminTeamPage() {
         {editing && (
           <form onSubmit={handleSave} style={{ background: "#12141c", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.2)", marginBottom: "2rem" }}>
             <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "1.2rem", color: "#d4af37" }}>{editing.id ? "Edit Team Member" : "Add Team Member"}</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "1rem" }}>
               <div>
                 <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Full Name *</label>
                 <input
@@ -283,6 +341,15 @@ export default function AdminTeamPage() {
                   value={editing.memberCode || ""}
                   onChange={(e) => setEditing({ ...editing, memberCode: e.target.value })}
                   style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#d4af37", fontWeight: 700, marginBottom: "0.3rem" }}>Sequence # (Position)</label>
+                <input
+                  type="number"
+                  value={editing.sequenceNumber ?? 1}
+                  onChange={(e) => setEditing({ ...editing, sequenceNumber: parseInt(e.target.value) || 1 })}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #d4af37", color: "#fff", borderRadius: "6px", fontWeight: 700 }}
                 />
               </div>
             </div>
@@ -370,6 +437,9 @@ export default function AdminTeamPage() {
                       <span style={{ fontSize: "0.75rem", background: "rgba(59, 130, 246, 0.2)", color: "#60a5fa", border: "1px solid rgba(59,130,246,0.4)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800 }}>
                         {m.category || "Sales"}
                       </span>
+                      <span style={{ fontSize: "0.75rem", background: "rgba(255, 255, 255, 0.1)", color: "#cbd5e1", padding: "0.2rem 0.5rem", borderRadius: "4px", fontWeight: 700 }}>
+                        Pos #{m.sequenceNumber || 1}
+                      </span>
                     </div>
                     <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0.3rem 0" }}>{m.name}</h3>
                     <div style={{ color: "#d4af37", fontSize: "0.88rem", fontWeight: 700 }}>{m.designation}</div>
@@ -378,7 +448,21 @@ export default function AdminTeamPage() {
                 <p style={{ color: "#cbd5e1", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1.2rem", fontWeight: 400 }}>{m.bio}</p>
               </div>
 
-              <div style={{ display: "flex", gap: "0.8rem", paddingTop: "0.8rem", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <div style={{ display: "flex", gap: "0.5rem", paddingTop: "0.8rem", borderTop: "1px solid rgba(255,255,255,0.06)", flexWrap: "wrap" }}>
+                <button
+                  onClick={() => handleMoveMember(m.id, "up")}
+                  title="Move Up in Sequence Order"
+                  style={{ padding: "0.45rem 0.8rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
+                >
+                  ⬆️ Up
+                </button>
+                <button
+                  onClick={() => handleMoveMember(m.id, "down")}
+                  title="Move Down in Sequence Order"
+                  style={{ padding: "0.45rem 0.8rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
+                >
+                  ⬇️ Down
+                </button>
                 <button onClick={() => setEditing(m)} style={{ padding: "0.45rem 1rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
                   Edit
                 </button>
@@ -389,6 +473,186 @@ export default function AdminTeamPage() {
             </div>
           ))}
         </div>
+
+        {/* REARRANGE TEAM ORDER MODAL */}
+        {showRearrangeModal && (
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "2rem" }}>
+            <div style={{ background: "#12141c", border: "1px solid rgba(59, 130, 246, 0.4)", borderRadius: "14px", width: "100%", maxWidth: "750px", maxHeight: "90vh", overflowY: "auto", padding: "2rem", color: "#fff", boxShadow: "0 20px 50px rgba(0,0,0,0.9)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1rem" }}>
+                <div>
+                  <h2 style={{ margin: 0, fontSize: "1.4rem", fontWeight: 800, color: "#60a5fa" }}>🔀 Rearrange Team Display Order</h2>
+                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.85rem", color: "#94a3b8" }}>Change sequence numbers or use ▲ Up / ▼ Down buttons to order team members.</p>
+                </div>
+                <button onClick={() => setShowRearrangeModal(false)} style={{ background: "none", border: "none", color: "#aaa", fontSize: "1.4rem", cursor: "pointer" }}>✕</button>
+              </div>
+
+              {/* Category selector within modal */}
+              <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
+                <button
+                  onClick={() => setRearrangeCategory("ALL")}
+                  style={{
+                    padding: "0.4rem 0.9rem",
+                    borderRadius: "6px",
+                    fontSize: "0.8rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    border: "1px solid " + (rearrangeCategory === "ALL" ? "#3b82f6" : "rgba(255,255,255,0.1)"),
+                    background: rearrangeCategory === "ALL" ? "#3b82f6" : "#0b0c10",
+                    color: "#fff",
+                  }}
+                >
+                  ALL CATEGORIES
+                </button>
+                {SUB_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setRearrangeCategory(cat)}
+                    style={{
+                      padding: "0.4rem 0.9rem",
+                      borderRadius: "6px",
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      border: "1px solid " + (rearrangeCategory === cat ? "#3b82f6" : "rgba(255,255,255,0.1)"),
+                      background: rearrangeCategory === cat ? "#3b82f6" : "#0b0c10",
+                      color: "#fff",
+                    }}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              {/* Reordering list */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", marginBottom: "2rem" }}>
+                {rearrangeList
+                  .filter((m) => rearrangeCategory === "ALL" || (m.category || "Leadership").toLowerCase() === rearrangeCategory.toLowerCase())
+                  .map((m, idx, arr) => (
+                    <div
+                      key={m.id || m.name}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        background: "#0b0c10",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        borderRadius: "8px",
+                        padding: "0.8rem 1.2rem",
+                        gap: "1rem",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <div style={{ width: "70px" }}>
+                          <label style={{ display: "block", fontSize: "0.7rem", color: "#60a5fa", fontWeight: 700 }}>POS #</label>
+                          <input
+                            type="number"
+                            value={m.sequenceNumber ?? (idx + 1)}
+                            onChange={(e) => {
+                              const newSeq = parseInt(e.target.value) || 1;
+                              setRearrangeList((prev) =>
+                                prev.map((item) => (item.id === m.id ? { ...item, sequenceNumber: newSeq } : item))
+                              );
+                            }}
+                            style={{ width: "100%", padding: "0.3rem 0.5rem", background: "#12141c", border: "1px solid #3b82f6", color: "#fff", borderRadius: "4px", fontWeight: 800 }}
+                          />
+                        </div>
+
+                        {m.photoUrl ? (
+                          <img src={m.photoUrl} alt={m.name} style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover", border: "1px solid #d4af37" }} />
+                        ) : (
+                          <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#d4af37", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "0.85rem" }}>
+                            {m.name ? m.name.substring(0, 2).toUpperCase() : "TM"}
+                          </div>
+                        )}
+
+                        <div>
+                          <div style={{ fontWeight: 800, color: "#fff", fontSize: "1rem" }}>{m.name}</div>
+                          <div style={{ fontSize: "0.8rem", color: "#94a3b8" }}>{m.designation} · <span style={{ color: "#d4af37" }}>{m.category}</span></div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", gap: "0.4rem" }}>
+                        <button
+                          type="button"
+                          disabled={idx === 0}
+                          onClick={() => {
+                            if (idx === 0) return;
+                            const newList = [...rearrangeList];
+                            const currentIdx = newList.findIndex((item) => item.id === m.id);
+                            const prevIdx = currentIdx - 1;
+                            if (prevIdx < 0) return;
+                            const temp = newList[currentIdx];
+                            newList[currentIdx] = newList[prevIdx];
+                            newList[prevIdx] = temp;
+                            // Re-assign sequence numbers
+                            newList.forEach((item, index) => {
+                              item.sequenceNumber = index + 1;
+                            });
+                            setRearrangeList(newList);
+                          }}
+                          style={{ padding: "0.4rem 0.8rem", background: idx === 0 ? "#222" : "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", cursor: idx === 0 ? "not-allowed" : "pointer", fontWeight: 700, fontSize: "0.8rem" }}
+                        >
+                          ▲ Up
+                        </button>
+                        <button
+                          type="button"
+                          disabled={idx === arr.length - 1}
+                          onClick={() => {
+                            if (idx === arr.length - 1) return;
+                            const newList = [...rearrangeList];
+                            const currentIdx = newList.findIndex((item) => item.id === m.id);
+                            const nextIdx = currentIdx + 1;
+                            if (nextIdx >= newList.length) return;
+                            const temp = newList[currentIdx];
+                            newList[currentIdx] = newList[nextIdx];
+                            newList[nextIdx] = temp;
+                            newList.forEach((item, index) => {
+                              item.sequenceNumber = index + 1;
+                            });
+                            setRearrangeList(newList);
+                          }}
+                          style={{ padding: "0.4rem 0.8rem", background: idx === arr.length - 1 ? "#222" : "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", cursor: idx === arr.length - 1 ? "not-allowed" : "pointer", fontWeight: 700, fontSize: "0.8rem" }}
+                        >
+                          ▼ Down
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "1rem" }}>
+                <button type="button" onClick={() => setShowRearrangeModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      // Sort rearrangeList by sequenceNumber before saving
+                      const sortedList = [...rearrangeList].sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+                      const res = await fetch("/api/team", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ type: "reorder", team: sortedList }),
+                      });
+                      const json = await res.json();
+                      if (json.success) {
+                        alert("Team display order saved successfully!");
+                        setShowRearrangeModal(false);
+                        fetchTeam();
+                      } else alert("Error: " + json.error);
+                    } catch (e: any) {
+                      alert("Error: " + e.message);
+                    }
+                  }}
+                  style={{ padding: "0.75rem 1.5rem", background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 800 }}
+                >
+                  💾 Save Team Display Order Live
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
