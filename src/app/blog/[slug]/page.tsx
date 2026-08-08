@@ -59,13 +59,13 @@ export default function BlogDetail({ params }: PageProps) {
     );
   }
 
-  const displayTitle = article?.title || targetSlug.replace(/-/g, " ").toUpperCase();
+  const displayTitle = article?.title || targetSlug.replace(/-/g, " ");
   const displayCategory = article?.category || "Outdoor Architecture & Surfaces";
   const displayDate = article?.publishDate || article?.createdAt || "August 2026";
   const displayImage =
     article?.featuredImage ||
     "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80";
-  const displayContent =
+  const rawContent =
     article?.content ||
     `NewTechWood represents the pinnacle of composite wood technology for luxury outdoor living spaces. Engineered with an advanced Ultrashield co-extrusion technology, NewTechWood delivers an ultra-durable outer shell that protects against moisture, UV rays, fading, scratches, and severe weather elements.
 
@@ -77,74 +77,101 @@ export default function BlogDetail({ params }: PageProps) {
 4. Hidden Fastener Installation System: Enjoy clean, seamless deck surfaces with concealed clip locking systems that hide screws and hardware.
 5. 25-Year Commercial Warranty: Backed by global testing certifications, guaranteeing long-term value for residential villas, hotels, pool decks, and commercial facades.`;
 
+  // Parse raw content string into structured paragraphs and headings
+  const blocks = rawContent.split("\n\n").map((block) => block.trim()).filter(Boolean);
+
   return (
-    <div className="bg-white text-neutral-900 pt-32 pb-24 px-6 md:px-12 min-h-screen">
-      <div className="max-w-4xl mx-auto">
+    <div className="bg-white text-neutral-900 pt-28 pb-24 px-6 md:px-12 min-h-screen">
+      <div className="max-w-3xl mx-auto">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-neutral-500 hover:text-[#80673f] transition-colors mb-12 text-sm uppercase tracking-widest font-bold"
+          className="inline-flex items-center gap-2 text-neutral-500 hover:text-[#80673f] transition-colors mb-8 text-xs uppercase tracking-widest font-bold"
         >
-          <ArrowLeft size={16} /> Back to journal
+          <ArrowLeft size={14} /> Back to journal
         </Link>
 
         <article className="mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#80673f]">
-            {displayCategory} • {displayDate}
-          </span>
-          <h1 className="text-3xl md:text-5xl font-extrabold uppercase tracking-tight mt-3 mb-6 leading-tight text-[#80673f]">
+          <div className="mb-3">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#80673f]">
+              {displayCategory} • {displayDate}
+            </span>
+          </div>
+
+          <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight mt-2 mb-6 leading-tight text-[#80673f]">
             {displayTitle}
           </h1>
 
-          <div className="w-full aspect-[21/9] bg-neutral-100 overflow-hidden mb-10 rounded-lg border border-neutral-200 shadow-md">
+          <div className="w-full aspect-[21/9] bg-neutral-100 overflow-hidden mb-10 rounded-lg border border-neutral-200 shadow-sm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={displayImage} alt={displayTitle} className="w-full h-full object-cover" />
           </div>
 
-          <div className="text-neutral-800 text-base md:text-lg leading-relaxed font-normal whitespace-pre-line mb-12 space-y-4">
-            {displayContent}
+          {/* Formatted Article Body */}
+          <div className="article-body space-y-4">
+            {blocks.map((block, idx) => {
+              const isHeading =
+                block.length < 65 &&
+                !block.endsWith(".") &&
+                !block.includes("\n") &&
+                !block.match(/^[0-9]\./);
+
+              if (isHeading) {
+                return (
+                  <h3 key={idx} className="text-lg md:text-xl font-bold text-neutral-900 mt-8 mb-3 leading-snug">
+                    {block}
+                  </h3>
+                );
+              }
+
+              return (
+                <p key={idx} className="text-sm md:text-base text-neutral-700 leading-relaxed font-normal whitespace-pre-line">
+                  {block}
+                </p>
+              );
+            })}
           </div>
         </article>
 
         {/* Comments Section */}
-        <div className="border-t border-neutral-200 pt-12">
-          <h3 className="text-2xl font-black uppercase tracking-tight mb-8 text-[#80673f]">
+        <div className="border-t border-neutral-200 pt-10">
+          <h3 className="text-lg font-bold uppercase tracking-wider mb-6 text-[#80673f]">
             COMMENTS ({comments.length})
           </h3>
 
-          <div className="space-y-6 mb-12">
+          <div className="space-y-4 mb-10">
             {comments.map((c, i) => (
-              <div key={i} className="bg-[#fdfbf7] border border-neutral-200 p-6 rounded-lg">
+              <div key={i} className="bg-[#fdfbf7] border border-neutral-200 p-5 rounded-lg">
                 <span className="text-xs font-bold uppercase tracking-wider text-[#80673f]">{c.author}</span>
-                <p className="text-neutral-800 text-sm mt-2 font-normal">{c.text}</p>
+                <p className="text-neutral-800 text-sm mt-1 font-normal">{c.text}</p>
               </div>
             ))}
           </div>
 
-          <form onSubmit={handleCommentSubmit} className="space-y-6 bg-[#fdfbf7] border border-neutral-200 p-8 rounded-lg">
-            <h4 className="text-lg font-bold uppercase text-[#80673f]">Add a Comment</h4>
+          <form onSubmit={handleCommentSubmit} className="space-y-5 bg-[#fdfbf7] border border-neutral-200 p-6 rounded-lg">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-[#80673f]">Add a Comment</h4>
             <div>
-              <label className="block text-xs uppercase tracking-wider font-bold mb-2 text-neutral-700">Name</label>
+              <label className="block text-xs uppercase tracking-wider font-bold mb-1.5 text-neutral-700">Name</label>
               <input
                 type="text"
                 required
                 value={newComment.author}
                 onChange={(e) => setNewComment({ ...newComment, author: e.target.value })}
-                className="w-full bg-white border border-neutral-300 p-4 text-neutral-900 text-sm outline-none focus:border-[#80673f] rounded"
+                className="w-full bg-white border border-neutral-300 p-3 text-neutral-900 text-sm outline-none focus:border-[#80673f] rounded"
               />
             </div>
             <div>
-              <label className="block text-xs uppercase tracking-wider font-bold mb-2 text-neutral-700">Message</label>
+              <label className="block text-xs uppercase tracking-wider font-bold mb-1.5 text-neutral-700">Message</label>
               <textarea
-                rows={4}
+                rows={3}
                 required
                 value={newComment.text}
                 onChange={(e) => setNewComment({ ...newComment, text: e.target.value })}
-                className="w-full bg-white border border-neutral-300 p-4 text-neutral-900 text-sm outline-none focus:border-[#80673f] rounded"
+                className="w-full bg-white border border-neutral-300 p-3 text-neutral-900 text-sm outline-none focus:border-[#80673f] rounded"
               />
             </div>
             <button
               type="submit"
-              className="px-8 py-4 bg-[#80673f] text-white font-bold uppercase tracking-wider text-xs hover:bg-[#6a5431] transition-colors rounded-full"
+              className="px-6 py-3 bg-[#80673f] text-white font-bold uppercase tracking-wider text-xs hover:bg-[#6a5431] transition-colors rounded-full"
             >
               Post Comment
             </button>
