@@ -259,3 +259,25 @@ export const DEFAULT_SETTINGS: SiteSettingsItem = {
   ],
   copyrightText: "AAREN © 2026. All rights reserved.",
 };
+
+export type CatalogSettingsItem = {
+  modalBgColor: string;
+  modalTextColor: string;
+  cardBgColor: string;
+  cardTextColor: string;
+  badgeText: string;
+  buttonText: string;
+  modalTitle: string;
+  modalSubtext: string;
+};
+
+export const DEFAULT_CATALOG_SETTINGS: CatalogSettingsItem = {
+  modalBgColor: "linear-gradient(145deg, #181920 0%, #0b0c10 100%)",
+  modalTextColor: "#ffffff",
+  cardBgColor: "#ffffff",
+  cardTextColor: "#0f172a",
+  badgeText: "OFFICIAL CATALOGUE",
+  buttonText: "View Catalog ↗",
+  modalTitle: "Catalogue Enquiry",
+  modalSubtext: "Submit your details below to view on-screen digital access for this official architectural specification PDF.",
+};

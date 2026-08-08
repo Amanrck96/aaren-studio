@@ -112,7 +112,7 @@ export default function BlogPage() {
             Perspectives on spatial design, material engineering, digital architecture, and bespoke craftsmanship from the Aaren Studio team.
           </p>
 
-          {/* Search + Categories */}
+          {/* Search */}
           <div className="blog-controls">
             <div className="search-box">
               <input
@@ -127,18 +127,6 @@ export default function BlogPage() {
                   ✕
                 </button>
               )}
-            </div>
-
-            <div className="category-pills">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`cat-pill ${selectedCategory === cat ? "is-active" : ""}`}
-                >
-                  {cat}
-                </button>
-              ))}
             </div>
           </div>
         </header>

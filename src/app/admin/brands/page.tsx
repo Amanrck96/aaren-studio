@@ -34,8 +34,30 @@ export default function AdminBrandsPage() {
     catalogPdfUrl: "",
   });
 
+  const [showCatalogThemeModal, setShowCatalogThemeModal] = useState(false);
+  const [catalogSettings, setCatalogSettings] = useState<any>({
+    modalBgColor: "linear-gradient(145deg, #181920 0%, #0b0c10 100%)",
+    modalTextColor: "#ffffff",
+    cardBgColor: "#ffffff",
+    cardTextColor: "#0f172a",
+    badgeText: "OFFICIAL CATALOGUE",
+    buttonText: "View Catalog ↗",
+    modalTitle: "Catalogue Enquiry",
+    modalSubtext: "Submit your details below to view on-screen digital access for this official specification PDF.",
+  });
+
+  const fetchCatalogSettings = () => {
+    fetch("/api/catalog-settings")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) setCatalogSettings(json.data);
+      })
+      .catch(() => {});
+  };
+
   useEffect(() => {
     fetchBrands();
+    fetchCatalogSettings();
   }, []);
 
   async function fetchBrands() {
@@ -154,7 +176,13 @@ export default function AdminBrandsPage() {
             <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.3rem 0" }}>Brand Section Manager</h1>
             <p style={{ color: "#aaa", fontSize: "0.95rem" }}>Add, edit, or remove partner brands, logos, short codes (SF 01), sequence, and PDF catalogs (via Google Drive links or computer upload).</p>
           </div>
-          <div style={{ display: "flex", gap: "0.8rem" }}>
+          <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap" }}>
+            <button
+              onClick={() => setShowCatalogThemeModal(true)}
+              style={{ padding: "0.8rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 800 }}
+            >
+              🎨 Catalog Theme & Modal Settings
+            </button>
             <button
               onClick={() => setShowBulkPdfModal(true)}
               style={{ padding: "0.8rem 1.4rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 700 }}
@@ -465,6 +493,151 @@ export default function AdminBrandsPage() {
                 </button>
                 <button onClick={handleSaveBulkPdf} style={{ padding: "0.75rem 1.5rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 700 }}>
                   💾 Save All PDF Catalogs Live
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CATALOG THEME & MODAL SETTINGS MODAL */}
+        {showCatalogThemeModal && (
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "2rem" }}>
+            <div style={{ background: "#181920", border: "1px solid rgba(212,175,55,0.4)", borderRadius: "12px", width: "100%", maxWidth: "650px", maxHeight: "90vh", overflowY: "auto", padding: "2rem", color: "#fff", boxShadow: "0 20px 50px rgba(0,0,0,0.8)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1rem" }}>
+                <h2 style={{ margin: 0, fontSize: "1.4rem", fontWeight: 800, color: "#d4af37" }}>🎨 Catalog Theme & Modal Settings</h2>
+                <button onClick={() => setShowCatalogThemeModal(false)} style={{ background: "none", border: "none", color: "#aaa", fontSize: "1.4rem", cursor: "pointer" }}>✕</button>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", marginBottom: "2rem" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#cbd5e1", fontWeight: 600, marginBottom: "0.4rem" }}>
+                    Badge Text (e.g. OFFICIAL CATALOGUE, SPECIFICATION PDF)
+                  </label>
+                  <input
+                    type="text"
+                    value={catalogSettings.badgeText}
+                    onChange={(e) => setCatalogSettings({ ...catalogSettings, badgeText: e.target.value })}
+                    style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.95rem" }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#cbd5e1", fontWeight: 600, marginBottom: "0.4rem" }}>
+                    Button Text (e.g. View Catalog ↗, Open Specification)
+                  </label>
+                  <input
+                    type="text"
+                    value={catalogSettings.buttonText}
+                    onChange={(e) => setCatalogSettings({ ...catalogSettings, buttonText: e.target.value })}
+                    style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.95rem" }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#cbd5e1", fontWeight: 600, marginBottom: "0.4rem" }}>
+                    Modal Popup Header Title
+                  </label>
+                  <input
+                    type="text"
+                    value={catalogSettings.modalTitle}
+                    onChange={(e) => setCatalogSettings({ ...catalogSettings, modalTitle: e.target.value })}
+                    style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.95rem" }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#cbd5e1", fontWeight: 600, marginBottom: "0.4rem" }}>
+                    Modal Subtitle Description
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={catalogSettings.modalSubtext}
+                    onChange={(e) => setCatalogSettings({ ...catalogSettings, modalSubtext: e.target.value })}
+                    style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.9rem", resize: "vertical" }}
+                  />
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#cbd5e1", fontWeight: 600, marginBottom: "0.4rem" }}>
+                      Modal Background Color / Gradient
+                    </label>
+                    <input
+                      type="text"
+                      value={catalogSettings.modalBgColor}
+                      onChange={(e) => setCatalogSettings({ ...catalogSettings, modalBgColor: e.target.value })}
+                      placeholder="#181920 or linear-gradient(...)"
+                      style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.9rem" }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#cbd5e1", fontWeight: 600, marginBottom: "0.4rem" }}>
+                      Modal Text Color
+                    </label>
+                    <input
+                      type="text"
+                      value={catalogSettings.modalTextColor}
+                      onChange={(e) => setCatalogSettings({ ...catalogSettings, modalTextColor: e.target.value })}
+                      placeholder="#ffffff or #0f172a"
+                      style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.9rem" }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#cbd5e1", fontWeight: 600, marginBottom: "0.4rem" }}>
+                      Card Background Color
+                    </label>
+                    <input
+                      type="text"
+                      value={catalogSettings.cardBgColor}
+                      onChange={(e) => setCatalogSettings({ ...catalogSettings, cardBgColor: e.target.value })}
+                      placeholder="#ffffff or #12141f"
+                      style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.9rem" }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#cbd5e1", fontWeight: 600, marginBottom: "0.4rem" }}>
+                      Card Text Color
+                    </label>
+                    <input
+                      type="text"
+                      value={catalogSettings.cardTextColor}
+                      onChange={(e) => setCatalogSettings({ ...catalogSettings, cardTextColor: e.target.value })}
+                      placeholder="#0f172a or #ffffff"
+                      style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.9rem" }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "1rem" }}>
+                <button type="button" onClick={() => setShowCatalogThemeModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await fetch("/api/catalog-settings", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(catalogSettings),
+                      });
+                      const json = await res.json();
+                      if (json.success) {
+                        alert("Catalog Theme & Modal Settings saved successfully!");
+                        setShowCatalogThemeModal(false);
+                      } else alert("Error: " + json.error);
+                    } catch (e: any) {
+                      alert("Error saving: " + e.message);
+                    }
+                  }}
+                  style={{ padding: "0.75rem 1.5rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 800 }}
+                >
+                  💾 Save Settings Live
                 </button>
               </div>
             </div>

@@ -213,7 +213,7 @@ export default function CatalogsPage() {
                         {cat.brand}
                       </span>
                       <span style={{ padding: "0.3rem 0.75rem", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", color: "#fbbf24", borderRadius: "12px", fontSize: "0.72rem", fontWeight: 800, border: "1px solid rgba(251,191,36,0.3)" }}>
-                        🔒 Locked PDF
+                        OFFICIAL CATALOGUE
                       </span>
                     </div>
 
@@ -272,8 +272,7 @@ export default function CatalogsPage() {
                         transition: "all 0.2s ease",
                       }}
                     >
-                      <span>🔒 View PDF Catalog</span>
-                      <span style={{ fontSize: "0.8rem", opacity: 0.8 }}>(Enquiry Required)</span>
+                      <span>View Catalog ↗</span>
                     </button>
                   </div>
                 </div>

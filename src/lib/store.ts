@@ -21,7 +21,9 @@ import {
   SeoItem,
   CustomPageItem,
   PdfCatalogItem,
+  CatalogSettingsItem,
   DEFAULT_SETTINGS,
+  DEFAULT_CATALOG_SETTINGS,
 } from "./types";
 
 export * from "./types";
@@ -661,6 +663,29 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
     });
   } catch (e) {}
 
+  return updated;
+}
+
+// CATALOG SETTINGS STORE
+export async function getCatalogSettingsStore(): Promise<CatalogSettingsItem> {
+  const fbData = await fetchFromFirebaseCloudStore("catalogSettings");
+  if (fbData && typeof fbData === "object" && fbData.modalTitle) {
+    return { ...DEFAULT_CATALOG_SETTINGS, ...fbData };
+  }
+  const json = readJsonStore();
+  if (json.catalogSettings) {
+    return { ...DEFAULT_CATALOG_SETTINGS, ...json.catalogSettings };
+  }
+  return DEFAULT_CATALOG_SETTINGS;
+}
+
+export async function saveCatalogSettingsStore(data: Partial<CatalogSettingsItem>): Promise<CatalogSettingsItem> {
+  const current = await getCatalogSettingsStore();
+  const updated = { ...current, ...data };
+  await syncToFirebaseCloudStore("catalogSettings", updated);
+  const json = readJsonStore();
+  json.catalogSettings = updated;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
   return updated;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Props = {
   catalogPdfUrl: string;
@@ -35,6 +35,33 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
   });
   const [submitting, setSubmitting] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
+  const [settings, setSettings] = useState({
+    modalBgColor: "linear-gradient(145deg, #181920 0%, #0b0c10 100%)",
+    modalTextColor: "#ffffff",
+    badgeText: "OFFICIAL CATALOGUE ENQUIRY",
+    buttonText: "View Catalogue On-Screen",
+    modalTitle: `${itemTitle} Catalogue Access`,
+    modalSubtext: "Submit your details below to view on-screen digital access for this official architectural specification PDF.",
+  });
+
+  useEffect(() => {
+    fetch("/api/catalog-settings")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          setSettings((prev) => ({
+            ...prev,
+            modalBgColor: json.data.modalBgColor || prev.modalBgColor,
+            modalTextColor: json.data.modalTextColor || prev.modalTextColor,
+            badgeText: json.data.badgeText ? `📋 ${json.data.badgeText}` : prev.badgeText,
+            buttonText: json.data.buttonText || prev.buttonText,
+            modalTitle: json.data.modalTitle ? `${json.data.modalTitle} - ${itemTitle}` : prev.modalTitle,
+            modalSubtext: json.data.modalSubtext || prev.modalSubtext,
+          }));
+        }
+      })
+      .catch(() => {});
+  }, [itemTitle]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -114,15 +141,15 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: "#121316",
-          border: "1px solid rgba(212, 175, 55, 0.3)",
+          background: settings.modalBgColor,
+          border: "1px solid rgba(212, 175, 55, 0.4)",
           borderRadius: "16px",
           width: "100%",
-          maxWidth: unlocked ? "1100px" : "520px",
+          maxWidth: unlocked ? "1200px" : "560px",
           maxHeight: "92vh",
           overflowY: unlocked ? "hidden" : "auto",
           padding: unlocked ? "1.5rem" : "2.4rem",
-          color: "#ffffff",
+          color: settings.modalTextColor,
           position: "relative",
           boxShadow: "0 25px 60px rgba(0, 0, 0, 0.9)",
           display: "flex",
@@ -176,7 +203,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                 gap: "0.4rem",
               }}
             >
-              🔒 EXCLUSIVE CATALOGUE ENQUIRY
+              {settings.badgeText}
             </div>
             <h3
               style={{
@@ -184,11 +211,11 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                 fontWeight: 700,
                 lineHeight: 1.2,
                 marginBottom: "0.6rem",
-                color: "#ffffff",
+                color: settings.modalTextColor,
                 letterSpacing: "-0.02em",
               }}
             >
-              Unlock {itemTitle} Catalogue
+              {settings.modalTitle}
             </h3>
             <p
               style={{
@@ -198,7 +225,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                 marginBottom: "1.8rem",
               }}
             >
-              Submit your details below to unlock on-screen digital viewing access for this official architectural specification PDF.
+              {settings.modalSubtext}
             </p>
 
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
@@ -339,7 +366,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                   transition: "transform 0.2s ease, boxShadow 0.2s ease",
                 }}
               >
-                {submitting ? "Submitting Enquiry..." : "📩 View Catalogue On-Screen"}
+                {submitting ? "Submitting Enquiry..." : settings.buttonText}
               </button>
             </form>
           </>
@@ -348,7 +375,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "0.8rem", flexWrap: "wrap", gap: "0.5rem" }}>
               <div>
                 <span style={{ fontSize: "0.75rem", background: "#d4af37", color: "#000", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  🔓 Catalogue Unlocked
+                  ✓ Catalogue Access Granted
                 </span>
                 <h3 style={{ fontSize: "1.3rem", fontWeight: 700, margin: "0.4rem 0 0 0", color: "#ffffff" }}>
                   {itemTitle} Official Digital Catalogue

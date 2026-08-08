@@ -145,7 +145,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                 fontWeight: 800,
               }}
             >
-              🔒 LOCKED PDF
+              OFFICIAL CATALOG
             </div>
           </div>
 
@@ -381,14 +381,14 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                     transition: "all 0.2s ease",
                   }}
                 >
-                  {loading ? "Unlocking Catalog..." : "🔓 Unlock & View Catalog On-Screen"}
+                  {loading ? "Loading Catalog..." : "View Catalogue On-Screen"}
                 </button>
               </form>
             )}
           </div>
 
           <div style={{ marginTop: "1rem", borderTop: "1px solid #f1f5f9", paddingTop: "0.8rem", fontSize: "0.72rem", color: "#94a3b8", textAlign: "center" }}>
-            🔒 Instant PDF access granted upon form submission. Zero spam guarantee.
+            Instant PDF access granted upon form submission. Zero spam guarantee.
           </div>
         </div>
       </div>

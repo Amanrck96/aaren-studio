@@ -358,31 +358,31 @@ export default function BrandDetailPage({ params }: Props) {
                     }}
                   />
 
-                  {/* Red Luxury PDF Tag */}
+                  {/* Luxury Catalogue Badge */}
                   <span
                     style={{
                       position: "absolute",
                       top: "14px",
                       right: "14px",
-                      background: "#ef4444",
-                      color: "#ffffff",
+                      background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)",
+                      color: "#000000",
                       fontSize: "0.75rem",
                       fontWeight: 900,
-                      padding: "0.25rem 0.65rem",
-                      borderRadius: "4px",
+                      padding: "0.28rem 0.75rem",
+                      borderRadius: "6px",
                       letterSpacing: "0.08em",
-                      boxShadow: "0 4px 12px rgba(239, 68, 68, 0.4)",
+                      boxShadow: "0 4px 14px rgba(212, 175, 55, 0.4)",
                       zIndex: 25,
                     }}
                   >
-                    🔒 LOCKED PDF
+                    OFFICIAL CATALOGUE
                   </span>
 
                   {/* 1st Page Cover Preview Image Container */}
                   <div
                     style={{
                       height: "320px",
-                      background: "#0f172a",
+                      background: "linear-gradient(145deg, #181920 0%, #0b0c10 100%)",
                       position: "relative",
                       overflow: "hidden",
                       display: "flex",
@@ -395,6 +395,15 @@ export default function BrandDetailPage({ params }: Props) {
                       <img
                         src={coverThumbUrl}
                         alt={`${cat.title} Cover 1st Page`}
+                        onError={(e) => {
+                          // Try alternative Google Drive direct thumbnail URL if primary thumbnail fails
+                          if (driveId && !(e.currentTarget as any).dataset.triedSecondary) {
+                            (e.currentTarget as any).dataset.triedSecondary = "true";
+                            e.currentTarget.src = `https://lh3.googleusercontent.com/d/${driveId}=s800`;
+                          } else if ((brand as any).bannerUrl) {
+                            e.currentTarget.src = (brand as any).bannerUrl;
+                          }
+                        }}
                         style={{
                           width: "100%",
                           height: "100%",
@@ -403,6 +412,20 @@ export default function BrandDetailPage({ params }: Props) {
                           transition: "transform 0.5s ease",
                         }}
                       />
+                    ) : (cat as any).coverImage || (brand as any).bannerUrl ? (
+                      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={(cat as any).coverImage || (brand as any).bannerUrl}
+                          alt={`${cat.title} Cover`}
+                          style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.65)" }}
+                        />
+                        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.85) 100%)", display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "1.2rem" }}>
+                          <span style={{ fontSize: "0.72rem", color: "#d4af37", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>{brand.name}</span>
+                          <span style={{ fontSize: "1.05rem", fontWeight: 800, color: "#ffffff", marginTop: "0.2rem" }}>{cat.title}</span>
+                          <span style={{ fontSize: "0.72rem", color: "#cbd5e1", marginTop: "0.3rem" }}>Official Specification PDF</span>
+                        </div>
+                      </div>
                     ) : (
                       <div
                         style={{
@@ -412,16 +435,20 @@ export default function BrandDetailPage({ params }: Props) {
                           flexDirection: "column",
                           alignItems: "center",
                           justifyContent: "center",
-                          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+                          background: "linear-gradient(135deg, #1e2235 0%, #0b0c10 100%)",
                           color: "#ffffff",
                           padding: "2rem",
                           textAlign: "center",
+                          position: "relative",
                         }}
                       >
-                        <div style={{ fontSize: "2.5rem", marginBottom: "0.6rem" }}>📄</div>
+                        {(brand as any).logoUrl && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={(brand as any).logoUrl} alt={brand.name} style={{ maxHeight: "45px", objectFit: "contain", marginBottom: "1rem", filter: "brightness(0) invert(1)" }} />
+                        )}
                         <span style={{ fontSize: "0.75rem", color: "#d4af37", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>{brand.name}</span>
-                        <span style={{ fontSize: "1rem", fontWeight: 700, marginTop: "0.3rem", color: "#fff" }}>{cat.title}</span>
-                        <span style={{ fontSize: "0.7rem", color: "#94a3b8", marginTop: "0.5rem" }}>Official 1st Page Specification PDF</span>
+                        <span style={{ fontSize: "1.1rem", fontWeight: 800, marginTop: "0.3rem", color: "#fff" }}>{cat.title}</span>
+                        <span style={{ fontSize: "0.72rem", color: "#94a3b8", marginTop: "0.5rem" }}>Official Architectural Specification PDF</span>
                       </div>
                     )}
                   </div>
@@ -445,21 +472,21 @@ export default function BrandDetailPage({ params }: Props) {
                       style={{
                         fontSize: "0.85rem",
                         color: "#ffffff",
-                        background: "#0f172a",
-                        border: "none",
+                        background: "linear-gradient(135deg, #1e2235 0%, #12141f 100%)",
+                        border: "1px solid rgba(212,175,55,0.3)",
                         borderRadius: "6px",
-                        padding: "0.65rem 1rem",
-                        fontWeight: 700,
+                        padding: "0.7rem 1rem",
+                        fontWeight: 800,
                         cursor: "pointer",
                         marginTop: "0.6rem",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         gap: "0.5rem",
-                        boxShadow: "0 4px 12px rgba(15, 23, 42, 0.15)",
+                        boxShadow: "0 4px 12px rgba(15, 23, 42, 0.2)",
                       }}
                     >
-                      🔒 Unlock & View PDF ↗
+                      View Catalog ↗
                     </button>
                   </div>
                 </div>
