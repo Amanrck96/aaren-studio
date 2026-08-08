@@ -126,34 +126,42 @@ export default function BlogDetail({ params }: PageProps) {
             <img src={displayImage} alt={displayTitle} className="w-full h-full object-cover" />
           </div>
 
-          {/* Dynamic Article Body Content Font Size */}
-          <div className="article-body space-y-4">
-            {blocks.map((block, idx) => {
-              const isHeading =
-                block.length < 65 &&
-                !block.endsWith(".") &&
-                !block.includes("\n") &&
-                !block.match(/^[0-9]\./);
+          {/* Formatted Article Body (Supports Rich Text HTML & Plain Text) */}
+          {rawContent.includes("<") && rawContent.includes(">") ? (
+            <div
+              style={{ fontSize: article?.bodySize || fontSettings.articleBodySize || "0.9rem" }}
+              className="article-rich-content text-neutral-800 leading-relaxed font-normal space-y-4"
+              dangerouslySetInnerHTML={{ __html: rawContent }}
+            />
+          ) : (
+            <div className="article-body space-y-4">
+              {blocks.map((block, idx) => {
+                const isHeading =
+                  block.length < 65 &&
+                  !block.endsWith(".") &&
+                  !block.includes("\n") &&
+                  !block.match(/^[0-9]\./);
 
-              if (isHeading) {
+                if (isHeading) {
+                  return (
+                    <h3 key={idx} className="text-base md:text-lg font-bold text-neutral-900 mt-6 mb-2 leading-snug">
+                      {block}
+                    </h3>
+                  );
+                }
+
                 return (
-                  <h3 key={idx} className="text-base md:text-lg font-bold text-neutral-900 mt-6 mb-2 leading-snug">
+                  <p
+                    key={idx}
+                    style={{ fontSize: article?.bodySize || fontSettings.articleBodySize || "0.9rem" }}
+                    className="text-neutral-700 leading-relaxed font-normal whitespace-pre-line"
+                  >
                     {block}
-                  </h3>
+                  </p>
                 );
-              }
-
-              return (
-                <p
-                  key={idx}
-                  style={{ fontSize: article?.bodySize || fontSettings.articleBodySize || "0.9rem" }}
-                  className="text-neutral-700 leading-relaxed font-normal whitespace-pre-line"
-                >
-                  {block}
-                </p>
-              );
-            })}
-          </div>
+              })}
+            </div>
+          )}
         </article>
 
         {/* Comments Section */}

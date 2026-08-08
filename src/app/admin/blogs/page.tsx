@@ -1,9 +1,272 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import AdminNav from "@/components/AdminNav";
 import { BlogItem } from "@/lib/types";
 import { uploadFileWithCompression } from "@/lib/uploadHelper";
+
+// WORD-STYLE RICH TEXT EDITOR TOOLBAR COMPONENT
+function BlogRichTextEditor({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+}) {
+  const editorRef = useRef<HTMLDivElement>(null);
+  const [showRawHtml, setShowRawHtml] = useState(false);
+  const [fontFamily, setFontFamily] = useState("Calibri, sans-serif");
+  const [fontSize, setFontSize] = useState("14px");
+  const [textColor, setTextColor] = useState("#80673f");
+  const [highlightColor, setHighlightColor] = useState("#fef08a");
+
+  // Sync initial content to contentEditable on load or change if out of sync
+  useEffect(() => {
+    if (editorRef.current && editorRef.current.innerHTML !== value) {
+      editorRef.current.innerHTML = value || "";
+    }
+  }, [value]);
+
+  const execCmd = (command: string, arg: string | undefined = undefined) => {
+    document.execCommand(command, false, arg);
+    if (editorRef.current) {
+      onChange(editorRef.current.innerHTML);
+    }
+  };
+
+  const handleApplyFontFamily = (family: string) => {
+    setFontFamily(family);
+    execCmd("fontName", family);
+  };
+
+  const handleApplyFontSize = (sizePx: string) => {
+    setFontSize(sizePx);
+    // Wrap selection in a styled span with exact px size
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
+      const range = selection.getRangeAt(0);
+      const span = document.createElement("span");
+      span.style.fontSize = sizePx;
+      range.surroundContents(span);
+      if (editorRef.current) onChange(editorRef.current.innerHTML);
+    } else {
+      execCmd("fontSize", "4");
+    }
+  };
+
+  const handleApplyTextColor = (color: string) => {
+    setTextColor(color);
+    execCmd("foreColor", color);
+  };
+
+  const handleApplyHighlightColor = (color: string) => {
+    setHighlightColor(color);
+    execCmd("hiliteColor", color);
+  };
+
+  return (
+    <div style={{ border: "1px solid #333", borderRadius: "8px", overflow: "hidden", background: "#141418" }}>
+      {/* WORD-STYLE TOOLBAR */}
+      <div
+        style={{
+          background: "#1e1e24",
+          borderBottom: "1px solid #333",
+          padding: "0.6rem 0.8rem",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "0.5rem",
+          alignItems: "center",
+        }}
+      >
+        {/* Font Family Selector */}
+        <select
+          value={fontFamily}
+          onChange={(e) => handleApplyFontFamily(e.target.value)}
+          style={{ padding: "0.35rem 0.6rem", background: "#0a0a0c", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontSize: "0.8rem" }}
+        >
+          <option value="Calibri, sans-serif">Calibri (Body)</option>
+          <option value="Inter, sans-serif">Inter</option>
+          <option value="Georgia, serif">Georgia (Serif)</option>
+          <option value="Montserrat, sans-serif">Montserrat</option>
+          <option value="Playfair Display, serif">Playfair Display</option>
+          <option value="Arial, sans-serif">Arial</option>
+        </select>
+
+        {/* Font Size Selector */}
+        <select
+          value={fontSize}
+          onChange={(e) => handleApplyFontSize(e.target.value)}
+          style={{ padding: "0.35rem 0.6rem", background: "#0a0a0c", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontSize: "0.8rem" }}
+        >
+          <option value="12px">12px (Small)</option>
+          <option value="14px">14px (Standard)</option>
+          <option value="16px">16px (Medium)</option>
+          <option value="18px">18px (H3 Subtitle)</option>
+          <option value="22px">22px (H2 Heading)</option>
+          <option value="28px">28px (H1 Title)</option>
+          <option value="36px">36px (Extra Large)</option>
+        </select>
+
+        <span style={{ color: "#444" }}>|</span>
+
+        {/* Text Formatting Buttons: Bold, Italic, Underline, Strikethrough */}
+        <button
+          type="button"
+          onClick={() => execCmd("bold")}
+          title="Bold (Ctrl+B)"
+          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontWeight: 900, cursor: "pointer" }}
+        >
+          B
+        </button>
+        <button
+          type="button"
+          onClick={() => execCmd("italic")}
+          title="Italic (Ctrl+I)"
+          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontStyle: "italic", cursor: "pointer" }}
+        >
+          I
+        </button>
+        <button
+          type="button"
+          onClick={() => execCmd("underline")}
+          title="Underline (Ctrl+U)"
+          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", textDecoration: "underline", cursor: "pointer" }}
+        >
+          U
+        </button>
+        <button
+          type="button"
+          onClick={() => execCmd("strikeThrough")}
+          title="Strikethrough"
+          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", textDecoration: "line-through", cursor: "pointer" }}
+        >
+          S
+        </button>
+
+        <span style={{ color: "#444" }}>|</span>
+
+        {/* Text Color Picker */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.2rem" }} title="Text Color">
+          <span style={{ fontSize: "0.75rem", color: "#aaa", fontWeight: 700 }}>A</span>
+          <input
+            type="color"
+            value={textColor}
+            onChange={(e) => handleApplyTextColor(e.target.value)}
+            style={{ width: "24px", height: "24px", padding: 0, border: "none", borderRadius: "4px", background: "none", cursor: "pointer" }}
+          />
+        </div>
+
+        {/* Highlight Color Picker */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.2rem" }} title="Highlight Text Color">
+          <span style={{ fontSize: "0.75rem", color: "#aaa", fontWeight: 700 }}>🖍️</span>
+          <input
+            type="color"
+            value={highlightColor}
+            onChange={(e) => handleApplyHighlightColor(e.target.value)}
+            style={{ width: "24px", height: "24px", padding: 0, border: "none", borderRadius: "4px", background: "none", cursor: "pointer" }}
+          />
+        </div>
+
+        <span style={{ color: "#444" }}>|</span>
+
+        {/* List Formatting */}
+        <button
+          type="button"
+          onClick={() => execCmd("insertUnorderedList")}
+          title="Bullet List"
+          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem" }}
+        >
+          • Bullet List
+        </button>
+        <button
+          type="button"
+          onClick={() => execCmd("insertOrderedList")}
+          title="Numbered List"
+          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem" }}
+        >
+          1. Numbered List
+        </button>
+
+        <span style={{ color: "#444" }}>|</span>
+
+        {/* Alignments */}
+        <button
+          type="button"
+          onClick={() => execCmd("justifyLeft")}
+          title="Align Left"
+          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}
+        >
+          ⫷ Left
+        </button>
+        <button
+          type="button"
+          onClick={() => execCmd("justifyCenter")}
+          title="Align Center"
+          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}
+        >
+          ≡ Center
+        </button>
+        <button
+          type="button"
+          onClick={() => execCmd("justifyRight")}
+          title="Align Right"
+          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}
+        >
+          ⫸ Right
+        </button>
+        <button
+          type="button"
+          onClick={() => execCmd("justifyFull")}
+          title="Justify"
+          style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}
+        >
+          ≣ Justify
+        </button>
+
+        <span style={{ color: "#444" }}>|</span>
+
+        {/* Code / Visual View Toggle */}
+        <button
+          type="button"
+          onClick={() => setShowRawHtml(!showRawHtml)}
+          style={{ padding: "0.35rem 0.8rem", background: showRawHtml ? "#d4af37" : "#3b82f6", color: showRawHtml ? "#000" : "#fff", border: "none", borderRadius: "4px", fontWeight: 800, cursor: "pointer", fontSize: "0.8rem" }}
+        >
+          {showRawHtml ? "📝 Visual Editor" : "💻 Edit HTML Code"}
+        </button>
+      </div>
+
+      {/* EDITING AREA */}
+      {showRawHtml ? (
+        <textarea
+          rows={12}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          style={{ width: "100%", padding: "1rem", background: "#0a0a0c", color: "#4ade80", fontFamily: "monospace", fontSize: "0.85rem", border: "none", outline: "none", lineHeight: 1.6 }}
+        />
+      ) : (
+        <div
+          ref={editorRef}
+          contentEditable
+          onInput={() => {
+            if (editorRef.current) onChange(editorRef.current.innerHTML);
+          }}
+          style={{
+            background: "#ffffff",
+            color: "#111111",
+            padding: "1.5rem 2rem",
+            minHeight: "350px",
+            maxHeight: "600px",
+            overflowY: "auto",
+            outline: "none",
+            fontSize: "14px",
+            lineHeight: "1.7",
+            fontFamily: fontFamily,
+          }}
+        />
+      )}
+    </div>
+  );
+}
 
 export default function AdminBlogsPage() {
   const [blogs, setBlogs] = useState<BlogItem[]>([]);
@@ -163,7 +426,7 @@ export default function AdminBlogsPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #222", paddingBottom: "1rem" }}>
           <div>
             <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>✍️ Blog Articles & Journal CMS</h1>
-            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Create, edit, rearrange article order, and customize font/image sizes dynamically.</p>
+            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Create, edit, format individual text sizes/styles with Word toolbar, rearrange order, and manage blog media.</p>
           </div>
           <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
             <button
@@ -451,7 +714,7 @@ export default function AdminBlogsPage() {
           </div>
         )}
 
-        {/* CREATE / EDIT BLOG FORM WITH PER-ARTICLE CUSTOM SIZING OVERRIDES */}
+        {/* CREATE / EDIT BLOG FORM WITH WORD-STYLE RICH TEXT EDITOR TOOLBAR */}
         {editing && (
           <form onSubmit={handleSave} style={{ background: "#141418", padding: "2rem", borderRadius: "10px", border: "1px solid #333", marginBottom: "2rem" }}>
             <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#6366f1", marginBottom: "1.2rem" }}>
@@ -552,7 +815,7 @@ export default function AdminBlogsPage() {
               </div>
             </div>
 
-            <div style={{ marginBottom: "1rem" }}>
+            <div style={{ marginBottom: "1.2rem" }}>
               <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Featured Cover Image URL</label>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <input
@@ -588,22 +851,22 @@ export default function AdminBlogsPage() {
               </div>
             </div>
 
-            <div style={{ marginBottom: "1rem" }}>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Full Article Text & Content *</label>
-              <textarea
-                rows={10}
-                required
+            {/* WORD-STYLE RICH TEXT EDITOR TOOLBAR */}
+            <div style={{ marginBottom: "1.5rem" }}>
+              <label style={{ display: "block", fontSize: "0.9rem", color: "#d4af37", fontWeight: 800, marginBottom: "0.4rem" }}>
+                📝 Article Body Text & Rich Content Formatting (Word-Style Toolbar) *
+              </label>
+              <BlogRichTextEditor
                 value={editing.content || ""}
-                onChange={(e) => setEditing({ ...editing, content: e.target.value })}
-                style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontFamily: "inherit", lineHeight: 1.6 }}
+                onChange={(newHtml) => setEditing({ ...editing, content: newHtml })}
               />
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" style={{ padding: "0.7rem 1.5rem", background: "#6366f1", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}>
+              <button type="submit" style={{ padding: "0.75rem 1.8rem", background: "linear-gradient(135deg, #6366f1 0%, #4338ca 100%)", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}>
                 💾 Save & Publish Article
               </button>
-              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.7rem 1.5rem", background: "#333", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.75rem 1.5rem", background: "#333", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
                 Cancel
               </button>
             </div>
@@ -619,12 +882,14 @@ export default function AdminBlogsPage() {
                 <span style={{ fontSize: "0.75rem", color: "#d4af37", fontWeight: 800 }}>Sequence #{index + 1}</span>
               </div>
               <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0.4rem 0 0.5rem" }}>{b.title}</h3>
-              <p style={{ color: "#cbd5e1", fontSize: "0.9rem", margin: "0.5rem 0 1.4rem", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{b.content}</p>
+              <div style={{ color: "#cbd5e1", fontSize: "0.88rem", margin: "0.5rem 0 1.4rem", lineHeight: 1.6, maxHeight: "70px", overflow: "hidden" }}>
+                {b.content ? b.content.replace(/<[^>]*>/g, "") : ""}
+              </div>
               
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #252836", paddingTop: "1rem" }}>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                   <button onClick={() => setEditing(b)} style={{ padding: "0.45rem 1rem", background: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.82rem", fontWeight: 700 }}>
-                    ✏️ Edit
+                    ✏️ Edit & Format
                   </button>
                   <button onClick={() => handleDelete(b.id)} style={{ padding: "0.45rem 1rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "6px", cursor: "pointer", fontSize: "0.82rem", fontWeight: 700 }}>
                     🗑️ Delete
