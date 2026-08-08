@@ -2,7 +2,6 @@
 
 import { use, useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, Clock, Calendar, Share2, MapPin } from "lucide-react";
 import { BlogItem } from "@/lib/types";
 
 interface PageProps {
@@ -15,10 +14,6 @@ export default function BlogDetail({ params }: PageProps) {
 
   const [article, setArticle] = useState<BlogItem | null>(null);
   const [loading, setLoading] = useState(true);
-  const [fontSettings, setFontSettings] = useState({
-    articleTitleSize: "1.75rem",
-    articleBodySize: "0.9rem",
-  });
 
   const [comments, setComments] = useState<{ author: string; text: string; date?: string }[]>([
     {
@@ -28,7 +23,6 @@ export default function BlogDetail({ params }: PageProps) {
     },
   ]);
   const [newComment, setNewComment] = useState({ author: "", text: "" });
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetch("/api/blogs")
@@ -48,15 +42,6 @@ export default function BlogDetail({ params }: PageProps) {
       })
       .catch((e) => console.error(e))
       .finally(() => setLoading(false));
-
-    fetch("/api/blog-settings")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json && json.success && json.data) {
-          setFontSettings(json.data);
-        }
-      })
-      .catch(() => {});
   }, [targetSlug]);
 
   const handleCommentSubmit = (e: React.FormEvent) => {
@@ -66,367 +51,672 @@ export default function BlogDetail({ params }: PageProps) {
     setNewComment({ author: "", text: "" });
   };
 
-  const handleShare = () => {
-    if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    }
-  };
-
   if (loading) {
     return (
-      <div className="bg-[#fcfbf9] text-neutral-900 pt-32 pb-24 px-6 md:px-12 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-[#80673f] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-xs font-bold uppercase tracking-widest text-[#80673f]">Loading Editorial Article...</p>
+      <div style={{ background: "#F1ECE1", color: "#1E1B16", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ width: "40px", height: "40px", border: "3px solid #7A4A28", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 1rem" }} />
+          <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "#7A4A28" }}>Loading Journal Article...</p>
         </div>
+        <style jsx>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
 
   const displayTitle = article?.title || targetSlug.replace(/-/g, " ");
-  const displayCategory = article?.category || "Outdoor Architecture & Surfaces";
+  const displayCategory = article?.category || "Materials & Architecture";
   const displayDate = article?.publishDate || article?.createdAt || "August 2026";
-  const displayAuthor = article?.author || "Aaren Studio Editorial & Architectural Design Team";
-  const displayImage =
-    article?.featuredImage ||
-    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80";
-  const rawContent =
-    article?.content ||
-    `Imagine stepping out from your living room onto a beautifully finished terrace, relaxing beside a pool on a warm wood-look deck, or enjoying an evening with family in a landscaped outdoor space.
+  const displayAuthor = article?.author || "Aaren IntPro Editorial & Architectural Design Team";
+  const displayImage = article?.featuredImage || "";
+  const rawContent = article?.content || "";
 
-The right flooring can transform these spaces completely.
+  // Dynamic Tags
+  const tagsList = article?.tags && article.tags.length > 0
+    ? article.tags
+    : ["Composite Decking", "Outdoor Living", "Material Specification", "Bengaluru"];
 
-NewTechWood composite decking is designed to bring the visual appeal of timber to outdoor environments while offering the benefits of engineered composite technology.
-
-From Balconies to Luxury Villas
-
-Composite decking can be used to enhance:
-• Residential balconies
-• Rooftop terraces
-• Garden decks
-• Poolside areas
-• Villa exteriors
-• Outdoor restaurants
-• Hospitality spaces
-
-The result is an outdoor environment that feels warm, sophisticated and connected to nature.
-
-Built for Everyday Life
-
-Outdoor flooring has to deal with sunlight, rain, dirt, furniture and regular foot traffic.
-
-NewTechWood's UltraShield® technology is designed to provide protection against stains, fading, scratches, moisture and mould while reducing the maintenance normally associated with outdoor wood surfaces.
-
-The decking is available in different profiles and can be installed using conventional screws or hidden fastening systems, depending on the product and project requirements.
-
-Design Beyond the Deck
-
-NewTechWood's product portfolio extends beyond decking to include composite wall cladding, siding, fencing, railing and other outdoor solutions.
-
-This makes it possible to create a cohesive outdoor design rather than treating the deck as a standalone element.
-
-Visit the Experience Centre
-
-Want to see how NewTechWood can transform your outdoor space?
-
-Visit the NewTechWood Experience Centre at Aaren Intpro, Mysore Road, Bengaluru, and explore the colours, textures and applications in person.
-
-Step outside. Experience better outdoor living with NewTechWood.`;
-
-  // Parse raw content string into structured blocks
-  const blocks = rawContent.split("\n\n").map((block) => block.trim()).filter(Boolean);
-
-  // Check if content has the 5 key reasons or structured list items
-  const keyReasonsList = [
-    { title: "Unmatched Weather Resistance & Durability", desc: "Unlike traditional wood that warps, splinters, or rots over time, NewTechWood withstands extreme summer heat and heavy monsoons without expanding or splitting." },
-    { title: "Zero Maintenance & Eco-Friendly Living", desc: "Manufactured using 95% recycled materials (including plastic bottles and reclaimed wood fibers), NewTechWood requires zero staining, sanding, or oiling." },
-    { title: "Natural Wood Grain Aesthetics", desc: "Available in luxury teak, ipe, walnut, and charcoal finishes, it matches the rich texture of natural timber while maintaining perfect geometric alignment." },
-    { title: "Hidden Fastener Installation System", desc: "Enjoy clean, seamless deck surfaces with concealed clip locking systems that hide screws and hardware." },
-    { title: "25-Year Commercial Warranty", desc: "Backed by global testing certifications, guaranteeing long-term value for residential villas, hotels, pool decks, and commercial facades." }
+  const reasonsData = [
+    { num: "01", title: "Unmatched Weather Resistance & Durability", desc: "Engineered to hold up against sun, rain, and temperature swings without the splitting, cupping, or greying that solid timber decking eventually shows." },
+    { num: "02", title: "Zero Maintenance & Eco-Friendly Living", desc: "No sanding, staining, or annual sealing. Boards are made with a high proportion of recycled material, cutting both upkeep and environmental footprint." },
+    { num: "03", title: "Natural Wood Grain Aesthetics", desc: "Available in a range of tones and grain patterns that hold their texture and colour far longer than a natural timber finish would in the same conditions." },
+    { num: "04", title: "Hidden Fastener Installation System", desc: "A concealed clip system keeps the surface free of visible screws, giving a cleaner sightline and a tighter, more precise board alignment." },
+    { num: "05", title: "25-Year Commercial Warranty", desc: "Backed by global testing certifications and a warranty term long enough for architects to specify with confidence on residential and commercial projects alike.", full: true }
   ];
 
   return (
-    <div className="bg-[#fdfcfb] text-neutral-900 min-h-screen pt-28 md:pt-36 pb-24 border-t border-neutral-100">
-      {/* GLOBAL CONTAINER: MAX-WIDTH 1400px */}
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 md:px-12 lg:px-16">
-        
-        {/* 1. ARTICLE HEADER / HERO SECTION (MAX-WIDTH 1200px) */}
-        <header className="max-w-[1200px] mx-auto mb-10">
-          
-          {/* Top Bar: Back Link & Share Action */}
-          <div className="flex items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-200/70">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-extrabold text-neutral-500 hover:text-[#80673f] transition-colors"
-            >
-              <ArrowLeft size={15} /> Back to Journal
-            </Link>
+    <div className="aaren-editorial-page">
+      {/* GOOGLE FONTS IMPORT & EXACT STYLES matching user HTML specification */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-            <button
-              onClick={handleShare}
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#80673f] bg-[#f5f1ea] hover:bg-[#ede5d6] px-3.5 py-1.5 rounded-full border border-[#e2d8c3] transition-colors"
-            >
-              <Share2 size={13} /> {copied ? "Link Copied!" : "Share Article"}
-            </button>
-          </div>
+        .aaren-editorial-page {
+          --ink: #1E1B16;
+          --ink-soft: #4A443B;
+          --paper: #F1ECE1;
+          --paper-raised: #E7E0D0;
+          --walnut: #7A4A28;
+          --copper: #B87333;
+          --moss: #4B5842;
+          --line: #D9D0BC;
+          --line-strong: #C4B89E;
+          --max: 720px;
 
-          {/* Category & Date Metadata */}
-          <div className="flex items-center gap-3 mb-4 flex-wrap">
-            <span className="text-xs font-black uppercase tracking-widest text-[#80673f]">
-              {displayCategory}
-            </span>
-            <span className="text-xs text-neutral-300">•</span>
-            <span className="text-xs md:text-sm text-neutral-500 font-medium flex items-center gap-1">
-              <Calendar size={13} className="text-[#80673f]" /> {displayDate}
-            </span>
-            <span className="text-xs text-neutral-300">•</span>
-            <span className="text-xs md:text-sm text-neutral-500 font-medium flex items-center gap-1">
-              <Clock size={13} className="text-[#80673f]" /> 4 MIN READ
-            </span>
-          </div>
+          background: var(--paper);
+          color: var(--ink);
+          font-family: 'Inter', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          min-height: 100vh;
+          padding-top: 80px; /* Offset fixed header */
+        }
 
-          {/* Large Editorial Title */}
-          <h1
-            style={{ fontSize: article?.titleSize || fontSettings.articleTitleSize || "clamp(2rem, 4vw, 3.5rem)" }}
-            className="font-extrabold tracking-tight text-[#80673f] uppercase leading-[1.12] mb-6 max-w-[1100px]"
-          >
-            {displayTitle}
-          </h1>
+        .grain-mark {
+          display: inline-flex;
+          align-items: center;
+          gap: 2px;
+        }
+        .grain-mark span {
+          display: block;
+          width: 14px;
+          height: 2px;
+          background: currentColor;
+          opacity: 0.55;
+        }
+        .grain-mark span:nth-child(2) { width: 20px; opacity: 0.85; }
+        .grain-mark span:nth-child(3) { width: 10px; opacity: 0.4; }
 
-          {/* Author Byline Bar */}
-          <div className="flex items-center gap-3 py-3 border-y border-neutral-200/80 my-6">
-            <div className="w-8 h-8 rounded-full bg-[#80673f] text-white flex items-center justify-center font-black text-xs shadow-xs">
-              A
+        .grain-divider {
+          width: 100%;
+          height: 18px;
+          margin: 0 auto;
+          background-repeat: repeat-x;
+          background-size: 60px 18px;
+          background-image: repeating-linear-gradient(
+            90deg,
+            transparent 0px, transparent 26px,
+            var(--line-strong) 26px, var(--line-strong) 27px,
+            transparent 27px, transparent 40px,
+            var(--line-strong) 40px, var(--line-strong) 40.6px
+          );
+          opacity: 0.7;
+        }
+
+        /* Utility Bar */
+        .ed-utility-bar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 14px 24px;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px;
+          letter-spacing: .06em;
+          text-transform: uppercase;
+          color: var(--ink-soft);
+          border-bottom: 1px solid var(--line);
+          background: var(--paper);
+        }
+        .ed-utility-bar .back {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          text-decoration: none;
+          color: var(--ink-soft);
+          transition: color 0.2s ease;
+        }
+        .ed-utility-bar .back:hover {
+          color: var(--walnut);
+        }
+
+        /* Hero */
+        .ed-hero {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 16 / 8;
+          overflow: hidden;
+          background:
+            radial-gradient(120% 90% at 15% 15%, #C48A4E 0%, transparent 55%),
+            radial-gradient(140% 100% at 85% 90%, #3B2A1C 0%, transparent 60%),
+            linear-gradient(135deg, #EADFC7 0%, #C9A56C 35%, #8A5A34 70%, #3E2A1B 100%);
+        }
+        .ed-hero img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .ed-hero svg {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          opacity: .55;
+          mix-blend-mode: overlay;
+        }
+        .ed-hero-caption {
+          position: absolute;
+          left: 24px;
+          bottom: 16px;
+          color: #F1ECE1;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px;
+          letter-spacing: .05em;
+          text-shadow: 0 1px 6px rgba(0,0,0,.4);
+        }
+
+        /* Article Head */
+        .ed-article-head {
+          max-width: var(--max);
+          margin: 0 auto;
+          padding: 48px 24px 0;
+        }
+        .ed-eyebrow {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 12px;
+          letter-spacing: .12em;
+          text-transform: uppercase;
+          color: var(--walnut);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 18px;
+        }
+        .ed-article-head h1 {
+          font-family: 'Fraunces', serif;
+          font-optical-sizing: auto;
+          font-weight: 600;
+          font-size: clamp(32px, 5.2vw, 48px);
+          line-height: 1.08;
+          letter-spacing: -.01em;
+          margin: 0 0 20px;
+          color: var(--ink);
+        }
+        .ed-lede {
+          font-family: 'Fraunces', serif;
+          font-weight: 400;
+          font-style: italic;
+          font-size: 20px;
+          line-height: 1.55;
+          color: var(--ink-soft);
+          margin: 0 0 28px;
+        }
+        .ed-meta-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+          align-items: center;
+          padding: 18px 0;
+          border-top: 1px solid var(--line);
+          border-bottom: 1px solid var(--line);
+          font-size: 13px;
+          color: var(--ink-soft);
+        }
+        .ed-meta-row .author {
+          font-weight: 600;
+          color: var(--ink);
+        }
+        .ed-meta-row .sep { color: var(--line-strong); }
+
+        /* Article Body */
+        .ed-article-body {
+          max-width: var(--max);
+          margin: 0 auto;
+          padding: 40px 24px 0;
+        }
+        .ed-article-body section { margin-bottom: 44px; }
+        .ed-article-body h2 {
+          font-family: 'Fraunces', serif;
+          font-weight: 600;
+          font-size: 26px;
+          line-height: 1.25;
+          letter-spacing: -.005em;
+          color: var(--ink);
+          margin: 0 0 14px;
+        }
+        .ed-article-body p {
+          font-size: 16.5px;
+          line-height: 1.75;
+          color: #2E2A24;
+          margin: 0 0 16px;
+        }
+        .ed-section-divider {
+          display: flex;
+          justify-content: center;
+          margin: 44px 0;
+          color: var(--line-strong);
+        }
+        .ed-article-body blockquote {
+          margin: 32px 0;
+          padding: 4px 0 4px 22px;
+          border-left: 3px solid var(--copper);
+          font-family: 'Fraunces', serif;
+          font-style: italic;
+          font-weight: 500;
+          font-size: 21px;
+          line-height: 1.5;
+          color: var(--walnut);
+        }
+
+        /* Rich Content Support */
+        .ed-rich-content {
+          font-size: 16.5px;
+          line-height: 1.75;
+          color: #2E2A24;
+        }
+        .ed-rich-content h1, .ed-rich-content h2, .ed-rich-content h3 {
+          font-family: 'Fraunces', serif;
+          font-weight: 600;
+          color: var(--ink);
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+        }
+        .ed-rich-content h2 { font-size: 26px; }
+        .ed-rich-content h3 { font-size: 20px; }
+        .ed-rich-content p { margin-bottom: 16px; }
+        .ed-rich-content ul, .ed-rich-content ol { margin: 1.2rem 0 1.2rem 1.8rem; }
+        .ed-rich-content li { margin-bottom: 0.4rem; }
+
+        /* 5 Reasons Grid */
+        .ed-reasons-intro { text-align: left; }
+        .ed-reasons-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1px;
+          background: var(--line);
+          border: 1px solid var(--line);
+          margin-top: 24px;
+        }
+        .ed-reason-card {
+          background: var(--paper);
+          padding: 26px 24px;
+        }
+        .ed-reason-card.full { grid-column: 1 / -1; }
+        .ed-reason-num {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 12px;
+          color: var(--copper);
+          letter-spacing: .05em;
+          margin-bottom: 10px;
+          display: block;
+        }
+        .ed-reason-card h3 {
+          font-family: 'Fraunces', serif;
+          font-weight: 600;
+          font-size: 18px;
+          line-height: 1.3;
+          margin: 0 0 8px;
+          color: var(--ink);
+        }
+        .ed-reason-card p {
+          font-size: 14.5px;
+          line-height: 1.6;
+          margin: 0;
+          color: var(--ink-soft);
+        }
+
+        /* CTA Block */
+        .ed-cta-block {
+          max-width: var(--max);
+          margin: 52px auto 0;
+          padding: 0 24px;
+        }
+        .ed-cta-inner {
+          background: var(--ink);
+          color: var(--paper);
+          padding: 40px 36px;
+          position: relative;
+          overflow: hidden;
+        }
+        .ed-cta-inner::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: repeating-linear-gradient(
+            100deg,
+            rgba(184,115,51,.10) 0px, rgba(184,115,51,.10) 1px,
+            transparent 1px, transparent 34px
+          );
+          pointer-events: none;
+        }
+        .ed-cta-inner .ed-eyebrow { color: var(--copper); }
+        .ed-cta-inner h2 {
+          font-family: 'Fraunces', serif;
+          font-weight: 600;
+          font-size: 26px;
+          color: var(--paper);
+          margin: 0 0 12px;
+        }
+        .ed-cta-inner p { color: #CFC7B4; font-size: 15px; line-height: 1.6; margin: 0 0 20px; }
+        .ed-cta-meta {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 28px;
+          margin: 20px 0 26px;
+          font-size: 13.5px;
+          color: #CFC7B4;
+        }
+        .ed-cta-meta strong {
+          display: block;
+          color: var(--paper);
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px;
+          letter-spacing: .06em;
+          text-transform: uppercase;
+          margin-bottom: 4px;
+          font-weight: 500;
+        }
+        .ed-cta-button {
+          display: inline-block;
+          background: var(--copper);
+          color: var(--ink);
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 12.5px;
+          letter-spacing: .05em;
+          text-transform: uppercase;
+          font-weight: 500;
+          padding: 13px 26px;
+          text-decoration: none;
+          position: relative;
+          z-index: 1;
+          transition: opacity 0.2s ease;
+        }
+        .ed-cta-button:hover { opacity: 0.9; }
+
+        /* Comments Form & Footer */
+        .ed-article-footer {
+          max-width: var(--max);
+          margin: 52px auto 0;
+          padding: 24px 24px 60px;
+          border-top: 1px solid var(--line);
+        }
+        .ed-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin: 18px 0 28px;
+        }
+        .ed-tag {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px;
+          letter-spacing: .04em;
+          text-transform: uppercase;
+          padding: 6px 12px;
+          border: 1px solid var(--line-strong);
+          color: var(--ink-soft);
+        }
+
+        .ed-comments-section {
+          margin-top: 36px;
+          padding-top: 24px;
+          border-top: 1px dashed var(--line-strong);
+        }
+        .ed-comments-title {
+          font-family: 'Fraunces', serif;
+          font-size: 20px;
+          font-weight: 600;
+          color: var(--ink);
+          margin-bottom: 20px;
+        }
+        .ed-comment-card {
+          background: var(--paper-raised);
+          border: 1px solid var(--line);
+          padding: 18px 20px;
+          margin-bottom: 14px;
+        }
+        .ed-comment-author {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: var(--walnut);
+          font-weight: 600;
+
+          display: flex;
+          justify-content: space-between;
+        }
+        .ed-comment-text {
+          font-size: 14.5px;
+          color: var(--ink);
+          margin-top: 6px;
+          line-height: 1.55;
+        }
+
+        .ed-comment-form {
+          margin-top: 28px;
+          background: var(--paper-raised);
+          border: 1px solid var(--line);
+          padding: 24px;
+        }
+        .ed-form-field {
+          margin-bottom: 16px;
+        }
+        .ed-form-label {
+          display: block;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: var(--ink-soft);
+          margin-bottom: 6px;
+        }
+        .ed-form-input, .ed-form-textarea {
+          width: 100%;
+          background: var(--paper);
+          border: 1px solid var(--line-strong);
+          padding: 10px 14px;
+          font-family: 'Inter', sans-serif;
+          font-size: 14px;
+          color: var(--ink);
+          outline: none;
+        }
+        .ed-form-input:focus, .ed-form-textarea:focus {
+          border-color: var(--walnut);
+        }
+        .ed-form-submit {
+          background: var(--walnut);
+          color: var(--paper);
+          border: none;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          padding: 12px 24px;
+          cursor: pointer;
+          font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+          .ed-reasons-grid { grid-template-columns: 1fr; }
+          .ed-reason-card.full { grid-column: 1; }
+          .ed-article-head h1 { font-size: 30px; }
+          .ed-lede { font-size: 18px; }
+          .ed-cta-inner { padding: 28px 20px; }
+        }
+      `}</style>
+
+      {/* TOP UTILITY BAR */}
+      <div className="ed-utility-bar">
+        <Link className="back" href="/blog">
+          <span className="grain-mark"><span></span><span></span><span></span></span>
+          Back to Journal
+        </Link>
+        <span>Global Architecture &amp; Design Journal</span>
+      </div>
+
+      {/* HERO BANNER */}
+      <div className="ed-hero">
+        {displayImage ? (
+          <img src={displayImage} alt={displayTitle} />
+        ) : (
+          <svg viewBox="0 0 800 400" preserveAspectRatio="none">
+            <g fill="none" stroke="#F1ECE1" strokeWidth="1.4">
+              <path d="M -50 380 C 150 320, 250 340, 420 300 S 700 240, 900 260" />
+              <path d="M -50 340 C 150 290, 260 300, 430 260 S 700 200, 900 220" />
+              <path d="M -50 300 C 150 260, 270 260, 440 220 S 700 160, 900 180" />
+              <path d="M -50 260 C 150 230, 280 220, 450 180 S 700 120, 900 140" />
+              <path d="M -50 220 C 150 200, 290 180, 460 140 S 700 80, 900 100" />
+              <path d="M -50 180 C 150 170, 300 140, 470 100 S 700 40, 900 60" />
+            </g>
+          </svg>
+        )}
+        <span className="ed-hero-caption">{displayTitle} — Aaren IntPro Luxury Feature</span>
+      </div>
+
+      {/* ARTICLE HEADER BLOCK */}
+      <header className="ed-article-head">
+        <div className="ed-eyebrow">
+          <span className="grain-mark"><span></span><span></span><span></span></span>
+          {displayCategory}
+        </div>
+        <h1>{displayTitle}</h1>
+        <p className="ed-lede">
+          Composite decking has moved past its budget-material reputation. Engineered to hold the warmth of natural timber without timber's upkeep, it's becoming the material architects reach for when an outdoor space needs to work as hard as it looks good.
+        </p>
+        <div className="ed-meta-row">
+          <span className="author">{displayAuthor}</span>
+          <span className="sep">&middot;</span>
+          <span>{displayDate}</span>
+          <span className="sep">&middot;</span>
+          <span>6 min read</span>
+        </div>
+      </header>
+
+      {/* ARTICLE BODY & SECTIONS */}
+      <main className="ed-article-body">
+        {rawContent.includes("<") && rawContent.includes(">") ? (
+          <div className="ed-rich-content" dangerouslySetInnerHTML={{ __html: rawContent }} />
+        ) : (
+          <>
+            <section>
+              <h2>From Balconies to Luxury Villas</h2>
+              <p>
+                Composite decking now spans a far wider range of settings than its early years suggested. On a compact residential balcony it reads as a warm, low-fuss upgrade from bare concrete. Scaled up, the same system shows up on rooftop decks, poolside walkways, villa terraces, and the outdoor seating areas of restaurants and hotels — anywhere a design brief calls for the look of timber in a space that has to withstand real weather and real foot traffic.
+              </p>
+            </section>
+
+            <div className="ed-section-divider">
+              <div className="grain-divider" style={{ width: "220px" }} />
             </div>
-            <span className="text-xs md:text-sm font-bold text-neutral-800 uppercase tracking-wider">
-              {displayAuthor}
-            </span>
-          </div>
-        </header>
 
-        {/* 3. FEATURED IMAGE CONTAINER (MAX-WIDTH 1200px, ASPECT 16:9 / 21:9) */}
-        <div className="max-w-[1200px] mx-auto mb-16 rounded-2xl overflow-hidden shadow-lg border border-neutral-200/80 aspect-[16/9] md:aspect-[21/9] bg-neutral-100 relative">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={displayImage}
-            alt={displayTitle}
-            className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.02]"
-          />
+            <section>
+              <h2>Built for Everyday Life</h2>
+              <p>
+                Outdoor flooring takes a harder daily beating than almost anything else in a building — sun, monsoon rain, spilled drinks, bare feet, furniture legs dragged across the surface. A well-engineered composite board is built with that abuse in mind: the fading, splintering, and warping that plague solid timber decking are designed out at the material level, so the finish an architect specifies on day one is closer to what's still standing five years later.
+              </p>
+              <blockquote>
+                The right decking doesn't just survive outdoor conditions — it disappears into the background of daily use.
+              </blockquote>
+            </section>
+
+            <div className="ed-section-divider">
+              <div className="grain-divider" style={{ width: "220px" }} />
+            </div>
+
+            <section>
+              <h2>Design Beyond the Deck</h2>
+              <p>
+                NewTechWood's broader product range extends the same engineered-timber approach to cladding, siding, fencing, railing, and ceiling systems — giving architects a consistent material language to carry from the deck itself up the walls and across the ceiling line of an outdoor room, rather than mixing in unrelated finishes.
+              </p>
+            </section>
+          </>
+        )}
+      </main>
+
+      {/* EXPERIENCE CENTRE CTA BLOCK */}
+      <div className="ed-cta-block">
+        <div className="ed-cta-inner">
+          <div className="ed-eyebrow">
+            <span className="grain-mark"><span></span><span></span><span></span></span>
+            Visit in Person
+          </div>
+          <h2>See how NewTechWood transforms an outdoor space</h2>
+          <p>
+            The Aaren IntPro Experience Centre keeps full board runs, fastener systems, and colourways on display, so a finish that reads well in a spec sheet can be checked against how it actually feels underfoot.
+          </p>
+          <div className="ed-cta-meta">
+            <div><strong>Location</strong>Mysore Road, Bengaluru</div>
+            <div><strong>Hours</strong>Mon&ndash;Sat, 10am&ndash;6:30pm</div>
+            <div><strong>Ideal for</strong>Architects, builders &amp; homeowners</div>
+          </div>
+          <Link className="ed-cta-button" href="/contact">
+            Plan a Visit
+          </Link>
+        </div>
+      </div>
+
+      {/* 5 REASONS SPECIFICATION CASE GRID */}
+      <main className="ed-article-body ed-reasons-intro" style={{ paddingTop: "52px" }}>
+        <div className="ed-eyebrow">
+          <span className="grain-mark"><span></span><span></span><span></span></span>
+          The Specification Case
+        </div>
+        <h2>5 Reasons Architects &amp; Builders Choose NewTechWood</h2>
+        <p>
+          The recurring reasons the material keeps making it onto approved-materials lists, in the order they usually come up in a site meeting:
+        </p>
+
+        <div className="ed-reasons-grid">
+          {reasonsData.map((item) => (
+            <div key={item.num} className={`ed-reason-card ${item.full ? "full" : ""}`}>
+              <span className="ed-reason-num">{item.num}</span>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </main>
+
+      {/* ARTICLE FOOTER, TAGS & COMMENTS */}
+      <footer className="ed-article-footer">
+        <div className="ed-tags">
+          {tagsList.map((tag, idx) => (
+            <span key={idx} className="ed-tag">{tag}</span>
+          ))}
         </div>
 
-        {/* 4. NARROW EDITORIAL READING COLUMN (MAX-WIDTH 820px) */}
-        <main className="max-w-[820px] mx-auto">
-          
-          {/* Formatted Article Body */}
-          {rawContent.includes("<") && rawContent.includes(">") ? (
-            <>
-              <style jsx global>{`
-                .article-rich-content {
-                  color: #262626;
-                  font-size: 18px;
-                  line-height: 1.85;
-                }
-                .article-rich-content h1,
-                .article-rich-content h2,
-                .article-rich-content h3,
-                .article-rich-content h4 {
-                  color: #80673f;
-                  font-weight: 800;
-                  margin-top: 2.2rem;
-                  margin-bottom: 0.9rem;
-                  line-height: 1.25;
-                }
-                .article-rich-content p {
-                  margin-bottom: 1.75rem;
-                }
-                .article-rich-content ul,
-                .article-rich-content ol {
-                  margin: 1.5rem 0 1.5rem 1.8rem;
-                  padding-left: 0.5rem;
-                }
-                .article-rich-content ul {
-                  list-style-type: disc;
-                }
-                .article-rich-content ol {
-                  list-style-type: decimal;
-                }
-                .article-rich-content li {
-                  margin-bottom: 0.5rem;
-                }
-                .article-rich-content blockquote {
-                  border-left: 4px solid #80673f;
-                  background: #f7f3eb;
-                  padding: 1.2rem 1.6rem;
-                  margin: 1.8rem 0;
-                  border-radius: 0 10px 10px 0;
-                  font-style: italic;
-                  color: #333;
-                }
-                .article-rich-content img {
-                  display: block;
-                  max-width: 100%;
-                  height: auto;
-                  margin: 2rem auto;
-                  border-radius: 12px;
-                }
-              `}</style>
-              <div
-                style={{ fontSize: article?.bodySize || fontSettings.articleBodySize || "18px" }}
-                className="article-rich-content"
-                dangerouslySetInnerHTML={{ __html: rawContent }}
+        {/* COMMENTS SECTION */}
+        <div className="ed-comments-section">
+          <h3 className="ed-comments-title">Comments ({comments.length})</h3>
+
+          {comments.map((c, i) => (
+            <div key={i} className="ed-comment-card">
+              <div className="ed-comment-author">
+                <span>{c.author}</span>
+                {c.date && <span style={{ opacity: 0.7 }}>{c.date}</span>}
+              </div>
+              <p className="ed-comment-text">{c.text}</p>
+            </div>
+          ))}
+
+          <form onSubmit={handleCommentSubmit} className="ed-comment-form">
+            <h4 style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "12px", textTransform: "uppercase", color: "var(--walnut)", marginBottom: "14px", fontWeight: 600 }}>Add a Comment</h4>
+            <div className="ed-form-field">
+              <label className="ed-form-label">Name</label>
+              <input
+                type="text"
+                required
+                value={newComment.author}
+                onChange={(e) => setNewComment({ ...newComment, author: e.target.value })}
+                className="ed-form-input"
               />
-            </>
-          ) : (
-            <div className="article-body space-y-7 text-[18px] text-neutral-800 leading-[1.85] font-normal">
-              {blocks.map((block, idx) => {
-                const isHeading =
-                  block.length < 65 &&
-                  !block.endsWith(".") &&
-                  !block.includes("\n") &&
-                  !block.match(/^[0-9]\./);
-
-                if (isHeading) {
-                  return (
-                    <h3
-                      key={idx}
-                      className="text-xl md:text-2xl font-black text-[#80673f] uppercase mt-10 mb-3 leading-snug tracking-tight"
-                    >
-                      {block}
-                    </h3>
-                  );
-                }
-
-                return (
-                  <p key={idx} className="whitespace-pre-line text-neutral-800">
-                    {block}
-                  </p>
-                );
-              })}
             </div>
-          )}
-
-          {/* 5. 5 KEY REASONS ARCHITECTS & BUILDERS CHOOSE NEWTECHWOOD SECTION */}
-          {targetSlug.includes("newtechwood") && (
-            <section className="my-14 p-8 md:p-10 bg-[#f7f3eb] rounded-2xl border border-[#e5decb] shadow-xs">
-              <h3 className="text-lg md:text-xl font-black text-[#80673f] uppercase tracking-tight mb-8 pb-4 border-b border-[#e1d5c2] leading-tight">
-                5 KEY REASONS ARCHITECTS & BUILDERS<br className="hidden md:block" /> CHOOSE NEWTECHWOOD
-              </h3>
-
-              <div className="space-y-6">
-                {keyReasonsList.map((reason, rIdx) => (
-                  <div key={rIdx} className="flex items-start gap-4 p-4 rounded-xl bg-white border border-[#eae3d5] shadow-xs">
-                    <span className="text-xl md:text-2xl font-black text-[#80673f] shrink-0 font-mono">
-                      0{rIdx + 1}
-                    </span>
-                    <div>
-                      <h4 className="text-base font-extrabold text-neutral-900 leading-snug">
-                        {reason.title}
-                      </h4>
-                      <p className="text-sm text-neutral-600 font-normal mt-1 leading-relaxed">
-                        {reason.desc}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* 6. EXPERIENCE CENTRE CTA BANNER */}
-          <section className="my-14 p-8 md:p-10 bg-[#80673f] text-white rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#e8dfce] bg-[#655231] px-3 py-1 rounded-sm">
-                EXPERIENCE CENTRE
-              </span>
-              <h3 className="text-xl md:text-2xl font-extrabold mt-3 text-white">
-                Aaren Intpro Experience Centre
-              </h3>
-              <p className="text-sm text-[#e6ded0] mt-2 max-w-xl font-normal leading-relaxed">
-                Explore physical samples, swatches & outdoor decking materials at Mysore Road, Bengaluru.
-              </p>
+            <div className="ed-form-field">
+              <label className="ed-form-label">Message</label>
+              <textarea
+                rows={3}
+                required
+                value={newComment.text}
+                onChange={(e) => setNewComment({ ...newComment, text: e.target.value })}
+                className="ed-form-textarea"
+              />
             </div>
-            <Link
-              href="/contact"
-              className="px-7 py-3.5 bg-white text-[#80673f] hover:bg-[#f5efe6] font-bold text-xs uppercase tracking-widest rounded-full transition-all shadow-md shrink-0 flex items-center gap-2"
-            >
-              <MapPin size={14} /> Book a Visit →
-            </Link>
-          </section>
-
-          {/* 7. CLEAN EDITORIAL COMMENTS SECTION */}
-          <section className="border-t border-neutral-200/80 pt-12 mt-16">
-            
-            {/* Header with Counter */}
-            <div className="flex items-center justify-between mb-8 pb-3 border-b border-neutral-200">
-              <h3 className="text-lg font-black uppercase tracking-wider text-[#80673f]">
-                COMMENTS ({comments.length})
-              </h3>
-            </div>
-
-            {/* Comment List */}
-            <div className="space-y-4 mb-12">
-              {comments.map((c, i) => (
-                <div key={i} className="bg-white border border-neutral-200/90 p-6 rounded-xl shadow-xs">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-extrabold uppercase tracking-wider text-[#80673f]">
-                      {c.author}
-                    </span>
-                    {c.date && <span className="text-[11px] text-neutral-400 font-medium">{c.date}</span>}
-                  </div>
-                  <p className="text-neutral-800 text-sm font-normal leading-relaxed">
-                    {c.text}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* Editorial Add Comment Form */}
-            <form onSubmit={handleCommentSubmit} className="space-y-5 bg-white border border-neutral-200/90 p-8 rounded-xl shadow-xs">
-              <h4 className="text-xs font-black uppercase tracking-widest text-[#80673f]">
-                ADD A COMMENT
-              </h4>
-              
-              <div>
-                <label className="block text-xs uppercase tracking-wider font-bold mb-2 text-neutral-700">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Your full name"
-                  value={newComment.author}
-                  onChange={(e) => setNewComment({ ...newComment, author: e.target.value })}
-                  className="w-full bg-[#fdfcfb] border border-neutral-300 p-3.5 text-neutral-900 text-sm outline-none focus:border-[#80673f] rounded-lg transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs uppercase tracking-wider font-bold mb-2 text-neutral-700">
-                  Message
-                </label>
-                <textarea
-                  rows={4}
-                  required
-                  placeholder="Share your thoughts on this article..."
-                  value={newComment.text}
-                  onChange={(e) => setNewComment({ ...newComment, text: e.target.value })}
-                  className="w-full bg-[#fdfcfb] border border-neutral-300 p-3.5 text-neutral-900 text-sm outline-none focus:border-[#80673f] rounded-lg transition-colors"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="px-8 py-3.5 bg-[#80673f] text-white font-extrabold uppercase tracking-widest text-xs hover:bg-[#685331] transition-colors rounded-full shadow-md cursor-pointer"
-              >
-                POST COMMENT
-              </button>
-            </form>
-          </section>
-
-        </main>
-      </div>
+            <button type="submit" className="ed-form-submit">
+              Post Comment
+            </button>
+          </form>
+        </div>
+      </footer>
     </div>
   );
 }
