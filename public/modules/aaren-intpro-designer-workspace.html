@@ -6,6 +6,64 @@
 <title>Aaren IntPro OS — Designer Workspace</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- ── Firebase Auth Guard ── -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBYSs_xIhwazMSIVNPrktPOaXFjBDeVMsA",
+  authDomain: "aarenintpro-1c09f.firebaseapp.com",
+  projectId: "aarenintpro-1c09f",
+  storageBucket: "aarenintpro-1c09f.firebasestorage.app",
+  databaseURL: "https://aarenintpro-1c09f-default-rtdb.firebaseio.com",
+  messagingSenderId: "603871066511",
+  appId: "1:603871066511:web:722509e20111c88b20b3fa"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    // Not logged in → redirect to login
+    window.location.href = '/login';
+    return;
+  }
+
+  // Inject real user data into the workspace UI
+  const name = user.displayName || user.email?.split('@')[0] || 'Designer';
+  const email = user.email || '';
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
+
+  const inject = () => {
+    const sn = document.getElementById('sidebarName');
+    const sa = document.getElementById('sidebarAvatar');
+    const gt = document.getElementById('greetingText');
+    if (sn) sn.textContent = name;
+    if (sa) sa.textContent = initials;
+    if (gt) gt.textContent = `Good ${greeting}, ${name.split(' ')[0]} 👋`;
+
+    // Store for JS state
+    window.__aarenUser = { name, email, initials };
+
+    // Expose signOut globally so sidebar button can call it
+    window.__firebaseSignOut = () => {
+      signOut(auth).then(() => { window.location.href = '/login'; });
+    };
+  };
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    inject();
+  } else {
+    document.addEventListener('DOMContentLoaded', inject);
+  }
+});
+</script>
+
 <style>
 :root{
   --navy:#08111F;--navy-2:#0D1929;--surface:#101C30;--surface-2:#152238;
@@ -1505,6 +1563,29 @@ renderDashProjects();
 renderDashTasks();
 updateTaskBadge();
 document.getElementById('nav-proj-count').textContent=state.projects.length;
+
+// Sign-out button in sidebar footer
+document.querySelector('.user-chip').addEventListener('click', function(e) {
+  // Show a mini menu
+  const existing = document.getElementById('user-menu-pop');
+  if (existing) { existing.remove(); return; }
+  const pop = document.createElement('div');
+  pop.id = 'user-menu-pop';
+  pop.style.cssText = 'position:absolute;bottom:80px;left:14px;right:14px;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:12px;padding:8px;z-index:60;box-shadow:var(--shadow-glass);';
+  pop.innerHTML = `
+    <div style="padding:8px 10px;font-size:11px;color:var(--slate-dim);border-bottom:1px solid var(--border);margin-bottom:6px;">
+      ${window.__aarenUser?.email || 'Signed in'}
+    </div>
+    <button onclick="showToast('Profile settings coming soon','info');document.getElementById('user-menu-pop').remove();" style="width:100%;text-align:left;padding:8px 10px;border-radius:8px;border:none;background:transparent;color:var(--white);font-size:12.5px;font-weight:600;cursor:pointer;">
+      ⚙ Profile Settings
+    </button>
+    <button onclick="if(window.__firebaseSignOut){window.__firebaseSignOut();}else{window.location.href='/login';}" style="width:100%;text-align:left;padding:8px 10px;border-radius:8px;border:none;background:transparent;color:var(--red);font-size:12.5px;font-weight:600;cursor:pointer;">
+      ⇠ Sign Out
+    </button>`;
+  document.querySelector('.sidebar').style.position = 'relative';
+  document.querySelector('.sidebar').appendChild(pop);
+  setTimeout(() => { document.addEventListener('click', function rem(ev){ if(!pop.contains(ev.target)){pop.remove();document.removeEventListener('click',rem);} }); }, 100);
+});
 </script>
 </body>
 </html>
