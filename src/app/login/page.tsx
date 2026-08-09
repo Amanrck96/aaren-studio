@@ -19,6 +19,13 @@ export default function LoginPage() {
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // Admin Access Rule: Admin Console is strictly exclusive to /admin/login
+    if (formData.email.trim().toLowerCase() === "info@aarenintpro.com") {
+      setError("🔒 Master Admin Console is strictly exclusive to https://aarenstudio.vercel.app/admin/login. Please sign in at /admin/login.");
+      return;
+    }
+
     setLoading(true);
 
     const res = await loginWithEmail(formData.email, formData.password);
