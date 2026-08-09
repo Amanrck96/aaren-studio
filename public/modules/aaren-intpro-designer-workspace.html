@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,596 +7,1504 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --navy:#08111F; --navy-2:#0D1929; --surface:#101C30; --surface-2:#152238;
-    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
-    --white:#F8FAFC; --slate:#93A2B8; --slate-dim:#5E6E85;
-    --purple:#7C3AED; --purple-soft:rgba(124,58,237,0.14); --blue:#2563EB; --blue-soft:rgba(37,99,235,0.14);
-    --green:#22C55E; --green-soft:rgba(34,197,94,0.14);
-    --amber:#F59E0B; --amber-soft:rgba(245,158,11,0.14);
-    --red:#F87171; --red-soft:rgba(248,113,113,0.14);
-    --radius-lg:20px; --radius-md:16px; --radius-sm:10px;
-    --shadow-glass:0 8px 40px rgba(0,0,0,0.45);
-  }
-  [data-theme="light"]{
-    --navy:#F6F5FA; --navy-2:#EFEEF6; --surface:#FFFFFF; --surface-2:#F9F8FC;
-    --border:rgba(15,23,42,0.08); --border-strong:rgba(15,23,42,0.14);
-    --white:#0B1220; --slate:#4C5A72; --slate-dim:#8792A3;
-    --purple-soft:rgba(124,58,237,0.08); --blue-soft:rgba(37,99,235,0.08);
-    --green-soft:rgba(34,197,94,0.1); --amber-soft:rgba(245,158,11,0.1); --red-soft:rgba(248,113,113,0.1);
-    --shadow-glass:0 8px 40px rgba(15,23,42,0.08);
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html,body{height:100%;}
-  body{font-family:'Inter',system-ui,sans-serif; background:var(--navy); color:var(--white); -webkit-font-smoothing:antialiased; transition:background .3s,color .3s;}
-  a{color:inherit; text-decoration:none;}
-  button{font-family:inherit; cursor:pointer;}
-  .page{display:none;}
-  .page.active{display:block; animation:fadeIn .3s ease;}
-  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
-  .badge{font-size:10px; font-weight:700; padding:4px 9px; border-radius:20px; display:inline-flex; align-items:center; gap:4px;}
-  .badge.green{background:var(--green-soft); color:var(--green);}
-  .badge.amber{background:var(--amber-soft); color:var(--amber);}
-  .badge.purple{background:var(--purple-soft); color:var(--purple);}
-  .badge.blue{background:var(--blue-soft); color:var(--blue);}
-  .badge.red{background:var(--red-soft); color:var(--red);}
-  .btn-primary{padding:9px 16px; border-radius:9px; border:none; background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff; font-size:12.5px; font-weight:700; box-shadow:0 8px 22px rgba(124,58,237,0.28);}
-  .btn-ghost{padding:8px 14px; border-radius:9px; border:1px solid var(--border-strong); background:var(--surface); color:var(--white); font-size:12.5px; font-weight:600;}
-  .btn-ghost.sm{padding:6px 11px; font-size:11.5px;}
+:root{
+  --navy:#08111F;--navy-2:#0D1929;--surface:#101C30;--surface-2:#152238;
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14);
+  --white:#F8FAFC;--slate:#93A2B8;--slate-dim:#5E6E85;
+  --purple:#7C3AED;--purple-soft:rgba(124,58,237,0.14);
+  --blue:#2563EB;--blue-soft:rgba(37,99,235,0.14);
+  --green:#22C55E;--green-soft:rgba(34,197,94,0.14);
+  --amber:#F59E0B;--amber-soft:rgba(245,158,11,0.14);
+  --red:#F87171;--red-soft:rgba(248,113,113,0.14);
+  --radius-lg:20px;--radius-md:16px;--radius-sm:10px;
+  --shadow-glass:0 8px 40px rgba(0,0,0,0.45);
+  --sidebar-w:220px;
+}
+[data-theme="light"]{
+  --navy:#F6F5FA;--navy-2:#EFEEF6;--surface:#FFFFFF;--surface-2:#F9F8FC;
+  --border:rgba(15,23,42,0.08);--border-strong:rgba(15,23,42,0.14);
+  --white:#0B1220;--slate:#4C5A72;--slate-dim:#8792A3;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--navy);color:var(--white);-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;transition:all .15s;}
+input,select,textarea{font-family:inherit;}
 
-  /* ===== APP SHELL (sidebar + topbar) used by workspace pages ===== */
-  .shell{display:grid; grid-template-columns:220px 1fr; min-height:100vh;}
-  @media(max-width:980px){.shell{grid-template-columns:1fr;} .sidebar{display:none;}}
-  .sidebar{border-right:1px solid var(--border); padding:18px 14px; position:sticky; top:0; height:100vh; overflow-y:auto;}
-  .wordmark{display:flex; align-items:center; gap:10px; font-weight:800; font-size:14px; padding:6px 8px 20px;}
-  .wordmark .mark{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;}
-  .nav-item{display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; font-size:12.5px; font-weight:600; color:var(--slate); margin-bottom:2px;}
-  .nav-item .ic{width:16px;height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px;}
-  .nav-item.on{background:var(--purple-soft); color:var(--purple);}
-  .nav-label{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--slate-dim); padding:14px 10px 6px;}
+/* ──── LAYOUT ──── */
+.app{display:flex;min-height:100vh;}
+.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;overflow-y:auto;z-index:50;transition:transform .3s;}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:18px 14px 14px;font-weight:800;font-size:14px;border-bottom:1px solid var(--border);}
+.brand-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0;}
+.nav-section{padding:12px 10px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--slate-dim);}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;font-size:12.5px;font-weight:600;color:var(--slate);cursor:pointer;margin:1px 4px;transition:all .15s;}
+.nav-item:hover{background:var(--surface-2);color:var(--white);}
+.nav-item.active{background:var(--purple-soft);color:var(--purple);}
+.nav-item .ni{width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;}
+.nav-badge{margin-left:auto;background:var(--purple);color:#fff;border-radius:20px;font-size:10px;font-weight:700;padding:2px 7px;}
+.sidebar-footer{margin-top:auto;padding:12px 14px;border-top:1px solid var(--border);}
+.user-chip{display:flex;align-items:center;gap:8px;padding:8px;border-radius:10px;background:var(--surface-2);cursor:pointer;}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-name{font-size:12px;font-weight:600;}
+.user-role{font-size:10.5px;color:var(--slate-dim);}
 
-  .topbar{display:flex; align-items:center; justify-content:space-between; padding:14px 26px; border-bottom:1px solid var(--border); background:rgba(8,17,31,0.6); backdrop-filter:blur(14px); position:sticky; top:0; z-index:30;}
-  [data-theme="light"] .topbar{background:rgba(246,245,250,0.75);}
-  .crumb{font-size:12.5px; color:var(--slate-dim);}
-  .crumb b{color:var(--white);}
-  .topbar-right{display:flex; align-items:center; gap:10px;}
-  .icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--border-strong);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--slate);}
-  .icon-btn svg{width:14px;height:14px;}
-  .cmdk{display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:9px; border:1px solid var(--border-strong); background:var(--surface); color:var(--slate-dim); font-size:11.5px;}
-  .cmdk kbd{font-size:10px; padding:1px 5px; border-radius:4px; background:var(--surface-2); border:1px solid var(--border-strong);}
+/* ──── MAIN AREA ──── */
+.main-wrap{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:58px;background:rgba(8,17,31,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+[data-theme="light"] .topbar{background:rgba(246,245,250,.88);}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.breadcrumb{font-size:13px;color:var(--slate-dim);}
+.breadcrumb b{color:var(--white);}
+.breadcrumb span{margin:0 5px;}
+.topbar-search{display:flex;align-items:center;gap:8px;padding:7px 13px;border-radius:9px;border:1px solid var(--border-strong);background:var(--surface);color:var(--slate-dim);font-size:12px;min-width:220px;cursor:text;}
+.topbar-search input{background:transparent;border:none;outline:none;color:var(--white);font-size:12px;width:100%;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--border-strong);background:var(--surface);color:var(--slate);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.icon-btn:hover{border-color:var(--purple);color:var(--purple);}
 
-  .main{padding:24px 28px 60px;}
+/* ──── BUTTONS ──── */
+.btn-primary{padding:9px 16px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;font-size:12.5px;font-weight:700;box-shadow:0 6px 20px rgba(124,58,237,.28);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,58,237,.38);}
+.btn-ghost{padding:8px 14px;border-radius:9px;border:1px solid var(--border-strong);background:transparent;color:var(--white);font-size:12.5px;font-weight:600;}
+.btn-ghost:hover{background:var(--surface-2);}
+.btn-ghost.sm{padding:6px 11px;font-size:11.5px;}
+.btn-danger{padding:8px 14px;border-radius:9px;border:1px solid var(--red-soft);background:var(--red-soft);color:var(--red);font-size:12.5px;font-weight:600;}
 
-  /* ===== DASHBOARD ===== */
-  .dash-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;}
-  .dash-head h1{font-size:20px; font-weight:800; letter-spacing:-0.02em;}
-  .dash-head p{font-size:12.5px; color:var(--slate-dim); margin-top:3px;}
-  .kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px;}
-  @media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
-  .kpi-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px;}
-  .kpi-card .lbl{font-size:11px; color:var(--slate-dim); margin-bottom:6px;}
-  .kpi-card .val{font-size:22px; font-weight:800;}
-  .kpi-card .trend{font-size:11px; margin-top:6px; font-weight:600;}
-  .kpi-card .trend.up{color:var(--green);}
-  .dash-grid{display:grid; grid-template-columns:1.4fr 1fr; gap:16px;}
-  @media(max-width:980px){.dash-grid{grid-template-columns:1fr;}}
-  .panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:18px; margin-bottom:16px;}
-  .panel h3{font-size:13.5px; font-weight:700; margin-bottom:14px;}
-  .task-row{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); font-size:12.5px;}
-  .task-row:last-child{border-bottom:none;}
-  .task-row input{accent-color:var(--purple);}
-  .task-row .t{flex:1;}
-  .task-row .due{font-size:11px; color:var(--slate-dim);}
-  .proj-row{display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);}
-  .proj-row:last-child{border-bottom:none;}
-  .proj-row .thumb{width:40px;height:40px;border-radius:10px; background:linear-gradient(135deg,var(--purple-soft),var(--blue-soft)); flex-shrink:0;}
-  .proj-row .n{flex:1;}
-  .proj-row .n b{font-size:12.5px; display:block;}
-  .proj-row .n span{font-size:11px; color:var(--slate-dim);}
-  .proj-row .ring{width:30px;height:30px;border-radius:50%; background:conic-gradient(var(--purple) 0% 68%, var(--border-strong) 68% 100%); display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:800; flex-shrink:0;}
-  .proj-row .ring div{width:22px;height:22px;border-radius:50%; background:var(--surface); display:flex; align-items:center; justify-content:center;}
-  .meeting-row{display:flex; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); font-size:12px;}
-  .meeting-row:last-child{border-bottom:none;}
-  .meeting-row .time{width:52px; color:var(--slate-dim); font-size:11px; flex-shrink:0;}
+/* ──── BADGES ──── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:700;}
+.badge.green{background:var(--green-soft);color:var(--green);}
+.badge.amber{background:var(--amber-soft);color:var(--amber);}
+.badge.blue{background:var(--blue-soft);color:var(--blue);}
+.badge.purple{background:var(--purple-soft);color:var(--purple);}
+.badge.red{background:var(--red-soft);color:var(--red);}
 
-  /* ===== PROJECT LIST ===== */
-  .list-toolbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;}
-  .view-tabs{display:flex; gap:6px;}
-  .view-tabs button{padding:7px 13px; border-radius:8px; font-size:12px; font-weight:600; color:var(--slate); border:1px solid var(--border-strong); background:var(--surface);}
-  .view-tabs button.on{background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff; border-color:transparent;}
-  .proj-table-wrap{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden;}
-  table{width:100%; border-collapse:collapse; font-size:12.5px;}
-  thead th{text-align:left; padding:12px 14px; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--slate-dim); border-bottom:1px solid var(--border); background:var(--surface-2);}
-  tbody td{padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:middle;}
-  tbody tr:last-child td{border-bottom:none;}
-  tbody tr:hover{background:var(--surface-2); cursor:pointer;}
-  .pname{font-weight:700;}
-  .pclient{font-size:11px; color:var(--slate-dim);}
-  .progress-bar{width:90px; height:5px; border-radius:5px; background:var(--border-strong); overflow:hidden;}
-  .progress-bar div{height:100%; background:linear-gradient(90deg,var(--purple),var(--blue));}
-  .avatars{display:flex;}
-  .avatars div{width:22px;height:22px;border-radius:50%; background:linear-gradient(135deg,var(--purple),var(--blue)); border:2px solid var(--surface); margin-left:-6px; font-size:9px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700;}
-  .avatars div:first-child{margin-left:0;}
+/* ──── PANELS ──── */
+.content-area{padding:24px 26px 60px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;}
+.card-title{font-size:13.5px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
 
-  /* ===== NEW PROJECT WIZARD ===== */
-  .wizard-wrap{max-width:640px; margin:0 auto;}
-  .wizard-steps{display:flex; justify-content:space-between; margin-bottom:30px; position:relative;}
-  .wizard-steps::before{content:''; position:absolute; top:13px; left:0; right:0; height:2px; background:var(--border-strong); z-index:0;}
-  .wstep{position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:6px;}
-  .wstep .dot{width:26px;height:26px;border-radius:50%; background:var(--surface); border:2px solid var(--border-strong); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--slate-dim);}
-  .wstep.done .dot{background:var(--green); border-color:var(--green); color:#fff;}
-  .wstep.active .dot{background:linear-gradient(135deg,var(--purple),var(--blue)); border-color:transparent; color:#fff;}
-  .wstep span{font-size:10.5px; color:var(--slate-dim); font-weight:600;}
-  .wstep.active span{color:var(--white);}
-  .wizard-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px;}
-  .wizard-card h2{font-size:17px; font-weight:800; margin-bottom:4px;}
-  .wizard-card p.sub{font-size:12px; color:var(--slate-dim); margin-bottom:22px;}
-  .field{margin-bottom:16px;}
-  .field label{font-size:11.5px; font-weight:600; color:var(--slate); margin-bottom:6px; display:block;}
-  .field input, .field select{width:100%; padding:11px 13px; border-radius:10px; border:1px solid var(--border-strong); background:var(--surface-2); color:var(--white); font-size:12.5px; font-family:inherit; outline:none;}
-  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-  .type-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
-  .type-tile{padding:14px 8px; text-align:center; border-radius:11px; border:1px solid var(--border-strong); background:var(--surface-2); font-size:11.5px; font-weight:600; color:var(--slate);}
-  .type-tile.on{border-color:var(--purple); background:var(--purple-soft); color:var(--purple);}
-  .wizard-actions{display:flex; justify-content:space-between; margin-top:26px;}
+/* ──── PAGES ──── */
+.page{display:none;}
+.page.active{display:block;animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
 
-  /* ===== PROJECT DETAIL ===== */
-  .pdetail-hero{border-radius:var(--radius-lg); border:1px solid var(--border); padding:26px; margin-bottom:18px; position:relative; overflow:hidden; background:radial-gradient(circle at 20% 0%, rgba(124,58,237,0.22), transparent 55%), var(--surface);}
-  .pdetail-hero .top{display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px;}
-  .pdetail-hero h1{font-size:22px; font-weight:800; letter-spacing:-0.01em;}
-  .pdetail-hero .sub{font-size:12px; color:var(--slate-dim); margin-top:4px;}
-  .pdetail-stats{display:flex; gap:26px; margin-top:20px; flex-wrap:wrap;}
-  .pdetail-stat .k{font-size:10.5px; color:var(--slate-dim); text-transform:uppercase; letter-spacing:0.05em;}
-  .pdetail-stat .v{font-size:16px; font-weight:800; margin-top:3px;}
-  .pd-tabs{display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid var(--border); overflow-x:auto;}
-  .pd-tabs button{padding:10px 4px; margin-right:20px; border:none; background:transparent; color:var(--slate-dim); font-size:12.5px; font-weight:700; border-bottom:2px solid transparent; white-space:nowrap;}
-  .pd-tabs button.on{color:var(--white); border-color:var(--purple);}
-  .activity-item{display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); font-size:12px;}
-  .activity-item:last-child{border-bottom:none;}
-  .activity-item .av{width:26px;height:26px;border-radius:50%; background:linear-gradient(135deg,var(--purple),var(--blue)); flex-shrink:0;}
-  .activity-item .txt b{color:var(--white);}
-  .activity-item .txt{color:var(--slate);}
-  .activity-item .ts{font-size:10.5px; color:var(--slate-dim); margin-top:2px;}
+/* ──── DASHBOARD ──── */
+.dash-greeting{font-size:22px;font-weight:800;margin-bottom:4px;}
+.dash-sub{font-size:13px;color:var(--slate-dim);}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0;}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px;}
+.kpi-lbl{font-size:11px;color:var(--slate-dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.kpi-val{font-size:28px;font-weight:900;}
+.kpi-trend{font-size:11px;margin-top:6px;font-weight:600;color:var(--green);}
+.kpi-trend.down{color:var(--amber);}
+.two-col{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;}
+@media(max-width:900px){.two-col{grid-template-columns:1fr;}}
+.proj-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.proj-row:last-child{border-bottom:none;}
+.proj-thumb{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--purple-soft),var(--blue-soft));flex-shrink:0;}
+.proj-info{flex:1;}
+.proj-name{font-size:12.5px;font-weight:700;}
+.proj-client{font-size:11px;color:var(--slate-dim);margin-top:2px;}
+.ring{width:36px;height:36px;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;}
+.ring svg{position:absolute;inset:0;}
+.task-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+.task-item:last-child{border-bottom:none;}
+.task-item input[type=checkbox]{accent-color:var(--purple);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.task-item.done .task-text{text-decoration:line-through;color:var(--slate-dim);}
+.task-text{flex:1;}
+.task-due{font-size:11px;color:var(--slate-dim);}
+.meeting-row{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.meeting-row:last-child{border-bottom:none;}
+.meeting-time{width:48px;font-size:11px;color:var(--slate-dim);flex-shrink:0;padding-top:2px;}
 
-  /* ===== DIGITAL TWIN ===== */
-  .twin-layout{display:grid; grid-template-columns:280px 1fr; gap:20px;}
-  @media(max-width:980px){.twin-layout{grid-template-columns:1fr;}}
-  .twin-tree{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; align-self:start; position:sticky; top:78px;}
-  .floor-group{margin-bottom:6px;}
-  .floor-head{display:flex; align-items:center; gap:8px; padding:9px 8px; font-size:12px; font-weight:700; color:var(--slate); cursor:pointer;}
-  .floor-head .chev{font-size:10px; color:var(--slate-dim);}
-  .room-item{display:flex; align-items:center; gap:8px; padding:8px 8px 8px 26px; border-radius:8px; font-size:12px; color:var(--slate); cursor:pointer;}
-  .room-item:hover{background:var(--surface-2);}
-  .room-item.on{background:var(--purple-soft); color:var(--purple); font-weight:600;}
-  .room-item .stat-dot{width:6px;height:6px;border-radius:50%; margin-left:auto; flex-shrink:0;}
-  .room-item .stat-dot.done{background:var(--green);}
-  .room-item .stat-dot.progress{background:var(--amber);}
-  .room-item .stat-dot.notstarted{background:var(--border-strong);}
+/* ──── PROJECTS LIST ──── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.view-btns{display:flex;gap:6px;}
+.view-btn{padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid var(--border-strong);background:var(--surface);color:var(--slate);}
+.view-btn.on{background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;border-color:transparent;}
+.search-box{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:9px;border:1px solid var(--border-strong);background:var(--surface);}
+.search-box input{border:none;outline:none;background:transparent;color:var(--white);font-size:12px;width:180px;}
+.proj-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.proj-table thead th{text-align:left;padding:11px 14px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--slate-dim);border-bottom:1px solid var(--border);background:var(--surface-2);}
+.proj-table tbody td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.proj-table tbody tr:hover{background:var(--surface-2);}
+.proj-table tbody tr{cursor:pointer;}
+.pbar{width:80px;height:4px;border-radius:4px;background:var(--border-strong);}
+.pbar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--blue));}
+.avs{display:flex;}
+.av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--blue));border:2px solid var(--surface);margin-left:-5px;font-size:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;}
+.av:first-child{margin-left:0;}
+.proj-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:900px){.proj-card-grid{grid-template-columns:repeat(2,1fr);}}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px;cursor:pointer;transition:border-color .2s,transform .2s;}
+.proj-card:hover{border-color:var(--purple);transform:translateY(-2px);}
+.pc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.pc-thumb{width:100%;height:80px;border-radius:10px;background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(37,99,235,.25));margin-bottom:12px;}
 
-  .twin-view{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; min-height:560px; position:relative; background-image:radial-gradient(var(--border-strong) 1px, transparent 1px); background-size:26px 26px;}
-  .twin-building{max-width:520px; margin:0 auto;}
-  .twin-floor{margin-bottom:22px;}
-  .twin-floor-label{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--slate-dim); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
-  .twin-floor-label::after{content:''; flex:1; height:1px; background:var(--border);}
-  .twin-room-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
-  .twin-room{background:var(--surface-2); border:1px solid var(--border-strong); border-radius:13px; padding:16px; cursor:pointer; transition:border-color .2s, transform .2s;}
-  .twin-room:hover{border-color:var(--purple); transform:translateY(-2px);}
-  .twin-room h4{font-size:13px; font-weight:700; margin-bottom:8px;}
-  .twin-room .bar{height:4px; border-radius:4px; background:var(--border-strong); overflow:hidden; margin-bottom:6px;}
-  .twin-room .bar div{height:100%; background:linear-gradient(90deg,var(--purple),var(--blue));}
-  .twin-room .meta{font-size:10.5px; color:var(--slate-dim);}
+/* ──── WIZARD ──── */
+.wizard-wrap{max-width:600px;margin:0 auto;}
+.wizard-steps{display:flex;justify-content:space-between;margin-bottom:32px;position:relative;}
+.wizard-steps::before{content:'';position:absolute;top:13px;left:0;right:0;height:2px;background:var(--border-strong);z-index:0;}
+.ws{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.ws .dot{width:26px;height:26px;border-radius:50%;background:var(--surface-2);border:2px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--slate-dim);}
+.ws.done .dot{background:var(--green);border-color:var(--green);color:#fff;}
+.ws.active .dot{background:linear-gradient(135deg,var(--purple),var(--blue));border-color:transparent;color:#fff;}
+.ws span{font-size:10px;color:var(--slate-dim);font-weight:600;}
+.ws.active span,.ws.done span{color:var(--white);}
+.wizard-body{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;}
+.wizard-body h2{font-size:17px;font-weight:800;margin-bottom:4px;}
+.wizard-body .sub{font-size:12px;color:var(--slate-dim);margin-bottom:22px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:11.5px;font-weight:600;color:var(--slate);margin-bottom:6px;}
+.field input,.field select{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--white);font-size:12.5px;outline:none;transition:border-color .2s;}
+.field input:focus,.field select:focus{border-color:var(--purple);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.type-tile{padding:13px 8px;text-align:center;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);font-size:12px;font-weight:600;color:var(--slate);cursor:pointer;transition:all .15s;}
+.type-tile.on{border-color:var(--purple);background:var(--purple-soft);color:var(--purple);}
+.wiz-actions{display:flex;justify-content:space-between;margin-top:24px;gap:10px;}
+.step-content{display:none;}
+.step-content.active{display:block;}
 
-  /* ===== ROOM WORKSPACE ===== */
-  .room-hero{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; flex-wrap:wrap; gap:14px;}
-  .room-hero h1{font-size:20px; font-weight:800;}
-  .room-hero .sub{font-size:12px; color:var(--slate-dim); margin-top:3px;}
-  .room-tabs{display:flex; gap:6px; margin-bottom:18px; flex-wrap:wrap;}
-  .room-tabs button{padding:8px 14px; border-radius:9px; font-size:12px; font-weight:600; color:var(--slate); border:1px solid var(--border-strong); background:var(--surface);}
-  .room-tabs button.on{background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff; border-color:transparent;}
-  .room-grid{display:grid; grid-template-columns:2fr 1fr; gap:18px;}
-  @media(max-width:980px){.room-grid{grid-template-columns:1fr;}}
-  .room-cat-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
-  .room-cat-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden;}
-  .room-cat-card .im{height:90px; background:linear-gradient(135deg,var(--purple-soft),var(--blue-soft));}
-  .room-cat-card .b{padding:10px 12px;}
-  .room-cat-card .b .cat{font-size:10px; color:var(--slate-dim); text-transform:uppercase; letter-spacing:0.05em;}
-  .room-cat-card .b h5{font-size:12.5px; font-weight:700; margin-top:2px;}
-  .room-cat-card .b .pr{font-size:11.5px; font-weight:700; margin-top:5px;}
-  .room-side .panel{margin-bottom:14px;}
-  .budget-row{display:flex; justify-content:space-between; font-size:12px; padding:6px 0;}
-  .budget-row .k{color:var(--slate-dim);}
-  .budget-total{border-top:1px solid var(--border); margin-top:6px; padding-top:10px; font-weight:800; font-size:14px; display:flex; justify-content:space-between;}
+/* ──── PROJECT DETAIL ──── */
+.proj-hero{border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:18px;background:radial-gradient(circle at 20% 0%,rgba(124,58,237,.18),transparent 55%),var(--surface);}
+.proj-hero h1{font-size:22px;font-weight:800;}
+.proj-hero .sub{font-size:12px;color:var(--slate-dim);margin-top:4px;}
+.proj-stats{display:flex;gap:28px;margin-top:18px;flex-wrap:wrap;}
+.pstat .lbl{font-size:10.5px;color:var(--slate-dim);text-transform:uppercase;letter-spacing:.05em;}
+.pstat .val{font-size:17px;font-weight:800;margin-top:2px;}
+.pd-tabs{display:flex;gap:2px;margin-bottom:18px;border-bottom:1px solid var(--border);overflow-x:auto;}
+.pd-tab{padding:10px 4px;margin-right:18px;border:none;background:transparent;color:var(--slate-dim);font-size:12.5px;font-weight:700;border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer;transition:all .15s;}
+.pd-tab:hover{color:var(--white);}
+.pd-tab.on{color:var(--white);border-color:var(--purple);}
+.pd-panel{display:none;}
+.pd-panel.active{display:block;}
+.activity-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.activity-item:last-child{border-bottom:none;}
+.act-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--blue));flex-shrink:0;}
+.act-txt{color:var(--slate);}
+.act-txt b{color:var(--white);}
+.act-time{font-size:10.5px;color:var(--slate-dim);margin-top:2px;}
 
-  /* ===== TASK KANBAN ===== */
-  .kanban{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; overflow-x:auto;}
-  @media(max-width:980px){.kanban{grid-template-columns:repeat(2,1fr);}}
-  .kcol{background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:12px; min-height:200px;}
-  .kcol-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:0 4px;}
-  .kcol-head h5{font-size:12px; font-weight:700;}
-  .kcol-head span{font-size:10.5px; color:var(--slate-dim); background:var(--surface); padding:2px 7px; border-radius:10px;}
-  .kcard{background:var(--surface); border:1px solid var(--border-strong); border-radius:11px; padding:12px; margin-bottom:10px; cursor:grab;}
-  .kcard .tag{font-size:9.5px; font-weight:700; padding:3px 7px; border-radius:6px; display:inline-block; margin-bottom:8px;}
-  .kcard p{font-size:12px; font-weight:600; line-height:1.4;}
-  .kcard .foot{display:flex; align-items:center; justify-content:space-between; margin-top:10px;}
-  .kcard .foot .due{font-size:10.5px; color:var(--slate-dim);}
-  .kcard .foot .av{width:22px;height:22px;border-radius:50%; background:linear-gradient(135deg,var(--purple),var(--blue));}
+/* ──── DIGITAL TWIN ──── */
+.twin-layout{display:grid;grid-template-columns:260px 1fr;gap:16px;}
+.twin-tree{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;align-self:start;position:sticky;top:74px;}
+.twin-tree h4{font-size:12px;font-weight:700;color:var(--slate-dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;}
+.floor-group{margin-bottom:8px;}
+.floor-label{font-size:11.5px;font-weight:700;color:var(--slate);padding:7px 6px 5px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.room-row{display:flex;align-items:center;gap:8px;padding:7px 8px 7px 20px;border-radius:8px;font-size:12px;color:var(--slate);cursor:pointer;transition:all .15s;}
+.room-row:hover{background:var(--surface-2);color:var(--white);}
+.room-row.active{background:var(--purple-soft);color:var(--purple);font-weight:600;}
+.stat-dot{width:6px;height:6px;border-radius:50%;margin-left:auto;flex-shrink:0;}
+.stat-dot.done{background:var(--green);}
+.stat-dot.progress{background:var(--amber);}
+.stat-dot.pending{background:var(--border-strong);}
+.twin-canvas{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;min-height:520px;background-image:radial-gradient(var(--border-strong) 1px,transparent 1px);background-size:24px 24px;}
+.floor-block{margin-bottom:24px;}
+.floor-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-dim);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.floor-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.room-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.room-block{background:var(--surface-2);border:1px solid var(--border-strong);border-radius:13px;padding:16px;cursor:pointer;transition:border-color .2s,transform .2s;}
+.room-block:hover{border-color:var(--purple);transform:translateY(-2px);}
+.room-block h4{font-size:13px;font-weight:700;margin-bottom:8px;}
+.room-block .rbar{height:4px;border-radius:4px;background:var(--border-strong);overflow:hidden;margin-bottom:5px;}
+.room-block .rbar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:4px;}
+.room-block .rmeta{font-size:10.5px;color:var(--slate-dim);}
 
-  /* ===== FILES ===== */
-  .files-toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;}
-  .files-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:14px;}
-  @media(max-width:980px){.files-grid{grid-template-columns:repeat(2,1fr);}}
-  .folder-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; text-align:center;}
-  .folder-card .ic{width:38px;height:38px; border-radius:10px; margin:0 auto 10px; background:var(--purple-soft); color:var(--purple); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px;}
-  .folder-card h5{font-size:12px; font-weight:700;}
-  .folder-card span{font-size:10.5px; color:var(--slate-dim);}
-  .file-row{display:flex; align-items:center; gap:12px; padding:11px 14px; border:1px solid var(--border); border-radius:12px; margin-bottom:8px; background:var(--surface);}
-  .file-row .ic{width:32px;height:32px;border-radius:9px; background:var(--blue-soft); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; flex-shrink:0;}
-  .file-row .t{flex:1;}
-  .file-row .t b{font-size:12.5px; display:block;}
-  .file-row .t span{font-size:10.5px; color:var(--slate-dim);}
+/* ──── ROOM WORKSPACE ──── */
+.room-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:12px;}
+.room-header h1{font-size:19px;font-weight:800;}
+.room-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.room-tab{padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid var(--border-strong);background:var(--surface);color:var(--slate);cursor:pointer;}
+.room-tab.on{background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;border-color:transparent;}
+.room-content{display:none;}
+.room-content.active{display:block;}
+.room-layout{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+@media(max-width:900px){.room-layout{grid-template-columns:1fr;}}
+.product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.product-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;transition:border-color .2s;}
+.product-card:hover{border-color:var(--purple);}
+.pc-img{height:80px;background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(37,99,235,.2));}
+.pc-body{padding:10px 12px;}
+.pc-cat{font-size:10px;font-weight:700;color:var(--slate-dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;}
+.pc-name{font-size:12.5px;font-weight:700;}
+.pc-price{font-size:12px;color:var(--purple);font-weight:700;margin-top:4px;}
+.pc-actions{padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:6px;}
+.budget-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+.budget-row:last-child{border-bottom:none;}
+.budget-row .lbl{color:var(--slate);}
+.budget-total{display:flex;justify-content:space-between;padding:12px 0 0;font-weight:700;font-size:13px;}
+.moodboard-canvas{background:var(--surface-2);border:2px dashed var(--border-strong);border-radius:var(--radius-md);min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:border-color .2s;}
+.moodboard-canvas:hover{border-color:var(--purple);}
+.moodboard-img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:16px;}
+.mood-item{border-radius:8px;overflow:hidden;aspect-ratio:1;background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(37,99,235,.25));display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--slate);cursor:pointer;}
+.ai-suggestion{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(37,99,235,.06));border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:14px;}
+.ai-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:var(--purple-soft);border-radius:20px;font-size:10px;font-weight:700;color:var(--purple);margin-bottom:8px;}
 
-  .dev-switcher{position:fixed; bottom:16px; left:16px; z-index:100; display:flex; gap:6px; background:var(--surface); border:1px solid var(--border-strong); padding:6px; border-radius:10px; box-shadow:var(--shadow-glass); flex-wrap:wrap; max-width:250px;}
-  .dev-switcher button{font-size:10px; font-weight:700; padding:6px 8px; border-radius:6px; border:none; background:transparent; color:var(--slate);}
-  .dev-switcher button.on{background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff;}
+/* ──── KANBAN ──── */
+.kanban-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.kanban-board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start;}
+@media(max-width:900px){.kanban-board{grid-template-columns:repeat(2,1fr);}}
+.k-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);min-height:300px;display:flex;flex-direction:column;}
+.k-col.drag-over{border-color:var(--purple);background:rgba(124,58,237,.04);}
+.k-col-header{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 10px;border-bottom:1px solid var(--border);}
+.k-col-header h4{font-size:12.5px;font-weight:700;}
+.k-count{background:var(--surface-2);border:1px solid var(--border);border-radius:20px;font-size:10.5px;font-weight:700;padding:2px 8px;}
+.k-cards{padding:8px;flex:1;min-height:60px;}
+.k-card{background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:12px;margin-bottom:8px;cursor:grab;transition:border-color .2s,transform .15s;user-select:none;}
+.k-card:hover{border-color:var(--border-strong);transform:translateY(-1px);}
+.k-card.dragging{opacity:.6;transform:scale(.97);}
+.k-card p{font-size:12.5px;margin:7px 0 10px;}
+.k-card-footer{display:flex;align-items:center;justify-content:space-between;}
+.k-due{font-size:10.5px;color:var(--slate-dim);}
+.k-av{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--blue));font-size:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;}
+.k-add{margin:4px 8px 8px;padding:7px;border-radius:8px;border:1px dashed var(--border-strong);color:var(--slate-dim);font-size:12px;font-weight:600;background:transparent;text-align:left;width:calc(100% - 16px);}
+.k-add:hover{border-color:var(--purple);color:var(--purple);}
+
+/* ──── FILES ──── */
+.files-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.folder-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
+@media(max-width:900px){.folder-grid{grid-template-columns:repeat(3,1fr);}}
+.folder-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;text-align:center;cursor:pointer;transition:border-color .2s;}
+.folder-card:hover{border-color:var(--purple);}
+.folder-icon{width:36px;height:36px;border-radius:10px;background:var(--purple-soft);color:var(--purple);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.folder-name{font-size:12px;font-weight:700;}
+.folder-count{font-size:10.5px;color:var(--slate-dim);margin-top:2px;}
+.file-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:11px;margin-bottom:8px;transition:border-color .2s;}
+.file-row:hover{border-color:var(--border-strong);}
+.file-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;}
+.file-icon.pdf{background:var(--red-soft);color:var(--red);}
+.file-icon.dwg{background:var(--blue-soft);color:var(--blue);}
+.file-icon.jpg{background:var(--green-soft);color:var(--green);}
+.file-icon.xls{background:var(--green-soft);color:var(--green);}
+.file-icon.zip{background:var(--amber-soft);color:var(--amber);}
+.file-icon.gen{background:var(--purple-soft);color:var(--purple);}
+.file-meta{flex:1;}
+.file-meta b{font-size:12.5px;display:block;}
+.file-meta span{font-size:10.5px;color:var(--slate-dim);}
+.upload-drop{border:2px dashed var(--border-strong);border-radius:var(--radius-md);padding:28px;text-align:center;margin-bottom:16px;cursor:pointer;transition:border-color .2s,background .2s;}
+.upload-drop:hover,.upload-drop.dragover{border-color:var(--purple);background:var(--purple-soft);}
+
+/* ──── BOQ TABLE ──── */
+.boq-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.boq-table th{text-align:left;padding:10px 12px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--slate-dim);border-bottom:1px solid var(--border);background:var(--surface-2);}
+.boq-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.boq-table tfoot td{font-weight:700;font-size:13px;border-top:2px solid var(--border-strong);padding-top:14px;}
+.boq-table input{background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--white);font-size:12.5px;width:100%;padding:3px 0;outline:none;}
+.boq-table input:focus{border-color:var(--purple);}
+
+/* ──── MODAL ──── */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;align-items:center;justify-content:center;}
+.modal-backdrop.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;box-shadow:var(--shadow-glass);animation:fadeIn .2s ease;}
+.modal-title{font-size:16px;font-weight:800;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{background:transparent;border:none;color:var(--slate);font-size:18px;cursor:pointer;line-height:1;}
+.modal-close:hover{color:var(--white);}
+
+/* ──── TOAST ──── */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;flex-direction:column;gap:8px;}
+.toast{background:var(--surface);border:1px solid var(--border-strong);border-radius:10px;padding:12px 16px;font-size:12.5px;box-shadow:var(--shadow-glass);animation:slideIn .25s ease;display:flex;align-items:center;gap:10px;min-width:240px;}
+@keyframes slideIn{from{transform:translateX(110%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.toast.success{border-color:var(--green);color:var(--green);}
+.toast.info{border-color:var(--blue);color:var(--blue);}
+
+/* ──── THEME TOGGLE ──── */
+.theme-toggle{width:34px;height:34px;border-radius:9px;border:1px solid var(--border-strong);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;}
+
+/* ──── MOBILE ──── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main-wrap{margin-left:0;}
+  .twin-layout{grid-template-columns:1fr;}
+  .kanban-board{grid-template-columns:1fr 1fr;}
+}
+.hamburger{display:none;font-size:20px;cursor:pointer;padding:6px;}
+@media(max-width:768px){.hamburger{display:block;}}
 </style>
 </head>
-<body data-theme="dark">
+<body>
 
-<!-- ============ DASHBOARD ============ -->
-<div class="page active" id="page-dashboard">
-  <div class="shell">
-    <div class="sidebar">
-      <div class="wordmark"><div class="mark">A</div>Aaren IntPro</div>
-      <div class="nav-item on"><span class="ic">◧</span>Dashboard</div>
-      <div class="nav-item" onclick="goTo('page-projects')"><span class="ic">▦</span>Projects</div>
-      <div class="nav-item"><span class="ic">◐</span>Moodboards</div>
-      <div class="nav-item"><span class="ic">⎘</span>Specifications</div>
-      <div class="nav-item"><span class="ic">Σ</span>BOQ</div>
-      <div class="nav-item" onclick="goTo('page-files')"><span class="ic">⎗</span>Files</div>
-      <div class="nav-item"><span class="ic">▤</span>Calendar</div>
-      <div class="nav-item" onclick="goTo('page-kanban')"><span class="ic">☰</span>Tasks</div>
-      <div class="nav-item"><span class="ic">✓</span>Client Approvals</div>
-      <div class="nav-label">Workspace</div>
-      <div class="nav-item"><span class="ic">✦</span>AI Assistant</div>
-      <div class="nav-item"><span class="ic">▢</span>Templates</div>
-      <div class="nav-item"><span class="ic">⚙</span>Settings</div>
-    </div>
+<!-- ==================== SIDEBAR ==================== -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-mark">A</div>
     <div>
-      <div class="topbar">
-        <div class="crumb"><b>Good morning, Ananya</b></div>
-        <div class="cmdk">⌘ Search or jump to... <kbd>⌘K</kbd></div>
-        <div class="topbar-right">
-          <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg></button>
-          <button class="btn-primary" onclick="goTo('page-wizard')">+ New Project</button>
+      <div style="font-size:13px;font-weight:800;">Aaren IntPro</div>
+      <div style="font-size:10px;color:var(--slate-dim);font-weight:500;">Designer OS</div>
+    </div>
+  </div>
+
+  <div style="padding:8px 4px;">
+    <div class="nav-section">Workspace</div>
+    <div class="nav-item active" data-nav="dashboard" onclick="goTo('dashboard')"><span class="ni">◧</span> Dashboard</div>
+    <div class="nav-item" data-nav="projects" onclick="goTo('projects')"><span class="ni">▦</span> Projects <span class="nav-badge" id="nav-proj-count">4</span></div>
+    <div class="nav-item" data-nav="detail" onclick="goTo('detail')"><span class="ni">◧</span> Prestige Villa</div>
+    <div class="nav-item" data-nav="twin" onclick="goTo('twin')"><span class="ni">⬡</span> Digital Twin</div>
+    <div class="nav-item" data-nav="kanban" onclick="goTo('kanban')"><span class="ni">☰</span> Tasks <span class="nav-badge" id="nav-task-count">9</span></div>
+    <div class="nav-item" data-nav="files" onclick="goTo('files')"><span class="ni">⎗</span> Files</div>
+    <div class="nav-section">Tools</div>
+    <div class="nav-item" onclick="goTo('boq')"><span class="ni">Σ</span> BOQ Generator</div>
+    <div class="nav-item"><span class="ni">◐</span> Moodboards</div>
+    <div class="nav-item"><span class="ni">✦</span> AI Assistant</div>
+    <div class="nav-item" onclick="showToast('Opening marketplace…','info')"><span class="ni">🛒</span> Marketplace</div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-chip" onclick="showToast('Profile settings coming soon','info')">
+      <div class="user-avatar" id="sidebarAvatar">A</div>
+      <div>
+        <div class="user-name" id="sidebarName">Ananya Sharma</div>
+        <div class="user-role">Interior Designer</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MAIN ==================== -->
+<div class="main-wrap">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</span>
+      <div class="breadcrumb" id="breadcrumb"><b>Dashboard</b></div>
+    </div>
+    <div class="topbar-search">
+      <span style="font-size:13px;color:var(--slate-dim);">🔍</span>
+      <input type="text" id="globalSearch" placeholder="Search projects, tasks…" oninput="handleSearch(this.value)">
+      <kbd style="font-size:10px;padding:2px 5px;border-radius:4px;background:var(--surface-2);border:1px solid var(--border-strong);">⌘K</kbd>
+    </div>
+    <div class="topbar-right">
+      <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</div>
+      <div class="icon-btn" onclick="showToast('No new notifications','info')" title="Notifications">🔔</div>
+      <button class="btn-primary" onclick="openModal('newProjectModal')">+ New Project</button>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <div class="page active" id="page-dashboard">
+    <div class="content-area">
+      <div class="dash-greeting" id="greetingText">Good morning, Ananya 👋</div>
+      <div class="dash-sub">4 active projects · 3 pending client approvals · 11 tasks due this week</div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-lbl">Active Projects</div>
+          <div class="kpi-val" id="kpi-projects">4</div>
+          <div class="kpi-trend">↑ 1 new this month</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-lbl">Budget Under Mgmt</div>
+          <div class="kpi-val">₹2.4 Cr</div>
+          <div class="kpi-trend">↑ 8% vs plan</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-lbl">Tasks Due This Week</div>
+          <div class="kpi-val" id="kpi-tasks">11</div>
+          <div class="kpi-trend down">3 overdue</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-lbl">Pending Approvals</div>
+          <div class="kpi-val">3</div>
+          <div class="kpi-trend down">Avg 1.8 days wait</div>
         </div>
       </div>
-      <div class="main">
-        <div class="dash-head"><div><h1>Studio overview</h1><p>4 active projects · 3 pending client approvals</p></div></div>
-        <div class="kpi-grid">
-          <div class="kpi-card"><div class="lbl">Active projects</div><div class="val">4</div><div class="trend up">↑ 1 this month</div></div>
-          <div class="kpi-card"><div class="lbl">Tasks due this week</div><div class="val">11</div><div class="trend">3 overdue</div></div>
-          <div class="kpi-card"><div class="lbl">Budget under management</div><div class="val">₹2.4 Cr</div><div class="trend up">↑ 8% vs plan</div></div>
-          <div class="kpi-card"><div class="lbl">Pending approvals</div><div class="val">3</div><div class="trend">Avg 1.8 days</div></div>
-        </div>
-        <div class="dash-grid">
-          <div>
-            <div class="panel">
-              <h3>Pinned projects</h3>
-              <div class="proj-row" onclick="goTo('page-detail')"><div class="thumb"></div><div class="n"><b>Prestige Villa</b><span>Client: Rohan Mehta · Due Oct 12</span></div><div class="ring"><div>68%</div></div></div>
-              <div class="proj-row" onclick="goTo('page-detail')"><div class="thumb"></div><div class="n"><b>Oak Residency — Kitchen</b><span>Client: Meera Nair · Due Sep 2</span></div><div class="ring" style="background:conic-gradient(var(--green) 0% 90%, var(--border-strong) 90% 100%);"><div>90%</div></div></div>
-              <div class="proj-row" onclick="goTo('page-detail')"><div class="thumb"></div><div class="n"><b>Studio 42 Office Fitout</b><span>Client: Vantage Co · Due Nov 20</span></div><div class="ring" style="background:conic-gradient(var(--amber) 0% 32%, var(--border-strong) 32% 100%);"><div>32%</div></div></div>
-            </div>
-            <div class="panel">
-              <h3>Today's tasks</h3>
-              <div class="task-row"><input type="checkbox"><span class="t">Finalize kitchen island countertop selection</span><span class="due">Today</span></div>
-              <div class="task-row"><input type="checkbox" checked><span class="t">Send BOQ v3 to Prestige Villa client</span><span class="due">Done</span></div>
-              <div class="task-row"><input type="checkbox"><span class="t">Review wardrobe hardware samples</span><span class="due">Today</span></div>
-              <div class="task-row"><input type="checkbox"><span class="t">Site visit — Oak Residency</span><span class="due">2:00 PM</span></div>
-            </div>
+
+      <div class="two-col">
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">Pinned Projects <button class="btn-ghost sm" onclick="goTo('projects')">View all →</button></div>
+            <div id="dashProjects"></div>
           </div>
-          <div>
-            <div class="panel">
-              <h3>Upcoming meetings</h3>
-              <div class="meeting-row"><div class="time">10:00</div><div>Client review — Prestige Villa moodboard approval</div></div>
-              <div class="meeting-row"><div class="time">1:30</div><div>Vendor call — Hettich hardware pricing</div></div>
-              <div class="meeting-row"><div class="time">4:00</div><div>Internal — Studio 42 timeline sync</div></div>
-            </div>
-            <div class="panel">
-              <h3>AI suggestions</h3>
-              <p style="font-size:12px; color:var(--slate); line-height:1.6;">Prestige Villa's kitchen budget is 12% under allocation — consider upgrading the countertop spec before the next client review.</p>
-              <button class="btn-ghost sm" style="margin-top:12px;">Review suggestion</button>
+          <div class="card">
+            <div class="card-title">Today's Tasks <button class="btn-ghost sm" onclick="goTo('kanban')">Kanban →</button></div>
+            <div id="dashTasks"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">Upcoming Meetings</div>
+            <div class="meeting-row"><div class="meeting-time">10:00</div><div>Client review — Prestige Villa moodboard</div></div>
+            <div class="meeting-row"><div class="meeting-time">1:30</div><div>Vendor call — Hettich hardware pricing</div></div>
+            <div class="meeting-row"><div class="meeting-time">4:00</div><div>Internal — Studio 42 timeline sync</div></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><span>✦ AI Suggestions</span></div>
+            <div class="ai-suggestion">
+              <div class="ai-chip">✦ AI</div>
+              <p style="font-size:12px;color:var(--slate);line-height:1.7;">Prestige Villa's kitchen budget is 12% under allocation — consider upgrading the countertop spec before the next client review.</p>
+              <button class="btn-ghost sm" style="margin-top:10px;" onclick="showToast('Opening AI recommendation…','info')">View suggestion →</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ============ PROJECT LIST ============ -->
-<div class="page" id="page-projects">
-  <div class="shell">
-    <div class="sidebar">
-      <div class="wordmark"><div class="mark">A</div>Aaren IntPro</div>
-      <div class="nav-item" onclick="goTo('page-dashboard')"><span class="ic">◧</span>Dashboard</div>
-      <div class="nav-item on"><span class="ic">▦</span>Projects</div>
-      <div class="nav-item"><span class="ic">◐</span>Moodboards</div>
-      <div class="nav-item"><span class="ic">Σ</span>BOQ</div>
-      <div class="nav-item" onclick="goTo('page-files')"><span class="ic">⎗</span>Files</div>
-      <div class="nav-item" onclick="goTo('page-kanban')"><span class="ic">☰</span>Tasks</div>
-    </div>
-    <div>
-      <div class="topbar"><div class="crumb"><b>Projects</b></div><button class="btn-primary" onclick="goTo('page-wizard')">+ New Project</button></div>
-      <div class="main">
-        <div class="list-toolbar">
-          <div class="view-tabs"><button class="on">Table</button><button>Card</button><button>Kanban</button><button>Timeline</button></div>
-          <input class="btn-ghost" style="width:220px;" placeholder="Search projects...">
+  <!-- ==================== PROJECTS ==================== -->
+  <div class="page" id="page-projects">
+    <div class="content-area">
+      <div class="toolbar">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;">Projects</h2>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:3px;" id="projCount">4 projects</p>
         </div>
-        <div class="proj-table-wrap">
-          <table>
-            <thead><tr><th>Project</th><th>Client</th><th>Status</th><th>Progress</th><th>Budget</th><th>Team</th><th>Due</th></tr></thead>
-            <tbody>
-              <tr onclick="goTo('page-detail')"><td><div class="pname">Prestige Villa</div><div class="pclient">Residential · Villa</div></td><td>Rohan Mehta</td><td><span class="badge blue">In progress</span></td><td><div class="progress-bar"><div style="width:68%;"></div></div></td><td>₹86L</td><td><div class="avatars"><div>A</div><div>R</div><div>+2</div></div></td><td>Oct 12</td></tr>
-              <tr onclick="goTo('page-detail')"><td><div class="pname">Oak Residency — Kitchen</div><div class="pclient">Residential · Apartment</div></td><td>Meera Nair</td><td><span class="badge green">On track</span></td><td><div class="progress-bar"><div style="width:90%;"></div></div></td><td>₹18L</td><td><div class="avatars"><div>A</div><div>+1</div></div></td><td>Sep 2</td></tr>
-              <tr onclick="goTo('page-detail')"><td><div class="pname">Studio 42 Office Fitout</div><div class="pclient">Commercial · Office</div></td><td>Vantage Co</td><td><span class="badge amber">At risk</span></td><td><div class="progress-bar"><div style="width:32%;"></div></div></td><td>₹1.2Cr</td><td><div class="avatars"><div>A</div><div>R</div><div>M</div><div>+3</div></div></td><td>Nov 20</td></tr>
-              <tr onclick="goTo('page-detail')"><td><div class="pname">Whitepine Bathroom Reno</div><div class="pclient">Residential · Apartment</div></td><td>Delhi Client</td><td><span class="badge purple">Client review</span></td><td><div class="progress-bar"><div style="width:76%;"></div></div></td><td>₹9L</td><td><div class="avatars"><div>R</div></div></td><td>Sep 18</td></tr>
-            </tbody>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <div class="search-box">
+            <span style="font-size:13px;color:var(--slate-dim);">🔍</span>
+            <input type="text" id="projSearch" placeholder="Search projects…" oninput="filterProjects(this.value)">
+          </div>
+          <div class="view-btns">
+            <button class="view-btn on" id="vbTable" onclick="setView('table')">Table</button>
+            <button class="view-btn" id="vbCard" onclick="setView('card')">Cards</button>
+          </div>
+          <button class="btn-primary" onclick="openModal('newProjectModal')">+ New Project</button>
+        </div>
+      </div>
+
+      <!-- Table view -->
+      <div id="proj-table-view">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;">
+          <table class="proj-table">
+            <thead><tr>
+              <th>Project</th><th>Client</th><th>Status</th><th>Progress</th><th>Budget</th><th>Team</th><th>Due</th>
+            </tr></thead>
+            <tbody id="projTableBody"></tbody>
           </table>
         </div>
       </div>
+
+      <!-- Card view -->
+      <div id="proj-card-view" style="display:none;">
+        <div class="proj-card-grid" id="projCardBody"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ============ NEW PROJECT WIZARD ============ -->
-<div class="page" id="page-wizard">
-  <div class="topbar"><div class="crumb" onclick="goTo('page-projects')" style="cursor:pointer;">← Back to projects</div><div></div></div>
-  <div class="main">
-    <div class="wizard-wrap">
-      <div class="wizard-steps">
-        <div class="wstep done"><div class="dot">✓</div><span>Details</span></div>
-        <div class="wstep active"><div class="dot">2</div><span>Location</span></div>
-        <div class="wstep"><div class="dot">3</div><span>Team</span></div>
-        <div class="wstep"><div class="dot">4</div><span>Template</span></div>
-        <div class="wstep"><div class="dot">5</div><span>Finish</span></div>
+  <!-- ==================== PROJECT DETAIL ==================== -->
+  <div class="page" id="page-detail">
+    <div class="content-area">
+      <div style="margin-bottom:16px;">
+        <button class="btn-ghost sm" onclick="goTo('projects')">← Back to Projects</button>
       </div>
-      <div class="wizard-card">
-        <h2>Project location, timeline &amp; budget</h2>
-        <p class="sub">This helps AI generate an accurate initial project structure and BOQ estimate.</p>
-        <div class="field"><label>Project name</label><input value="Prestige Villa"></div>
-        <div class="field-row">
-          <div class="field"><label>Client</label><input value="Rohan Mehta"></div>
-          <div class="field"><label>Location</label><input value="Whitefield, Bengaluru"></div>
-        </div>
-        <div class="field"><label>Project type</label>
-          <div class="type-grid">
-            <div class="type-tile on">Villa</div><div class="type-tile">Apartment</div><div class="type-tile">Office</div>
-            <div class="type-tile">Retail</div><div class="type-tile">Hospitality</div><div class="type-tile">Commercial</div>
+      <div class="proj-hero">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h1>Prestige Villa</h1>
+            <div class="sub">4,200 sqft · Whitefield, Bengaluru · Client: Rohan Mehta</div>
           </div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>Built-up area (sqft)</label><input value="4,200"></div>
-          <div class="field"><label>Estimated budget</label><input value="₹85,00,000"></div>
-        </div>
-        <div class="field"><label>Target completion</label><input type="date" value="2026-10-12"></div>
-        <div class="wizard-actions"><button class="btn-ghost">Back</button><button class="btn-primary">Continue →</button></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ PROJECT DETAIL ============ -->
-<div class="page" id="page-detail">
-  <div class="shell">
-    <div class="sidebar">
-      <div class="wordmark"><div class="mark">A</div>Aaren IntPro</div>
-      <div class="nav-item" onclick="goTo('page-dashboard')"><span class="ic">◧</span>Dashboard</div>
-      <div class="nav-item" onclick="goTo('page-projects')"><span class="ic">▦</span>Projects</div>
-      <div class="nav-item on"><span class="ic">◧</span>Prestige Villa</div>
-    </div>
-    <div>
-      <div class="topbar"><div class="crumb"><b>Projects</b> / Prestige Villa</div><div class="topbar-right"><button class="btn-ghost sm">Share</button><button class="btn-primary">Presentation Mode</button></div></div>
-      <div class="main">
-        <div class="pdetail-hero">
-          <div class="top">
-            <div><h1>Prestige Villa</h1><div class="sub">4,200 sqft · Whitefield, Bengaluru · Client: Rohan Mehta</div></div>
+          <div style="display:flex;gap:8px;align-items:center;">
             <span class="badge blue">In progress</span>
-          </div>
-          <div class="pdetail-stats">
-            <div class="pdetail-stat"><div class="k">Progress</div><div class="v">68%</div></div>
-            <div class="pdetail-stat"><div class="k">Budget used</div><div class="v">₹58.4L / ₹86L</div></div>
-            <div class="pdetail-stat"><div class="k">Rooms</div><div class="v">11 of 12 specified</div></div>
-            <div class="pdetail-stat"><div class="k">Days to deadline</div><div class="v">64</div></div>
+            <button class="btn-ghost sm" onclick="showToast('Opening presentation mode…','info')">📊 Presentation</button>
+            <button class="btn-ghost sm" onclick="showToast('Share link copied!','success')">🔗 Share</button>
           </div>
         </div>
-        <div class="pd-tabs">
-          <button class="on">Overview</button><button onclick="goTo('page-twin')">Digital Twin</button><button>Moodboards</button><button>BOQ</button>
-          <button onclick="goTo('page-kanban')">Tasks</button><button onclick="goTo('page-files')">Files</button><button>Approvals</button><button>Activity</button>
-        </div>
-        <div class="dash-grid">
-          <div class="panel">
-            <h3>Recent activity</h3>
-            <div class="activity-item"><div class="av"></div><div class="txt"><b>Ananya</b> approved the kitchen countertop BOQ line.<div class="ts">2 hours ago</div></div></div>
-            <div class="activity-item"><div class="av"></div><div class="txt"><b>Rohan Mehta</b> commented on the Living Room moodboard.<div class="ts">Yesterday</div></div></div>
-            <div class="activity-item"><div class="av"></div><div class="txt"><b>Ananya</b> uploaded 3 files to Master Bedroom.<div class="ts">2 days ago</div></div></div>
-          </div>
-          <div class="panel">
-            <h3>Quick access</h3>
-            <button class="btn-ghost" style="width:100%; margin-bottom:8px;" onclick="goTo('page-twin')">Open Digital Twin →</button>
-            <button class="btn-ghost" style="width:100%; margin-bottom:8px;" onclick="goTo('page-kanban')">View tasks →</button>
-            <button class="btn-ghost" style="width:100%;" onclick="goTo('page-files')">Browse files →</button>
-          </div>
+        <div class="proj-stats">
+          <div class="pstat"><div class="lbl">Progress</div><div class="val">68%</div></div>
+          <div class="pstat"><div class="lbl">Budget Used</div><div class="val">₹58.4L / ₹86L</div></div>
+          <div class="pstat"><div class="lbl">Rooms</div><div class="val">11 / 12</div></div>
+          <div class="pstat"><div class="lbl">Days Left</div><div class="val">64</div></div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<!-- ============ DIGITAL TWIN ============ -->
-<div class="page" id="page-twin">
-  <div class="topbar"><div class="crumb" onclick="goTo('page-detail')" style="cursor:pointer;"><b>Prestige Villa</b> / Digital Twin</div><button class="btn-ghost sm" onclick="goTo('page-detail')">← Overview</button></div>
-  <div class="main">
-    <div class="twin-layout">
-      <div class="twin-tree">
-        <div class="floor-group">
-          <div class="floor-head"><span class="chev">▾</span>📍 Ground Floor</div>
-          <div class="room-item on" onclick="goTo('page-room')">Living Room<span class="stat-dot progress"></span></div>
-          <div class="room-item" onclick="goTo('page-room')">Dining<span class="stat-dot done"></span></div>
-          <div class="room-item" onclick="goTo('page-room')">Kitchen<span class="stat-dot done"></span></div>
-          <div class="room-item" onclick="goTo('page-room')">Powder Room<span class="stat-dot notstarted"></span></div>
-        </div>
-        <div class="floor-group">
-          <div class="floor-head"><span class="chev">▾</span>📍 First Floor</div>
-          <div class="room-item" onclick="goTo('page-room')">Master Bedroom<span class="stat-dot progress"></span></div>
-          <div class="room-item" onclick="goTo('page-room')">Bedroom 2<span class="stat-dot progress"></span></div>
-          <div class="room-item" onclick="goTo('page-room')">Bedroom 3<span class="stat-dot notstarted"></span></div>
-          <div class="room-item" onclick="goTo('page-room')">Family Lounge<span class="stat-dot notstarted"></span></div>
-        </div>
-        <div class="floor-group">
-          <div class="floor-head"><span class="chev">▾</span>📍 Terrace</div>
-          <div class="room-item" onclick="goTo('page-room')">Outdoor Deck<span class="stat-dot notstarted"></span></div>
-        </div>
+      <div class="pd-tabs">
+        <button class="pd-tab on" onclick="switchPdTab('overview',this)">Overview</button>
+        <button class="pd-tab" onclick="goTo('twin')">Digital Twin</button>
+        <button class="pd-tab" onclick="goTo('kanban')">Tasks</button>
+        <button class="pd-tab" onclick="goTo('files')">Files</button>
+        <button class="pd-tab" onclick="goTo('boq')">BOQ</button>
+        <button class="pd-tab" onclick="switchPdTab('approvals',this)">Approvals</button>
+        <button class="pd-tab" onclick="switchPdTab('activity',this)">Activity</button>
       </div>
-      <div class="twin-view">
-        <div class="twin-building">
-          <div class="twin-floor">
-            <div class="twin-floor-label">Ground Floor</div>
-            <div class="twin-room-grid">
-              <div class="twin-room" onclick="goTo('page-room')"><h4>Living Room</h4><div class="bar"><div style="width:55%;"></div></div><div class="meta">55% · ₹9.2L of ₹14L</div></div>
-              <div class="twin-room" onclick="goTo('page-room')"><h4>Dining</h4><div class="bar"><div style="width:100%;"></div></div><div class="meta">Complete · ₹4.1L</div></div>
-              <div class="twin-room" onclick="goTo('page-room')"><h4>Kitchen</h4><div class="bar"><div style="width:100%;"></div></div><div class="meta">Complete · ₹11.6L</div></div>
-              <div class="twin-room" onclick="goTo('page-room')"><h4>Powder Room</h4><div class="bar"><div style="width:8%;"></div></div><div class="meta">Not started · ₹1.8L budget</div></div>
-            </div>
+
+      <div class="pd-panel active" id="pd-overview">
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Recent Activity</div>
+            <div class="activity-item"><div class="act-av"></div><div><div class="act-txt"><b>Ananya</b> approved kitchen countertop BOQ line.</div><div class="act-time">2 hours ago</div></div></div>
+            <div class="activity-item"><div class="act-av"></div><div><div class="act-txt"><b>Rohan Mehta</b> commented on the Living Room moodboard.</div><div class="act-time">Yesterday</div></div></div>
+            <div class="activity-item"><div class="act-av"></div><div><div class="act-txt"><b>Ananya</b> uploaded 3 files to Master Bedroom.</div><div class="act-time">2 days ago</div></div></div>
           </div>
-          <div class="twin-floor">
-            <div class="twin-floor-label">First Floor</div>
-            <div class="twin-room-grid">
-              <div class="twin-room" onclick="goTo('page-room')"><h4>Master Bedroom</h4><div class="bar"><div style="width:40%;"></div></div><div class="meta">40% · ₹6.4L of ₹12L</div></div>
-              <div class="twin-room" onclick="goTo('page-room')"><h4>Bedroom 2</h4><div class="bar"><div style="width:22%;"></div></div><div class="meta">22% · ₹2.1L of ₹8L</div></div>
-              <div class="twin-room" onclick="goTo('page-room')"><h4>Bedroom 3</h4><div class="bar"><div style="width:0%;"></div></div><div class="meta">Not started · ₹8L budget</div></div>
-              <div class="twin-room" onclick="goTo('page-room')"><h4>Family Lounge</h4><div class="bar"><div style="width:0%;"></div></div><div class="meta">Not started · ₹6L budget</div></div>
-            </div>
-          </div>
-          <div class="twin-floor">
-            <div class="twin-floor-label">Terrace</div>
-            <div class="twin-room-grid">
-              <div class="twin-room" onclick="goTo('page-room')"><h4>Outdoor Deck</h4><div class="bar"><div style="width:0%;"></div></div><div class="meta">Not started · ₹5L budget</div></div>
+          <div>
+            <div class="card" style="margin-bottom:14px;">
+              <div class="card-title">Quick Access</div>
+              <button class="btn-ghost" style="width:100%;margin-bottom:8px;text-align:left;" onclick="goTo('twin')">⬡ Open Digital Twin →</button>
+              <button class="btn-ghost" style="width:100%;margin-bottom:8px;text-align:left;" onclick="goTo('kanban')">☰ View Tasks →</button>
+              <button class="btn-ghost" style="width:100%;margin-bottom:8px;text-align:left;" onclick="goTo('files')">⎗ Browse Files →</button>
+              <button class="btn-ghost" style="width:100%;text-align:left;" onclick="goTo('boq')">Σ View BOQ →</button>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ ROOM WORKSPACE ============ -->
-<div class="page" id="page-room">
-  <div class="topbar"><div class="crumb" onclick="goTo('page-twin')" style="cursor:pointer;"><b>Prestige Villa</b> / Digital Twin / Living Room</div><button class="btn-ghost sm" onclick="goTo('page-twin')">← Digital Twin</button></div>
-  <div class="main">
-    <div class="room-hero"><div><h1>Living Room</h1><div class="sub">Ground Floor · 420 sqft · 55% specified</div></div><button class="btn-primary">+ Add product</button></div>
-    <div class="room-tabs">
-      <button class="on">Products</button><button>Moodboard</button><button>Materials</button><button>Photos</button><button>AI Suggestions</button><button>Client Comments</button>
-    </div>
-    <div class="room-grid">
-      <div>
-        <div class="room-cat-grid">
-          <div class="room-cat-card"><div class="im"></div><div class="b"><div class="cat">Furniture</div><h5>Modular Sofa — Aurora</h5><div class="pr">₹1,84,000</div></div></div>
-          <div class="room-cat-card"><div class="im"></div><div class="b"><div class="cat">Lighting</div><h5>Brass Pendant Cluster</h5><div class="pr">₹42,500</div></div></div>
-          <div class="room-cat-card"><div class="im"></div><div class="b"><div class="cat">Flooring</div><h5>Italian Marble — Calacatta</h5><div class="pr">₹385/sqft</div></div></div>
-          <div class="room-cat-card"><div class="im"></div><div class="b"><div class="cat">Wall Finish</div><h5>Textured Lime Plaster</h5><div class="pr">₹165/sqft</div></div></div>
-          <div class="room-cat-card"><div class="im"></div><div class="b"><div class="cat">Curtains</div><h5>Linen Blend — Ivory</h5><div class="pr">₹2,800/panel</div></div></div>
-          <div class="room-cat-card" style="display:flex; align-items:center; justify-content:center; color:var(--slate-dim); font-size:12px; font-weight:600;">+ Add product</div>
+      <div class="pd-panel" id="pd-approvals">
+        <div class="card">
+          <div class="card-title">Client Approvals</div>
+          <div style="font-size:12.5px;color:var(--slate);">
+            <div class="file-row"><div class="file-icon gen">📋</div><div class="file-meta"><b>Living Room Moodboard v2</b><span>Sent Aug 7 · Pending approval</span></div><span class="badge amber">Pending</span></div>
+            <div class="file-row"><div class="file-icon gen">📋</div><div class="file-meta"><b>Kitchen Countertop Selection</b><span>Sent Aug 6 · Approved</span></div><span class="badge green">Approved</span></div>
+            <div class="file-row"><div class="file-icon gen">📋</div><div class="file-meta"><b>BOQ v3 — Master</b><span>Sent Aug 5 · Approved</span></div><span class="badge green">Approved</span></div>
+          </div>
         </div>
       </div>
-      <div class="room-side">
-        <div class="panel">
-          <h3>Room budget</h3>
-          <div class="budget-row"><span class="k">Furniture</span><span>₹1.84L</span></div>
-          <div class="budget-row"><span class="k">Lighting</span><span>₹42.5K</span></div>
-          <div class="budget-row"><span class="k">Flooring</span><span>₹5.4L</span></div>
-          <div class="budget-row"><span class="k">Wall &amp; curtains</span><span>₹1.5L</span></div>
-          <div class="budget-total"><span>Spent</span><span>₹9.2L / ₹14L</span></div>
-        </div>
-        <div class="panel">
-          <h3>AI recommendations</h3>
-          <p style="font-size:12px; color:var(--slate); line-height:1.6;">The Aurora sofa pairs well with a warmer rug tone — consider Terracotta Weave to balance the cool marble floor.</p>
-          <button class="btn-ghost sm" style="margin-top:12px;">View suggestion</button>
+      <div class="pd-panel" id="pd-activity">
+        <div class="card">
+          <div class="card-title">Full Activity Log</div>
+          <div class="activity-item"><div class="act-av"></div><div><div class="act-txt"><b>Ananya</b> approved kitchen countertop BOQ.</div><div class="act-time">Aug 9, 2:14 PM</div></div></div>
+          <div class="activity-item"><div class="act-av"></div><div><div class="act-txt"><b>Rohan Mehta</b> commented: "Let's upgrade the marble grade."</div><div class="act-time">Aug 8, 11:42 AM</div></div></div>
+          <div class="activity-item"><div class="act-av"></div><div><div class="act-txt"><b>Ananya</b> created 3 new tasks in Kanban.</div><div class="act-time">Aug 7, 9:20 AM</div></div></div>
+          <div class="activity-item"><div class="act-av"></div><div><div class="act-txt"><b>Raj Kumar</b> uploaded electrical drawings.</div><div class="act-time">Aug 6, 3:15 PM</div></div></div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- ==================== DIGITAL TWIN ==================== -->
+  <div class="page" id="page-twin">
+    <div class="content-area">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <button class="btn-ghost sm" onclick="goTo('detail')">← Overview</button>
+          </div>
+          <h2 style="font-size:20px;font-weight:800;">Prestige Villa — Digital Twin</h2>
+          <p style="font-size:12.5px;color:var(--slate-dim);">Click any room to open its full workspace</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-ghost sm" onclick="showToast('Exporting floor plan PDF…','info')">📄 Export</button>
+          <button class="btn-primary" onclick="showToast('Add room dialog coming soon','info')">+ Add Room</button>
+        </div>
+      </div>
+
+      <div class="twin-layout">
+        <!-- Tree -->
+        <div class="twin-tree">
+          <h4>Floor Navigator</h4>
+          <div id="twin-tree-content"></div>
+        </div>
+        <!-- Canvas -->
+        <div class="twin-canvas">
+          <div id="twin-canvas-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ROOM WORKSPACE ==================== -->
+  <div class="page" id="page-room">
+    <div class="content-area">
+      <div style="margin-bottom:12px;">
+        <button class="btn-ghost sm" onclick="goTo('twin')">← Digital Twin</button>
+      </div>
+      <div class="room-header">
+        <div>
+          <h1 id="roomTitle">Living Room</h1>
+          <div style="font-size:12px;color:var(--slate-dim);margin-top:4px;" id="roomMeta">Ground Floor · 420 sqft · 55% specified</div>
+        </div>
+        <button class="btn-primary" onclick="openModal('addProductModal')">+ Add Product</button>
+      </div>
+
+      <div class="room-tabs">
+        <button class="room-tab on" onclick="switchRoomTab('products',this)">Products</button>
+        <button class="room-tab" onclick="switchRoomTab('moodboard',this)">Moodboard</button>
+        <button class="room-tab" onclick="switchRoomTab('ai',this)">AI Suggestions</button>
+        <button class="room-tab" onclick="switchRoomTab('comments',this)">Client Comments</button>
+      </div>
+
+      <!-- Products tab -->
+      <div class="room-content active" id="room-products">
+        <div class="room-layout">
+          <div>
+            <div class="product-grid" id="roomProductGrid"></div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:14px;">
+              <div class="card-title">Room Budget</div>
+              <div id="roomBudget"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Moodboard tab -->
+      <div class="room-content" id="room-moodboard">
+        <div class="card">
+          <div class="card-title">Moodboard <button class="btn-ghost sm" onclick="showToast('Moodboard saved!','success')">💾 Save</button></div>
+          <div class="moodboard-canvas" id="moodboardCanvas" onclick="addMoodItem()">
+            <div class="moodboard-img-grid" id="moodGrid"></div>
+            <div id="moodPrompt" style="color:var(--slate-dim);font-size:13px;font-weight:600;">Click to add images, materials & textures</div>
+          </div>
+          <p style="font-size:11.5px;color:var(--slate-dim);margin-top:10px;">Drag images from marketplace or upload your own references</p>
+        </div>
+      </div>
+
+      <!-- AI tab -->
+      <div class="room-content" id="room-ai">
+        <div class="card">
+          <div class="ai-chip">✦ AI Material Intelligence</div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:12px;">
+            <div class="ai-suggestion"><p style="font-size:12.5px;color:var(--slate);line-height:1.7;">The Aurora sofa pairs well with a warmer rug tone — consider <b style="color:var(--white)">Terracotta Weave</b> to balance the cool marble floor.</p><button class="btn-ghost sm" style="margin-top:8px;" onclick="showToast('Adding Terracotta Weave to wishlist','success')">Add to board →</button></div>
+            <div class="ai-suggestion"><p style="font-size:12.5px;color:var(--slate);line-height:1.7;">Brass pendant cluster creates warm focal lighting. Consider adding <b style="color:var(--white)">Cove LED strips</b> at 2700K for layered ambient light.</p><button class="btn-ghost sm" style="margin-top:8px;" onclick="showToast('Added to specifications','success')">Add to spec →</button></div>
+            <div class="ai-suggestion"><p style="font-size:12.5px;color:var(--slate);line-height:1.7;">Budget alert: You have ₹4.8L remaining — enough to upgrade Calacatta marble to Statuario grade for a premium finish.</p><button class="btn-ghost sm" style="margin-top:8px;" onclick="showToast('Showing upgrade options…','info')">View upgrade →</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments tab -->
+      <div class="room-content" id="room-comments">
+        <div class="card">
+          <div class="card-title">Client Comments — Rohan Mehta</div>
+          <div style="display:flex;flex-direction:column;gap:10px;" id="commentsList">
+            <div class="activity-item"><div class="act-av"></div><div><div class="act-txt"><b>Rohan Mehta:</b> "The marble choice looks great but can we see a warmer alternative?"</div><div class="act-time">Aug 8, 11:42 AM</div></div></div>
+            <div class="activity-item"><div class="act-av" style="background:linear-gradient(135deg,var(--green),var(--blue));"></div><div><div class="act-txt"><b>Ananya:</b> "Absolutely — I'll add Botticino Classico as an alternative option."</div><div class="act-time">Aug 8, 12:05 PM</div></div></div>
+          </div>
+          <div style="margin-top:16px;display:flex;gap:8px;">
+            <input type="text" id="commentInput" placeholder="Add a comment…" style="flex:1;padding:10px 13px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--white);font-size:12.5px;outline:none;" onkeydown="if(event.key==='Enter')addComment()">
+            <button class="btn-primary" onclick="addComment()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== KANBAN ==================== -->
+  <div class="page" id="page-kanban">
+    <div class="content-area">
+      <div class="kanban-header">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;">Task Board</h2>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:3px;">Prestige Villa · Drag cards to update status</p>
+        </div>
+        <button class="btn-primary" onclick="openModal('newTaskModal')">+ New Task</button>
+      </div>
+      <div class="kanban-board" id="kanbanBoard"></div>
+    </div>
+  </div>
+
+  <!-- ==================== FILES ==================== -->
+  <div class="page" id="page-files">
+    <div class="content-area">
+      <div class="files-header">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;">Project Files</h2>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:3px;">Prestige Villa</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div class="search-box">
+            <span>🔍</span>
+            <input type="text" id="fileSearch" placeholder="Search files…" oninput="filterFiles(this.value)" style="width:160px;">
+          </div>
+          <label class="btn-primary" style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+            <input type="file" multiple id="fileUploadInput" style="display:none;" onchange="handleFileUpload(this.files)">
+            ↑ Upload
+          </label>
+        </div>
+      </div>
+
+      <div class="upload-drop" id="uploadDrop" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleDrop(event)">
+        <div style="font-size:28px;margin-bottom:8px;">📁</div>
+        <div style="font-size:13px;font-weight:700;color:var(--slate);">Drag & drop files here, or click Upload above</div>
+        <div style="font-size:11.5px;color:var(--slate-dim);margin-top:4px;">PDF, DWG, JPG, XLS, ZIP — any size</div>
+      </div>
+
+      <div class="folder-grid">
+        <div class="folder-card" onclick="showToast('Opening Drawings folder','info')"><div class="folder-icon">📐</div><div class="folder-name">Drawings</div><div class="folder-count">18 files</div></div>
+        <div class="folder-card" onclick="showToast('Opening Moodboards folder','info')"><div class="folder-icon">🎨</div><div class="folder-name">Moodboards</div><div class="folder-count">6 files</div></div>
+        <div class="folder-card" onclick="showToast('Opening Specifications folder','info')"><div class="folder-icon">📋</div><div class="folder-name">Specifications</div><div class="folder-count">24 files</div></div>
+        <div class="folder-card" onclick="showToast('Opening Site Photos folder','info')"><div class="folder-icon">📷</div><div class="folder-name">Site Photos</div><div class="folder-count">142 files</div></div>
+        <div class="folder-card" onclick="showToast('Opening Contracts folder','info')"><div class="folder-icon">📝</div><div class="folder-name">Contracts</div><div class="folder-count">5 files</div></div>
+      </div>
+
+      <div id="filesList"></div>
+    </div>
+  </div>
+
+  <!-- ==================== BOQ ==================== -->
+  <div class="page" id="page-boq">
+    <div class="content-area">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;">BOQ Generator</h2>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:3px;">Prestige Villa — Auto-calculated with GST</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-ghost" onclick="showToast('Downloading BOQ as Excel…','success')">📥 Excel</button>
+          <button class="btn-ghost" onclick="showToast('Generating PDF…','success')">📄 PDF</button>
+          <button class="btn-primary" onclick="addBOQRow()">+ Add Item</button>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;">
+        <table class="boq-table">
+          <thead><tr>
+            <th>#</th><th>Item / Specification</th><th>Room</th><th>Qty</th><th>Unit</th><th>Rate (₹)</th><th>Amount (₹)</th><th>GST%</th><th>Total (₹)</th><th></th>
+          </tr></thead>
+          <tbody id="boqBody"></tbody>
+          <tfoot id="boqFoot"></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main-wrap -->
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- New Project Modal -->
+<div class="modal-backdrop" id="newProjectModal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-title">New Project <button class="modal-close" onclick="closeModal('newProjectModal')">✕</button></div>
+    <div id="wizardContent"></div>
+  </div>
 </div>
 
-<!-- ============ TASK KANBAN ============ -->
-<div class="page" id="page-kanban">
-  <div class="topbar"><div class="crumb"><b>Prestige Villa</b> / Tasks</div><button class="btn-primary">+ New task</button></div>
-  <div class="main">
-    <div class="kanban">
-      <div class="kcol">
-        <div class="kcol-head"><h5>Backlog</h5><span>4</span></div>
-        <div class="kcard"><span class="tag badge purple">Design</span><p>Shortlist rug options for Living Room</p><div class="foot"><span class="due">No due date</span><div class="av"></div></div></div>
-        <div class="kcard"><span class="tag badge blue">Procurement</span><p>Confirm marble slab availability</p><div class="foot"><span class="due">No due date</span><div class="av"></div></div></div>
-      </div>
-      <div class="kcol">
-        <div class="kcol-head"><h5>In Progress</h5><span>3</span></div>
-        <div class="kcard"><span class="tag badge amber">Client</span><p>Finalize kitchen island countertop selection</p><div class="foot"><span class="due">Today</span><div class="av"></div></div></div>
-        <div class="kcard"><span class="tag badge purple">Design</span><p>Review wardrobe hardware samples</p><div class="foot"><span class="due">Today</span><div class="av"></div></div></div>
-      </div>
-      <div class="kcol">
-        <div class="kcol-head"><h5>Review</h5><span>2</span></div>
-        <div class="kcard"><span class="tag badge blue">Procurement</span><p>BOQ v3 pending internal sign-off</p><div class="foot"><span class="due">Tomorrow</span><div class="av"></div></div></div>
-      </div>
-      <div class="kcol">
-        <div class="kcol-head"><h5>Done</h5><span>6</span></div>
-        <div class="kcard"><span class="tag badge green">Client</span><p>Send BOQ v3 to Prestige Villa client</p><div class="foot"><span class="due">Done</span><div class="av"></div></div></div>
-        <div class="kcard"><span class="tag badge green">Design</span><p>Kitchen moodboard approved</p><div class="foot"><span class="due">Done</span><div class="av"></div></div></div>
-      </div>
+<!-- New Task Modal -->
+<div class="modal-backdrop" id="newTaskModal">
+  <div class="modal">
+    <div class="modal-title">New Task <button class="modal-close" onclick="closeModal('newTaskModal')">✕</button></div>
+    <div class="field"><label>Task title</label><input type="text" id="newTaskTitle" placeholder="e.g. Confirm marble slab delivery"></div>
+    <div class="field"><label>Column</label>
+      <select id="newTaskCol" style="width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--white);font-size:12.5px;outline:none;">
+        <option value="0">Backlog</option><option value="1">In Progress</option><option value="2">Review</option><option value="3">Done</option>
+      </select>
+    </div>
+    <div class="field"><label>Category</label>
+      <select id="newTaskTag" style="width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--white);font-size:12.5px;outline:none;">
+        <option value="purple">Design</option><option value="blue">Procurement</option><option value="amber">Client</option><option value="green">Done</option>
+      </select>
+    </div>
+    <div class="field"><label>Due date</label><input type="date" id="newTaskDue" style="width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--white);font-size:12.5px;outline:none;"></div>
+    <div style="display:flex;gap:10px;margin-top:6px;">
+      <button class="btn-ghost" style="flex:1;" onclick="closeModal('newTaskModal')">Cancel</button>
+      <button class="btn-primary" style="flex:2;" onclick="createTask()">Create Task</button>
     </div>
   </div>
 </div>
 
-<!-- ============ FILES ============ -->
-<div class="page" id="page-files">
-  <div class="topbar"><div class="crumb"><b>Prestige Villa</b> / Files</div><button class="btn-primary">Upload</button></div>
-  <div class="main">
-    <div class="files-toolbar"><div class="crumb"><b>All Files</b> / Living Room</div><input class="btn-ghost" style="width:200px;" placeholder="Search files..."></div>
-    <div class="files-grid" style="margin-bottom:22px;">
-      <div class="folder-card"><div class="ic">🖿</div><h5>Drawings</h5><span>18 files</span></div>
-      <div class="folder-card"><div class="ic">🖿</div><h5>Moodboards</h5><span>6 files</span></div>
-      <div class="folder-card"><div class="ic">🖿</div><h5>Specifications</h5><span>24 files</span></div>
-      <div class="folder-card"><div class="ic">🖿</div><h5>Site Photos</h5><span>142 files</span></div>
-      <div class="folder-card"><div class="ic">🖿</div><h5>Contracts</h5><span>5 files</span></div>
+<!-- Add Product Modal -->
+<div class="modal-backdrop" id="addProductModal">
+  <div class="modal">
+    <div class="modal-title">Add Product to Room <button class="modal-close" onclick="closeModal('addProductModal')">✕</button></div>
+    <div class="field"><label>Category</label>
+      <select id="prodCat" style="width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--white);font-size:12.5px;outline:none;">
+        <option>Furniture</option><option>Lighting</option><option>Flooring</option><option>Wall Finish</option><option>Curtains</option><option>Hardware</option><option>Accessories</option>
+      </select>
     </div>
-    <div class="file-row"><div class="ic">PDF</div><div class="t"><b>Living Room — Furniture Layout Rev3.pdf</b><span>Updated 2 days ago · 4.2 MB</span></div><button class="btn-ghost sm">Preview</button></div>
-    <div class="file-row"><div class="ic">DWG</div><div class="t"><b>Ground Floor — Electrical Plan.dwg</b><span>Updated 5 days ago · 8.6 MB</span></div><button class="btn-ghost sm">Preview</button></div>
-    <div class="file-row"><div class="ic">JPG</div><div class="t"><b>Site Visit — Aug 4 (12 photos).zip</b><span>Updated 1 week ago · 34 MB</span></div><button class="btn-ghost sm">Preview</button></div>
-    <div class="file-row"><div class="ic">XLS</div><div class="t"><b>BOQ v3 — Master.xlsx</b><span>Updated yesterday · 1.1 MB</span></div><button class="btn-ghost sm">Preview</button></div>
+    <div class="field"><label>Product Name</label><input type="text" id="prodName" placeholder="e.g. Marble Coffee Table"></div>
+    <div class="field"><label>Brand / Supplier</label><input type="text" id="prodBrand" placeholder="e.g. NewTechWood"></div>
+    <div class="field"><label>Price (₹)</label><input type="number" id="prodPrice" placeholder="e.g. 45000"></div>
+    <div style="display:flex;gap:10px;margin-top:6px;">
+      <button class="btn-ghost" style="flex:1;" onclick="closeModal('addProductModal')">Cancel</button>
+      <button class="btn-primary" style="flex:2;" onclick="addProduct()">Add to Room</button>
+    </div>
   </div>
 </div>
 
-<div class="dev-switcher" id="devSwitcher"></div>
+<!-- Toast container -->
+<div class="toast-wrap" id="toastWrap"></div>
 
 <script>
-  const pages = ['page-dashboard','page-projects','page-wizard','page-detail','page-twin','page-room','page-kanban','page-files'];
-  const labels = {'page-dashboard':'Dashboard','page-projects':'Project List','page-wizard':'New Project','page-detail':'Project Detail','page-twin':'Digital Twin','page-room':'Room','page-kanban':'Kanban','page-files':'Files'};
-  function goTo(id){
-    pages.forEach(p=>document.getElementById(p).classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    window.scrollTo(0,0);
-    updateSwitcher(id);
-  }
-  const switcher = document.getElementById('devSwitcher');
-  pages.forEach(p=>{
-    const btn = document.createElement('button');
-    btn.textContent = labels[p];
-    btn.onclick = ()=>goTo(p);
-    btn.dataset.page = p;
-    switcher.appendChild(btn);
+// ====================================================================
+// STATE
+// ====================================================================
+const state = JSON.parse(localStorage.getItem('aaren_ws_state') || '{}');
+
+const defaultProjects = [
+  {id:1,name:'Prestige Villa',client:'Rohan Mehta',type:'Residential · Villa',status:'inprogress',statusLabel:'In Progress',statusColor:'blue',progress:68,budget:'₹86L',due:'Oct 12',team:['A','R','+2']},
+  {id:2,name:'Oak Residency — Kitchen',client:'Meera Nair',type:'Residential · Apartment',status:'ontrack',statusLabel:'On Track',statusColor:'green',progress:90,budget:'₹18L',due:'Sep 2',team:['A','+1']},
+  {id:3,name:'Studio 42 Office Fitout',client:'Vantage Co',type:'Commercial · Office',status:'atrisk',statusLabel:'At Risk',statusColor:'amber',progress:32,budget:'₹1.2Cr',due:'Nov 20',team:['A','R','M','+3']},
+  {id:4,name:'Whitepine Bathroom Reno',client:'Delhi Client',type:'Residential · Apartment',status:'review',statusLabel:'Client Review',statusColor:'purple',progress:76,budget:'₹9L',due:'Sep 18',team:['R']},
+];
+state.projects = state.projects || defaultProjects;
+
+const defaultTasks = [
+  {id:1,text:'Finalize kitchen island countertop selection',done:false,due:'Today',col:1,tag:'amber'},
+  {id:2,text:'Send BOQ v3 to Prestige Villa client',done:true,due:'Done',col:3,tag:'green'},
+  {id:3,text:'Review wardrobe hardware samples',done:false,due:'Today',col:1,tag:'purple'},
+  {id:4,text:'Site visit — Oak Residency',done:false,due:'2:00 PM',col:1,tag:'blue'},
+  {id:5,text:'Shortlist rug options for Living Room',done:false,due:'No date',col:0,tag:'purple'},
+  {id:6,text:'Confirm marble slab availability',done:false,due:'No date',col:0,tag:'blue'},
+  {id:7,text:'BOQ v3 pending internal sign-off',done:false,due:'Tomorrow',col:2,tag:'blue'},
+  {id:8,text:'Kitchen moodboard approved',done:true,due:'Done',col:3,tag:'green'},
+  {id:9,text:'Check Hettich hardware lead time',done:false,due:'Fri',col:0,tag:'blue'},
+];
+state.tasks = state.tasks || defaultTasks;
+
+const defaultFiles = [
+  {id:1,name:'Living Room — Furniture Layout Rev3.pdf',size:'4.2 MB',updated:'2 days ago',type:'pdf'},
+  {id:2,name:'Ground Floor — Electrical Plan.dwg',size:'8.6 MB',updated:'5 days ago',type:'dwg'},
+  {id:3,name:'Site Visit — Aug 4 (12 photos).zip',size:'34 MB',updated:'1 week ago',type:'zip'},
+  {id:4,name:'BOQ v3 — Master.xlsx',size:'1.1 MB',updated:'Yesterday',type:'xls'},
+  {id:5,name:'Prestige Villa — Contract Signed.pdf',size:'2.4 MB',updated:'1 month ago',type:'pdf'},
+];
+state.files = state.files || defaultFiles;
+
+const defaultRoomProducts = [
+  {id:1,cat:'Furniture',name:'Modular Sofa — Aurora',price:'₹1,84,000',brand:'Furlenco'},
+  {id:2,cat:'Lighting',name:'Brass Pendant Cluster',price:'₹42,500',brand:'Design Cafe'},
+  {id:3,cat:'Flooring',name:'Italian Marble — Calacatta',price:'₹385/sqft',brand:'Antolini'},
+  {id:4,cat:'Wall Finish',name:'Textured Lime Plaster',price:'₹165/sqft',brand:'Asian Paints'},
+  {id:5,cat:'Curtains',name:'Linen Blend — Ivory',price:'₹2,800/panel',brand:'Fenesta'},
+];
+state.roomProducts = state.roomProducts || defaultRoomProducts;
+
+const defaultBOQ = [
+  {id:1,item:'Modular Sofa — Aurora',room:'Living Room',qty:1,unit:'No',rate:184000,gst:18},
+  {id:2,item:'Italian Marble — Calacatta',room:'Living Room',qty:420,unit:'Sqft',rate:385,gst:28},
+  {id:3,item:'Brass Pendant Cluster',room:'Living Room',qty:3,unit:'No',rate:14167,gst:18},
+  {id:4,item:'Textured Lime Plaster',room:'Living Room',qty:840,unit:'Sqft',rate:165,gst:18},
+  {id:5,item:'Modular Kitchen — Lacquer Finish',room:'Kitchen',qty:1,unit:'Lot',rate:1160000,gst:18},
+];
+state.boq = state.boq || defaultBOQ;
+
+const moodItems = [];
+state.comments = state.comments || [
+  {author:'Rohan Mehta',text:'The marble choice looks great but can we see a warmer alternative?',time:'Aug 8, 11:42 AM',isClient:true},
+  {author:'Ananya',text:"Absolutely — I'll add Botticino Classico as an alternative option.",time:'Aug 8, 12:05 PM',isClient:false},
+];
+
+const ROOM_DATA = [
+  {name:'Living Room',floor:'Ground Floor',area:'420 sqft',progress:55,budget:'₹9.2L',total:'₹14L',status:'progress'},
+  {name:'Dining',floor:'Ground Floor',area:'280 sqft',progress:100,budget:'₹4.1L',total:'₹4.1L',status:'done'},
+  {name:'Kitchen',floor:'Ground Floor',area:'320 sqft',progress:100,budget:'₹11.6L',total:'₹11.6L',status:'done'},
+  {name:'Powder Room',floor:'Ground Floor',area:'60 sqft',progress:8,budget:'₹0.1L',total:'₹1.8L',status:'pending'},
+  {name:'Master Bedroom',floor:'First Floor',area:'380 sqft',progress:40,budget:'₹4.8L',total:'₹12L',status:'progress'},
+  {name:'Bedroom 2',floor:'First Floor',area:'260 sqft',progress:22,budget:'₹1.8L',total:'₹8L',status:'progress'},
+  {name:'Bedroom 3',floor:'First Floor',area:'240 sqft',progress:0,budget:'₹0',total:'₹8L',status:'pending'},
+  {name:'Family Lounge',floor:'First Floor',area:'300 sqft',progress:0,budget:'₹0',total:'₹6L',status:'pending'},
+  {name:'Outdoor Deck',floor:'Terrace',area:'480 sqft',progress:0,budget:'₹0',total:'₹5L',status:'pending'},
+];
+
+let currentRoom = ROOM_DATA[0];
+let draggedCard = null;
+let dragFromCol = null;
+let wizardStep = 1;
+const wizardData = {};
+
+// ====================================================================
+// NAVIGATION
+// ====================================================================
+const pages = {
+  dashboard:'page-dashboard', projects:'page-projects', detail:'page-detail',
+  twin:'page-twin', room:'page-room', kanban:'page-kanban', files:'page-files', boq:'page-boq'
+};
+const breadcrumbs = {
+  dashboard:'<b>Dashboard</b>',
+  projects:'Dashboard <span>›</span> <b>Projects</b>',
+  detail:'Projects <span>›</span> <b>Prestige Villa</b>',
+  twin:'Prestige Villa <span>›</span> <b>Digital Twin</b>',
+  room:'Digital Twin <span>›</span> <b>Living Room</b>',
+  kanban:'Prestige Villa <span>›</span> <b>Tasks</b>',
+  files:'Prestige Villa <span>›</span> <b>Files</b>',
+  boq:'Prestige Villa <span>›</span> <b>BOQ</b>',
+};
+
+function goTo(key){
+  Object.values(pages).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.classList.remove('active');
   });
-  function updateSwitcher(active){
-    switcher.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.page===active));
+  const target=document.getElementById(pages[key]);
+  if(target)target.classList.add('active');
+  document.getElementById('breadcrumb').innerHTML=breadcrumbs[key]||'';
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.nav===key));
+  window.scrollTo(0,0);
+  // lazy render
+  if(key==='projects')renderProjects();
+  if(key==='twin')renderTwin();
+  if(key==='kanban')renderKanban();
+  if(key==='files')renderFiles();
+  if(key==='boq')renderBOQ();
+  if(key==='dashboard'){renderDashProjects();renderDashTasks();}
+  if(key==='room')renderRoom();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function openRoom(room){
+  currentRoom=room;
+  document.getElementById('roomTitle').textContent=room.name;
+  document.getElementById('roomMeta').textContent=`${room.floor} · ${room.area} · ${room.progress}% specified`;
+  goTo('room');
+}
+
+// ====================================================================
+// DASHBOARD RENDER
+// ====================================================================
+function renderDashProjects(){
+  const el=document.getElementById('dashProjects');
+  if(!el)return;
+  el.innerHTML=state.projects.slice(0,3).map(p=>`
+    <div class="proj-row" onclick="goTo('detail')" style="cursor:pointer;">
+      <div class="proj-thumb"></div>
+      <div class="proj-info">
+        <div class="proj-name">${p.name}</div>
+        <div class="proj-client">${p.client} · Due ${p.due}</div>
+      </div>
+      ${ringHTML(p.progress,p.status)}
+    </div>`).join('');
+}
+
+function renderDashTasks(){
+  const el=document.getElementById('dashTasks');
+  if(!el)return;
+  const today=state.tasks.filter(t=>t.due==='Today'||t.due==='2:00 PM').slice(0,5);
+  el.innerHTML=today.map(t=>`
+    <div class="task-item ${t.done?'done':''}">
+      <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id},this.checked)">
+      <span class="task-text">${t.text}</span>
+      <span class="task-due">${t.due}</span>
+    </div>`).join('');
+}
+
+function ringHTML(pct,status){
+  const color=status==='done'?'var(--green)':status==='atrisk'?'var(--amber)':'var(--purple)';
+  const r=14;const c=2*Math.PI*r;const dash=c*(pct/100);
+  return `<div class="ring" style="width:40px;height:40px;">
+    <svg viewBox="0 0 36 36" style="transform:rotate(-90deg)">
+      <circle cx="18" cy="18" r="${r}" fill="none" stroke="var(--border-strong)" stroke-width="3"/>
+      <circle cx="18" cy="18" r="${r}" fill="none" stroke="${color}" stroke-width="3" stroke-dasharray="${dash.toFixed(1)} ${(c-dash).toFixed(1)}"/>
+    </svg>
+    <span style="font-size:9px;font-weight:800;position:relative;z-index:1;">${pct}%</span>
+  </div>`;
+}
+
+function toggleTask(id,checked){
+  const t=state.tasks.find(t=>t.id===id);
+  if(t){t.done=checked;saveState();}
+  renderDashTasks();
+  updateTaskBadge();
+}
+
+// ====================================================================
+// PROJECTS RENDER
+// ====================================================================
+let currentView='table';
+function setView(v){
+  currentView=v;
+  document.getElementById('vbTable').classList.toggle('on',v==='table');
+  document.getElementById('vbCard').classList.toggle('on',v==='card');
+  document.getElementById('proj-table-view').style.display=v==='table'?'block':'none';
+  document.getElementById('proj-card-view').style.display=v==='card'?'block':'none';
+  renderProjects();
+}
+
+function renderProjects(filter=''){
+  const filtered=state.projects.filter(p=>
+    p.name.toLowerCase().includes(filter.toLowerCase())||
+    p.client.toLowerCase().includes(filter.toLowerCase())
+  );
+  document.getElementById('projCount').textContent=`${filtered.length} project${filtered.length!==1?'s':''}`;
+
+  // Table
+  document.getElementById('projTableBody').innerHTML=filtered.map(p=>`
+    <tr onclick="goTo('detail')">
+      <td><div style="font-weight:700;">${p.name}</div><div style="font-size:11px;color:var(--slate-dim);">${p.type}</div></td>
+      <td>${p.client}</td>
+      <td><span class="badge ${p.statusColor}">${p.statusLabel}</span></td>
+      <td><div class="pbar"><div class="pbar-fill" style="width:${p.progress}%;"></div></div></td>
+      <td>${p.budget}</td>
+      <td><div class="avs">${p.team.map(a=>`<div class="av">${a}</div>`).join('')}</div></td>
+      <td>${p.due}</td>
+    </tr>`).join('');
+
+  // Cards
+  document.getElementById('projCardBody').innerHTML=filtered.map(p=>`
+    <div class="proj-card" onclick="goTo('detail')">
+      <div class="pc-thumb"></div>
+      <div class="pc-header">
+        <div><div style="font-size:13px;font-weight:700;">${p.name}</div><div style="font-size:11px;color:var(--slate-dim);margin-top:2px;">${p.client}</div></div>
+        <span class="badge ${p.statusColor}">${p.statusLabel}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--slate-dim);margin-bottom:8px;"><span>${p.budget}</span><span>Due ${p.due}</span></div>
+      <div class="pbar" style="margin-bottom:6px;"><div class="pbar-fill" style="width:${p.progress}%;"></div></div>
+      <div style="font-size:11px;color:var(--slate-dim);">${p.progress}% complete</div>
+    </div>`).join('');
+}
+
+function filterProjects(v){renderProjects(v);}
+
+// ====================================================================
+// TWIN RENDER
+// ====================================================================
+function renderTwin(){
+  const floors=[
+    {label:'📍 Ground Floor',rooms:ROOM_DATA.filter(r=>r.floor==='Ground Floor')},
+    {label:'📍 First Floor',rooms:ROOM_DATA.filter(r=>r.floor==='First Floor')},
+    {label:'📍 Terrace',rooms:ROOM_DATA.filter(r=>r.floor==='Terrace')},
+  ];
+
+  document.getElementById('twin-tree-content').innerHTML=floors.map(f=>`
+    <div class="floor-group">
+      <div class="floor-label">${f.label}</div>
+      ${f.rooms.map(r=>`
+        <div class="room-row ${r===currentRoom?'active':''}" onclick="openRoom(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+          ${r.name}<span class="stat-dot ${r.status}"></span>
+        </div>`).join('')}
+    </div>`).join('');
+
+  document.getElementById('twin-canvas-content').innerHTML=floors.map(f=>`
+    <div class="floor-block">
+      <div class="floor-title">${f.label}</div>
+      <div class="room-grid-2">
+        ${f.rooms.map(r=>`
+          <div class="room-block" onclick="openRoom(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+            <h4>${r.name}</h4>
+            <div class="rbar"><div class="rbar-fill" style="width:${r.progress}%;"></div></div>
+            <div class="rmeta">${r.progress}% · ${r.budget} of ${r.total}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ====================================================================
+// ROOM RENDER
+// ====================================================================
+function renderRoom(){
+  // Products
+  const grid=document.getElementById('roomProductGrid');
+  if(grid){
+    grid.innerHTML=state.roomProducts.map(p=>`
+      <div class="product-card">
+        <div class="pc-img"></div>
+        <div class="pc-body">
+          <div class="pc-cat">${p.cat}</div>
+          <div class="pc-name">${p.name}</div>
+          <div class="pc-price">${p.price}</div>
+        </div>
+        <div class="pc-actions">
+          <button class="btn-ghost sm" onclick="showToast('Added to specification','success')">+ Spec</button>
+          <button class="btn-ghost sm" onclick="removeProduct(${p.id})">Remove</button>
+        </div>
+      </div>`).join('')+`
+      <div class="product-card" style="display:flex;align-items:center;justify-content:center;min-height:140px;cursor:pointer;border-style:dashed;" onclick="openModal('addProductModal')">
+        <span style="color:var(--slate-dim);font-size:13px;font-weight:600;">+ Add product</span>
+      </div>`;
   }
-  updateSwitcher('page-dashboard');
+
+  // Budget
+  const cats={};
+  state.roomProducts.forEach(p=>{
+    const raw=parseFloat(p.price.replace(/[^0-9.]/g,''));
+    const key=p.cat;
+    if(!cats[key])cats[key]=0;
+    cats[key]+=raw;
+  });
+  const total=Object.values(cats).reduce((a,b)=>a+b,0);
+  document.getElementById('roomBudget').innerHTML=Object.entries(cats).map(([k,v])=>`
+    <div class="budget-row"><span class="lbl">${k}</span><span>₹${v.toLocaleString('en-IN')}</span></div>`).join('')+
+    `<div class="budget-total"><span>Total spent</span><span>₹${total.toLocaleString('en-IN')}</span></div>`;
+
+  // Comments
+  renderComments();
+}
+
+function renderComments(){
+  const el=document.getElementById('commentsList');
+  if(!el)return;
+  el.innerHTML=state.comments.map(c=>`
+    <div class="activity-item">
+      <div class="act-av" style="${!c.isClient?'background:linear-gradient(135deg,var(--green),var(--blue));':''}"></div>
+      <div><div class="act-txt"><b>${c.author}:</b> "${c.text}"</div><div class="act-time">${c.time}</div></div>
+    </div>`).join('');
+}
+
+function addComment(){
+  const input=document.getElementById('commentInput');
+  const text=input.value.trim();
+  if(!text)return;
+  state.comments.push({author:'Ananya',text,time:new Date().toLocaleString('en-IN',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),isClient:false});
+  input.value='';
+  saveState();
+  renderComments();
+  showToast('Comment added','success');
+}
+
+function removeProduct(id){
+  state.roomProducts=state.roomProducts.filter(p=>p.id!==id);
+  saveState();renderRoom();showToast('Product removed','info');
+}
+
+function addProduct(){
+  const cat=document.getElementById('prodCat').value;
+  const name=document.getElementById('prodName').value;
+  const brand=document.getElementById('prodBrand').value;
+  const price=document.getElementById('prodPrice').value;
+  if(!name||!price){showToast('Please fill all fields','info');return;}
+  state.roomProducts.push({id:Date.now(),cat,name,price:`₹${parseInt(price).toLocaleString('en-IN')}`,brand});
+  saveState();
+  closeModal('addProductModal');
+  renderRoom();
+  showToast(`${name} added to room!`,'success');
+}
+
+// ====================================================================
+// ROOM TABS
+// ====================================================================
+function switchRoomTab(tab,btn){
+  document.querySelectorAll('.room-tab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.room-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('on');
+  document.getElementById('room-'+tab).classList.add('active');
+}
+
+let moodCount=0;
+function addMoodItem(){
+  moodCount++;
+  const grid=document.getElementById('moodGrid');
+  const colors=[
+    'rgba(124,58,237,.3)','rgba(37,99,235,.3)','rgba(34,197,94,.2)',
+    'rgba(245,158,11,.25)','rgba(248,113,113,.2)','rgba(6,182,212,.2)'
+  ];
+  const div=document.createElement('div');
+  div.className='mood-item';
+  div.style.background=`linear-gradient(135deg,${colors[moodCount%colors.length]},${colors[(moodCount+2)%colors.length]})`;
+  div.textContent=['Marble','Sofa','Pendant','Texture','Linen','Rug','Wood','Stone'][moodCount%8];
+  grid.appendChild(div);
+  document.getElementById('moodPrompt').style.display='none';
+}
+
+// ====================================================================
+// PROJECT DETAIL TABS
+// ====================================================================
+function switchPdTab(tab,btn){
+  document.querySelectorAll('.pd-tab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.pd-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('on');
+  document.getElementById('pd-'+tab).classList.add('active');
+}
+
+// ====================================================================
+// KANBAN
+// ====================================================================
+const COLS=['Backlog','In Progress','Review','Done'];
+
+function renderKanban(){
+  const board=document.getElementById('kanbanBoard');
+  board.innerHTML=COLS.map((col,ci)=>`
+    <div class="k-col" id="kcol-${ci}" ondragover="dragOver(event,${ci})" ondrop="drop(event,${ci})" ondragleave="dragLeave(${ci})">
+      <div class="k-col-header">
+        <h4>${col}</h4>
+        <span class="k-count">${state.tasks.filter(t=>t.col===ci).length}</span>
+      </div>
+      <div class="k-cards" id="kcards-${ci}">
+        ${state.tasks.filter(t=>t.col===ci).map(t=>taskCardHTML(t)).join('')}
+      </div>
+      <button class="k-add" onclick="prefillTaskModal(${ci})">+ Add task</button>
+    </div>`).join('');
+
+  // attach drag events
+  document.querySelectorAll('.k-card').forEach(card=>{
+    card.addEventListener('dragstart',e=>{
+      draggedCard=parseInt(card.dataset.id);
+      dragFromCol=parseInt(card.dataset.col);
+      setTimeout(()=>card.classList.add('dragging'),0);
+    });
+    card.addEventListener('dragend',()=>{
+      card.classList.remove('dragging');
+    });
+  });
+}
+
+function taskCardHTML(t){
+  return `<div class="k-card" draggable="true" data-id="${t.id}" data-col="${t.col}">
+    <span class="badge ${t.tag}">${{purple:'Design',blue:'Procurement',amber:'Client',green:'Completed'}[t.tag]||'Task'}</span>
+    <p>${t.text}</p>
+    <div class="k-card-footer">
+      <span class="k-due">${t.due}</span>
+      <div class="k-av">A</div>
+    </div>
+  </div>`;
+}
+
+function dragOver(e,col){
+  e.preventDefault();
+  document.getElementById('kcol-'+col).classList.add('drag-over');
+}
+function dragLeave(col){document.getElementById('kcol-'+col).classList.remove('drag-over');}
+function drop(e,col){
+  e.preventDefault();
+  document.getElementById('kcol-'+col).classList.remove('drag-over');
+  if(draggedCard!==null){
+    const task=state.tasks.find(t=>t.id===draggedCard);
+    if(task){task.col=col;saveState();}
+    renderKanban();
+    updateTaskBadge();
+    showToast(`Task moved to ${COLS[col]}`,'success');
+    draggedCard=null;
+  }
+}
+
+function prefillTaskModal(col){
+  document.getElementById('newTaskCol').value=col;
+  openModal('newTaskModal');
+}
+
+function createTask(){
+  const title=document.getElementById('newTaskTitle').value.trim();
+  if(!title){showToast('Please enter a task title','info');return;}
+  const col=parseInt(document.getElementById('newTaskCol').value);
+  const tag=document.getElementById('newTaskTag').value;
+  const due=document.getElementById('newTaskDue').value||'No date';
+  state.tasks.push({id:Date.now(),text:title,done:false,due,col,tag});
+  saveState();
+  closeModal('newTaskModal');
+  document.getElementById('newTaskTitle').value='';
+  renderKanban();
+  updateTaskBadge();
+  showToast('Task created!','success');
+}
+
+function updateTaskBadge(){
+  const open=state.tasks.filter(t=>!t.done).length;
+  const el=document.getElementById('nav-task-count');
+  if(el)el.textContent=open;
+  const kpi=document.getElementById('kpi-tasks');
+  if(kpi)kpi.textContent=state.tasks.filter(t=>t.col===1).length;
+}
+
+// ====================================================================
+// FILES
+// ====================================================================
+function renderFiles(filter=''){
+  const filtered=state.files.filter(f=>f.name.toLowerCase().includes(filter.toLowerCase()));
+  document.getElementById('filesList').innerHTML=filtered.map(f=>`
+    <div class="file-row">
+      <div class="file-icon ${f.type}">${f.type.toUpperCase()}</div>
+      <div class="file-meta"><b>${f.name}</b><span>Updated ${f.updated} · ${f.size}</span></div>
+      <button class="btn-ghost sm" onclick="showToast('Opening preview…','info')">Preview</button>
+      <button class="btn-ghost sm" onclick="showToast('Downloading ${f.name}','success')">⬇</button>
+    </div>`).join('');
+}
+
+function filterFiles(v){renderFiles(v);}
+
+function handleFileUpload(files){
+  Array.from(files).forEach(file=>{
+    const ext=file.name.split('.').pop().toLowerCase();
+    const typeMap={pdf:'pdf',dwg:'dwg',jpg:'jpg',jpeg:'jpg',png:'jpg',xlsx:'xls',xls:'xls',zip:'zip'};
+    state.files.unshift({
+      id:Date.now(),
+      name:file.name,
+      size:`${(file.size/1048576).toFixed(1)} MB`,
+      updated:'Just now',
+      type:typeMap[ext]||'gen'
+    });
+  });
+  saveState();renderFiles();
+  showToast(`${files.length} file${files.length>1?'s':''} uploaded!`,'success');
+}
+
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('uploadDrop').classList.remove('dragover');
+  if(e.dataTransfer.files.length)handleFileUpload(e.dataTransfer.files);
+}
+
+// ====================================================================
+// BOQ
+// ====================================================================
+function renderBOQ(){
+  const body=document.getElementById('boqBody');
+  body.innerHTML=state.boq.map(row=>{
+    const amt=row.qty*row.rate;
+    const gstAmt=amt*(row.gst/100);
+    const total=amt+gstAmt;
+    return `<tr>
+      <td style="color:var(--slate-dim);">${row.id}</td>
+      <td><input value="${row.item}" onchange="updateBOQ(${row.id},'item',this.value)"></td>
+      <td><input value="${row.room}" onchange="updateBOQ(${row.id},'room',this.value)" style="width:120px;"></td>
+      <td><input type="number" value="${row.qty}" onchange="updateBOQ(${row.id},'qty',this.value)" style="width:60px;"></td>
+      <td><input value="${row.unit}" onchange="updateBOQ(${row.id},'unit',this.value)" style="width:60px;"></td>
+      <td><input type="number" value="${row.rate}" onchange="updateBOQ(${row.id},'rate',this.value)" style="width:100px;"></td>
+      <td>₹${amt.toLocaleString('en-IN')}</td>
+      <td><input type="number" value="${row.gst}" onchange="updateBOQ(${row.id},'gst',this.value)" style="width:50px;">%</td>
+      <td>₹${total.toLocaleString('en-IN')}</td>
+      <td><button class="btn-ghost sm" style="color:var(--red);" onclick="removeBOQRow(${row.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+
+  const grandTotal=state.boq.reduce((s,r)=>{const a=r.qty*r.rate;return s+a+a*(r.gst/100);},0);
+  const subTotal=state.boq.reduce((s,r)=>s+r.qty*r.rate,0);
+  document.getElementById('boqFoot').innerHTML=`
+    <tr><td></td><td colspan="5">Sub-total</td><td>₹${subTotal.toLocaleString('en-IN')}</td><td colspan="2">GST Total</td><td>₹${(grandTotal-subTotal).toLocaleString('en-IN')}</td><td></td></tr>
+    <tr><td></td><td colspan="7"><b>Grand Total (incl. GST)</b></td><td colspan="2"><b>₹${grandTotal.toLocaleString('en-IN')}</b></td><td></td></tr>`;
+}
+
+function updateBOQ(id,key,val){
+  const row=state.boq.find(r=>r.id===id);
+  if(row){row[key]=key==='qty'||key==='rate'||key==='gst'?parseFloat(val)||0:val;saveState();renderBOQ();}
+}
+
+function addBOQRow(){
+  state.boq.push({id:Date.now(),item:'New item',room:'Living Room',qty:1,unit:'No',rate:0,gst:18});
+  saveState();renderBOQ();
+}
+
+function removeBOQRow(id){
+  state.boq=state.boq.filter(r=>r.id!==id);
+  saveState();renderBOQ();showToast('Row removed','info');
+}
+
+// ====================================================================
+// NEW PROJECT WIZARD
+// ====================================================================
+function renderWizard(){
+  const steps=['Details','Location','Team','Template','Finish'];
+  const stepsHTML=steps.map((s,i)=>`
+    <div class="ws ${i+1<wizardStep?'done':i+1===wizardStep?'active':''}">
+      <div class="dot">${i+1<wizardStep?'✓':i+1}</div>
+      <span>${s}</span>
+    </div>`).join('');
+
+  const bodies={
+    1:`<h2>Project details</h2><p class="sub">Basic information about your new project.</p>
+      <div class="field"><label>Project name</label><input id="wName" placeholder="e.g. Oberoi Suite — Mumbai"></div>
+      <div class="field-row">
+        <div class="field"><label>Client name</label><input id="wClient" placeholder="Client full name"></div>
+        <div class="field"><label>Project type</label></div>
+      </div>
+      <div class="type-grid">
+        <div class="type-tile on" onclick="selectType(this)">Villa</div>
+        <div class="type-tile" onclick="selectType(this)">Apartment</div>
+        <div class="type-tile" onclick="selectType(this)">Office</div>
+        <div class="type-tile" onclick="selectType(this)">Retail</div>
+        <div class="type-tile" onclick="selectType(this)">Hospitality</div>
+        <div class="type-tile" onclick="selectType(this)">Commercial</div>
+      </div>`,
+    2:`<h2>Location & timeline</h2><p class="sub">Set the project location, area and budget.</p>
+      <div class="field"><label>Location</label><input id="wLoc" placeholder="City, Area"></div>
+      <div class="field-row">
+        <div class="field"><label>Area (sqft)</label><input id="wArea" type="number" placeholder="e.g. 3500"></div>
+        <div class="field"><label>Budget (₹)</label><input id="wBudget" type="number" placeholder="e.g. 8500000"></div>
+      </div>
+      <div class="field"><label>Target completion</label><input id="wDate" type="date"></div>`,
+    3:`<h2>Invite team</h2><p class="sub">Add architects, designers, contractors and clients.</p>
+      <div class="field"><label>Team members (emails)</label><input id="wTeam" placeholder="colleague@studio.com, client@email.com"></div>
+      <div style="padding:14px;background:var(--surface-2);border-radius:10px;margin-top:8px;font-size:12px;color:var(--slate);">Invites will be sent once the project is created.</div>`,
+    4:`<h2>Choose template</h2><p class="sub">AI will pre-populate your project structure.</p>
+      <div class="type-grid" style="margin-top:8px;">
+        <div class="type-tile on" onclick="selectType(this)">Luxury Villa</div>
+        <div class="type-tile" onclick="selectType(this)">Apartment</div>
+        <div class="type-tile" onclick="selectType(this)">Office Fitout</div>
+        <div class="type-tile" onclick="selectType(this)">Kitchen Reno</div>
+        <div class="type-tile" onclick="selectType(this)">Hospitality</div>
+        <div class="type-tile" onclick="selectType(this)">Custom</div>
+      </div>`,
+    5:`<h2>🎉 Ready to launch!</h2><p class="sub">Your project will be created with AI-generated rooms, tasks, and BOQ structure.</p>
+      <div style="background:var(--surface-2);border-radius:12px;padding:16px;font-size:12.5px;color:var(--slate);line-height:2;">
+        <div>📍 <b style="color:var(--white)">Name:</b> ${wizardData.name||'New Project'}</div>
+        <div>👤 <b style="color:var(--white)">Client:</b> ${wizardData.client||'—'}</div>
+        <div>📐 <b style="color:var(--white)">Location:</b> ${wizardData.loc||'—'}</div>
+        <div>💰 <b style="color:var(--white)">Budget:</b> ₹${(wizardData.budget||0).toLocaleString('en-IN')}</div>
+      </div>`,
+  };
+
+  document.getElementById('wizardContent').innerHTML=`
+    <div class="wizard-steps">${stepsHTML}</div>
+    <div class="wizard-body">
+      ${bodies[wizardStep]}
+      <div class="wiz-actions">
+        <button class="btn-ghost" onclick="${wizardStep===1?"closeModal('newProjectModal')":"prevWizardStep()"}">${wizardStep===1?'Cancel':'← Back'}</button>
+        <button class="btn-primary" onclick="${wizardStep<5?'nextWizardStep()':'createProject()'}">${wizardStep===5?'Create Project →':'Continue →'}</button>
+      </div>
+    </div>`;
+}
+
+function selectType(el){
+  el.closest('.type-grid').querySelectorAll('.type-tile').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+}
+function nextWizardStep(){
+  if(wizardStep===1){wizardData.name=document.getElementById('wName')?.value;wizardData.client=document.getElementById('wClient')?.value;}
+  if(wizardStep===2){wizardData.loc=document.getElementById('wLoc')?.value;wizardData.budget=document.getElementById('wBudget')?.value;}
+  wizardStep=Math.min(5,wizardStep+1);renderWizard();
+}
+function prevWizardStep(){wizardStep=Math.max(1,wizardStep-1);renderWizard();}
+
+function createProject(){
+  const proj={
+    id:Date.now(),
+    name:wizardData.name||'New Project',
+    client:wizardData.client||'New Client',
+    type:'Residential · Villa',
+    status:'inprogress',statusLabel:'In Progress',statusColor:'blue',
+    progress:0,
+    budget:`₹${(parseInt(wizardData.budget)||0).toLocaleString('en-IN')}`,
+    due:'TBD',
+    team:['A']
+  };
+  state.projects.unshift(proj);
+  document.getElementById('nav-proj-count').textContent=state.projects.length;
+  document.getElementById('kpi-projects').textContent=state.projects.length;
+  saveState();
+  closeModal('newProjectModal');
+  wizardStep=1;
+  renderProjects();
+  showToast(`"${proj.name}" project created! 🎉`,'success');
+}
+
+// ====================================================================
+// MODAL + TOAST + THEME
+// ====================================================================
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  if(id==='newProjectModal'){wizardStep=1;renderWizard();}
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+// Close modal on backdrop click
+document.querySelectorAll('.modal-backdrop').forEach(el=>{
+  el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});
+});
+
+function showToast(msg,type='info'){
+  const wrap=document.getElementById('toastWrap');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`<span>${type==='success'?'✓':'ℹ'}</span> ${msg}`;
+  wrap.appendChild(t);
+  setTimeout(()=>t.style.opacity='0',3000);
+  setTimeout(()=>t.remove(),3400);
+}
+
+function toggleTheme(){
+  const html=document.documentElement;
+  const isDark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',isDark?'light':'dark');
+  document.querySelector('.theme-toggle').textContent=isDark?'🌙':'☀️';
+  showToast(`${isDark?'Light':'Dark'} mode`,'info');
+}
+
+function handleSearch(val){
+  if(!val)return;
+  if(document.getElementById('page-projects').classList.contains('active')){
+    filterProjects(val);
+  }
+}
+
+// ====================================================================
+// GREETING
+// ====================================================================
+function setGreeting(){
+  const h=new Date().getHours();
+  const g=h<12?'morning':h<18?'afternoon':'evening';
+  const el=document.getElementById('greetingText');
+  if(el)el.textContent=`Good ${g}, Ananya 👋`;
+}
+
+// ====================================================================
+// PERSIST
+// ====================================================================
+function saveState(){localStorage.setItem('aaren_ws_state',JSON.stringify(state));}
+
+// ====================================================================
+// INIT
+// ====================================================================
+setGreeting();
+renderDashProjects();
+renderDashTasks();
+updateTaskBadge();
+document.getElementById('nav-proj-count').textContent=state.projects.length;
 </script>
 </body>
 </html>
