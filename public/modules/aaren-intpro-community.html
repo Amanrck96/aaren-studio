@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aaren IntPro — Community & Professional Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* ===================== LOCKED DESIGN TOKENS ===================== */
+  :root{
+    --navy:#08111F; --navy-2:#0D1929; --surface:#101C30; --surface-2:#152238;
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
+    --white:#F8FAFC; --slate:#93A2B8; --slate-dim:#5E6E85;
+    --purple:#7C3AED; --purple-soft:rgba(124,58,237,0.14);
+    --blue:#2563EB;
+    --radius-lg:20px; --radius-md:16px; --radius-sm:10px;
+    --shadow-glass: 0 8px 40px rgba(0,0,0,0.45);
+
+    /* extended, non-conflicting tokens for this module's status/tag language */
+    --green:#22C55E; --green-soft:rgba(34,197,94,0.14);
+    --amber:#F59E0B; --amber-soft:rgba(245,158,11,0.14);
+    --rose:#FB7185; --rose-soft:rgba(251,113,133,0.14);
+
+    --bg: var(--navy);
+    --bg-2: var(--navy-2);
+    --panel: var(--surface);
+    --panel-2: var(--surface-2);
+    --text: var(--white);
+    --text-dim: var(--slate);
+    --text-faint: var(--slate-dim);
+    --line: var(--border);
+    --line-strong: var(--border-strong);
+  }
+
+  [data-theme="light"]{
+    --bg:#F5F6F9; --bg-2:#EEF0F5; --panel:#FFFFFF; --panel-2:#F8F9FC;
+    --border:rgba(15,23,42,0.08); --border-strong:rgba(15,23,42,0.14);
+    --text:#0B1220; --text-dim:#54617A; --text-faint:#8792A6;
+    --line: var(--border); --line-strong: var(--border-strong);
+    --shadow-glass: 0 8px 40px rgba(15,23,42,0.10);
+    --purple-soft: rgba(124,58,237,0.10);
+    --green-soft: rgba(34,197,94,0.10);
+    --amber-soft: rgba(245,158,11,0.12);
+    --rose-soft: rgba(251,113,133,0.12);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    font-size:14px;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+  ::selection{background:var(--purple-soft); color:var(--text);}
+  ::-webkit-scrollbar{width:8px; height:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:8px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+
+  :focus-visible{outline:2px solid var(--purple); outline-offset:2px; border-radius:6px;}
+
+  img,svg{display:block;}
+
+  /* ===================== LAYOUT SHELL ===================== */
+  .app{
+    display:grid;
+    grid-template-columns:248px 1fr;
+    min-height:100vh;
+  }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    background:var(--bg-2);
+    border-right:1px solid var(--line);
+    padding:20px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    padding:6px 10px 22px;
+  }
+  .brand-mark{
+    width:32px; height:32px; border-radius:9px;
+    background:linear-gradient(135deg, var(--purple), var(--blue));
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:14px; color:#fff; flex-shrink:0;
+  }
+  .brand-name{font-weight:800; font-size:15px; letter-spacing:-0.01em;}
+  .brand-sub{font-size:10.5px; color:var(--text-faint); font-weight:600; letter-spacing:.04em; text-transform:uppercase;}
+
+  .nav-label{
+    font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--text-faint); padding:14px 10px 6px;
+  }
+  .nav-item{
+    display:flex; align-items:center; gap:11px;
+    padding:9px 10px; border-radius:var(--radius-sm);
+    color:var(--text-dim); font-weight:600; font-size:13.5px;
+    transition:background .15s ease, color .15s ease;
+    position:relative;
+  }
+  .nav-item svg{width:17px; height:17px; flex-shrink:0;}
+  .nav-item:hover{background:var(--panel); color:var(--text);}
+  .nav-item.active{background:var(--purple-soft); color:var(--text);}
+  .nav-item.active::before{
+    content:''; position:absolute; left:-14px; top:50%; transform:translateY(-50%);
+    width:3px; height:16px; border-radius:4px; background:var(--purple);
+  }
+  .nav-badge{
+    margin-left:auto; font-size:10.5px; font-weight:700;
+    background:var(--purple); color:#fff; padding:1px 6px; border-radius:20px;
+  }
+
+  .sidebar-foot{
+    margin-top:auto; padding-top:14px; border-top:1px solid var(--line);
+  }
+  .theme-toggle{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:9px 10px; border-radius:var(--radius-sm); background:var(--panel);
+    border:1px solid var(--line); font-size:12.5px; font-weight:600; color:var(--text-dim);
+  }
+  .switch{
+    width:34px; height:19px; border-radius:20px; background:var(--line-strong);
+    position:relative; border:none; flex-shrink:0;
+  }
+  .switch::after{
+    content:''; position:absolute; width:15px; height:15px; border-radius:50%;
+    background:#fff; top:2px; left:2px; transition:transform .18s ease;
+  }
+  [data-theme="light"] .switch::after{transform:translateX(15px);}
+  [data-theme="light"] .switch{background:var(--purple);}
+
+  /* ---------- TOPBAR ---------- */
+  .main{display:flex; flex-direction:column; min-height:100vh;}
+  .topbar{
+    display:flex; align-items:center; gap:16px;
+    padding:14px 28px; border-bottom:1px solid var(--line);
+    background:var(--bg); position:sticky; top:0; z-index:20;
+  }
+  .search{
+    flex:1; max-width:420px; display:flex; align-items:center; gap:9px;
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:9px 13px; color:var(--text-faint);
+  }
+  .search svg{width:16px; height:16px; flex-shrink:0;}
+  .search input{
+    background:none; border:none; outline:none; color:var(--text); font-size:13px; width:100%;
+    font-family:inherit;
+  }
+  .search input::placeholder{color:var(--text-faint);}
+  .topbar-spacer{flex:1;}
+  .icon-btn{
+    width:36px; height:36px; border-radius:var(--radius-sm);
+    background:var(--panel); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; position:relative;
+    color:var(--text-dim);
+  }
+  .icon-btn svg{width:16px; height:16px;}
+  .icon-btn:hover{color:var(--text); border-color:var(--line-strong);}
+  .dot{
+    position:absolute; top:6px; right:6px; width:7px; height:7px; border-radius:50%;
+    background:var(--rose); border:2px solid var(--bg);
+  }
+  .btn{
+    display:inline-flex; align-items:center; gap:7px;
+    padding:9px 16px; border-radius:var(--radius-sm); font-weight:700; font-size:13px;
+    border:1px solid transparent; white-space:nowrap;
+  }
+  .btn svg{width:14px; height:14px;}
+  .btn-primary{background:linear-gradient(135deg, var(--purple), #6528d1); color:#fff; box-shadow:0 4px 18px rgba(124,58,237,0.35);}
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-ghost{background:var(--panel); border:1px solid var(--line); color:var(--text);}
+  .btn-ghost:hover{border-color:var(--line-strong);}
+  .btn-sm{padding:6px 12px; font-size:12px;}
+
+  .avatar{
+    width:36px; height:36px; border-radius:50%; flex-shrink:0;
+    background:linear-gradient(135deg,#F59E0B,#7C3AED); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12.5px;
+    border:2px solid var(--line);
+  }
+  .avatar.sm{width:30px; height:30px; font-size:11px;}
+  .avatar.lg{width:88px; height:88px; font-size:26px; border-width:4px; border-color:var(--bg);}
+  .avatar.xl{width:112px; height:112px; font-size:32px; border-width:4px; border-color:var(--bg);}
+
+  /* ---------- CONTENT REGION ---------- */
+  .content{padding:26px 28px 60px; flex:1;}
+  .view{display:none;}
+  .view.active{display:block; animation:fadeUp .28s ease;}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+
+  .page-head{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:20px; gap:16px; flex-wrap:wrap;}
+  .page-title{font-size:22px; font-weight:800; letter-spacing:-0.01em;}
+  .page-sub{color:var(--text-dim); font-size:13px; margin-top:4px;}
+
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:20px;
+  }
+  .pill{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px;
+  }
+  .pill-purple{background:var(--purple-soft); color:#C4B5FD;}
+  .pill-green{background:var(--green-soft); color:#4ADE80;}
+  .pill-amber{background:var(--amber-soft); color:#FBBF24;}
+  .pill-rose{background:var(--rose-soft); color:var(--rose);}
+  [data-theme="light"] .pill-purple{color:#6D28D9;}
+  [data-theme="light"] .pill-green{color:#15803D;}
+  [data-theme="light"] .pill-amber{color:#B45309;}
+  [data-theme="light"] .pill-rose{color:#BE123C;}
+
+  /* ===================== FEED VIEW ===================== */
+  .feed-grid{
+    display:grid; grid-template-columns:1fr 320px; gap:22px; align-items:start;
+  }
+
+  .composer{
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .composer-input{
+    flex:1; background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:12px 14px; color:var(--text-faint); font-size:13px; cursor:text;
+  }
+  .composer-actions{display:flex; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--line); align-items:center;}
+  .composer-actions .chip{
+    display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--text-dim);
+    padding:6px 10px; border-radius:var(--radius-sm);
+  }
+  .composer-actions .chip:hover{background:var(--panel-2);}
+  .composer-actions .chip svg{width:15px; height:15px;}
+
+  .filter-row{display:flex; gap:8px; margin:18px 0 16px;}
+  .tab{
+    padding:7px 14px; border-radius:20px; font-size:12.5px; font-weight:700;
+    background:var(--panel); border:1px solid var(--line); color:var(--text-dim);
+  }
+  .tab.active{background:var(--purple-soft); color:var(--text); border-color:transparent;}
+
+  .post{margin-bottom:16px;}
+  .post-head{display:flex; gap:11px; align-items:center;}
+  .post-meta{flex:1;}
+  .post-name{font-weight:700; font-size:13.5px; display:flex; align-items:center; gap:7px;}
+  .post-role{color:var(--text-faint); font-size:12px; margin-top:1px;}
+  .post-more{width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--text-faint);}
+  .post-more:hover{background:var(--panel-2);}
+  .post-body{margin:12px 0; font-size:13.5px; color:var(--text); line-height:1.6;}
+  .post-body b{color:var(--purple); font-weight:700;}
+
+  .post-media{
+    border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--line); margin-bottom:12px;
+  }
+  .swatch{
+    width:100%; height:230px; display:flex; align-items:flex-end; padding:16px;
+    position:relative; color:#fff;
+  }
+  .swatch::after{content:''; position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.55), transparent 55%);}
+  .swatch-label{position:relative; z-index:1; font-weight:700; font-size:13px;}
+  .swatch-1{background:linear-gradient(135deg,#7C3AED,#2563EB);}
+  .swatch-2{background:linear-gradient(135deg,#F59E0B,#EA580C);}
+  .swatch-3{background:linear-gradient(135deg,#22C55E,#0D9488);}
+  .swatch-4{background:linear-gradient(135deg,#334155,#0F172A);}
+
+  .media-grid{display:grid; grid-template-columns:1.4fr 1fr; gap:2px;}
+  .media-grid .swatch{height:100%; min-height:150px;}
+  .media-grid .stack{display:grid; grid-template-rows:1fr 1fr; gap:2px;}
+
+  .post-stats{display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-faint); padding:2px 2px 10px;}
+  .post-actions{display:flex; gap:4px; border-top:1px solid var(--line); padding-top:8px;}
+  .post-act{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:7px;
+    padding:8px; border-radius:var(--radius-sm); font-size:12.5px; font-weight:700; color:var(--text-dim);
+  }
+  .post-act svg{width:15px; height:15px;}
+  .post-act:hover{background:var(--panel-2); color:var(--text);}
+  .post-act.liked{color:var(--rose);}
+
+  /* right rail */
+  .rail-card{margin-bottom:16px;}
+  .rail-title{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); margin-bottom:14px;}
+  .suggest-row{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+  .suggest-row:last-child{margin-bottom:0;}
+  .suggest-meta{flex:1; min-width:0;}
+  .suggest-name{font-weight:700; font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .suggest-role{font-size:11px; color:var(--text-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .follow-btn{
+    font-size:11px; font-weight:700; padding:5px 10px; border-radius:20px;
+    background:var(--panel-2); border:1px solid var(--line-strong); color:var(--text);
+    flex-shrink:0;
+  }
+  .follow-btn:hover{border-color:var(--purple);}
+
+  .trend-row{display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--line); font-size:12.5px;}
+  .trend-row:last-child{border-bottom:none;}
+  .trend-tag{font-weight:700;}
+  .trend-count{color:var(--text-faint); font-size:11px;}
+
+  .mini-event{display:flex; gap:12px; align-items:center;}
+  .mini-date{
+    width:44px; height:44px; border-radius:10px; background:var(--purple-soft);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .mini-date .d{font-size:15px; font-weight:800; color:var(--text); line-height:1;}
+  .mini-date .m{font-size:9px; font-weight:700; color:var(--purple); text-transform:uppercase; letter-spacing:.04em;}
+  .mini-event-meta{flex:1; min-width:0;}
+  .mini-event-name{font-weight:700; font-size:12.5px;}
+  .mini-event-sub{font-size:11px; color:var(--text-faint); margin-top:1px;}
+
+  /* ===================== PROFILE VIEW ===================== */
+  .profile-cover{
+    height:150px; border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+    background:linear-gradient(120deg,#1E1240,#0B1F3A 45%,#122A22 100%);
+    position:relative;
+  }
+  .profile-card{border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--line); background:var(--panel);}
+  .profile-head{padding:0 24px 20px; position:relative;}
+  .profile-avatar-wrap{margin-top:-46px; display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .profile-id h2{font-size:20px; font-weight:800; margin-top:10px;}
+  .profile-id .role{color:var(--text-dim); font-size:13px; margin-top:3px;}
+  .profile-id .loc{color:var(--text-faint); font-size:12px; margin-top:5px; display:flex; align-items:center; gap:5px;}
+  .profile-id .loc svg{width:13px; height:13px;}
+  .profile-cta{display:flex; gap:8px; margin-bottom:6px;}
+
+  .profile-stats{display:flex; gap:26px; margin-top:16px; padding-top:16px; border-top:1px solid var(--line);}
+  .pstat b{font-size:16px; font-weight:800; display:block;}
+  .pstat span{font-size:11.5px; color:var(--text-faint);}
+
+  .profile-tabs{display:flex; gap:4px; padding:0 24px; border-bottom:1px solid var(--line); margin-top:6px;}
+  .ptab{padding:12px 6px; font-size:13px; font-weight:700; color:var(--text-faint); border-bottom:2px solid transparent; margin-right:20px;}
+  .ptab.active{color:var(--text); border-color:var(--purple);}
+
+  .profile-body{padding:22px 24px; display:grid; grid-template-columns:2fr 1fr; gap:22px;}
+  .portfolio-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .portfolio-grid .swatch{height:120px; border-radius:var(--radius-sm);}
+  .portfolio-item{border-radius:var(--radius-sm); overflow:hidden;}
+  .portfolio-item .p-name{font-size:11px; font-weight:700; margin-top:6px;}
+
+  .about-block{margin-bottom:18px;}
+  .about-block h4{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-faint); margin-bottom:8px; font-weight:800;}
+  .about-block p{font-size:13px; color:var(--text-dim); line-height:1.7;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:7px;}
+  .skill-tag{font-size:11.5px; font-weight:600; padding:5px 11px; border-radius:20px; background:var(--panel-2); border:1px solid var(--line); color:var(--text-dim);}
+
+  .exp-row{display:flex; gap:12px; margin-bottom:16px;}
+  .exp-icon{width:34px; height:34px; border-radius:9px; background:var(--panel-2); border:1px solid var(--line); flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+  .exp-icon svg{width:16px; height:16px; color:var(--text-dim);}
+  .exp-title{font-weight:700; font-size:13px;}
+  .exp-sub{font-size:12px; color:var(--text-faint); margin-top:2px;}
+
+  .side-card{margin-bottom:16px;}
+  .endorse-row{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
+  .endorse-row:last-child{margin-bottom:0;}
+  .endorse-text{font-size:12px; color:var(--text-dim);}
+  .endorse-text b{color:var(--text);}
+
+  /* ===================== GROUPS VIEW ===================== */
+  .groups-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  .group-card{display:flex; flex-direction:column; gap:12px;}
+  .group-banner{height:64px; border-radius:var(--radius-sm); display:flex; align-items:center; padding:0 14px;}
+  .group-banner svg{width:26px; height:26px; color:#fff;}
+  .group-name{font-weight:800; font-size:14.5px;}
+  .group-desc{font-size:12px; color:var(--text-dim); line-height:1.6; min-height:36px;}
+  .group-foot{display:flex; align-items:center; justify-content:space-between; margin-top:auto; padding-top:10px; border-top:1px solid var(--line);}
+  .group-members{display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--text-faint);}
+  .stacked-avatars{display:flex;}
+  .stacked-avatars .avatar{width:22px; height:22px; font-size:9px; margin-left:-8px; border-width:2px;}
+  .stacked-avatars .avatar:first-child{margin-left:0;}
+
+  /* ===================== EVENTS VIEW ===================== */
+  .events-list{display:flex; flex-direction:column; gap:12px;}
+  .event-row{display:flex; gap:18px; align-items:center;}
+  .event-date-block{
+    width:64px; height:64px; border-radius:var(--radius-md); flex-shrink:0;
+    background:var(--panel-2); border:1px solid var(--line);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .event-date-block .d{font-size:20px; font-weight:800; line-height:1;}
+  .event-date-block .m{font-size:10px; font-weight:700; color:var(--purple); text-transform:uppercase; margin-top:2px;}
+  .event-info{flex:1; min-width:0;}
+  .event-name{font-weight:700; font-size:14px;}
+  .event-sub{font-size:12px; color:var(--text-faint); margin-top:4px; display:flex; gap:14px; flex-wrap:wrap;}
+  .event-sub span{display:flex; align-items:center; gap:5px;}
+  .event-sub svg{width:13px; height:13px;}
+  .event-cta{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+  .attendee-count{font-size:11px; color:var(--text-faint); text-align:right;}
+
+  /* ===================== JOBS VIEW ===================== */
+  .job-row{display:flex; gap:16px; align-items:flex-start;}
+  .job-icon{width:44px; height:44px; border-radius:var(--radius-sm); background:var(--purple-soft); flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+  .job-icon svg{width:20px; height:20px; color:var(--purple);}
+  .job-info{flex:1; min-width:0;}
+  .job-title{font-weight:700; font-size:14px;}
+  .job-org{font-size:12.5px; color:var(--text-dim); margin-top:2px;}
+  .job-tags{display:flex; gap:7px; flex-wrap:wrap; margin-top:10px;}
+  .job-meta-row{display:flex; gap:16px; margin-top:10px; font-size:11.5px; color:var(--text-faint); flex-wrap:wrap;}
+  .job-meta-row span{display:flex; align-items:center; gap:5px;}
+  .job-meta-row svg{width:13px; height:13px;}
+  .job-cta{flex-shrink:0; text-align:right;}
+  .job-posted{font-size:11px; color:var(--text-faint); margin-top:8px;}
+
+  /* ===================== MESSAGES VIEW ===================== */
+  .msg-shell{display:grid; grid-template-columns:300px 1fr; height:calc(100vh - 170px); border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--line);}
+  .msg-list{background:var(--panel); border-right:1px solid var(--line); overflow-y:auto;}
+  .msg-search{padding:14px; border-bottom:1px solid var(--line);}
+  .conv{display:flex; gap:11px; padding:12px 14px; border-bottom:1px solid var(--line); position:relative;}
+  .conv:hover{background:var(--panel-2);}
+  .conv.active{background:var(--purple-soft);}
+  .conv-meta{flex:1; min-width:0;}
+  .conv-top{display:flex; justify-content:space-between; align-items:baseline;}
+  .conv-name{font-weight:700; font-size:13px;}
+  .conv-time{font-size:10.5px; color:var(--text-faint);}
+  .conv-preview{font-size:12px; color:var(--text-faint); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .unread-dot{width:8px; height:8px; border-radius:50%; background:var(--purple); position:absolute; right:12px; top:18px;}
+
+  .chat-pane{display:flex; flex-direction:column; background:var(--bg);}
+  .chat-head{display:flex; align-items:center; gap:11px; padding:14px 18px; border-bottom:1px solid var(--line); background:var(--panel);}
+  .chat-head-name{font-weight:700; font-size:13.5px;}
+  .chat-head-status{font-size:11px; color:var(--green); display:flex; align-items:center; gap:5px;}
+  .chat-head-status::before{content:''; width:6px; height:6px; border-radius:50%; background:var(--green);}
+  .chat-body{flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;}
+  .bubble-row{display:flex; gap:10px; max-width:70%;}
+  .bubble-row.mine{align-self:flex-end; flex-direction:row-reverse;}
+  .bubble{padding:10px 14px; border-radius:var(--radius-md); font-size:13px; line-height:1.5;}
+  .bubble-row:not(.mine) .bubble{background:var(--panel); border:1px solid var(--line); border-bottom-left-radius:4px;}
+  .bubble-row.mine .bubble{background:var(--purple); color:#fff; border-bottom-right-radius:4px;}
+  .bubble-time{font-size:10px; color:var(--text-faint); margin-top:4px;}
+  .chat-input-row{display:flex; gap:10px; padding:14px 18px; border-top:1px solid var(--line); background:var(--panel);}
+  .chat-input{flex:1; background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius-md); padding:10px 14px; color:var(--text); font-size:13px; font-family:inherit;}
+  .chat-input:focus{outline:none; border-color:var(--purple);}
+  .send-btn{width:40px; height:40px; border-radius:var(--radius-sm); background:var(--purple); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .send-btn svg{width:17px; height:17px; color:#fff;}
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 1100px){
+    .feed-grid{grid-template-columns:1fr;}
+    .groups-grid{grid-template-columns:repeat(2,1fr);}
+    .profile-body{grid-template-columns:1fr;}
+  }
+  @media (max-width: 860px){
+    .app{grid-template-columns:1fr;}
+    .sidebar{position:fixed; z-index:50; transform:translateX(-100%); transition:transform .2s ease; width:240px; box-shadow:var(--shadow-glass);}
+    .sidebar.open{transform:translateX(0);}
+    .groups-grid{grid-template-columns:1fr;}
+    .msg-shell{grid-template-columns:1fr;}
+    .msg-list{display:none;}
+    .search{max-width:none;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">A</div>
+      <div>
+        <div class="brand-name">Aaren IntPro</div>
+        <div class="brand-sub">Community</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Network</div>
+    <a class="nav-item active" data-view="feed">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12l2-2 4 4L18 5l3 3"/><path d="M3 19h18"/></svg>
+      Feed
+    </a>
+    <a class="nav-item" data-view="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.8-4 5-6 8-6s6.2 2 8 6"/></svg>
+      My Profile
+    </a>
+    <a class="nav-item" data-view="groups">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="9" r="3"/><circle cx="17" cy="10" r="2.6"/><path d="M2.5 20c.8-3.2 3-5 5.5-5s4.7 1.8 5.5 5"/><path d="M13 20c.6-2.2 2-3.6 4-3.6s3.6 1.4 4.2 3.6"/></svg>
+      Groups
+    </a>
+    <a class="nav-item" data-view="events">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="16" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>
+      Events
+      <span class="nav-badge">4</span>
+    </a>
+    <a class="nav-item" data-view="jobs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="8" width="18" height="12" rx="2.5"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      Jobs &amp; Collabs
+    </a>
+    <a class="nav-item" data-view="messages">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5.5h16a1 1 0 0 1 1 1V17a1 1 0 0 1-1 1H8l-4.5 3.5V19H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1z"/></svg>
+      Messages
+      <span class="nav-badge">3</span>
+    </a>
+
+    <div class="nav-label">Discover</div>
+    <a class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l2.5 6.9L21 11l-6.5 2.1L12 20l-2.5-6.9L3 11l6.5-2.1z"/></svg>
+      Trending
+    </a>
+    <a class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3v18l6-4 6 4V3z"/></svg>
+      Saved
+    </a>
+
+    <div class="sidebar-foot">
+      <div class="theme-toggle">
+        <span id="themeLabel">Dark mode</span>
+        <button class="switch" id="themeSwitch" aria-label="Toggle theme"></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN ===================== -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" placeholder="Search designers, groups, or projects...">
+      </div>
+      <div class="topbar-spacer"></div>
+      <button class="icon-btn" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 13 6 9z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+        <span class="dot"></span>
+      </button>
+      <button class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Share
+      </button>
+      <div class="avatar">RA</div>
+    </header>
+
+    <div class="content">
+
+      <!-- ===================== FEED VIEW ===================== -->
+      <section class="view active" id="view-feed">
+        <div class="page-head">
+          <div>
+            <div class="page-title">Community Feed</div>
+            <div class="page-sub">Project shares, discussions and updates from designers &amp; architects you follow</div>
+          </div>
+        </div>
+
+        <div class="feed-grid">
+          <div>
+            <!-- composer -->
+            <div class="card composer-card" style="margin-bottom:18px;">
+              <div class="composer">
+                <div class="avatar sm">RA</div>
+                <div class="composer-input">Share a project, ask a question, or post an update…</div>
+              </div>
+              <div class="composer-actions">
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-9 9"/></svg>Photo</div>
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v14M6 10l6 6 6-6"/><path d="M4 20h16"/></svg>Project</div>
+                <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Poll</div>
+                <div style="flex:1;"></div>
+                <button class="btn btn-primary btn-sm">Post</button>
+              </div>
+            </div>
+
+            <div class="filter-row">
+              <div class="tab active">For You</div>
+              <div class="tab">Following</div>
+              <div class="tab">Projects</div>
+              <div class="tab">Discussions</div>
+            </div>
+
+            <!-- Post 1: project share -->
+            <div class="card post">
+              <div class="post-head">
+                <div class="avatar sm">MK</div>
+                <div class="post-meta">
+                  <div class="post-name">Meera Krishnan <span class="pill pill-purple">Interior Designer</span></div>
+                  <div class="post-role">Principal, Studio Meraki · Bengaluru · 4h</div>
+                </div>
+                <div class="post-more">⋯</div>
+              </div>
+              <div class="post-body">Wrapped up the client walkthrough for our <b>Whitefield duplex</b> project today — a warm, materials-first take on modern Indian living. Full BOQ and moodboard now live on the platform.</div>
+              <div class="post-media">
+                <div class="media-grid">
+                  <div class="swatch swatch-1"><div class="swatch-label">Living &amp; Dining — Warm Minimal</div></div>
+                  <div class="stack">
+                    <div class="swatch swatch-2"><div class="swatch-label">Kitchen</div></div>
+                    <div class="swatch swatch-4"><div class="swatch-label">Study Nook</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="post-stats"><span>❤ 142 · 💬 28</span><span>Shared with Community</span></div>
+              <div class="post-actions">
+                <div class="post-act liked"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21s-7-4.4-9.5-9C.6 8.3 2 5 5.3 5c2 0 3.4 1.1 4.2 2.4C10.3 6.1 11.7 5 13.7 5 17 5 18.4 8.3 16.5 12c-2.5 4.6-9.5 9-9.5 9z"/></svg>Liked</div>
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.6 8.6 0 0 1-3.6-.8L3 20l1-4.9a8.4 8.4 0 0 1-.9-3.8A8.4 8.4 0 0 1 11.9 3a8.5 8.5 0 0 1 9.1 8.5z"/></svg>Comment</div>
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v14"/></svg>Share</div>
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3v18l6-4 6 4V3z"/></svg>Save</div>
+              </div>
+            </div>
+
+            <!-- Post 2: text/discussion -->
+            <div class="card post">
+              <div class="post-head">
+                <div class="avatar sm">AV</div>
+                <div class="post-meta">
+                  <div class="post-name">Arjun Varma <span class="pill pill-amber">Architect</span></div>
+                  <div class="post-role">Varma & Co. Architects · Pune · 9h</div>
+                </div>
+                <div class="post-more">⋯</div>
+              </div>
+              <div class="post-body">Question for the group — what's everyone's go-to vendor for fluted MDF panelling in the Pune/Mumbai belt right now? Client wants a 3-week turnaround for a 400 sq.ft. area.</div>
+              <div class="post-stats"><span>❤ 34 · 💬 61</span><span>Posted in <b>Site Execution</b></span></div>
+              <div class="post-actions">
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s-7-4.4-9.5-9C.6 8.3 2 5 5.3 5c2 0 3.4 1.1 4.2 2.4C10.3 6.1 11.7 5 13.7 5 17 5 18.4 8.3 16.5 12c-2.5 4.6-9.5 9-9.5 9z"/></svg>Like</div>
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.6 8.6 0 0 1-3.6-.8L3 20l1-4.9a8.4 8.4 0 0 1-.9-3.8A8.4 8.4 0 0 1 11.9 3a8.5 8.5 0 0 1 9.1 8.5z"/></svg>61 replies</div>
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v14"/></svg>Share</div>
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3v18l6-4 6 4V3z"/></svg>Save</div>
+              </div>
+            </div>
+
+            <!-- Post 3: event share -->
+            <div class="card post">
+              <div class="post-head">
+                <div class="avatar sm">IN</div>
+                <div class="post-meta">
+                  <div class="post-name">Aaren IntPro <span class="pill pill-green">Official</span></div>
+                  <div class="post-role">Community Team · 1d</div>
+                </div>
+                <div class="post-more">⋯</div>
+              </div>
+              <div class="post-body">Registrations are open for <b>Material Futures 2026</b> — a live session on sustainable surfaces and low-VOC finishes, with Q&amp;A from three manufacturer partners.</div>
+              <div class="card" style="background:var(--panel-2); display:flex; align-items:center; gap:14px; margin-bottom:12px;">
+                <div class="mini-date"><div class="d">18</div><div class="m">Sep</div></div>
+                <div class="mini-event-meta">
+                  <div class="mini-event-name">Material Futures 2026 — Live Webinar</div>
+                  <div class="mini-event-sub">6:00 PM IST · Online · 312 designers going</div>
+                </div>
+                <button class="btn btn-ghost btn-sm">RSVP</button>
+              </div>
+              <div class="post-stats"><span>❤ 88 · 💬 12</span><span>Sponsored by Material Intelligence</span></div>
+              <div class="post-actions">
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s-7-4.4-9.5-9C.6 8.3 2 5 5.3 5c2 0 3.4 1.1 4.2 2.4C10.3 6.1 11.7 5 13.7 5 17 5 18.4 8.3 16.5 12c-2.5 4.6-9.5 9-9.5 9z"/></svg>Like</div>
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.6 8.6 0 0 1-3.6-.8L3 20l1-4.9a8.4 8.4 0 0 1-.9-3.8A8.4 8.4 0 0 1 11.9 3a8.5 8.5 0 0 1 9.1 8.5z"/></svg>Comment</div>
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v14"/></svg>Share</div>
+                <div class="post-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3v18l6-4 6 4V3z"/></svg>Save</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT RAIL -->
+          <aside>
+            <div class="card rail-card">
+              <div class="rail-title">People you may know</div>
+              <div class="suggest-row">
+                <div class="avatar sm">SP</div>
+                <div class="suggest-meta"><div class="suggest-name">Sanya Pillai</div><div class="suggest-role">Landscape Architect · Chennai</div></div>
+                <button class="follow-btn">Connect</button>
+              </div>
+              <div class="suggest-row">
+                <div class="avatar sm">RD</div>
+                <div class="suggest-meta"><div class="suggest-name">Rohit Desai</div><div class="suggest-role">Lighting Consultant · Mumbai</div></div>
+                <button class="follow-btn">Connect</button>
+              </div>
+              <div class="suggest-row">
+                <div class="avatar sm">NF</div>
+                <div class="suggest-meta"><div class="suggest-name">Nikita Fernandes</div><div class="suggest-role">3D Visualizer · Goa</div></div>
+                <button class="follow-btn">Connect</button>
+              </div>
+            </div>
+
+            <div class="card rail-card">
+              <div class="rail-title">Trending in Community</div>
+              <div class="trend-row"><span class="trend-tag">#SustainableInteriors</span><span class="trend-count">1.2k posts</span></div>
+              <div class="trend-row"><span class="trend-tag">#VastuCompliant</span><span class="trend-count">840 posts</span></div>
+              <div class="trend-row"><span class="trend-tag">#ModularKitchens</span><span class="trend-count">612 posts</span></div>
+              <div class="trend-row"><span class="trend-tag">#SiteExecution</span><span class="trend-count">455 posts</span></div>
+            </div>
+
+            <div class="card rail-card">
+              <div class="rail-title">Upcoming Events</div>
+              <div class="mini-event" style="margin-bottom:14px;">
+                <div class="mini-date"><div class="d">18</div><div class="m">Sep</div></div>
+                <div class="mini-event-meta"><div class="mini-event-name">Material Futures 2026</div><div class="mini-event-sub">Online webinar</div></div>
+              </div>
+              <div class="mini-event">
+                <div class="mini-date"><div class="d">27</div><div class="m">Sep</div></div>
+                <div class="mini-event-meta"><div class="mini-event-name">Bengaluru Design Meetup</div><div class="mini-event-sub">In person · Indiranagar</div></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ===================== PROFILE VIEW ===================== -->
+      <section class="view" id="view-profile">
+        <div class="page-head">
+          <div>
+            <div class="page-title">My Profile</div>
+            <div class="page-sub">This is how other members see your professional profile</div>
+          </div>
+          <button class="btn btn-ghost">Edit Profile</button>
+        </div>
+
+        <div class="profile-card">
+          <div class="profile-cover"></div>
+          <div class="profile-head">
+            <div class="profile-avatar-wrap">
+              <div class="avatar xl">RA</div>
+              <div class="profile-cta">
+                <button class="btn btn-ghost btn-sm">Message</button>
+                <button class="btn btn-primary btn-sm">+ Connect</button>
+              </div>
+            </div>
+            <div class="profile-id">
+              <h2>Rhea Alvares</h2>
+              <div class="role">Senior Interior Designer · Residential &amp; Boutique Hospitality</div>
+              <div class="loc">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.6 7-11.5A7 7 0 0 0 5 9.5C5 14.4 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+                Mumbai, Maharashtra · Aaren IntPro since 2023
+              </div>
+            </div>
+            <div class="profile-stats">
+              <div class="pstat"><b>36</b><span>Projects</span></div>
+              <div class="pstat"><b>1.4k</b><span>Followers</span></div>
+              <div class="pstat"><b>512</b><span>Connections</span></div>
+              <div class="pstat"><b>4.9</b><span>Client rating</span></div>
+            </div>
+          </div>
+
+          <div class="profile-tabs">
+            <div class="ptab active" data-ptab="portfolio">Portfolio</div>
+            <div class="ptab" data-ptab="about">About</div>
+            <div class="ptab" data-ptab="experience">Experience</div>
+            <div class="ptab" data-ptab="endorsements">Endorsements</div>
+          </div>
+
+          <!-- Portfolio tab -->
+          <div class="profile-body ptab-panel active" data-ppanel="portfolio">
+            <div>
+              <div class="portfolio-grid">
+                <div class="portfolio-item"><div class="swatch swatch-1" style="height:120px;"></div><div class="p-name">Whitefield Duplex</div></div>
+                <div class="portfolio-item"><div class="swatch swatch-2" style="height:120px;"></div><div class="p-name">Boutique Café, Goa</div></div>
+                <div class="portfolio-item"><div class="swatch swatch-3" style="height:120px;"></div><div class="p-name">Lakeview Villa</div></div>
+                <div class="portfolio-item"><div class="swatch swatch-4" style="height:120px;"></div><div class="p-name">Studio Apartment, Pune</div></div>
+                <div class="portfolio-item"><div class="swatch swatch-1" style="height:120px;"></div><div class="p-name">Heritage Retrofit</div></div>
+                <div class="portfolio-item"><div class="swatch swatch-2" style="height:120px;"></div><div class="p-name">Rooftop Lounge, Bandra</div></div>
+              </div>
+            </div>
+            <aside>
+              <div class="card side-card">
+                <div class="rail-title">Skills</div>
+                <div class="tag-row">
+                  <span class="skill-tag">Space Planning</span>
+                  <span class="skill-tag">Material Sourcing</span>
+                  <span class="skill-tag">BOQ Costing</span>
+                  <span class="skill-tag">3D Visualization</span>
+                  <span class="skill-tag">Vastu Consulting</span>
+                  <span class="skill-tag">Hospitality Design</span>
+                </div>
+              </div>
+              <div class="card side-card">
+                <div class="rail-title">Certifications</div>
+                <div class="endorse-row"><div class="avatar sm">🏅</div><div class="endorse-text"><b>IGBC Accredited Professional</b><br>Indian Green Building Council</div></div>
+                <div class="endorse-row"><div class="avatar sm">🏅</div><div class="endorse-text"><b>Certified Vastu Consultant</b><br>Vastu Shastra Institute</div></div>
+              </div>
+            </aside>
+          </div>
+
+          <!-- About tab -->
+          <div class="profile-body ptab-panel" data-ppanel="about" style="display:none;">
+            <div>
+              <div class="about-block">
+                <h4>Summary</h4>
+                <p>Rhea leads residential and boutique hospitality projects across Mumbai and Goa, with a focus on warm-minimal interiors that pair locally sourced materials with restrained, functional layouts. She has delivered 36 projects on the Aaren IntPro platform since 2023, from single-room makeovers to full villa builds.</p>
+              </div>
+              <div class="about-block">
+                <h4>Specializations</h4>
+                <div class="tag-row">
+                  <span class="skill-tag">Residential Interiors</span>
+                  <span class="skill-tag">Boutique Hospitality</span>
+                  <span class="skill-tag">Adaptive Reuse</span>
+                </div>
+              </div>
+            </div>
+            <aside>
+              <div class="card side-card">
+                <div class="rail-title">Contact</div>
+                <p style="font-size:12.5px; color:var(--text-dim); line-height:2;">studio@rheaalvares.in<br>+91 98xxx xxxxx<br>rheaalvares.in</p>
+              </div>
+            </aside>
+          </div>
+
+          <!-- Experience tab -->
+          <div class="profile-body ptab-panel" data-ppanel="experience" style="display:none;">
+            <div>
+              <div class="exp-row">
+                <div class="exp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+                <div><div class="exp-title">Principal Designer, Studio Alvares</div><div class="exp-sub">2021 — Present · Mumbai</div></div>
+              </div>
+              <div class="exp-row">
+                <div class="exp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+                <div><div class="exp-title">Senior Designer, Casa Collective</div><div class="exp-sub">2018 — 2021 · Bengaluru</div></div>
+              </div>
+              <div class="exp-row">
+                <div class="exp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l7 4v6c0 5-3.4 8.4-7 10-3.6-1.6-7-5-7-10V6z"/></svg></div>
+                <div><div class="exp-title">B.Des, Interior Design</div><div class="exp-sub">CEPT University · 2014 — 2018</div></div>
+              </div>
+            </div>
+            <aside></aside>
+          </div>
+
+          <!-- Endorsements tab -->
+          <div class="profile-body ptab-panel" data-ppanel="endorsements" style="display:none;">
+            <div>
+              <div class="card" style="margin-bottom:12px;">
+                <div class="endorse-row">
+                  <div class="avatar sm">VK</div>
+                  <div class="endorse-text"><b>Vikram Kapoor</b>, Client — Lakeview Villa<br>"Rhea managed a full villa renovation end-to-end with almost no site surprises. Communication was excellent throughout."</div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="endorse-row">
+                  <div class="avatar sm">PS</div>
+                  <div class="endorse-text"><b>Priya Sharma</b>, Collaborator — Boutique Café, Goa<br>"Great eye for material pairing and always on top of the BOQ. Would work with her again."</div>
+                </div>
+              </div>
+            </div>
+            <aside></aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== GROUPS VIEW ===================== -->
+      <section class="view" id="view-groups">
+        <div class="page-head">
+          <div>
+            <div class="page-title">Groups</div>
+            <div class="page-sub">Join specialization-based groups to discuss, ask, and share with peers</div>
+          </div>
+          <button class="btn btn-ghost">+ Create Group</button>
+        </div>
+
+        <div class="filter-row">
+          <div class="tab active">All</div>
+          <div class="tab">My Groups</div>
+          <div class="tab">Suggested</div>
+        </div>
+
+        <div class="groups-grid">
+          <div class="card group-card">
+            <div class="group-banner" style="background:linear-gradient(135deg,#22C55E,#0D9488);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2C8 6 5 9 5 13a7 7 0 0 0 14 0c0-4-3-7-7-11z"/></svg>
+            </div>
+            <div class="group-name">Sustainable Design</div>
+            <div class="group-desc">Low-VOC finishes, reclaimed material sourcing, and IGBC-aligned project workflows.</div>
+            <div class="group-foot">
+              <div class="group-members">
+                <div class="stacked-avatars"><div class="avatar">A</div><div class="avatar">B</div><div class="avatar">C</div></div>
+                4,120 members
+              </div>
+              <button class="btn btn-ghost btn-sm">Joined</button>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <div class="group-banner" style="background:linear-gradient(135deg,#7C3AED,#2563EB);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 14l4-4 4 4 4-6 4 6"/></svg>
+            </div>
+            <div class="group-name">Vastu Compliant Layouts</div>
+            <div class="group-desc">Practical Vastu adaptation for modern residential floor plans and renovations.</div>
+            <div class="group-foot">
+              <div class="group-members">
+                <div class="stacked-avatars"><div class="avatar">D</div><div class="avatar">E</div><div class="avatar">F</div></div>
+                2,860 members
+              </div>
+              <button class="btn btn-primary btn-sm">Join</button>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <div class="group-banner" style="background:linear-gradient(135deg,#F59E0B,#EA580C);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="9" width="18" height="10" rx="2"/><path d="M7 9V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3"/></svg>
+            </div>
+            <div class="group-name">Modular Kitchens</div>
+            <div class="group-desc">Vendor recommendations, hardware brands, and layout troubleshooting for kitchens.</div>
+            <div class="group-foot">
+              <div class="group-members">
+                <div class="stacked-avatars"><div class="avatar">G</div><div class="avatar">H</div><div class="avatar">I</div></div>
+                5,340 members
+              </div>
+              <button class="btn btn-ghost btn-sm">Joined</button>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <div class="group-banner" style="background:linear-gradient(135deg,#334155,#0F172A);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>
+            </div>
+            <div class="group-name">Site Execution</div>
+            <div class="group-desc">Contractor coordination, timeline slippage, and on-ground quality checks.</div>
+            <div class="group-foot">
+              <div class="group-members">
+                <div class="stacked-avatars"><div class="avatar">J</div><div class="avatar">K</div><div class="avatar">L</div></div>
+                3,610 members
+              </div>
+              <button class="btn btn-primary btn-sm">Join</button>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <div class="group-banner" style="background:linear-gradient(135deg,#FB7185,#7C3AED);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.6"/><path d="M20 15l-4.5-4.5L6 20"/></svg>
+            </div>
+            <div class="group-name">3D Visualization &amp; Renders</div>
+            <div class="group-desc">Render engines, lighting setups, and client-presentation workflows.</div>
+            <div class="group-foot">
+              <div class="group-members">
+                <div class="stacked-avatars"><div class="avatar">M</div><div class="avatar">N</div><div class="avatar">O</div></div>
+                1,980 members
+              </div>
+              <button class="btn btn-ghost btn-sm">Joined</button>
+            </div>
+          </div>
+
+          <div class="card group-card">
+            <div class="group-banner" style="background:linear-gradient(135deg,#2563EB,#0EA5E9);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+            </div>
+            <div class="group-name">Business of Design</div>
+            <div class="group-desc">Pricing your services, contracts, client management, and studio growth.</div>
+            <div class="group-foot">
+              <div class="group-members">
+                <div class="stacked-avatars"><div class="avatar">P</div><div class="avatar">Q</div><div class="avatar">R</div></div>
+                2,410 members
+              </div>
+              <button class="btn btn-primary btn-sm">Join</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== EVENTS VIEW ===================== -->
+      <section class="view" id="view-events">
+        <div class="page-head">
+          <div>
+            <div class="page-title">Events</div>
+            <div class="page-sub">Webinars, workshops, and in-person meetups from the community</div>
+          </div>
+          <button class="btn btn-ghost">+ Host an Event</button>
+        </div>
+
+        <div class="filter-row">
+          <div class="tab active">Upcoming</div>
+          <div class="tab">My Events</div>
+          <div class="tab">Past</div>
+        </div>
+
+        <div class="events-list">
+          <div class="card event-row">
+            <div class="event-date-block"><div class="d">18</div><div class="m">Sep</div></div>
+            <div class="event-info">
+              <div class="event-name">Material Futures 2026 <span class="pill pill-purple">Webinar</span></div>
+              <div class="event-sub">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>6:00 PM – 7:15 PM IST</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.6 7-11.5A7 7 0 0 0 5 9.5C5 14.4 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>Online</span>
+              </div>
+            </div>
+            <div class="event-cta">
+              <div class="attendee-count">312 going</div>
+              <button class="btn btn-primary btn-sm">RSVP</button>
+            </div>
+          </div>
+
+          <div class="card event-row">
+            <div class="event-date-block"><div class="d">27</div><div class="m">Sep</div></div>
+            <div class="event-info">
+              <div class="event-name">Bengaluru Design Meetup <span class="pill pill-green">In Person</span></div>
+              <div class="event-sub">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>7:00 PM – 9:30 PM IST</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.6 7-11.5A7 7 0 0 0 5 9.5C5 14.4 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>Indiranagar, Bengaluru</span>
+              </div>
+            </div>
+            <div class="event-cta">
+              <div class="attendee-count">86 going</div>
+              <button class="btn btn-ghost btn-sm">Interested</button>
+            </div>
+          </div>
+
+          <div class="card event-row">
+            <div class="event-date-block"><div class="d">03</div><div class="m">Oct</div></div>
+            <div class="event-info">
+              <div class="event-name">BOQ &amp; Costing Workshop <span class="pill pill-amber">Workshop</span></div>
+              <div class="event-sub">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>11:00 AM – 1:00 PM IST</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.6 7-11.5A7 7 0 0 0 5 9.5C5 14.4 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>Online</span>
+              </div>
+            </div>
+            <div class="event-cta">
+              <div class="attendee-count">204 going</div>
+              <button class="btn btn-primary btn-sm">RSVP</button>
+            </div>
+          </div>
+
+          <div class="card event-row">
+            <div class="event-date-block"><div class="d">12</div><div class="m">Oct</div></div>
+            <div class="event-info">
+              <div class="event-name">Mumbai Vendor Showcase <span class="pill pill-rose">Trade Show</span></div>
+              <div class="event-sub">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>10:00 AM – 6:00 PM IST</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.6 7-11.5A7 7 0 0 0 5 9.5C5 14.4 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>BKC, Mumbai</span>
+              </div>
+            </div>
+            <div class="event-cta">
+              <div class="attendee-count">540 going</div>
+              <button class="btn btn-ghost btn-sm">Interested</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== JOBS & COLLABS VIEW ===================== -->
+      <section class="view" id="view-jobs">
+        <div class="page-head">
+          <div>
+            <div class="page-title">Jobs &amp; Collabs</div>
+            <div class="page-sub">Freelance briefs, full-time roles, and collaboration requests from the community</div>
+          </div>
+          <button class="btn btn-ghost">+ Post a Listing</button>
+        </div>
+
+        <div class="filter-row">
+          <div class="tab active">All</div>
+          <div class="tab">Freelance</div>
+          <div class="tab">Full-time</div>
+          <div class="tab">Collaboration</div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="card job-row">
+            <div class="job-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v14M6 10l6 6 6-6"/><path d="M4 20h16"/></svg></div>
+            <div class="job-info">
+              <div class="job-title">BOQ Consultant — Short-term Freelance</div>
+              <div class="job-org">Studio Meraki · Bengaluru</div>
+              <div class="job-tags"><span class="pill pill-purple">Freelance</span><span class="pill pill-green">Remote OK</span></div>
+              <div class="job-meta-row">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>3-week engagement</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7"/></svg>₹25,000 – ₹40,000</span>
+              </div>
+              <div class="job-posted">Posted 2 days ago · 14 applicants</div>
+            </div>
+            <div class="job-cta"><button class="btn btn-primary btn-sm">Apply</button></div>
+          </div>
+
+          <div class="card job-row">
+            <div class="job-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="9" r="3"/><circle cx="17" cy="10" r="2.6"/><path d="M2.5 20c.8-3.2 3-5 5.5-5s4.7 1.8 5.5 5"/></svg></div>
+            <div class="job-info">
+              <div class="job-title">Site Visit Collaborator — Bandra Rooftop Lounge</div>
+              <div class="job-org">Rhea Alvares · Mumbai</div>
+              <div class="job-tags"><span class="pill pill-amber">Collaboration</span><span class="pill pill-rose">On-site</span></div>
+              <div class="job-meta-row">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>2 site visits / week</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.6 7-11.5A7 7 0 0 0 5 9.5C5 14.4 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>Mumbai only</span>
+              </div>
+              <div class="job-posted">Posted 5 days ago · 6 applicants</div>
+            </div>
+            <div class="job-cta"><button class="btn btn-primary btn-sm">Request to Join</button></div>
+          </div>
+
+          <div class="card job-row">
+            <div class="job-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+            <div class="job-info">
+              <div class="job-title">Interior Designer — Full-time</div>
+              <div class="job-org">Casa Collective · Pune</div>
+              <div class="job-tags"><span class="pill pill-green">Full-time</span><span class="pill pill-purple">2–4 yrs exp</span></div>
+              <div class="job-meta-row">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>In-office</span>
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7"/></svg>₹6L – ₹9L / year</span>
+              </div>
+              <div class="job-posted">Posted 1 week ago · 41 applicants</div>
+            </div>
+            <div class="job-cta"><button class="btn btn-primary btn-sm">Apply</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== MESSAGES VIEW ===================== -->
+      <section class="view" id="view-messages">
+        <div class="page-head">
+          <div>
+            <div class="page-title">Messages</div>
+            <div class="page-sub">Direct conversations with your connections</div>
+          </div>
+        </div>
+
+        <div class="msg-shell">
+          <div class="msg-list">
+            <div class="msg-search">
+              <div class="search" style="max-width:none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                <input type="text" placeholder="Search messages">
+              </div>
+            </div>
+            <div class="conv active">
+              <div class="avatar sm">MK</div>
+              <div class="conv-meta">
+                <div class="conv-top"><span class="conv-name">Meera Krishnan</span><span class="conv-time">2m</span></div>
+                <div class="conv-preview">Sure, I can share the vendor contact for the fluted panels</div>
+              </div>
+              <div class="unread-dot"></div>
+            </div>
+            <div class="conv">
+              <div class="avatar sm">AV</div>
+              <div class="conv-meta">
+                <div class="conv-top"><span class="conv-name">Arjun Varma</span><span class="conv-time">1h</span></div>
+                <div class="conv-preview">Thanks for the intro on the Pune project</div>
+              </div>
+            </div>
+            <div class="conv">
+              <div class="avatar sm">SP</div>
+              <div class="conv-meta">
+                <div class="conv-top"><span class="conv-name">Sanya Pillai</span><span class="conv-time">Yesterday</span></div>
+                <div class="conv-preview">Loved the Whitefield duplex post!</div>
+              </div>
+              <div class="unread-dot"></div>
+            </div>
+            <div class="conv">
+              <div class="avatar sm">RD</div>
+              <div class="conv-meta">
+                <div class="conv-top"><span class="conv-name">Rohit Desai</span><span class="conv-time">2d</span></div>
+                <div class="conv-preview">Let's connect on the Bandra rooftop lighting</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-pane">
+            <div class="chat-head">
+              <div class="avatar sm">MK</div>
+              <div>
+                <div class="chat-head-name">Meera Krishnan</div>
+                <div class="chat-head-status">Online</div>
+              </div>
+            </div>
+            <div class="chat-body">
+              <div class="bubble-row">
+                <div class="avatar sm">MK</div>
+                <div>
+                  <div class="bubble">Hey! Saw your comment on the fluted MDF post — happy to share who we used for the Whitefield project.</div>
+                  <div class="bubble-time">10:14 AM</div>
+                </div>
+              </div>
+              <div class="bubble-row mine">
+                <div>
+                  <div class="bubble">That would be amazing, thank you! We're on a tight 3-week window so any lead helps.</div>
+                  <div class="bubble-time" style="text-align:right;">10:16 AM</div>
+                </div>
+              </div>
+              <div class="bubble-row">
+                <div class="avatar sm">MK</div>
+                <div>
+                  <div class="bubble">Sure, I can share the vendor contact for the fluted panels — they turned ours around in 12 days.</div>
+                  <div class="bubble-time">10:19 AM</div>
+                </div>
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <input type="text" class="chat-input" placeholder="Write a message…">
+              <button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- View navigation ----------
+  const navItems = document.querySelectorAll('.nav-item[data-view]');
+  const views = document.querySelectorAll('.view');
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+      const target = item.getAttribute('data-view');
+      views.forEach(v => v.classList.toggle('active', v.id === 'view-' + target));
+      document.querySelector('.content').scrollTop = 0;
+      window.scrollTo({top:0, behavior:'smooth'});
+      if (window.innerWidth <= 860) document.getElementById('sidebar').classList.remove('open');
+    });
+  });
+
+  // ---------- Profile tabs ----------
+  const ptabs = document.querySelectorAll('.ptab');
+  const ppanels = document.querySelectorAll('.ptab-panel');
+  ptabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      ptabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const key = tab.getAttribute('data-ptab');
+      ppanels.forEach(p => {
+        p.style.display = (p.getAttribute('data-ppanel') === key) ? 'grid' : 'none';
+      });
+    });
+  });
+
+  // ---------- Filter tabs (visual only) ----------
+  document.querySelectorAll('.filter-row').forEach(row => {
+    row.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        row.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  });
+
+  // ---------- Post like toggle ----------
+  document.querySelectorAll('.post-act').forEach(act => {
+    if (act.textContent.trim().startsWith('Like') || act.classList.contains('liked')) {
+      act.addEventListener('click', () => act.classList.toggle('liked'));
+    }
+  });
+
+  // ---------- Conversation switch (visual only) ----------
+  document.querySelectorAll('.conv').forEach(c => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.conv').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+      c.querySelector('.unread-dot')?.remove();
+    });
+  });
+
+  // ---------- Theme toggle ----------
+  const themeSwitch = document.getElementById('themeSwitch');
+  const themeLabel = document.getElementById('themeLabel');
+  themeSwitch.addEventListener('click', () => {
+    const html = document.documentElement;
+    const isLight = html.getAttribute('data-theme') === 'light';
+    html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    themeLabel.textContent = isLight ? 'Dark mode' : 'Light mode';
+  });
+</script>
+</body>
+</html>

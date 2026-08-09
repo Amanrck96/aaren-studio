@@ -3,212 +3,605 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aaren IntPro OS — Authentication & Role Login</title>
+<title>Aaren IntPro OS — Sign in</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy: #08111F;
-    --navy-2: #0D1929;
-    --surface: #101C30;
-    --surface-2: #152238;
-    --border: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.14);
-    --white: #F8FAFC;
-    --slate: #93A2B8;
-    --slate-dim: #5E6E85;
-    --purple: #7C3AED;
-    --purple-soft: rgba(124, 58, 237, 0.14);
-    --blue: #2563EB;
-    --radius-lg: 20px;
-    --radius-md: 16px;
-    --radius-sm: 10px;
-    --shadow-glass: 0 8px 40px rgba(0, 0, 0, 0.45);
+  :root{
+    --navy:#08111F;
+    --navy-2:#0D1929;
+    --surface:#101C30;
+    --surface-2:#152238;
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.14);
+    --white:#F8FAFC;
+    --slate:#93A2B8;
+    --slate-dim:#5E6E85;
+    --purple:#7C3AED;
+    --purple-soft:rgba(124,58,237,0.14);
+    --blue:#2563EB;
+    --radius-lg:20px;
+    --radius-md:16px;
+    --radius-sm:10px;
+    --shadow-glass: 0 8px 40px rgba(0,0,0,0.45);
+  }
+  [data-theme="light"]{
+    --navy:#F6F5FA;
+    --navy-2:#EFEEF6;
+    --surface:#FFFFFF;
+    --surface-2:#F9F8FC;
+    --border:rgba(15,23,42,0.08);
+    --border-strong:rgba(15,23,42,0.14);
+    --white:#0B1220;
+    --slate:#4C5A72;
+    --slate-dim:#8792A3;
+    --purple-soft:rgba(124,58,237,0.08);
+    --shadow-glass: 0 8px 40px rgba(15,23,42,0.08);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--navy);
+    color:var(--white);
+    -webkit-font-smoothing:antialiased;
+    transition:background .3s ease, color .3s ease;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+
+  .app{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns: 460px 1fr;
+  }
+  @media (max-width: 980px){
+    .app{grid-template-columns: 1fr;}
+    .showcase{display:none;}
   }
 
-  [data-theme="light"] {
-    --navy: #F8FAFC;
-    --navy-2: #F1F5F9;
-    --surface: #FFFFFF;
-    --surface-2: #F8FAFC;
-    --border: rgba(0, 0, 0, 0.08);
-    --border-strong: rgba(0, 0, 0, 0.14);
-    --white: #0F172A;
-    --slate: #475569;
-    --slate-dim: #94A3B8;
+  /* ---------- LEFT: FORM PANEL ---------- */
+  .form-panel{
+    background:var(--navy);
+    display:flex;
+    flex-direction:column;
+    padding:36px 44px 40px;
+    position:relative;
+    border-right:1px solid var(--border);
+  }
+  .top-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:56px;
+  }
+  .wordmark{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:800;
+    font-size:16px;
+    letter-spacing:-0.01em;
+  }
+  .wordmark .mark{
+    width:28px;height:28px;
+    border-radius:8px;
+    background:linear-gradient(135deg,var(--purple),var(--blue));
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:800;
+    color:white;
+  }
+  .theme-toggle{
+    width:38px;height:38px;
+    border-radius:10px;
+    border:1px solid var(--border-strong);
+    background:var(--surface);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    color:var(--slate);
+    transition:all .2s ease;
+  }
+  .theme-toggle:hover{border-color:var(--purple); color:var(--white);}
+  .theme-toggle svg{width:16px;height:16px;}
+
+  .form-wrap{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    max-width:372px;
+    width:100%;
+    margin:0 auto;
   }
 
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--navy);
-    color: var(--white);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
+  .heading-eyebrow{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--purple);
+    margin-bottom:14px;
+  }
+  h1{
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    line-height:1.15;
+    margin-bottom:8px;
+  }
+  .sub{
+    font-size:14px;
+    color:var(--slate);
+    margin-bottom:28px;
+    line-height:1.5;
   }
 
-  .auth-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    width: 100%;
-    max-width: 480px;
-    padding: 40px;
-    box-shadow: var(--shadow-glass);
-    position: relative;
-    overflow: hidden;
+  /* Tabs */
+  .tabs{
+    display:flex;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:4px;
+    margin-bottom:28px;
+  }
+  .tab-btn{
+    flex:1;
+    padding:9px 0;
+    text-align:center;
+    font-size:13px;
+    font-weight:600;
+    color:var(--slate);
+    border:none;
+    background:transparent;
+    border-radius:7px;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .tab-btn.active{
+    background:linear-gradient(135deg,var(--purple),var(--blue));
+    color:white;
   }
 
-  .auth-header { text-align: center; margin-bottom: 32px; }
-  .auth-logo { font-size: 20px; font-weight: 900; letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); margin-bottom: 8px; }
-  .auth-title { font-size: 24px; font-weight: 800; margin: 0 0 6px; }
-  .auth-desc { font-size: 13.5px; color: var(--slate); margin: 0; }
+  /* Social buttons */
+  .social-row{display:flex; gap:10px; margin-bottom:22px;}
+  .social-btn{
+    flex:1;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:11px 0;
+    border-radius:var(--radius-sm);
+    border:1px solid var(--border-strong);
+    background:var(--surface);
+    color:var(--white);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .social-btn:hover{border-color:var(--slate-dim); transform:translateY(-1px);}
+  .social-btn svg{width:16px;height:16px;}
 
-  .role-selector {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-bottom: 24px;
-    background: var(--navy-2);
-    padding: 6px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
+  .divider{
+    display:flex;align-items:center;gap:12px;
+    color:var(--slate-dim);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    margin-bottom:22px;
+  }
+  .divider::before,.divider::after{
+    content:'';flex:1;height:1px;background:var(--border);
   }
 
-  .role-btn {
-    background: transparent;
-    border: none;
-    color: var(--slate);
-    padding: 10px;
-    font-size: 12px;
-    font-weight: 700;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:var(--slate);
+    margin-bottom:7px;
+  }
+  .input, select.input{
+    width:100%;
+    padding:12px 14px;
+    border-radius:var(--radius-sm);
+    border:1px solid var(--border-strong);
+    background:var(--surface);
+    color:var(--white);
+    font-size:14px;
+    font-family:inherit;
+    outline:none;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .input::placeholder{color:var(--slate-dim);}
+  .input:focus{
+    border-color:var(--purple);
+    box-shadow:0 0 0 3px var(--purple-soft);
+  }
+  .pw-wrap{position:relative;}
+  .pw-toggle{
+    position:absolute; right:12px; top:50%; transform:translateY(-50%);
+    background:none;border:none;color:var(--slate-dim);cursor:pointer;
+    font-size:11px; font-weight:600;
   }
 
-  .role-btn.active {
-    background: var(--purple);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  .row-between{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:22px;
+    font-size:13px;
+  }
+  .remember{display:flex;align-items:center;gap:8px; color:var(--slate);}
+  .remember input{accent-color:var(--purple); width:14px;height:14px;}
+  .forgot-link{color:var(--purple); font-weight:600; text-decoration:none;}
+  .forgot-link:hover{text-decoration:underline;}
+
+  .submit-btn{
+    width:100%;
+    padding:13px 0;
+    border-radius:var(--radius-sm);
+    border:none;
+    background:linear-gradient(135deg,var(--purple),var(--blue));
+    color:white;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 8px 24px rgba(124,58,237,0.28);
+    transition:transform .15s ease, box-shadow .15s ease;
+    margin-bottom:18px;
+  }
+  .submit-btn:hover{transform:translateY(-1px); box-shadow:0 10px 30px rgba(124,58,237,0.4);}
+  .submit-btn:active{transform:translateY(0);}
+
+  .switch-line{
+    text-align:center;
+    font-size:13px;
+    color:var(--slate);
+  }
+  .switch-line button{
+    background:none;border:none;color:var(--purple);font-weight:700;cursor:pointer;font-size:13px;font-family:inherit;
   }
 
-  .form-group { margin-bottom: 18px; }
-  .form-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--slate); margin-bottom: 6px; }
-  .form-input {
-    width: 100%;
-    background: var(--navy-2);
-    border: 1px solid var(--border-strong);
-    padding: 12px 16px;
-    border-radius: var(--radius-sm);
-    color: var(--white);
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
+  /* User type grid (sign up) */
+  .usertype-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-bottom:18px;
   }
-  .form-input:focus { border-color: var(--purple); }
-
-  .btn-primary {
-    width: 100%;
-    background: var(--purple);
-    color: #ffffff;
-    border: none;
-    padding: 14px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    transition: background 0.2s;
-    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+  .usertype-chip{
+    border:1px solid var(--border-strong);
+    background:var(--surface);
+    color:var(--slate);
+    border-radius:var(--radius-sm);
+    padding:10px 8px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    text-align:center;
+    transition:all .15s ease;
   }
-  .btn-primary:hover { background: #6d28d9; }
+  .usertype-chip.selected{
+    border-color:var(--purple);
+    background:var(--purple-soft);
+    color:var(--white);
+  }
 
-  .auth-footer { margin-top: 24px; text-align: center; font-size: 13px; color: var(--slate); }
-  .auth-link { color: var(--purple); text-decoration: none; font-weight: 700; margin-left: 4px; }
+  /* OTP screen */
+  .otp-boxes{display:flex; gap:10px; margin-bottom:22px;}
+  .otp-box{
+    width:100%;
+    aspect-ratio:1/1;
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+    border-radius:var(--radius-sm);
+    border:1px solid var(--border-strong);
+    background:var(--surface);
+    color:var(--white);
+    outline:none;
+  }
+  .otp-box:focus{border-color:var(--purple); box-shadow:0 0 0 3px var(--purple-soft);}
+  .resend{font-size:12px; color:var(--slate-dim); text-align:center;}
+  .resend button{background:none;border:none;color:var(--purple);font-weight:700;cursor:pointer;font-size:12px;font-family:inherit;}
+
+  .panel-view{display:none;}
+  .panel-view.active{display:block; animation:fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .back-link{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12px; color:var(--slate); font-weight:600; cursor:pointer;
+    margin-bottom:18px; background:none; border:none; font-family:inherit;
+  }
+  .back-link:hover{color:var(--white);}
+
+  /* ---------- RIGHT: SHOWCASE ---------- */
+  .showcase{
+    position:relative;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(124,58,237,0.35), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(37,99,235,0.3), transparent 45%),
+      var(--navy-2);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:64px;
+    overflow:hidden;
+  }
+  .showcase::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size:44px 44px;
+    mask-image:radial-gradient(circle at 50% 40%, black 10%, transparent 70%);
+  }
+  .showcase-inner{position:relative; z-index:2; max-width:560px;}
+  .showcase-eyebrow{
+    font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--purple); margin-bottom:18px;
+  }
+  .showcase h2{
+    font-size:38px;
+    font-weight:800;
+    letter-spacing:-0.03em;
+    line-height:1.1;
+    color:var(--white);
+    margin-bottom:16px;
+  }
+  .showcase p.desc{
+    font-size:15px;
+    color:var(--slate);
+    line-height:1.6;
+    max-width:440px;
+    margin-bottom:36px;
+  }
+
+  /* Digital twin mock card — signature element */
+  .twin-card{
+    background:rgba(16,28,48,0.6);
+    backdrop-filter:blur(20px);
+    border:1px solid var(--border-strong);
+    border-radius:var(--radius-lg);
+    padding:22px;
+    box-shadow:var(--shadow-glass);
+    max-width:440px;
+  }
+  .twin-header{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:16px;
+  }
+  .twin-title{font-size:13px; font-weight:700; color:var(--white);}
+  .twin-tag{
+    font-size:10px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase;
+    color:var(--purple); background:var(--purple-soft);
+    padding:4px 8px; border-radius:6px;
+  }
+  .floor-group{margin-bottom:12px;}
+  .floor-label{
+    font-size:11px; font-weight:700; color:var(--slate-dim);
+    text-transform:uppercase; letter-spacing:0.05em;
+    margin-bottom:8px;
+    display:flex; align-items:center; gap:6px;
+  }
+  .room-list{display:flex; flex-direction:column; gap:6px; padding-left:14px; border-left:1px solid var(--border-strong);}
+  .room-item{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 10px;
+    border-radius:9px;
+    font-size:13px;
+    color:var(--slate);
+    background:rgba(255,255,255,0.02);
+    cursor:pointer;
+    transition:all .18s ease;
+  }
+  .room-item:hover{background:var(--purple-soft); color:var(--white);}
+  .room-dot{width:6px;height:6px;border-radius:50%; background:var(--blue); margin-right:8px; display:inline-block;}
+  .room-status{font-size:10px; color:var(--slate-dim); font-weight:600;}
+
+  .brand-strip{
+    margin-top:36px;
+    display:flex; align-items:center; gap:22px;
+    font-size:11px; font-weight:600; letter-spacing:0.03em;
+    color:var(--slate-dim); text-transform:uppercase;
+  }
 </style>
 </head>
-<body>
+<body data-theme="dark">
+<div class="app">
 
-<div class="auth-card">
-  <div class="auth-header">
-    <div class="auth-logo">AAREN INTPRO OS</div>
-    <h2 class="auth-title">Sign In to Platform</h2>
-    <p class="auth-desc">Select your role and enter credentials to launch your enterprise workspace.</p>
-  </div>
-
-  <!-- Role Selector -->
-  <div class="role-selector">
-    <button type="button" onclick="selectRole('designer')" id="role-designer" class="role-btn active">Designer</button>
-    <button type="button" onclick="selectRole('brand')" id="role-brand" class="role-btn">Brand/Mfr</button>
-    <button type="button" onclick="selectRole('dealer')" id="role-dealer" class="role-btn">Dealer</button>
-    <button type="button" onclick="selectRole('admin')" id="role-admin" class="role-btn">Super Admin</button>
-  </div>
-
-  <form onsubmit="handleLogin(event)">
-    <div class="form-group">
-      <label class="form-label">Work Email</label>
-      <input type="email" id="email" required class="form-input" value="designer@aarenintpro.com">
+  <!-- LEFT PANEL -->
+  <div class="form-panel">
+    <div class="top-row">
+      <div class="wordmark"><span class="mark">A</span> Aaren IntPro OS</div>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
     </div>
 
-    <div class="form-group">
-      <label class="form-label">Password</label>
-      <input type="password" id="password" required class="form-input" value="••••••••">
+    <div class="form-wrap">
+
+      <!-- SIGN IN -->
+      <div class="panel-view active" id="view-signin">
+        <div class="heading-eyebrow">Welcome back</div>
+        <h1>Sign in to your workspace</h1>
+        <p class="sub">The operating system for interior professionals — projects, materials and approvals, in one place.</p>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="showView('signin')">Sign in</button>
+          <button class="tab-btn" onclick="showView('signup')">Create account</button>
+        </div>
+
+        <div class="social-row">
+          <button class="social-btn"><svg viewBox="0 0 24 24"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.9 1.5l2.6-2.5C16.9 3.4 14.7 2.4 12 2.4 6.9 2.4 2.7 6.6 2.7 11.7S6.9 21 12 21c6.9 0 8.9-4.8 8.9-8.9 0-.6-.1-1.1-.1-1.5H12z"/></svg> Google</button>
+          <button class="social-btn"><svg viewBox="0 0 23 23"><rect x="1" y="1" width="10" height="10" fill="#F35325"/><rect x="12" y="1" width="10" height="10" fill="#81BC06"/><rect x="1" y="12" width="10" height="10" fill="#05A6F0"/><rect x="12" y="12" width="10" height="10" fill="#FFBA08"/></svg> Microsoft</button>
+        </div>
+        <div class="divider">or continue with email</div>
+
+        <div class="field">
+          <label>Email address</label>
+          <input class="input" type="email" placeholder="you@studio.com">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input class="input" type="password" id="pw1" placeholder="Enter your password">
+            <button class="pw-toggle" onclick="togglePw('pw1',this)">Show</button>
+          </div>
+        </div>
+        <div class="row-between">
+          <label class="remember"><input type="checkbox"> Remember me</label>
+          <a class="forgot-link" onclick="showView('forgot')">Forgot password?</a>
+        </div>
+        <button class="submit-btn" onclick="showView('otp')">Sign in</button>
+        <div class="switch-line">Don't have an account? <button onclick="showView('signup')">Create one</button></div>
+      </div>
+
+      <!-- SIGN UP -->
+      <div class="panel-view" id="view-signup">
+        <div class="heading-eyebrow">Join the network</div>
+        <h1>Create your account</h1>
+        <p class="sub">Tell us who you are so we can tailor your workspace from day one.</p>
+
+        <div class="tabs">
+          <button class="tab-btn" onclick="showView('signin')">Sign in</button>
+          <button class="tab-btn active" onclick="showView('signup')">Create account</button>
+        </div>
+
+        <div class="field">
+          <label>I am a...</label>
+          <div class="usertype-grid" id="userTypeGrid">
+            <div class="usertype-chip selected">Architect</div>
+            <div class="usertype-chip">Interior Designer</div>
+            <div class="usertype-chip">Builder</div>
+            <div class="usertype-chip">Manufacturer</div>
+            <div class="usertype-chip">Dealer</div>
+            <div class="usertype-chip">Contractor</div>
+            <div class="usertype-chip">Customer</div>
+            <div class="usertype-chip">Sales</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Full name</label>
+          <input class="input" type="text" placeholder="Aaren Kapoor">
+        </div>
+        <div class="field">
+          <label>Work email</label>
+          <input class="input" type="email" placeholder="you@studio.com">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input class="input" type="password" id="pw2" placeholder="Minimum 8 characters">
+            <button class="pw-toggle" onclick="togglePw('pw2',this)">Show</button>
+          </div>
+        </div>
+
+        <button class="submit-btn" onclick="showView('otp')">Create account</button>
+        <div class="switch-line">Already have an account? <button onclick="showView('signin')">Sign in</button></div>
+      </div>
+
+      <!-- FORGOT PASSWORD -->
+      <div class="panel-view" id="view-forgot">
+        <button class="back-link" onclick="showView('signin')">← Back to sign in</button>
+        <div class="heading-eyebrow">Reset password</div>
+        <h1>Forgot your password?</h1>
+        <p class="sub">Enter your work email and we'll send a reset link.</p>
+        <div class="field">
+          <label>Email address</label>
+          <input class="input" type="email" placeholder="you@studio.com">
+        </div>
+        <button class="submit-btn" onclick="showView('signin')">Send reset link</button>
+      </div>
+
+      <!-- OTP VERIFICATION -->
+      <div class="panel-view" id="view-otp">
+        <button class="back-link" onclick="showView('signin')">← Back</button>
+        <div class="heading-eyebrow">Verify it's you</div>
+        <h1>Enter verification code</h1>
+        <p class="sub">We sent a 6-digit code to your email. It expires in 5 minutes.</p>
+        <div class="otp-boxes">
+          <input class="otp-box" maxlength="1" type="text">
+          <input class="otp-box" maxlength="1" type="text">
+          <input class="otp-box" maxlength="1" type="text">
+          <input class="otp-box" maxlength="1" type="text">
+          <input class="otp-box" maxlength="1" type="text">
+          <input class="otp-box" maxlength="1" type="text">
+        </div>
+        <button class="submit-btn">Verify & continue</button>
+        <div class="resend">Didn't get a code? <button>Resend</button></div>
+      </div>
+
     </div>
-
-    <button type="submit" class="btn-primary">Launch Workspace →</button>
-  </form>
-
-  <div class="auth-footer">
-    <span>Need an enterprise tenant?</span>
-    <a href="aaren-intpro-onboarding.html" class="auth-link">Start Onboarding Wizard</a>
   </div>
+
+  <!-- RIGHT: SHOWCASE / SIGNATURE ELEMENT -->
+  <div class="showcase">
+    <div class="showcase-inner">
+      <div class="showcase-eyebrow">Project Digital Twin</div>
+      <h2>Every project, organized the way you actually walk through it.</h2>
+      <p class="desc">Not a spreadsheet — a floor-by-floor navigator. Open any room to its moodboard, materials, BOQ and approvals in one click.</p>
+
+      <div class="twin-card">
+        <div class="twin-header">
+          <div class="twin-title">Prestige Villa</div>
+          <div class="twin-tag">Live</div>
+        </div>
+
+        <div class="floor-group">
+          <div class="floor-label">📍 Ground Floor</div>
+          <div class="room-list">
+            <div class="room-item"><span><span class="room-dot"></span>Living Room</span><span class="room-status">In progress</span></div>
+            <div class="room-item"><span><span class="room-dot" style="background:var(--purple)"></span>Kitchen</span><span class="room-status">Approved</span></div>
+          </div>
+        </div>
+        <div class="floor-group">
+          <div class="floor-label">📍 First Floor</div>
+          <div class="room-list">
+            <div class="room-item"><span><span class="room-dot"></span>Master Bedroom</span><span class="room-status">Sourcing</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-strip">Trusted by · Programa · Archiproducts · Houzz Pro workflows</div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-  let activeRole = 'designer';
-
-  function selectRole(role) {
-    activeRole = role;
-    document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`role-${role}`).classList.add('active');
-
-    const emailInput = document.getElementById('email');
-    if (role === 'designer') emailInput.value = 'designer@aarenintpro.com';
-    else if (role === 'brand') emailInput.value = 'brand@formica.com';
-    else if (role === 'dealer') emailInput.value = 'dealer@bengaluru-surfaces.com';
-    else if (role === 'admin') emailInput.value = 'admin@aarenintpro.com';
-  }
-
-  function handleLogin(e) {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-
-    const session = {
-      user: email.split('@')[0],
-      email: email,
-      role: activeRole,
-      token: 'session_token_' + Date.now(),
-      loggedInAt: new Date().toISOString()
-    };
-
-    localStorage.setItem('aaren_session', JSON.stringify(session));
-
-    // Redirect based on role
-    if (activeRole === 'designer') window.location.href = 'aaren-intpro-designer-workspace.html';
-    else if (activeRole === 'brand') window.location.href = 'aaren-intpro-brand-portal.html';
-    else if (activeRole === 'dealer') window.location.href = 'aaren-intpro-dealer-portal.html';
-    else if (activeRole === 'admin') window.location.href = 'aaren-intpro-admin-console.html';
-  }
+function showView(name){
+  document.querySelectorAll('.panel-view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+}
+function togglePw(id, btn){
+  const el = document.getElementById(id);
+  if(el.type === 'password'){ el.type='text'; btn.textContent='Hide'; }
+  else { el.type='password'; btn.textContent='Show'; }
+}
+document.getElementById('userTypeGrid').addEventListener('click', (e)=>{
+  const chip = e.target.closest('.usertype-chip');
+  if(!chip) return;
+  document.querySelectorAll('.usertype-chip').forEach(c=>c.classList.remove('selected'));
+  chip.classList.add('selected');
+});
+document.getElementById('themeToggle').addEventListener('click', ()=>{
+  const body = document.body;
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+});
+// OTP auto-advance
+document.querySelectorAll('.otp-box').forEach((box, i, arr)=>{
+  box.addEventListener('input', ()=>{
+    if(box.value && arr[i+1]) arr[i+1].focus();
+  });
+  box.addEventListener('keydown', (e)=>{
+    if(e.key === 'Backspace' && !box.value && arr[i-1]) arr[i-1].focus();
+  });
+});
 </script>
-
 </body>
 </html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aaren IntPro OS — Material Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#08111F; --navy-2:#0D1929; --surface:#101C30; --surface-2:#152238;
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
+    --white:#F8FAFC; --slate:#93A2B8; --slate-dim:#5E6E85;
+    --purple:#7C3AED; --purple-soft:rgba(124,58,237,0.14); --blue:#2563EB; --blue-soft:rgba(37,99,235,0.14);
+    --green:#22C55E; --green-soft:rgba(34,197,94,0.14);
+    --amber:#F59E0B; --amber-soft:rgba(245,158,11,0.14);
+    --red:#F87171; --red-soft:rgba(248,113,113,0.14);
+    --radius-lg:20px; --radius-md:16px; --radius-sm:10px;
+    --shadow-glass:0 8px 40px rgba(0,0,0,0.45);
+  }
+  [data-theme="light"]{
+    --navy:#F6F5FA; --navy-2:#EFEEF6; --surface:#FFFFFF; --surface-2:#F9F8FC;
+    --border:rgba(15,23,42,0.08); --border-strong:rgba(15,23,42,0.14);
+    --white:#0B1220; --slate:#4C5A72; --slate-dim:#8792A3;
+    --purple-soft:rgba(124,58,237,0.08); --blue-soft:rgba(37,99,235,0.08);
+    --green-soft:rgba(34,197,94,0.1); --amber-soft:rgba(245,158,11,0.1); --red-soft:rgba(248,113,113,0.1);
+    --shadow-glass:0 8px 40px rgba(15,23,42,0.08);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{font-family:'Inter',system-ui,sans-serif; background:var(--navy); color:var(--white); -webkit-font-smoothing:antialiased; transition:background .3s,color .3s;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+  .page{display:none;}
+  .page.active{display:block; animation:fadeIn .3s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .topbar{display:flex; align-items:center; justify-content:space-between; padding:14px 28px; gap:20px; border-bottom:1px solid var(--border); background:rgba(8,17,31,0.6); backdrop-filter:blur(14px); position:sticky; top:0; z-index:40;}
+  [data-theme="light"] .topbar{background:rgba(246,245,250,0.75);}
+  .wordmark{display:flex; align-items:center; gap:10px; font-weight:800; font-size:15px; flex-shrink:0;}
+  .wordmark .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;}
+  .top-nav{display:flex; align-items:center; gap:20px; font-size:12.5px; font-weight:600; color:var(--slate);}
+  .top-nav a.on{color:var(--white);}
+  .btn-primary{padding:9px 16px; border-radius:9px; border:none; background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff; font-size:12.5px; font-weight:700; box-shadow:0 8px 22px rgba(124,58,237,0.28);}
+  .btn-ghost{padding:8px 14px; border-radius:9px; border:1px solid var(--border-strong); background:var(--surface); color:var(--white); font-size:12.5px; font-weight:600;}
+  .btn-ghost.sm{padding:6px 11px; font-size:11.5px;}
+  .icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--border-strong);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--slate);}
+  .icon-btn svg{width:14px;height:14px;}
+
+  .main{padding:28px 32px 60px; max-width:1360px; margin:0 auto;}
+  .crumbline{font-size:11.5px; color:var(--slate-dim); margin-bottom:16px;}
+  .crumbline b{color:var(--white);}
+  .page-head{margin-bottom:24px;}
+  .eyebrow{font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--purple); margin-bottom:10px;}
+  .page-head h1{font-size:26px; font-weight:800; letter-spacing:-0.02em;}
+  .page-head p{font-size:13px; color:var(--slate); margin-top:6px; max-width:620px;}
+  .badge{font-size:10px; font-weight:700; padding:4px 9px; border-radius:20px; display:inline-flex; align-items:center; gap:4px;}
+  .badge.green{background:var(--green-soft); color:var(--green);}
+  .badge.amber{background:var(--amber-soft); color:var(--amber);}
+  .badge.purple{background:var(--purple-soft); color:var(--purple);}
+  .badge.blue{background:var(--blue-soft); color:var(--blue);}
+  .badge.red{background:var(--red-soft); color:var(--red);}
+
+  /* ===== AI ADVISOR (chat) ===== */
+  .advisor-layout{display:grid; grid-template-columns:260px 1fr; gap:20px; height:calc(100vh - 160px); min-height:520px;}
+  @media(max-width:980px){.advisor-layout{grid-template-columns:1fr; height:auto;}}
+  .advisor-side{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; overflow-y:auto;}
+  .advisor-side h5{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--slate-dim); margin-bottom:10px;}
+  .adv-chat-item{padding:9px 10px; border-radius:9px; font-size:12px; color:var(--slate); margin-bottom:4px; cursor:pointer;}
+  .adv-chat-item.on{background:var(--purple-soft); color:var(--purple); font-weight:600;}
+  .advisor-main{display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden;}
+  .adv-messages{flex:1; padding:24px; overflow-y:auto; display:flex; flex-direction:column; gap:16px;}
+  .msg{max-width:70%; padding:13px 16px; border-radius:14px; font-size:13px; line-height:1.6;}
+  .msg.user{align-self:flex-end; background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff; border-bottom-right-radius:4px;}
+  .msg.ai{align-self:flex-start; background:var(--surface-2); border:1px solid var(--border); border-bottom-left-radius:4px;}
+  .msg.ai .rec-row{display:flex; gap:10px; margin-top:12px; overflow-x:auto;}
+  .rec-card{flex-shrink:0; width:130px; background:var(--surface); border:1px solid var(--border-strong); border-radius:11px; overflow:hidden;}
+  .rec-card .im{height:70px; background:linear-gradient(135deg,var(--purple-soft),var(--blue-soft));}
+  .rec-card .tx{padding:8px; font-size:10.5px;}
+  .rec-card .tx b{display:block; font-size:11px;}
+  .suggested-prompts{display:flex; gap:8px; flex-wrap:wrap; padding:0 24px 16px;}
+  .suggested-prompts span{padding:7px 12px; border-radius:20px; border:1px solid var(--border-strong); font-size:11.5px; color:var(--slate); cursor:pointer;}
+  .adv-input{display:flex; align-items:center; gap:10px; padding:16px 20px; border-top:1px solid var(--border);}
+  .adv-input input{flex:1; background:var(--surface-2); border:1px solid var(--border-strong); border-radius:11px; padding:12px 14px; color:var(--white); font-size:13px; font-family:inherit; outline:none;}
+  .adv-input button{padding:11px 18px; border-radius:11px; border:none; background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff; font-weight:700; font-size:12.5px;}
+
+  /* ===== INSPIRATION GALLERY ===== */
+  .insp-filters{display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;}
+  .insp-filters span{padding:8px 14px; border-radius:20px; border:1px solid var(--border-strong); font-size:12px; font-weight:600; color:var(--slate);}
+  .insp-filters span.on{background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff; border-color:transparent;}
+  .masonry{columns:4 220px; column-gap:14px;}
+  @media(max-width:980px){.masonry{columns:2 200px;}}
+  .insp-tile{break-inside:avoid; margin-bottom:14px; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border); background:var(--surface); position:relative;}
+  .insp-tile .im{background:linear-gradient(135deg,var(--purple-soft),var(--blue-soft));}
+  .insp-tile .im.h1{height:180px;} .insp-tile .im.h2{height:240px;} .insp-tile .im.h3{height:140px;}
+  .insp-tile .ov{position:absolute; inset:0; background:linear-gradient(to top, rgba(8,17,31,0.85), transparent 50%); display:flex; align-items:flex-end; padding:12px; opacity:0; transition:opacity .2s;}
+  .insp-tile:hover .ov{opacity:1;}
+  .insp-tile .ov div b{font-size:12px; display:block; color:#fff;}
+  .insp-tile .ov div span{font-size:10.5px; color:rgba(255,255,255,0.7);}
+
+  /* ===== SUSTAINABILITY ===== */
+  .sus-hero{display:grid; grid-template-columns:220px 1fr; gap:28px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; margin-bottom:24px; align-items:center;}
+  @media(max-width:780px){.sus-hero{grid-template-columns:1fr;}}
+  .score-ring{width:180px; height:180px; border-radius:50%; background:conic-gradient(var(--green) 0% 82%, var(--border-strong) 82% 100%); display:flex; align-items:center; justify-content:center; margin:0 auto;}
+  .score-ring .in{width:145px;height:145px;border-radius:50%; background:var(--surface); display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .score-ring .in b{font-size:30px; font-weight:800;}
+  .score-ring .in span{font-size:10.5px; color:var(--slate-dim);}
+  .sus-hero h2{font-size:18px; font-weight:800; margin-bottom:6px;}
+  .sus-hero p{font-size:12.5px; color:var(--slate); line-height:1.6; max-width:520px;}
+  .sus-metrics{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;}
+  @media(max-width:780px){.sus-metrics{grid-template-columns:repeat(2,1fr);}}
+  .sus-metric{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px;}
+  .sus-metric .lbl{font-size:11px; color:var(--slate-dim); margin-bottom:6px;}
+  .sus-metric .val{font-size:18px; font-weight:800;}
+  .sus-metric .bar{height:5px; border-radius:5px; background:var(--border-strong); margin-top:8px; overflow:hidden;}
+  .sus-metric .bar div{height:100%; background:linear-gradient(90deg,var(--purple),var(--blue));}
+  .cert-grid{display:flex; gap:10px; flex-wrap:wrap;}
+  .cert-chip{display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:11px; border:1px solid var(--border); background:var(--surface); font-size:12px; font-weight:600;}
+  .cert-chip .dot{width:8px;height:8px;border-radius:50%; background:var(--green);}
+
+  /* ===== NEARBY DEALERS ===== */
+  .dealer-layout{display:grid; grid-template-columns:1fr 420px; gap:20px;}
+  @media(max-width:980px){.dealer-layout{grid-template-columns:1fr;}}
+  .dealer-map{height:560px; border-radius:var(--radius-lg); border:1px solid var(--border); background:linear-gradient(135deg,var(--surface-2),var(--surface)); background-image:radial-gradient(var(--border-strong) 1px, transparent 1px); background-size:24px 24px; position:relative;}
+  .map-pin{position:absolute; width:30px;height:30px; border-radius:50% 50% 50% 0; background:linear-gradient(135deg,var(--purple),var(--blue)); transform:rotate(-45deg); display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px; font-weight:800; box-shadow:0 6px 16px rgba(124,58,237,0.4);}
+  .map-pin span{transform:rotate(45deg);}
+  .dealer-list{display:flex; flex-direction:column; gap:10px; max-height:560px; overflow-y:auto;}
+  .dealer-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; display:flex; gap:12px;}
+  .dealer-card .av{width:44px;height:44px;border-radius:11px; background:var(--purple-soft); color:var(--purple); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0;}
+  .dealer-card h4{font-size:13px; font-weight:700;}
+  .dealer-card .addr{font-size:11.5px; color:var(--slate-dim); margin-top:2px;}
+  .dealer-card .meta{display:flex; gap:10px; margin-top:8px; font-size:11px; color:var(--slate);}
+
+  /* ===== SAMPLE TRACKING ===== */
+  .sample-table-wrap{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden;}
+  table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  thead th{text-align:left; padding:12px 14px; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--slate-dim); border-bottom:1px solid var(--border); background:var(--surface-2);}
+  tbody td{padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  .track-steps{display:flex; align-items:center; gap:4px;}
+  .track-dot{width:9px;height:9px;border-radius:50%; background:var(--green);}
+  .track-dot.pending{background:var(--border-strong);}
+  .track-line{width:24px; height:2px; background:var(--green);}
+  .track-line.pending{background:var(--border-strong);}
+
+  /* ===== TRENDS 2027 ===== */
+  .trend-hero{border-radius:var(--radius-lg); border:1px solid var(--border); padding:44px 40px; margin-bottom:28px; background:radial-gradient(circle at 20% 20%, rgba(124,58,237,0.28), transparent 55%), var(--surface);}
+  .trend-hero .eyebrow{margin-bottom:12px;}
+  .trend-hero h1{font-size:30px; font-weight:800; letter-spacing:-0.02em; max-width:560px;}
+  .trend-list{display:flex; flex-direction:column; gap:14px;}
+  .trend-row{display:grid; grid-template-columns:64px 220px 1fr; gap:20px; align-items:center; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:18px;}
+  @media(max-width:780px){.trend-row{grid-template-columns:1fr; text-align:left;}}
+  .trend-row .rank{font-size:22px; font-weight:800; color:var(--slate-dim);}
+  .trend-row .im{height:80px; border-radius:11px; background:linear-gradient(135deg,var(--purple-soft),var(--blue-soft));}
+  .trend-row h4{font-size:14px; font-weight:800; margin-bottom:4px;}
+  .trend-row p{font-size:12px; color:var(--slate); line-height:1.55;}
+
+  .dev-switcher{position:fixed; bottom:16px; left:16px; z-index:100; display:flex; gap:6px; background:var(--surface); border:1px solid var(--border-strong); padding:6px; border-radius:10px; box-shadow:var(--shadow-glass); flex-wrap:wrap; max-width:250px;}
+  .dev-switcher button{font-size:10px; font-weight:700; padding:6px 8px; border-radius:6px; border:none; background:transparent; color:var(--slate);}
+  .dev-switcher button.on{background:linear-gradient(135deg,var(--purple),var(--blue)); color:#fff;}
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- ============ AI ADVISOR ============ -->
+<div class="page active" id="page-advisor">
+  <div class="topbar">
+    <div class="wordmark"><div class="mark">A</div>Aaren IntPro</div>
+    <div class="top-nav">
+      <a class="on">AI Advisor</a><a>Inspiration</a><a>Sustainability</a><a>Dealers</a><a>Samples</a><a>Trends 2027</a>
+    </div>
+    <div class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></div>
+  </div>
+  <div class="main">
+    <div class="crumbline"><b>Material Intelligence</b> / AI Material Advisor</div>
+    <div class="advisor-layout">
+      <div class="advisor-side">
+        <h5>Recent chats</h5>
+        <div class="adv-chat-item on">Kitchen countertop options</div>
+        <div class="adv-chat-item">Fire-rated wardrobe finishes</div>
+        <div class="adv-chat-item">Budget laminate alternatives</div>
+        <div class="adv-chat-item">Sustainable flooring for villa</div>
+        <h5 style="margin-top:20px;">Knowledge sources</h5>
+        <div class="adv-chat-item">FENIX product catalogue</div>
+        <div class="adv-chat-item">IS fire safety codes</div>
+        <div class="adv-chat-item">Your project specs</div>
+      </div>
+      <div class="advisor-main">
+        <div class="adv-messages">
+          <div class="msg user">I need a matte, anti-fingerprint laminate for a high-traffic kitchen island — budget around ₹2,500/sheet.</div>
+          <div class="msg ai">
+            Based on your budget and fire-safety requirement (Class B, typical for kitchens), here are three strong matches. FENIX Bromo Matte is the closest fit — nanotech anti-fingerprint surface, 10-year warranty, and 4 dealers within 12km of your project site.
+            <div class="rec-row">
+              <div class="rec-card"><div class="im"></div><div class="tx"><b>Bromo Matte</b>₹2,450 · FENIX</div></div>
+              <div class="rec-card"><div class="im"></div><div class="tx"><b>Onyx AFP</b>₹3,150 · FENIX</div></div>
+              <div class="rec-card"><div class="im"></div><div class="tx"><b>Cascade Suede</b>₹2,120 · Merino</div></div>
+            </div>
+          </div>
+          <div class="msg user">Which one pairs best with a matte black quartz counter?</div>
+          <div class="msg ai">Cascade Suede reads warmer against matte black quartz and hides seam lines better under side lighting. Bromo Matte gives more contrast if you want the cabinetry to stand apart from the counter. Want me to add both to a moodboard for side-by-side review?</div>
+        </div>
+        <div class="suggested-prompts">
+          <span>Compare fire ratings</span><span>Show sustainable alternatives</span><span>Estimate cost for 12 cabinet fronts</span>
+        </div>
+        <div class="adv-input">
+          <input placeholder="Ask the AI Material Advisor anything...">
+          <button>Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ INSPIRATION GALLERY ============ -->
+<div class="page" id="page-inspiration">
+  <div class="topbar">
+    <div class="wordmark"><div class="mark">A</div>Aaren IntPro</div>
+    <div class="top-nav"><a>AI Advisor</a><a class="on">Inspiration</a><a>Sustainability</a><a>Dealers</a><a>Samples</a><a>Trends 2027</a></div>
+    <button class="btn-ghost">Save to moodboard</button>
+  </div>
+  <div class="main">
+    <div class="crumbline"><b>Material Intelligence</b> / Inspiration Gallery</div>
+    <div class="page-head"><div class="eyebrow">Completed projects &amp; palettes</div><h1>Inspiration Gallery</h1><p>Real interiors built with Aaren-sourced materials, organized by style. Click through to see the exact products and collections used.</p></div>
+    <div class="insp-filters">
+      <span class="on">All styles</span><span>Luxury Modern</span><span>Scandinavian</span><span>Japandi</span><span>Minimalist</span><span>Industrial</span>
+    </div>
+    <div class="masonry">
+      <div class="insp-tile"><div class="im h2"></div><div class="ov"><div><b>Prestige Villa — Living Room</b><span>Luxury Modern · Bengaluru</span></div></div></div>
+      <div class="insp-tile"><div class="im h1"></div><div class="ov"><div><b>Oak Residency — Kitchen</b><span>Scandinavian · Pune</span></div></div></div>
+      <div class="insp-tile"><div class="im h3"></div><div class="ov"><div><b>Studio 42 — Reading Nook</b><span>Japandi · Chennai</span></div></div></div>
+      <div class="insp-tile"><div class="im h2"></div><div class="ov"><div><b>The Loft — Wardrobe Wall</b><span>Industrial · Mumbai</span></div></div></div>
+      <div class="insp-tile"><div class="im h1"></div><div class="ov"><div><b>Casa Verde — Dining</b><span>Minimalist · Hyderabad</span></div></div></div>
+      <div class="insp-tile"><div class="im h3"></div><div class="ov"><div><b>Whitepine — Bathroom</b><span>Scandinavian · Delhi</span></div></div></div>
+      <div class="insp-tile"><div class="im h2"></div><div class="ov"><div><b>Elm House — Bedroom</b><span>Japandi · Kochi</span></div></div></div>
+      <div class="insp-tile"><div class="im h1"></div><div class="ov"><div><b>Marble Bay — Powder Room</b><span>Luxury Modern · Goa</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SUSTAINABILITY ============ -->
+<div class="page" id="page-sustainability">
+  <div class="topbar">
+    <div class="wordmark"><div class="mark">A</div>Aaren IntPro</div>
+    <div class="top-nav"><a>AI Advisor</a><a>Inspiration</a><a class="on">Sustainability</a><a>Dealers</a><a>Samples</a><a>Trends 2027</a></div>
+    <button class="btn-ghost">Download report</button>
+  </div>
+  <div class="main">
+    <div class="crumbline"><b>Material Intelligence</b> / Sustainability Score</div>
+    <div class="page-head"><div class="eyebrow">FENIX Bromo Matte Laminate</div><h1>Sustainability Score</h1><p>Scored against embodied carbon, certification coverage, recyclability and VOC emissions using third-party lab data.</p></div>
+
+    <div class="sus-hero">
+      <div class="score-ring"><div class="in"><b>82</b><span>/ 100</span></div></div>
+      <div>
+        <h2>Strong sustainability profile <span class="badge green">Recommended</span></h2>
+        <p>This product scores in the top 15% of laminates in its category, driven by FSC-certified core material and a low-VOC adhesive system. Embodied carbon is slightly above the category median due to the nanotech surface layer.</p>
+      </div>
+    </div>
+
+    <div class="sus-metrics">
+      <div class="sus-metric"><div class="lbl">Embodied carbon</div><div class="val">18.2 kg CO₂e/m²</div><div class="bar"><div style="width:64%;"></div></div></div>
+      <div class="sus-metric"><div class="lbl">Recyclability</div><div class="val">Partial</div><div class="bar"><div style="width:55%;"></div></div></div>
+      <div class="sus-metric"><div class="lbl">VOC emissions</div><div class="val">Low (E1)</div><div class="bar"><div style="width:88%;"></div></div></div>
+      <div class="sus-metric"><div class="lbl">Certified sourcing</div><div class="val">FSC Mix</div><div class="bar"><div style="width:92%;"></div></div></div>
+    </div>
+
+    <div class="section-head" style="display:flex; justify-content:space-between; margin-bottom:14px;"><h2 style="font-size:15px; font-weight:800;">Certifications on file</h2></div>
+    <div class="cert-grid">
+      <div class="cert-chip"><span class="dot"></span>FSC Mix Credit</div>
+      <div class="cert-chip"><span class="dot"></span>Greenguard Gold</div>
+      <div class="cert-chip"><span class="dot"></span>E1 Low Formaldehyde</div>
+      <div class="cert-chip"><span class="dot"></span>ISO 14001</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ NEARBY DEALERS ============ -->
+<div class="page" id="page-dealers">
+  <div class="topbar">
+    <div class="wordmark"><div class="mark">A</div>Aaren IntPro</div>
+    <div class="top-nav"><a>AI Advisor</a><a>Inspiration</a><a>Sustainability</a><a class="on">Dealers</a><a>Samples</a><a>Trends 2027</a></div>
+    <button class="btn-ghost">Change location</button>
+  </div>
+  <div class="main">
+    <div class="crumbline"><b>Material Intelligence</b> / Nearby Dealers</div>
+    <div class="page-head"><div class="eyebrow">FENIX Bromo Matte Laminate</div><h1>Nearby Dealers</h1><p>4 authorized dealers within 15km of Bengaluru — Whitefield project site.</p></div>
+    <div class="dealer-layout">
+      <div class="dealer-map">
+        <div class="map-pin" style="top:38%; left:44%;"><span>1</span></div>
+        <div class="map-pin" style="top:58%; left:62%;"><span>2</span></div>
+        <div class="map-pin" style="top:24%; left:66%;"><span>3</span></div>
+        <div class="map-pin" style="top:70%; left:30%;"><span>4</span></div>
+      </div>
+      <div class="dealer-list">
+        <div class="dealer-card"><div class="av">1</div><div><h4>Aaren Authorized — Whitefield</h4><div class="addr">ITPL Main Road, Whitefield, Bengaluru</div><div class="meta"><span>2.4 km</span><span>In stock</span><span>★ 4.7</span></div></div></div>
+        <div class="dealer-card"><div class="av">2</div><div><h4>Prestige Surfaces Co.</h4><div class="addr">Marathahalli Bridge, Bengaluru</div><div class="meta"><span>5.1 km</span><span>Low stock</span><span>★ 4.5</span></div></div></div>
+        <div class="dealer-card"><div class="av">3</div><div><h4>Elite Laminate House</h4><div class="addr">Old Airport Road, Bengaluru</div><div class="meta"><span>7.8 km</span><span>In stock</span><span>★ 4.6</span></div></div></div>
+        <div class="dealer-card"><div class="av">4</div><div><h4>Modern Surface Studio</h4><div class="addr">Sarjapur Road, Bengaluru</div><div class="meta"><span>9.3 km</span><span>In stock</span><span>★ 4.4</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SAMPLE TRACKING ============ -->
+<div class="page" id="page-samples">
+  <div class="topbar">
+    <div class="wordmark"><div class="mark">A</div>Aaren IntPro</div>
+    <div class="top-nav"><a>AI Advisor</a><a>Inspiration</a><a>Sustainability</a><a>Dealers</a><a class="on">Samples</a><a>Trends 2027</a></div>
+    <button class="btn-primary">+ Request sample</button>
+  </div>
+  <div class="main">
+    <div class="crumbline"><b>Material Intelligence</b> / Sample Tracking</div>
+    <div class="page-head"><div class="eyebrow">Prestige Villa project</div><h1>Sample Tracking</h1><p>Physical samples requested for client review, tracked from dispatch to approval.</p></div>
+    <div class="sample-table-wrap">
+      <table>
+        <thead><tr><th>Product</th><th>Requested by</th><th>Dispatched</th><th>Status</th><th>Progress</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><b>Bromo Matte</b><br><span style="color:var(--slate-dim); font-size:11px;">FENIX</span></td><td>Ananya R.</td><td>Aug 4</td><td><span class="badge green">Delivered</span></td>
+            <td><div class="track-steps"><div class="track-dot"></div><div class="track-line"></div><div class="track-dot"></div><div class="track-line"></div><div class="track-dot"></div><div class="track-line"></div><div class="track-dot"></div></div></td>
+            <td><button class="btn-ghost sm">View</button></td></tr>
+          <tr><td><b>Cascade Suede</b><br><span style="color:var(--slate-dim); font-size:11px;">Merino</span></td><td>Ananya R.</td><td>Aug 6</td><td><span class="badge amber">In transit</span></td>
+            <td><div class="track-steps"><div class="track-dot"></div><div class="track-line"></div><div class="track-dot"></div><div class="track-line pending"></div><div class="track-dot pending"></div><div class="track-line pending"></div><div class="track-dot pending"></div></div></td>
+            <td><button class="btn-ghost sm">View</button></td></tr>
+          <tr><td><b>Onyx Anti-Fingerprint</b><br><span style="color:var(--slate-dim); font-size:11px;">FENIX</span></td><td>Rahul K.</td><td>—</td><td><span class="badge blue">Requested</span></td>
+            <td><div class="track-steps"><div class="track-dot"></div><div class="track-line pending"></div><div class="track-dot pending"></div><div class="track-line pending"></div><div class="track-dot pending"></div><div class="track-line pending"></div><div class="track-dot pending"></div></div></td>
+            <td><button class="btn-ghost sm">View</button></td></tr>
+          <tr><td><b>Matte Vitrified Tile</b><br><span style="color:var(--slate-dim); font-size:11px;">Kajaria</span></td><td>Ananya R.</td><td>Jul 28</td><td><span class="badge purple">Approved</span></td>
+            <td><div class="track-steps"><div class="track-dot"></div><div class="track-line"></div><div class="track-dot"></div><div class="track-line"></div><div class="track-dot"></div><div class="track-line"></div><div class="track-dot"></div></div></td>
+            <td><button class="btn-ghost sm">View</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TRENDS 2027 ============ -->
+<div class="page" id="page-trends">
+  <div class="topbar">
+    <div class="wordmark"><div class="mark">A</div>Aaren IntPro</div>
+    <div class="top-nav"><a>AI Advisor</a><a>Inspiration</a><a>Sustainability</a><a>Dealers</a><a>Samples</a><a class="on">Trends 2027</a></div>
+    <button class="btn-ghost">Share report</button>
+  </div>
+  <div class="main">
+    <div class="crumbline"><b>Material Intelligence</b> / Interior Trends 2027</div>
+    <div class="trend-hero">
+      <div class="eyebrow">Annual material &amp; design report</div>
+      <h1>Interior Trends 2027</h1>
+      <p style="font-size:13px; color:var(--slate); margin-top:12px; max-width:520px;">Compiled from 40,000+ specification requests, dealer sell-through data and designer surveys across Aaren IntPro's network.</p>
+    </div>
+    <div class="trend-list">
+      <div class="trend-row"><div class="rank">01</div><div class="im"></div><div><h4>Warm minimalism replaces stark white</h4><p>Specs for off-white and warm greige surfaces rose 34% year-over-year as designers move away from cold minimalism.</p></div></div>
+      <div class="trend-row"><div class="rank">02</div><div class="im"></div><div><h4>Anti-fingerprint matte becomes standard</h4><p>62% of new kitchen laminate specs now require an anti-fingerprint matte finish, up from 28% two years ago.</p></div></div>
+      <div class="trend-row"><div class="rank">03</div><div class="im"></div><div><h4>Low-carbon certification as a filter, not a feature</h4><p>Sustainability filters are now applied in 71% of product searches before price filters are set.</p></div></div>
+      <div class="trend-row"><div class="rank">04</div><div class="im"></div><div><h4>Fluted &amp; textured wall panels surge</h4><p>Fluted panel specification is up 48%, driven by feature-wall requests in living and dining spaces.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="dev-switcher" id="devSwitcher"></div>
+
+<script>
+  const pages = ['page-advisor','page-inspiration','page-sustainability','page-dealers','page-samples','page-trends'];
+  const labels = {'page-advisor':'AI Advisor','page-inspiration':'Inspiration','page-sustainability':'Sustainability','page-dealers':'Dealers','page-samples':'Samples','page-trends':'Trends 2027'};
+  function goTo(id){
+    pages.forEach(p=>document.getElementById(p).classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+    updateSwitcher(id);
+  }
+  const switcher = document.getElementById('devSwitcher');
+  pages.forEach(p=>{
+    const btn = document.createElement('button');
+    btn.textContent = labels[p];
+    btn.onclick = ()=>goTo(p);
+    btn.dataset.page = p;
+    switcher.appendChild(btn);
+  });
+  function updateSwitcher(active){
+    switcher.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.page===active));
+  }
+  // wire top-nav anchors to matching pages by index
+  document.querySelectorAll('.top-nav a').forEach((a,i)=>{ a.addEventListener('click', ()=>goTo(pages[i])); });
+  updateSwitcher('page-advisor');
+</script>
+</body>
+</html>

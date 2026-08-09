@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aaren IntPro — Brand Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#08111F; --navy-2:#0D1929; --surface:#101C30; --surface-2:#152238;
+    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
+    --white:#F8FAFC; --slate:#93A2B8; --slate-dim:#5E6E85;
+    --purple:#7C3AED; --purple-soft:rgba(124,58,237,0.14);
+    --blue:#2563EB; --blue-soft:rgba(37,99,235,0.14);
+    --green:#22C55E; --green-soft:rgba(34,197,94,.14);
+    --amber:#F59E0B; --amber-soft:rgba(245,158,11,.14);
+    --red:#EF4444; --red-soft:rgba(239,68,68,.14);
+    --radius-lg:20px; --radius-md:16px; --radius-sm:10px;
+    --shadow-glass: 0 8px 40px rgba(0,0,0,0.45);
+  }
+  [data-theme="light"]{
+    --navy:#F3F5F9; --navy-2:#FFFFFF; --surface:#FFFFFF; --surface-2:#F1F4F9;
+    --border:rgba(15,23,42,0.08); --border-strong:rgba(15,23,42,0.14);
+    --white:#0B1220; --slate:#475569; --slate-dim:#94A3B8;
+    --purple-soft:rgba(124,58,237,0.10); --blue-soft:rgba(37,99,235,0.10);
+    --shadow-glass: 0 8px 40px rgba(15,23,42,0.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{font-family:'Inter',sans-serif; background:var(--navy); color:var(--white); font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  ::-webkit-scrollbar{width:9px;height:9px;} ::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:99px;} ::-webkit-scrollbar-track{background:transparent;}
+
+  .shell{display:grid; grid-template-columns:76px 1fr; height:100vh; overflow:hidden;}
+  @media (min-width:900px){ .shell{grid-template-columns:236px 1fr;} }
+
+  .sidebar{background:var(--navy-2); border-right:1px solid var(--border); display:flex; flex-direction:column; padding:20px 12px; gap:22px; overflow-y:auto;}
+  .brand{display:flex; align-items:center; gap:10px; padding:0 8px;}
+  .brand-mark{width:32px;height:32px;border-radius:9px;flex:none;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;}
+  .brand-name{font-weight:700; font-size:14px; display:none;} @media (min-width:900px){.brand-name{display:block;}}
+  .brand-sub{font-size:11px; color:var(--slate-dim); display:none;} @media (min-width:900px){.brand-sub{display:block;}}
+
+  .nav-label{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--slate-dim); padding:8px 12px 6px; display:none; font-weight:600;} @media (min-width:900px){.nav-label{display:block;}}
+  .nav-item{display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:var(--radius-sm); color:var(--slate); font-size:13.5px; font-weight:500; border:1px solid transparent; background:none; width:100%; justify-content:center;}
+  @media (min-width:900px){.nav-item{justify-content:flex-start;}}
+  .nav-item svg{width:18px;height:18px;flex:none;}
+  .nav-item span{display:none;} @media (min-width:900px){.nav-item span{display:inline;}}
+  .nav-item:hover{background:var(--surface); color:var(--white);}
+  .nav-item.active{background:var(--purple-soft); color:var(--white); border-color:rgba(124,58,237,.35);}
+  .nav-item .count{margin-left:auto; font-size:11px; background:var(--surface-2); padding:1px 7px; border-radius:99px; color:var(--slate-dim); display:none;} @media (min-width:900px){.nav-item .count{display:inline-block;}}
+
+  .sidebar-foot{margin-top:auto; display:flex; flex-direction:column; gap:10px;}
+  .brand-mini{display:none; align-items:center; gap:10px; padding:10px; border-radius:var(--radius-md); background:var(--surface); border:1px solid var(--border);}
+  @media (min-width:900px){.brand-mini{display:flex;}}
+  .brand-mini img{width:34px;height:34px;border-radius:9px; object-fit:cover;}
+  .brand-mini .n{font-size:12.5px; font-weight:600;} .brand-mini .r{font-size:11px; color:var(--slate-dim);}
+  .theme-toggle{display:flex; align-items:center; justify-content:center; gap:8px; padding:9px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface); color:var(--slate); font-size:12.5px; font-weight:500;}
+  .theme-toggle span{display:none;} @media (min-width:900px){.theme-toggle span{display:inline;}}
+
+  .main{display:flex; flex-direction:column; height:100vh; overflow:hidden;}
+  .topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 28px; border-bottom:1px solid var(--border); flex:none;}
+  .crumb{font-size:13px; color:var(--slate-dim);} .crumb b{color:var(--white); font-weight:600;}
+  .topbar-right{display:flex; align-items:center; gap:10px;}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:var(--radius-sm); font-size:13.5px; font-weight:600; border:1px solid var(--border-strong); background:var(--surface); color:var(--white);}
+  .btn svg{width:15px;height:15px;} .btn:hover{background:var(--surface-2);}
+  .btn-primary{background:linear-gradient(135deg,var(--purple),var(--blue)); border:none; color:#fff; box-shadow:0 6px 20px rgba(124,58,237,.35);}
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-ghost{background:transparent; border-color:transparent; color:var(--slate);} .btn-ghost:hover{background:var(--surface); color:var(--white);}
+  .btn-sm{padding:7px 11px; font-size:12.5px;}
+  .btn-danger{color:var(--red); border-color:rgba(239,68,68,.3); background:var(--red-soft);}
+
+  .studio-tabs{display:flex; gap:4px; padding:10px 28px 0; border-bottom:1px solid var(--border); flex:none; overflow-x:auto;}
+  .studio-tab{display:flex; align-items:center; gap:8px; padding:10px 14px; font-size:13px; font-weight:600; color:var(--slate-dim); border-bottom:2px solid transparent; white-space:nowrap;}
+  .studio-tab svg{width:15px;height:15px;}
+  .studio-tab.active{color:var(--white); border-color:var(--purple);}
+  .studio-tab:hover:not(.active){color:var(--slate);}
+
+  .view{flex:1; overflow:hidden; display:none;} .view.active{display:flex;}
+
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-glass);}
+  .section-heading{display:flex; align-items:center; justify-content:space-between;}
+  .section-heading h3{font-size:14px; font-weight:700;}
+  .muted{font-size:12.5px; color:var(--slate-dim);}
+
+  /* ============ PRODUCT EDITOR ============ */
+  #view-products{flex-direction:column;}
+  .editor-body{flex:1; overflow-y:auto; padding:24px 28px 60px; display:grid; grid-template-columns:1fr; gap:22px;}
+  @media (min-width:1100px){ .editor-body{grid-template-columns:1fr 340px;} }
+
+  .editor-main{display:flex; flex-direction:column; gap:18px;}
+  .editor-card{padding:20px;}
+  .editor-card h4{font-size:13px; font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:8px;}
+
+  .upload-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px;}
+  .upload-tile{aspect-ratio:1; border-radius:var(--radius-md); border:1px solid var(--border); overflow:hidden; position:relative; background:var(--surface-2);}
+  .upload-tile img{width:100%;height:100%;object-fit:cover;}
+  .upload-tile.add{display:flex; align-items:center; justify-content:center; border:1.5px dashed var(--border-strong); color:var(--slate-dim); flex-direction:column; gap:6px; font-size:11px;}
+  .upload-tile.add svg{width:20px;height:20px;}
+  .cover-badge{position:absolute; top:6px; left:6px; font-size:9.5px; font-weight:700; background:rgba(8,17,31,.75); color:#fff; padding:3px 7px; border-radius:99px;}
+
+  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .field{display:flex; flex-direction:column; gap:6px;}
+  .field.full{grid-column:1/-1;}
+  .field label{font-size:12px; font-weight:600; color:var(--slate);}
+  .input, .select-field, textarea.input{
+    padding:10px 12px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface-2);
+    color:var(--white); font-size:13px; font-family:inherit; outline:none;
+  }
+  .input:focus, .select-field:focus, textarea.input:focus{border-color:var(--purple);}
+  textarea.input{resize:vertical; min-height:80px;}
+  .prefix-input{display:flex; align-items:center; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface-2); overflow:hidden;}
+  .prefix-input span{padding:0 10px; color:var(--slate-dim); font-size:13px; border-right:1px solid var(--border);}
+  .prefix-input input{border:none; background:transparent; padding:10px 10px; color:var(--white); font-size:13px; outline:none; width:100%;}
+
+  .spec-table{width:100%; border-collapse:collapse;}
+  .spec-table tr{border-bottom:1px solid var(--border);}
+  .spec-table tr:last-child{border-bottom:none;}
+  .spec-table td{padding:9px 4px;}
+  .spec-table input{width:100%; background:transparent; border:none; color:var(--white); font-size:12.5px; outline:none; padding:4px;}
+  .spec-table td:first-child input{color:var(--slate); font-weight:600;}
+  .row-remove{width:26px;height:26px; border-radius:7px; background:var(--surface-2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--slate-dim);}
+  .row-remove svg{width:13px;height:13px;}
+  .add-row{margin-top:10px; font-size:12px; font-weight:600; color:var(--purple); display:inline-flex; align-items:center; gap:6px;}
+  [data-theme="light"] .add-row{color:var(--blue);}
+
+  .variant-chip{display:inline-flex; align-items:center; gap:8px; padding:7px 10px; border-radius:99px; background:var(--surface-2); border:1px solid var(--border); font-size:12px; margin:0 8px 8px 0;}
+  .variant-chip .x{width:16px;height:16px; border-radius:50%; background:var(--border-strong); display:flex; align-items:center; justify-content:center; font-size:10px;}
+
+  .editor-side{display:flex; flex-direction:column; gap:16px;}
+  .status-toggle{display:flex; border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden;}
+  .status-toggle button{flex:1; padding:9px 6px; font-size:12px; background:var(--surface); color:var(--slate); border:none; border-right:1px solid var(--border);}
+  .status-toggle button:last-child{border-right:none;}
+  .status-toggle button.active{background:var(--purple-soft); color:var(--white);}
+
+  .score-ring{width:64px;height:64px; border-radius:50%; background:conic-gradient(var(--green) 0 78%, var(--surface-2) 78% 100%); display:flex; align-items:center; justify-content:center; position:relative;}
+  .score-ring::before{content:''; position:absolute; inset:6px; border-radius:50%; background:var(--surface);}
+  .score-ring span{position:relative; font-weight:800; font-size:15px;}
+  .score-row{display:flex; align-items:center; gap:14px;}
+  .score-row .label{font-size:12px; color:var(--slate-dim);}
+  .score-row .val{font-size:12.5px; font-weight:600;}
+
+  .side-list{display:flex; flex-direction:column; gap:8px;}
+  .side-list-item{display:flex; justify-content:space-between; align-items:center; font-size:12.5px; padding:8px 0; border-bottom:1px solid var(--border);}
+  .side-list-item:last-child{border-bottom:none;}
+  .side-list-item .l{color:var(--slate);}
+
+  /* ============ LEADS / CRM ============ */
+  #view-leads{flex-direction:column;}
+  .leads-toolbar{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 28px; border-bottom:1px solid var(--border); flex-wrap:wrap;}
+  .search-box{display:flex; align-items:center; gap:8px; padding:9px 12px; border-radius:var(--radius-sm); background:var(--surface); border:1px solid var(--border); flex:1; max-width:320px;}
+  .search-box svg{width:15px;height:15px; color:var(--slate-dim);}
+  .search-box input{border:none; background:transparent; outline:none; color:var(--white); font-size:13px; width:100%;}
+  .filter-chip{display:flex; align-items:center; gap:6px; padding:7px 12px; border-radius:99px; font-size:12.5px; font-weight:500; background:var(--surface-2); border:1px solid var(--border); color:var(--slate);}
+  .filter-chip.selected{background:var(--purple-soft); color:var(--white); border-color:rgba(124,58,237,.4);}
+
+  .kanban{flex:1; overflow-x:auto; padding:20px 28px; display:flex; gap:16px;}
+  .kanban-col{flex:none; width:270px; display:flex; flex-direction:column; gap:12px;}
+  .kanban-head{display:flex; align-items:center; justify-content:space-between; padding:0 2px;}
+  .kanban-head .dot{width:8px;height:8px;border-radius:50%; margin-right:6px;}
+  .kanban-title{display:flex; align-items:center; font-size:12.5px; font-weight:700;}
+  .kanban-count{font-size:11px; color:var(--slate-dim); background:var(--surface-2); padding:2px 8px; border-radius:99px;}
+  .kanban-cards{display:flex; flex-direction:column; gap:10px; overflow-y:auto; padding-bottom:10px;}
+
+  .lead-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:12px; cursor:pointer;}
+  .lead-card:hover{border-color:var(--border-strong);}
+  .lead-card .name{font-size:13px; font-weight:700;}
+  .lead-card .proj{font-size:11.5px; color:var(--slate-dim); margin-top:2px;}
+  .lead-card .meta-row{display:flex; align-items:center; justify-content:space-between; margin-top:10px;}
+  .lead-card .value{font-size:12px; font-weight:700; color:var(--green);}
+  .lead-avatar{width:22px;height:22px;border-radius:50%; background:var(--surface-2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:9.5px; font-weight:700;}
+  .lead-tag{font-size:10px; font-weight:700; padding:3px 7px; border-radius:99px; background:var(--blue-soft); color:var(--blue); display:inline-block; margin-top:8px;}
+
+  /* ============ ORDERS & INVOICES ============ */
+  #view-orders{flex-direction:column;}
+  .orders-body{flex:1; overflow-y:auto; padding:20px 28px 40px;}
+  .stat-row{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:20px;}
+  @media (min-width:800px){ .stat-row{grid-template-columns:repeat(4,1fr);} }
+  .stat-card{padding:16px; display:flex; flex-direction:column; gap:6px;}
+  .stat-card .label{font-size:11.5px; color:var(--slate-dim); font-weight:600; text-transform:uppercase; letter-spacing:.04em;}
+  .stat-card .val{font-size:22px; font-weight:800;}
+  .stat-card .trend{font-size:11.5px; font-weight:600;}
+  .trend.up{color:var(--green);} .trend.down{color:var(--red);}
+
+  table.data-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  .data-table thead th{text-align:left; padding:10px 14px; color:var(--slate-dim); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; border-bottom:1px solid var(--border);}
+  .data-table tbody td{padding:12px 14px; border-bottom:1px solid var(--border);}
+  .data-table tbody tr:hover{background:var(--surface-2);}
+  .data-table tbody tr:last-child td{border-bottom:none;}
+  .order-id{font-weight:700;}
+  .badge{font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:99px; display:inline-block;}
+  .badge.paid{background:var(--green-soft); color:var(--green);}
+  .badge.pending{background:var(--amber-soft); color:var(--amber);}
+  .badge.overdue{background:var(--red-soft); color:var(--red);}
+  .badge.processing{background:var(--blue-soft); color:var(--blue);}
+  .row-actions{display:flex; gap:6px; justify-content:flex-end;}
+  .icon-btn-sm{width:28px;height:28px;border-radius:8px; border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; color:var(--slate);}
+  .icon-btn-sm svg{width:14px;height:14px;}
+
+  /* ============ MODAL ============ */
+  .modal-backdrop{position:fixed; inset:0; background:rgba(3,7,15,.6); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:50; padding:20px;}
+  .modal-backdrop.open{display:flex;}
+  .modal{width:100%; max-width:460px; background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--radius-lg); box-shadow:var(--shadow-glass); max-height:88vh; overflow-y:auto;}
+  .modal-head{display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--border);}
+  .modal-head h3{font-size:14.5px; font-weight:700;}
+  .modal-close{width:28px;height:28px; border-radius:8px; background:var(--surface-2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center;}
+  .modal-close svg{width:14px;height:14px;}
+  .modal-body{padding:20px; display:flex; flex-direction:column; gap:14px;}
+  .modal-foot{padding:16px 20px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:10px;}
+  .lead-detail-head{display:flex; align-items:center; gap:12px;}
+  .lead-detail-avatar{width:44px;height:44px;border-radius:12px; background:linear-gradient(135deg,var(--purple),var(--blue)); display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff;}
+  .timeline{display:flex; flex-direction:column; gap:12px;}
+  .timeline-item{display:flex; gap:10px;}
+  .timeline-dot{width:8px;height:8px;border-radius:50%; background:var(--purple); margin-top:5px; flex:none;}
+  .timeline-item .t{font-size:12px; color:var(--slate-dim);}
+  .timeline-item .d{font-size:12.5px;}
+
+  @media (max-width:640px){
+    .topbar{padding:12px 16px;} .studio-tabs{padding:10px 16px 0;}
+    .editor-body,.orders-body{padding-left:16px; padding-right:16px;}
+    .leads-toolbar,.kanban{padding-left:16px; padding-right:16px;}
+    .form-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body data-theme="dark">
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">BP</div>
+      <div><div class="brand-name">Aaren IntPro</div><div class="brand-sub">Brand Portal</div></div>
+    </div>
+
+    <div>
+      <div class="nav-label">Overview</div>
+      <button class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span>Dashboard</span>
+      </button>
+    </div>
+
+    <div>
+      <div class="nav-label">Manage</div>
+      <button class="nav-item active" data-tab="products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></svg>
+        <span>Products</span><span class="count">86</span>
+      </button>
+      <button class="nav-item" data-tab="leads">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Leads / CRM</span><span class="count">24</span>
+      </button>
+      <button class="nav-item" data-tab="orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2l1.5 4h9L18 2M4 6h16l-1.5 13a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8L4 6z"/></svg>
+        <span>Orders & Invoices</span><span class="count">12</span>
+      </button>
+    </div>
+
+    <div class="sidebar-foot">
+      <div class="brand-mini">
+        <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?w=100&h=100&fit=crop">
+        <div><div class="n">Woodcraft Co.</div><div class="r">Manufacturer · Verified</div></div>
+      </div>
+      <button class="theme-toggle" id="themeToggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.4 5.4 0 0 1-7.54-7.54c-.44-.06-.9-.1-1.36-.1z"/></svg>
+        <span id="themeLabel">Dark mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb">Brand Portal / <b id="crumbTitle">Products</b></div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost btn-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v4H4zM4 4l8 16 8-16"/></svg>
+          Export
+        </button>
+        <button class="btn btn-primary btn-sm" id="primaryAction">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          New product
+        </button>
+      </div>
+    </div>
+
+    <div class="studio-tabs">
+      <div class="studio-tab active" data-tab="products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></svg>
+        Product Editor
+      </div>
+      <div class="studio-tab" data-tab="leads">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Lead Management
+      </div>
+      <div class="studio-tab" data-tab="orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2l1.5 4h9L18 2M4 6h16l-1.5 13a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8L4 6z"/></svg>
+        Orders & Invoices
+      </div>
+    </div>
+
+    <!-- ============ PRODUCT EDITOR ============ -->
+    <section class="view active" id="view-products">
+      <div class="editor-body">
+        <div class="editor-main">
+          <div class="card editor-card">
+            <h4>Product images</h4>
+            <div class="upload-grid">
+              <div class="upload-tile"><img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?w=200&h=200&fit=crop"><span class="cover-badge">Cover</span></div>
+              <div class="upload-tile"><img src="https://images.unsplash.com/photo-1616627561950-9f746e330187?w=200&h=200&fit=crop"></div>
+              <div class="upload-tile"><img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?w=200&h=200&fit=crop"></div>
+              <div class="upload-tile add">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                Add photo
+              </div>
+            </div>
+          </div>
+
+          <div class="card editor-card">
+            <h4>Product details</h4>
+            <div class="form-grid">
+              <div class="field full"><label>Product name</label><input class="input" value="Walnut Veneer Console — Aria Series"></div>
+              <div class="field"><label>Category</label><select class="select-field"><option>Furniture · Consoles</option><option>Furniture · Seating</option><option>Lighting</option><option>Surfaces</option></select></div>
+              <div class="field"><label>SKU</label><input class="input" value="WC-ARIA-CNS-140"></div>
+              <div class="field"><label>Price</label><div class="prefix-input"><span>₹</span><input value="42,000"></div></div>
+              <div class="field"><label>Sustainability score</label><input class="input" value="78 / 100"></div>
+              <div class="field full"><label>Description</label><textarea class="input">A low-profile console in FSC-certified walnut veneer, hand-finished with a matte lacquer. Soft-close drawers, brass inlay detail, designed for warm-minimal and Japandi interiors.</textarea></div>
+            </div>
+          </div>
+
+          <div class="card editor-card">
+            <h4>Specifications</h4>
+            <table class="spec-table" id="specTable">
+              <tr><td style="width:38%"><input value="Dimensions"></td><td><input value="140 × 40 × 76 cm"></td><td style="width:32px"><button class="row-remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></td></tr>
+              <tr><td><input value="Material"></td><td><input value="Walnut veneer, engineered core"></td><td><button class="row-remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></td></tr>
+              <tr><td><input value="Weight"></td><td><input value="34 kg"></td><td><button class="row-remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></td></tr>
+              <tr><td><input value="Lead time"></td><td><input value="4–6 weeks"></td><td><button class="row-remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></td></tr>
+            </table>
+            <button class="add-row" id="addSpecRow"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Add specification</button>
+          </div>
+
+          <div class="card editor-card">
+            <h4>Variants</h4>
+            <div id="variantChips">
+              <span class="variant-chip">Walnut <span class="x">×</span></span>
+              <span class="variant-chip">Oak <span class="x">×</span></span>
+              <span class="variant-chip">Ebony-stained <span class="x">×</span></span>
+            </div>
+            <button class="add-row" id="addVariant"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Add variant</button>
+          </div>
+        </div>
+
+        <div class="editor-side">
+          <div class="card editor-card">
+            <h4>Publish status</h4>
+            <div class="status-toggle" id="statusToggle">
+              <button class="active" data-s="draft">Draft</button>
+              <button data-s="review">In review</button>
+              <button data-s="live">Live</button>
+            </div>
+            <div class="side-list" style="margin-top:14px;">
+              <div class="side-list-item"><span class="l">Last updated</span><span>2 hours ago</span></div>
+              <div class="side-list-item"><span class="l">Visible in marketplace</span><span>Yes</span></div>
+              <div class="side-list-item"><span class="l">Total views</span><span>1,204</span></div>
+            </div>
+            <button class="btn btn-primary" style="width:100%; justify-content:center; margin-top:14px;" id="saveProduct">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+              Save & publish
+            </button>
+          </div>
+
+          <div class="card editor-card">
+            <h4>Sustainability score</h4>
+            <div class="score-row">
+              <div class="score-ring"><span>78</span></div>
+              <div style="flex:1;">
+                <div class="side-list-item" style="border:none; padding:3px 0;"><span class="l">FSC certified</span><span class="val" style="color:var(--green);">Yes</span></div>
+                <div class="side-list-item" style="border:none; padding:3px 0;"><span class="l">Low-VOC finish</span><span class="val" style="color:var(--green);">Yes</span></div>
+                <div class="side-list-item" style="border:none; padding:3px 0;"><span class="l">Local sourcing</span><span class="val" style="color:var(--amber);">Partial</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card editor-card">
+            <h4>Related dealers stocking this</h4>
+            <div class="side-list">
+              <div class="side-list-item"><span class="l">Bombay Living Co.</span><span>Mumbai</span></div>
+              <div class="side-list-item"><span class="l">Studio North</span><span>Delhi</span></div>
+              <div class="side-list-item"><span class="l">Verve Interiors</span><span>Bengaluru</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEADS / CRM ============ -->
+    <section class="view" id="view-leads">
+      <div class="leads-toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <input placeholder="Search leads by name, project, or city…">
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <div class="filter-chip selected">All regions</div>
+          <div class="filter-chip">This month</div>
+          <div class="filter-chip">High value</div>
+        </div>
+      </div>
+      <div class="kanban" id="kanban">
+        <div class="kanban-col" data-stage="New">
+          <div class="kanban-head"><div class="kanban-title"><span class="dot" style="background:var(--blue);"></span>New</div><span class="kanban-count">4</span></div>
+          <div class="kanban-cards">
+            <div class="lead-card" data-lead="1">
+              <div class="name">Aditi Menon</div><div class="proj">3BHK · Whitefield, Bengaluru</div>
+              <span class="lead-tag">Console + Seating</span>
+              <div class="meta-row"><span class="value">₹1.8L est.</span><span class="lead-avatar">DS</span></div>
+            </div>
+            <div class="lead-card" data-lead="2">
+              <div class="name">Rohan Kapoor</div><div class="proj">Villa · Riverside</div>
+              <span class="lead-tag">Full furnishing</span>
+              <div class="meta-row"><span class="value">₹6.4L est.</span><span class="lead-avatar">MP</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="kanban-col" data-stage="Contacted">
+          <div class="kanban-head"><div class="kanban-title"><span class="dot" style="background:var(--amber);"></span>Contacted</div><span class="kanban-count">3</span></div>
+          <div class="kanban-cards">
+            <div class="lead-card" data-lead="3">
+              <div class="name">Studio North</div><div class="proj">Design firm · Delhi NCR</div>
+              <span class="lead-tag">Bulk order</span>
+              <div class="meta-row"><span class="value">₹12.2L est.</span><span class="lead-avatar">RS</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="kanban-col" data-stage="Quoted">
+          <div class="kanban-head"><div class="kanban-title"><span class="dot" style="background:var(--purple);"></span>Quoted</div><span class="kanban-count">2</span></div>
+          <div class="kanban-cards">
+            <div class="lead-card" data-lead="4">
+              <div class="name">Verve Interiors</div><div class="proj">Boutique hotel · Goa</div>
+              <span class="lead-tag">Case goods</span>
+              <div class="meta-row"><span class="value">₹9.1L est.</span><span class="lead-avatar">NK</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="kanban-col" data-stage="Won">
+          <div class="kanban-head"><div class="kanban-title"><span class="dot" style="background:var(--green);"></span>Won</div><span class="kanban-count">5</span></div>
+          <div class="kanban-cards">
+            <div class="lead-card" data-lead="5">
+              <div class="name">Bombay Living Co.</div><div class="proj">Retail stocking order</div>
+              <span class="lead-tag">Recurring</span>
+              <div class="meta-row"><span class="value">₹4.7L</span><span class="lead-avatar">AK</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ORDERS & INVOICES ============ -->
+    <section class="view" id="view-orders">
+      <div class="orders-body">
+        <div class="stat-row">
+          <div class="card stat-card"><div class="label">Open orders</div><div class="val">12</div><div class="trend up">↑ 3 this week</div></div>
+          <div class="card stat-card"><div class="label">Revenue (MTD)</div><div class="val">₹18.6L</div><div class="trend up">↑ 12%</div></div>
+          <div class="card stat-card"><div class="label">Pending invoices</div><div class="val">₹4.2L</div><div class="trend down">3 overdue</div></div>
+          <div class="card stat-card"><div class="label">Avg. fulfillment</div><div class="val">9.4 days</div><div class="trend up">↓ 1.2 days</div></div>
+        </div>
+
+        <div class="card" style="overflow:hidden;">
+          <div style="padding:16px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border);">
+            <h3 style="font-size:14px; font-weight:700;">Recent orders</h3>
+            <span class="muted">12 total</span>
+          </div>
+          <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead><tr><th>Order</th><th>Buyer</th><th>Items</th><th>Amount</th><th>Payment</th><th>Fulfillment</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="order-id">#ORD-3391</td><td>Studio North</td><td>Console × 6</td><td>₹2,52,000</td><td><span class="badge paid">Paid</span></td><td><span class="badge processing">Processing</span></td><td><div class="row-actions"><button class="icon-btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4H4zM4 4l8 16 8-16"/></svg></button></div></td></tr>
+              <tr><td class="order-id">#ORD-3390</td><td>Bombay Living Co.</td><td>Console × 3, Table × 4</td><td>₹4,71,000</td><td><span class="badge pending">Pending</span></td><td><span class="badge processing">Processing</span></td><td><div class="row-actions"><button class="icon-btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4H4zM4 4l8 16 8-16"/></svg></button></div></td></tr>
+              <tr><td class="order-id">#ORD-3387</td><td>Verve Interiors</td><td>Table × 8</td><td>₹9,12,000</td><td><span class="badge overdue">Overdue</span></td><td><span class="badge pending">Awaiting stock</span></td><td><div class="row-actions"><button class="icon-btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4H4zM4 4l8 16 8-16"/></svg></button></div></td></tr>
+              <tr><td class="order-id">#ORD-3382</td><td>Aditi Menon</td><td>Console × 1, Chair × 4</td><td>₹1,84,500</td><td><span class="badge paid">Paid</span></td><td><span class="badge paid">Delivered</span></td><td><div class="row-actions"><button class="icon-btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4H4zM4 4l8 16 8-16"/></svg></button></div></td></tr>
+              <tr><td class="order-id">#ORD-3379</td><td>Rohan Kapoor</td><td>Full furnishing set</td><td>₹6,40,000</td><td><span class="badge pending">Pending</span></td><td><span class="badge processing">Processing</span></td><td><div class="row-actions"><button class="icon-btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4H4zM4 4l8 16 8-16"/></svg></button></div></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ LEAD DETAIL MODAL ============ -->
+<div class="modal-backdrop" id="leadModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Lead details</h3>
+      <button class="modal-close" id="closeLeadModal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="lead-detail-head">
+        <div class="lead-detail-avatar" id="modalAvatar">AM</div>
+        <div><div style="font-weight:700; font-size:14.5px;" id="modalName">Aditi Menon</div><div class="muted" id="modalProj">3BHK · Whitefield, Bengaluru</div></div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>Estimated value</label><input class="input" value="₹1,80,000" readonly></div>
+        <div class="field"><label>Stage</label><select class="select-field"><option>New</option><option>Contacted</option><option>Quoted</option><option>Won</option><option>Lost</option></select></div>
+      </div>
+      <div>
+        <h4 style="font-size:12.5px; font-weight:700; margin-bottom:10px;">Activity</h4>
+        <div class="timeline">
+          <div class="timeline-item"><div class="timeline-dot"></div><div><div class="d">Inquiry submitted via product page</div><div class="t">2 days ago</div></div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div><div class="d">Auto-matched to nearest dealer</div><div class="t">2 days ago</div></div></div>
+          <div class="timeline-item"><div class="timeline-dot" style="background:var(--slate-dim);"></div><div><div class="d">Follow-up call scheduled</div><div class="t">Today</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost btn-sm">Mark lost</button>
+      <button class="btn btn-primary btn-sm">Send quote</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const sidebarTabs = document.querySelectorAll('.sidebar .nav-item[data-tab]');
+  const studioTabs = document.querySelectorAll('.studio-tab[data-tab]');
+  const views = document.querySelectorAll('.view');
+  const crumbTitle = document.getElementById('crumbTitle');
+  const primaryAction = document.getElementById('primaryAction');
+  const titles = { products:['Products','New product'], leads:['Leads / CRM','New lead'], orders:['Orders & Invoices','New invoice'] };
+
+  function setActiveTab(tab){
+    sidebarTabs.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    studioTabs.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    views.forEach(v => v.classList.toggle('active', v.id === 'view-' + tab));
+    crumbTitle.textContent = titles[tab][0];
+    primaryAction.lastChild.textContent = ' ' + titles[tab][1];
+  }
+  sidebarTabs.forEach(b => b.addEventListener('click', () => setActiveTab(b.dataset.tab)));
+  studioTabs.forEach(b => b.addEventListener('click', () => setActiveTab(b.dataset.tab)));
+
+  const themeToggle = document.getElementById('themeToggle');
+  const themeLabel = document.getElementById('themeLabel');
+  themeToggle.addEventListener('click', () => {
+    const isLight = document.body.getAttribute('data-theme') === 'light';
+    document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    themeLabel.textContent = isLight ? 'Dark mode' : 'Light mode';
+  });
+
+  // Status toggle
+  document.getElementById('statusToggle').addEventListener('click', (e) => {
+    const btn = e.target.closest('button'); if(!btn) return;
+    document.querySelectorAll('#statusToggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+
+  // Add spec row
+  document.getElementById('addSpecRow').addEventListener('click', () => {
+    const table = document.getElementById('specTable');
+    const row = document.createElement('tr');
+    row.innerHTML = `<td><input placeholder="Attribute"></td><td><input placeholder="Value"></td><td><button class="row-remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></td>`;
+    table.appendChild(row);
+  });
+  document.getElementById('specTable').addEventListener('click', (e) => {
+    const btn = e.target.closest('.row-remove'); if(!btn) return;
+    btn.closest('tr').remove();
+  });
+
+  // Variants
+  document.getElementById('addVariant').addEventListener('click', () => {
+    const name = prompt('Variant name (e.g. finish or color):');
+    if(!name) return;
+    const chip = document.createElement('span');
+    chip.className = 'variant-chip';
+    chip.innerHTML = `${name} <span class="x">×</span>`;
+    document.getElementById('variantChips').appendChild(chip);
+  });
+  document.getElementById('variantChips').addEventListener('click', (e) => {
+    if(e.target.classList.contains('x')) e.target.closest('.variant-chip').remove();
+  });
+
+  // Save product feedback
+  document.getElementById('saveProduct').addEventListener('click', function(){
+    const original = this.innerHTML;
+    this.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Saved';
+    setTimeout(() => this.innerHTML = original, 1600);
+  });
+
+  // Filter chips
+  document.querySelectorAll('.filter-chip').forEach(c => c.addEventListener('click', () => {
+    c.classList.toggle('selected');
+  }));
+
+  // Lead detail modal
+  const leadModal = document.getElementById('leadModal');
+  const leadData = {
+    1:{name:'Aditi Menon', proj:'3BHK · Whitefield, Bengaluru', init:'AM'},
+    2:{name:'Rohan Kapoor', proj:'Villa · Riverside', init:'RK'},
+    3:{name:'Studio North', proj:'Design firm · Delhi NCR', init:'SN'},
+    4:{name:'Verve Interiors', proj:'Boutique hotel · Goa', init:'VI'},
+    5:{name:'Bombay Living Co.', proj:'Retail stocking order', init:'BL'},
+  };
+  document.getElementById('kanban').addEventListener('click', (e) => {
+    const card = e.target.closest('.lead-card'); if(!card) return;
+    const d = leadData[card.dataset.lead];
+    document.getElementById('modalName').textContent = d.name;
+    document.getElementById('modalProj').textContent = d.proj;
+    document.getElementById('modalAvatar').textContent = d.init;
+    leadModal.classList.add('open');
+  });
+  document.getElementById('closeLeadModal').addEventListener('click', () => leadModal.classList.remove('open'));
+  leadModal.addEventListener('click', (e) => { if(e.target === leadModal) leadModal.classList.remove('open'); });
+</script>
+</body>
+</html>
