@@ -8,7 +8,7 @@ import {
   sendPasswordResetEmail,
   User,
 } from "firebase/auth";
-import { ref, set, get } from "firebase/database";
+import { ref, set, get, push } from "firebase/database";
 import { auth, googleProvider, db } from "./firebase";
 
 export interface UserProfileData {
@@ -18,6 +18,14 @@ export interface UserProfileData {
   photoURL: string | null;
   sector?: string;
   createdAt?: string;
+}
+
+export interface UserActivityLog {
+  id?: string;
+  email: string;
+  action: string;
+  details?: string;
+  timestamp: string;
 }
 
 /**
@@ -44,7 +52,27 @@ export async function saveUserProfileToDatabase(user: User, sector: string = "Ar
     profileData.sector = existing.sector || sector;
   }
 
+  // Record login activity in RTDB for Admin tracking
+  await trackUserActivity(user.email || "anonymous@studio.com", "Workspace Login & Session Launch", `User UID: ${user.uid}`);
+
   return profileData;
+}
+
+/**
+ * Track user work activity in Firebase Realtime Database (/user_activities)
+ */
+export async function trackUserActivity(email: string, action: string, details?: string) {
+  try {
+    const activitiesRef = ref(db, "user_activities");
+    await push(activitiesRef, {
+      email,
+      action,
+      details: details || "",
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    console.warn("Failed to log user activity to Firebase:", err);
+  }
 }
 
 /**

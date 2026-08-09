@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserPlus, ArrowRight, AlertCircle } from "lucide-react";
-import { signUpWithEmail, signInWithGoogle } from "@/lib/firebaseAuth";
+import { signUpWithEmail, signInWithGoogle, trackUserActivity } from "@/lib/firebaseAuth";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -23,7 +23,11 @@ export default function SignupPage() {
     setLoading(false);
 
     if (res.success) {
+      await trackUserActivity(formData.email, "Registered new member workspace profile", `Role Sector: ${formData.sector}`);
       setSuccess(true);
+      setTimeout(() => {
+        router.push("/workspace");
+      }, 1500);
     } else {
       setError(res.error || "Registration failed.");
     }
@@ -37,7 +41,8 @@ export default function SignupPage() {
     setGoogleLoading(false);
 
     if (res.success) {
-      router.push("/");
+      await trackUserActivity(res.user?.email || "Google User", "Registered via Google OAuth to Workspace", `Role Sector: ${formData.sector}`);
+      router.push("/workspace");
     } else {
       setError(res.error || "Google sign-up failed.");
     }

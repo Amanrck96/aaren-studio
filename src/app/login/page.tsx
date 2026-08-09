@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogIn, ArrowRight, KeyRound, AlertCircle } from "lucide-react";
-import { loginWithEmail, signInWithGoogle, resetUserPassword } from "@/lib/firebaseAuth";
+import { loginWithEmail, signInWithGoogle, resetUserPassword, trackUserActivity } from "@/lib/firebaseAuth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,7 +32,8 @@ export default function LoginPage() {
     setLoading(false);
 
     if (res.success) {
-      router.push("/");
+      await trackUserActivity(res.user?.email || formData.email, "Logged in to Aaren IntPro OS Workspace");
+      router.push("/workspace");
     } else {
       setError(res.error || "Login failed. Please check your credentials.");
     }
@@ -46,7 +47,8 @@ export default function LoginPage() {
     setGoogleLoading(false);
 
     if (res.success) {
-      router.push("/");
+      await trackUserActivity(res.user?.email || "Google User", "Logged in via Google OAuth to Workspace");
+      router.push("/workspace");
     } else {
       setError(res.error || "Google Sign-In failed.");
     }
