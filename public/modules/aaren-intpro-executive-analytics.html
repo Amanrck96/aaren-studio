@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aaren IntPro OS — Executive Analytics Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #08111F;
+    --navy-2: #0D1929;
+    --surface: #101C30;
+    --surface-2: #152238;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --white: #F8FAFC;
+    --slate: #93A2B8;
+    --slate-dim: #5E6E85;
+    --purple: #7C3AED;
+    --purple-soft: rgba(124, 58, 237, 0.14);
+    --blue: #2563EB;
+    --radius-lg: 20px;
+    --radius-md: 16px;
+    --radius-sm: 10px;
+    --shadow-glass: 0 8px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  [data-theme="light"] {
+    --navy: #F8FAFC;
+    --navy-2: #F1F5F9;
+    --surface: #FFFFFF;
+    --surface-2: #F8FAFC;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.14);
+    --white: #0F172A;
+    --slate: #475569;
+    --slate-dim: #94A3B8;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding-top: 80px;
+  }
+
+  .nav-bar {
+    position: fixed;
+    top: 0; inset-x: 0;
+    height: 70px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 99;
+  }
+  .nav-logo { font-size: 16px; font-weight: 900; letter-spacing: 0.3em; text-transform: uppercase; color: var(--white); }
+
+  .container { max-width: 1360px; margin: 0 auto; padding: 32px 24px; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
+  .title h1 { font-size: 30px; font-weight: 800; margin: 0 0 4px; }
+  .title p { font-size: 14px; color: var(--slate); margin: 0; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 22px; }
+  .stat-card .lbl { font-size: 11px; font-weight: 700; color: var(--slate); text-transform: uppercase; margin-bottom: 8px; }
+  .stat-card .val { font-size: 32px; font-weight: 900; color: var(--white); }
+  .stat-card .sub { font-size: 12px; color: #10B981; margin-top: 6px; font-weight: 600; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; margin-bottom: 24px; }
+  .card-title { font-size: 16px; font-weight: 700; margin: 0 0 16px; color: var(--white); }
+
+  .btn { background: var(--purple); color: #fff; border: none; padding: 10px 20px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <div class="nav-logo">AAREN INTPRO OS — EXECUTIVE ANALYTICS</div>
+  <div>
+    <a href="aaren-intpro-admin-console.html" style="color:var(--slate); text-decoration:none; font-size:13px; font-weight:600; margin-right:16px;">Admin Console</a>
+    <a href="aaren-intpro-auth.html" style="color:var(--purple); text-decoration:none; font-size:13px; font-weight:700;">Sign Out</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="header">
+    <div class="title">
+      <h1>Executive BI &amp; Revenue Analytics</h1>
+      <p>Real-time GMV pipeline, brand specification conversions &amp; regional performance across India.</p>
+    </div>
+    <button class="btn">Export Board Deck PDF</button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="lbl">Gross Spec GMV</div>
+      <div class="val">₹14.2 Cr</div>
+      <div class="sub">+24.8% vs last month</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Annual Recurring Revenue</div>
+      <div class="val">₹3.8 Cr</div>
+      <div class="sub">+19.2% ARR YoY</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Catalog Conversions</div>
+      <div class="val">3,420</div>
+      <div class="sub">68% Lead to RFI</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Active Studios</div>
+      <div class="val">1,248</div>
+      <div class="sub">5 Metro Hubs</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Brand Partner Revenue Breakdown</h3>
+    <table style="width:100%; border-collapse:collapse; text-align:left;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border); font-size:11px; text-transform:uppercase; color:var(--slate);">
+          <th style="padding:10px 0;">Brand</th>
+          <th>GMV Volume</th>
+          <th>Orders</th>
+          <th>MoM Growth</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border); font-size:14px;">
+          <td style="padding:14px 0; font-weight:700;">NewTechWood Composite</td>
+          <td style="color:#10B981; font-weight:700;">₹4.8 Cr</td>
+          <td>142 orders</td>
+          <td style="color:#60A5FA;">+28.4%</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border); font-size:14px;">
+          <td style="padding:14px 0; font-weight:700;">Formica Laminates</td>
+          <td style="color:#10B981; font-weight:700;">₹3.2 Cr</td>
+          <td>310 orders</td>
+          <td style="color:#60A5FA;">+18.2%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // Auth Guard
+  const sessionStr = localStorage.getItem('aaren_session');
+  if (!sessionStr) {
+    window.location.href = 'aaren-intpro-auth.html';
+  }
+</script>
+
+</body>
+</html>

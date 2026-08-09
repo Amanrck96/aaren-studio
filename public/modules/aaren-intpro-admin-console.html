@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aaren IntPro OS — Enterprise Admin Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #08111F;
+    --navy-2: #0D1929;
+    --surface: #101C30;
+    --surface-2: #152238;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --white: #F8FAFC;
+    --slate: #93A2B8;
+    --slate-dim: #5E6E85;
+    --purple: #7C3AED;
+    --purple-soft: rgba(124, 58, 237, 0.14);
+    --blue: #2563EB;
+    --radius-lg: 20px;
+    --radius-md: 16px;
+    --radius-sm: 10px;
+    --shadow-glass: 0 8px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  [data-theme="light"] {
+    --navy: #F8FAFC;
+    --navy-2: #F1F5F9;
+    --surface: #FFFFFF;
+    --surface-2: #F8FAFC;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.14);
+    --white: #0F172A;
+    --slate: #475569;
+    --slate-dim: #94A3B8;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding-top: 80px;
+  }
+
+  .nav-bar {
+    position: fixed;
+    top: 0; inset-x: 0;
+    height: 70px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 99;
+  }
+  .nav-logo { font-size: 16px; font-weight: 900; letter-spacing: 0.3em; text-transform: uppercase; color: var(--white); }
+  .user-badge { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; background: var(--surface-2); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); }
+
+  .container { max-width: 1360px; margin: 0 auto; padding: 32px 24px; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
+  .title h1 { font-size: 30px; font-weight: 800; margin: 0 0 4px; }
+  .title p { font-size: 14px; color: var(--slate); margin: 0; }
+
+  .tab-bar { display: flex; gap: 6px; background: var(--navy-2); padding: 6px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+  .tab-btn { background: transparent; border: none; color: var(--slate); padding: 8px 16px; font-size: 12px; font-weight: 700; border-radius: 6px; cursor: pointer; text-transform: uppercase; }
+  .tab-btn.active { background: var(--purple); color: #fff; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3); }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 22px; }
+  .stat-card .lbl { font-size: 11px; font-weight: 700; color: var(--slate); text-transform: uppercase; margin-bottom: 8px; }
+  .stat-card .val { font-size: 32px; font-weight: 900; color: var(--white); }
+
+  .data-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .data-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--slate); padding: 14px 18px; border-bottom: 1px solid var(--border); background: var(--navy-2); text-align: left; }
+  .data-table td { font-size: 13.5px; color: var(--white); padding: 16px 18px; border-bottom: 1px solid var(--border); }
+  .data-table tr:hover { background: var(--surface-2); cursor: pointer; }
+
+  .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+  .badge-active { background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.3); }
+  .badge-suspended { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+  .btn { background: var(--purple); color: #fff; border: none; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<!-- Navigation Header -->
+<div class="nav-bar">
+  <div class="nav-logo">AAREN INTPRO OS — ADMIN CONSOLE</div>
+  <div className="user-badge" id="user-display">
+    <span>Super Admin</span> • <a href="aaren-intpro-auth.html" style="color:var(--purple); text-decoration:none;" onclick="logout()">Sign Out</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="header">
+    <div class="title">
+      <h1>Enterprise Tenant Admin Console</h1>
+      <p>Manage user accounts, RBAC permissions, system moderation, and tenant security logs.</p>
+    </div>
+
+    <div class="tab-bar">
+      <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active">Overview</button>
+      <button onclick="switchTab('users')" id="tab-users" class="tab-btn">Users &amp; RBAC</button>
+      <button onclick="switchTab('audit')" id="tab-audit" class="tab-btn">Audit Logs</button>
+    </div>
+  </div>
+
+  <!-- KPI Overview -->
+  <div class="stats-grid">
+    <div class="stat-card"><div class="lbl">Total Users</div><div class="val">12,480</div></div>
+    <div class="stat-card"><div class="lbl">Active Designers</div><div class="val">8,420</div></div>
+    <div class="stat-card"><div class="lbl">Brand Accounts</div><div class="val">310</div></div>
+    <div class="stat-card"><div class="lbl">Dealers</div><div class="val">1,750</div></div>
+  </div>
+
+  <!-- Users Data Table -->
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>User Name</th>
+        <th>Work Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Signed Up</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:700;">Ar. Priya Sharma</td>
+        <td>priya@studiovanya.com</td>
+        <td><span class="badge" style="background:var(--purple-soft); color:var(--purple);">Designer</span></td>
+        <td><span class="badge badge-active">Active</span></td>
+        <td>Aug 08, 2026</td>
+        <td><button class="btn" style="padding:6px 12px;">Manage</button></td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">Formica India Admin</td>
+        <td>brand@formica.com</td>
+        <td><span class="badge" style="background:rgba(37,99,235,0.15); color:#60A5FA;">Brand</span></td>
+        <td><span class="badge badge-active">Active</span></td>
+        <td>Jul 14, 2026</td>
+        <td><button class="btn" style="padding:6px 12px;">Manage</button></td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">Bengaluru Surfaces Hub</td>
+        <td>dealer@bengaluru-surfaces.com</td>
+        <td><span class="badge" style="background:rgba(245,158,11,0.15); color:#F59E0B;">Dealer</span></td>
+        <td><span class="badge badge-active">Active</span></td>
+        <td>Jun 22, 2026</td>
+        <td><button class="btn" style="padding:6px 12px;">Manage</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // Auth Guard: Only Admin role is allowed
+  const sessionStr = localStorage.getItem('aaren_session');
+  if (!sessionStr) {
+    window.location.href = 'aaren-intpro-auth.html';
+  } else {
+    const session = JSON.parse(sessionStr);
+    if (session.role !== 'admin') {
+      alert('Access Denied: Admin Console requires Super Admin privileges.');
+      window.location.href = 'aaren-intpro-auth.html';
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('aaren_session');
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+  }
+</script>
+
+</body>
+</html>

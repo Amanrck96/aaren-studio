@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aaren IntPro OS — Authentication & Role Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #08111F;
+    --navy-2: #0D1929;
+    --surface: #101C30;
+    --surface-2: #152238;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --white: #F8FAFC;
+    --slate: #93A2B8;
+    --slate-dim: #5E6E85;
+    --purple: #7C3AED;
+    --purple-soft: rgba(124, 58, 237, 0.14);
+    --blue: #2563EB;
+    --radius-lg: 20px;
+    --radius-md: 16px;
+    --radius-sm: 10px;
+    --shadow-glass: 0 8px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  [data-theme="light"] {
+    --navy: #F8FAFC;
+    --navy-2: #F1F5F9;
+    --surface: #FFFFFF;
+    --surface-2: #F8FAFC;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.14);
+    --white: #0F172A;
+    --slate: #475569;
+    --slate-dim: #94A3B8;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .auth-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 480px;
+    padding: 40px;
+    box-shadow: var(--shadow-glass);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .auth-header { text-align: center; margin-bottom: 32px; }
+  .auth-logo { font-size: 20px; font-weight: 900; letter-spacing: 0.35em; text-transform: uppercase; color: var(--white); margin-bottom: 8px; }
+  .auth-title { font-size: 24px; font-weight: 800; margin: 0 0 6px; }
+  .auth-desc { font-size: 13.5px; color: var(--slate); margin: 0; }
+
+  .role-selector {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+    background: var(--navy-2);
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+
+  .role-btn {
+    background: transparent;
+    border: none;
+    color: var(--slate);
+    padding: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .role-btn.active {
+    background: var(--purple);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  }
+
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--slate); margin-bottom: 6px; }
+  .form-input {
+    width: 100%;
+    background: var(--navy-2);
+    border: 1px solid var(--border-strong);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    color: var(--white);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--purple); }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--purple);
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+  }
+  .btn-primary:hover { background: #6d28d9; }
+
+  .auth-footer { margin-top: 24px; text-align: center; font-size: 13px; color: var(--slate); }
+  .auth-link { color: var(--purple); text-decoration: none; font-weight: 700; margin-left: 4px; }
+</style>
+</head>
+<body>
+
+<div class="auth-card">
+  <div class="auth-header">
+    <div class="auth-logo">AAREN INTPRO OS</div>
+    <h2 class="auth-title">Sign In to Platform</h2>
+    <p class="auth-desc">Select your role and enter credentials to launch your enterprise workspace.</p>
+  </div>
+
+  <!-- Role Selector -->
+  <div class="role-selector">
+    <button type="button" onclick="selectRole('designer')" id="role-designer" class="role-btn active">Designer</button>
+    <button type="button" onclick="selectRole('brand')" id="role-brand" class="role-btn">Brand/Mfr</button>
+    <button type="button" onclick="selectRole('dealer')" id="role-dealer" class="role-btn">Dealer</button>
+    <button type="button" onclick="selectRole('admin')" id="role-admin" class="role-btn">Super Admin</button>
+  </div>
+
+  <form onsubmit="handleLogin(event)">
+    <div class="form-group">
+      <label class="form-label">Work Email</label>
+      <input type="email" id="email" required class="form-input" value="designer@aarenintpro.com">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" id="password" required class="form-input" value="••••••••">
+    </div>
+
+    <button type="submit" class="btn-primary">Launch Workspace →</button>
+  </form>
+
+  <div class="auth-footer">
+    <span>Need an enterprise tenant?</span>
+    <a href="aaren-intpro-onboarding.html" class="auth-link">Start Onboarding Wizard</a>
+  </div>
+</div>
+
+<script>
+  let activeRole = 'designer';
+
+  function selectRole(role) {
+    activeRole = role;
+    document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(`role-${role}`).classList.add('active');
+
+    const emailInput = document.getElementById('email');
+    if (role === 'designer') emailInput.value = 'designer@aarenintpro.com';
+    else if (role === 'brand') emailInput.value = 'brand@formica.com';
+    else if (role === 'dealer') emailInput.value = 'dealer@bengaluru-surfaces.com';
+    else if (role === 'admin') emailInput.value = 'admin@aarenintpro.com';
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+
+    const session = {
+      user: email.split('@')[0],
+      email: email,
+      role: activeRole,
+      token: 'session_token_' + Date.now(),
+      loggedInAt: new Date().toISOString()
+    };
+
+    localStorage.setItem('aaren_session', JSON.stringify(session));
+
+    // Redirect based on role
+    if (activeRole === 'designer') window.location.href = 'aaren-intpro-designer-workspace.html';
+    else if (activeRole === 'brand') window.location.href = 'aaren-intpro-brand-portal.html';
+    else if (activeRole === 'dealer') window.location.href = 'aaren-intpro-dealer-portal.html';
+    else if (activeRole === 'admin') window.location.href = 'aaren-intpro-admin-console.html';
+  }
+</script>
+
+</body>
+</html>
