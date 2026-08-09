@@ -32,8 +32,8 @@ export default function LoginPage() {
     setLoading(false);
 
     if (res.success) {
-      await trackUserActivity(res.user?.email || formData.email, "Logged in to Aaren IntPro OS Workspace");
-      router.push("/workspace");
+      await trackUserActivity(res.user?.email || formData.email, "Logged in to Aaren IntPro OS Designer Workspace");
+      window.location.href = "/modules/aaren-intpro-designer-workspace.html";
     } else {
       setError(res.error || "Login failed. Please check your credentials.");
     }
@@ -47,8 +47,8 @@ export default function LoginPage() {
     setGoogleLoading(false);
 
     if (res.success) {
-      await trackUserActivity(res.user?.email || "Google User", "Logged in via Google OAuth to Workspace");
-      router.push("/workspace");
+      await trackUserActivity(res.user?.email || "Google User", "Logged in via Google OAuth to Designer Workspace");
+      window.location.href = "/modules/aaren-intpro-designer-workspace.html";
     } else {
       setError(res.error || "Google Sign-In failed.");
     }

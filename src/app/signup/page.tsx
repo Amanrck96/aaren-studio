@@ -26,8 +26,8 @@ export default function SignupPage() {
       await trackUserActivity(formData.email, "Registered new member workspace profile", `Role Sector: ${formData.sector}`);
       setSuccess(true);
       setTimeout(() => {
-        router.push("/workspace");
-      }, 1500);
+        window.location.href = "/modules/aaren-intpro-designer-workspace.html";
+      }, 1000);
     } else {
       setError(res.error || "Registration failed.");
     }
@@ -41,8 +41,8 @@ export default function SignupPage() {
     setGoogleLoading(false);
 
     if (res.success) {
-      await trackUserActivity(res.user?.email || "Google User", "Registered via Google OAuth to Workspace", `Role Sector: ${formData.sector}`);
-      router.push("/workspace");
+      await trackUserActivity(res.user?.email || "Google User", "Registered via Google OAuth to Designer Workspace", `Role Sector: ${formData.sector}`);
+      window.location.href = "/modules/aaren-intpro-designer-workspace.html";
     } else {
       setError(res.error || "Google sign-up failed.");
     }
