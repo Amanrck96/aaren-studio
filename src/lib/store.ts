@@ -2127,7 +2127,10 @@ export const DEFAULT_COLLECTIONS: CollectionItem[] = [
   { id: "wall-cladding", name: "Wall Cladding", brandId: "newtech-wood", brandName: "NewTechWood", iconUrl: "", description: "Exterior facade and fluted siding panels", sequenceNumber: 2 },
   { id: "natural-timber", name: "Natural Oak Flooring", brandId: "mafi", brandName: "Mafi", iconUrl: "", description: "All-natural Austrian hardwood planks", sequenceNumber: 1 },
   { id: "architectural-hardware", name: "Concealed Hinges & Hardware", brandId: "waltz", brandName: "Waltz", iconUrl: "", description: "Precision engineering architectural hardware", sequenceNumber: 1 },
-  { id: "ceramic-surfaces", name: "3D Feature Surfaces", brandId: "wow", brandName: "WOW", iconUrl: "", description: "Geometric decorative wall tiles", sequenceNumber: 1 },
+  { id: "highlighter-tiles", name: "Highlighter Tiles", brandId: "wow", brandName: "WOW", iconUrl: "", description: "Handcrafted & 3D accent wall tiles", sequenceNumber: 1 },
+  { id: "pool-area-tiles", name: "Pool Area Tiles", brandId: "wow", brandName: "WOW", iconUrl: "", description: "Anti-slip luxury porcelain & ceramic surfaces", sequenceNumber: 2 },
+  { id: "terracotta-jali-tiles", name: "Terracotta Jali Tiles", brandId: "wow", brandName: "WOW", iconUrl: "", description: "Architectural clay screen & jali blocks", sequenceNumber: 3 },
+  { id: "ceramic-surfaces", name: "3D Feature Surfaces", brandId: "wow", brandName: "WOW", iconUrl: "", description: "Geometric decorative wall tiles", sequenceNumber: 4 },
 ];
 
 export async function getAllCollectionsStore(brandId?: string): Promise<CollectionItem[]> {
@@ -2147,7 +2150,7 @@ export async function getAllCollectionsStore(brandId?: string): Promise<Collecti
   if (brandId && brandId !== "all") {
     const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
     const target = norm(brandId);
-    return list.filter((c) => norm(c.brandId) === target || norm(c.brandName || "") === target);
+    return list.filter((c) => norm(c.brandId) === target || norm(c.brandName || "") === target || target.includes(norm(c.brandId)));
   }
   return list;
 }
@@ -2181,6 +2184,7 @@ export async function saveCollectionStore(item: Partial<CollectionItem>): Promis
   await syncToFirebaseCloudStore("collections", list);
   const json = readJsonStore();
   json.collections = list;
+  writeJsonStore(json);
   globalThis.__AAREN_MEMORY_STORE__ = json;
   return full;
 }
@@ -2191,6 +2195,7 @@ export async function deleteCollectionStore(id: string): Promise<void> {
   await syncToFirebaseCloudStore("collections", list);
   const json = readJsonStore();
   json.collections = list;
+  writeJsonStore(json);
   globalThis.__AAREN_MEMORY_STORE__ = json;
 }
 

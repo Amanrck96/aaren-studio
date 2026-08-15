@@ -272,24 +272,23 @@ input,select,textarea{font-family:inherit;}
     <div class="nav-section">Trade & Operations</div>
     <div class="nav-item" data-nav="orders" onclick="goTo('orders')"><span class="ni">📑</span> Purchase Orders (POs)</div>
     <div class="nav-item" data-nav="timetracker" onclick="goTo('timetracker')"><span class="ni">⏱️</span> Live Time Tracker</div>
-    <div class="nav-item" data-nav="kanban" onclick="goTo('kanban')"><span class="ni">☰</span> Tasks & Kanban <span class="nav-badge" id="nav-task-count">9</span></div>
+    <div class="nav-item" data-nav="kanban" onclick="goTo('kanban')"><span class="ni">☰</span> Tasks & Kanban <span class="nav-badge" id="nav-task-count">0</span></div>
     <div class="nav-item" data-nav="files" onclick="goTo('files')"><span class="ni">⎗</span> CAD & Files</div>
     <div class="nav-item" data-nav="boq" onclick="goTo('boq')"><span class="ni">Σ</span> Master BOQ</div>
-    
-    <div class="nav-section">Administration & Logs</div>
-    <div class="nav-item" data-nav="audit" onclick="goTo('audit')"><span class="ni">🛡️</span> Admin Activity Audit</div>
-    <div class="nav-item" onclick="window.location.href='/modules/aaren-intpro-marketplace.html'"><span class="ni">🛒</span> Trade Marketplace ↗</div>
-    <div class="nav-item" onclick="window.location.href='/modules/aaren-intpro-ai-studio.html'"><span class="ni">✦</span> Generative AI Studio ↗</div>
-    <div class="nav-item" onclick="window.location.href='/admin/dashboard'"><span class="ni">📊</span> Master CMS Admin ↗</div>
   </div>
 
   <div class="sidebar-footer">
-    <div class="user-chip" id="userChipBtn">
-      <div class="user-avatar" id="sidebarAvatar">A</div>
-      <div>
-        <div class="user-name" id="sidebarName">Anand M</div>
-        <div class="user-role">Principal Architect</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px;">
+      <div class="user-chip" id="userChipBtn" style="flex:1;min-width:0;">
+        <div class="user-avatar" id="sidebarAvatar">A</div>
+        <div style="min-width:0;overflow:hidden;">
+          <div class="user-name" id="sidebarName" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Designer</div>
+          <div class="user-role">Studio Member</div>
+        </div>
       </div>
+      <button onclick="handleWorkspaceLogout()" title="Log out from Workspace" style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.3);padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:all 0.2s ease;">
+        🚪 Logout
+      </button>
     </div>
   </div>
 </div>
@@ -316,12 +315,12 @@ input,select,textarea{font-family:inherit;}
       <!-- Live Stopwatch Pill -->
       <div class="timer-pill" onclick="goTo('timetracker')" title="Click to view Time Tracker">
         <span class="timer-dot"></span>
-        <span id="topbarTimer">00:14:32</span>
-        <span style="font-size:9.5px;color:var(--slate);margin-left:2px;">(Prestige Villa)</span>
+        <span id="topbarTimer">00:00:00</span>
       </div>
 
       <div class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">🌙</div>
       <button class="btn-primary" onclick="openModal('newProjectModal')">+ New Project</button>
+      <button onclick="handleWorkspaceLogout()" class="btn-ghost sm" style="color:#ef4444;border-color:rgba(239,68,68,0.3);padding:7px 12px;font-weight:700;" title="Log out from Workspace">🚪 Logout</button>
     </div>
   </div>
 
@@ -1706,6 +1705,30 @@ function renderAuditLogs(){
 function exportAuditReport(){
   showToast('Exporting admin activity audit report (CSV)…','success');
 }
+
+function handleWorkspaceLogout(){
+  if(confirm("Are you sure you want to log out from your Designer Workspace?")){
+    try {
+      localStorage.removeItem('aaren_auth_user');
+      localStorage.removeItem('aaren_token');
+      sessionStorage.clear();
+      if (window.__firebaseAuth) {
+        import("https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js").then(({ signOut }) => {
+          signOut(window.__firebaseAuth).finally(() => {
+            window.location.href = '/login';
+          });
+        }).catch(() => {
+          window.location.href = '/login';
+        });
+      } else {
+        window.location.href = '/login';
+      }
+    } catch(e) {
+      window.location.href = '/login';
+    }
+  }
+}
+window.handleWorkspaceLogout = handleWorkspaceLogout;
 
 // INITIALIZATION
 if (!window.__aarenUser) {

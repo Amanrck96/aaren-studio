@@ -25,11 +25,28 @@ export default function BrandDetailPage({ params }: Props) {
 
   useEffect(() => {
     setMounted(true);
-    fetch(`/api/collections?brand=${encodeURIComponent(slug)}&includeCounts=true&t=${Date.now()}`)
+    fetch(`/api/collections?includeCounts=true&t=${Date.now()}`)
       .then((res) => res.json())
       .then((json) => {
-        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setDbCollections(json.data);
+        if (json && json.success && Array.isArray(json.data)) {
+          const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+          const targetBrand = norm(slug);
+          const brandNameNorm = norm(brandNameForQuery);
+          const matching = json.data.filter((c: any) => {
+            const cBrand = norm(c.brandId || "");
+            const cBrandName = norm(c.brandName || "");
+            return (
+              cBrand === targetBrand ||
+              cBrandName === targetBrand ||
+              cBrand === brandNameNorm ||
+              cBrandName === brandNameNorm ||
+              targetBrand.includes(cBrand) ||
+              brandNameNorm.includes(cBrand)
+            );
+          });
+          if (matching.length > 0) {
+            setDbCollections(matching);
+          }
         }
       })
       .catch(() => {});
@@ -159,8 +176,10 @@ export default function BrandDetailPage({ params }: Props) {
     }));
 
     const seen = new Set<string>();
-    const list = [{ id: "all", name: "All", iconUrl: "" }];
-    [...fromApi, ...fromBrand].forEach((c) => {
+    const list: Array<{ id: string; name: string; iconUrl: string }> = [{ id: "all", name: "All", iconUrl: "" }];
+    const sourceList: Array<{ id: string; name: string; iconUrl: string }> = fromApi.length > 0 ? fromApi : fromBrand;
+
+    sourceList.forEach((c: { id: string; name: string; iconUrl: string }) => {
       const k = c.name.toLowerCase();
       if (k !== "all" && !seen.has(k)) {
         seen.add(k);
@@ -172,7 +191,14 @@ export default function BrandDetailPage({ params }: Props) {
 
   const filteredProducts = useMemo(() => {
     if (activeCollection === "All") return allBrandProducts;
-    return allBrandProducts.filter((p) => p.collection.toLowerCase() === activeCollection.toLowerCase());
+    const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const target = norm(activeCollection);
+    return allBrandProducts.filter((p) => {
+      const pCol = norm(p.collection);
+      const pTag = norm(p.tag || "");
+      const pName = norm(p.name);
+      return pCol === target || pCol.includes(target) || target.includes(pCol) || pTag.includes(target) || pName.includes(target);
+    });
   }, [activeCollection, allBrandProducts]);
 
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));

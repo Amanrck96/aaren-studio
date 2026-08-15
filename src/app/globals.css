@@ -619,11 +619,17 @@ input, select, textarea {
   flex: 1;
   display: flex;
   align-items: flex-end;
+  color: #81663F;
+}
+
+.footer-wordmark span {
+  color: #81663F;
 }
 
 .footer-wordmark svg {
   width: 100%;
   height: auto;
+  fill: #81663F;
 }
 
 /* ── Misc utilities ── */
