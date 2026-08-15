@@ -94,14 +94,8 @@ export default function WorkspaceHubPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = subscribeToAuth((currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-      if (currentUser?.email) {
-        trackUserActivity(currentUser.email, "Launched Workspace Hub");
-      }
-    });
-    return () => unsubscribe();
+    // Direct redirect to Designer Workspace OS module
+    window.location.replace("/modules/aaren-intpro-designer-workspace.html");
   }, []);
 
   const handleLaunchModule = (moduleTitle: string, href: string) => {

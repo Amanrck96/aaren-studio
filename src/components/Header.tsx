@@ -167,8 +167,8 @@ export default function Header() {
                   </div>
 
                   {/* Direct Link to Designer Workspace */}
-                  <Link
-                    href="/workspace"
+                  <a
+                    href="/modules/aaren-intpro-designer-workspace.html"
                     onClick={() => setShowProfileMenu(false)}
                     style={{
                       width: "100%",
@@ -193,7 +193,7 @@ export default function Header() {
                   >
                     <span>🏛️ Designer Workspace</span>
                     <span>↗</span>
-                  </Link>
+                  </a>
 
                   <button
                     onClick={handleLogout}
@@ -259,14 +259,14 @@ export default function Header() {
 
           {user && (
             <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <Link
-                href="/workspace"
+              <a
+                href="/modules/aaren-intpro-designer-workspace.html"
                 onClick={() => setOpen(false)}
                 className="btn btn--primary"
                 style={{ background: "#80673f", color: "#fff", border: "none", padding: "1.2rem 2.4rem", cursor: "pointer", fontWeight: 700, textAlign: "center", textDecoration: "none" }}
               >
                 🏛️ DESIGNER WORKSPACE (PROGRAMA OS) ↗
-              </Link>
+              </a>
               <button
                 onClick={handleLogout}
                 className="btn btn--primary"
