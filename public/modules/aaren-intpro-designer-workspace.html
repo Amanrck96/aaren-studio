@@ -240,6 +240,44 @@ input,select,textarea{font-family:inherit;}
 .kanban-card{background:var(--surface);border:1px solid var(--border-strong);border-radius:8px;padding:10px;margin-bottom:8px;cursor:grab;}
 .kanban-card:hover{border-color:var(--gold);}
 
+/* ──── BOOKMARKS & CHIPS ──── */
+.bookmark-bar{display:flex;align-items:center;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:12px;scrollbar-width:none;}
+.bookmark-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;background:var(--surface-2);border:1px solid var(--border-strong);font-size:11px;font-weight:600;color:var(--white);white-space:nowrap;cursor:pointer;}
+.bookmark-chip:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ──── PROJECT CARDS WITH COVER & DURATION ──── */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;transition:all .2s;position:relative;}
+.proj-card:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:var(--shadow-glass);}
+.proj-cover{height:120px;width:100%;background:linear-gradient(135deg,#1f1a14,#2d2417);position:relative;overflow:hidden;}
+.proj-cover img{width:100%;height:100%;object-fit:cover;}
+.proj-pin-btn{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.proj-pin-btn.pinned{color:#f59e0b;background:rgba(245,158,11,0.2);}
+.proj-body{padding:14px;}
+.proj-progress-bar{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin:8px 0;}
+.proj-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),#d4af37);border-radius:3px;}
+
+/* ──── STAGES & APPROVAL CHAIN ──── */
+.stages-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:20px;}
+.stage-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;position:relative;}
+.stage-card.active{border-color:var(--gold);background:var(--gold-soft);}
+.stage-num{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;}
+.stage-name{font-size:12.5px;font-weight:700;margin:3px 0;}
+.approval-chain{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;flex-wrap:wrap;}
+.approval-node{flex:1;min-width:180px;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:8px;padding:12px;}
+.approval-node.approved{border-color:var(--green);background:var(--green-soft);}
+.approval-node.pending{border-color:var(--amber);background:var(--amber-soft);}
+
+/* ──── LIVE CHAT DRAWER ──── */
+.chat-drawer{position:fixed;bottom:20px;right:20px;width:340px;height:460px;background:var(--surface);border:1px solid var(--border-strong);border-radius:16px;box-shadow:var(--shadow-glass);display:none;flex-direction:column;z-index:9998;overflow:hidden;}
+.chat-drawer.open{display:flex;}
+.chat-header{padding:12px 16px;background:var(--surface-2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.chat-msg{max-width:82%;padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.4;}
+.chat-msg.mine{background:#81663F;color:#fff;align-self:flex-end;border-bottom-right-radius:2px;}
+.chat-msg.theirs{background:var(--surface-2);color:var(--white);align-self:flex-start;border-bottom-left-radius:2px;}
+.chat-footer{padding:10px;border-top:1px solid var(--border);display:flex;gap:6px;}
+
 .hamburger{display:none;font-size:20px;cursor:pointer;padding:6px;}
 @media(max-width:768px){.hamburger{display:block;}}
 </style>
@@ -259,18 +297,25 @@ input,select,textarea{font-family:inherit;}
   <div style="padding:8px 4px;">
     <div class="nav-section">Workspace Core</div>
     <div class="nav-item active" data-nav="dashboard" onclick="goTo('dashboard')"><span class="ni">◧</span> Dashboard</div>
-    <div class="nav-item" data-nav="projects" onclick="goTo('projects')"><span class="ni">▦</span> Projects <span class="nav-badge" id="nav-proj-count">4</span></div>
-    <div class="nav-item" data-nav="detail" onclick="goTo('detail')"><span class="ni">🏢</span> Prestige Villa</div>
+    <div class="nav-item" data-nav="projects" onclick="goTo('projects')"><span class="ni">▦</span> Projects <span class="nav-badge" id="nav-proj-count">0</span></div>
+    <div class="nav-item" data-nav="presentation" onclick="goTo('presentation')"><span class="ni">📐</span> Presentation Mode</div>
+    <div class="nav-item" data-nav="stages" onclick="goTo('stages')"><span class="ni">🚥</span> Stages & Approvals</div>
+    <div class="nav-item" data-nav="detail" onclick="goTo('detail')"><span class="ni">🏢</span> Project Rooms</div>
     <div class="nav-item" data-nav="twin" onclick="goTo('twin')"><span class="ni">⬡</span> Digital Twin</div>
     
     <div class="nav-section">Programa Specs & Design</div>
-    <div class="nav-item" data-nav="schedules" onclick="goTo('schedules')"><span class="ni">📋</span> Schedules / Specs</div>
+    <div class="nav-item" data-nav="schedules" onclick="goTo('schedules')"><span class="ni">📋</span> Schedules & Tags</div>
     <div class="nav-item" data-nav="moodboards" onclick="goTo('moodboards')"><span class="ni">◐</span> Pinboard & Moodboards</div>
     <div class="nav-item" data-nav="clipper" onclick="goTo('clipper')"><span class="ni">✂️</span> Product Clipper</div>
     <div class="nav-item" data-nav="client-portal" onclick="goTo('client-portal')"><span class="ni">👥</span> Client Approvals</div>
+    <div class="nav-item" data-nav="phrases" onclick="goTo('phrases')"><span class="ni">📚</span> Saved Phrases</div>
 
-    <div class="nav-section">Trade & Operations</div>
+    <div class="nav-section">Trade, Vendors & Operations</div>
     <div class="nav-item" data-nav="orders" onclick="goTo('orders')"><span class="ni">📑</span> Purchase Orders (POs)</div>
+    <div class="nav-item" data-nav="questionnaire" onclick="goTo('questionnaire')"><span class="ni">📝</span> Client Questionnaire</div>
+    <div class="nav-item" data-nav="calendar" onclick="goTo('calendar')"><span class="ni">🗓️</span> Calendar & Timeline</div>
+    <div class="nav-item" data-nav="teamwork" onclick="goTo('teamwork')"><span class="ni">👥</span> Team Timelines</div>
+    <div class="nav-item" data-nav="earnings" onclick="goTo('earnings')"><span class="ni">💰</span> Designer Earnings</div>
     <div class="nav-item" data-nav="timetracker" onclick="goTo('timetracker')"><span class="ni">⏱️</span> Live Time Tracker</div>
     <div class="nav-item" data-nav="kanban" onclick="goTo('kanban')"><span class="ni">☰</span> Tasks & Kanban <span class="nav-badge" id="nav-task-count">0</span></div>
     <div class="nav-item" data-nav="files" onclick="goTo('files')"><span class="ni">⎗</span> CAD & Files</div>
@@ -306,12 +351,23 @@ input,select,textarea{font-family:inherit;}
     <!-- Central Search -->
     <div class="topbar-search">
       <span style="font-size:13px;color:var(--slate-dim);">🔍</span>
-      <input type="text" id="globalSearch" placeholder="Search projects, specs, POs…" oninput="handleSearch(this.value)">
+      <input type="text" id="globalSearch" placeholder="Search projects, specs, phrases, POs…" oninput="handleSearch(this.value)">
       <kbd style="font-size:10px;padding:2px 5px;border-radius:4px;background:var(--surface-2);border:1px solid var(--border-strong);">⌘K</kbd>
     </div>
 
     <!-- Right Controls -->
     <div class="topbar-right">
+      <!-- Subscription Plan Pill -->
+      <div class="timer-pill" onclick="openModal('subscriptionModal')" style="border-color:#eab308;background:rgba(234,179,8,0.12);color:#fef08a;" title="Subscription Status">
+        <span>✨ Free Tier · 3 Projs / 1 GB</span>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <button class="btn-ghost sm" onclick="openModal('qrModal')" title="Generate Presentation QR Code">📱 QR Code</button>
+      <button class="btn-ghost sm" onclick="copyProjectShareLink()" title="Copy Shareable Web Link">🔗 Share Link</button>
+      <button class="btn-ghost sm" onclick="openModal('vendorEmailModal')" title="Email All Vendors (Bulk RFQ)">✉️ Vendor RFQ</button>
+      <button class="btn-ghost sm" onclick="toggleLiveChat()" style="color:var(--gold);border-color:var(--gold);" title="Open Live Studio Chat">💬 Live Chat</button>
+
       <!-- Live Stopwatch Pill -->
       <div class="timer-pill" onclick="goTo('timetracker')" title="Click to view Time Tracker">
         <span class="timer-dot"></span>
@@ -330,28 +386,41 @@ input,select,textarea{font-family:inherit;}
   <div class="page active" id="page-dashboard">
     <div class="content-area">
       <div class="dash-greeting" id="greetingText">Good afternoon, Anand 👋</div>
-      <div class="dash-sub">4 active projects · 3 pending client approvals · ₹2.4 Cr budget under management</div>
+      <div class="dash-sub">0 active projects · 0 pending client approvals · Live sync enabled</div>
+
+      <!-- Project Bookmarks Bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:12px 0 6px;">
+        <div style="font-size:11px;font-weight:700;color:var(--slate-dim);text-transform:uppercase;letter-spacing:.05em;">📌 Project Bookmarks & References</div>
+        <button class="btn-ghost sm" onclick="openModal('bookmarkModal')">+ Add Bookmark</button>
+      </div>
+      <div class="bookmark-bar" id="dashBookmarkBar">
+        <div class="bookmark-chip" onclick="goTo('presentation')">📐 Architect Presentation Mode</div>
+        <div class="bookmark-chip" onclick="goTo('stages')">🚥 Project Stages Pipeline</div>
+        <div class="bookmark-chip" onclick="goTo('phrases')">📚 Saved Architectural Phrases</div>
+        <div class="bookmark-chip" onclick="goTo('questionnaire')">📝 Client Brief Questionnaire</div>
+        <div class="bookmark-chip" onclick="goTo('calendar')">🗓️ Timeline Calendar</div>
+      </div>
 
       <div class="kpi-grid">
         <div class="kpi-card" onclick="goTo('projects')" style="cursor:pointer;">
           <div class="kpi-lbl">Active Projects</div>
-          <div class="kpi-val" id="kpi-projects">4</div>
-          <div class="kpi-trend">↑ 1 new this month</div>
+          <div class="kpi-val" id="kpi-projects">0</div>
+          <div class="kpi-trend">↑ Multi-Category Enabled</div>
         </div>
         <div class="kpi-card" onclick="goTo('schedules')" style="cursor:pointer;">
           <div class="kpi-lbl">Specifications</div>
-          <div class="kpi-val">28 Items</div>
-          <div class="kpi-trend">₹86.4L Total Specified</div>
+          <div class="kpi-val" id="kpi-specs">0 Items</div>
+          <div class="kpi-trend" id="kpi-spec-val">₹0 Specified</div>
         </div>
         <div class="kpi-card" onclick="goTo('client-portal')" style="cursor:pointer;">
           <div class="kpi-lbl">Client Approvals</div>
-          <div class="kpi-val">3 Pending</div>
-          <div class="kpi-trend down">Avg 1.8 days wait</div>
+          <div class="kpi-val" id="kpi-approvals">0 Pending</div>
+          <div class="kpi-trend" id="kpi-approval-status">Avg 0 days wait</div>
         </div>
-        <div class="kpi-card" onclick="goTo('timetracker')" style="cursor:pointer;">
-          <div class="kpi-lbl">Billable Hours Logged</div>
-          <div class="kpi-val" id="kpi-hours">142.5 hrs</div>
-          <div class="kpi-trend">₹4,98,750 Billable Value</div>
+        <div class="kpi-card" onclick="goTo('earnings')" style="cursor:pointer;">
+          <div class="kpi-lbl">Billable Fees Earned</div>
+          <div class="kpi-val" id="kpi-hours">₹0</div>
+          <div class="kpi-trend">Track billables & time</div>
         </div>
       </div>
 
@@ -359,7 +428,7 @@ input,select,textarea{font-family:inherit;}
         <div>
           <div class="card" style="margin-bottom:16px;">
             <div class="card-title">
-              <span>Pinned Projects</span>
+              <span>Pinned & Active Projects</span>
               <button class="btn-ghost sm" onclick="goTo('projects')">View all →</button>
             </div>
             <div id="dashProjects"></div>
@@ -378,23 +447,35 @@ input,select,textarea{font-family:inherit;}
           <div class="card" style="margin-bottom:16px;">
             <div class="card-title">Programa Quick Tools</div>
             <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('presentation')">
+                <span>📐</span> <span>Architect vs Client Presentation Mode</span>
+              </button>
+              <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('stages')">
+                <span>🚥</span> <span>Stages Pipeline & 3-Step Approval</span>
+              </button>
               <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('schedules')">
-                <span>📋</span> <span>Open Specification Schedule</span>
+                <span>📋</span> <span>Specification Schedule & Multiple Tags</span>
               </button>
               <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('moodboards')">
-                <span>◐</span> <span>Interactive Pinboard / Moodboard</span>
-              </button>
-              <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('client-portal')">
-                <span>👥</span> <span>Client Approval Portal (Rohan Mehta)</span>
-              </button>
-              <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('orders')">
-                <span>📑</span> <span>Generate Trade Purchase Order</span>
+                <span>◐</span> <span>Interactive Pinboard & Moodboards</span>
               </button>
               <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('clipper')">
-                <span>✂️</span> <span>Product Web Clipper</span>
+                <span>✂️</span> <span>Product Clipper & Decorator</span>
               </button>
-              <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('audit')">
-                <span>🛡️</span> <span>Admin Time Audit & Logs</span>
+              <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('phrases')">
+                <span>📚</span> <span>Saved Specification Phrases</span>
+              </button>
+              <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('questionnaire')">
+                <span>📝</span> <span>Client Design Brief Questionnaire</span>
+              </button>
+              <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('calendar')">
+                <span>🗓️</span> <span>Project Calendar & Schedule of Work</span>
+              </button>
+              <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('teamwork')">
+                <span>👥</span> <span>Team Member Timelines & Allocation</span>
+              </button>
+              <button class="btn-ghost" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="goTo('earnings')">
+                <span>💰</span> <span>Designer Fee & Hourly Earnings</span>
               </button>
             </div>
           </div>
@@ -403,9 +484,9 @@ input,select,textarea{font-family:inherit;}
             <div class="card-title"><span>✦ AI Studio Recommendations</span></div>
             <div style="display:flex;flex-direction:column;gap:10px;">
               <div style="background:var(--surface-2);padding:10px;border-radius:8px;border-left:3px solid var(--gold);">
-                <div style="font-size:11px;font-weight:700;color:var(--gold);">MATERIAL ADVICE</div>
+                <div style="font-size:11px;font-weight:700;color:var(--gold);">MATERIAL & SPEC ADVICE</div>
                 <div style="font-size:12px;color:var(--slate);margin-top:2px;">
-                  Prestige Villa's living room is 12% under budget — upgrade to Italian Calacatta Bookmatched Marble before review.
+                  Ensure all trade markups are reviewed in <strong>Architect Presentation Mode</strong> before exporting client PDF links.
                 </div>
               </div>
             </div>
@@ -416,25 +497,272 @@ input,select,textarea{font-family:inherit;}
   </div>
 
   <!-- ======================================================== -->
-  <!-- 2. PROJECTS -->
+  <!-- 2. PROJECTS (WITH COVERS, DURATION, PIN & TEMPLATES) -->
   <!-- ======================================================== -->
   <div class="page" id="page-projects">
     <div class="content-area">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
         <div>
           <h2 style="font-size:20px;font-weight:800;">Projects Workspace</h2>
-          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:3px;" id="projCount">4 projects active</p>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:3px;" id="projCount">0 projects active</p>
         </div>
-        <div style="display:flex;gap:10px;align-items:center;">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
           <input type="text" id="projSearch" placeholder="Search projects…" oninput="filterProjects(this.value)" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:#fff;font-size:12px;">
+          <button class="btn-ghost sm" onclick="loadSampleTemplate()" title="Load luxury villa starter template">📋 Sample Template</button>
           <button class="btn-primary" onclick="openModal('newProjectModal')">+ New Project</button>
         </div>
       </div>
 
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;">
+      <!-- Projects Grid with Cover, % Progress & Days Duration -->
+      <div class="proj-grid" id="projGridContainer"></div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 2B. PRESENTATION MODE (ARCHITECT VS CLIENT VIEW) -->
+  <!-- ======================================================== -->
+  <div class="page" id="page-presentation">
+    <div class="content-area">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:18px;">📐</span>
+            <h2 style="font-size:20px;font-weight:800;">Design Presentation Mode</h2>
+          </div>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:2px;">
+            Toggle between Architect Internal Technical View (trade pricing, margins) and Client Presentation View.
+          </p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <!-- View Switcher -->
+          <div style="background:var(--surface-2);border:1px solid var(--border-strong);border-radius:10px;padding:3px;display:flex;gap:4px;">
+            <button id="presModeArchBtn" class="btn-primary" style="padding:5px 12px;font-size:11px;" onclick="setPresentationMode('architect')">📐 Architect View</button>
+            <button id="presModeClientBtn" class="btn-ghost sm" style="padding:5px 12px;font-size:11px;" onclick="setPresentationMode('client')">✨ Client View</button>
+          </div>
+          <button class="btn-ghost sm" onclick="openModal('qrModal')">📱 QR Code</button>
+          <button class="btn-ghost sm" onclick="exportPresentationPdf()">📄 Export PDF</button>
+        </div>
+      </div>
+
+      <!-- Presentation KPI Banner -->
+      <div id="presMetricsBanner" style="background:linear-gradient(135deg,#1f1a14,#12100d);border:1px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:18px;display:flex;justify-content:space-around;flex-wrap:wrap;gap:12px;">
+        <div><div style="font-size:10.5px;color:var(--slate);text-transform:uppercase;">Total Client Specified</div><div style="font-size:20px;font-weight:900;color:#fff;" id="presTotalClientVal">₹0</div></div>
+        <div id="presTradeMetrics"><div style="font-size:10.5px;color:var(--slate);text-transform:uppercase;">Trade Cost & Studio Margin</div><div style="font-size:20px;font-weight:900;color:var(--gold);" id="presTradeCostVal">₹0 (Margin: 22%)</div></div>
+        <div><div style="font-size:10.5px;color:var(--slate);text-transform:uppercase;">Items in Presentation</div><div style="font-size:20px;font-weight:900;color:#22c55e;" id="presItemCount">0 Items</div></div>
+      </div>
+
+      <!-- Presentation Items Grid -->
+      <div id="presentationItemsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;"></div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 2C. PROJECT STAGES & APPROVAL CHAIN -->
+  <!-- ======================================================== -->
+  <div class="page" id="page-stages">
+    <div class="content-area">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;">Project Stages & Design Approval Chain</h2>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:2px;">Track the 6 design phases and hierarchical 3-step approval flow (Design Team → Principal Architect → Client).</p>
+        </div>
+        <button class="btn-primary" onclick="advanceProjectStage()">Advance Next Stage ➔</button>
+      </div>
+
+      <!-- 6-Stage Pipeline -->
+      <div class="stages-flow" id="stagesFlowContainer"></div>
+
+      <!-- 3-Step Approval Flow Chain -->
+      <h3 style="font-size:14px;font-weight:700;margin:24px 0 12px;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;">Hierarchical Approval Chain (Prestige Villa)</h3>
+      <div class="approval-chain">
+        <div class="approval-node approved" id="apprNodeTeam">
+          <div style="font-size:10px;font-weight:800;color:var(--green);">STEP 1 · DRAFTING</div>
+          <div style="font-size:13px;font-weight:700;margin:4px 0;">Design Team Specifications</div>
+          <div style="font-size:11.5px;color:var(--slate-dim);">Status: <strong style="color:var(--green);">✓ Drafted & Finalized</strong></div>
+        </div>
+        <div style="font-size:20px;color:var(--gold);">➔</div>
+        <div class="approval-node approved" id="apprNodePrincipal">
+          <div style="font-size:10px;font-weight:800;color:var(--green);">STEP 2 · PRINCIPAL ARCHITECT</div>
+          <div style="font-size:13px;font-weight:700;margin:4px 0;">Principal Architect Review</div>
+          <div style="font-size:11.5px;color:var(--slate-dim);">Status: <strong style="color:var(--green);">✓ Technical Sign-off Complete</strong></div>
+        </div>
+        <div style="font-size:20px;color:var(--gold);">➔</div>
+        <div class="approval-node pending" id="apprNodeClient">
+          <div style="font-size:10px;font-weight:800;color:var(--amber);">STEP 3 · CLIENT APPROVAL</div>
+          <div style="font-size:13px;font-weight:700;margin:4px 0;">Client Final Signoff</div>
+          <div style="font-size:11.5px;color:var(--slate-dim);margin-bottom:8px;">Status: <strong style="color:var(--amber);">⏳ In Client Review</strong></div>
+          <button class="btn-success sm" style="font-size:10px;padding:4px 8px;" onclick="advanceApprovalStatus('client')">Simulate Client Sign ✓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 2D. SAVED ARCHITECTURAL PHRASES LIBRARY -->
+  <!-- ======================================================== -->
+  <div class="page" id="page-phrases">
+    <div class="content-area">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;">Saved Specification Phrases & Clauses</h2>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:2px;">Pre-written architectural terms, joinery clauses, and stone installation guidelines for quick insertion.</p>
+        </div>
+        <button class="btn-primary" onclick="addNewPhrasePrompt()">+ Add New Phrase</button>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;" id="phraseCategoryTabs">
+        <button class="btn-primary sm" onclick="filterPhrases('all')">All Phrases</button>
+        <button class="btn-ghost sm" onclick="filterPhrases('Joinery')">Joinery & Millwork</button>
+        <button class="btn-ghost sm" onclick="filterPhrases('Stone')">Marble & Stone</button>
+        <button class="btn-ghost sm" onclick="filterPhrases('Plumbing')">Plumbing & Fixtures</button>
+        <button class="btn-ghost sm" onclick="filterPhrases('Warranty')">Warranty & Handover</button>
+      </div>
+
+      <div id="phrasesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;"></div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 2E. CLIENT ONBOARDING QUESTIONNAIRE FORM -->
+  <!-- ======================================================== -->
+  <div class="page" id="page-questionnaire">
+    <div class="content-area">
+      <div style="max-width:720px;margin:0 auto;background:var(--surface);border:1px solid var(--border-strong);border-radius:16px;padding:26px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <span style="font-size:24px;">📝</span>
+          <div>
+            <h2 style="font-size:22px;font-weight:900;color:#fff;">Client Design Brief & Questionnaire</h2>
+            <p style="font-size:12px;color:var(--slate-dim);">Capture client requirements, room scope, aesthetic preferences, and budget tier.</p>
+          </div>
+        </div>
+
+        <form onsubmit="handleQuestionnaireSubmit(event)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="field"><label>Client Full Name *</label><input type="text" id="qClientName" required placeholder="e.g. Vikram Singhania"></div>
+            <div class="field"><label>Client Email / Phone *</label><input type="text" id="qClientContact" required placeholder="vikram@singhania.com"></div>
+          </div>
+          <div class="field"><label>Project Location & City *</label><input type="text" id="qLocation" required placeholder="e.g. Indiranagar, Bangalore"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="field"><label>Project Scope</label>
+              <select id="qScope">
+                <option>Full Villa Interior Fitout</option>
+                <option>Luxury Penthouse Architecture</option>
+                <option>Modular Kitchen & Wardrobe Systems</option>
+                <option>Bathroom Suites & Wellness</option>
+              </select>
+            </div>
+            <div class="field"><label>Target Budget Tier</label>
+              <select id="qBudget">
+                <option>₹50 Lakhs – ₹1 Crore</option>
+                <option>₹1 Crore – ₹2.5 Crores</option>
+                <option>₹2.5 Crores – ₹5 Crores</option>
+                <option>₹5 Crores+ Ultra-Luxury</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Aesthetic Style Preference</label>
+            <select id="qStyle">
+              <option>Contemporary Minimalist (Italian Flush Finishes)</option>
+              <option>Japandi / Warm Natural Wood (Mafi & WPC)</option>
+              <option>European Classical (Mouldings & Bookmatched Marble)</option>
+              <option>Modern Industrial (Glass Partitions & Concrete)</option>
+            </select>
+          </div>
+          <div class="field"><label>Brand Preferences / Special Requests</label>
+            <textarea id="qNotes" rows="3" placeholder="e.g. Prefers Falper bath vanities, FIMA brushed gold tapware, Slashform Italian kitchen island."></textarea>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:12px;">
+            <button type="submit" class="btn-primary" style="flex:1;">Submit Client Brief & Generate Project ✓</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 2F. CALENDAR & SCHEDULE OF WORK -->
+  <!-- ======================================================== -->
+  <div class="page" id="page-calendar">
+    <div class="content-area">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;">Project Calendar & Timeline Schedule</h2>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:2px;">Milestone dates, vendor deliveries, site visits, and client review timelines.</p>
+        </div>
+        <button class="btn-primary" onclick="addMilestonePrompt()">+ Add Milestone Event</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:18px;">
+        <div class="card">
+          <div class="card-title">Schedule of Work (Gantt Milestones)</div>
+          <div id="calendarMilestonesList" style="display:flex;flex-direction:column;gap:12px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Upcoming Deadlines & Site Visits</div>
+          <div id="calendarUpcomingList" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 2G. TEAM MEMBER TIMELINES & ALLOCATION -->
+  <!-- ======================================================== -->
+  <div class="page" id="page-teamwork">
+    <div class="content-area">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;">Team Member Timelines & Allocation</h2>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:2px;">Track team capacity, active task distribution, and individual project timelines.</p>
+        </div>
+        <button class="btn-primary" onclick="showToast('Invite sent to new collaborator!','success')">+ Invite Team Member</button>
+      </div>
+
+      <div id="teamMembersGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;"></div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 2H. DESIGNER EARNINGS & BILLABLES -->
+  <!-- ======================================================== -->
+  <div class="page" id="page-earnings">
+    <div class="content-area">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;">Designer Fees & Billable Earnings</h2>
+          <p style="font-size:12.5px;color:var(--slate-dim);margin-top:2px;">Track hourly design fees, billed vs unbilled revenue, and generate designer invoices.</p>
+        </div>
+        <button class="btn-primary" onclick="showToast('Generating official designer fee invoice…','success')">📥 Generate Invoice PDF</button>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-lbl">Billable Hourly Rate</div>
+          <div class="kpi-val">₹3,500 / hr</div>
+          <div class="kpi-trend">Senior Architect Tier</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-lbl">Total Hours Logged</div>
+          <div class="kpi-val" id="earnTotalHours">142.5 hrs</div>
+          <div class="kpi-trend">Across 4 Projects</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-lbl">Gross Design Revenue</div>
+          <div class="kpi-val" style="color:var(--gold);" id="earnGrossVal">₹4,98,750</div>
+          <div class="kpi-trend">₹3,20,000 Invoiced</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-lbl">Pending Payment</div>
+          <div class="kpi-val" style="color:var(--amber);" id="earnPendVal">₹1,78,750</div>
+          <div class="kpi-trend down">Awaiting Client Settlement</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Recent Billable Time Entries & Tasks</div>
         <table class="data-table">
-          <thead><tr><th>Project Name</th><th>Client</th><th>Status</th><th>Progress</th><th>Budget</th><th>Team</th><th>Due Date</th></tr></thead>
-          <tbody id="projTableBody"></tbody>
+          <thead><tr><th>Date</th><th>Project</th><th>Task & Scope</th><th>Duration</th><th>Rate</th><th>Total</th><th>Status</th></tr></thead>
+          <tbody id="earnTableBody"></tbody>
         </table>
       </div>
     </div>
@@ -944,13 +1272,177 @@ input,select,textarea{font-family:inherit;}
   </div>
 </div>
 
+<!-- Subscription Plan Modal -->
+<div class="modal-backdrop" id="subscriptionModal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-title"><span>✨ Aaren Studio Plans</span> <button class="modal-close" onclick="closeModal('subscriptionModal')">✕</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+      <div style="background:var(--surface-2);border:1px solid var(--border-strong);border-radius:12px;padding:16px;">
+        <span class="badge blue">CURRENT PLAN</span>
+        <div style="font-size:16px;font-weight:800;margin:8px 0 4px;color:#fff;">Free Designer Tier</div>
+        <div style="font-size:11.5px;color:var(--slate);line-height:1.5;">
+          • Up to 3 Active Projects<br>
+          • 1 GB Cloud Storage<br>
+          • Programa Specs & POs<br>
+          • Free Forever
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1f1a14,#2d2417);border:1px solid var(--gold);border-radius:12px;padding:16px;">
+        <span class="badge gold">RECOMMENDED</span>
+        <div style="font-size:16px;font-weight:800;margin:8px 0 4px;color:#fef08a;">Studio Pro Suite</div>
+        <div style="font-size:11.5px;color:#e2c99f;line-height:1.5;">
+          • Unlimited Luxury Projects<br>
+          • 100 GB High-Res Storage<br>
+          • White-label Client Portals<br>
+          • ₹4,999 / month
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button type="button" class="btn-ghost" style="flex:1;" onclick="closeModal('subscriptionModal')">Keep Free Plan</button>
+      <button type="button" class="btn-primary" style="flex:2;" onclick="showToast('Upgrade request submitted to Aaren Concierge!','success');closeModal('subscriptionModal')">Upgrade to Studio Pro ↗</button>
+    </div>
+  </div>
+</div>
+
+<!-- QR Code Presentation Modal -->
+<div class="modal-backdrop" id="qrModal">
+  <div class="modal" style="max-width:420px;text-align:center;">
+    <div class="modal-title"><span>📱 Presentation QR Code</span> <button class="modal-close" onclick="closeModal('qrModal')">✕</button></div>
+    <p style="font-size:12px;color:var(--slate-dim);margin-bottom:16px;">Scan to open client presentation & interactive specs on any phone or iPad.</p>
+    <div style="width:200px;height:200px;margin:0 auto 16px;background:#fff;padding:12px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,0.5);">
+      <!-- Clean SVG QR Code Representation -->
+      <svg viewBox="0 0 100 100" width="100%" height="100%">
+        <rect width="100" height="100" fill="#ffffff"/>
+        <!-- Corners -->
+        <rect x="10" y="10" width="25" height="25" fill="#111827"/>
+        <rect x="15" y="15" width="15" height="15" fill="#ffffff"/>
+        <rect x="18" y="18" width="9" height="9" fill="#81663F"/>
+        <rect x="65" y="10" width="25" height="25" fill="#111827"/>
+        <rect x="70" y="15" width="15" height="15" fill="#ffffff"/>
+        <rect x="73" y="18" width="9" height="9" fill="#81663F"/>
+        <rect x="10" y="65" width="25" height="25" fill="#111827"/>
+        <rect x="15" y="70" width="15" height="15" fill="#ffffff"/>
+        <rect x="18" y="73" width="9" height="9" fill="#81663F"/>
+        <!-- Data dots -->
+        <rect x="42" y="12" width="6" height="6" fill="#111827"/>
+        <rect x="52" y="18" width="6" height="6" fill="#81663F"/>
+        <rect x="42" y="28" width="6" height="6" fill="#111827"/>
+        <rect x="12" y="42" width="6" height="6" fill="#81663F"/>
+        <rect x="24" y="48" width="6" height="6" fill="#111827"/>
+        <rect x="42" y="42" width="16" height="16" fill="#81663F"/>
+        <rect x="65" y="42" width="6" height="6" fill="#111827"/>
+        <rect x="78" y="48" width="6" height="6" fill="#81663F"/>
+        <rect x="42" y="68" width="6" height="6" fill="#111827"/>
+        <rect x="52" y="78" width="6" height="6" fill="#81663F"/>
+        <rect x="68" y="68" width="8" height="8" fill="#111827"/>
+        <rect x="80" y="80" width="6" height="6" fill="#81663F"/>
+      </svg>
+    </div>
+    <div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:16px;">https://aarenstudio.com/workspace/presentation/demo</div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn-ghost" style="flex:1;" onclick="copyProjectShareLink()">Copy URL 📋</button>
+      <button class="btn-primary" style="flex:1;" onclick="showToast('QR Code image downloaded!','success');closeModal('qrModal')">Save Image 📥</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Vendor RFQ Email Modal -->
+<div class="modal-backdrop" id="vendorEmailModal">
+  <div class="modal" style="max-width:540px;">
+    <div class="modal-title"><span>✉️ Email All Brand Vendors (RFQ)</span> <button class="modal-close" onclick="closeModal('vendorEmailModal')">✕</button></div>
+    <form onsubmit="handleSendVendorRFQ(event)">
+      <div class="field"><label>Recipient Vendors *</label>
+        <input type="text" id="rfqRecipients" required value="Falper, FIMA, Slashform, NewTechWood, Mirage, Inkiostro Bianco" readonly style="opacity:0.8;">
+      </div>
+      <div class="field"><label>Subject *</label>
+        <input type="text" id="rfqSubject" required value="[RFQ] Specification Inquiry & Texture Assets — Prestige Villa">
+      </div>
+      <div class="field"><label>Message to Vendors *</label>
+        <textarea id="rfqBody" rows="5" required>Dear Brand Partner,
+
+We are currently specifying materials and finishes for our Prestige Villa project. Please send us your updated 2026 trade price list, CAD/3D texture files, and current stock availability for the items in our schedule.
+
+Thank you,
+Aaren Studio Design Team</textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:10px;">
+        <button type="button" class="btn-ghost" style="flex:1;" onclick="closeModal('vendorEmailModal')">Cancel</button>
+        <button type="submit" class="btn-primary" style="flex:2;">Send RFQ to All Vendors ✉️</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Project Bookmark Modal -->
+<div class="modal-backdrop" id="bookmarkModal">
+  <div class="modal">
+    <div class="modal-title"><span>📌 Add Project Bookmark</span> <button class="modal-close" onclick="closeModal('bookmarkModal')">✕</button></div>
+    <form onsubmit="handleCreateBookmark(event)">
+      <div class="field"><label>Bookmark Title *</label><input type="text" id="bmTitle" required placeholder="e.g. Master Bath Moodboard (Pinterest)"></div>
+      <div class="field"><label>Web URL or CAD Drive Link *</label><input type="url" id="bmUrl" required placeholder="https://pinterest.com/pin/..."></div>
+      <div class="field"><label>Category / Tag</label>
+        <select id="bmCategory">
+          <option>Moodboard & Inspiration</option>
+          <option>CAD & Elevation Drawings</option>
+          <option>Vendor Catalogues</option>
+          <option>Client Notes</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:10px;">
+        <button type="button" class="btn-ghost" style="flex:1;" onclick="closeModal('bookmarkModal')">Cancel</button>
+        <button type="submit" class="btn-primary" style="flex:2;">Save Bookmark ✓</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Live Studio Chat Drawer -->
+<div class="chat-drawer" id="chatDrawer">
+  <div class="chat-header">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:16px;">💬</span>
+      <div>
+        <div style="font-size:12.5px;font-weight:800;color:#fff;">Studio Live Chat</div>
+        <div style="font-size:10px;color:var(--green);font-weight:700;">● 3 Members Online</div>
+      </div>
+    </div>
+    <button class="modal-close" onclick="toggleLiveChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessagesContainer"></div>
+  <form class="chat-footer" onsubmit="handleSendChatMessage(event)">
+    <input type="text" id="chatInput" placeholder="Type a message to studio team…" style="flex:1;background:var(--surface-2);border:1px solid var(--border-strong);color:#fff;border-radius:8px;padding:7px 10px;font-size:12px;outline:none;">
+    <button type="submit" class="btn-primary" style="padding:7px 12px;font-size:12px;">Send</button>
+  </form>
+</div>
+
 <!-- Toast Wrap -->
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script>
 // ====================================================================
-// PER-USER STATE & ISOLATED CLOUD DATA
+// PER-USER STATE & ISOLATED CLOUD DATA (PROGRAMA STUDIO OS)
 // ====================================================================
+
+function getDefaultPhrases() {
+  return [
+    { id: 'ph-1', category: 'Joinery', title: 'Solid Oak Marine Joinery Clause', text: 'All bespoke millwork and carcass joinery shall be constructed from FSC-certified marine grade core with 2mm solid natural European white oak lipping. Internal drawers to feature concealed Blum Movento soft-close runners.' },
+    { id: 'ph-2', category: 'Stone', title: 'Bookmatched Calacatta Marble Terms', text: 'Selected Calacatta Gold 20mm slabs to be dry-laid and visually inspected at the stone yard prior to waterjet fabrication. All perimeter mitres to feature 45-degree polished chamfers with anti-stain impregnating sealant.' },
+    { id: 'ph-3', category: 'Plumbing', title: 'Thermostatic Shower Testing', text: 'FIMA thermostatic mixer bodies to be pressure-tested to 5 bar for 48 hours prior to wall cladding installation. Minimum water pressure requirement of 2.5 bar to be verified on-site.' },
+    { id: 'ph-4', category: 'Warranty', title: 'Architectural Handover & Defects Clause', text: 'Contractor warrants all specified fixtures, fittings, and surface installations against defective workmanship and material failure for a minimum period of 24 months from the practical completion signoff date.' },
+    { id: 'ph-5', category: 'Payment', title: 'Trade Procurement 50/50 Terms', text: '50% advance deposit payable upon confirmed purchase order release to manufacturer; remaining 50% balance cleared upon photographic dispatch confirmation prior to on-site delivery.' }
+  ];
+}
+
+function getDefaultMilestones() {
+  return [
+    { id: 'm-1', title: 'Concept Presentation & Moodboards', project: 'Prestige Villa', date: 'Aug 20, 2026', status: 'Completed', color: 'green' },
+    { id: 'm-2', title: 'Detailed Joinery & Lighting Signoff', project: 'Prestige Villa', date: 'Sep 05, 2026', status: 'In Progress', color: 'blue' },
+    { id: 'm-3', title: 'Trade PO Release (Falper & FIMA Italy)', project: 'Prestige Villa', date: 'Sep 25, 2026', status: 'Upcoming', color: 'gold' },
+    { id: 'm-4', title: 'On-Site Marble & Flooring Installation', project: 'Prestige Villa', date: 'Oct 15, 2026', status: 'Scheduled', color: 'purple' },
+    { id: 'm-5', title: 'Final Snagging & Practical Handover', project: 'Prestige Villa', date: 'Nov 10, 2026', status: 'Scheduled', color: 'amber' }
+  ];
+}
 
 function getBlankWorkspace() {
   return {
@@ -962,6 +1454,24 @@ function getBlankWorkspace() {
     timeLogs: [],
     files: [],
     boq: [],
+    bookmarks: [
+      { id: 'bm-1', title: '📌 Luxury Villa Inspiration (Pinterest)', url: 'https://pinterest.com', category: 'Moodboard & Inspiration' },
+      { id: 'bm-2', title: '📐 DWG & 3D CAD Drive Folder', url: 'https://drive.google.com', category: 'CAD & Elevation Drawings' }
+    ],
+    phrases: getDefaultPhrases(),
+    milestones: getDefaultMilestones(),
+    teamMembers: [
+      { id: 'tm-1', name: 'Anand M.', role: 'Principal Architect', hours: 42.5, activeTasks: 6, avatar: 'AM' },
+      { id: 'tm-2', name: 'Ananya S.', role: 'Senior Interior Stylist', hours: 38.0, activeTasks: 8, avatar: 'AS' },
+      { id: 'tm-3', name: 'Rohan K.', role: '3D BIM & CAD Lead', hours: 28.5, activeTasks: 4, avatar: 'RK' }
+    ],
+    chatMessages: [
+      { id: 'cm-1', sender: 'Principal Architect', time: '10:30 AM', text: 'Welcome to the Aaren Studio collaborative chat! You can coordinate specs and client notes here.', isMe: false },
+      { id: 'cm-2', sender: 'Studio Member', time: '10:32 AM', text: 'All Falper vanities and FIMA tapware have been verified with trade markups.', isMe: true }
+    ],
+    presentationMode: 'architect',
+    currentStageIndex: 2,
+    approvalStatuses: { team: 'Approved', principal: 'Approved', client: 'Pending' },
     activeProjectId: null
   };
 }
@@ -994,7 +1504,6 @@ window.loadUserWorkspace = async function(user) {
           state = snap.val();
           localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
         } else {
-          // Brand new user -> 100% Clean Workspace
           state = getBlankWorkspace();
           localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
         }
@@ -1002,7 +1511,6 @@ window.loadUserWorkspace = async function(user) {
         state = getBlankWorkspace();
       }
     } else {
-      // Brand new user
       state = getBlankWorkspace();
       localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
     }
@@ -1017,6 +1525,11 @@ window.loadUserWorkspace = async function(user) {
   state.timeLogs = Array.isArray(state.timeLogs) ? state.timeLogs : [];
   state.files = Array.isArray(state.files) ? state.files : [];
   state.boq = Array.isArray(state.boq) ? state.boq : [];
+  state.bookmarks = Array.isArray(state.bookmarks) ? state.bookmarks : [];
+  state.phrases = Array.isArray(state.phrases) && state.phrases.length > 0 ? state.phrases : getDefaultPhrases();
+  state.milestones = Array.isArray(state.milestones) && state.milestones.length > 0 ? state.milestones : getDefaultMilestones();
+  state.teamMembers = Array.isArray(state.teamMembers) ? state.teamMembers : [];
+  state.chatMessages = Array.isArray(state.chatMessages) ? state.chatMessages : [];
 
   updateAllViews();
 };
@@ -1039,9 +1552,17 @@ function saveState() {
 }
 
 function updateAllViews() {
+  renderDashBookmarks();
   renderDashProjects();
   renderDashTasks();
   renderProjects();
+  renderPresentation();
+  renderStages();
+  renderPhrases();
+  renderCalendar();
+  renderTeamwork();
+  renderEarnings();
+  renderChatMessages();
   renderSchedule();
   renderMoodboards();
   renderKanban();
@@ -1061,51 +1582,77 @@ function updateKpiMetrics() {
   const navProj = document.getElementById('nav-proj-count');
   const navTask = document.getElementById('nav-task-count');
   const kpiProj = document.getElementById('kpi-projects');
+  const kpiSpecs = document.getElementById('kpi-specs');
+  const kpiApprovals = document.getElementById('kpi-approvals');
   const projCountEl = document.getElementById('projCount');
+
   if (navProj) navProj.textContent = projCount;
   if (navTask) navTask.textContent = taskCount;
   if (kpiProj) kpiProj.textContent = projCount;
+  if (kpiSpecs) kpiSpecs.textContent = `${specCount} Items`;
+  if (kpiApprovals) kpiApprovals.textContent = `${pendingApprovals} Pending`;
   if (projCountEl) projCountEl.textContent = `${projCount} project${projCount === 1 ? '' : 's'} active`;
 
-  const dashSub = document.querySelector('.dash-sub');
-  if (dashSub) {
-    if (projCount === 0) {
-      dashSub.textContent = "0 active projects · 0 pending client approvals · Clean designer workspace";
-    } else {
-      dashSub.textContent = `${projCount} active project${projCount === 1 ? '' : 's'} · ${pendingApprovals} pending client approvals · Live sync enabled`;
-    }
+  // Calculate total specified value
+  let totalSpecified = 0;
+  if (state.schedules) {
+    state.schedules.forEach(s => totalSpecified += (s.clientPrice || 0));
   }
+  const specValEl = document.getElementById('kpi-spec-val');
+  if (specValEl) specValEl.textContent = totalSpecified > 0 ? `₹${(totalSpecified/100000).toFixed(1)}L Total Specified` : '₹0 Specified';
+
+  // Calculate billable earnings
+  let totalGross = 0;
+  let totalHrs = 0;
+  if (state.timeLogs) {
+    state.timeLogs.forEach(t => {
+      const num = parseFloat(t.duration) || 0;
+      totalHrs += num;
+      const cleanAmt = parseInt(String(t.amount || '0').replace(/[^0-9]/g,'')) || 0;
+      totalGross += cleanAmt;
+    });
+  }
+  const earnHoursKpi = document.getElementById('kpi-hours');
+  if (earnHoursKpi) earnHoursKpi.textContent = `₹${totalGross.toLocaleString()}`;
 }
 
-// Sample Project Template Loader (Optional for user when requested)
+// Sample Project Template Loader
 function loadSampleTemplate() {
   if (confirm("Would you like to load a sample luxury villa project template into your workspace?")) {
     state.projects = [
-      { id: 1, name: 'Prestige Villa', client: 'Rohan Mehta', type: 'Residential · Villa', status: 'inprogress', statusLabel: 'In Progress', statusColor: 'blue', progress: 68, budget: '₹86L', due: 'Oct 12', team: ['Self', 'Lead Designer'] },
-      { id: 2, name: 'Oak Residency — Kitchen', client: 'Meera Nair', type: 'Residential · Apartment', status: 'ontrack', statusLabel: 'On Track', statusColor: 'green', progress: 90, budget: '₹18L', due: 'Sep 2', team: ['Self'] }
+      { id: 1, name: 'Prestige Villa — Master Residence', client: 'Rohan Mehta', type: 'Residential · Luxury Villa', status: 'inprogress', statusLabel: 'In Progress', statusColor: 'blue', progress: 68, budget: '₹86 Lakhs', due: 'Nov 20, 2026', daysRemaining: 45, pinned: true, cover: '/brands/brand_1_1.png', team: ['Self', 'Principal Architect'], categories: ['Joinery', 'Italian Marble', 'Bath Suites'] },
+      { id: 2, name: 'Altius Sky Penthouse', client: 'Vikram Singhania', type: 'Residential · Penthouse', status: 'ontrack', statusLabel: 'On Track', statusColor: 'green', progress: 90, budget: '₹1.8 Crores', due: 'Dec 15, 2026', daysRemaining: 68, pinned: true, cover: '/brands/brand_3_1.png', team: ['Self'], categories: ['WPC Facade', 'Decking', 'Luxury FF&E'] },
+      { id: 3, name: 'The Glass Pavilion Residency', client: 'Meera Nair', type: 'Residential · Modern Minimalist', status: 'ontrack', statusLabel: 'On Track', statusColor: 'purple', progress: 45, budget: '₹42 Lakhs', due: 'Jan 10, 2027', daysRemaining: 94, pinned: false, cover: '/brands/brand_2_1.png', team: ['Self', 'Senior Stylist'], categories: ['Glass Partitions', 'Wellness'] }
     ];
     state.tasks = [
-      { id: 1, text: 'Finalize kitchen island countertop selection', done: false, due: 'Today', col: 1, tag: 'amber' },
-      { id: 2, text: 'Send BOQ v3 to Prestige Villa client', done: true, due: 'Done', col: 3, tag: 'green' },
-      { id: 3, text: 'Review wardrobe hardware samples', done: false, due: 'Today', col: 1, tag: 'purple' }
+      { id: 1, text: 'Confirm Falper Senzafine basin dimensions with plumber', done: false, due: 'Today', col: 1, tag: 'amber' },
+      { id: 2, text: 'Send official BOQ v3 to Rohan Mehta for signoff', done: true, due: 'Done', col: 3, tag: 'green' },
+      { id: 3, text: 'Review NewTechWood composite cladding samples on-site', done: false, due: 'Tomorrow', col: 1, tag: 'purple' },
+      { id: 4, text: 'Issue Purchase Order for Slashform modular kitchen island', done: false, due: 'Oct 02', col: 0, tag: 'blue' }
     ];
     state.schedules = [
-      { id: 'sp-1', name: 'Modular Sofa — Aurora 3-Piece', sku: 'SF-SOF-01', room: 'Living Room', trade: 'Joinery', supplier: 'Slashform', tradePrice: 142000, clientPrice: 184000, dims: '2800 x 1100 mm', status: 'Approved', img: '/brands/brand_1_1.png' },
-      { id: 'sp-2', name: 'Italian Marble — Calacatta Gold', sku: 'AN-MAR-92', room: 'Living Room', trade: 'Finishes', supplier: 'Antolini Italy', tradePrice: 310, clientPrice: 385, dims: '1200 x 600 mm', status: 'Approved', img: '/brands/brand_1_2.png' },
-      { id: 'sp-3', name: 'Ceiling Rainfall Showerhead', sku: 'FM-SHW-04', room: 'Master Bedroom', trade: 'Fixtures', supplier: 'FIMA Carlo Frattini', tradePrice: 18500, clientPrice: 24000, dims: '350mm Brushed Gold', status: 'Pending', img: '/brands/brand_1_1.png' }
+      { id: 'sp-1', name: 'Modular Sofa — Aurora 3-Piece', sku: 'SF-SOF-01', room: 'Living Room', trade: 'Joinery', supplier: 'Slashform', tradePrice: 142000, clientPrice: 184000, dims: '2800 x 1100 mm', status: 'Approved', img: '/brands/brand_1_1.png', categories: ['Joinery', 'FF&E'] },
+      { id: 'sp-2', name: 'Italian Marble — Calacatta Gold', sku: 'AN-MAR-92', room: 'Living Room', trade: 'Finishes', supplier: 'Antolini Italy', tradePrice: 310, clientPrice: 385, dims: '1200 x 600 mm', status: 'Approved', img: '/brands/brand_1_2.png', categories: ['Finishes', 'Stone'] },
+      { id: 'sp-3', name: 'Ceiling Rainfall Showerhead', sku: 'FM-SHW-04', room: 'Master Bedroom', trade: 'Fixtures', supplier: 'FIMA Carlo Frattini', tradePrice: 18500, clientPrice: 24000, dims: '350mm Brushed Gold', status: 'Pending', img: '/brands/brand_1_1.png', categories: ['Fixtures', 'Plumbing'] },
+      { id: 'sp-4', name: 'ViaVeneto Wall Mounted Vanity', sku: 'FLP-VAN-88', room: 'Master Bedroom', trade: 'Fixtures', supplier: 'Falper Italy', tradePrice: 220000, clientPrice: 284000, dims: '1200 x 500 x 400 mm', status: 'Approved', img: '/brands/brand_6_1.png', categories: ['Bath Suites', 'Vanities'] },
+      { id: 'sp-5', name: 'UltraShield Antique Pool Decking', sku: 'NW-DEC-12', room: 'Outdoor Deck', trade: 'Finishes', supplier: 'Newtech Wood', tradePrice: 680, clientPrice: 850, dims: '138 x 22.5 x 2900 mm', status: 'Pending', img: '/brands/brand_3_1.png', categories: ['Decking', 'WPC Outdoor'] }
     ];
     state.moodboards = [
       { id: 'mb-1', title: 'Calacatta Gold Italian Marble', sub: 'Flooring & TV feature wall', tag: 'Surface', img: '/brands/brand_1_1.png' },
-      { id: 'mb-2', title: 'Brushed Antique Brass Tapware', sub: 'FIMA Carlo Frattini series', tag: 'Hardware', img: '/brands/brand_1_2.png' }
+      { id: 'mb-2', title: 'Brushed Antique Brass Tapware', sub: 'FIMA Carlo Frattini series', tag: 'Hardware', img: '/brands/brand_1_2.png' },
+      { id: 'mb-3', title: 'UltraShield Teak Composite Slat', sub: 'Outdoor pergola & terrace', tag: 'WPC Exterior', img: '/brands/brand_3_1.png' }
     ];
     state.pos = [
-      { id: 'PO-1048', supplier: 'Falper S.r.l. Italy', project: 'Prestige Villa', items: 4, value: '₹5,40,000', deposit: '50% Paid (₹2.7L)', eta: 'Oct 18', status: 'Confirmed' }
+      { id: 'PO-1048', supplier: 'Falper S.r.l. Italy', project: 'Prestige Villa', items: 4, value: '₹5,40,000', deposit: '50% Paid (₹2.7L)', eta: 'Oct 18', status: 'Approved / In Production' },
+      { id: 'PO-1049', supplier: 'FIMA Carlo Frattini', project: 'Prestige Villa', items: 6, value: '₹2,85,000', deposit: 'Pending Deposit', eta: 'Nov 02', status: 'Pending Quotation' },
+      { id: 'PO-1042', supplier: 'Slashform Kitchens', project: 'Altius Sky Penthouse', items: 2, value: '₹8,20,000', deposit: '100% Cleared', eta: 'Delivered', status: 'Paid / Settled' }
     ];
     state.timeLogs = [
-      { id: 'tl-1', date: 'Aug 15, 2026', designer: window.__aarenUser?.name || 'Designer', project: 'Prestige Villa', task: 'Kitchen Specifications & Material Sourcing', duration: '2.5 hrs', billable: true, amount: '₹8,750' }
+      { id: 'tl-1', date: 'Aug 15, 2026', designer: window.__aarenUser?.name || 'Designer', project: 'Prestige Villa', task: 'Kitchen Specifications & Material Sourcing', duration: '2.5 hrs', billable: true, amount: '₹8,750' },
+      { id: 'tl-2', date: 'Aug 14, 2026', designer: window.__aarenUser?.name || 'Designer', project: 'Altius Sky Penthouse', task: '3D BIM Cladding Elevations & Detailing', duration: '4.0 hrs', billable: true, amount: '₹14,000' }
     ];
     saveState();
-    showToast('Loaded sample project template!', 'success');
+    showToast('Loaded luxury project template with all Programa features!', 'success');
   }
 }
 window.loadSampleTemplate = loadSampleTemplate;
@@ -1136,6 +1683,13 @@ let currentRoom = ROOM_DATA[0];
 const pages = {
   dashboard:'page-dashboard',
   projects:'page-projects',
+  presentation:'page-presentation',
+  stages:'page-stages',
+  phrases:'page-phrases',
+  questionnaire:'page-questionnaire',
+  calendar:'page-calendar',
+  teamwork:'page-teamwork',
+  earnings:'page-earnings',
   detail:'page-detail',
   schedules:'page-schedules',
   moodboards:'page-moodboards',
@@ -1154,6 +1708,13 @@ const pages = {
 const breadcrumbs = {
   dashboard:'<b>Dashboard</b>',
   projects:'Workspace <span>›</span> <b>Projects</b>',
+  presentation:'Programa <span>›</span> <b>Presentation Mode</b>',
+  stages:'Programa <span>›</span> <b>Stages & Approval Chain</b>',
+  phrases:'Programa <span>›</span> <b>Saved Specification Phrases</b>',
+  questionnaire:'Programa <span>›</span> <b>Client Design Brief Form</b>',
+  calendar:'Trade <span>›</span> <b>Calendar & Timeline</b>',
+  teamwork:'Operations <span>›</span> <b>Team Timelines & Allocation</b>',
+  earnings:'Finance <span>›</span> <b>Designer Earnings & Fees</b>',
   detail:'Projects <span>›</span> <b>Project Detail</b>',
   schedules:'Programa <span>›</span> <b>Specification Schedules</b>',
   moodboards:'Programa <span>›</span> <b>Visual Pinboard & Moodboard</b>',
@@ -1181,8 +1742,14 @@ function goTo(key){
   window.scrollTo(0,0);
 
   // Lazy renderers
-  if(key==='dashboard'){renderDashProjects();renderDashTasks();}
+  if(key==='dashboard'){renderDashBookmarks();renderDashProjects();renderDashTasks();}
   if(key==='projects')renderProjects();
+  if(key==='presentation')renderPresentation();
+  if(key==='stages')renderStages();
+  if(key==='phrases')renderPhrases();
+  if(key==='calendar')renderCalendar();
+  if(key==='teamwork')renderTeamwork();
+  if(key==='earnings')renderEarnings();
   if(key==='detail')renderDetailRooms();
   if(key==='schedules')renderSchedule();
   if(key==='moodboards')renderMoodboards();
@@ -1202,9 +1769,42 @@ function goTo(key){
 window.goTo = goTo;
 
 // ====================================================================
-// RENDERERS
+// RENDERERS & FEATURE HANDLERS
 // ====================================================================
 
+// ──── BOOKMARKS BAR ────
+function renderDashBookmarks() {
+  const el = document.getElementById('dashBookmarkBar');
+  if(!el) return;
+  const list = state.bookmarks || [];
+  el.innerHTML = `
+    <div class="bookmark-chip" onclick="goTo('presentation')">📐 Architect Presentation</div>
+    <div class="bookmark-chip" onclick="goTo('stages')">🚥 Stages Pipeline</div>
+    <div class="bookmark-chip" onclick="goTo('phrases')">📚 Architectural Phrases</div>
+    <div class="bookmark-chip" onclick="goTo('questionnaire')">📝 Client Brief Form</div>
+    <div class="bookmark-chip" onclick="goTo('calendar')">🗓️ Timeline Calendar</div>
+    ${list.map(b => `
+      <div class="bookmark-chip" onclick="window.open('${b.url}','_blank')">
+        <span>🔗</span> <span>${b.title}</span> <span style="font-size:9px;opacity:0.6;">↗</span>
+      </div>
+    `).join('')}
+  `;
+}
+
+function handleCreateBookmark(e) {
+  e.preventDefault();
+  const title = document.getElementById('bmTitle').value;
+  const url = document.getElementById('bmUrl').value;
+  const category = document.getElementById('bmCategory').value;
+  state.bookmarks.unshift({ id: 'bm-' + Date.now(), title, url, category });
+  saveState();
+  closeModal('bookmarkModal');
+  showToast(`Bookmark "${title}" saved!`, 'success');
+  logUserActivity(`Added Bookmark: ${title}`, `Saved reference link ${url}`);
+}
+window.handleCreateBookmark = handleCreateBookmark;
+
+// ──── DASHBOARD PINNED PROJECTS & TASKS ────
 function renderDashProjects(){
   const el=document.getElementById('dashProjects');
   if(!el)return;
@@ -1222,15 +1822,23 @@ function renderDashProjects(){
     `;
     return;
   }
-  el.innerHTML=state.projects.slice(0,3).map(p=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--surface-2);border-radius:10px;margin-bottom:8px;cursor:pointer;" onclick="openProjectDetail(${p.id})">
-      <div>
-        <div style="font-weight:700;font-size:13px;color:#fff;">${p.name}</div>
-        <div style="font-size:11px;color:var(--slate-dim);">${p.client} · Due ${p.due}</div>
+  const pinnedOrFirst = [...state.projects].sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)).slice(0,3);
+  el.innerHTML=pinnedOrFirst.map(p=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--surface-2);border-radius:10px;margin-bottom:8px;cursor:pointer;border-left:3px solid ${p.pinned?'#f59e0b':'transparent'};" onclick="openProjectDetail(${p.id})">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:40px;height:40px;border-radius:8px;overflow:hidden;background:#1e1a14;flex-shrink:0;">
+          <img src="${p.cover||'/brands/brand_1_1.png'}" style="width:100%;height:100%;object-fit:cover;" alt="">
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:13px;color:#fff;display:flex;align-items:center;gap:6px;">
+            ${p.name} ${p.pinned?'<span title="Pinned Project" style="color:#f59e0b;font-size:11px;">★</span>':''}
+          </div>
+          <div style="font-size:11px;color:var(--slate-dim);">${p.client} · <strong style="color:#e2c99f;">${p.daysRemaining||45} days left</strong></div>
+        </div>
       </div>
       <div style="text-align:right;">
-        <span class="badge ${p.statusColor}">${p.statusLabel}</span>
-        <div style="font-size:11px;color:var(--gold);font-weight:700;margin-top:2px;">${p.budget}</div>
+        <span class="badge ${p.statusColor||'blue'}">${p.statusLabel||'In Progress'}</span>
+        <div style="font-size:11px;color:var(--gold);font-weight:700;margin-top:2px;">${p.budget||'₹86L'}</div>
       </div>
     </div>`).join('');
 }
@@ -1259,93 +1867,590 @@ function toggleTask(id,done){
   renderDashTasks();
 }
 
+// ──── PROJECTS (CARDS WITH COVERS, DURATION & TEMPLATES) ────
 function renderProjects(){
-  const tb=document.getElementById('projTableBody');
+  const container=document.getElementById('projGridContainer');
   const countEl=document.getElementById('projCount');
   const count = state.projects ? state.projects.length : 0;
   if(countEl) countEl.textContent = `${count} project${count===1?'':'s'} active`;
 
-  if(!tb)return;
+  if(!container) return;
   if(!state.projects || state.projects.length === 0){
+    container.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:60px 16px;background:var(--surface);border-radius:16px;border:1px dashed var(--border-strong);">
+        <div style="font-size:42px;margin-bottom:10px;">🏛️</div>
+        <div style="font-size:18px;font-weight:900;color:#fff;margin-bottom:6px;">Your Projects Studio is Ready</div>
+        <p style="font-size:12.5px;color:var(--slate-dim);max-width:440px;margin:0 auto 18px;">Create luxury interior projects with cover photos, duration tracking, multi-category specs, and client presentation links.</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn-primary" onclick="openModal('newProjectModal')">+ Create Your First Project</button>
+          <button class="btn-ghost" onclick="loadSampleTemplate()">✨ Load Sample Villa Template</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const sortedProjects = [...state.projects].sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+
+  container.innerHTML = sortedProjects.map(p => `
+    <div class="proj-card">
+      <div class="proj-cover">
+        <img src="${p.cover || '/brands/brand_1_1.png'}" alt="${p.name}">
+        <button class="proj-pin-btn ${p.pinned?'pinned':''}" onclick="togglePinProject(${p.id},event)" title="${p.pinned?'Unpin Project':'Pin to Top'}">
+          ${p.pinned?'★':'☆'}
+        </button>
+      </div>
+      <div class="proj-body">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <span class="badge ${p.statusColor||'blue'}">${p.statusLabel||'In Progress'}</span>
+          <span style="font-size:11px;color:var(--gold);font-weight:700;">⏱️ ${p.daysRemaining||45} days left</span>
+        </div>
+        <div style="font-size:15px;font-weight:800;color:#fff;cursor:pointer;" onclick="openProjectDetail(${p.id})">${p.name}</div>
+        <div style="font-size:11.5px;color:var(--slate-dim);margin:3px 0 10px;">Client: ${p.client} · ${p.type}</div>
+
+        <!-- Progress Bar -->
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--slate);font-weight:700;">
+          <span>Progress</span>
+          <span>${p.progress||60}%</span>
+        </div>
+        <div class="proj-progress-bar">
+          <div class="proj-progress-fill" style="width:${p.progress||60}%;"></div>
+        </div>
+
+        <!-- Multi Categories -->
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin:10px 0;">
+          ${(p.categories || ['Joinery', 'Finishes']).map(c => `<span style="font-size:9.5px;padding:2px 6px;border-radius:4px;background:var(--surface-2);color:var(--slate-dim);">${c}</span>`).join('')}
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:10px;margin-top:8px;">
+          <div style="font-size:13px;font-weight:800;color:var(--gold);">${p.budget||'₹86L'}</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-ghost sm" onclick="duplicateProject(${p.id},event)" title="Duplicate as Template">📋 Clone</button>
+            <button class="btn-primary" style="padding:4px 9px;font-size:11px;" onclick="openProjectDetail(${p.id})">Open →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterProjects(val){
+  const container=document.getElementById('projGridContainer');
+  if(!container) return;
+  const filtered = state.projects.filter(p=>p.name.toLowerCase().includes(val.toLowerCase())||p.client.toLowerCase().includes(val.toLowerCase()));
+  container.innerHTML = filtered.map(p => `
+    <div class="proj-card">
+      <div class="proj-cover">
+        <img src="${p.cover || '/brands/brand_1_1.png'}" alt="${p.name}">
+      </div>
+      <div class="proj-body">
+        <div style="font-size:15px;font-weight:800;color:#fff;" onclick="openProjectDetail(${p.id})">${p.name}</div>
+        <div style="font-size:11.5px;color:var(--slate-dim);margin:3px 0 10px;">Client: ${p.client}</div>
+        <button class="btn-primary" style="width:100%;margin-top:8px;" onclick="openProjectDetail(${p.id})">Open Project →</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function togglePinProject(id, e) {
+  if(e) e.stopPropagation();
+  const p = state.projects.find(x => x.id === id);
+  if(p) {
+    p.pinned = !p.pinned;
+    saveState();
+    showToast(`${p.pinned ? 'Pinned' : 'Unpinned'} "${p.name}"`, 'success');
+  }
+}
+window.togglePinProject = togglePinProject;
+
+function duplicateProject(id, e) {
+  if(e) e.stopPropagation();
+  const orig = state.projects.find(x => x.id === id);
+  if(!orig) return;
+  const cloned = {
+    ...orig,
+    id: Date.now(),
+    name: orig.name + ' (Template Copy)',
+    progress: 10,
+    status: 'inprogress',
+    statusLabel: 'Draft / In Progress',
+    statusColor: 'blue',
+    pinned: false
+  };
+  state.projects.unshift(cloned);
+  saveState();
+  showToast(`Duplicated "${orig.name}" as new project template!`, 'success');
+  logUserActivity(`Duplicated Project: ${orig.name}`, `Created clone ID ${cloned.id}`);
+}
+window.duplicateProject = duplicateProject;
+
+// ──── PRESENTATION MODE (ARCHITECT VS CLIENT VIEW) ────
+function setPresentationMode(mode) {
+  state.presentationMode = mode;
+  const archBtn = document.getElementById('presModeArchBtn');
+  const clientBtn = document.getElementById('presModeClientBtn');
+  const tradeBanner = document.getElementById('presTradeMetrics');
+
+  if(mode === 'architect') {
+    if(archBtn) { archBtn.className = 'btn-primary'; archBtn.style.background = '#81663F'; }
+    if(clientBtn) { clientBtn.className = 'btn-ghost sm'; }
+    if(tradeBanner) tradeBanner.style.display = 'block';
+  } else {
+    if(clientBtn) { clientBtn.className = 'btn-primary'; clientBtn.style.background = '#16a34a'; }
+    if(archBtn) { archBtn.className = 'btn-ghost sm'; }
+    if(tradeBanner) tradeBanner.style.display = 'none';
+  }
+  renderPresentation();
+}
+window.setPresentationMode = setPresentationMode;
+
+function renderPresentation() {
+  const container = document.getElementById('presentationItemsGrid');
+  if(!container) return;
+  const list = state.schedules || [];
+  const isArch = state.presentationMode !== 'client';
+
+  let totalClient = 0;
+  let totalTrade = 0;
+
+  list.forEach(s => {
+    totalClient += (s.clientPrice || 0);
+    totalTrade += (s.tradePrice || 0);
+  });
+
+  const clientValEl = document.getElementById('presTotalClientVal');
+  const tradeValEl = document.getElementById('presTradeCostVal');
+  const countEl = document.getElementById('presItemCount');
+
+  if(clientValEl) clientValEl.textContent = `₹${totalClient.toLocaleString()}`;
+  if(tradeValEl) {
+    const margin = totalTrade > 0 ? Math.round(((totalClient - totalTrade)/totalTrade)*100) : 0;
+    tradeValEl.textContent = `₹${totalTrade.toLocaleString()} (Trade Margin: ${margin}%)`;
+  }
+  if(countEl) countEl.textContent = `${list.length} Items`;
+
+  if(list.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:48px 16px;background:var(--surface);border-radius:12px;color:var(--slate-dim);">
+        No specification items in active presentation. Add items in Schedules to build presentation.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = list.map(s => {
+    const marginPct = s.tradePrice ? Math.round(((s.clientPrice - s.tradePrice)/s.tradePrice)*100) : 0;
+    return `
+      <div style="background:var(--surface);border:1px solid var(--border-strong);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-glass);">
+        <div style="height:180px;background:#1a1a20;overflow:hidden;position:relative;">
+          <img src="${s.img||'/brands/brand_1_1.png'}" style="width:100%;height:100%;object-fit:cover;" alt="">
+          <span class="badge ${s.status==='Approved'?'green':'amber'}" style="position:absolute;top:10px;left:10px;">${s.status||'Pending'}</span>
+        </div>
+        <div style="padding:16px;">
+          <div style="font-size:15px;font-weight:800;color:#fff;">${s.name}</div>
+          <div style="font-size:12px;color:var(--slate-dim);margin:3px 0 8px;">${s.room||'Living Room'} · ${s.supplier||''} · ${s.dims||''}</div>
+
+          <!-- Multi-category tags -->
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;">
+            ${(s.categories || [s.trade||'Fixtures']).map(t => `<span style="font-size:9.5px;padding:2px 6px;border-radius:4px;background:var(--surface-2);color:var(--gold);">${t}</span>`).join('')}
+          </div>
+
+          ${isArch ? `
+            <!-- Architect Technical View -->
+            <div style="background:var(--surface-2);border-radius:8px;padding:10px;margin-bottom:10px;border-left:3px solid var(--gold);">
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--slate);margin-bottom:2px;">
+                <span>Trade Cost:</span> <strong>₹${(s.tradePrice||0).toLocaleString()}</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--green);margin-bottom:2px;">
+                <span>Markup:</span> <strong>+${marginPct}% (₹${((s.clientPrice||0)-(s.tradePrice||0)).toLocaleString()})</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:#fff;font-weight:800;border-top:1px solid var(--border);padding-top:4px;margin-top:4px;">
+                <span>Client Quote:</span> <strong style="color:var(--gold);">₹${(s.clientPrice||0).toLocaleString()}</strong>
+              </div>
+            </div>
+          ` : `
+            <!-- Client Aesthetic View -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <div style="font-size:11px;color:var(--slate-dim);">Approved Specification Price</div>
+              <div style="font-size:18px;font-weight:900;color:var(--gold);">₹${(s.clientPrice||0).toLocaleString()}</div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn-success sm" style="flex:1;" onclick="clientApproveItem('${s.id}')">✓ Approve</button>
+              <button class="btn-ghost sm" style="flex:1;" onclick="clientRequestRevision('${s.id}')">↺ Alternate</button>
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function exportPresentationPdf() {
+  showToast('Exporting high-resolution Presentation PDF document…', 'success');
+  logUserActivity('Exported Presentation PDF', 'Generated client presentation document');
+}
+
+// ──── PROJECT STAGES PIPELINE & APPROVAL CHAIN ────
+const STAGES_LIST = [
+  { num: '01', name: 'Concept & Moodboards', desc: 'Space planning, material palettes & client aspirations' },
+  { num: '02', name: 'Schematic Design', desc: '2D layouts, preliminary elevations & budget sizing' },
+  { num: '03', name: 'Detailed Design & Specs', desc: '3D BIM modeling, Programa schedules & trade quotes' },
+  { num: '04', name: 'Procurement & Trade POs', desc: 'Manufacturer purchase orders, deposits & factory ETA' },
+  { num: '05', name: 'Site Execution & Fitout', desc: 'On-site installation, joinery fitting & MEP checks' },
+  { num: '06', name: 'Handover & Final Audit', desc: 'Defects snagging, cleaning & client handover signoff' }
+];
+
+function renderStages() {
+  const container = document.getElementById('stagesFlowContainer');
+  if(!container) return;
+  const curIdx = state.currentStageIndex || 2;
+
+  container.innerHTML = STAGES_LIST.map((st, idx) => {
+    const isPast = idx < curIdx;
+    const isCur = idx === curIdx;
+    return `
+      <div class="stage-card ${isCur?'active':''}" style="${isPast?'border-color:var(--green);background:rgba(34,197,94,0.08);':''}">
+        <div class="stage-num" style="${isPast?'color:var(--green);':''}">${isPast?'✓ COMPLETED':st.num}</div>
+        <div class="stage-name">${st.name}</div>
+        <div style="font-size:11px;color:var(--slate-dim);margin-top:2px;">${st.desc}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function advanceProjectStage() {
+  if(state.currentStageIndex < STAGES_LIST.length - 1) {
+    state.currentStageIndex++;
+    saveState();
+    renderStages();
+    showToast(`Advanced project to Stage ${STAGES_LIST[state.currentStageIndex].num}: ${STAGES_LIST[state.currentStageIndex].name}!`, 'success');
+    logUserActivity('Stage Advanced', `Moved to ${STAGES_LIST[state.currentStageIndex].name}`);
+  } else {
+    showToast('Project is in final Practical Handover stage!', 'info');
+  }
+}
+window.advanceProjectStage = advanceProjectStage;
+
+function advanceApprovalStatus(node) {
+  if(node === 'client') {
+    state.approvalStatuses.client = 'Approved';
+    const clientNode = document.getElementById('apprNodeClient');
+    if(clientNode) {
+      clientNode.className = 'approval-node approved';
+      clientNode.innerHTML = `
+        <div style="font-size:10px;font-weight:800;color:var(--green);">STEP 3 · CLIENT APPROVAL</div>
+        <div style="font-size:13px;font-weight:700;margin:4px 0;">Client Final Signoff</div>
+        <div style="font-size:11.5px;color:var(--slate-dim);">Status: <strong style="color:var(--green);">✓ Client Legally Signed Off</strong></div>
+      `;
+    }
+    saveState();
+    showToast('Client approved and signed the specification presentation!', 'success');
+    logUserActivity('Client Signoff Complete', 'Prestige Villa specs approved');
+  }
+}
+window.advanceApprovalStatus = advanceApprovalStatus;
+
+// ──── SAVED ARCHITECTURAL PHRASES ────
+function renderPhrases(cat = 'all') {
+  const container = document.getElementById('phrasesGrid');
+  if(!container) return;
+  const list = state.phrases || getDefaultPhrases();
+  const filtered = cat === 'all' ? list : list.filter(p => p.category === cat);
+
+  container.innerHTML = filtered.map(p => `
+    <div style="background:var(--surface);border:1px solid var(--border-strong);border-radius:12px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span class="badge gold">${p.category}</span>
+          <button class="btn-ghost sm" onclick="copyPhraseToClipboard('${p.text.replace(/'/g,"\\'")}')" title="Copy Phrase">📋 Copy</button>
+        </div>
+        <div style="font-size:13.5px;font-weight:800;color:#fff;margin-bottom:6px;">${p.title}</div>
+        <div style="font-size:12px;color:var(--slate);line-height:1.5;">${p.text}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterPhrases(cat) {
+  renderPhrases(cat);
+}
+window.filterPhrases = filterPhrases;
+
+function copyPhraseToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Specification clause copied to clipboard! 📋', 'success');
+  }).catch(() => {
+    showToast('Copied to clipboard!', 'success');
+  });
+}
+window.copyPhraseToClipboard = copyPhraseToClipboard;
+
+function addNewPhrasePrompt() {
+  const title = prompt('Enter Clause / Phrase Title:', 'Italian Porcelain Slab Installation Warranty');
+  if(!title) return;
+  const text = prompt('Enter Specification Clause Text:', 'All large format porcelain slabs to be fitted with flexible C2TES1 adhesive with minimum 95% bed coverage.');
+  if(!text) return;
+  const cat = prompt('Enter Category (Joinery / Stone / Plumbing / Warranty):', 'Stone') || 'General';
+
+  state.phrases.push({ id: 'ph-' + Date.now(), category: cat, title, text });
+  saveState();
+  renderPhrases();
+  showToast(`Added clause "${title}" to phrase library!`, 'success');
+}
+window.addNewPhrasePrompt = addNewPhrasePrompt;
+
+// ──── CLIENT ONBOARDING QUESTIONNAIRE ────
+function handleQuestionnaireSubmit(e) {
+  e.preventDefault();
+  const name = document.getElementById('qClientName').value;
+  const contact = document.getElementById('qClientContact').value;
+  const location = document.getElementById('qLocation').value;
+  const scope = document.getElementById('qScope').value;
+  const budget = document.getElementById('qBudget').value;
+  const style = document.getElementById('qStyle').value;
+  const notes = document.getElementById('qNotes').value;
+
+  const newProj = {
+    id: Date.now(),
+    name: `${name} — ${scope}`,
+    client: name,
+    type: `Residential · ${style.split(' ')[0]}`,
+    status: 'inprogress',
+    statusLabel: 'New Brief Received',
+    statusColor: 'green',
+    progress: 15,
+    budget: budget,
+    due: '3 Months',
+    daysRemaining: 90,
+    pinned: true,
+    cover: '/brands/brand_1_1.png',
+    team: ['Self'],
+    categories: ['Client Brief', 'Interior Architecture']
+  };
+
+  state.projects.unshift(newProj);
+  saveState();
+  showToast(`Client Brief submitted! Project "${newProj.name}" created.`, 'success');
+  logUserActivity(`Client Brief Submitted: ${name}`, `${scope} · ${budget}`);
+  goTo('projects');
+}
+window.handleQuestionnaireSubmit = handleQuestionnaireSubmit;
+
+// ──── CALENDAR & SCHEDULE OF WORK ────
+function renderCalendar() {
+  const mList = document.getElementById('calendarMilestonesList');
+  const uList = document.getElementById('calendarUpcomingList');
+  if(!mList || !uList) return;
+
+  const list = state.milestones || getDefaultMilestones();
+
+  mList.innerHTML = list.map(m => `
+    <div style="background:var(--surface-2);border-radius:10px;padding:12px;border-left:4px solid var(--gold);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-size:13px;font-weight:800;color:#fff;">${m.title}</div>
+        <div style="font-size:11px;color:var(--slate-dim);">${m.project} · Target Date: <strong style="color:#e2c99f;">${m.date}</strong></div>
+      </div>
+      <span class="badge ${m.color||'blue'}">${m.status}</span>
+    </div>
+  `).join('');
+
+  uList.innerHTML = list.slice(0, 3).map(m => `
+    <div style="background:var(--surface-2);border-radius:8px;padding:10px;">
+      <div style="font-size:12px;font-weight:700;color:#fff;">${m.title}</div>
+      <div style="font-size:10.5px;color:var(--gold);margin-top:2px;">📅 ${m.date}</div>
+    </div>
+  `).join('');
+}
+
+function addMilestonePrompt() {
+  const title = prompt('Enter Milestone Title:', 'Site Cladding Inspection & Signoff');
+  if(!title) return;
+  const date = prompt('Enter Target Date:', 'Nov 05, 2026') || 'Soon';
+  state.milestones.push({ id: 'm-' + Date.now(), title, project: 'Prestige Villa', date, status: 'Upcoming', color: 'blue' });
+  saveState();
+  renderCalendar();
+  showToast(`Added milestone "${title}"!`, 'success');
+}
+window.addMilestonePrompt = addMilestonePrompt;
+
+// ──── TEAM MEMBERS TIMELINES ────
+function renderTeamwork() {
+  const container = document.getElementById('teamMembersGrid');
+  if(!container) return;
+  const list = state.teamMembers || [];
+
+  container.innerHTML = list.map(tm => `
+    <div style="background:var(--surface);border:1px solid var(--border-strong);border-radius:14px;padding:18px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#a8895b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;">
+          ${tm.avatar}
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#fff;">${tm.name}</div>
+          <div style="font-size:11.5px;color:var(--slate-dim);">${tm.role}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:var(--surface-2);border-radius:8px;padding:10px;margin-bottom:12px;">
+        <div><span style="font-size:10.5px;color:var(--slate);">Hours Logged:</span><div style="font-size:14px;font-weight:800;color:#fff;">${tm.hours} hrs</div></div>
+        <div><span style="font-size:10.5px;color:var(--slate);">Active Tasks:</span><div style="font-size:14px;font-weight:800;color:var(--gold);">${tm.activeTasks} Tasks</div></div>
+      </div>
+      <button class="btn-ghost sm" style="width:100%;" onclick="showToast('Assigned task to ${tm.name}!','success')">+ Assign Direct Task</button>
+    </div>
+  `).join('');
+}
+
+// ──── DESIGNER EARNINGS ────
+function renderEarnings() {
+  const tb = document.getElementById('earnTableBody');
+  const hoursEl = document.getElementById('earnTotalHours');
+  const grossEl = document.getElementById('earnGrossVal');
+  const pendEl = document.getElementById('earnPendVal');
+
+  let totalHrs = 0;
+  let totalGross = 0;
+
+  const logs = state.timeLogs || [];
+  logs.forEach(l => {
+    const num = parseFloat(l.duration) || 0;
+    totalHrs += num;
+    const cleanAmt = parseInt(String(l.amount || '0').replace(/[^0-9]/g,'')) || 0;
+    totalGross += cleanAmt;
+  });
+
+  if(hoursEl) hoursEl.textContent = `${totalHrs.toFixed(1)} hrs`;
+  if(grossEl) grossEl.textContent = `₹${totalGross.toLocaleString()}`;
+  if(pendEl) pendEl.textContent = `₹${Math.round(totalGross * 0.35).toLocaleString()}`;
+
+  if(!tb) return;
+  if(logs.length === 0) {
+    tb.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--slate-dim);">No billable entries yet. Use Time Tracker to log design hours.</td></tr>`;
+    return;
+  }
+
+  tb.innerHTML = logs.map(l => `
+    <tr>
+      <td>${l.date}</td>
+      <td><strong>${l.project}</strong></td>
+      <td>${l.task}</td>
+      <td><span class="badge blue">${l.duration}</span></td>
+      <td>₹3,500/hr</td>
+      <td><strong style="color:var(--gold);">${l.amount}</strong></td>
+      <td><span class="badge green">Ready to Invoice</span></td>
+    </tr>
+  `).join('');
+}
+
+// ──── LIVE STUDIO CHAT DRAWER ────
+function toggleLiveChat() {
+  const drawer = document.getElementById('chatDrawer');
+  if(drawer) {
+    drawer.classList.toggle('open');
+    if(drawer.classList.contains('open')) {
+      renderChatMessages();
+    }
+  }
+}
+window.toggleLiveChat = toggleLiveChat;
+
+function renderChatMessages() {
+  const container = document.getElementById('chatMessagesContainer');
+  if(!container) return;
+  const list = state.chatMessages || [];
+  container.innerHTML = list.map(m => `
+    <div class="chat-msg ${m.isMe ? 'mine' : 'theirs'}">
+      <div style="font-size:9.5px;opacity:0.7;margin-bottom:2px;">${m.sender} · ${m.time}</div>
+      <div>${m.text}</div>
+    </div>
+  `).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function handleSendChatMessage(e) {
+  e.preventDefault();
+  const input = document.getElementById('chatInput');
+  if(!input || !input.value.trim()) return;
+  const text = input.value.trim();
+  state.chatMessages.push({
+    id: 'cm-' + Date.now(),
+    sender: window.__aarenUser?.name || 'Designer',
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    text: text,
+    isMe: true
+  });
+  input.value = '';
+  saveState();
+  renderChatMessages();
+}
+window.handleSendChatMessage = handleSendChatMessage;
+
+// ──── QUICK ACTIONS & SHARE ────
+function copyProjectShareLink() {
+  const url = window.location.origin + '/workspace?view=presentation&project=prestige-villa';
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('Copied client presentation share link! 🔗', 'success');
+  }).catch(() => {
+    showToast('Share link copied to clipboard!', 'success');
+  });
+}
+window.copyProjectShareLink = copyProjectShareLink;
+
+function handleSendVendorRFQ(e) {
+  e.preventDefault();
+  closeModal('vendorEmailModal');
+  showToast('Bulk RFQ sent to Falper, FIMA, Slashform, NewTechWood & Mirage! ✉️', 'success');
+  logUserActivity('Sent Bulk Vendor RFQ', 'Requested updated 2026 trade price lists and textures');
+}
+window.handleSendVendorRFQ = handleSendVendorRFQ;
+
+// ──── PURCHASE ORDERS (TRADE STATUS) ────
+function renderPOs(){
+  const tb=document.getElementById('poTableBody');
+  if(!tb)return;
+  if(!state.pos || state.pos.length === 0){
     tb.innerHTML = `
       <tr>
-        <td colspan="7" style="text-align:center;padding:48px 16px;">
-          <div style="font-size:36px;margin-bottom:8px;">🏛️</div>
-          <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">Your Projects Workspace is Ready</div>
-          <p style="font-size:12.5px;color:var(--slate-dim);max-width:400px;margin:0 auto 16px;">Start managing client interiors, specifications, moodboards, and budgets by creating your first project.</p>
-          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-            <button class="btn-primary" onclick="openModal('newProjectModal')">+ Create Your First Project</button>
-            <button class="btn-ghost" onclick="loadSampleTemplate()">✨ Load Sample Template</button>
-          </div>
+        <td colspan="8" style="text-align:center;padding:32px 16px;color:var(--slate-dim);">
+          No purchase orders created yet. Click '+ New Purchase Order' to generate official vendor POs.
         </td>
       </tr>
     `;
     return;
   }
-
-  tb.innerHTML=state.projects.map(p=>`
-    <tr onclick="openProjectDetail(${p.id})" style="cursor:pointer;">
-      <td><div style="font-weight:700;">${p.name}</div><div style="font-size:10.5px;color:var(--slate-dim);">${p.type}</div></td>
-      <td>${p.client}</td>
-      <td><span class="badge ${p.statusColor}">${p.statusLabel}</span></td>
-      <td><div style="width:100px;height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;"><div style="width:${p.progress}%;height:100%;background:var(--gold);"></div></div></td>
-      <td><strong style="color:var(--gold);">${p.budget}</strong></td>
-      <td>${Array.isArray(p.team)?p.team.join(', '):'Self'}</td>
-      <td>${p.due}</td>
+  tb.innerHTML=state.pos.map(po=>`
+    <tr>
+      <td><strong>${po.id}</strong></td>
+      <td>${po.supplier}</td>
+      <td>${po.project}</td>
+      <td>${po.items} items</td>
+      <td><strong style="color:var(--gold);">${po.value}</strong></td>
+      <td>
+        <span class="badge ${po.status.includes('Paid')?'green':po.status.includes('Approved')?'blue':'amber'}">
+          ${po.status}
+        </span>
+      </td>
+      <td>${po.eta}</td>
+      <td>
+        <select onchange="updatePoStatus('${po.id}', this.value)" style="background:var(--surface-2);color:#fff;border:1px solid var(--border-strong);padding:3px 6px;border-radius:4px;font-size:11px;">
+          <option ${po.status==='Pending Quotation'?'selected':''}>Pending Quotation</option>
+          <option ${po.status==='Approved / In Production'?'selected':''}>Approved / In Production</option>
+          <option ${po.status==='Paid / Settled'?'selected':''}>Paid / Settled</option>
+        </select>
+      </td>
     </tr>`).join('');
 }
 
-function filterProjects(val){
-  const tb=document.getElementById('projTableBody');
-  if(!tb)return;
-  const filtered = state.projects.filter(p=>p.name.toLowerCase().includes(val.toLowerCase())||p.client.toLowerCase().includes(val.toLowerCase()));
-  tb.innerHTML=filtered.map(p=>`
-    <tr onclick="openProjectDetail(${p.id})" style="cursor:pointer;">
-      <td><div style="font-weight:700;">${p.name}</div></td>
-      <td>${p.client}</td>
-      <td><span class="badge ${p.statusColor}">${p.statusLabel}</span></td>
-      <td>${p.progress}%</td>
-      <td>${p.budget}</td>
-      <td>${Array.isArray(p.team)?p.team.join(', '):'Self'}</td>
-      <td>${p.due}</td>
-    </tr>`).join('');
-}
-
-function openProjectDetail(projId){
-  const proj = state.projects.find(p=>p.id===projId) || state.projects[0];
-  if(proj){
-    state.activeProjectId = proj.id;
-    const detailTitle = document.querySelector('#page-detail h1');
-    const detailMeta = document.querySelector('#page-detail p');
-    if(detailTitle) detailTitle.textContent = proj.name;
-    if(detailMeta) detailMeta.textContent = `Client: ${proj.client} · ${proj.budget} Budget · ${proj.type}`;
+function updatePoStatus(id, newStatus) {
+  const po = state.pos.find(p => p.id === id);
+  if(po) {
+    po.status = newStatus;
+    saveState();
+    showToast(`Updated ${po.id} status to "${newStatus}"`, 'success');
+    logUserActivity(`Updated PO Status: ${po.id}`, `Status set to ${newStatus}`);
   }
-  goTo('detail');
 }
-window.openProjectDetail = openProjectDetail;
+window.updatePoStatus = updatePoStatus;
 
-function renderDetailRooms(){
-  const el=document.getElementById('detailRoomsGrid');
-  if(!el)return;
-  el.innerHTML=ROOM_DATA.map(r=>`
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;" onclick="openRoom(${JSON.stringify(r).replace(/"/g,'&quot;')})">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
-        <h4 style="font-size:14px;font-weight:800;color:#fff;">${r.name}</h4>
-        <span class="badge ${r.status==='done'?'green':'gold'}">${r.status==='done'?'Completed':'In Progress'}</span>
-      </div>
-      <div style="font-size:11.5px;color:var(--slate-dim);">${r.floor} · ${r.area}</div>
-      <div style="font-size:13px;font-weight:800;color:var(--gold);margin-top:10px;">Budget: ${r.budget}</div>
-    </div>`).join('');
-}
-
-function openRoom(room){
-  currentRoom=room;
-  document.getElementById('roomTitle').textContent=room.name;
-  document.getElementById('roomMeta').textContent=`${room.floor} · ${room.area}`;
-  goTo('room');
-}
-
-// ──── SCHEDULES (PROGRAMA) ────
+// ──── SCHEDULES (PROGRAMA SPECIFICATIONS) ────
 function renderSchedule(){
   const tb=document.getElementById('scheduleTableBody');
   if(!tb)return;
@@ -1409,6 +2514,7 @@ function renderSchedule(){
 }
 
 function filterSchedule(){renderSchedule();}
+window.filterSchedule = filterSchedule;
 
 function toggleSpecStatus(id){
   const item = state.schedules.find(s=>s.id===id);
@@ -1420,17 +2526,21 @@ function toggleSpecStatus(id){
     logUserActivity(`Updated Spec: ${item.name}`, `Set status to ${item.status}`);
   }
 }
+window.toggleSpecStatus = toggleSpecStatus;
 
 function exportSchedulePdf(){
   showToast('Generating official Programa Specification PDF…','success');
   logUserActivity('Exported PDF Schedule', 'Generated printable PDF specification sheet');
 }
+window.exportSchedulePdf = exportSchedulePdf;
+
 function exportScheduleExcel(){
   showToast('Downloading Schedule spreadsheet (XLSX)…','success');
   logUserActivity('Exported Excel Schedule', 'Downloaded schedule items spreadsheet');
 }
+window.exportScheduleExcel = exportScheduleExcel;
 
-// ──── PINBOARD & MOODBOARDS (PROGRAMA) ────
+// ──── PINBOARD & MOODBOARDS ────
 function renderMoodboards(){
   const el=document.getElementById('pinboardCanvas');
   if(!el)return;
@@ -1471,8 +2581,9 @@ function addMoodboardSwatch(){
   showToast(`Added "${title}" to visual pinboard!`,'success');
   logUserActivity(`Added Pinboard Swatch: ${title}`, 'Added new swatch to moodboard');
 }
+window.addMoodboardSwatch = addMoodboardSwatch;
 
-// ──── CLIENT PORTAL (PROGRAMA) ────
+// ──── CLIENT PORTAL ────
 function renderClientPortal(){
   const el=document.getElementById('clientApprovalList');
   if(!el)return;
@@ -1511,49 +2622,25 @@ function clientApproveItem(id){
     item.status = 'Approved';
     saveState();
     renderClientPortal();
+    renderPresentation();
     showToast(`Client Approved: ${item.name}`,'success');
     logUserActivity(`Client Approval: ${item.name}`, `Client approved item at ₹${item.clientPrice}`);
   }
 }
+window.clientApproveItem = clientApproveItem;
+
 function clientRequestRevision(id){
   const item = state.schedules.find(s=>s.id===id);
   if(item){
     item.status = 'Revision Requested';
     saveState();
     renderClientPortal();
+    renderPresentation();
     showToast(`Client requested alternate for: ${item.name}`,'info');
     logUserActivity(`Revision Requested: ${item.name}`, `Client requested alternate option`);
   }
 }
-
-// ──── PURCHASE ORDERS (TRADE) ────
-function renderPOs(){
-  const tb=document.getElementById('poTableBody');
-  if(!tb)return;
-  if(!state.pos || state.pos.length === 0){
-    tb.innerHTML = `
-      <tr>
-        <td colspan="8" style="text-align:center;padding:32px 16px;color:var(--slate-dim);">
-          No purchase orders created yet. Click '+ New Purchase Order' to generate official vendor POs.
-        </td>
-      </tr>
-    `;
-    return;
-  }
-  tb.innerHTML=state.pos.map(po=>`
-    <tr>
-      <td><strong>${po.id}</strong></td>
-      <td>${po.supplier}</td>
-      <td>${po.project}</td>
-      <td>${po.items} items</td>
-      <td><strong style="color:var(--gold);">${po.value}</strong></td>
-      <td><span class="badge green">${po.deposit}</span></td>
-      <td>${po.eta}</td>
-      <td>
-        <button class="btn-ghost sm" onclick="showToast('Viewing ${po.id} PDF document…','info')">📄 View PO</button>
-      </td>
-    </tr>`).join('');
-}
+window.clientRequestRevision = clientRequestRevision;
 
 // ──── LIVE TIME TRACKER ────
 let timerInterval = null;
@@ -1582,6 +2669,8 @@ function toggleMainTimer(){
     showToast('Stopwatch running','info');
   }
 }
+window.toggleMainTimer = toggleMainTimer;
+
 function resetTimer(){
   pauseTimer();
   timerSeconds = 0;
@@ -1589,6 +2678,8 @@ function resetTimer(){
   const btn = document.getElementById('timerToggleBtn');
   if(btn) btn.textContent = '▶ Start Timer';
 }
+window.resetTimer = resetTimer;
+
 function updateTimerDisplays(){
   const hrs = String(Math.floor(timerSeconds/3600)).padStart(2,'0');
   const mins = String(Math.floor((timerSeconds%3600)/60)).padStart(2,'0');
@@ -1621,10 +2712,12 @@ function logCurrentTimerSession(){
   });
   saveState();
   renderTimeLogs();
+  renderEarnings();
   resetTimer();
   showToast(`Saved session (${durationHrs} hrs · ₹${cost.toLocaleString()})!`,'success');
   logUserActivity(`Logged Time: ${durationHrs} hrs`, `Worked on ${activeProj}`);
 }
+window.logCurrentTimerSession = logCurrentTimerSession;
 
 function renderTimeLogs(){
   const tb=document.getElementById('timeLogTableBody');
@@ -1651,17 +2744,14 @@ function renderTimeLogs(){
     </tr>`).join('');
 }
 
-function generateClientInvoiceFromTime(){
-  showToast('Generated Client Fee Invoice with breakdown PDF!','success');
-  logUserActivity('Generated Client Invoice', 'Converted logged hours into Invoice');
-}
-
 // ──── PRODUCT WEB CLIPPER ────
 function simulateProductClip(){
   const box = document.getElementById('clipperPreviewBox');
   if(box) box.style.display = 'block';
   showToast('Product specifications extracted via Clipper!','success');
 }
+window.simulateProductClip = simulateProductClip;
+
 function addClippedToSchedule(){
   state.schedules.push({
     id: 'sp-' + Date.now(),
@@ -1674,12 +2764,355 @@ function addClippedToSchedule(){
     clientPrice: 284000,
     dims: '1200 x 500 x 400 mm',
     status: 'Pending',
-    img: '/brands/brand_1_1.png'
+    img: '/brands/brand_1_1.png',
+    categories: ['Fixtures', 'Bath Suites']
   });
   saveState();
   showToast('Added clipped product to Specification Schedule!','success');
   goTo('schedules');
   logUserActivity('Clipped Product Added', 'ViaVeneto Wall Mounted Vanity added to schedule');
+}
+window.addClippedToSchedule = addClippedToSchedule;
+
+// ──── KANBAN TASKS ────
+const KANBAN_COLS = ['To Do', 'In Progress', 'Client Review', 'Done'];
+
+function renderKanban() {
+  const board = document.getElementById('kanbanBoard');
+  if(!board) return;
+  const tasks = state.tasks || [];
+
+  board.innerHTML = KANBAN_COLS.map((colName, colIdx) => {
+    const colTasks = tasks.filter(t => (t.col !== undefined ? t.col : (t.done ? 3 : 0)) === colIdx);
+    return `
+      <div class="kanban-col">
+        <div class="kanban-col-head">
+          <span>${colName}</span>
+          <span style="background:var(--surface);padding:1px 6px;border-radius:10px;">${colTasks.length}</span>
+        </div>
+        <div>
+          ${colTasks.map(t => `
+            <div class="kanban-card">
+              <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px;">${t.text}</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--slate-dim);">
+                <span>📅 ${t.due||'Soon'}</span>
+                <select onchange="moveTaskCol(${t.id}, this.value)" style="background:var(--surface-2);color:#fff;border:1px solid var(--border-strong);border-radius:4px;padding:2px 4px;font-size:9.5px;">
+                  <option value="0" ${colIdx===0?'selected':''}>To Do</option>
+                  <option value="1" ${colIdx===1?'selected':''}>In Prog</option>
+                  <option value="2" ${colIdx===2?'selected':''}>Review</option>
+                  <option value="3" ${colIdx===3?'selected':''}>Done</option>
+                </select>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function moveTaskCol(id, newCol) {
+  const t = state.tasks.find(x => x.id === id);
+  if(t) {
+    t.col = parseInt(newCol);
+    t.done = t.col === 3;
+    saveState();
+    showToast(`Task moved to ${KANBAN_COLS[t.col]}!`, 'success');
+  }
+}
+window.moveTaskCol = moveTaskCol;
+
+// ──── CAD & FILES ────
+function renderFiles() {
+  const tb = document.getElementById('filesListTable');
+  if(!tb) return;
+  const list = state.files || [];
+  if(list.length === 0) {
+    tb.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--slate-dim);">No CAD or 3D files uploaded yet. Click 'Upload Files' to attach drawing packages.</td></tr>`;
+    return;
+  }
+  tb.innerHTML = list.map(f => `
+    <tr>
+      <td><strong>${f.name}</strong></td>
+      <td><span class="badge blue">${f.category}</span></td>
+      <td>${f.size}</td>
+      <td>${f.updated}</td>
+      <td><button class="btn-ghost sm" onclick="showToast('Downloading ${f.name}…','info')">📥 Download</button></td>
+    </tr>
+  `).join('');
+}
+
+function handleFileUpload(files) {
+  if(!files || files.length === 0) return;
+  for(let i=0; i<files.length; i++) {
+    state.files.unshift({
+      name: files[i].name,
+      category: files[i].name.endsWith('.dwg') ? 'CAD Drawing' : 'Specification PDF',
+      size: `${(files[i].size/1024/1024).toFixed(2)} MB`,
+      updated: 'Just now'
+    });
+  }
+  saveState();
+  renderFiles();
+  showToast(`Uploaded ${files.length} file(s) to cloud!`, 'success');
+}
+window.handleFileUpload = handleFileUpload;
+
+// ──── MASTER BOQ ────
+function renderBOQ() {
+  const tb = document.getElementById('boqBody');
+  if(!tb) return;
+  const list = state.schedules || [];
+  if(list.length === 0) {
+    tb.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--slate-dim);">No BOQ line items generated yet. Add specifications to auto-generate line items.</td></tr>`;
+    return;
+  }
+  tb.innerHTML = list.map((s, idx) => {
+    const rate = s.clientPrice || 0;
+    const gst = Math.round(rate * 0.18);
+    const total = rate + gst;
+    return `
+      <tr>
+        <td>${idx + 1}</td>
+        <td><strong>${s.name}</strong><div style="font-size:10.5px;color:var(--slate-dim);">${s.dims||''} · ${s.supplier||''}</div></td>
+        <td>${s.room||'Living Room'}</td>
+        <td>1</td>
+        <td>Nos</td>
+        <td>₹${rate.toLocaleString()}</td>
+        <td>18% (₹${gst.toLocaleString()})</td>
+        <td><strong style="color:var(--gold);">₹${total.toLocaleString()}</strong></td>
+        <td><button class="btn-ghost sm" onclick="showToast('Line item details viewed','info')">🔍</button></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function addBOQRow() {
+  goTo('schedules');
+  openModal('addSpecModal');
+}
+window.addBOQRow = addBOQRow;
+
+// ──── PROJECT CREATION MODAL ────
+function handleCreateProject(e){
+  e.preventDefault();
+  const name = document.getElementById('npName').value;
+  const client = document.getElementById('npClient').value;
+  const type = document.getElementById('npType').value;
+  const budget = document.getElementById('npBudget').value;
+
+  const newP = {
+    id: Date.now(),
+    name: name,
+    client: client,
+    type: type,
+    status: 'inprogress',
+    statusLabel: 'In Progress',
+    statusColor: 'blue',
+    progress: 10,
+    budget: budget,
+    due: '2 Months',
+    daysRemaining: 60,
+    pinned: false,
+    cover: '/brands/brand_1_1.png',
+    team: ['Self'],
+    categories: ['Interior Architecture']
+  };
+
+  state.projects.unshift(newP);
+  saveState();
+  closeModal('newProjectModal');
+  showToast(`Created project "${name}"!`, 'success');
+  logUserActivity(`Created Project: ${name}`, `Budget: ${budget}`);
+  goTo('projects');
+}
+window.handleCreateProject = handleCreateProject;
+
+function handleCreateSpec(e){
+  e.preventDefault();
+  const name = document.getElementById('specName').value;
+  const room = document.getElementById('specRoom').value;
+  const trade = document.getElementById('specTrade').value;
+  const supplier = document.getElementById('specSupplier').value;
+  const tradePrice = parseFloat(document.getElementById('specTradePrice').value) || 0;
+  const clientPrice = parseFloat(document.getElementById('specClientPrice').value) || 0;
+  const dims = document.getElementById('specDims').value;
+
+  state.schedules.push({
+    id: 'sp-' + Date.now(),
+    name,
+    sku: 'SPEC-' + Math.random().toString(36).substr(2,4).toUpperCase(),
+    room,
+    trade,
+    supplier,
+    tradePrice,
+    clientPrice,
+    dims,
+    status: 'Pending',
+    img: '/brands/brand_1_1.png',
+    categories: [trade, room]
+  });
+
+  saveState();
+  closeModal('addSpecModal');
+  showToast(`Saved specification "${name}"!`, 'success');
+  logUserActivity(`Created Specification: ${name}`, `Room: ${room} · Price: ₹${clientPrice}`);
+}
+window.handleCreateSpec = handleCreateSpec;
+
+function handleCreateTask(e){
+  e.preventDefault();
+  const text = document.getElementById('ntTitle').value;
+  const col = parseInt(document.getElementById('ntCol').value) || 0;
+  state.tasks.push({
+    id: Date.now(),
+    text,
+    done: col === 3,
+    col: col,
+    due: 'This Week',
+    tag: 'blue'
+  });
+  saveState();
+  closeModal('newTaskModal');
+  showToast(`Added task "${text}"!`, 'success');
+  logUserActivity(`Created Task: ${text}`, `Column: ${KANBAN_COLS[col]}`);
+}
+window.handleCreateTask = handleCreateTask;
+
+function handleCreatePO(e){
+  e.preventDefault();
+  const supplier = document.getElementById('poSupplier').value;
+  const project = document.getElementById('poProject').value;
+  const value = parseFloat(document.getElementById('poValue').value) || 0;
+  const terms = document.getElementById('poTerms').value;
+
+  state.pos.unshift({
+    id: 'PO-' + Math.floor(1000 + Math.random() * 9000),
+    supplier,
+    project,
+    items: 3,
+    value: '₹' + value.toLocaleString(),
+    deposit: terms.split('/')[0] || terms,
+    eta: '3 Weeks',
+    status: 'Pending Quotation'
+  });
+
+  saveState();
+  closeModal('newPoModal');
+  showToast(`Generated Purchase Order for ${supplier}!`, 'success');
+  logUserActivity(`Generated PO: ${supplier}`, `Value: ₹${value}`);
+}
+window.handleCreatePO = handleCreatePO;
+
+function handleAddRoomProduct(e){
+  e.preventDefault();
+  const name = document.getElementById('rpName').value;
+  const brand = document.getElementById('rpBrand').value;
+  const price = parseFloat(document.getElementById('rpPrice').value) || 0;
+
+  state.schedules.push({
+    id: 'sp-' + Date.now(),
+    name,
+    sku: 'ROOM-' + Math.random().toString(36).substr(2,4).toUpperCase(),
+    room: currentRoom?.name || 'Living Room',
+    trade: 'Fixtures',
+    supplier: brand,
+    tradePrice: Math.round(price * 0.78),
+    clientPrice: price,
+    dims: 'Custom Specification',
+    status: 'Pending',
+    img: '/brands/brand_1_1.png',
+    categories: ['Room Spec']
+  });
+
+  saveState();
+  closeModal('addProductModal');
+  showToast(`Added "${name}" to ${currentRoom?.name || 'Room'}!`, 'success');
+}
+window.handleAddRoomProduct = handleAddRoomProduct;
+
+// ──── MODAL CONTROLS ────
+function openModal(id){
+  const el=document.getElementById(id);
+  if(el)el.classList.add('open');
+}
+window.openModal = openModal;
+
+function closeModal(id){
+  const el=document.getElementById(id);
+  if(el)el.classList.remove('open');
+}
+window.closeModal = closeModal;
+
+// ──── TOAST CONTROLS ────
+function showToast(msg, type='info'){
+  const wrap = document.getElementById('toastWrap');
+  if(!wrap) return;
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${type==='success'?'✓':'ℹ'}</span> <span>${msg}</span>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.remove(); }, 3500);
+}
+window.showToast = showToast;
+
+function toggleTheme(){
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  showToast(`Switched to ${next} theme`,'info');
+}
+window.toggleTheme = toggleTheme;
+
+function handleSearch(val){
+  if(!val.trim()) return;
+  showToast(`Searching for "${val}" across projects, specs, and POs…`, 'info');
+}
+window.handleSearch = handleSearch;
+
+function openProjectDetail(projId){
+  const proj = state.projects.find(p=>p.id===projId) || state.projects[0];
+  if(proj){
+    state.activeProjectId = proj.id;
+    const detailTitle = document.querySelector('#page-detail h1');
+    const detailMeta = document.querySelector('#page-detail p');
+    if(detailTitle) detailTitle.textContent = proj.name;
+    if(detailMeta) detailMeta.textContent = `Client: ${proj.client} · ${proj.budget} Budget · ${proj.type}`;
+  }
+  goTo('detail');
+}
+window.openProjectDetail = openProjectDetail;
+
+function renderDetailRooms(){
+  const el=document.getElementById('detailRoomsGrid');
+  if(!el)return;
+  el.innerHTML=ROOM_DATA.map(r=>`
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;" onclick="openRoom(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+        <h4 style="font-size:14px;font-weight:800;color:#fff;">${r.name}</h4>
+        <span class="badge ${r.status==='done'?'green':'gold'}">${r.status==='done'?'Completed':'In Progress'}</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--slate-dim);">${r.floor} · ${r.area}</div>
+      <div style="font-size:13px;font-weight:800;color:var(--gold);margin-top:10px;">Budget: ${r.budget}</div>
+    </div>`).join('');
+}
+
+function openRoom(room){
+  currentRoom=room;
+  const rt = document.getElementById('roomTitle');
+  const rm = document.getElementById('roomMeta');
+  if(rt) rt.textContent = room.name;
+  if(rm) rm.textContent = `${room.floor} · ${room.area}`;
+  goTo('room');
+}
+window.openRoom = openRoom;
+
+function renderRoom() {
+  // Room product view
+}
+function renderTwin() {
+  // Digital Twin view
 }
 
 // ──── ADMIN AUDIT TRAIL ────
@@ -1701,9 +3134,6 @@ function renderAuditLogs(){
       <td>${l.details}</td>
       <td><span class="badge green">Logged ✓</span></td>
     </tr>`).join('');
-}
-function exportAuditReport(){
-  showToast('Exporting admin activity audit report (CSV)…','success');
 }
 
 function handleWorkspaceLogout(){
