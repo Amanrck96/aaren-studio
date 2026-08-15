@@ -34,6 +34,7 @@ export default function AdminNav() {
     { label: "📦 Products", href: "/admin/products" },
     { label: "💬 Testimonials", href: "/admin/testimonials" },
     { label: "✍️ Blogs", href: "/admin/blogs" },
+    { label: "❓ FAQs & Brand Help", href: "/admin/faq" },
     { label: "📁 Media Library", href: "/admin/media" },
     { label: "🗂️ Dropdowns", href: "/admin/dropdowns" },
     { label: "ℹ️ About & Roadmap", href: "/admin/about" },

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import AdminNav from "@/components/AdminNav";
 import { BrandItem, PdfCatalogItem } from "@/lib/types";
 import { uploadFileWithCompression } from "@/lib/uploadHelper";
@@ -32,6 +33,12 @@ export default function AdminBrandsPage() {
     description: "",
     shortCode: "SF 01",
     sequenceNumber: 1,
+    category: "Outdoor Screens",
+    origin: "Australia",
+    tagline: "",
+    founded: "2008",
+    collections: ["All"],
+    accentColor: "#6b9e7a",
     catalogPdfUrl: "",
     pdfCatalogs: [],
   });
@@ -212,20 +219,30 @@ export default function AdminBrandsPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
             {brands.map((b) => (
               <div key={b.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "12px", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
-                <div style={{ position: "relative", height: "140px", background: "#1a1a20" }}>
+                <Link href={`/admin/brands/${b.id}`} style={{ textDecoration: "none", position: "relative", height: "140px", background: "#1a1a20", display: "block" }}>
                   <Image src={b.bannerUrl || "/brands/brand_1_1.png"} alt={b.name} fill style={{ objectFit: "cover" }} />
                   <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.4)" }} />
                   <div style={{ position: "absolute", bottom: "10px", left: "15px", background: "rgba(255,255,255,0.9)", padding: "0.4rem 0.8rem", borderRadius: "4px" }}>
-                    <Image src={b.logoUrl} alt={b.name} width={80} height={28} style={{ objectFit: "contain" }} />
+                    <Image src={b.logoUrl || "/brands/brand_1_2.png"} alt={b.name} width={80} height={28} style={{ objectFit: "contain" }} />
                   </div>
                   <span style={{ position: "absolute", top: "10px", right: "10px", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.3rem 0.7rem", borderRadius: "4px", fontSize: "0.8rem", fontWeight: 900 }}>
-                    {b.shortCode}
+                    {b.shortCode || "BR"}
                   </span>
-                </div>
+                </Link>
                 <div style={{ padding: "1.4rem", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                   <div>
-                    <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0 0 0.5rem", letterSpacing: "0.02em" }}>{b.name}</h3>
-                    <p style={{ color: "#cbd5e1", fontSize: "0.9rem", lineHeight: 1.5, margin: "0 0 0.8rem", fontWeight: 400 }}>{b.description}</p>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+                      <Link href={`/admin/brands/${b.id}`} style={{ textDecoration: "none" }}>
+                        <h3 style={{ fontSize: "1.25rem", fontWeight: 900, color: "#ffffff", margin: 0, letterSpacing: "0.02em" }}>{b.name}</h3>
+                      </Link>
+                      {b.category && <span style={{ fontSize: "0.75rem", background: "rgba(255,255,255,0.1)", color: "#cbd5e1", padding: "2px 8px", borderRadius: "4px" }}>{b.category}</span>}
+                    </div>
+                    {b.tagline && <div style={{ fontSize: "0.82rem", fontStyle: "italic", color: "#d4af37", marginBottom: "0.5rem" }}>&ldquo;{b.tagline}&rdquo;</div>}
+                    <p style={{ color: "#cbd5e1", fontSize: "0.85rem", lineHeight: 1.5, margin: "0 0 0.8rem", fontWeight: 400, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{b.description}</p>
+                    <div style={{ display: "flex", gap: "10px", fontSize: "0.75rem", color: "#94a3b8", marginBottom: "0.8rem" }}>
+                      {b.origin && <span>🌍 {b.origin}</span>}
+                      {b.founded && <span>📅 Est. {b.founded}</span>}
+                    </div>
                     {b.catalogPdfUrl ? (
                       <div style={{ fontSize: "0.78rem", color: "#60a5fa", marginBottom: "0.8rem", wordBreak: "break-all" }}>
                         📄 <a href={b.catalogPdfUrl} target="_blank" rel="noopener noreferrer" style={{ color: "#60a5fa", textDecoration: "underline" }}>Catalog PDF Active</a>
@@ -234,22 +251,35 @@ export default function AdminBrandsPage() {
                       <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginBottom: "0.8rem" }}>⚠️ No PDF catalog linked</div>
                     )}
                   </div>
-                  <div style={{ display: "flex", gap: "0.8rem", borderTop: "1px solid #222", paddingTop: "0.8rem" }}>
+                  <div style={{ display: "flex", gap: "0.5rem", borderTop: "1px solid #222", paddingTop: "0.8rem", flexWrap: "wrap" }}>
                     <button
                       onClick={() => {
                         setEditingBrand(b);
                         setPdfCatalogs(b.pdfCatalogs || (b.catalogPdfUrl ? [{ id: "cat-1", title: `${b.name} Specification Catalog`, pdfUrl: b.catalogPdfUrl }] : []));
                         setShowModal(true);
                       }}
-                      style={{ flex: 1, padding: "0.5rem", background: "#222", color: "#fff", border: "1px solid #333", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}
+                      style={{ flex: 1, padding: "0.5rem", background: "#222", color: "#fff", border: "1px solid #333", borderRadius: "4px", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}
                     >
-                      ✏️ Edit
+                      ✏️ Quick Edit
                     </button>
+                    <Link
+                      href={`/admin/brands/${b.id}`}
+                      style={{ padding: "0.5rem 0.7rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", borderRadius: "4px", textDecoration: "none", fontSize: "0.8rem", fontWeight: 800, display: "inline-flex", alignItems: "center" }}
+                    >
+                      ⚙️ Full Page ↗
+                    </Link>
+                    <Link
+                      href={`/brands/${b.id}`}
+                      target="_blank"
+                      style={{ padding: "0.5rem 0.7rem", background: "#334155", color: "#fff", borderRadius: "4px", textDecoration: "none", fontSize: "0.8rem", fontWeight: 600, display: "inline-flex", alignItems: "center" }}
+                    >
+                      👁 Live ↗
+                    </Link>
                     <button
                       onClick={() => handleDelete(b.id)}
-                      style={{ padding: "0.5rem 0.8rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}
+                      style={{ padding: "0.5rem 0.7rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}
                     >
-                      🗑️ Delete
+                      🗑️
                     </button>
                   </div>
                 </div>
@@ -260,9 +290,19 @@ export default function AdminBrandsPage() {
 
         {/* Add / Edit Brand Modal */}
         {showModal && (
-          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
-            <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "550px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
-              <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem" }}>{editingBrand.id ? "Edit Brand" : "Add New Brand"}</h2>
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
+            <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "600px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+                <h2 style={{ fontSize: "1.5rem", margin: 0 }}>{editingBrand.id ? "Edit Brand" : "Add New Brand"}</h2>
+                {editingBrand.id && (
+                  <Link
+                    href={`/admin/brands/${editingBrand.id}`}
+                    style={{ fontSize: "0.8rem", color: "#d4af37", textDecoration: "underline", fontWeight: 700 }}
+                  >
+                    Open Master Brand Editor Page ⚙️ ↗
+                  </Link>
+                )}
+              </div>
               <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div>
                   <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Brand Name *</label>
@@ -275,9 +315,43 @@ export default function AdminBrandsPage() {
                   />
                 </div>
 
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Hero Tagline / Quote (e.g. &ldquo;Infinite Zipline retractable screen systems&rdquo;)</label>
+                  <input
+                    type="text"
+                    placeholder="Infinite Zipline retractable screen systems"
+                    value={editingBrand.tagline || ""}
+                    onChange={(e) => setEditingBrand({ ...editingBrand, tagline: e.target.value })}
+                    style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  />
+                </div>
+
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                   <div>
-                    <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Short Code (e.g. SF 01) *</label>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Category *</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Outdoor Screens"
+                      value={editingBrand.category || ""}
+                      onChange={(e) => setEditingBrand({ ...editingBrand, category: e.target.value })}
+                      style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Country of Origin *</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Australia"
+                      value={editingBrand.origin || ""}
+                      onChange={(e) => setEditingBrand({ ...editingBrand, origin: e.target.value })}
+                      style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Short Code *</label>
                     <input
                       type="text"
                       required
@@ -287,7 +361,17 @@ export default function AdminBrandsPage() {
                     />
                   </div>
                   <div>
-                    <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Sequence Number *</label>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Founded Year</label>
+                    <input
+                      type="text"
+                      placeholder="2008"
+                      value={editingBrand.founded || ""}
+                      onChange={(e) => setEditingBrand({ ...editingBrand, founded: e.target.value })}
+                      style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Sequence #</label>
                     <input
                       type="number"
                       required
@@ -446,9 +530,9 @@ export default function AdminBrandsPage() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Description</label>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>About the Brand (Story Description) *</label>
                   <textarea
-                    rows={3}
+                    rows={4}
                     value={editingBrand.description || ""}
                     onChange={(e) => setEditingBrand({ ...editingBrand, description: e.target.value })}
                     style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}

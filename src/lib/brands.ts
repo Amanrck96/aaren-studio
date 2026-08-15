@@ -129,6 +129,7 @@ export type Brand = {
   description: string;
   founded?: string;
   website?: string;
+  accentColor?: string;
   collections: string[]; // filter chips
   products: BrandProduct[];
   catalogues: BrandCatalogue[];

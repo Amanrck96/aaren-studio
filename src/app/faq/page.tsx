@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 
 interface FaqItem {
   id: string;
-  category: "General & Showroom" | "Surfaces & Materials" | "Kitchens & Wardrobes" | "Hardware & Fittings" | "Architects & Commercial";
+  category: string;
   question: string;
   answer: string;
+  brand?: string;
 }
 
 const FAQ_DATA: FaqItem[] = [
@@ -313,15 +314,6 @@ const FAQ_DATA: FaqItem[] = [
   }
 ];
 
-const CATEGORIES = [
-  "All",
-  "General & Showroom",
-  "Surfaces & Materials",
-  "Kitchens & Wardrobes",
-  "Hardware & Fittings",
-  "Architects & Commercial"
-];
-
 export default function FaqPage() {
   const [faqList, setFaqList] = useState<FaqItem[]>(FAQ_DATA);
   const [activeCategory, setActiveCategory] = useState<string>("All");
@@ -339,15 +331,23 @@ export default function FaqPage() {
       .catch(() => {});
   }, []);
 
+  const categories = useMemo(() => {
+    const fromData = faqList.map((f) => f.category).filter(Boolean);
+    return Array.from(new Set(["All", ...fromData]));
+  }, [faqList]);
+
   const toggleItem = (id: string) => {
     setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const filteredFaqs = faqList.filter((item) => {
-    const matchesCategory = activeCategory === "All" || item.category === activeCategory;
+    const matchesCategory = activeCategory === "All" || item.category.toLowerCase() === activeCategory.toLowerCase();
+    const q = searchQuery.toLowerCase();
     const matchesSearch =
-      item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.answer.toLowerCase().includes(searchQuery.toLowerCase());
+      !searchQuery ||
+      item.question.toLowerCase().includes(q) ||
+      item.answer.toLowerCase().includes(q) ||
+      (item.brand && item.brand.toLowerCase().includes(q));
     return matchesCategory && matchesSearch;
   });
 
@@ -358,7 +358,7 @@ export default function FaqPage() {
         <header className="faq-header">
           <div className="faq-meta-bar">
             <span className="faq-tag">AAREN INTPRO KNOWLEDGE BASE</span>
-            <span className="faq-count">[{FAQ_DATA.length} FREQUENTLY ASKED QUESTIONS]</span>
+            <span className="faq-count">[{faqList.length} FREQUENTLY ASKED QUESTIONS]</span>
           </div>
           <h1 className="faq-title">FREQUENTLY ASKED QUESTIONS</h1>
           <p className="faq-desc">
@@ -369,7 +369,7 @@ export default function FaqPage() {
           <div className="faq-search">
             <input
               type="text"
-              placeholder="Search questions or keywords (e.g. Bangalore, laminates, hardware, architects, Mysore Road)..."
+              placeholder="Search questions or keywords (e.g. Bangalore, Freedom Screens, FIMA, Falper, laminates, hardware)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
@@ -383,8 +383,8 @@ export default function FaqPage() {
 
           {/* Category Tabs */}
           <div className="faq-categories">
-            {CATEGORIES.map((cat) => {
-              const count = cat === "All" ? FAQ_DATA.length : FAQ_DATA.filter((f) => f.category === cat).length;
+            {categories.map((cat) => {
+              const count = cat === "All" ? faqList.length : faqList.filter((f) => f.category.toLowerCase() === cat.toLowerCase()).length;
               return (
                 <button
                   key={cat}

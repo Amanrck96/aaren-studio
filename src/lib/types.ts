@@ -33,6 +33,14 @@ export type BrandItem = {
   sequenceNumber: number;
   catalogPdfUrl?: string;
   pdfCatalogs?: { id: string; title: string; pdfUrl: string }[];
+  category?: string;
+  origin?: string;
+  tagline?: string;
+  founded?: string;
+  website?: string;
+  collections?: string[];
+  accentColor?: string;
+  tags?: string[];
 };
 
 export type ServiceItem = {
@@ -129,12 +137,19 @@ export type ProductItem = {
   category: string;
   subcategory?: string;
   shortCode?: string;
+  sku?: string;
   width?: string;
   height?: string;
   depth?: string;
   measurementType?: string;
   thickness?: string;
   finish?: string;
+  material?: string;
+  origin?: string;
+  leadTime?: string;
+  warranty?: string;
+  features?: string[];
+  applicationAreas?: string[];
   description: string;
   tags?: string[];
   imageUrl: string;
@@ -142,6 +157,7 @@ export type ProductItem = {
   catalogPdfUrl?: string;
   qtyInStock?: number;
   price?: number;
+  priceUnit?: string;
   finishOptions?: { name: string; hex?: string; image?: string }[];
 };
 
@@ -295,4 +311,13 @@ export const DEFAULT_CATALOG_SETTINGS: CatalogSettingsItem = {
   buttonText: "View Catalog ↗",
   modalTitle: "Catalogue Enquiry",
   modalSubtext: "Submit your details below to view on-screen digital access for this official architectural specification PDF.",
+};
+
+export type FaqItem = {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
+  brand?: string;
+  sequenceNumber?: number;
 };

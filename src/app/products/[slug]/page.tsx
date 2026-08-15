@@ -384,13 +384,36 @@ export default function ProductDetailPage({ params }: Props) {
 
         {/* RIGHT 42%: STICKY INFO PANEL */}
         <div className="info-right-col">
-          {/* Breadcrumb */}
-          <div className="breadcrumb">
-            <Link href="/">Home</Link>
-            <ChevronRight size={10} />
-            <Link href="/products">Products</Link>
-            <ChevronRight size={10} />
-            <span>{product.brand}</span>
+          {/* Breadcrumb & Admin Edit Access */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "12px", flexWrap: "wrap", gap: "8px" }}>
+            <div className="breadcrumb" style={{ margin: 0 }}>
+              <Link href="/">Home</Link>
+              <ChevronRight size={10} />
+              <Link href="/products">Products</Link>
+              <ChevronRight size={10} />
+              <span>{product.brand}</span>
+            </div>
+            <Link
+              href={`/admin/products/${product.id}`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "6px 12px",
+                background: "#f1f5f9",
+                border: "1px solid #cbd5e1",
+                borderRadius: "6px",
+                fontSize: "11px",
+                fontWeight: 700,
+                color: "#1e1e1e",
+                textDecoration: "none",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                transition: "all 0.2s",
+              }}
+            >
+              ✏️ Edit in Admin
+            </Link>
           </div>
 
           <h1 className="product-title">{product.name}</h1>
@@ -535,7 +558,7 @@ export default function ProductDetailPage({ params }: Props) {
           </div>
           <div className="specs-row">
             <div className="spec-key">WARRANTY</div>
-            <div className="spec-val">25 years structural warranty</div>
+            <div className="spec-val">{product.warranty || "25 years structural warranty"}</div>
           </div>
           <div className="specs-row">
             <div className="spec-key">MAINTENANCE</div>

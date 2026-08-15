@@ -54,6 +54,7 @@ export default function AdminProductsPage() {
 
   // Modal State
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [editingProduct, setEditingProduct] = useState<ProductItem | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   // Form State
@@ -62,9 +63,16 @@ export default function AdminProductsPage() {
     brand: "Newtech Wood",
     category: "Decking",
     collection: "",
+    shortCode: "",
     finish: "",
+    width: "",
+    height: "",
+    depth: "",
+    thickness: "",
+    measurementType: "mm",
     price: "",
     priceUnit: "per SQM",
+    qtyInStock: "50",
     imageUrl: "",
     description: "",
   });
@@ -103,6 +111,52 @@ export default function AdminProductsPage() {
     setTimeout(() => setToastMsg(null), 3000);
   };
 
+  const openNewProductModal = () => {
+    setEditingProduct(null);
+    setForm({
+      name: "",
+      brand: "Newtech Wood",
+      category: "Decking",
+      collection: "",
+      shortCode: "",
+      finish: "",
+      width: "",
+      height: "",
+      depth: "",
+      thickness: "",
+      measurementType: "mm",
+      price: "",
+      priceUnit: "per SQM",
+      qtyInStock: "50",
+      imageUrl: "",
+      description: "",
+    });
+    setModalOpen(true);
+  };
+
+  const openEditProductModal = (p: ProductItem) => {
+    setEditingProduct(p);
+    setForm({
+      name: p.name || "",
+      brand: p.brand || "Newtech Wood",
+      category: p.category || "Decking",
+      collection: p.subcategory || (p as any).collection || "",
+      shortCode: p.shortCode || "",
+      finish: p.finish || "",
+      width: p.width || "",
+      height: p.height || "",
+      depth: p.depth || "",
+      thickness: p.thickness || "",
+      measurementType: p.measurementType || "mm",
+      price: p.price !== undefined ? String(p.price) : "",
+      priceUnit: (p as any).priceUnit || "per SQM",
+      qtyInStock: p.qtyInStock !== undefined ? String(p.qtyInStock) : "50",
+      imageUrl: p.imageUrl || "",
+      description: p.description || "",
+    });
+    setModalOpen(true);
+  };
+
   // Delete product - calls API so it is permanently removed from DB
   const handleDeleteProduct = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
@@ -121,51 +175,50 @@ export default function AdminProductsPage() {
     }
   };
 
-  // Create product submit
+  // Create or Update product submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const isEdit = Boolean(editingProduct);
       const payload = {
-        id: `prod-${Date.now()}`,
+        ...(isEdit && editingProduct ? editingProduct : {}),
+        id: isEdit && editingProduct ? editingProduct.id : `prod-${Date.now()}`,
         name: form.name,
         brand: form.brand,
         category: form.category,
         subcategory: form.collection || form.category,
+        shortCode: form.shortCode || undefined,
         finish: form.finish,
+        width: form.width || undefined,
+        height: form.height || undefined,
+        depth: form.depth || undefined,
+        thickness: form.thickness || undefined,
+        measurementType: form.measurementType || "mm",
         description: form.description || `${form.name} by ${form.brand}`,
         price: form.price ? parseFloat(form.price) : undefined,
         priceUnit: form.priceUnit,
+        qtyInStock: form.qtyInStock ? parseInt(form.qtyInStock, 10) : 50,
         imageUrl: form.imageUrl,
-        galleryImages: [form.imageUrl],
-        qtyInStock: 50,
+        galleryImages: isEdit && editingProduct?.galleryImages?.length ? editingProduct.galleryImages : [form.imageUrl],
       };
 
       const res = await fetch("/api/products", {
-        method: "POST",
+        method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       const json = await res.json();
-      if (json.success || json.product) {
+      if (json.success || json.product || json.data) {
         setModalOpen(false);
-        setForm({
-          name: "",
-          brand: "Newtech Wood",
-          category: "Decking",
-          collection: "",
-          finish: "",
-          price: "",
-          priceUnit: "per SQM",
-          imageUrl: "",
-          description: "",
-        });
         fetchProducts();
-        showToast("Product added successfully!");
+        showToast(isEdit ? "Product details updated successfully!" : "Product added successfully!");
+      } else {
+        showToast("Failed: " + (json.error || "Save error"));
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      showToast("Failed to create product");
+      showToast("Failed to save product: " + err.message);
     }
   };
 
@@ -292,7 +345,7 @@ export default function AdminProductsPage() {
             <span className="eyebrow">AAREN Studio Admin Control</span>
             <h1 className="page-title">Product Catalog Management</h1>
           </div>
-          <button className="btn-add" onClick={() => setModalOpen(true)}>
+          <button className="btn-add" onClick={openNewProductModal}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
             Add New Product
           </button>
@@ -322,7 +375,7 @@ export default function AdminProductsPage() {
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
                 <input
                   type="text"
-                  placeholder="Search products by name or brand..."
+                  placeholder="Search products by name, brand, or shortcode..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -349,7 +402,7 @@ export default function AdminProductsPage() {
                     <th>Category</th>
                     <th>Collection</th>
                     <th>Price</th>
-                    <th>Actions</th>
+                    <th>Actions & Editor</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -361,15 +414,18 @@ export default function AdminProductsPage() {
                     filteredProducts.map((p) => (
                       <tr key={p.id}>
                         <td>
-                          <div className="prod-cell">
+                          <Link href={`/admin/products/${p.id}`} className="prod-cell" title="Click to open master individual product page">
                             <div
                               className="prod-thumb"
                               style={{
                                 backgroundImage: p.imageUrl ? `url(${p.imageUrl})` : "linear-gradient(135deg,#d8d2c4,#a89b7f)"
                               }}
                             />
-                            <span>{p.name}</span>
-                          </div>
+                            <div>
+                              <div style={{ color: "#1e1e1e", fontWeight: 700 }}>{p.name}</div>
+                              {p.shortCode && <span className="cell-shortcode">{p.shortCode}</span>}
+                            </div>
+                          </Link>
                         </td>
                         <td className="brand-cell">{p.brand}</td>
                         <td>{p.category}</td>
@@ -378,8 +434,22 @@ export default function AdminProductsPage() {
                           {p.price ? `₹${p.price.toLocaleString("en-IN")} ${(p as any).priceUnit || ""}` : "Quote Request"}
                         </td>
                         <td>
-                          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                            <Link href={`/products/${p.id}`} className="action-icon" title="View Product">
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                            <button
+                              onClick={() => openEditProductModal(p)}
+                              className="btn-action-edit"
+                              title="Quick Edit Product Details"
+                            >
+                              ✏️ Quick Edit
+                            </button>
+                            <Link
+                              href={`/admin/products/${p.id}`}
+                              className="btn-action-full"
+                              title="Open Full Individual Product Page"
+                            >
+                              ⚙️ Full Page ↗
+                            </Link>
+                            <Link href={`/products/${p.id}`} target="_blank" className="action-icon" title="View Live Public Page">
                               👁
                             </Link>
                             <span
@@ -420,20 +490,22 @@ export default function AdminProductsPage() {
                 className="dropzone"
                 onClick={() => bulkFileInputRef.current?.click()}
               >
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#81663f" strokeWidth="2" style={{ margin: "0 auto", display: "block" }}><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
-                <h4>Drag &amp; Drop .xlsx Excel File Here</h4>
-                <p>or click to browse from your device</p>
                 <input
-                  ref={bulkFileInputRef}
                   type="file"
+                  ref={bulkFileInputRef}
                   accept=".xlsx, .xls"
                   style={{ display: "none" }}
-                  onChange={(e) => e.target.files?.[0] && handleExcelSelect(e.target.files[0])}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) handleExcelSelect(e.target.files[0]);
+                  }}
                 />
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#81663f" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                <h4>{bulkFile ? bulkFile.name : "Click to select or drop Excel file here"}</h4>
+                <p>{bulkFile ? `${(bulkFile.size / 1024).toFixed(1)} KB` : "Supports standard .xlsx catalog templates"}</p>
               </div>
 
               {uploadStatusMsg && (
-                <div style={{ marginTop: "20px", padding: "12px 16px", borderRadius: "12px", background: "rgba(0,0,0,0.05)", fontSize: "12px", fontWeight: 600 }}>
+                <div style={{ marginTop: "16px", padding: "12px 16px", borderRadius: "8px", background: "#f1f5f9", fontSize: "12px", fontWeight: 600 }}>
                   {uploadStatusMsg}
                 </div>
               )}
@@ -486,11 +558,21 @@ export default function AdminProductsPage() {
         )}
       </main>
 
-      {/* ADD PRODUCT MODAL */}
+      {/* ADD / EDIT PRODUCT MODAL */}
       <div className={`overlay ${modalOpen ? "open" : ""}`}>
         <div className="modal">
           <button className="modal-close" onClick={() => setModalOpen(false)}>✕</button>
-          <h3>Add New Architectural Product</h3>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+            <h3 style={{ margin: 0 }}>{editingProduct ? `Edit: ${form.name}` : "Add New Architectural Product"}</h3>
+            {editingProduct && (
+              <Link
+                href={`/admin/products/${editingProduct.id}`}
+                className="btn-modal-full"
+              >
+                Open Full Master Page ↗
+              </Link>
+            )}
+          </div>
           <form id="productForm" onSubmit={handleSubmit}>
             <div className="field">
               <label>Product Name *</label>
@@ -502,27 +584,29 @@ export default function AdminProductsPage() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
             </div>
-            <div className="field">
-              <label>Brand Name *</label>
-              <select
-                value={form.brand}
-                onChange={(e) => setForm({ ...form, brand: e.target.value })}
-              >
-                {PREDEFINED_BRANDS.map((b) => (
-                  <option key={b} value={b}>{b}</option>
-                ))}
-              </select>
-            </div>
-            <div className="field">
-              <label>Category *</label>
-              <select
-                value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-              >
-                {CATEGORIES.filter((c) => c !== "All").map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
+            <div className="field-row">
+              <div className="field">
+                <label>Brand Name *</label>
+                <select
+                  value={form.brand}
+                  onChange={(e) => setForm({ ...form, brand: e.target.value })}
+                >
+                  {PREDEFINED_BRANDS.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="field">
+                <label>Category *</label>
+                <select
+                  value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                >
+                  {CATEGORIES.filter((c) => c !== "All").map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="field-row">
               <div className="field">
@@ -535,12 +619,52 @@ export default function AdminProductsPage() {
                 />
               </div>
               <div className="field">
-                <label>Finish</label>
+                <label>Short Code</label>
+                <input
+                  type="text"
+                  placeholder="e.g. NW 10, SF 01"
+                  value={form.shortCode}
+                  onChange={(e) => setForm({ ...form, shortCode: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="field-row">
+              <div className="field">
+                <label>Width</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 140mm"
+                  value={form.width}
+                  onChange={(e) => setForm({ ...form, width: e.target.value })}
+                />
+              </div>
+              <div className="field">
+                <label>Height / Thickness</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 22.5mm"
+                  value={form.height}
+                  onChange={(e) => setForm({ ...form, height: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="field-row">
+              <div className="field">
+                <label>Finish Texture</label>
                 <input
                   type="text"
                   placeholder="e.g. Teak Composite"
                   value={form.finish}
                   onChange={(e) => setForm({ ...form, finish: e.target.value })}
+                />
+              </div>
+              <div className="field">
+                <label>In-Stock Quantity</label>
+                <input
+                  type="number"
+                  placeholder="50"
+                  value={form.qtyInStock}
+                  onChange={(e) => setForm({ ...form, qtyInStock: e.target.value })}
                 />
               </div>
             </div>
@@ -577,7 +701,7 @@ export default function AdminProductsPage() {
                 style={{ marginBottom: "0.4rem" }}
               />
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <span style={{ fontSize: "0.8rem", color: "#666" }}>OR Upload Image from computer:</span>
+                <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.7)" }}>OR Upload Image from computer:</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -612,7 +736,9 @@ export default function AdminProductsPage() {
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
               />
             </div>
-            <button type="submit" className="submit-btn">Save Product to Catalog →</button>
+            <button type="submit" className="submit-btn">
+              {editingProduct ? "Update Product Details →" : "Save Product to Catalog →"}
+            </button>
           </form>
         </div>
       </div>
@@ -781,8 +907,55 @@ export default function AdminProductsPage() {
         }
         .brand-cell { color: #81663f; font-weight: 700; }
         .price-cell { font-weight: 700; }
-        .action-icon { color: rgba(0,0,0,0.5); cursor: pointer; }
+        .action-icon { color: rgba(0,0,0,0.5); cursor: pointer; text-decoration: none; font-size: 14px; }
         .action-icon:hover { color: #1E1E1E; }
+        .btn-action-edit {
+          padding: 5px 10px;
+          border-radius: 6px;
+          background: #1e1e1e;
+          color: #fff;
+          font-size: 11px;
+          font-weight: 700;
+          border: none;
+          cursor: pointer;
+          transition: background 0.2s;
+          white-space: nowrap;
+        }
+        .btn-action-edit:hover { background: #81663f; }
+        .btn-action-full {
+          padding: 5px 10px;
+          border-radius: 6px;
+          background: #f1f5f9;
+          color: #1e1e1e;
+          border: 1px solid #cbd5e1;
+          font-size: 11px;
+          font-weight: 700;
+          text-decoration: none;
+          white-space: nowrap;
+          transition: all 0.2s;
+        }
+        .btn-action-full:hover { background: #e2e8f0; border-color: #94a3b8; }
+        .btn-modal-full {
+          padding: 6px 12px;
+          border-radius: 6px;
+          background: #81663f;
+          color: #fff;
+          font-size: 11px;
+          font-weight: 700;
+          text-decoration: none;
+          transition: background 0.2s;
+        }
+        .btn-modal-full:hover { background: #a38354; }
+        .cell-shortcode {
+          display: inline-block;
+          font-size: 10px;
+          font-weight: 700;
+          color: #81663f;
+          background: #fdf8f0;
+          padding: 1px 6px;
+          border-radius: 4px;
+          margin-top: 2px;
+        }
         .empty-row td { text-align: center; padding: 40px; color: rgba(0,0,0,0.4); font-style: italic; }
 
         .bulk-panel {

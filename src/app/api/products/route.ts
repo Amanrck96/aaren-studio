@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAllProductsStore, addProductStore, deleteProductStore } from "@/lib/store";
+import { getAllProductsStore, getProductByIdStore, addProductStore, updateProductStore, deleteProductStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -7,9 +7,18 @@ export const revalidate = 0;
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
     const category = searchParams.get("category");
     const brand = searchParams.get("brand");
     const query = searchParams.get("q");
+
+    if (id) {
+      const product = await getProductByIdStore(id);
+      if (!product) {
+        return NextResponse.json({ success: false, error: "Product not found" }, { status: 404 });
+      }
+      return NextResponse.json({ success: true, data: product });
+    }
 
     let products = await getAllProductsStore();
 
@@ -28,6 +37,8 @@ export async function GET(request: Request) {
           p.name.toLowerCase().includes(qLower) ||
           p.brand.toLowerCase().includes(qLower) ||
           p.category.toLowerCase().includes(qLower) ||
+          (p.subcategory && p.subcategory.toLowerCase().includes(qLower)) ||
+          (p.shortCode && p.shortCode.toLowerCase().includes(qLower)) ||
           p.description.toLowerCase().includes(qLower)
       );
     }
@@ -50,6 +61,21 @@ export async function POST(request: Request) {
 
     const created = await addProductStore(body);
     return NextResponse.json({ success: true, data: created });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json();
+    const id = body.id;
+    if (!id) {
+      return NextResponse.json({ success: false, error: "Product ID is required for updates" }, { status: 400 });
+    }
+
+    const updated = await updateProductStore(id, body);
+    return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

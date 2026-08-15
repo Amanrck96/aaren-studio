@@ -4,16 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useMemo, use } from "react";
 import { getBrandById } from "@/lib/brands";
-import { notFound } from "next/navigation";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export default function BrandDetailPage({ params }: Props) {
   const { slug } = use(params);
-  const brand = getBrandById(slug);
-
-  if (!brand) notFound();
+  const staticBrand = getBrandById(slug);
 
   const [activeCollection, setActiveCollection] = useState("All");
   const [mounted, setMounted] = useState(false);
@@ -23,9 +20,11 @@ export default function BrandDetailPage({ params }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
 
+  const brandNameForQuery = staticBrand?.name || slug.replace(/[-_]/g, " ");
+
   useEffect(() => {
     setMounted(true);
-    fetch(`/api/products?brand=${encodeURIComponent(brand.name)}&t=${Date.now()}`)
+    fetch(`/api/products?brand=${encodeURIComponent(brandNameForQuery)}&t=${Date.now()}`)
       .then((res) => res.json())
       .then((json) => {
         if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
@@ -34,21 +33,73 @@ export default function BrandDetailPage({ params }: Props) {
       })
       .catch((e) => console.error("Brand products API error:", e));
 
-    fetch("/api/brands")
+    fetch(`/api/brands?id=${encodeURIComponent(slug)}&t=${Date.now()}`)
       .then((res) => res.json())
       .then((json) => {
-        if (json && json.success && Array.isArray(json.data)) {
-          const found = json.data.find((b: any) => b.id === brand.id || b.name.toLowerCase() === brand.name.toLowerCase());
-          if (found) setApiBrand(found);
+        if (json && json.success && json.data) {
+          setApiBrand(json.data);
+        } else {
+          // Fallback fetch all brands
+          fetch("/api/brands")
+            .then((r) => r.json())
+            .then((allJson) => {
+              if (allJson && allJson.success && Array.isArray(allJson.data)) {
+                const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+                const found = allJson.data.find(
+                  (b: any) => b.id === slug || norm(b.id) === norm(slug) || norm(b.name) === norm(slug)
+                );
+                if (found) setApiBrand(found);
+              }
+            })
+            .catch(() => {});
         }
       })
       .catch(() => {});
-  }, [brand.id, brand.name]);
+  }, [slug, brandNameForQuery]);
+
+  // Merge static Brand fallback with dynamic database state from API
+  const activeBrand = useMemo(() => {
+    const base = staticBrand || {
+      id: slug,
+      name: slug.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      code: "BR",
+      num: "01",
+      hero: "/brands/brand_1_1.png",
+      logo: "/brands/brand_1_2.png",
+      category: "Architectural Products",
+      origin: "International",
+      tagline: "",
+      description: "",
+      founded: "",
+      collections: ["All"],
+      products: [],
+      catalogues: [],
+    };
+
+    if (!apiBrand) return base;
+
+    return {
+      ...base,
+      id: apiBrand.id || base.id,
+      name: apiBrand.name || base.name,
+      hero: apiBrand.bannerUrl || base.hero,
+      logo: apiBrand.logoUrl || base.logo,
+      num: apiBrand.shortCode || base.num,
+      code: apiBrand.shortCode || base.code,
+      category: apiBrand.category || base.category,
+      origin: apiBrand.origin || base.origin,
+      tagline: apiBrand.tagline !== undefined ? apiBrand.tagline : base.tagline,
+      description: apiBrand.description || base.description,
+      founded: apiBrand.founded !== undefined ? apiBrand.founded : base.founded,
+      collections: Array.isArray(apiBrand.collections) && apiBrand.collections.length > 0 ? apiBrand.collections : base.collections,
+      accentColor: apiBrand.accentColor || undefined,
+    };
+  }, [staticBrand, apiBrand, slug]);
 
   const displayCatalogues = useMemo(() => {
     if (apiBrand?.pdfCatalogs && apiBrand.pdfCatalogs.length > 0) {
       return apiBrand.pdfCatalogs.map((c: any) => ({
-        title: c.title || `${brand.name} Specification Catalog`,
+        title: c.title || `${activeBrand.name} Specification Catalog`,
         url: c.pdfUrl,
         year: "2026",
         pages: "Full Edition",
@@ -58,7 +109,7 @@ export default function BrandDetailPage({ params }: Props) {
     }
     if (apiBrand?.catalogPdfUrl) {
       return [{
-        title: `${brand.name} Specification Catalog`,
+        title: `${activeBrand.name} Specification Catalog`,
         url: apiBrand.catalogPdfUrl,
         year: "2026",
         pages: "Full Edition",
@@ -66,8 +117,8 @@ export default function BrandDetailPage({ params }: Props) {
         featured: true,
       }];
     }
-    return brand.catalogues;
-  }, [apiBrand, brand]);
+    return activeBrand.catalogues || [];
+  }, [apiBrand, activeBrand]);
 
   // Combine hardcoded samples with API products
   const allBrandProducts = useMemo(() => {
@@ -81,8 +132,8 @@ export default function BrandDetailPage({ params }: Props) {
         tag: p.shortCode || p.category,
       }));
     }
-    return brand.products;
-  }, [apiProducts, brand.products]);
+    return activeBrand.products || [];
+  }, [apiProducts, activeBrand.products]);
 
   const filteredProducts = useMemo(() => {
     if (activeCollection === "All") return allBrandProducts;
@@ -118,8 +169,7 @@ export default function BrandDetailPage({ params }: Props) {
     jacuzzi: "#6a9ab0",
     "alex-turco": "#c8a06a",
   };
-  const accent = accentMap[brand.id] || "#d4af37";
-
+  const accent = activeBrand.accentColor || accentMap[activeBrand.id] || "#d4af37";
 
   return (
     <div className="brand-detail">
@@ -128,8 +178,8 @@ export default function BrandDetailPage({ params }: Props) {
       <div className="bd-hero">
         <div className="bd-hero__img-wrap">
           <Image
-            src={brand.hero}
-            alt={brand.name}
+            src={activeBrand.hero || "/brands/brand_1_1.png"}
+            alt={activeBrand.name}
             fill
             priority
             sizes="100vw"
@@ -141,32 +191,61 @@ export default function BrandDetailPage({ params }: Props) {
 
         {/* Hero overlay content */}
         <div className="bd-hero__content">
-          <div className="bd-hero__breadcrumb">
-            <Link href="/brands" className="bd-hero__breadcrumb-link">Brands</Link>
-            <span className="bd-hero__breadcrumb-sep">→</span>
-            <span>{brand.name}</span>
+          <div className="bd-hero__breadcrumb" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+            <div>
+              <Link href="/brands" className="bd-hero__breadcrumb-link">Brands</Link>
+              <span className="bd-hero__breadcrumb-sep">→</span>
+              <span>{activeBrand.name}</span>
+            </div>
+
+            {/* Quick Admin Edit Button */}
+            <Link
+              href={`/admin/brands/${activeBrand.id}`}
+              className="bd-edit-admin-btn"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "6px 14px",
+                background: "rgba(0,0,0,0.65)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255,255,255,0.3)",
+                borderRadius: "999px",
+                color: "#ffffff",
+                fontSize: "11px",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                textDecoration: "none",
+                transition: "all 0.2s ease",
+              }}
+            >
+              ✏️ Edit in Admin
+            </Link>
           </div>
 
           <div className="bd-hero__meta-row">
-            <span className="bd-hero__num">{brand.num}</span>
-            <div className="bd-hero__logo-wrap">
-              <Image
-                src={brand.logo}
-                alt={`${brand.name} logo`}
-                width={120}
-                height={48}
-                className="bd-hero__logo"
-                style={{ objectFit: "contain", objectPosition: "left center" }}
-              />
-            </div>
+            <span className="bd-hero__num">{activeBrand.num || activeBrand.code}</span>
+            {activeBrand.logo && (
+              <div className="bd-hero__logo-wrap">
+                <Image
+                  src={activeBrand.logo}
+                  alt={`${activeBrand.name} logo`}
+                  width={120}
+                  height={48}
+                  className="bd-hero__logo"
+                  style={{ objectFit: "contain", objectPosition: "left center" }}
+                />
+              </div>
+            )}
           </div>
 
-          <h1 className="bd-hero__title">{brand.name}</h1>
+          <h1 className="bd-hero__title">{activeBrand.name}</h1>
 
           <div className="bd-hero__tags">
-            <span className="bd-hero__tag">{brand.category}</span>
-            <span className="bd-hero__tag">{brand.origin}</span>
-            {brand.founded && <span className="bd-hero__tag">Est. {brand.founded}</span>}
+            {activeBrand.category && <span className="bd-hero__tag">{activeBrand.category}</span>}
+            {activeBrand.origin && <span className="bd-hero__tag">{activeBrand.origin}</span>}
+            {activeBrand.founded && <span className="bd-hero__tag">Est. {activeBrand.founded}</span>}
           </div>
         </div>
       </div>
@@ -174,21 +253,29 @@ export default function BrandDetailPage({ params }: Props) {
       {/* ── Brand Info Bar ── */}
       <div className="bd-info-bar">
         <div className="bd-info-bar__left">
-          <p className="bd-info-bar__tagline">&ldquo;{brand.tagline}&rdquo;</p>
+          {activeBrand.tagline ? (
+            <p className="bd-info-bar__tagline">&ldquo;{activeBrand.tagline}&rdquo;</p>
+          ) : (
+            <p className="bd-info-bar__tagline" style={{ opacity: 0.5, fontStyle: "normal" }}>Architectural Partner Brand</p>
+          )}
         </div>
         <div className="bd-info-bar__right">
-          <div className="bd-info-stat">
-            <span className="bd-info-stat__label">Category</span>
-            <span className="bd-info-stat__value">{brand.category}</span>
-          </div>
-          <div className="bd-info-stat">
-            <span className="bd-info-stat__label">Origin</span>
-            <span className="bd-info-stat__value">{brand.origin}</span>
-          </div>
-          {brand.founded && (
+          {activeBrand.category && (
+            <div className="bd-info-stat">
+              <span className="bd-info-stat__label">Category</span>
+              <span className="bd-info-stat__value">{activeBrand.category}</span>
+            </div>
+          )}
+          {activeBrand.origin && (
+            <div className="bd-info-stat">
+              <span className="bd-info-stat__label">Origin</span>
+              <span className="bd-info-stat__value">{activeBrand.origin}</span>
+            </div>
+          )}
+          {activeBrand.founded && (
             <div className="bd-info-stat">
               <span className="bd-info-stat__label">Est.</span>
-              <span className="bd-info-stat__value">{brand.founded}</span>
+              <span className="bd-info-stat__value">{activeBrand.founded}</span>
             </div>
           )}
           <div className="bd-info-stat">
@@ -198,16 +285,18 @@ export default function BrandDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* ── Description ── */}
-      <div className="bd-description">
-        <div className="bd-description__inner">
-          <div className="bd-description__label t-tag" style={{ color: "rgba(0,0,0,0.35)" }}>
-            About the brand
+      {/* ── Description (About the Brand) ── */}
+      {activeBrand.description && (
+        <div className="bd-description">
+          <div className="bd-description__inner">
+            <div className="bd-description__label t-tag" style={{ color: "rgba(0,0,0,0.35)" }}>
+              About the brand
+            </div>
+            <p className="bd-description__text">{activeBrand.description}</p>
           </div>
-          <p className="bd-description__text">{brand.description}</p>
+          <div className="bd-description__accent-line" style={{ background: accent }} />
         </div>
-        <div className="bd-description__accent-line" style={{ background: accent }} />
-      </div>
+      )}
 
       {/* ── Products / Collection ── */}
       {allBrandProducts.length > 0 && (
@@ -222,9 +311,9 @@ export default function BrandDetailPage({ params }: Props) {
 
           {/* Circular Category Cards Row */}
           <div className="bd-category-circles-bar">
-            {brand.collections.map((col) => {
+            {(activeBrand.collections || ["All"]).map((col: string) => {
               const catSampleProduct = allBrandProducts.find((p) => col === "All" || p.collection.toLowerCase() === col.toLowerCase());
-              const thumbUrl = catSampleProduct?.image || brand.hero;
+              const thumbUrl = catSampleProduct?.image || activeBrand.hero;
               const count =
                 col === "All"
                   ? allBrandProducts.length
@@ -240,14 +329,14 @@ export default function BrandDetailPage({ params }: Props) {
                     setCurrentPage(1);
                   }}
                   className={`bd-cat-circle-card${isActive ? " is-active" : ""}`}
-                  id={`brand-filter-${brand.id}-${col.toLowerCase().replace(/\s+/g, "-")}`}
+                  id={`brand-filter-${activeBrand.id}-${col.toLowerCase().replace(/\s+/g, "-")}`}
                 >
                   <div
                     className="bd-cat-circle__img-wrap"
                     style={isActive ? { borderColor: accent, boxShadow: `0 0 0 3px ${accent}33` } : {}}
                   >
                     <Image
-                      src={thumbUrl}
+                      src={thumbUrl || "/brands/brand_1_1.png"}
                       alt={col}
                       fill
                       sizes="80px"
@@ -368,7 +457,7 @@ export default function BrandDetailPage({ params }: Props) {
                   key={i}
                   className="bd-pdf-luxury-card"
                   onClick={() => {
-                    setSelectedPdf({ url: pdfUrl, title: `${brand.name} - ${cat.title}` });
+                    setSelectedPdf({ url: pdfUrl, title: `${activeBrand.name} - ${cat.title}` });
                   }}
                   style={{
                     display: "flex",
@@ -435,8 +524,8 @@ export default function BrandDetailPage({ params }: Props) {
                           if (driveId && !(e.currentTarget as any).dataset.triedSecondary) {
                             (e.currentTarget as any).dataset.triedSecondary = "true";
                             e.currentTarget.src = `https://lh3.googleusercontent.com/d/${driveId}=s800`;
-                          } else if ((brand as any).bannerUrl) {
-                            e.currentTarget.src = (brand as any).bannerUrl;
+                          } else if (activeBrand.hero) {
+                            e.currentTarget.src = activeBrand.hero;
                           }
                         }}
                         style={{
@@ -447,16 +536,16 @@ export default function BrandDetailPage({ params }: Props) {
                           transition: "transform 0.5s ease",
                         }}
                       />
-                    ) : (cat as any).coverImage || (brand as any).bannerUrl ? (
+                    ) : (cat as any).coverImage || activeBrand.hero ? (
                       <div style={{ position: "relative", width: "100%", height: "100%" }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={(cat as any).coverImage || (brand as any).bannerUrl}
+                          src={(cat as any).coverImage || activeBrand.hero}
                           alt={`${cat.title} Cover`}
                           style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.65)" }}
                         />
                         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.85) 100%)", display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "1.2rem" }}>
-                          <span style={{ fontSize: "0.72rem", color: "#d4af37", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>{brand.name}</span>
+                          <span style={{ fontSize: "0.72rem", color: "#d4af37", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>{activeBrand.name}</span>
                           <span style={{ fontSize: "1.05rem", fontWeight: 800, color: "#ffffff", marginTop: "0.2rem" }}>{cat.title}</span>
                           <span style={{ fontSize: "0.72rem", color: "#cbd5e1", marginTop: "0.3rem" }}>Official Specification PDF</span>
                         </div>
@@ -477,11 +566,11 @@ export default function BrandDetailPage({ params }: Props) {
                           position: "relative",
                         }}
                       >
-                        {(brand as any).logoUrl && (
+                        {activeBrand.logo && (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={(brand as any).logoUrl} alt={brand.name} style={{ maxHeight: "45px", objectFit: "contain", marginBottom: "1rem", filter: "brightness(0) invert(1)" }} />
+                          <img src={activeBrand.logo} alt={activeBrand.name} style={{ maxHeight: "45px", objectFit: "contain", marginBottom: "1rem", filter: "brightness(0) invert(1)" }} />
                         )}
-                        <span style={{ fontSize: "0.75rem", color: "#d4af37", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>{brand.name}</span>
+                        <span style={{ fontSize: "0.75rem", color: "#d4af37", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>{activeBrand.name}</span>
                         <span style={{ fontSize: "1.1rem", fontWeight: 800, marginTop: "0.3rem", color: "#fff" }}>{cat.title}</span>
                         <span style={{ fontSize: "0.72rem", color: "#94a3b8", marginTop: "0.5rem" }}>Official Architectural Specification PDF</span>
                       </div>
@@ -502,7 +591,7 @@ export default function BrandDetailPage({ params }: Props) {
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedPdf({ url: pdfUrl, title: `${brand.name} - ${cat.title}` });
+                        setSelectedPdf({ url: pdfUrl, title: `${activeBrand.name} - ${cat.title}` });
                       }}
                       style={{
                         fontSize: "0.85rem",
@@ -539,11 +628,11 @@ export default function BrandDetailPage({ params }: Props) {
               Let&apos;s work together
             </p>
             <p className="bd-cta__text">
-              Interested in {brand.name} for your project? We&apos;ll discuss specifications, samples, and lead times.
+              Interested in {activeBrand.name} for your project? We&apos;ll discuss specifications, samples, and lead times.
             </p>
           </div>
           <div className="bd-cta__actions">
-            <Link href="/contact" className="ul-link t-cta-1" id={`brand-${brand.id}-enquire`}>
+            <Link href="/contact" className="ul-link t-cta-1" id={`brand-${activeBrand.id}-enquire`}>
               Enquire Now →
             </Link>
             <Link href="/brands" className="bd-cta__back">

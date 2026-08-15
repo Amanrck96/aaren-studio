@@ -22,9 +22,11 @@ import {
   CustomPageItem,
   PdfCatalogItem,
   CatalogSettingsItem,
+  FaqItem,
   DEFAULT_SETTINGS,
   DEFAULT_CATALOG_SETTINGS,
 } from "./types";
+import BRANDWISE_FAQS from "./brandwise_faqs.json";
 
 export * from "./types";
 
@@ -185,16 +187,26 @@ export const DEFAULT_CATEGORIES: CategoryItem[] = [
 ];
 
 export const DEFAULT_BRANDS: BrandItem[] = [
-  { id: "slashform", name: "Slashform", logoUrl: "/brands/brand_1_2.png", bannerUrl: "/brands/brand_1_1.png", description: "Italian precision living systems for kitchen & wardrobe", shortCode: "SF 01", sequenceNumber: 1, catalogPdfUrl: "/catalogues/Slashform/Slashform_2025.pdf" },
-  { id: "waltz", name: "Waltz by JB Glass", logoUrl: "/brands/brand_2_2.png", bannerUrl: "/brands/brand_2_1.png", description: "Architectural glass partitions and zipline screens", shortCode: "WB 02", sequenceNumber: 2, catalogPdfUrl: "/catalogues/Waltz/Waltz_Glass.pdf" },
-  { id: "newtech-wood", name: "Newtech Wood", logoUrl: "/brands/brand_3_2.png", bannerUrl: "/brands/brand_3_1.png", description: "WPC composite outdoor decking and architectural cladding", shortCode: "NW 03", sequenceNumber: 3, catalogPdfUrl: "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf" },
-  { id: "formica", name: "Formica", logoUrl: "/brands/brand_4_2.png", bannerUrl: "/brands/brand_4_1.png", description: "FENIX nano-tech surfaces and premium laminates", shortCode: "FC 04", sequenceNumber: 4, catalogPdfUrl: "/catalogues/Formica/2024-FENIX-brochure-digital.pdf" },
-  { id: "loco", name: "Loco", logoUrl: "/brands/brand_5_2.png", bannerUrl: "/brands/brand_5_1.png", description: "Bespoke Italian millwork and furniture sculpture", shortCode: "LC 05", sequenceNumber: 5 },
-  { id: "falper", name: "Falper", logoUrl: "/brands/brand_6_2.png", bannerUrl: "/brands/brand_6_1.png", description: "Luxury bath environments, vanities and freestanding tubs", shortCode: "FP 06", sequenceNumber: 6 },
-  { id: "fima", name: "Fima Carlo Frattini", logoUrl: "/brands/brand_7_2.png", bannerUrl: "/brands/brand_7_1.png", description: "Refined Italian tapware and thermostatic shower systems", shortCode: "FM 07", sequenceNumber: 7 },
-  { id: "inkiostro-bianco", name: "Inkiostro Bianco", logoUrl: "/brands/brand_8_2.png", bannerUrl: "/brands/brand_8_1.png", description: "Creative decorative wallcoverings and printed surfaces", shortCode: "IB 08", sequenceNumber: 8, catalogPdfUrl: "/catalogues/Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf" },
-  { id: "mafi", name: "Mafi", logoUrl: "/brands/brand_9_2.png", bannerUrl: "/brands/brand_9_1.png", description: "Austrian natural wood flooring with hand-rubbed oil finish", shortCode: "MF 09", sequenceNumber: 9 },
-  { id: "mirage", name: "Mirage", logoUrl: "/brands/brand_10_2.png", bannerUrl: "/brands/brand_10_1.png", description: "Italian porcelain tile mastery and marble slabs", shortCode: "MG 10", sequenceNumber: 10, catalogPdfUrl: "/catalogues/Mirage/catalogue-elysian-pdf.pdf" },
+  { id: "slashform", name: "Slashform", logoUrl: "/brands/brand_1_2.png", bannerUrl: "/brands/brand_1_1.png", description: "Slashform engineers kitchens and wardrobe systems where Italian craft meets architectural rigour. Every component is resolved to the millimetre — flush profiles, integrated hardware, and surfaces that age with grace.", shortCode: "SF 01", sequenceNumber: 1, category: "Kitchen & Wardrobe", origin: "Italy", tagline: "Precision living systems", founded: "2003", collections: ["All", "Kitchen", "Wardrobe", "Door Systems"], catalogPdfUrl: "/catalogues/Slashform/Slashform_2025.pdf" },
+  { id: "waltz", name: "Waltz by JB Glass", logoUrl: "/brands/brand_2_2.png", bannerUrl: "/brands/brand_2_1.png", description: "Waltz by JB Glass redefines how space is divided. Born from decades of precision glass manufacturing in India, the brand offers frameless partitions, zipline screens, and bespoke shower enclosures that command attention through their clarity and structural confidence.", shortCode: "WB 02", sequenceNumber: 2, category: "Screens & Partitions", origin: "India", tagline: "Architectural glass solutions", founded: "1998", collections: ["All", "Partitions", "Shower Enclosures", "Balustrades", "Zipline"], catalogPdfUrl: "/catalogues/Waltz/Waltz_Glass.pdf" },
+  { id: "newtech-wood", name: "Newtech Wood", logoUrl: "/brands/brand_3_2.png", bannerUrl: "/brands/brand_3_1.png", description: "Newtech Wood pioneers wood-plastic composite technology that outlasts timber without compromising on natural beauty. Their WPC profiles resist moisture, insects, and UV degradation.", shortCode: "NW 03", sequenceNumber: 3, category: "Cladding & Decking", origin: "USA", tagline: "WPC composite excellence", founded: "2005", collections: ["All", "Decking", "Cladding", "Screens", "Fencing"], catalogPdfUrl: "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf" },
+  { id: "formica", name: "Formica", logoUrl: "/brands/brand_4_2.png", bannerUrl: "/brands/brand_4_1.png", description: "For over a century, Formica has defined the language of surfaces. From postmodern kitchens to landmark public spaces, Formica laminates carry an unmatched breadth of finishes — including the revolutionary FENIX nano-tech matte.", shortCode: "FC 04", sequenceNumber: 4, category: "Laminates", origin: "USA", tagline: "Iconic surface solutions", founded: "1913", collections: ["All", "Fenix", "VIS", "Homapal"], catalogPdfUrl: "/catalogues/Formica/2024-FENIX-brochure-digital.pdf" },
+  { id: "loco", name: "Loco", logoUrl: "/brands/brand_5_2.png", bannerUrl: "/brands/brand_5_1.png", description: "Loco approaches furniture and millwork as spatial sculpture. Each piece is drawn from a rigorous Italian design process — where proportion, joinery, and material selection converge into objects that transcend trend.", shortCode: "LC 05", sequenceNumber: 5, category: "FF&E", origin: "Italy", tagline: "Bespoke millwork & furniture", founded: "2010", collections: ["All", "Seating", "Tables", "Storage", "Millwork", "Lighting"] },
+  { id: "falper", name: "Falper", logoUrl: "/brands/brand_6_2.png", bannerUrl: "/brands/brand_6_1.png", description: "Falper transforms the bathroom into an intimate destination. Their complete bath collections — vanities, bathtubs, shower systems, and accessories — are conceived as unified environments.", shortCode: "FP 06", sequenceNumber: 6, category: "Bathroom Fittings", origin: "Italy", tagline: "Luxury bath environments", founded: "1990", collections: ["All", "Senzafine", "Minimum", "Edge Metal"] },
+  { id: "fima", name: "Fima Carlo Frattini", logoUrl: "/brands/brand_7_2.png", bannerUrl: "/brands/brand_7_1.png", description: "Three generations of Italian tapware engineering culminate in Fima Carlo Frattini. Every thermostatic valve, spout, and showerhead is produced in-house in northern Italy.", shortCode: "FM 07", sequenceNumber: 7, category: "Sanitary Ware", origin: "Italy", tagline: "Italian tapware mastery", founded: "1960", collections: ["All", "Spout", "Thermostatic", "Showerhead", "Mixer"] },
+  { id: "inkiostro-bianco", name: "Inkiostro Bianco", logoUrl: "/brands/brand_8_2.png", bannerUrl: "/brands/brand_8_1.png", description: "Inkiostro Bianco treats wallcoverings as contemporary art. Working with Italian graphic artists, painters, and surface designers, they produce large-format vinyl wallpapers, fiberglass wet-area murals, and wood veneers.", shortCode: "IB 08", sequenceNumber: 8, category: "Wallpapers", origin: "Italy", tagline: "Artistic surface expressions", founded: "2013", collections: ["All", "Vinyl Wallpapers", "Golden Wall", "Raw Finish"], catalogPdfUrl: "/catalogues/Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf" },
+  { id: "mafi", name: "Mafi", logoUrl: "/brands/brand_9_2.png", bannerUrl: "/brands/brand_9_1.png", description: "Mafi crafts all-natural Austrian timber flooring free from petrochemicals and plastic coatings. Sourced sustainably from alpine forests, their three-layer wide planks are hand-rubbed with natural linseed oil.", shortCode: "MF 09", sequenceNumber: 9, category: "Flooring", origin: "Austria", tagline: "Pure natural wood flooring", founded: "1919", collections: ["All", "Oak", "Beech", "Walnut", "Larch", "Ash"] },
+  { id: "mirage", name: "Mirage", logoUrl: "/brands/brand_10_2.png", bannerUrl: "/brands/brand_10_1.png", description: "Mirage represents the pinnacle of Italian porcelain stoneware. Operating from Pavullo in Modena, the company engineers large-format porcelain slabs and architectural tiles that replicate the rarest marbles and stones.", shortCode: "MG 10", sequenceNumber: 10, category: "Tiles", origin: "Italy", tagline: "Italian porcelain stoneware", founded: "1973", collections: ["All", "Clay", "Elysian", "Glocal", "Norr", "Cosmopolitan"], catalogPdfUrl: "/catalogues/Mirage/catalogue-elysian-pdf.pdf" },
+  { id: "freedom-screens", name: "Freedom Screens", logoUrl: "/brands/brand_1_2.png", bannerUrl: "/brands/brand_1_1.png", description: "Freedom Screens is Australia's leading innovator in motorised and manual retractable screen systems. The Infinite Zipline collection delivers architectural-grade outdoor screens for patios, pergolas, and facade applications — providing seamless control over light, privacy, and ventilation. Smart motorised and manual options available across residential and hospitality projects.", shortCode: "FS 11", sequenceNumber: 11, category: "Outdoor Screens", origin: "Australia", tagline: "Infinite Zipline retractable screen systems", founded: "2008", collections: ["All", "Infinite Zip line", "Smart Motorised", "Smart Manual"] },
+  { id: "peelply", name: "Peelply", logoUrl: "/brands/brand_2_2.png", bannerUrl: "/brands/brand_2_1.png", description: "Peelply offers a comprehensive range of high-quality plywood, blockboard, veneer, and flush door solutions engineered for premium interior applications. Their products meet the most demanding structural and aesthetic requirements.", shortCode: "PP 12", sequenceNumber: 12, category: "Plywood & Panels", origin: "India", tagline: "Premium plywood and engineered panel solutions", founded: "2000", collections: ["All", "Plywood", "Blockboard", "Veneer", "Flush Door"] },
+  { id: "inclass", name: "Inclass", logoUrl: "/brands/brand_3_2.png", bannerUrl: "/brands/brand_3_1.png", description: "Inclass designs and manufactures contemporary furniture for workplaces, hospitality spaces, and modern residences. Collaborating with leading international designers, Inclass creates seating, tables, and auxiliary furniture characterized by clean lines and functional elegance.", shortCode: "IC 13", sequenceNumber: 13, category: "Furniture & Seating", origin: "Spain", tagline: "Contemporary designer furniture from Spain", founded: "1997", collections: ["All", "Chairs", "Armchairs", "Sofas", "Tables"] },
+  { id: "wow", name: "WOW", logoUrl: "/brands/brand_4_2.png", bannerUrl: "/brands/brand_4_1.png", description: "WOW is a design studio specialized in the development of exclusive architectural ceramic wall and floor tiles. Their creative approach explores 3D volumetric surfaces, geometry, light, and shadow.", shortCode: "WW 14", sequenceNumber: 14, category: "Ceramics & 3D Tiles", origin: "Spain", tagline: "Creative 3D ceramic tile design studio", founded: "2001", collections: ["All", "Aquarelle", "Bejmat", "60 Degrees", "Pottery", "Melange"] },
+  { id: "iww", name: "IWW", logoUrl: "/brands/brand_5_2.png", bannerUrl: "/brands/brand_5_1.png", description: "IWW delivers bespoke architectural joinery, door solutions, and wooden panelling systems crafted for discerning architects and interior designers.", shortCode: "IW 15", sequenceNumber: 15, category: "Joinery & Doors", origin: "India", tagline: "Custom architectural wood and door systems", founded: "2005", collections: ["All", "Flush Doors", "Acoustic Panels", "Wall Cladding", "Mouldings"] },
+  { id: "living-ceramica", name: "Living Ceramica", logoUrl: "/brands/brand_6_2.png", bannerUrl: "/brands/brand_6_1.png", description: "Living Ceramica produces large-format porcelain slabs and architectural surface solutions designed for seamless residential and commercial spaces.", shortCode: "LV 16", sequenceNumber: 16, category: "Porcelain Surfaces", origin: "Spain", tagline: "Large-format architectural porcelain surfaces", founded: "2012", collections: ["All", "Ductile Large Slabs", "Signature Collection", "Outdoor 20mm"] },
+  { id: "florim", name: "Florim", logoUrl: "/brands/brand_7_2.png", bannerUrl: "/brands/brand_7_1.png", description: "Florim is an Italian ceramic industry leader known globally for sustainability, design innovation, and high-performance porcelain surfaces.", shortCode: "FL 17", sequenceNumber: 17, category: "Porcelain Slabs", origin: "Italy", tagline: "Italian luxury porcelain and surface innovation", founded: "1962", collections: ["All", "Magnum Oversize", "Sensi Marble", "Earth Tone Surfaces"] },
+  { id: "gelli", name: "Gelli", logoUrl: "/brands/brand_8_2.png", bannerUrl: "/brands/brand_8_1.png", description: "Gelli specializes in handcrafted architectural glass, mirrors, and decorative partitions crafted with Italian glassmaking traditions.", shortCode: "GL 18", sequenceNumber: 18, category: "Decorative Glass", origin: "Italy", tagline: "Artisanal decorative glass and custom mirrors", founded: "1985", collections: ["All", "Antique Mirrors", "Fluted Glass", "Decorative Panels"] },
+  { id: "jacuzzi", name: "Jacuzzi", logoUrl: "/brands/brand_9_2.png", bannerUrl: "/brands/brand_9_1.png", description: "Jacuzzi is the original inventor of hydromassage and the world standard for wellness bath and hydrotherapy environments.", shortCode: "JC 19", sequenceNumber: 19, category: "Wellness & Baths", origin: "Italy", tagline: "The original hydrotherapy & wellness pioneer", founded: "1956", collections: ["All", "Whirlpool Baths", "Hydromassage Showers", "Spa Pools"] },
+  { id: "alex-turco", name: "Alex Turco", logoUrl: "/brands/brand_10_2.png", bannerUrl: "/brands/brand_10_1.png", description: "Alex Turco is an Italian art designer who creates handcrafted waterproof art panels and decorative surface art for luxury bathrooms, living spaces, and exterior facades.", shortCode: "AT 20", sequenceNumber: 20, category: "Art Panels & Surfaces", origin: "Italy", tagline: "Waterproof art panels and bespoke decorative surfaces", founded: "2006", collections: ["All", "Canvas Art Panels", "Metal Art Surfaces", "Wet-Area Panels"] },
 ];
 
 export const DEFAULT_PROJECTS: ProjectShowcaseItem[] = [
@@ -773,6 +785,15 @@ export async function getBrandsStore(): Promise<BrandItem[]> {
   return DEFAULT_BRANDS;
 }
 
+export async function getBrandByIdStore(id: string): Promise<BrandItem | null> {
+  const all = await getBrandsStore();
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const found = all.find(
+    (b) => b.id === id || norm(b.id) === norm(id) || norm(b.name) === norm(id)
+  );
+  return found || null;
+}
+
 export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: string }): Promise<BrandItem> {
   const id = brand.id || brand.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full: BrandItem = { ...brand, id };
@@ -783,8 +804,8 @@ export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: strin
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.brands || []; }
 
-  const idx = current.findIndex((b: any) => b.id === id);
-  if (idx >= 0) current[idx] = full;
+  const idx = current.findIndex((b: any) => b.id === id || b.name.toLowerCase() === full.name.toLowerCase());
+  if (idx >= 0) current[idx] = { ...current[idx], ...full };
   else current.push(full);
 
   // 2. Save directly to Firebase
@@ -796,7 +817,22 @@ export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: strin
   globalThis.__AAREN_MEMORY_STORE__ = json;
 
   // 4. Background Prisma
-  try { await prisma.brand.upsert({ where: { id }, update: brand, create: { id, ...brand } }); } catch (e) {}
+  try {
+    const prismaPayload = {
+      name: full.name,
+      logoUrl: full.logoUrl,
+      bannerUrl: full.bannerUrl,
+      description: full.description,
+      shortCode: full.shortCode || "BR 01",
+      sequenceNumber: full.sequenceNumber || 1,
+      catalogPdfUrl: full.catalogPdfUrl || null,
+    };
+    await prisma.brand.upsert({
+      where: { id },
+      update: prismaPayload,
+      create: { id, ...prismaPayload },
+    });
+  } catch (e) {}
 
   return full;
 }
@@ -871,6 +907,14 @@ export async function getAllProductsStore(): Promise<ProductItem[]> {
   return DEFAULT_PRODUCTS;
 }
 
+export async function getProductByIdStore(id: string): Promise<ProductItem | null> {
+  const all = await getAllProductsStore();
+  const found = all.find(
+    (p) => p.id === id || p.id.toLowerCase() === id.toLowerCase() || p.id.replace(/[^a-zA-Z0-9]/g, "") === id.replace(/[^a-zA-Z0-9]/g, "")
+  );
+  return found || null;
+}
+
 export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: string }): Promise<ProductItem> {
   const id = product.id || `prod-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const fullProduct: ProductItem = { ...product, id };
@@ -923,6 +967,24 @@ export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: 
   }).catch(() => {});
 
   return fullProduct;
+}
+
+export async function updateProductStore(id: string, updates: Partial<ProductItem>): Promise<ProductItem | null> {
+  const existing = await getProductByIdStore(id);
+  const fullUpdated: ProductItem = {
+    ...(existing || {
+      id,
+      name: updates.name || "Untitled Product",
+      brand: updates.brand || "AAREN",
+      category: updates.category || "General",
+      description: updates.description || "",
+      imageUrl: updates.imageUrl || "/brands/brand_1_1.png",
+    }),
+    ...updates,
+    id,
+  };
+
+  return await addProductStore(fullUpdated);
 }
 
 export async function deleteProductStore(id: string) {
@@ -1339,6 +1401,29 @@ export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & {
   return full;
 }
 
+export async function deleteRoadmapStepStore(id: string) {
+  let current: RoadmapStepItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("roadmap");
+  if (fbData && Array.isArray(fbData)) current = fbData;
+  else { const j = readJsonStore(); current = j.roadmap || [...DEFAULT_ROADMAP]; }
+
+  current = current.filter((r: any) => r.id !== id);
+  await syncToFirebaseCloudStore("roadmap", current);
+  const json = readJsonStore();
+  json.roadmap = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  try { await prisma.roadmapStep.delete({ where: { id } }); } catch (e) {}
+}
+
+export async function reorderRoadmapStore(steps: RoadmapStepItem[]): Promise<RoadmapStepItem[]> {
+  await syncToFirebaseCloudStore("roadmap", steps);
+  const json = readJsonStore();
+  json.roadmap = steps;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  return steps;
+}
+
 export const DEFAULT_TEAM_JOIN_BANNER: TeamJoinBanner = {
   title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
   fontSize: "medium",
@@ -1544,33 +1629,59 @@ export function generateInquiriesCSV(inquiries: InquiryItem[]): string {
 
 export const createProjectStore = saveProjectStore;
 
-export async function getAllFAQsStore() {
+export async function getAllFAQsStore(): Promise<FaqItem[]> {
+  const fbData = await fetchFromFirebaseCloudStore("faqs");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.faqs = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
   const json = readJsonStore();
   if (json.faqs && Array.isArray(json.faqs) && json.faqs.length > 0) {
     return json.faqs;
   }
-  return [
-    { id: "faq-1", category: "General & Showroom", question: "What is Aaren Intpro?", answer: "Aaren Intpro is a premium interior solutions company in Bangalore offering luxury surfaces, architectural hardware, modular kitchens, wardrobes, and flooring." },
-    { id: "faq-2", category: "General & Showroom", question: "Where is Aaren Intpro located?", answer: "Aaren Intpro is located at #342/8, NTY Layout, Mysore Road, Bangalore - 560026." },
-    { id: "faq-3", category: "Surfaces & Materials", question: "What products are available at Aaren Intpro?", answer: "Aaren Intpro offers luxury laminates, veneers, modular kitchens, wardrobe solutions, architectural hardware, bathroom fittings, hardwood flooring, and decorative panels." },
-    { id: "faq-4", category: "Kitchens & Wardrobes", question: "Does Aaren Intpro provide modular kitchen solutions?", answer: "Yes. Aaren Intpro offers customized modular kitchen solutions with premium finishes and international accessories." },
-    { id: "faq-5", category: "Kitchens & Wardrobes", question: "Does Aaren Intpro offer wardrobe solutions?", answer: "Yes. Aaren Intpro provides stylish wardrobe solutions with customized layouts and storage accessories." },
-    { id: "faq-6", category: "Surfaces & Materials", question: "What types of surface materials are available at Aaren Intpro?", answer: "Aaren Intpro offers FENIX nano-tech laminates, veneers, decorative surfaces, hardwood flooring, and designer materials." },
-    { id: "faq-7", category: "Hardware & Fittings", question: "Does Aaren Intpro supply architectural hardware?", answer: "Yes. Aaren Intpro provides high-quality door hardware, furniture fittings, handles, hinges, and drawer systems." },
-    { id: "faq-8", category: "Architects & Commercial", question: "Can architects and interior designers collaborate with Aaren Intpro?", answer: "Yes. Aaren Intpro works closely with architects, interior designers, builders, and developers." },
-    { id: "faq-9", category: "Hardware & Fittings", question: "Does Aaren Intpro offer bathroom solutions?", answer: "Yes. Aaren Intpro offers luxury bathroom fittings, sanitaryware, shower systems, and Falper vanities." },
-    { id: "faq-10", category: "Architects & Commercial", question: "Does Aaren Intpro provide products for commercial projects?", answer: "Yes. Aaren Intpro caters to residential, commercial, hospitality, and architectural projects." },
-    { id: "faq-11", category: "General & Showroom", question: "Why choose Aaren Intpro for luxury interior products in Bangalore?", answer: "Aaren Intpro represents top global brands, supplying high-quality materials under one roof with expert consultation." },
-    { id: "faq-12", category: "Surfaces & Materials", question: "Does Aaren Intpro offer imported interior products?", answer: "Yes. Aaren Intpro brings internationally recognized brands from Italy, Austria, USA, and global markets." },
-    { id: "faq-13", category: "General & Showroom", question: "Can homeowners visit the Aaren Intpro showroom?", answer: "Yes. Homeowners can visit our Mysore Road Bangalore showroom to explore interior products and finishes." },
-    { id: "faq-14", category: "General & Showroom", question: "Does Aaren Intpro help with product selection?", answer: "Yes. Our expert advisory team assists customers in selecting materials, finishes, hardware, and interior products." },
-    { id: "faq-15", category: "Architects & Commercial", question: "What industries does Aaren Intpro serve?", answer: "Aaren Intpro serves residential penthouses, villas, hospitality projects, corporate offices, and commercial developments." },
-    { id: "faq-16", category: "Surfaces & Materials", question: "Does Aaren Intpro offer flooring solutions?", answer: "Yes. Aaren Intpro provides Mafi Austrian hardwood flooring, engineered wood, SPC, and porcelain tile slabs." },
-    { id: "faq-17", category: "Surfaces & Materials", question: "What brands are available at Aaren Intpro?", answer: "Aaren Intpro offers FENIX Formica, Mirage, Falper, FIMA, Mafi, NewTechWood, Inkiostro Bianco, Waltz, and Slashform." },
-    { id: "faq-18", category: "Architects & Commercial", question: "Can Aaren Intpro handle custom interior requirements?", answer: "Yes. Aaren Intpro offers customized solutions tailored to specific architectural specifications." },
-    { id: "faq-19", category: "General & Showroom", question: "Does Aaren Intpro provide solutions for luxury homes?", answer: "Yes. We specialize in luxury interior products for penthouses, villas, and upscale residential spaces." },
-    { id: "faq-20", category: "General & Showroom", question: "How can I contact Aaren Intpro?", answer: "Call +91 888 446 4444 or email hello@aarenstudio.com / info@aarenintpro.com." }
-  ];
+  return BRANDWISE_FAQS as FaqItem[];
+}
+
+export async function saveFAQStore(faq: Partial<FaqItem>): Promise<FaqItem> {
+  const id = faq.id || `faq-${Date.now()}`;
+  const full: FaqItem = {
+    id,
+    category: faq.category || "General",
+    question: faq.question || "",
+    answer: faq.answer || "",
+    brand: faq.brand,
+    sequenceNumber: faq.sequenceNumber || 1,
+  };
+
+  let current = await getAllFAQsStore();
+  const idx = current.findIndex((f: any) => f.id === id);
+  if (idx >= 0) current[idx] = full;
+  else current.unshift(full);
+
+  await syncToFirebaseCloudStore("faqs", current);
+  const json = readJsonStore();
+  json.faqs = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  return full;
+}
+
+export async function deleteFAQStore(id: string): Promise<void> {
+  let current = await getAllFAQsStore();
+  current = current.filter((f: any) => f.id !== id);
+  await syncToFirebaseCloudStore("faqs", current);
+  const json = readJsonStore();
+  json.faqs = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+}
+
+export async function importFAQsBulkStore(faqs: FaqItem[]): Promise<FaqItem[]> {
+  await syncToFirebaseCloudStore("faqs", faqs);
+  const json = readJsonStore();
+  json.faqs = faqs;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  return faqs;
 }
 
 // SERVICES STORE

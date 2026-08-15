@@ -1,5 +1,16 @@
 import { NextResponse } from "next/server";
-import { getTeamStore, saveTeamMemberStore, reorderTeamStore, deleteTeamMemberStore, getRoadmapStore, saveRoadmapStepStore, getTeamJoinBannerStore, saveTeamJoinBannerStore } from "@/lib/store";
+import {
+  getTeamStore,
+  saveTeamMemberStore,
+  reorderTeamStore,
+  deleteTeamMemberStore,
+  getRoadmapStore,
+  saveRoadmapStepStore,
+  deleteRoadmapStepStore,
+  reorderRoadmapStore,
+  getTeamJoinBannerStore,
+  saveTeamJoinBannerStore
+} from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -33,6 +44,10 @@ export async function POST(request: Request) {
       const teamList = body.team || memberData;
       const saved = await reorderTeamStore(teamList);
       return NextResponse.json({ success: true, data: saved });
+    } else if (body.type === "reorder_roadmap") {
+      const steps = body.roadmap || memberData;
+      const saved = await reorderRoadmapStore(steps);
+      return NextResponse.json({ success: true, data: saved });
     } else if (body.type === "roadmap") {
       const saved = await saveRoadmapStepStore(memberData);
       return NextResponse.json({ success: true, data: saved });
@@ -52,8 +67,14 @@ export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    const type = searchParams.get("type");
 
     if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
+
+    if (type === "roadmap") {
+      await deleteRoadmapStepStore(id);
+      return NextResponse.json({ success: true, message: `Roadmap step ${id} deleted.` });
+    }
 
     await deleteTeamMemberStore(id);
     return NextResponse.json({ success: true });
