@@ -7,10 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-<!-- ── Firebase Auth Guard & Live Activity Tracker ── -->
+<!-- ── Firebase Auth Guard, Per-User Workspace Sync & Live Activity Tracker ── -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getDatabase, ref, set, get, push } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBYSs_xIhwazMSIVNPrktPOaXFjBDeVMsA",
@@ -24,16 +25,27 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getDatabase(app);
 
-onAuthStateChanged(auth, (user) => {
+window.__firebaseApp = app;
+window.__firebaseAuth = auth;
+window.__firebaseDb = db;
+window.__firebaseSet = set;
+window.__firebaseRef = ref;
+window.__firebaseGet = get;
+window.__firebasePush = push;
+
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    // If not logged in, allow demo or redirect
-    window.__aarenUser = { name: "Anand M", email: "anand.bj.7@gmail.com", initials: "AM" };
+    // Guest or anonymous session
+    const guestId = localStorage.getItem('aaren_guest_uid') || ('guest_' + Math.random().toString(36).slice(2, 9));
+    localStorage.setItem('aaren_guest_uid', guestId);
+    window.__aarenUser = { uid: guestId, name: "Studio Member", email: "designer@aarenstudio.com", initials: "SM", isGuest: true };
   } else {
     const name = user.displayName || user.email?.split('@')[0] || 'Designer';
     const email = user.email || '';
-    const initials = name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-    window.__aarenUser = { name, email, initials };
+    const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    window.__aarenUser = { uid: user.uid, name, email, initials, isGuest: false };
   }
 
   const name = window.__aarenUser.name;
@@ -41,27 +53,24 @@ onAuthStateChanged(auth, (user) => {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
 
-  const inject = () => {
-    const sn = document.getElementById('sidebarName');
-    const sa = document.getElementById('sidebarAvatar');
-    const gt = document.getElementById('greetingText');
-    if (sn) sn.textContent = name;
-    if (sa) sa.textContent = initials;
-    if (gt) gt.textContent = `Good ${greeting}, ${name.split(' ')[0]} 👋`;
+  const sn = document.getElementById('sidebarName');
+  const sa = document.getElementById('sidebarAvatar');
+  const gt = document.getElementById('greetingText');
+  if (sn) sn.textContent = name;
+  if (sa) sa.textContent = initials;
+  if (gt) gt.textContent = `Good ${greeting}, ${name.split(' ')[0]} 👋`;
 
-    window.__firebaseSignOut = () => {
-      signOut(auth).then(() => { window.location.href = '/login'; });
-    };
-
-    // Auto-log user activity
-    logUserActivity("Session Started", `User logged into Designer Workspace`);
+  window.__firebaseSignOut = () => {
+    signOut(auth).then(() => { window.location.href = '/login'; });
   };
 
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    inject();
-  } else {
-    document.addEventListener('DOMContentLoaded', inject);
+  // Trigger per-user workspace loading
+  if (typeof window.loadUserWorkspace === 'function') {
+    await window.loadUserWorkspace(window.__aarenUser);
   }
+
+  // Auto-log user activity
+  logUserActivity("Session Started", `User logged into Designer Workspace (${window.__aarenUser.email})`);
 });
 
 function logUserActivity(action, details) {
@@ -941,66 +950,175 @@ input,select,textarea{font-family:inherit;}
 
 <script>
 // ====================================================================
-// STATE & DATA
+// PER-USER STATE & ISOLATED CLOUD DATA
 // ====================================================================
-const state = JSON.parse(localStorage.getItem('aaren_ws_state') || '{}');
 
-state.projects = state.projects || [
-  {id:1,name:'Prestige Villa',client:'Rohan Mehta',type:'Residential · Villa',status:'inprogress',statusLabel:'In Progress',statusColor:'blue',progress:68,budget:'₹86L',due:'Oct 12',team:['A','R','+2']},
-  {id:2,name:'Oak Residency — Kitchen',client:'Meera Nair',type:'Residential · Apartment',status:'ontrack',statusLabel:'On Track',statusColor:'green',progress:90,budget:'₹18L',due:'Sep 2',team:['A','+1']},
-  {id:3,name:'Studio 42 Office Fitout',client:'Vantage Co',type:'Commercial · Office',status:'atrisk',statusLabel:'At Risk',statusColor:'amber',progress:32,budget:'₹1.2Cr',due:'Nov 20',team:['A','R','M','+3']},
-  {id:4,name:'Whitepine Bathroom Reno',client:'Delhi Client',type:'Residential · Apartment',status:'review',statusLabel:'Client Review',statusColor:'purple',progress:76,budget:'₹9L',due:'Sep 18',team:['R']},
-];
+function getBlankWorkspace() {
+  return {
+    projects: [],
+    tasks: [],
+    schedules: [],
+    moodboards: [],
+    pos: [],
+    timeLogs: [],
+    files: [],
+    boq: [],
+    activeProjectId: null
+  };
+}
 
-state.tasks = state.tasks || [
-  {id:1,text:'Finalize kitchen island countertop selection',done:false,due:'Today',col:1,tag:'amber'},
-  {id:2,text:'Send BOQ v3 to Prestige Villa client',done:true,due:'Done',col:3,tag:'green'},
-  {id:3,text:'Review wardrobe hardware samples',done:false,due:'Today',col:1,tag:'purple'},
-  {id:4,text:'Site visit — Oak Residency',done:false,due:'2:00 PM',col:1,tag:'blue'},
-  {id:5,text:'Shortlist rug options for Living Room',done:false,due:'No date',col:0,tag:'purple'},
-];
+let state = getBlankWorkspace();
+let currentUserStorageKey = 'aaren_ws_user_guest';
 
-state.schedules = state.schedules || [
-  {id:'sp-1',name:'Modular Sofa — Aurora 3-Piece',sku:'SF-SOF-01',room:'Living Room',trade:'Joinery',supplier:'Slashform',tradePrice:142000,clientPrice:184000,dims:'2800 x 1100 mm',status:'Approved',img:'/brands/brand_1_1.png'},
-  {id:'sp-2',name:'Italian Marble — Calacatta Gold',sku:'AN-MAR-92',room:'Living Room',trade:'Finishes',supplier:'Antolini Italy',tradePrice:310,clientPrice:385,dims:'1200 x 600 mm',status:'Approved',img:'/brands/brand_1_2.png'},
-  {id:'sp-3',name:'Ceiling Rainfall Showerhead',sku:'FM-SHW-04',room:'Master Bedroom',trade:'Fixtures',supplier:'FIMA Carlo Frattini',tradePrice:18500,clientPrice:24000,dims:'350mm Brushed Gold',status:'Pending',img:'/brands/brand_1_1.png'},
-  {id:'sp-4',name:'UltraShield Composite Decking',sku:'NTW-DEC-140',room:'Outdoor Deck',trade:'Finishes',supplier:'NewTechWood',tradePrice:320,clientPrice:410,dims:'140 x 23 mm',status:'Approved',img:'/brands/brand_1_2.png'},
-  {id:'sp-5',name:'ViaVeneto Wall Mounted Vanity',sku:'FLP-VAN-88',room:'Powder Room',trade:'Fixtures',supplier:'Falper Italy',tradePrice:220000,clientPrice:284000,dims:'1200 x 500 mm',status:'Pending',img:'/brands/brand_1_1.png'},
-];
+function getUserStorageKey(user) {
+  const safeId = user?.uid || (user?.email ? user.email.toLowerCase().replace(/[^a-z0-9]/g, '_') : 'guest');
+  return 'aaren_ws_user_' + safeId;
+}
 
-state.moodboards = state.moodboards || [
-  {id:'mb-1',title:'Calacatta Gold Italian Marble',sub:'Flooring & TV feature wall',tag:'Surface',img:'/brands/brand_1_1.png'},
-  {id:'mb-2',title:'Brushed Antique Brass Tapware',sub:'FIMA Carlo Frattini series',tag:'Hardware',img:'/brands/brand_1_2.png'},
-  {id:'mb-3',title:'Smoked European Oak Veneer',sub:'Custom kitchen & wardrobe joinery',tag:'Timber',img:'/brands/brand_1_1.png'},
-  {id:'mb-4',title:'Bouclé Textured Upholstery',sub:'Aurora custom sofa finish',tag:'Fabric',img:'/brands/brand_1_2.png'},
-];
+// User-scoped workspace loader
+window.loadUserWorkspace = async function(user) {
+  currentUserStorageKey = getUserStorageKey(user);
+  let localData = localStorage.getItem(currentUserStorageKey);
 
-state.pos = state.pos || [
-  {id:'PO-1048',supplier:'Falper S.r.l. Italy',project:'Prestige Villa',items:4,value:'₹5,40,000',deposit:'50% Paid (₹2.7L)',eta:'Oct 18',status:'Confirmed'},
-  {id:'PO-1049',supplier:'FIMA Carlo Frattini',project:'Prestige Villa',items:12,value:'₹2,85,000',deposit:'100% Advance',eta:'Sep 28',status:'In Transit'},
-  {id:'PO-1050',supplier:'NewTechWood India',project:'Prestige Villa',items:8,value:'₹3,60,000',deposit:'50% Paid',eta:'Oct 04',status:'Confirmed'},
-];
+  if (localData) {
+    try {
+      state = JSON.parse(localData);
+    } catch (e) {
+      state = getBlankWorkspace();
+    }
+  } else {
+    // Check if cloud Firebase RTDB has data for this user
+    if (window.__firebaseDb && window.__firebaseGet && window.__firebaseRef && user && user.uid && !user.isGuest) {
+      try {
+        const snap = await window.__firebaseGet(window.__firebaseRef(window.__firebaseDb, 'user_workspaces/' + user.uid));
+        if (snap.exists()) {
+          state = snap.val();
+          localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
+        } else {
+          // Brand new user -> 100% Clean Workspace
+          state = getBlankWorkspace();
+          localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
+        }
+      } catch (err) {
+        state = getBlankWorkspace();
+      }
+    } else {
+      // Brand new user
+      state = getBlankWorkspace();
+      localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
+    }
+  }
 
-state.timeLogs = state.timeLogs || [
-  {id:'tl-1',date:'Aug 15, 2026',designer:'Anand M',project:'Prestige Villa',task:'Kitchen Specifications & Material Sourcing',duration:'2.5 hrs',billable:true,amount:'₹8,750'},
-  {id:'tl-2',date:'Aug 14, 2026',designer:'Ananya S',project:'Prestige Villa',task:'Pinboard Curation & Client Review Preparation',duration:'3.0 hrs',billable:true,amount:'₹10,500'},
-  {id:'tl-3',date:'Aug 13, 2026',designer:'Anand M',project:'Oak Residency',task:'Site Inspection & Floor Measurement Sync',duration:'2.0 hrs',billable:true,amount:'₹7,000'},
-];
+  // Ensure all arrays are initialized
+  state.projects = Array.isArray(state.projects) ? state.projects : [];
+  state.tasks = Array.isArray(state.tasks) ? state.tasks : [];
+  state.schedules = Array.isArray(state.schedules) ? state.schedules : [];
+  state.moodboards = Array.isArray(state.moodboards) ? state.moodboards : [];
+  state.pos = Array.isArray(state.pos) ? state.pos : [];
+  state.timeLogs = Array.isArray(state.timeLogs) ? state.timeLogs : [];
+  state.files = Array.isArray(state.files) ? state.files : [];
+  state.boq = Array.isArray(state.boq) ? state.boq : [];
 
-state.files = state.files || [
-  {id:1,name:'Living Room — Furniture Layout Rev3.pdf',size:'4.2 MB',cat:'Drawings',updated:'2 days ago'},
-  {id:2,name:'Ground Floor — Electrical Plan.dwg',size:'8.6 MB',cat:'CAD',updated:'5 days ago'},
-  {id:3,name:'BOQ v3 — Master.xlsx',size:'1.1 MB',cat:'BOQ',updated:'Yesterday'},
-  {id:4,name:'Prestige Villa — Contract Signed.pdf',size:'2.4 MB',cat:'Contracts',updated:'1 month ago'},
-];
+  updateAllViews();
+};
 
-state.boq = state.boq || [
-  {id:1,item:'Modular Sofa — Aurora',room:'Living Room',qty:1,unit:'No',rate:184000,gst:18},
-  {id:2,item:'Italian Marble — Calacatta',room:'Living Room',qty:420,unit:'Sqft',rate:385,gst:28},
-  {id:3,item:'Brass Pendant Cluster',room:'Living Room',qty:3,unit:'No',rate:14167,gst:18},
-  {id:4,item:'Textured Lime Plaster',room:'Living Room',qty:840,unit:'Sqft',rate:165,gst:18},
-  {id:5,item:'Modular Kitchen — Lacquer Finish',room:'Kitchen',qty:1,unit:'Lot',rate:1160000,gst:18},
-];
+function saveState() {
+  if (currentUserStorageKey) {
+    localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
+  }
+
+  // Sync to Firebase Cloud if user is authenticated
+  if (window.__firebaseDb && window.__firebaseSet && window.__firebaseRef && window.__aarenUser && window.__aarenUser.uid && !window.__aarenUser.isGuest) {
+    try {
+      window.__firebaseSet(window.__firebaseRef(window.__firebaseDb, 'user_workspaces/' + window.__aarenUser.uid), state);
+    } catch (e) {
+      console.warn("Failed to sync workspace to cloud:", e);
+    }
+  }
+
+  updateAllViews();
+}
+
+function updateAllViews() {
+  renderDashProjects();
+  renderDashTasks();
+  renderProjects();
+  renderSchedule();
+  renderMoodboards();
+  renderKanban();
+  renderPOs();
+  renderTimeLogs();
+  renderFiles();
+  renderBOQ();
+  updateKpiMetrics();
+}
+
+function updateKpiMetrics() {
+  const projCount = state.projects ? state.projects.length : 0;
+  const specCount = state.schedules ? state.schedules.length : 0;
+  const pendingApprovals = state.schedules ? state.schedules.filter(s => s.status === 'Pending').length : 0;
+  const taskCount = state.tasks ? state.tasks.filter(t => !t.done).length : 0;
+
+  const navProj = document.getElementById('nav-proj-count');
+  const navTask = document.getElementById('nav-task-count');
+  const kpiProj = document.getElementById('kpi-projects');
+  const projCountEl = document.getElementById('projCount');
+  if (navProj) navProj.textContent = projCount;
+  if (navTask) navTask.textContent = taskCount;
+  if (kpiProj) kpiProj.textContent = projCount;
+  if (projCountEl) projCountEl.textContent = `${projCount} project${projCount === 1 ? '' : 's'} active`;
+
+  const dashSub = document.querySelector('.dash-sub');
+  if (dashSub) {
+    if (projCount === 0) {
+      dashSub.textContent = "0 active projects · 0 pending client approvals · Clean designer workspace";
+    } else {
+      dashSub.textContent = `${projCount} active project${projCount === 1 ? '' : 's'} · ${pendingApprovals} pending client approvals · Live sync enabled`;
+    }
+  }
+}
+
+// Sample Project Template Loader (Optional for user when requested)
+function loadSampleTemplate() {
+  if (confirm("Would you like to load a sample luxury villa project template into your workspace?")) {
+    state.projects = [
+      { id: 1, name: 'Prestige Villa', client: 'Rohan Mehta', type: 'Residential · Villa', status: 'inprogress', statusLabel: 'In Progress', statusColor: 'blue', progress: 68, budget: '₹86L', due: 'Oct 12', team: ['Self', 'Lead Designer'] },
+      { id: 2, name: 'Oak Residency — Kitchen', client: 'Meera Nair', type: 'Residential · Apartment', status: 'ontrack', statusLabel: 'On Track', statusColor: 'green', progress: 90, budget: '₹18L', due: 'Sep 2', team: ['Self'] }
+    ];
+    state.tasks = [
+      { id: 1, text: 'Finalize kitchen island countertop selection', done: false, due: 'Today', col: 1, tag: 'amber' },
+      { id: 2, text: 'Send BOQ v3 to Prestige Villa client', done: true, due: 'Done', col: 3, tag: 'green' },
+      { id: 3, text: 'Review wardrobe hardware samples', done: false, due: 'Today', col: 1, tag: 'purple' }
+    ];
+    state.schedules = [
+      { id: 'sp-1', name: 'Modular Sofa — Aurora 3-Piece', sku: 'SF-SOF-01', room: 'Living Room', trade: 'Joinery', supplier: 'Slashform', tradePrice: 142000, clientPrice: 184000, dims: '2800 x 1100 mm', status: 'Approved', img: '/brands/brand_1_1.png' },
+      { id: 'sp-2', name: 'Italian Marble — Calacatta Gold', sku: 'AN-MAR-92', room: 'Living Room', trade: 'Finishes', supplier: 'Antolini Italy', tradePrice: 310, clientPrice: 385, dims: '1200 x 600 mm', status: 'Approved', img: '/brands/brand_1_2.png' },
+      { id: 'sp-3', name: 'Ceiling Rainfall Showerhead', sku: 'FM-SHW-04', room: 'Master Bedroom', trade: 'Fixtures', supplier: 'FIMA Carlo Frattini', tradePrice: 18500, clientPrice: 24000, dims: '350mm Brushed Gold', status: 'Pending', img: '/brands/brand_1_1.png' }
+    ];
+    state.moodboards = [
+      { id: 'mb-1', title: 'Calacatta Gold Italian Marble', sub: 'Flooring & TV feature wall', tag: 'Surface', img: '/brands/brand_1_1.png' },
+      { id: 'mb-2', title: 'Brushed Antique Brass Tapware', sub: 'FIMA Carlo Frattini series', tag: 'Hardware', img: '/brands/brand_1_2.png' }
+    ];
+    state.pos = [
+      { id: 'PO-1048', supplier: 'Falper S.r.l. Italy', project: 'Prestige Villa', items: 4, value: '₹5,40,000', deposit: '50% Paid (₹2.7L)', eta: 'Oct 18', status: 'Confirmed' }
+    ];
+    state.timeLogs = [
+      { id: 'tl-1', date: 'Aug 15, 2026', designer: window.__aarenUser?.name || 'Designer', project: 'Prestige Villa', task: 'Kitchen Specifications & Material Sourcing', duration: '2.5 hrs', billable: true, amount: '₹8,750' }
+    ];
+    saveState();
+    showToast('Loaded sample project template!', 'success');
+  }
+}
+window.loadSampleTemplate = loadSampleTemplate;
+
+function clearUserWorkspace() {
+  if (confirm("Are you sure you want to clear all your projects and reset your workspace to a clean page?")) {
+    state = getBlankWorkspace();
+    saveState();
+    showToast("Workspace reset to blank state.", "info");
+  }
+}
+window.clearUserWorkspace = clearUserWorkspace;
 
 const ROOM_DATA = [
   {name:'Living Room',floor:'Ground Floor',area:'420 sqft',progress:85,budget:'₹14L',status:'progress'},
@@ -1037,7 +1155,7 @@ const pages = {
 const breadcrumbs = {
   dashboard:'<b>Dashboard</b>',
   projects:'Workspace <span>›</span> <b>Projects</b>',
-  detail:'Projects <span>›</span> <b>Prestige Villa</b>',
+  detail:'Projects <span>›</span> <b>Project Detail</b>',
   schedules:'Programa <span>›</span> <b>Specification Schedules</b>',
   moodboards:'Programa <span>›</span> <b>Visual Pinboard & Moodboard</b>',
   'client-portal':'Programa <span>›</span> <b>Client Approvals Portal</b>',
@@ -1045,11 +1163,11 @@ const breadcrumbs = {
   timetracker:'Trade <span>›</span> <b>Live Time Tracker & Billing</b>',
   clipper:'Tools <span>›</span> <b>Product Web Clipper</b>',
   audit:'Admin <span>›</span> <b>Activity Audit & Logs</b>',
-  twin:'Prestige Villa <span>›</span> <b>Digital Twin</b>',
+  twin:'Workspace <span>›</span> <b>Digital Twin</b>',
   room:'Digital Twin <span>›</span> <b>Room Workspace</b>',
-  kanban:'Prestige Villa <span>›</span> <b>Tasks Kanban</b>',
-  files:'Prestige Villa <span>›</span> <b>Files & CAD</b>',
-  boq:'Prestige Villa <span>›</span> <b>Master BOQ</b>'
+  kanban:'Workspace <span>›</span> <b>Tasks Kanban</b>',
+  files:'Workspace <span>›</span> <b>Files & CAD</b>',
+  boq:'Workspace <span>›</span> <b>Master BOQ</b>'
 };
 
 function goTo(key){
@@ -1091,8 +1209,22 @@ window.goTo = goTo;
 function renderDashProjects(){
   const el=document.getElementById('dashProjects');
   if(!el)return;
+  if(!state.projects || state.projects.length === 0){
+    el.innerHTML = `
+      <div style="text-align:center;padding:28px 16px;background:var(--surface-2);border-radius:10px;border:1px dashed var(--border-strong);">
+        <div style="font-size:28px;margin-bottom:6px;">📁</div>
+        <div style="font-size:13px;font-weight:700;color:#fff;">No Projects Created Yet</div>
+        <div style="font-size:11.5px;color:var(--slate-dim);margin:4px 0 14px;">Every project you create is saved to your account.</div>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn-primary sm" onclick="openModal('newProjectModal')">+ Create Project</button>
+          <button class="btn-ghost sm" onclick="loadSampleTemplate()">✨ Load Sample Template</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
   el.innerHTML=state.projects.slice(0,3).map(p=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--surface-2);border-radius:10px;margin-bottom:8px;cursor:pointer;" onclick="goTo('detail')">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--surface-2);border-radius:10px;margin-bottom:8px;cursor:pointer;" onclick="openProjectDetail(${p.id})">
       <div>
         <div style="font-weight:700;font-size:13px;color:#fff;">${p.name}</div>
         <div style="font-size:11px;color:var(--slate-dim);">${p.client} · Due ${p.due}</div>
@@ -1107,6 +1239,14 @@ function renderDashProjects(){
 function renderDashTasks(){
   const el=document.getElementById('dashTasks');
   if(!el)return;
+  if(!state.tasks || state.tasks.length === 0){
+    el.innerHTML = `
+      <div style="text-align:center;padding:20px;color:var(--slate-dim);font-size:12px;">
+        No active tasks. Click 'Open Board' to create tasks.
+      </div>
+    `;
+    return;
+  }
   el.innerHTML=state.tasks.slice(0,4).map(t=>`
     <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--border);">
       <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id},this.checked)">
@@ -1122,35 +1262,68 @@ function toggleTask(id,done){
 
 function renderProjects(){
   const tb=document.getElementById('projTableBody');
+  const countEl=document.getElementById('projCount');
+  const count = state.projects ? state.projects.length : 0;
+  if(countEl) countEl.textContent = `${count} project${count===1?'':'s'} active`;
+
   if(!tb)return;
+  if(!state.projects || state.projects.length === 0){
+    tb.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center;padding:48px 16px;">
+          <div style="font-size:36px;margin-bottom:8px;">🏛️</div>
+          <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">Your Projects Workspace is Ready</div>
+          <p style="font-size:12.5px;color:var(--slate-dim);max-width:400px;margin:0 auto 16px;">Start managing client interiors, specifications, moodboards, and budgets by creating your first project.</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button class="btn-primary" onclick="openModal('newProjectModal')">+ Create Your First Project</button>
+            <button class="btn-ghost" onclick="loadSampleTemplate()">✨ Load Sample Template</button>
+          </div>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
   tb.innerHTML=state.projects.map(p=>`
-    <tr onclick="goTo('detail')" style="cursor:pointer;">
+    <tr onclick="openProjectDetail(${p.id})" style="cursor:pointer;">
       <td><div style="font-weight:700;">${p.name}</div><div style="font-size:10.5px;color:var(--slate-dim);">${p.type}</div></td>
       <td>${p.client}</td>
       <td><span class="badge ${p.statusColor}">${p.statusLabel}</span></td>
       <td><div style="width:100px;height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;"><div style="width:${p.progress}%;height:100%;background:var(--gold);"></div></div></td>
       <td><strong style="color:var(--gold);">${p.budget}</strong></td>
-      <td>${p.team.join(', ')}</td>
+      <td>${Array.isArray(p.team)?p.team.join(', '):'Self'}</td>
       <td>${p.due}</td>
     </tr>`).join('');
 }
 
 function filterProjects(val){
-  // Basic search
   const tb=document.getElementById('projTableBody');
   if(!tb)return;
   const filtered = state.projects.filter(p=>p.name.toLowerCase().includes(val.toLowerCase())||p.client.toLowerCase().includes(val.toLowerCase()));
   tb.innerHTML=filtered.map(p=>`
-    <tr onclick="goTo('detail')" style="cursor:pointer;">
+    <tr onclick="openProjectDetail(${p.id})" style="cursor:pointer;">
       <td><div style="font-weight:700;">${p.name}</div></td>
       <td>${p.client}</td>
       <td><span class="badge ${p.statusColor}">${p.statusLabel}</span></td>
       <td>${p.progress}%</td>
       <td>${p.budget}</td>
-      <td>${p.team.join(', ')}</td>
+      <td>${Array.isArray(p.team)?p.team.join(', '):'Self'}</td>
       <td>${p.due}</td>
     </tr>`).join('');
 }
+
+function openProjectDetail(projId){
+  const proj = state.projects.find(p=>p.id===projId) || state.projects[0];
+  if(proj){
+    state.activeProjectId = proj.id;
+    const detailTitle = document.querySelector('#page-detail h1');
+    const detailMeta = document.querySelector('#page-detail p');
+    if(detailTitle) detailTitle.textContent = proj.name;
+    if(detailMeta) detailMeta.textContent = `Client: ${proj.client} · ${proj.budget} Budget · ${proj.type}`;
+  }
+  goTo('detail');
+}
+window.openProjectDetail = openProjectDetail;
 
 function renderDetailRooms(){
   const el=document.getElementById('detailRoomsGrid');
@@ -1186,28 +1359,44 @@ function renderSchedule(){
     return matchR && matchT;
   });
 
+  if(filtered.length === 0){
+    tb.innerHTML = `
+      <tr>
+        <td colspan="9" style="text-align:center;padding:36px 16px;color:var(--slate-dim);">
+          <div style="font-size:24px;margin-bottom:6px;">📋</div>
+          <div style="font-weight:700;color:#fff;">No Specification Items in Schedule</div>
+          <div style="font-size:12px;margin:4px 0 12px;">Add luxury tapware, tiles, vanities or custom joinery to this project schedule.</div>
+          <button class="btn-primary sm" onclick="openModal('addSpecModal')">+ Add Specification</button>
+        </td>
+      </tr>
+    `;
+    const totEl = document.getElementById('schedTotalVal');
+    if(totEl) totEl.textContent = '₹0';
+    return;
+  }
+
   let total = 0;
   tb.innerHTML = filtered.map(s=>{
-    total += s.clientPrice;
+    total += s.clientPrice || 0;
     const isApproved = s.status==='Approved';
     return `
       <tr>
         <td>
           <div style="display:flex;align-items:center;gap:10px;">
-            <div class="sched-thumb"><img src="${s.img}" alt=""></div>
+            <div class="sched-thumb"><img src="${s.img||'/brands/brand_1_1.png'}" alt=""></div>
             <div>
               <div style="font-weight:700;color:#fff;">${s.name}</div>
-              <div style="font-size:10px;color:var(--slate-dim);">${s.sku} · ${s.dims}</div>
+              <div style="font-size:10px;color:var(--slate-dim);">${s.sku||'SPEC'} · ${s.dims||''}</div>
             </div>
           </div>
         </td>
-        <td>${s.room}</td>
-        <td><span class="badge blue">${s.trade}</span></td>
-        <td>${s.supplier}</td>
-        <td>₹${s.tradePrice.toLocaleString()}</td>
-        <td><span style="color:#22c55e;font-weight:700;">+${Math.round(((s.clientPrice-s.tradePrice)/s.tradePrice)*100)}%</span></td>
-        <td><strong style="color:var(--gold);">₹${s.clientPrice.toLocaleString()}</strong></td>
-        <td><span class="badge ${isApproved?'green':'amber'}">${s.status}</span></td>
+        <td>${s.room||'Living Room'}</td>
+        <td><span class="badge blue">${s.trade||'Fixtures'}</span></td>
+        <td>${s.supplier||'Aaren Studio'}</td>
+        <td>₹${(s.tradePrice||0).toLocaleString()}</td>
+        <td><span style="color:#22c55e;font-weight:700;">+${s.tradePrice?Math.round(((s.clientPrice-s.tradePrice)/s.tradePrice)*100):0}%</span></td>
+        <td><strong style="color:var(--gold);">₹${(s.clientPrice||0).toLocaleString()}</strong></td>
+        <td><span class="badge ${isApproved?'green':'amber'}">${s.status||'Pending'}</span></td>
         <td>
           <button class="btn-ghost sm" onclick="toggleSpecStatus('${s.id}')">
             ${isApproved?'↺ Mark Pending':'✓ Approve'}
@@ -1216,7 +1405,8 @@ function renderSchedule(){
       </tr>`;
   }).join('');
 
-  document.getElementById('schedTotalVal').textContent = '₹' + total.toLocaleString();
+  const totEl = document.getElementById('schedTotalVal');
+  if(totEl) totEl.textContent = '₹' + total.toLocaleString();
 }
 
 function filterSchedule(){renderSchedule();}
@@ -1245,13 +1435,24 @@ function exportScheduleExcel(){
 function renderMoodboards(){
   const el=document.getElementById('pinboardCanvas');
   if(!el)return;
+  if(!state.moodboards || state.moodboards.length === 0){
+    el.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:48px 16px;background:var(--surface);border-radius:12px;border:1px dashed var(--border-strong);">
+        <div style="font-size:32px;margin-bottom:8px;">◐</div>
+        <div style="font-weight:800;font-size:15px;color:#fff;">Visual Pinboard is Clean</div>
+        <div style="font-size:12px;color:var(--slate-dim);margin:4px 0 16px;">Curate luxury textures, stone samples, timber finishes and fixtures for client presentations.</div>
+        <button class="btn-primary sm" onclick="addMoodboardSwatch()">+ Add Swatch / Texture</button>
+      </div>
+    `;
+    return;
+  }
   el.innerHTML=state.moodboards.map(m=>`
     <div class="pin-card">
-      <div class="pin-img"><img src="${m.img}" alt=""></div>
+      <div class="pin-img"><img src="${m.img||'/brands/brand_1_1.png'}" alt=""></div>
       <div class="pin-body">
-        <span class="badge gold" style="margin-bottom:4px;">${m.tag}</span>
+        <span class="badge gold" style="margin-bottom:4px;">${m.tag||'Finish'}</span>
         <div class="pin-title">${m.title}</div>
-        <div class="pin-sub">${m.sub}</div>
+        <div class="pin-sub">${m.sub||''}</div>
       </div>
     </div>`).join('');
 }
@@ -1262,7 +1463,7 @@ function addMoodboardSwatch(){
   state.moodboards.push({
     id: 'mb-' + Date.now(),
     title: title,
-    sub: 'Prestige Villa Material Palette',
+    sub: 'Custom Material Palette',
     tag: 'Finish',
     img: '/brands/brand_1_1.png'
   });
@@ -1276,20 +1477,28 @@ function addMoodboardSwatch(){
 function renderClientPortal(){
   const el=document.getElementById('clientApprovalList');
   if(!el)return;
+  if(!state.schedules || state.schedules.length === 0){
+    el.innerHTML = `
+      <div style="text-align:center;padding:36px 16px;color:var(--slate-dim);background:var(--surface);border-radius:10px;">
+        No items awaiting approval. Add items to Specification Schedule to enable client portal approvals.
+      </div>
+    `;
+    return;
+  }
   el.innerHTML=state.schedules.map(s=>`
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;">
       <div style="display:flex;align-items:center;gap:12px;">
-        <div class="sched-thumb"><img src="${s.img}" alt=""></div>
+        <div class="sched-thumb"><img src="${s.img||'/brands/brand_1_1.png'}" alt=""></div>
         <div>
           <div style="font-weight:800;color:#fff;font-size:13px;">${s.name}</div>
-          <div style="font-size:11px;color:var(--slate-dim);">${s.room} · ${s.supplier} · ${s.dims}</div>
+          <div style="font-size:11px;color:var(--slate-dim);">${s.room||''} · ${s.supplier||''} · ${s.dims||''}</div>
         </div>
       </div>
 
       <div style="display:flex;align-items:center;gap:14px;">
         <div style="text-align:right;">
-          <div style="font-size:13px;font-weight:800;color:var(--gold);">₹${s.clientPrice.toLocaleString()}</div>
-          <span class="badge ${s.status==='Approved'?'green':'amber'}">${s.status}</span>
+          <div style="font-size:13px;font-weight:800;color:var(--gold);">₹${(s.clientPrice||0).toLocaleString()}</div>
+          <span class="badge ${s.status==='Approved'?'green':'amber'}">${s.status||'Pending'}</span>
         </div>
         <button class="btn-success" onclick="clientApproveItem('${s.id}')">✓ Approve Item</button>
         <button class="btn-ghost sm" onclick="clientRequestRevision('${s.id}')">↺ Alternate</button>
@@ -1322,6 +1531,16 @@ function clientRequestRevision(id){
 function renderPOs(){
   const tb=document.getElementById('poTableBody');
   if(!tb)return;
+  if(!state.pos || state.pos.length === 0){
+    tb.innerHTML = `
+      <tr>
+        <td colspan="8" style="text-align:center;padding:32px 16px;color:var(--slate-dim);">
+          No purchase orders created yet. Click '+ New Purchase Order' to generate official vendor POs.
+        </td>
+      </tr>
+    `;
+    return;
+  }
   tb.innerHTML=state.pos.map(po=>`
     <tr>
       <td><strong>${po.id}</strong></td>
@@ -1339,7 +1558,7 @@ function renderPOs(){
 
 // ──── LIVE TIME TRACKER ────
 let timerInterval = null;
-let timerSeconds = 872; // 00:14:32 initial
+let timerSeconds = 0;
 
 function startTimer(){
   if(timerInterval) return;
@@ -1384,27 +1603,43 @@ function updateTimerDisplays(){
 startTimer();
 
 function logCurrentTimerSession(){
+  if(timerSeconds < 10) {
+    showToast('Please let timer run before saving session.','info');
+    return;
+  }
   const durationHrs = (timerSeconds/3600).toFixed(1);
-  const cost = Math.round(durationHrs * 3500);
+  const cost = Math.max(500, Math.round(durationHrs * 3500));
+  const activeProj = state.projects && state.projects.length > 0 ? state.projects[0].name : 'Client Project';
   state.timeLogs.unshift({
     id: 'tl-' + Date.now(),
     date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
-    designer: window.__aarenUser?.name || 'Anand M',
-    project: 'Prestige Villa',
-    task: 'Kitchen & Bathroom Material Sourcing',
+    designer: window.__aarenUser?.name || 'Designer',
+    project: activeProj,
+    task: 'Project Specifications & Spatial Design',
     duration: `${durationHrs} hrs`,
     billable: true,
     amount: '₹' + cost.toLocaleString()
   });
   saveState();
   renderTimeLogs();
+  resetTimer();
   showToast(`Saved session (${durationHrs} hrs · ₹${cost.toLocaleString()})!`,'success');
-  logUserActivity(`Logged Time: ${durationHrs} hrs`, `Worked on Prestige Villa Sourcing`);
+  logUserActivity(`Logged Time: ${durationHrs} hrs`, `Worked on ${activeProj}`);
 }
 
 function renderTimeLogs(){
   const tb=document.getElementById('timeLogTableBody');
   if(!tb)return;
+  if(!state.timeLogs || state.timeLogs.length === 0){
+    tb.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center;padding:28px 16px;color:var(--slate-dim);">
+          No time logs recorded yet. Start live timer to track billable design hours.
+        </td>
+      </tr>
+    `;
+    return;
+  }
   tb.innerHTML=state.timeLogs.map(l=>`
     <tr>
       <td>${l.date}</td>
@@ -1418,8 +1653,8 @@ function renderTimeLogs(){
 }
 
 function generateClientInvoiceFromTime(){
-  showToast('Generated Client Fee Invoice (₹4,98,750) with breakdown PDF!','success');
-  logUserActivity('Generated Client Invoice', 'Converted 142.5 logged hours into Invoice INV-882');
+  showToast('Generated Client Fee Invoice with breakdown PDF!','success');
+  logUserActivity('Generated Client Invoice', 'Converted logged hours into Invoice');
 }
 
 // ──── PRODUCT WEB CLIPPER ────
@@ -1472,301 +1707,12 @@ function exportAuditReport(){
   showToast('Exporting admin activity audit report (CSV)…','success');
 }
 
-// ──── DIGITAL TWIN & ROOMS ────
-function renderTwin(){
-  const tree=document.getElementById('twin-tree-content');
-  const canvas=document.getElementById('twin-canvas-content');
-  if(!tree)return;
-  tree.innerHTML = ROOM_DATA.map(r=>`
-    <div style="padding:8px 10px;border-radius:8px;background:var(--surface-2);margin-bottom:6px;cursor:pointer;display:flex;justify-content:space-between;" onclick="openRoom(${JSON.stringify(r).replace(/"/g,'&quot;')})">
-      <span>${r.name}</span>
-      <span class="badge ${r.status==='done'?'green':'blue'}">${r.progress}%</span>
-    </div>`).join('');
-
-  if(canvas){
-    canvas.innerHTML = `
-      <div style="text-align:center;color:var(--slate);">
-        <div style="font-size:42px;margin-bottom:10px;">🏛️</div>
-        <h3 style="color:#fff;font-size:16px;">Interactive Prestige Villa 3D Floorplan</h3>
-        <p style="font-size:12px;margin-top:4px;">Ground Floor · First Floor · Terrace</p>
-        <button class="btn-primary" style="margin-top:14px;" onclick="openRoom(ROOM_DATA[0])">Open Living Room Hotspot →</button>
-      </div>`;
-  }
+// INITIALIZATION
+if (!window.__aarenUser) {
+  const guestId = localStorage.getItem('aaren_guest_uid') || ('guest_' + Math.random().toString(36).slice(2, 9));
+  localStorage.setItem('aaren_guest_uid', guestId);
+  window.loadUserWorkspace({ uid: guestId, name: "Studio Member", email: "designer@aarenstudio.com", initials: "SM", isGuest: true });
 }
-
-function renderRoom(){
-  const g = document.getElementById('roomProductGrid');
-  if(!g)return;
-  const filtered = state.schedules.filter(s=>s.room===currentRoom.name);
-  if(filtered.length===0){
-    g.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--slate-dim);padding:30px;">No products specified in ${currentRoom.name} yet. Click + Add Product above!</div>`;
-    return;
-  }
-  g.innerHTML = filtered.map(p=>`
-    <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px;">
-      <div style="height:100px;border-radius:6px;overflow:hidden;background:#000;margin-bottom:8px;"><img src="${p.img}" style="width:100%;height:100%;object-fit:cover;"></div>
-      <div style="font-size:12px;font-weight:700;color:#fff;">${p.name}</div>
-      <div style="font-size:11px;color:var(--slate-dim);">${p.supplier}</div>
-      <div style="font-size:12.5px;font-weight:800;color:var(--gold);margin-top:4px;">₹${p.clientPrice.toLocaleString()}</div>
-    </div>`).join('');
-}
-
-// ──── KANBAN ────
-function renderKanban(){
-  const b=document.getElementById('kanbanBoard');
-  if(!b)return;
-  const cols = ['To Do', 'In Progress', 'Review', 'Done'];
-  b.innerHTML = cols.map((colName, cIdx)=>{
-    const tasks = state.tasks.filter(t=>t.col===cIdx);
-    return `
-      <div class="kanban-col">
-        <div class="kanban-col-head"><span>${colName}</span><span>(${tasks.length})</span></div>
-        ${tasks.map(t=>`
-          <div class="kanban-card" onclick="toggleTask(${t.id},!${t.done})">
-            <div style="font-size:12px;color:#fff;font-weight:600;">${t.text}</div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:10px;color:var(--slate-dim);">
-              <span>${t.due||'No due date'}</span>
-              <span class="badge ${t.tag||'purple'}">${t.done?'Done':'Active'}</span>
-            </div>
-          </div>`).join('')}
-      </div>`;
-  }).join('');
-}
-
-// ──── FILES ────
-function renderFiles(){
-  const tb=document.getElementById('filesListTable');
-  if(!tb)return;
-  tb.innerHTML = state.files.map(f=>`
-    <tr>
-      <td><strong>${f.name}</strong></td>
-      <td><span class="badge blue">${f.cat}</span></td>
-      <td>${f.size}</td>
-      <td>${f.updated}</td>
-      <td><button class="btn-ghost sm" onclick="showToast('Downloading ${f.name}…','info')">📥 Download</button></td>
-    </tr>`).join('');
-}
-function handleFileUpload(files){
-  if(!files || files.length===0) return;
-  for(let i=0; i<files.length; i++){
-    state.files.unshift({
-      id: Date.now() + i,
-      name: files[i].name,
-      size: (files[i].size/(1024*1024)).toFixed(1) + ' MB',
-      cat: 'Uploads',
-      updated: 'Just now'
-    });
-  }
-  saveState();
-  renderFiles();
-  showToast(`Uploaded ${files.length} file(s) successfully!`,'success');
-  logUserActivity(`Uploaded Files (${files.length})`, 'Added documents to project files');
-}
-
-// ──── BOQ ────
-function renderBOQ(){
-  const tb=document.getElementById('boqBody');
-  if(!tb)return;
-  let subtotal = 0;
-  let gstTotal = 0;
-  tb.innerHTML = state.boq.map((b, i)=>{
-    const amount = b.qty * b.rate;
-    const gstAmt = amount * (b.gst/100);
-    const total = amount + gstAmt;
-    subtotal += amount;
-    gstTotal += gstAmt;
-    return `
-      <tr>
-        <td>${i+1}</td>
-        <td><strong>${b.item}</strong></td>
-        <td>${b.room}</td>
-        <td>${b.qty}</td>
-        <td>${b.unit}</td>
-        <td>₹${b.rate.toLocaleString()}</td>
-        <td>${b.gst}%</td>
-        <td><strong style="color:var(--gold);">₹${Math.round(total).toLocaleString()}</strong></td>
-        <td><button class="btn-ghost sm" onclick="removeBOQRow(${b.id})" style="color:var(--red);">✕</button></td>
-      </tr>`;
-  }).join('');
-}
-
-function addBOQRow(){
-  const name = prompt('Item Description:','Custom Smoked Oak Wall Paneling');
-  if(!name)return;
-  state.boq.push({
-    id: Date.now(),
-    item: name,
-    room: 'Living Room',
-    qty: 1,
-    unit: 'Lot',
-    rate: 185000,
-    gst: 18
-  });
-  saveState();
-  renderBOQ();
-  showToast('Added line item to BOQ!','success');
-  logUserActivity(`Added BOQ Item: ${name}`, 'Updated Master BOQ');
-}
-function removeBOQRow(id){
-  state.boq = state.boq.filter(b=>b.id!==id);
-  saveState();
-  renderBOQ();
-}
-
-// ──── MODAL HANDLERS ────
-function handleCreateSpec(e){
-  e.preventDefault();
-  const name = document.getElementById('specName').value;
-  const room = document.getElementById('specRoom').value;
-  const trade = document.getElementById('specTrade').value;
-  const supplier = document.getElementById('specSupplier').value;
-  const tradePrice = parseFloat(document.getElementById('specTradePrice').value) || 0;
-  const clientPrice = parseFloat(document.getElementById('specClientPrice').value) || 0;
-  const dims = document.getElementById('specDims').value;
-
-  state.schedules.unshift({
-    id: 'sp-' + Date.now(),
-    name, room, trade, supplier, tradePrice, clientPrice, dims,
-    status: 'Pending',
-    sku: 'SPEC-' + Math.floor(Math.random()*900 + 100),
-    img: '/brands/brand_1_1.png'
-  });
-  saveState();
-  closeModal('addSpecModal');
-  goTo('schedules');
-  showToast(`Added "${name}" to Specification Schedule!`,'success');
-  logUserActivity(`Created Specification: ${name}`, `Added to ${room} (${trade})`);
-}
-
-function handleCreateProject(e){
-  e.preventDefault();
-  const name = document.getElementById('npName').value;
-  const client = document.getElementById('npClient').value;
-  const type = document.getElementById('npType').value;
-  const budget = document.getElementById('npBudget').value;
-
-  state.projects.unshift({
-    id: Date.now(),
-    name, client, type, budget,
-    status: 'inprogress', statusLabel: 'In Progress', statusColor: 'blue',
-    progress: 10, due: 'Dec 2026', team: ['A']
-  });
-  saveState();
-  closeModal('newProjectModal');
-  goTo('projects');
-  showToast(`Project "${name}" created successfully!`,'success');
-  logUserActivity(`Created Project: ${name}`, `Client: ${client}, Budget: ${budget}`);
-}
-
-function handleCreateTask(e){
-  e.preventDefault();
-  const text = document.getElementById('ntTitle').value;
-  const col = parseInt(document.getElementById('ntCol').value, 10);
-  state.tasks.push({ id: Date.now(), text, col, done: false, due: 'Today', tag: 'purple' });
-  saveState();
-  closeModal('newTaskModal');
-  renderKanban();
-  showToast('Added task to board!','success');
-  logUserActivity(`Added Task: ${text}`, 'Created project task');
-}
-
-function handleCreatePO(e){
-  e.preventDefault();
-  const supplier = document.getElementById('poSupplier').value;
-  const project = document.getElementById('poProject').value;
-  const val = parseFloat(document.getElementById('poValue').value) || 0;
-  const poId = 'PO-' + Math.floor(Math.random()*9000 + 1000);
-
-  state.pos.unshift({
-    id: poId,
-    supplier, project, items: 3,
-    value: '₹' + val.toLocaleString(),
-    deposit: '50% Advance Pending',
-    eta: '4 Weeks',
-    status: 'Draft'
-  });
-  saveState();
-  closeModal('newPoModal');
-  goTo('orders');
-  showToast(`Generated ${poId} for ${supplier}!`,'success');
-  logUserActivity(`Generated PO: ${poId}`, `Supplier: ${supplier}, Value: ₹${val.toLocaleString()}`);
-}
-
-function handleAddRoomProduct(e){
-  e.preventDefault();
-  const name = document.getElementById('rpName').value;
-  const brand = document.getElementById('rpBrand').value;
-  const price = parseFloat(document.getElementById('rpPrice').value) || 0;
-
-  state.schedules.push({
-    id: 'sp-' + Date.now(),
-    name, room: currentRoom.name, trade: 'Fixtures', supplier: brand,
-    tradePrice: Math.round(price * 0.75), clientPrice: price, dims: 'Standard',
-    status: 'Pending', sku: 'RM-' + Math.floor(Math.random()*900 + 100),
-    img: '/brands/brand_1_1.png'
-  });
-  saveState();
-  closeModal('addProductModal');
-  renderRoom();
-  showToast(`Added "${name}" to ${currentRoom.name}!`,'success');
-  logUserActivity(`Added Room Product: ${name}`, `Added to ${currentRoom.name}`);
-}
-
-// ──── MODAL UTILITIES ────
-function openModal(id){document.getElementById(id)?.classList.add('open');}
-function closeModal(id){document.getElementById(id)?.classList.remove('open');}
-window.openModal = openModal;
-window.closeModal = closeModal;
-
-document.querySelectorAll('.modal-backdrop').forEach(el=>{
-  el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});
-});
-
-function showToast(msg,type='info'){
-  const wrap=document.getElementById('toastWrap');
-  if(!wrap)return;
-  const t=document.createElement('div');
-  t.className=`toast ${type}`;
-  t.innerHTML=`<span>${type==='success'?'✓':'ℹ'}</span> ${msg}`;
-  wrap.appendChild(t);
-  setTimeout(()=>t.style.opacity='0',3000);
-  setTimeout(()=>t.remove(),3400);
-}
-window.showToast = showToast;
-
-function toggleTheme(){
-  const html=document.documentElement;
-  const isDark=html.getAttribute('data-theme')==='dark';
-  html.setAttribute('data-theme',isDark?'light':'dark');
-  showToast(`${isDark?'Light':'Dark'} Mode Activated`,'info');
-}
-
-function handleSearch(val){
-  if(!val)return;
-  goTo('schedules');
-  const tb=document.getElementById('scheduleTableBody');
-  if(tb){
-    const filtered = state.schedules.filter(s=>s.name.toLowerCase().includes(val.toLowerCase())||s.supplier.toLowerCase().includes(val.toLowerCase())||s.room.toLowerCase().includes(val.toLowerCase()));
-    tb.innerHTML = filtered.map(s=>`
-      <tr>
-        <td><strong>${s.name}</strong></td>
-        <td>${s.room}</td>
-        <td><span class="badge blue">${s.trade}</span></td>
-        <td>${s.supplier}</td>
-        <td>₹${s.tradePrice.toLocaleString()}</td>
-        <td>-</td>
-        <td><strong style="color:var(--gold);">₹${s.clientPrice.toLocaleString()}</strong></td>
-        <td><span class="badge green">${s.status}</span></td>
-        <td><button class="btn-ghost sm" onclick="toggleSpecStatus('${s.id}')">Toggle</button></td>
-      </tr>`).join('');
-  }
-}
-
-function saveState(){localStorage.setItem('aaren_ws_state',JSON.stringify(state));}
-
-// INIT
-renderDashProjects();
-renderDashTasks();
 </script>
 </body>
 </html>
