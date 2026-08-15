@@ -49,35 +49,45 @@ export default function AdminDashboardPage() {
   const [colorToast, setColorToast] = useState<string | null>(null);
 
   useEffect(() => {
+    const safeFetch = async (url: string) => {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) return { count: 0, data: [] };
+        return await res.json();
+      } catch (err) {
+        return { count: 0, data: [] };
+      }
+    };
+
     Promise.all([
-      fetch("/api/projects?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/categories?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/collections?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/brands?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/products?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/services?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/testimonials?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/blogs?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/media?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/inquiries?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/catalogs?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/faq?t=" + Date.now()).then((res) => res.json()),
-      fetch("/api/site-settings?t=" + Date.now()).then((res) => res.json()),
+      safeFetch("/api/projects?t=" + Date.now()),
+      safeFetch("/api/categories?t=" + Date.now()),
+      safeFetch("/api/collections?t=" + Date.now()),
+      safeFetch("/api/brands?t=" + Date.now()),
+      safeFetch("/api/products?t=" + Date.now()),
+      safeFetch("/api/services?t=" + Date.now()),
+      safeFetch("/api/testimonials?t=" + Date.now()),
+      safeFetch("/api/blogs?t=" + Date.now()),
+      safeFetch("/api/media?t=" + Date.now()),
+      safeFetch("/api/inquiries?t=" + Date.now()),
+      safeFetch("/api/catalogs?t=" + Date.now()),
+      safeFetch("/api/faq?t=" + Date.now()),
+      safeFetch("/api/site-settings?t=" + Date.now()),
     ])
       .then(([p, c, col, b, pr, s, t, bl, m, inq, cat, fq, st]) => {
         setStats({
-          projects: p.count || p.data?.length || 0,
-          categories: c.count || c.data?.length || 0,
-          collections: col.count || col.data?.length || 0,
-          brands: b.count || b.data?.length || 0,
-          products: pr.count || pr.data?.length || 0,
-          services: s.count || s.data?.length || 0,
-          testimonials: t.count || t.data?.length || 0,
-          blogs: bl.count || bl.data?.length || 0,
-          media: m.count || m.data?.length || 0,
-          inquiries: inq.count || inq.data?.length || 0,
-          catalogs: cat.count || cat.data?.length || 0,
-          faqs: fq.count || fq.data?.length || 0,
+          projects: p?.count || p?.data?.length || 0,
+          categories: c?.count || c?.data?.length || 0,
+          collections: col?.count || col?.data?.length || 0,
+          brands: b?.count || b?.data?.length || 0,
+          products: pr?.count || pr?.data?.length || 0,
+          services: s?.count || s?.data?.length || 0,
+          testimonials: t?.count || t?.data?.length || 0,
+          blogs: bl?.count || bl?.data?.length || 0,
+          media: m?.count || m?.data?.length || 0,
+          inquiries: inq?.count || inq?.data?.length || 0,
+          catalogs: cat?.count || cat?.data?.length || 0,
+          faqs: fq?.count || fq?.data?.length || 0,
         });
 
         if (st && st.success && st.data) {
@@ -88,7 +98,7 @@ export default function AdminDashboardPage() {
           if (st.data.accentColor) setAccentColor(st.data.accentColor);
         }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => console.error("Admin dashboard fetch error:", e));
   }, []);
 
   const handleSaveColors = async () => {

@@ -1,4 +1,4 @@
-export const BRAND_EXCEL_CATALOGS: Record<string, { title: string; subtitle?: string; file: string; url?: string }[]> = {
+export const BRAND_EXCEL_CATALOGS: Record<string, { title: string; subtitle?: string; file: string; url?: string; coverImage?: string; image?: string }[]> = {
   "mirage": [
     {
       "title": "Clay Collection Porcelain Slabs",
@@ -93,10 +93,46 @@ export const BRAND_EXCEL_CATALOGS: Record<string, { title: string; subtitle?: st
   ],
   "wow": [
     {
-      "title": "WOW Architectural Ceramic Tiles",
-      "subtitle": "Bejmat, Aquarelle & 60º Chevron Collections",
+      "title": "60 Degrees Ceramic Tile Collection",
+      "subtitle": "Contemporary Rhombus & Geometric Hexagon Series",
+      "file": "/catalogs/catalogo60grados.pdf",
+      "url": "/catalogs/catalogo60grados.pdf",
+      "coverImage": "/catalogs/thumbnails/catalogo60grados_thumb.jpg"
+    },
+    {
+      "title": "Bejmat Handcrafted Moroccan Tile Collection",
+      "subtitle": "Traditional Glossy & Matte Hand-Moulded Zellige Series",
       "file": "/catalogs/catalogobejmat.pdf",
-      "url": "/catalogs/catalogobejmat.pdf"
+      "url": "/catalogs/catalogobejmat.pdf",
+      "coverImage": "/catalogs/thumbnails/catalogobejmat_thumb.jpg"
+    },
+    {
+      "title": "Nouvelle Inja Ceramic Collection",
+      "subtitle": "Subtle Pastels, Relief Textures & Architectural Wall Finishes",
+      "file": "/catalogs/catalogo-nouvelle.pdf",
+      "url": "/catalogs/catalogo-nouvelle.pdf",
+      "coverImage": "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg"
+    },
+    {
+      "title": "Sabil Inja Luxury Wall Tile Collection",
+      "subtitle": "Artisanal Glazes & Organic Earth Tone Surface Finishes",
+      "file": "/catalogs/catalogo-sabil.pdf",
+      "url": "/catalogs/catalogo-sabil.pdf",
+      "coverImage": "/catalogs/thumbnails/catalogo-sabil_thumb.jpg"
+    },
+    {
+      "title": "Terre Volumetric Architectural Tile Collection",
+      "subtitle": "3D Sculptural Clay & Terracotta Expression Tiles",
+      "file": "/catalogs/catalogo-terre.pdf",
+      "url": "/catalogs/catalogo-terre.pdf",
+      "coverImage": "/catalogs/thumbnails/catalogo-terre_thumb.jpg"
+    },
+    {
+      "title": "Aquarelle & Bits Decorative Series",
+      "subtitle": "Watercolour Washes & Contemporary Speckled Porcelain",
+      "file": "/catalogs/aquarelle.pdf",
+      "url": "/catalogs/aquarelle.pdf",
+      "coverImage": "/catalogs/thumbnails/aquarelle_thumb.jpg"
     }
   ]
 };
@@ -105,6 +141,9 @@ export type BrandCatalogue = {
   title: string;
   subtitle?: string;
   file: string; // path under /public/catalogues/
+  url?: string;
+  coverImage?: string;
+  image?: string;
 };
 
 export type BrandProduct = {

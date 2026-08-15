@@ -166,15 +166,44 @@ export default function Header() {
                     </p>
                   </div>
 
-                  {/* Direct Link to Admin Dashboard */}
+                  {/* Direct Link to Designer Workspace */}
                   <Link
-                    href="/admin/dashboard"
+                    href="/workspace"
                     onClick={() => setShowProfileMenu(false)}
                     style={{
                       width: "100%",
                       background: "#80673f",
                       color: "#ffffff",
                       border: "none",
+                      padding: "0.8rem 1.2rem",
+                      borderRadius: "0.4rem",
+                      fontSize: "1.1rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "0.6rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      marginBottom: "0.6rem",
+                      textDecoration: "none",
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    <span>🏛️ Designer Workspace</span>
+                    <span>↗</span>
+                  </Link>
+
+                  {/* Direct Link to Admin Dashboard */}
+                  <Link
+                    href="/admin/dashboard"
+                    onClick={() => setShowProfileMenu(false)}
+                    style={{
+                      width: "100%",
+                      background: "#24201a",
+                      color: "#e2c99f",
+                      border: "1px solid #4a3e2c",
                       padding: "0.8rem 1.2rem",
                       borderRadius: "0.4rem",
                       fontSize: "1.1rem",
@@ -260,10 +289,18 @@ export default function Header() {
           {user && (
             <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
               <Link
-                href="/admin/dashboard"
+                href="/workspace"
                 onClick={() => setOpen(false)}
                 className="btn btn--primary"
                 style={{ background: "#80673f", color: "#fff", border: "none", padding: "1.2rem 2.4rem", cursor: "pointer", fontWeight: 700, textAlign: "center", textDecoration: "none" }}
+              >
+                🏛️ DESIGNER WORKSPACE (PROGRAMA OS) ↗
+              </Link>
+              <Link
+                href="/admin/dashboard"
+                onClick={() => setOpen(false)}
+                className="btn btn--primary"
+                style={{ background: "#24201a", color: "#e2c99f", border: "1px solid #4a3e2c", padding: "1.2rem 2.4rem", cursor: "pointer", fontWeight: 700, textAlign: "center", textDecoration: "none" }}
               >
                 📊 ADMIN DASHBOARD ↗
               </Link>

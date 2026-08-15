@@ -15,12 +15,12 @@ function getProtectedPdfViewerUrl(url: string): string {
   if (driveMatch && driveMatch[1]) {
     return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
   }
-  if (trimmed.startsWith("http")) {
-    return `https://docs.google.com/viewer?url=${encodeURIComponent(trimmed)}&embedded=true`;
+  // Local static PDF in public folder — serve directly for 100% reliable in-browser PDF rendering
+  if (trimmed.startsWith("/")) {
+    return trimmed;
   }
-  if (typeof window !== "undefined") {
-    const originUrl = window.location.origin + (trimmed.startsWith("/") ? trimmed : `/${trimmed}`);
-    return `https://docs.google.com/viewer?url=${encodeURIComponent(originUrl)}&embedded=true`;
+  if (trimmed.startsWith("http")) {
+    return trimmed;
   }
   return trimmed;
 }
@@ -45,6 +45,14 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
   });
 
   useEffect(() => {
+    // Auto-unlock if user is already logged in as Architect / Member or previously submitted enquiry
+    if (typeof window !== "undefined") {
+      const alreadySubmitted = sessionStorage.getItem("aaren_enquiry_submitted") || localStorage.getItem("aaren_auth_user") || localStorage.getItem("aaren_token");
+      if (alreadySubmitted) {
+        setUnlocked(true);
+      }
+    }
+
     fetch("/api/catalog-settings")
       .then((res) => res.json())
       .then((json) => {

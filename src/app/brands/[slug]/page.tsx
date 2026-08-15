@@ -124,10 +124,39 @@ export default function BrandDetailPage({ params }: Props) {
   }, [staticBrand, apiBrand, slug]);
 
   const displayCatalogues = useMemo(() => {
+    const norm = (activeBrand.id || slug || "").toLowerCase();
+    
+    // Default fallback rich catalogues for brands
+    let baseList: any[] = [];
+    if (norm === "wow") {
+      baseList = [
+        { title: "60 Degrees Ceramic Tile Collection", url: "/catalogs/catalogo60grados.pdf", coverImage: "/catalogs/thumbnails/catalogo60grados_thumb.jpg", year: "2026", pages: "Full Edition", category: "PDF Catalog", featured: true },
+        { title: "Bejmat Handcrafted Tile Collection", url: "/catalogs/catalogobejmat.pdf", coverImage: "/catalogs/thumbnails/catalogobejmat_thumb.jpg", year: "2026", pages: "Full Edition", category: "PDF Catalog", featured: true },
+        { title: "Nouvelle Inja Ceramic Collection", url: "/catalogs/catalogo-nouvelle.pdf", coverImage: "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg", year: "2026", pages: "Full Edition", category: "PDF Catalog", featured: true },
+        { title: "Sabil Inja Luxury Wall Tile Collection", url: "/catalogs/catalogo-sabil.pdf", coverImage: "/catalogs/thumbnails/catalogo-sabil_thumb.jpg", year: "2026", pages: "Full Edition", category: "PDF Catalog", featured: true },
+        { title: "Terre Volumetric Architectural Tile Collection", url: "/catalogs/catalogo-terre.pdf", coverImage: "/catalogs/thumbnails/catalogo-terre_thumb.jpg", year: "2026", pages: "Full Edition", category: "PDF Catalog", featured: true },
+        { title: "Aquarelle & Bits Decorative Series", url: "/catalogs/aquarelle.pdf", coverImage: "/catalogs/thumbnails/aquarelle_thumb.jpg", year: "2026", pages: "Full Edition", category: "PDF Catalog", featured: true }
+      ];
+    } else if (norm === "mirage") {
+      baseList = [
+        { title: "Mirage Clay Collection Porcelain Slabs", url: "/catalogs/catalogue-clay-pdf.pdf", coverImage: "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg", year: "2026", pages: "Full Edition", category: "PDF Catalog", featured: true },
+        { title: "Mirage Elysian Travertine Porcelain Slabs", url: "/catalogs/catalogue-clay-pdf.pdf", coverImage: "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg", year: "2026", pages: "Full Edition", category: "PDF Catalog", featured: true }
+      ];
+    } else if (norm === "inkiostro-bianco" || norm === "inkiostrobianco") {
+      baseList = [
+        { title: "Materia Prima 2026 Wallcoverings", url: "/catalogs/catalogo_materiaprima_2026_2a.pdf", coverImage: "/catalogs/thumbnails/catalogo_materiaprima_2026_2a_thumb.jpg", year: "2026", pages: "Full Edition", category: "PDF Catalog", featured: true }
+      ];
+    } else if (norm === "formica" || norm === "newtech-wood" || norm === "newtechwood") {
+      baseList = [
+        { title: "FENIX & VIS Architectural Surfaces", url: "/catalogs/arpa-vis-brochure_250122.pdf", coverImage: "/catalogs/thumbnails/arpa-vis-brochure_250122_thumb.jpg", year: "2026", pages: "Full Edition", category: "PDF Catalog", featured: true }
+      ];
+    }
+
     if (apiBrand?.pdfCatalogs && apiBrand.pdfCatalogs.length > 0) {
       return apiBrand.pdfCatalogs.map((c: any) => ({
         title: c.title || `${activeBrand.name} Specification Catalog`,
-        url: c.pdfUrl,
+        url: c.pdfUrl || c.url,
+        coverImage: c.coverImage,
         year: "2026",
         pages: "Full Edition",
         category: "PDF Catalog",
@@ -144,8 +173,9 @@ export default function BrandDetailPage({ params }: Props) {
         featured: true,
       }];
     }
+    if (baseList.length > 0) return baseList;
     return activeBrand.catalogues || [];
-  }, [apiBrand, activeBrand]);
+  }, [apiBrand, activeBrand, slug]);
 
   // Combine hardcoded samples with API products
   const allBrandProducts = useMemo(() => {
@@ -516,12 +546,38 @@ export default function BrandDetailPage({ params }: Props) {
           <div className="bd-catalogue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "2rem" }}>
             {displayCatalogues.map((cat: any, i: number) => {
               const rawPdf = (cat as any).url || cat.file || "";
-              const pdfUrl = rawPdf.startsWith("http") ? rawPdf : (rawPdf.startsWith("/") ? rawPdf : `/catalogues/${rawPdf}`);
+              let pdfUrl = rawPdf.startsWith("http") ? rawPdf : (rawPdf.startsWith("/") ? rawPdf : `/catalogs/${rawPdf}`);
+              
+              const lowerTitle = (cat.title || "").toLowerCase();
+              if (lowerTitle.includes("60 degree") || lowerTitle.includes("60grados")) pdfUrl = "/catalogs/catalogo60grados.pdf";
+              else if (lowerTitle.includes("bejmat")) pdfUrl = "/catalogs/catalogobejmat.pdf";
+              else if (lowerTitle.includes("nouvelle") || lowerTitle.includes("nouveau")) pdfUrl = "/catalogs/catalogo-nouvelle.pdf";
+              else if (lowerTitle.includes("sabil") || lowerTitle.includes("sahli")) pdfUrl = "/catalogs/catalogo-sabil.pdf";
+              else if (lowerTitle.includes("terre")) pdfUrl = "/catalogs/catalogo-terre.pdf";
+              else if (lowerTitle.includes("vestige")) pdfUrl = "/catalogs/catalogo-vestige.pdf";
+              else if (lowerTitle.includes("aquarelle")) pdfUrl = "/catalogs/aquarelle.pdf";
+              else if (lowerTitle.includes("bits")) pdfUrl = "/catalogs/bits.pdf";
 
-              // Extract 1st Page Cover Thumbnail Image from Google Drive ID
+              // Thumbnail resolver
+              let thumbImage = cat.coverImage;
+              if (!thumbImage) {
+                if (lowerTitle.includes("60 degree") || lowerTitle.includes("60grados")) thumbImage = "/catalogs/thumbnails/catalogo60grados_thumb.jpg";
+                else if (lowerTitle.includes("bejmat")) thumbImage = "/catalogs/thumbnails/catalogobejmat_thumb.jpg";
+                else if (lowerTitle.includes("nouvelle") || lowerTitle.includes("nouveau")) thumbImage = "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg";
+                else if (lowerTitle.includes("sabil") || lowerTitle.includes("sahli")) thumbImage = "/catalogs/thumbnails/catalogo-sabil_thumb.jpg";
+                else if (lowerTitle.includes("terre")) thumbImage = "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
+                else if (lowerTitle.includes("vestige")) thumbImage = "/catalogs/thumbnails/catalogo-vestige_thumb.jpg";
+                else if (lowerTitle.includes("aquarelle")) thumbImage = "/catalogs/thumbnails/aquarelle_thumb.jpg";
+                else if (lowerTitle.includes("bits")) thumbImage = "/catalogs/thumbnails/bits_thumb.jpg";
+                else if (lowerTitle.includes("clay") || lowerTitle.includes("elysian")) thumbImage = "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg";
+                else if (lowerTitle.includes("materia") || lowerTitle.includes("prima")) thumbImage = "/catalogs/thumbnails/catalogo_materiaprima_2026_2a_thumb.jpg";
+                else if (lowerTitle.includes("arpa") || lowerTitle.includes("vis") || lowerTitle.includes("fenix")) thumbImage = "/catalogs/thumbnails/arpa-vis-brochure_250122_thumb.jpg";
+              }
+
+              // Extract Google Drive thumbnail if available
               const driveMatch = rawPdf.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawPdf.match(/id=([a-zA-Z0-9_-]+)/);
               const driveId = driveMatch ? driveMatch[1] : null;
-              const coverThumbUrl = driveId ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w800` : null;
+              const coverThumbUrl = thumbImage || (driveId ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w800` : null);
 
               return (
                 <div
@@ -543,7 +599,7 @@ export default function BrandDetailPage({ params }: Props) {
                     transition: "transform 0.3s ease, box-shadow 0.3s ease",
                   }}
                 >
-                  {/* Click Overlay - Prevents direct PDF opening */}
+                  {/* Click Overlay - Opens PDF Modal */}
                   <div
                     style={{
                       position: "absolute",
@@ -577,7 +633,7 @@ export default function BrandDetailPage({ params }: Props) {
                   <div
                     style={{
                       height: "320px",
-                      background: "linear-gradient(145deg, #181920 0%, #0b0c10 100%)",
+                      background: "#181920",
                       position: "relative",
                       overflow: "hidden",
                       display: "flex",
@@ -589,9 +645,8 @@ export default function BrandDetailPage({ params }: Props) {
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={coverThumbUrl}
-                        alt={`${cat.title} Cover 1st Page`}
+                        alt={`${cat.title} Cover`}
                         onError={(e) => {
-                          // Try alternative Google Drive direct thumbnail URL if primary thumbnail fails
                           if (driveId && !(e.currentTarget as any).dataset.triedSecondary) {
                             (e.currentTarget as any).dataset.triedSecondary = "true";
                             e.currentTarget.src = `https://lh3.googleusercontent.com/d/${driveId}=s800`;
@@ -613,7 +668,7 @@ export default function BrandDetailPage({ params }: Props) {
                         <img
                           src={(cat as any).coverImage || activeBrand.hero}
                           alt={`${cat.title} Cover`}
-                          style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.65)" }}
+                          style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.85)" }}
                         />
                         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.85) 100%)", display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "1.2rem" }}>
                           <span style={{ fontSize: "0.72rem", color: "#d4af37", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>{activeBrand.name}</span>
