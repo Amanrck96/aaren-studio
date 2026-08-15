@@ -71,11 +71,11 @@ export default function Header() {
 
   const desktopNavLinks: NavLink[] = user
     ? BASE_NAV_LINKS
-    : [...BASE_NAV_LINKS, { label: "Sign in", href: "/login" }, { label: "Sign up", href: "/signup" }];
+    : [...BASE_NAV_LINKS, { label: "Sign up", href: "/signup" }];
 
   const mobileNavLinks: NavLink[] = user
     ? [...BASE_NAV_LINKS]
-    : [...BASE_NAV_LINKS, { label: "Sign in", href: "/login" }, { label: "Sign up", href: "/signup" }];
+    : [...BASE_NAV_LINKS, { label: "Sign up", href: "/signup" }];
 
   return (
     <>
@@ -152,8 +152,8 @@ export default function Header() {
                     border: "1px solid #332d25",
                     padding: "1.2rem",
                     borderRadius: "0.8rem",
-                    minWidth: "18rem",
-                    boxShadow: "0 1rem 2.5rem rgba(0,0,0,0.3)",
+                    minWidth: "20rem",
+                    boxShadow: "0 1rem 2.5rem rgba(0,0,0,0.4)",
                     zIndex: 999,
                   }}
                 >
@@ -165,6 +165,36 @@ export default function Header() {
                       {user.email}
                     </p>
                   </div>
+
+                  {/* Direct Link to Admin Dashboard */}
+                  <Link
+                    href="/admin/dashboard"
+                    onClick={() => setShowProfileMenu(false)}
+                    style={{
+                      width: "100%",
+                      background: "#80673f",
+                      color: "#ffffff",
+                      border: "none",
+                      padding: "0.8rem 1.2rem",
+                      borderRadius: "0.4rem",
+                      fontSize: "1.1rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "0.6rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      marginBottom: "0.6rem",
+                      textDecoration: "none",
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    <span>📊 Admin Dashboard</span>
+                    <span>↗</span>
+                  </Link>
+
                   <button
                     onClick={handleLogout}
                     style={{
@@ -228,11 +258,19 @@ export default function Header() {
           ))}
 
           {user && (
-            <div style={{ marginTop: "2rem" }}>
+            <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <Link
+                href="/admin/dashboard"
+                onClick={() => setOpen(false)}
+                className="btn btn--primary"
+                style={{ background: "#80673f", color: "#fff", border: "none", padding: "1.2rem 2.4rem", cursor: "pointer", fontWeight: 700, textAlign: "center", textDecoration: "none" }}
+              >
+                📊 ADMIN DASHBOARD ↗
+              </Link>
               <button
                 onClick={handleLogout}
                 className="btn btn--primary"
-                style={{ background: "#80673f", color: "#fff", border: "none", padding: "1.2rem 2.4rem", cursor: "pointer", fontWeight: 700 }}
+                style={{ background: "#332a1e", color: "#e8c389", border: "none", padding: "1.2rem 2.4rem", cursor: "pointer", fontWeight: 700 }}
               >
                 SIGN OUT ({user.displayName?.split(" ")[0]})
               </button>

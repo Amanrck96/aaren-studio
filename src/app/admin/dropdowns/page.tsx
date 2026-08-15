@@ -73,6 +73,7 @@ export default function AdminDropdownsPage() {
                   style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
                 >
                   <option value="Category">Category</option>
+                  <option value="Collection">Collection / Subcategory</option>
                   <option value="Technology">Technology</option>
                   <option value="ProjectType">ProjectType</option>
                   <option value="Status">Status</option>

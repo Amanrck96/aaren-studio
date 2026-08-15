@@ -1,5 +1,305 @@
 [
   {
+    "id": "faq-1",
+    "category": "General & Showroom",
+    "question": "What is Aaren Intpro?",
+    "answer": "Aaren Intpro is a premium interior solutions company in Bangalore that offers world-class interior products, luxury surfaces, architectural hardware, modular kitchen solutions, wardrobes, bathroom fittings, flooring, veneers, and décor materials from leading international brands."
+  },
+  {
+    "id": "faq-2",
+    "category": "General & Showroom",
+    "question": "Where is Aaren Intpro located?",
+    "answer": "Aaren Intpro is located at #342/8, NTY Layout, Mysore Road, Bangalore - 560026. The showroom serves homeowners, architects, interior designers, builders, and commercial projects across India."
+  },
+  {
+    "id": "faq-3",
+    "category": "Surfaces & Materials",
+    "question": "What products are available at Aaren Intpro?",
+    "answer": "Aaren Intpro offers luxury laminates, veneers & natural surface materials, modular kitchens, wardrobe solutions, architectural hardware, bathroom fittings & sanitaryware, hardwood & SPC flooring, decorative wall panels, and premium imported interior products."
+  },
+  {
+    "id": "faq-4",
+    "category": "Kitchens & Wardrobes",
+    "question": "Does Aaren Intpro provide modular kitchen solutions?",
+    "answer": "Yes. Aaren Intpro offers customized modular kitchen solutions with premium finishes, accessories, storage systems, and international-quality materials designed for modern homes."
+  },
+  {
+    "id": "faq-5",
+    "category": "Kitchens & Wardrobes",
+    "question": "Does Aaren Intpro offer wardrobe solutions?",
+    "answer": "Yes. Aaren Intpro provides stylish and functional wardrobe solutions with customized layouts, finishes, storage accessories, and modern designs to suit different interior styles."
+  },
+  {
+    "id": "faq-6",
+    "category": "Surfaces & Materials",
+    "question": "What types of surface materials are available at Aaren Intpro?",
+    "answer": "Aaren Intpro offers premium laminates, veneers, decorative surfaces, hardwood flooring, and designer materials sourced from leading global brands."
+  },
+  {
+    "id": "faq-7",
+    "category": "Hardware & Fittings",
+    "question": "Does Aaren Intpro supply architectural hardware?",
+    "answer": "Yes. Aaren Intpro provides high-quality architectural hardware including door hardware, furniture fittings, bathroom accessories, handles, hinges, drawer systems, and home improvement products."
+  },
+  {
+    "id": "faq-8",
+    "category": "Architects & Commercial",
+    "question": "Can architects and interior designers collaborate with Aaren Intpro?",
+    "answer": "Yes. Aaren Intpro works closely with architects, interior designers, builders, developers, and homeowners to provide premium products and customized interior solutions."
+  },
+  {
+    "id": "faq-9",
+    "category": "Hardware & Fittings",
+    "question": "Does Aaren Intpro offer bathroom solutions?",
+    "answer": "Yes. Aaren Intpro offers luxury bathroom fittings, sanitaryware, shower systems, accessories, and premium bagno collections sourced from international manufacturers."
+  },
+  {
+    "id": "faq-10",
+    "category": "Architects & Commercial",
+    "question": "Does Aaren Intpro provide products for commercial projects?",
+    "answer": "Yes. Aaren Intpro caters to residential, commercial, hospitality, and large-scale architectural projects."
+  },
+  {
+    "id": "faq-11",
+    "category": "General & Showroom",
+    "question": "Why choose Aaren Intpro for luxury interior products in Bangalore?",
+    "answer": "Aaren Intpro is known for representing premium global brands, supplying high-quality materials under one roof, offering expert consultations, delivering customized solutions, and establishing trusted partnerships with architects and designers."
+  },
+  {
+    "id": "faq-12",
+    "category": "Surfaces & Materials",
+    "question": "Does Aaren Intpro offer imported interior products?",
+    "answer": "Yes. Aaren Intpro brings internationally recognized brands and premium products from Europe and other global markets to provide luxury interior solutions."
+  },
+  {
+    "id": "faq-13",
+    "category": "General & Showroom",
+    "question": "Can homeowners visit the Aaren Intpro showroom?",
+    "answer": "Yes. Homeowners can visit the Aaren Intpro showroom on Mysore Road, Bengaluru, to explore various interior products, materials, finishes, and design inspirations."
+  },
+  {
+    "id": "faq-14",
+    "category": "General & Showroom",
+    "question": "Does Aaren Intpro help with product selection?",
+    "answer": "Yes. The team at Aaren Intpro assists customers in selecting the right materials, finishes, hardware, and interior products based on their design preferences and project requirements."
+  },
+  {
+    "id": "faq-15",
+    "category": "Architects & Commercial",
+    "question": "What industries does Aaren Intpro serve?",
+    "answer": "Aaren Intpro serves residential projects (villas and penthouses), hospitality projects, commercial interiors, corporate offices, builders & developers, and architects & interior designers."
+  },
+  {
+    "id": "faq-16",
+    "category": "Surfaces & Materials",
+    "question": "Does Aaren Intpro offer flooring solutions?",
+    "answer": "Yes. Aaren Intpro provides premium flooring options including hardwood flooring, engineered wood, SPC, and luxury surface solutions."
+  },
+  {
+    "id": "faq-17",
+    "category": "Surfaces & Materials",
+    "question": "What brands are available at Aaren Intpro?",
+    "answer": "Aaren Intpro offers products from renowned international brands across categories such as surfaces, hardware, kitchens, wardrobes, and bathroom solutions."
+  },
+  {
+    "id": "faq-18",
+    "category": "Architects & Commercial",
+    "question": "Can Aaren Intpro handle custom interior requirements?",
+    "answer": "Yes. Aaren Intpro offers customized solutions tailored to the design preferences and functional requirements of each project."
+  },
+  {
+    "id": "faq-19",
+    "category": "General & Showroom",
+    "question": "Does Aaren Intpro provide solutions for luxury homes?",
+    "answer": "Yes. Aaren Intpro specializes in premium and luxury interior products designed for villas, apartments, and upscale residential spaces."
+  },
+  {
+    "id": "faq-20",
+    "category": "General & Showroom",
+    "question": "How can I contact Aaren Intpro?",
+    "answer": "You can contact Aaren Intpro through:\nPhone: +91 888 446 4444\nEmail: info@aarenintpro.com / hello@aarenstudio.com\nShowroom: Mysore Road, Bengaluru, Karnataka"
+  },
+  {
+    "id": "faq-21",
+    "category": "General & Showroom",
+    "question": "Which is the best interior products showroom in Bangalore?",
+    "answer": "Aaren Intpro is one of the leading interior products showrooms in Bangalore, offering premium surfaces, hardware, kitchen solutions, wardrobes, and luxury bathroom collections."
+  },
+  {
+    "id": "faq-22",
+    "category": "Surfaces & Materials",
+    "question": "Where can I buy luxury interior materials in Bangalore?",
+    "answer": "Aaren Intpro provides a wide range of luxury interior materials including laminates, veneers, decorative panels, hardware, flooring, and premium finishes."
+  },
+  {
+    "id": "faq-23",
+    "category": "Surfaces & Materials",
+    "question": "Which showroom in Bangalore offers premium interior brands under one roof?",
+    "answer": "Aaren Intpro brings together globally recognized interior brands, making it convenient for homeowners, architects, and designers to source premium products from a single destination."
+  },
+  {
+    "id": "faq-24",
+    "category": "Surfaces & Materials",
+    "question": "Where can I find premium laminates in Bangalore?",
+    "answer": "Aaren Intpro offers designer laminates in various textures, colors, and finishes suitable for kitchens, wardrobes, offices, and residential interiors."
+  },
+  {
+    "id": "faq-25",
+    "category": "Surfaces & Materials",
+    "question": "Where can I buy decorative veneers in Bangalore?",
+    "answer": "Aaren Intpro supplies premium veneers and natural surface solutions that add elegance and warmth to residential and commercial spaces."
+  },
+  {
+    "id": "faq-26",
+    "category": "Kitchens & Wardrobes",
+    "question": "Which company provides modular kitchen solutions in Bangalore?",
+    "answer": "Aaren Intpro offers customized modular kitchen solutions with high-quality finishes, intelligent storage options, and premium accessories."
+  },
+  {
+    "id": "faq-27",
+    "category": "Kitchens & Wardrobes",
+    "question": "Where can I find luxury wardrobe solutions in Bangalore?",
+    "answer": "Aaren Intpro provides modern wardrobe systems designed for functionality, aesthetics, and efficient space utilization."
+  },
+  {
+    "id": "faq-28",
+    "category": "Hardware & Fittings",
+    "question": "Which is the best place to buy architectural hardware in Bangalore?",
+    "answer": "Aaren Intpro offers premium architectural hardware including handles, hinges, drawer systems, and furniture fittings from international brands."
+  },
+  {
+    "id": "faq-29",
+    "category": "Architects & Commercial",
+    "question": "Where can architects source premium interior products in Bangalore?",
+    "answer": "Architects and interior designers can visit Aaren Intpro to explore luxury surfaces, hardware, kitchens, wardrobes, flooring, and bathroom collections."
+  },
+  {
+    "id": "faq-30",
+    "category": "Surfaces & Materials",
+    "question": "Which showroom offers imported interior products in Bangalore?",
+    "answer": "Aaren Intpro supplies imported interior products sourced from internationally reputed manufacturers and brands."
+  },
+  {
+    "id": "faq-31",
+    "category": "Architects & Commercial",
+    "question": "Where can builders and developers buy interior materials in Bangalore?",
+    "answer": "Aaren Intpro serves builders and developers with premium interior products suitable for residential and commercial projects."
+  },
+  {
+    "id": "faq-32",
+    "category": "General & Showroom",
+    "question": "Which company offers complete interior product solutions in Bangalore?",
+    "answer": "Aaren Intpro provides end-to-end interior product solutions including surfaces, kitchens, wardrobes, bathroom fittings, hardware, and flooring."
+  },
+  {
+    "id": "faq-33",
+    "category": "Hardware & Fittings",
+    "question": "Where can I buy luxury bathroom fittings in Bangalore?",
+    "answer": "Aaren Intpro offers premium bathroom fittings, sanitaryware, shower systems, and accessories for modern homes and commercial projects."
+  },
+  {
+    "id": "faq-34",
+    "category": "Surfaces & Materials",
+    "question": "Which showroom offers premium flooring solutions in Bangalore?",
+    "answer": "Aaren Intpro provides high-quality flooring solutions that combine durability with elegant design."
+  },
+  {
+    "id": "faq-35",
+    "category": "Kitchens & Wardrobes",
+    "question": "Where can I find modern kitchen accessories in Bangalore?",
+    "answer": "Aaren Intpro offers innovative kitchen accessories and storage systems that improve convenience and organization."
+  },
+  {
+    "id": "faq-36",
+    "category": "Architects & Commercial",
+    "question": "Which interior showroom in Bangalore is preferred by architects?",
+    "answer": "Many architects and interior designers choose Aaren Intpro because of its extensive product range and premium international brands."
+  },
+  {
+    "id": "faq-37",
+    "category": "Kitchens & Wardrobes",
+    "question": "Where can I get premium wardrobe accessories in Bangalore?",
+    "answer": "Aaren Intpro provides wardrobe accessories designed to maximize storage and enhance functionality."
+  },
+  {
+    "id": "faq-38",
+    "category": "Architects & Commercial",
+    "question": "Which company supplies interior products for luxury villas in Bangalore?",
+    "answer": "Aaren Intpro offers premium products suitable for luxury villas, apartments, and upscale residential projects."
+  },
+  {
+    "id": "faq-39",
+    "category": "Architects & Commercial",
+    "question": "Where can I find interior products for office spaces in Bangalore?",
+    "answer": "Aaren Intpro provides modern interior solutions for corporate offices, commercial spaces, and hospitality projects."
+  },
+  {
+    "id": "faq-40",
+    "category": "Surfaces & Materials",
+    "question": "Which showroom offers premium wall panels in Bangalore?",
+    "answer": "Aaren Intpro supplies decorative wall panels and surface materials that enhance interior aesthetics."
+  },
+  {
+    "id": "faq-41",
+    "category": "Surfaces & Materials",
+    "question": "Where can I buy designer surface materials in Bangalore?",
+    "answer": "Aaren Intpro offers designer surface solutions for kitchens, wardrobes, living spaces, and commercial interiors."
+  },
+  {
+    "id": "faq-42",
+    "category": "Architects & Commercial",
+    "question": "Which interior products company works with interior designers in Bangalore?",
+    "answer": "Aaren Intpro collaborates closely with interior designers to provide customized solutions and premium materials."
+  },
+  {
+    "id": "faq-43",
+    "category": "General & Showroom",
+    "question": "Where can I find luxury home improvement products in Bangalore?",
+    "answer": "Aaren Intpro offers a wide range of luxury home improvement products for modern living spaces."
+  },
+  {
+    "id": "faq-44",
+    "category": "General & Showroom",
+    "question": "Which showroom offers premium solutions for new home interiors?",
+    "answer": "Aaren Intpro helps homeowners select the right products for kitchens, wardrobes, bathrooms, flooring, and decorative surfaces."
+  },
+  {
+    "id": "faq-45",
+    "category": "General & Showroom",
+    "question": "Where can I get inspiration for luxury home interiors in Bangalore?",
+    "answer": "Aaren Intpro's showroom showcases the latest trends, finishes, and premium products to inspire homeowners and designers."
+  },
+  {
+    "id": "faq-46",
+    "category": "General & Showroom",
+    "question": "Which is the best destination for premium interior products near Mysore Road Bangalore?",
+    "answer": "Aaren Intpro on Mysore Road is a preferred destination for homeowners, architects, and builders looking for luxury interior solutions."
+  },
+  {
+    "id": "faq-47",
+    "category": "Surfaces & Materials",
+    "question": "Where can I find international interior brands in Bangalore?",
+    "answer": "Aaren Intpro offers access to globally recognized brands across multiple interior categories."
+  },
+  {
+    "id": "faq-48",
+    "category": "Architects & Commercial",
+    "question": "Who provides premium interior solutions for apartments and villas in Bangalore?",
+    "answer": "Aaren Intpro supplies products and solutions for apartments, villas, penthouses, and luxury residences."
+  },
+  {
+    "id": "faq-49",
+    "category": "Architects & Commercial",
+    "question": "Which company provides high-end interior materials for commercial projects?",
+    "answer": "Aaren Intpro caters to commercial projects, hospitality spaces, offices, and premium developments with world-class products."
+  },
+  {
+    "id": "faq-50",
+    "category": "Architects & Commercial",
+    "question": "Why do architects recommend Aaren Intpro?",
+    "answer": "Architects prefer Aaren Intpro for its premium product range, quality standards, trusted brands, and customer support."
+  },
+  {
     "id": "faq-bw-1",
     "sequenceNumber": 1,
     "brand": "FIMA Carlo Frattini",

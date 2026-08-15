@@ -12,6 +12,10 @@ export type SiteSettingsItem = {
   footerLinks: string[];
   socialLinks: string[];
   copyrightText: string;
+  websiteBgColor?: string;
+  headingColor?: string;
+  textColor?: string;
+  accentColor?: string;
 };
 
 export type CategoryItem = {
@@ -280,6 +284,10 @@ export const DEFAULT_SETTINGS: SiteSettingsItem = {
   contactAddress: "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026",
   googleMapUrl: "https://maps.google.com/?q=Mysore+Road+Bangalore",
   webhookUrl: "",
+  websiteBgColor: "#E6E2D8",
+  headingColor: "#81663F",
+  textColor: "#1E1E1E",
+  accentColor: "#81663F",
   footerLinks: ["All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"],
   socialLinks: [
     "https://www.instagram.com/aaren_intpro",

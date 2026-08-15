@@ -66,13 +66,48 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+import { getSiteSettingsStore } from "@/lib/store";
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  let settings = null;
+  try {
+    settings = await getSiteSettingsStore();
+  } catch (e) {}
+
+  const bg = settings?.websiteBgColor || "#E6E2D8";
+  const heading = settings?.headingColor || "#81663F";
+  const text = settings?.textColor || "#1E1E1E";
+  const accent = settings?.accentColor || "#81663F";
+
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable} ${jost.variable}`} suppressHydrationWarning>
+      <head>
+        <style
+          id="aaren-dynamic-theme"
+          dangerouslySetInnerHTML={{
+            __html: `
+              :root {
+                --color-bg: ${bg};
+                --color-heading: ${heading};
+                --color-text: ${text};
+                --color-aaren-gold: ${accent};
+                --color-aaren-sand: ${bg};
+              }
+              body {
+                background-color: ${bg};
+                color: ${text};
+              }
+              h1, h2, h3, .main-heading {
+                color: ${heading};
+              }
+            `,
+          }}
+        />
+      </head>
       <body className={jost.className} suppressHydrationWarning>
         <SmoothScroll>
           <Header />

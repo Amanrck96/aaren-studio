@@ -35,8 +35,8 @@ html.lenis body {
 }
 
 body {
-  background-color: #eaeef4;
-  color: #000;
+  background-color: var(--color-bg, #E6E2D8);
+  color: var(--color-text, #1e1e1e);
   font-family: var(--font-jost), 'Jost', sans-serif !important;
   font-size: 1.4rem;
   font-weight: 400;
@@ -64,6 +64,7 @@ h1 {
   line-height: 0.9;
   font-weight: 700;
   text-transform: uppercase;
+  color: var(--color-heading, #81663F);
 }
 h2 {
   font-family: var(--font-jost), 'Jost', sans-serif !important;
@@ -72,6 +73,7 @@ h2 {
   line-height: 0.9;
   font-weight: 700;
   text-transform: uppercase;
+  color: var(--color-heading, #81663F);
 }
 h3 {
   font-size: 2.4rem;
@@ -79,6 +81,7 @@ h3 {
   line-height: 1.0;
   font-weight: 700;
   text-transform: uppercase;
+  color: var(--color-heading, #81663F);
 }
 h4 {
   font-size: 2.4rem;
@@ -160,15 +163,16 @@ h5 {
 /* ── Colors ── */
 :root {
   /* Official Aaren Brand Book Palette */
-  --color-aaren-gold: #81663f;        /* Primary Bronze / Muted Gold Accent */
+  --color-aaren-gold: #81663F;        /* Primary Bronze / Muted Gold Accent */
   --color-aaren-sand: #E6E2D8;        /* Light Warm Sand Neutral Background */
   --color-aaren-white: #FFFFFF;       /* Pure White Neutral */
-  --color-aaren-charcoal: #565656;    /* Dark Charcoal Slate Text */
+  --color-aaren-charcoal: #1E1E1E;    /* Dark Charcoal Slate Text */
   
-  --color-bg: #eaeef4;
+  --color-bg: #E6E2D8;
+  --color-heading: #81663F;
   --color-dark: #1e1e1e;
-  --color-text: #000;
-  --color-light: #eaeef4;
+  --color-text: #1e1e1e;
+  --color-light: #E6E2D8;
   --color-muted: #c8cbd0;
   --color-border: rgba(0, 0, 0, 0.15);
   --color-border-light: rgba(255, 255, 255, 0.15);
