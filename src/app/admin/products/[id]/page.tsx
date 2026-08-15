@@ -119,9 +119,18 @@ export default function AdminIndividualProductPage({ params }: Props) {
   const [tagInput, setTagInput] = useState<string>("");
   const [featureInput, setFeatureInput] = useState<string>("");
   const [newGalleryUrl, setNewGalleryUrl] = useState<string>("");
+  const [collectionsList, setCollectionsList] = useState<any[]>([]);
 
   useEffect(() => {
     fetchProduct();
+    fetch("/api/collections?t=" + Date.now())
+      .then((r) => r.json())
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data)) {
+          setCollectionsList(json.data);
+        }
+      })
+      .catch(() => {});
   }, [id]);
 
   const showToast = (msg: string) => {
@@ -507,13 +516,43 @@ export default function AdminIndividualProductPage({ params }: Props) {
                   </div>
 
                   <div className="form-group">
-                    <label>Collection / Subcategory</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Naturale Series / WPC Composite"
-                      value={formData.subcategory || ""}
-                      onChange={(e) => setFormData({ ...formData, subcategory: e.target.value })}
-                    />
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                      <label style={{ margin: 0 }}>Collection / Brand Group</label>
+                      <Link
+                        href="/admin/collections"
+                        target="_blank"
+                        style={{ fontSize: "11px", color: "#81663F", fontWeight: 700, textDecoration: "underline" }}
+                      >
+                        Manage Brand Collections ↗
+                      </Link>
+                    </div>
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <select
+                        value={formData.subcategory || ""}
+                        onChange={(e) => setFormData({ ...formData, subcategory: e.target.value })}
+                        style={{ flex: 1 }}
+                      >
+                        <option value="">-- Select Collection --</option>
+                        {collectionsList
+                          .filter((c) => {
+                            const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+                            const pBrand = norm(formData.brand);
+                            return norm(c.brandId) === pBrand || norm(c.brandName || "") === pBrand || norm(c.brandId) === "general";
+                          })
+                          .map((c) => (
+                            <option key={c.id} value={c.name}>
+                              {c.name} ({c.brandName || c.brandId})
+                            </option>
+                          ))}
+                      </select>
+                      <input
+                        type="text"
+                        placeholder="Or custom collection..."
+                        value={formData.subcategory || ""}
+                        onChange={(e) => setFormData({ ...formData, subcategory: e.target.value })}
+                        style={{ flex: 1 }}
+                      />
+                    </div>
                   </div>
 
                   <div className="form-group">

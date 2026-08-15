@@ -23,6 +23,7 @@ import {
   PdfCatalogItem,
   CatalogSettingsItem,
   FaqItem,
+  CollectionItem,
   DEFAULT_SETTINGS,
   DEFAULT_CATALOG_SETTINGS,
 } from "./types";
@@ -2106,6 +2107,91 @@ export async function saveBlogSettingsStore(settings: any): Promise<any> {
   json.blogSettings = settings;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   return settings;
+}
+
+// ─── BRAND-SCOPED COLLECTIONS STORE ──────────────────────────
+
+export const DEFAULT_COLLECTIONS: CollectionItem[] = [
+  { id: "kitchen", name: "Kitchen", brandId: "slashform", brandName: "Slashform", iconUrl: "", description: "Modular kitchen, island units & pantries", sequenceNumber: 1 },
+  { id: "wardrobe", name: "Wardrobe", brandId: "slashform", brandName: "Slashform", iconUrl: "", description: "Custom wardrobe systems & walk-in closets", sequenceNumber: 2 },
+  { id: "door-systems", name: "Door Systems", brandId: "slashform", brandName: "Slashform", iconUrl: "", description: "Architectural sliding & partition doors", sequenceNumber: 3 },
+  { id: "retractable-screens", name: "Retractable Screens", brandId: "freedom-screens", brandName: "Freedom Screens", iconUrl: "", description: "Infinity zipline retractable insect screens", sequenceNumber: 1 },
+  { id: "sliding-screens", name: "Sliding Screens", brandId: "freedom-screens", brandName: "Freedom Screens", iconUrl: "", description: "Smooth glide screen panels for large spans", sequenceNumber: 2 },
+  { id: "motorized-drop", name: "Motorized Screens", brandId: "freedom-screens", brandName: "Freedom Screens", iconUrl: "", description: "Automated patio & balcony drop screens", sequenceNumber: 3 },
+  { id: "washbasins", name: "Washbasins", brandId: "falper", brandName: "Falper", iconUrl: "", description: "LivingTec & marble countertop basins", sequenceNumber: 1 },
+  { id: "bathtubs", name: "Bathtubs", brandId: "falper", brandName: "Falper", iconUrl: "", description: "Freestanding Italian luxury bathtubs", sequenceNumber: 2 },
+  { id: "bathroom-furniture", name: "Bathroom Furniture", brandId: "falper", brandName: "Falper", iconUrl: "", description: "Minimalist vanity cabinets & mirrors", sequenceNumber: 3 },
+  { id: "faucets-taps", name: "Faucets & Taps", brandId: "fima", brandName: "FIMA Carlo Frattini", iconUrl: "", description: "Italian designer basin mixers and taps", sequenceNumber: 1 },
+  { id: "shower-systems", name: "Shower Systems", brandId: "fima", brandName: "FIMA Carlo Frattini", iconUrl: "", description: "Thermostatic rainfall ceiling showers", sequenceNumber: 2 },
+  { id: "composite-decking", name: "Composite Decking", brandId: "newtech-wood", brandName: "NewTechWood", iconUrl: "", description: "UltraShield natural timber texture decking", sequenceNumber: 1 },
+  { id: "wall-cladding", name: "Wall Cladding", brandId: "newtech-wood", brandName: "NewTechWood", iconUrl: "", description: "Exterior facade and fluted siding panels", sequenceNumber: 2 },
+  { id: "natural-timber", name: "Natural Oak Flooring", brandId: "mafi", brandName: "Mafi", iconUrl: "", description: "All-natural Austrian hardwood planks", sequenceNumber: 1 },
+  { id: "architectural-hardware", name: "Concealed Hinges & Hardware", brandId: "waltz", brandName: "Waltz", iconUrl: "", description: "Precision engineering architectural hardware", sequenceNumber: 1 },
+  { id: "ceramic-surfaces", name: "3D Feature Surfaces", brandId: "wow", brandName: "WOW", iconUrl: "", description: "Geometric decorative wall tiles", sequenceNumber: 1 },
+];
+
+export async function getAllCollectionsStore(brandId?: string): Promise<CollectionItem[]> {
+  const fbData = await fetchFromFirebaseCloudStore("collections");
+  let list: CollectionItem[] = [];
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    list = fbData;
+  } else {
+    const json = readJsonStore();
+    if (json.collections && Array.isArray(json.collections) && json.collections.length > 0) {
+      list = json.collections;
+    } else {
+      list = DEFAULT_COLLECTIONS;
+    }
+  }
+
+  if (brandId && brandId !== "all") {
+    const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const target = norm(brandId);
+    return list.filter((c) => norm(c.brandId) === target || norm(c.brandName || "") === target);
+  }
+  return list;
+}
+
+export async function getCollectionByIdStore(id: string): Promise<CollectionItem | null> {
+  const list = await getAllCollectionsStore();
+  return list.find((c) => c.id === id) || null;
+}
+
+export async function saveCollectionStore(item: Partial<CollectionItem>): Promise<CollectionItem> {
+  const slug = item.id || (item.name ? item.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : `collection-${Date.now()}`);
+  const full: CollectionItem = {
+    id: slug,
+    name: item.name || "Untitled Collection",
+    brandId: item.brandId || "general",
+    brandName: item.brandName || "",
+    iconUrl: item.iconUrl || "",
+    description: item.description || "",
+    sequenceNumber: item.sequenceNumber || 1,
+    featured: !!item.featured,
+  };
+
+  let list = await getAllCollectionsStore();
+  const idx = list.findIndex((c) => c.id === slug);
+  if (idx >= 0) {
+    list[idx] = full;
+  } else {
+    list.push(full);
+  }
+
+  await syncToFirebaseCloudStore("collections", list);
+  const json = readJsonStore();
+  json.collections = list;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  return full;
+}
+
+export async function deleteCollectionStore(id: string): Promise<void> {
+  let list = await getAllCollectionsStore();
+  list = list.filter((c) => c.id !== id);
+  await syncToFirebaseCloudStore("collections", list);
+  const json = readJsonStore();
+  json.collections = list;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
 }
 
 

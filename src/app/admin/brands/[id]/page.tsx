@@ -589,10 +589,33 @@ export default function AdminIndividualBrandPage({ params }: Props) {
             {/* TAB 4: FILTER COLLECTIONS */}
             {activeTab === "collections" && (
               <div className="section-card">
-                <h3 className="section-title">Brand Subcategory / Collection Filter Chips</h3>
-                <p className="section-sub">
-                  Configure the interactive circular collection filter pills shown above the product grid on the brand page.
-                </p>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+                  <div>
+                    <h3 className="section-title" style={{ margin: 0 }}>Brand Subcategory / Collection Filter Chips</h3>
+                    <p className="section-sub" style={{ margin: "4px 0 0" }}>
+                      Configure the interactive circular collection filter pills shown above the product grid on the brand page.
+                    </p>
+                  </div>
+                  <Link
+                    href="/admin/collections"
+                    target="_blank"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      background: "#81663F",
+                      color: "#fff",
+                      padding: "8px 14px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: 700,
+                      textDecoration: "none",
+                    }}
+                  >
+                    <span>🗃️ Collection Studio & Icons</span>
+                    <ExternalLink size={12} />
+                  </Link>
+                </div>
 
                 <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
                   <input

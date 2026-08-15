@@ -28,6 +28,7 @@ export default function AdminDashboardPage() {
   const [stats, setStats] = useState({
     projects: 0,
     categories: 0,
+    collections: 0,
     brands: 0,
     products: 0,
     services: 0,
@@ -51,6 +52,7 @@ export default function AdminDashboardPage() {
     Promise.all([
       fetch("/api/projects?t=" + Date.now()).then((res) => res.json()),
       fetch("/api/categories?t=" + Date.now()).then((res) => res.json()),
+      fetch("/api/collections?t=" + Date.now()).then((res) => res.json()),
       fetch("/api/brands?t=" + Date.now()).then((res) => res.json()),
       fetch("/api/products?t=" + Date.now()).then((res) => res.json()),
       fetch("/api/services?t=" + Date.now()).then((res) => res.json()),
@@ -62,10 +64,11 @@ export default function AdminDashboardPage() {
       fetch("/api/faq?t=" + Date.now()).then((res) => res.json()),
       fetch("/api/site-settings?t=" + Date.now()).then((res) => res.json()),
     ])
-      .then(([p, c, b, pr, s, t, bl, m, inq, cat, fq, st]) => {
+      .then(([p, c, col, b, pr, s, t, bl, m, inq, cat, fq, st]) => {
         setStats({
           projects: p.count || p.data?.length || 0,
           categories: c.count || c.data?.length || 0,
+          collections: col.count || col.data?.length || 0,
           brands: b.count || b.data?.length || 0,
           products: pr.count || pr.data?.length || 0,
           services: s.count || s.data?.length || 0,
@@ -101,23 +104,24 @@ export default function AdminDashboardPage() {
           accentColor,
         }),
       });
-      const json = await res.json();
-      if (json.success) {
-        setColorToast("✓ Global website colors saved successfully!");
-        setTimeout(() => setColorToast(null), 3500);
+      const data = await res.json();
+      if (data.success) {
+        setColorToast("✨ Website Branding Colors Saved Permanently!");
+        setTimeout(() => setColorToast(null), 4000);
       }
-    } catch (e: any) {
-      setColorToast("Error: " + e.message);
+    } catch (e) {
+      console.error(e);
     } finally {
       setSavingColors(false);
     }
   };
 
   const statCards = [
-    { label: "❓ Total FAQs & Help", count: stats.faqs, color: "#81663F", href: "/admin/faq" },
-    { label: "🏢 Partner Brands", count: stats.brands, color: "#81663F", href: "/admin/brands" },
-    { label: "📦 Catalog Products", count: stats.products, color: "#81663F", href: "/admin/products" },
-    { label: "🏷️ Categories & Collections", count: stats.categories, color: "#81663F", href: "/admin/categories" },
+    { label: "❓ FAQs & Brand Help", count: stats.faqs, color: "#81663F", href: "/admin/faq" },
+    { label: "🏢 Brands Registered", count: stats.brands, color: "#81663F", href: "/admin/brands" },
+    { label: "📦 Products in Catalog", count: stats.products, color: "#81663F", href: "/admin/products" },
+    { label: "🗃️ Brand Collections", count: stats.collections, color: "#81663F", href: "/admin/collections" },
+    { label: "🏷️ Categories", count: stats.categories, color: "#81663F", href: "/admin/categories" },
     { label: "📄 PDF Catalogs", count: stats.catalogs, color: "#81663F", href: "/catalogs" },
     { label: "🖼️ Showcase Projects", count: stats.projects, color: "#81663F", href: "/admin/projects" },
     { label: "📥 Inquiries & Leads", count: stats.inquiries, color: "#81663F", href: "/admin/inquiries" },
@@ -125,10 +129,11 @@ export default function AdminDashboardPage() {
   ];
 
   const modules = [
+    { title: "🗃️ Brand-Scoped Collections", desc: "Manage brand product collections (Kitchen, Wardrobe, Door Systems) with circular icons, storefront filter bar, and live product counts.", href: "/admin/collections", icon: Layers },
     { title: "❓ FAQ & Brand Knowledge Base", desc: "Manage 150+ brand FAQs, import/export Excel spreadsheets, edit questions, answers and categories.", href: "/admin/faq", icon: HelpCircle },
     { title: "🏢 Brand Management & Individual Pages", desc: "Manage partner brands, hero banners, logos, quote taglines, country of origin, founded year, story and PDF catalogs.", href: "/admin/brands", icon: Building },
     { title: "📦 Product Catalog & Master Editors", desc: "Upload Excel product list, manage dimensions, finishes, CAD specs, warranty, and middle gallery photos.", href: "/admin/products", icon: Layers },
-    { title: "🏷️ Categories & Filter Collections", desc: "Manage categories with cover images, descriptions, short codes (DS 06), sequence numbers and subcategories.", href: "/admin/categories", icon: FolderTree },
+    { title: "🏷️ Categories & Filter Taxonomies", desc: "Manage categories with cover images, descriptions, short codes (DS 06), sequence numbers and subcategories.", href: "/admin/categories", icon: FolderTree },
     { title: "🏠 Homepage Hero Section", desc: "Header text, tagline, subtext, background MP4 video URL, category tags bar.", href: "/admin/hero", icon: Sparkles },
     { title: "🖼️ Showcase Projects", desc: "Manage homepage showcase projects, project codes (OB 01), main images, sequence numbers.", href: "/admin/projects", icon: LayoutTemplate },
     { title: "🛠️ Services Management", desc: "Add/edit unlimited services, icons, descriptions, category tags, button URLs.", href: "/admin/services", icon: FileText },

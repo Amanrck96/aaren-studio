@@ -17,6 +17,7 @@ export default function BrandDetailPage({ params }: Props) {
   const [selectedPdf, setSelectedPdf] = useState<{ url: string; title: string } | null>(null);
   const [apiProducts, setApiProducts] = useState<any[]>([]);
   const [apiBrand, setApiBrand] = useState<any>(null);
+  const [dbCollections, setDbCollections] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
 
@@ -24,6 +25,15 @@ export default function BrandDetailPage({ params }: Props) {
 
   useEffect(() => {
     setMounted(true);
+    fetch(`/api/collections?brand=${encodeURIComponent(slug)}&includeCounts=true&t=${Date.now()}`)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setDbCollections(json.data);
+        }
+      })
+      .catch(() => {});
+
     fetch(`/api/products?brand=${encodeURIComponent(brandNameForQuery)}&t=${Date.now()}`)
       .then((res) => res.json())
       .then((json) => {
@@ -134,6 +144,31 @@ export default function BrandDetailPage({ params }: Props) {
     }
     return activeBrand.products || [];
   }, [apiProducts, activeBrand.products]);
+
+  const effectiveCollections = useMemo(() => {
+    const fromApi = dbCollections.map((c) => ({
+      id: c.id,
+      name: c.name,
+      iconUrl: c.iconUrl || "",
+    }));
+
+    const fromBrand = (activeBrand.collections || []).map((cName: string) => ({
+      id: cName.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+      name: cName,
+      iconUrl: "",
+    }));
+
+    const seen = new Set<string>();
+    const list = [{ id: "all", name: "All", iconUrl: "" }];
+    [...fromApi, ...fromBrand].forEach((c) => {
+      const k = c.name.toLowerCase();
+      if (k !== "all" && !seen.has(k)) {
+        seen.add(k);
+        list.push(c);
+      }
+    });
+    return list;
+  }, [dbCollections, activeBrand.collections]);
 
   const filteredProducts = useMemo(() => {
     if (activeCollection === "All") return allBrandProducts;
@@ -311,19 +346,22 @@ export default function BrandDetailPage({ params }: Props) {
 
           {/* Circular Category Cards Row */}
           <div className="bd-category-circles-bar">
-            {(activeBrand.collections || ["All"]).map((col: string) => {
-              const catSampleProduct = allBrandProducts.find((p) => col === "All" || p.collection.toLowerCase() === col.toLowerCase());
-              const thumbUrl = catSampleProduct?.image || activeBrand.hero;
+            {effectiveCollections.map((colItem) => {
+              const col = colItem.name;
+              const catSampleProduct = allBrandProducts.find(
+                (p) => col === "All" || p.collection.toLowerCase() === col.toLowerCase()
+              );
+              const thumbUrl = colItem.iconUrl || catSampleProduct?.image || activeBrand.hero;
               const count =
                 col === "All"
                   ? allBrandProducts.length
                   : allBrandProducts.filter((p) => p.collection.toLowerCase() === col.toLowerCase()).length;
 
-              const isActive = activeCollection === col;
+              const isActive = activeCollection.toLowerCase() === col.toLowerCase();
 
               return (
                 <button
-                  key={col}
+                  key={colItem.id + "-" + col}
                   onClick={() => {
                     setActiveCollection(col);
                     setCurrentPage(1);
@@ -335,14 +373,20 @@ export default function BrandDetailPage({ params }: Props) {
                     className="bd-cat-circle__img-wrap"
                     style={isActive ? { borderColor: accent, boxShadow: `0 0 0 3px ${accent}33` } : {}}
                   >
-                    <Image
-                      src={thumbUrl || "/brands/brand_1_1.png"}
-                      alt={col}
-                      fill
-                      sizes="80px"
-                      className="bd-cat-circle__img"
-                      style={{ objectFit: "cover" }}
-                    />
+                    {thumbUrl ? (
+                      <Image
+                        src={thumbUrl}
+                        alt={col}
+                        fill
+                        sizes="80px"
+                        className="bd-cat-circle__img"
+                        style={{ objectFit: "cover" }}
+                      />
+                    ) : (
+                      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#81663F", color: "#fff", fontWeight: 800 }}>
+                        {col.slice(0, 1).toUpperCase()}
+                      </div>
+                    )}
                   </div>
                   <span className="bd-cat-circle__title">{col}</span>
                   <span className="bd-cat-circle__count">{count}</span>

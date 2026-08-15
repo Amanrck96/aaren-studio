@@ -27,6 +27,17 @@ export type CategoryItem = {
   sequenceNumber: number;
 };
 
+export type CollectionItem = {
+  id: string;
+  name: string;
+  brandId: string;
+  brandName?: string;
+  iconUrl?: string;
+  description?: string;
+  sequenceNumber?: number;
+  featured?: boolean;
+};
+
 export type BrandItem = {
   id: string;
   name: string;
