@@ -194,6 +194,7 @@ export default function Home() {
   const [siteSettings, setSiteSettings] = useState<SiteSettingsItem | null>(null);
   const [categoriesList, setCategoriesList] = useState(HOME_CATEGORIES);
   const [brandsList, setBrandsList] = useState(HOME_BRANDS);
+  const [projectsList, setProjectsList] = useState(PROJECTS);
 
   useEffect(() => {
     fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" })
@@ -235,6 +236,25 @@ export default function Home() {
               name: b.name,
               sub: b.description || "Partner Brand",
               img: b.bannerUrl || "/brands/brand_1_1.png",
+            }))
+          );
+        }
+      })
+      .catch((err) => console.error(err));
+
+    fetch("/api/projects?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setProjectsList(
+            json.data.map((p: any, idx: number) => ({
+              client: p.client || p.title,
+              sub: p.title || p.description || "Architectural Project",
+              year: p.year || "2025",
+              code: p.code || (p.client ? p.client.slice(0, 2).toUpperCase() : "PR"),
+              num: String(idx + 1).padStart(2, "0"),
+              slug: p.slug || p.id,
+              img: p.image || p.imageUrl || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80",
             }))
           );
         }
@@ -435,7 +455,7 @@ export default function Home() {
     return () => ctx.revert();
   }, []);
 
-  const hovProject = PROJECTS.find((p) => p.slug === hovered);
+  const hovProject = projectsList.find((p) => p.slug === hovered);
 
   return (
     <>
@@ -937,7 +957,7 @@ export default function Home() {
 
         {/* 4-across on desktop, 2-across on mobile */}
         <div className="home-projects-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", width: "100%" }}>
-          {PROJECTS.slice(0, 4).map((project, i) => (
+          {projectsList.slice(0, 4).map((project, i) => (
             <Link
               key={project.slug}
               href="/work"
