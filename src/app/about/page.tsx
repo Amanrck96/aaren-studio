@@ -1,9 +1,27 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+const DEFAULT_ROADMAP_STEPS = [
+  { id: "rm-01", stepNumber: "01", year: "2015", title: "FOUNDATION & ITALIAN PARTNERSHIPS", description: "Established Aaren Intpro on Mysore Road, Bangalore as exclusive partners for luxury Italian surface brands." },
+  { id: "rm-02", stepNumber: "02", year: "2019", title: "MATERIAL LAB EXPANSION", description: "Launched the 10,000 sq.ft. interactive Material Lab showcasing full-scale architectural mockups and FENIX nano-tech surfaces." },
+  { id: "rm-03", stepNumber: "03", year: "2024", title: "AAREN CREATIVE STUDIO 2.0", description: "Expanded into bespoke furniture, outdoor WPC decking cladding, and automated project specification PDF generators." },
+  { id: "rm-04", stepNumber: "04", year: "2026", title: "LOCO Design", description: "Introduction of Loco Design and premier architectural living systems." }
+];
 
 export default function AboutPage() {
+  const [roadmap, setRoadmap] = useState(DEFAULT_ROADMAP_STEPS);
+
   useEffect(() => {
+    fetch(`/api/team?t=${Date.now()}`, { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.roadmap && Array.isArray(json.roadmap) && json.roadmap.length > 0) {
+          setRoadmap(json.roadmap);
+        }
+      })
+      .catch((e) => console.error(e));
+
     const items = document.querySelectorAll(".roadmap__item");
     const observer = new IntersectionObserver(
       (entries) => {
@@ -13,19 +31,19 @@ export default function AboutPage() {
           }
         });
       },
-      { threshold: 0.25, rootMargin: "0px 0px -10% 0px" }
+      { threshold: 0.15, rootMargin: "0px 0px -5% 0px" }
     );
     items.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [roadmap.length]);
 
   return (
     <div className="about-page font-['Jost',sans-serif]">
       {/* ── Page Header ── */}
       <div className="about-header">
         <div className="about-header__inner">
-          <div className="about-header__meta t-tag">THE HOUSE — Est. 1990</div>
-          <h1 className="about-header__title">About Us</h1>
+          <div className="about-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>THE HOUSE — Est. 1990</div>
+          <h1 className="about-header__title" style={{ color: "#81663F" }}>About Us</h1>
           <p className="about-header__desc">
             Aaren Intpro is Bengaluru&apos;s premier material house and luxury lifestyle curator, dedicated to providing world-class interior products under one roof.
           </p>
@@ -73,59 +91,43 @@ export default function AboutPage() {
       {/* ── Company Timeline — connected roadmap ── */}
       <div className="about-timeline-section">
         <div className="timeline-header">
-          <span className="t-tag" style={{ color: "rgba(0,0,0,0.45)" }}>Company Timeline</span>
+          <span className="t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", fontSize: "1.3rem" }}>Company Timeline</span>
         </div>
 
         <div className="roadmap">
           <div className="roadmap__spine" aria-hidden="true"></div>
 
-          <div className="roadmap__item roadmap__item--left" data-idx="0">
-            <div className="roadmap__node">
-              <span className="roadmap__node-dot"></span>
-              <span className="roadmap__node-code">PT</span>
-            </div>
-            <div className="roadmap__card">
-              <div className="roadmap__card-head">
-                <span className="roadmap__year">1990</span>
-                <span className="roadmap__num">90</span>
+          {roadmap.map((step, idx) => {
+            const isLeft = idx % 2 === 0;
+            const code = step.title ? step.title.split(" ").map((w: string) => w[0]).join("").substring(0, 2).toUpperCase() : `0${idx + 1}`;
+            const num = step.year ? step.year.slice(-2) : String(idx + 1).padStart(2, "0");
+            return (
+              <div
+                key={step.id || idx}
+                className={`roadmap__item ${isLeft ? "roadmap__item--left" : "roadmap__item--right"} is-visible`}
+                data-idx={idx}
+              >
+                <div className="roadmap__node">
+                  <span className="roadmap__node-dot"></span>
+                  <span className="roadmap__node-code">{code}</span>
+                </div>
+                <div className="roadmap__card">
+                  <div className="roadmap__card-head">
+                    <span className="roadmap__year">{step.year || "2026"}</span>
+                    <span className="roadmap__num">{num}</span>
+                  </div>
+                  {step.title && (
+                    <h4 style={{ fontSize: "1.4rem", fontWeight: 700, color: "#81663F", textTransform: "uppercase", marginBottom: "0.6rem", letterSpacing: "0.02em" }}>
+                      {step.title}
+                    </h4>
+                  )}
+                  <p className="roadmap__event">
+                    {step.description}
+                  </p>
+                </div>
               </div>
-              <p className="roadmap__event">
-                Founded as Poonam Timbers, establishing our deep roots in high-quality timber and raw surface materials.
-              </p>
-            </div>
-          </div>
-
-          <div className="roadmap__item roadmap__item--right" data-idx="1">
-            <div className="roadmap__node">
-              <span className="roadmap__node-dot"></span>
-              <span className="roadmap__node-code">AI</span>
-            </div>
-            <div className="roadmap__card">
-              <div className="roadmap__card-head">
-                <span className="roadmap__year">2015</span>
-                <span className="roadmap__num">15</span>
-              </div>
-              <p className="roadmap__event">
-                Rebranded as Aaren Intpro, expanding into elite global interior products and architectural solutions.
-              </p>
-            </div>
-          </div>
-
-          <div className="roadmap__item roadmap__item--left" data-idx="2">
-            <div className="roadmap__node">
-              <span className="roadmap__node-dot"></span>
-              <span className="roadmap__node-code">UD</span>
-            </div>
-            <div className="roadmap__card">
-              <div className="roadmap__card-head">
-                <span className="roadmap__year">2026</span>
-                <span className="roadmap__num">26</span>
-              </div>
-              <p className="roadmap__event">
-                Bengaluru&apos;s primary destination for world-renowned brands, luxury bathroom fixtures, and surfaces.
-              </p>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
 
@@ -133,9 +135,9 @@ export default function AboutPage() {
       <style jsx global>{`
         :root {
           --color-aaren-gold: #81663f;
-          --color-bg: #eaeef4;
-          --color-text: #000;
-          --color-border: rgba(0, 0, 0, 0.15);
+          --color-bg: #E6E2D8;
+          --color-text: #1e1e1e;
+          --color-border: rgba(129, 102, 63, 0.18);
         }
 
         .t-tag {
@@ -147,7 +149,7 @@ export default function AboutPage() {
 
         .about-page {
           background: var(--color-bg);
-          color: #000;
+          color: #1e1e1e;
           min-height: 100vh;
           padding-top: 8rem;
         }
@@ -168,7 +170,7 @@ export default function AboutPage() {
           letter-spacing: -0.05em;
           line-height: 0.88;
           text-transform: uppercase;
-          color: #000;
+          color: #81663F;
           margin-bottom: 3.2rem;
         }
 

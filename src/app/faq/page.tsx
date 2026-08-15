@@ -454,8 +454,8 @@ export default function FaqPage() {
 
       <style>{`
         .faq-page {
-          background-color: #ffffff;
-          color: #111111;
+          background-color: #E6E2D8;
+          color: #1e1e1e;
           min-height: 100vh;
           padding-top: 10rem;
           padding-bottom: 8rem;
@@ -470,7 +470,7 @@ export default function FaqPage() {
 
         .faq-header {
           padding-bottom: 4rem;
-          border-bottom: 1px solid rgba(0,0,0,0.1);
+          border-bottom: 1px solid rgba(129,102,63,0.18);
           margin-bottom: 4rem;
         }
 
@@ -481,7 +481,7 @@ export default function FaqPage() {
           font-size: 1.1rem;
           font-weight: 700;
           letter-spacing: 0.12em;
-          color: #80673f;
+          color: #81663F;
           margin-bottom: 1.6rem;
         }
 
@@ -490,7 +490,7 @@ export default function FaqPage() {
           font-weight: 800;
           letter-spacing: -0.04em;
           line-height: 0.95;
-          color: #80673f;
+          color: #81663F;
           text-transform: uppercase;
           margin-bottom: 2rem;
         }
@@ -511,9 +511,9 @@ export default function FaqPage() {
 
         .search-input {
           width: 100%;
-          background: #f4f5f7;
-          border: 1px solid rgba(0,0,0,0.15);
-          color: #111111;
+          background: #f0ece3;
+          border: 1px solid rgba(129,102,63,0.22);
+          color: #1e1e1e;
           padding: 1.4rem 2rem;
           border-radius: 999px;
           font-size: 1.3rem;
@@ -522,7 +522,7 @@ export default function FaqPage() {
         }
 
         .search-input:focus {
-          border-color: #80673f;
+          border-color: #81663F;
         }
 
         .search-clear {
@@ -544,9 +544,9 @@ export default function FaqPage() {
         }
 
         .cat-btn {
-          background: #f0f2f5;
-          border: 1px solid rgba(0,0,0,0.12);
-          color: #333333;
+          background: #f0ece3;
+          border: 1px solid rgba(129,102,63,0.2);
+          color: #1e1e1e;
           padding: 0.8rem 1.6rem;
           border-radius: 999px;
           font-size: 1.2rem;
@@ -556,14 +556,14 @@ export default function FaqPage() {
         }
 
         .cat-btn:hover {
-          border-color: #80673f;
-          color: #80673f;
+          border-color: #81663F;
+          color: #81663F;
         }
 
         .cat-btn.is-active {
-          background: #80673f;
+          background: #81663F;
           color: #ffffff;
-          border-color: #80673f;
+          border-color: #81663F;
         }
 
         .cat-count {
@@ -579,16 +579,16 @@ export default function FaqPage() {
         }
 
         .faq-item {
-          background: #ffffff;
-          border: 1px solid rgba(0,0,0,0.1);
+          background: #f1ede5;
+          border: 1px solid rgba(129,102,63,0.18);
           border-radius: 0.6rem;
           overflow: hidden;
           transition: border-color 0.25s ease, background 0.25s ease;
         }
 
         .faq-item.is-open {
-          border-color: #80673f;
-          background: #fdfbf7;
+          border-color: #81663F;
+          background: #fbf9f4;
         }
 
         .faq-question-btn {
@@ -596,7 +596,7 @@ export default function FaqPage() {
           padding: 2.2rem 2.4rem;
           background: none;
           border: none;
-          color: #111111;
+          color: #1e1e1e;
           text-align: left;
           display: grid;
           grid-template-columns: 40px 1fr auto auto;
@@ -608,7 +608,7 @@ export default function FaqPage() {
         .faq-idx {
           font-size: 1.2rem;
           font-weight: 700;
-          color: #80673f;
+          color: #81663F;
         }
 
         .faq-cat-badge {

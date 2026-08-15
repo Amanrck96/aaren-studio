@@ -458,8 +458,8 @@ input, select, textarea {
 
 /* ── Light section theme ── */
 .theme-light {
-  background-color: #eaeef4;
-  color: #000;
+  background-color: #E6E2D8;
+  color: #1e1e1e;
 }
 
 /* ── Scroll fade-in utility ── */
@@ -597,8 +597,8 @@ input, select, textarea {
 
 /* ── Footer ── */
 .site-footer {
-  background: #eaeef4;
-  color: #000;
+  background: #E6E2D8;
+  color: #1e1e1e;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -652,8 +652,8 @@ input, select, textarea {
 
 /* ── Project List Grid (Sturdy structure) ── */
 .project-list {
-  background-color: #eaeef4;
-  color: #000;
+  background-color: #E6E2D8;
+  color: #1e1e1e;
 }
 
 .project-list__grid {
@@ -836,8 +836,8 @@ input, select, textarea {
 
 /* ── Home Clients 3D Cylinder Section ── */
 .home-clients {
-  background-color: #eaeef4;
-  color: #000;
+  background-color: #E6E2D8;
+  color: #1e1e1e;
   position: relative;
   overflow: hidden;
   width: 100%;

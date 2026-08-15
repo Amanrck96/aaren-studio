@@ -115,8 +115,8 @@ export default function PrivacyPolicyPage() {
 
       <style>{`
         .privacy-page {
-          background: #eaeef4;
-          color: #111111;
+          background: #E6E2D8;
+          color: #1e1e1e;
           min-height: 100vh;
           padding-top: 10rem;
           padding-bottom: 8rem;
@@ -131,7 +131,7 @@ export default function PrivacyPolicyPage() {
 
         .privacy-header {
           padding-bottom: 4rem;
-          border-bottom: 1px solid rgba(0,0,0,0.12);
+          border-bottom: 1px solid rgba(129,102,63,0.18);
           margin-bottom: 4rem;
         }
 
@@ -139,7 +139,7 @@ export default function PrivacyPolicyPage() {
           font-size: 1.1rem;
           font-weight: 700;
           letter-spacing: 0.12em;
-          color: rgba(0,0,0,0.4);
+          color: #81663F;
           display: block;
           margin-bottom: 1.6rem;
         }
@@ -149,7 +149,7 @@ export default function PrivacyPolicyPage() {
           font-weight: 800;
           letter-spacing: -0.04em;
           line-height: 0.95;
-          color: #000000;
+          color: #81663F;
           text-transform: uppercase;
           margin-bottom: 2rem;
         }
@@ -170,7 +170,7 @@ export default function PrivacyPolicyPage() {
           font-size: 2.2rem;
           font-weight: 700;
           letter-spacing: -0.02em;
-          color: #000000;
+          color: #81663F;
           margin-bottom: 1.6rem;
           text-transform: none;
         }

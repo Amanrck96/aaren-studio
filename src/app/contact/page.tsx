@@ -46,11 +46,11 @@ export default function Contact() {
       {/* ── Page Header ── */}
       <div className="contact-header">
         <div className="contact-header__inner">
-          <div className="contact-header__meta t-tag" style={{ color: "rgba(0,0,0,0.4)", marginBottom: "2.4rem" }}>
+          <div className="contact-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "2.4rem" }}>
             GET IN TOUCH — 24/7 Response
           </div>
-          <h1 className="contact-header__title">Contact Us</h1>
-          <p className="contact-header__desc t-body" style={{ color: "rgba(0,0,0,0.5)", maxWidth: "52rem" }}>
+          <h1 className="contact-header__title" style={{ color: "#81663F" }}>Contact Us</h1>
+          <p className="contact-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "52rem" }}>
             Ready to construct something unreal? Fill out the project form, or reach out to our primary creative office directly.
           </p>
         </div>
@@ -205,15 +205,15 @@ export default function Contact() {
 
       <style>{`
         .contact-page {
-          background: #eaeef4;
-          color: #000;
+          background: #E6E2D8;
+          color: #1e1e1e;
           min-height: 100vh;
           padding-top: 8rem;
         }
 
         .contact-header {
           padding: 6rem 0.8rem 4rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
         @media (min-width: 768px) {
@@ -228,7 +228,7 @@ export default function Contact() {
           letter-spacing: -0.05em;
           line-height: 0.88;
           text-transform: uppercase;
-          color: #000;
+          color: #81663F;
           margin-bottom: 3.2rem;
         }
 
@@ -236,13 +236,14 @@ export default function Contact() {
           font-size: 1.5rem;
           line-height: 1.5;
           letter-spacing: -0.01em;
+          color: rgba(0,0,0,0.7);
         }
 
         /* ── Container Layout ── */
         .contact-container {
           display: flex;
           flex-direction: column;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
         @media (min-width: 992px) {
@@ -373,6 +374,7 @@ export default function Contact() {
           font-weight: 700;
           letter-spacing: -0.03em;
           text-transform: uppercase;
+          color: #81663F !important;
         }
 
         .contact-form {

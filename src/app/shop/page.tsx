@@ -68,15 +68,15 @@ export default function ShopPage() {
 
       <style>{`
         .shop-page {
-          background: #eaeef4;
-          color: #000;
+          background: #E6E2D8;
+          color: #1e1e1e;
           min-height: 100vh;
           padding-top: 8rem;
         }
 
         .shop-header {
           padding: 6rem 0.8rem 4rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
         @media (min-width: 768px) {
@@ -91,7 +91,7 @@ export default function ShopPage() {
           letter-spacing: -0.05em;
           line-height: 0.88;
           text-transform: uppercase;
-          color: #000;
+          color: #81663F;
           margin-bottom: 3.2rem;
         }
 
@@ -99,6 +99,7 @@ export default function ShopPage() {
           font-size: 1.5rem;
           line-height: 1.5;
           letter-spacing: -0.01em;
+          color: rgba(0,0,0,0.7);
         }
 
         /* ── Shop Grid ── */
@@ -108,12 +109,13 @@ export default function ShopPage() {
           width: 100%;
         }
 
+        /* ── Shop Card ── */
         .shop-card {
           display: flex;
           flex-direction: column;
           flex: 0 0 100%;
           width: 100%;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
           text-decoration: none;
           color: inherit;
           overflow: hidden;
@@ -123,46 +125,42 @@ export default function ShopPage() {
           .shop-card {
             flex: 0 0 50%;
             width: 50%;
-            border-right: 0.1rem solid rgba(0,0,0,0.12);
-          }
-          .shop-card:nth-child(2n) {
-            border-right: none;
+            border-right: 0.1rem solid rgba(129,102,63,0.18);
           }
         }
 
-        .shop-card__fig-wrapper {
+        @media (min-width: 1240px) {
+          .shop-card {
+            flex: 0 0 33.333333%;
+            width: 33.333333%;
+            border-right: 0.1rem solid rgba(129,102,63,0.18);
+          }
+        }
+
+        .shop-card__image-container {
           position: relative;
-          overflow: hidden;
-          height: 26rem;
+          width: 100%;
+          height: clamp(24rem, 28vw, 42rem);
           background: #111;
-        }
-
-        @media (min-width: 768px) {
-          .shop-card__fig-wrapper {
-            height: 38rem;
-          }
-        }
-
-        .shop-card__fig {
-          position: absolute;
-          inset: 0;
+          overflow: hidden;
         }
 
         .shop-card__img {
-          transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .shop-card:hover .shop-card__img {
-          transform: scale(1.04);
+          transform: scale(1.05);
         }
 
-        .shop-card__price-badge {
+        .shop-card__badge {
           position: absolute;
-          bottom: 1.6rem;
-          right: 1.6rem;
-          background: rgba(0,0,0,0.7);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
+          top: 1.6rem;
+          left: 1.6rem;
+          background: #81663F;
           color: #fff;
           padding: 0.6rem 1.2rem;
           font-size: 1.1rem;
@@ -176,12 +174,12 @@ export default function ShopPage() {
           justify-content: space-between;
           gap: 1.6rem;
           padding: 1.6rem 2.4rem;
-          background: #eaeef4;
+          background: #E6E2D8;
           transition: background 0.25s ease;
         }
 
         .shop-card:hover .shop-card__caption {
-          background: #dfe3e9;
+          background: #dbd6ca;
         }
 
         .shop-card__caption-left {

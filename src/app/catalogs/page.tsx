@@ -48,13 +48,13 @@ export default function CatalogsPage() {
   });
 
   return (
-    <div style={{ background: "#f8fafc", color: "#0f172a", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div style={{ background: "#E6E2D8", color: "#1e1e1e", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <Header />
 
       {/* Hero Banner Section */}
       <section
         style={{
-          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+          background: "linear-gradient(135deg, #181920 0%, #0f1015 100%)",
           color: "#ffffff",
           padding: "4.5rem 2rem 3.5rem",
           textAlign: "center",
@@ -62,13 +62,13 @@ export default function CatalogsPage() {
         }}
       >
         <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-          <span style={{ color: "#d4af37", fontSize: "0.85rem", letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 800 }}>
+          <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 800 }}>
             ARCHITECTURAL SPECIFICATION & MATERIAL LAB
           </span>
-          <h1 style={{ fontSize: "2.8rem", fontWeight: 900, margin: "0.6rem 0 1rem", letterSpacing: "-0.02em" }}>
+          <h1 style={{ color: "#81663F", fontSize: "2.8rem", fontWeight: 900, margin: "0.6rem 0 1rem", letterSpacing: "-0.02em" }}>
             AAREN Architectural PDF Catalogs
           </h1>
-          <p style={{ color: "#94a3b8", fontSize: "1.1rem", lineHeight: 1.6, maxWidth: "700px", margin: "0 auto" }}>
+          <p style={{ color: "#cbd5e1", fontSize: "1.1rem", lineHeight: 1.6, maxWidth: "700px", margin: "0 auto" }}>
             Explore official product brochures, high-res finish collections, and technical joinery specification guides from top European & Italian surface brands.
           </p>
         </div>
@@ -78,11 +78,11 @@ export default function CatalogsPage() {
       <section style={{ maxWidth: "1280px", margin: "-1.8rem auto 2.5rem", padding: "0 1.5rem", width: "100%", zIndex: 10 }}>
         <div
           style={{
-            background: "#ffffff",
+            background: "#EDE8DF",
             borderRadius: "14px",
             padding: "1.2rem 1.6rem",
             boxShadow: "0 10px 25px -5px rgba(0,0,0,0.08)",
-            border: "1px solid #e2e8f0",
+            border: "1px solid rgba(129,102,63,0.2)",
             display: "flex",
             flexWrap: "wrap",
             gap: "1rem",

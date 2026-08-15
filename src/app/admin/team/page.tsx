@@ -53,7 +53,7 @@ export default function AdminTeamPage() {
   const handleMoveMember = async (memberId: string, direction: "up" | "down") => {
     const categoryMembers = team
       .filter((m) => (m.category || "Leadership").toLowerCase() === selectedFilter.toLowerCase())
-      .sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+      .sort((a, b) => (a.sequenceNumber ?? 99) - (b.sequenceNumber ?? 99));
 
     const index = categoryMembers.findIndex((m) => m.id === memberId);
     if (index === -1) return;
@@ -61,28 +61,24 @@ export default function AdminTeamPage() {
     if (direction === "down" && index === categoryMembers.length - 1) return;
 
     const targetIndex = direction === "up" ? index - 1 : index + 1;
-    const itemA = { ...categoryMembers[index] };
-    const itemB = { ...categoryMembers[targetIndex] };
+    
+    // Move element in category array
+    const movedList = [...categoryMembers];
+    const [removed] = movedList.splice(index, 1);
+    movedList.splice(targetIndex, 0, removed);
 
-    // Swap sequence numbers
-    const seqA = itemA.sequenceNumber ?? (index + 1);
-    const seqB = itemB.sequenceNumber ?? (targetIndex + 1);
+    // Re-index all category members cleanly with unique sequential sequence numbers
+    const reindexedCategoryMembers = movedList.map((m, i) => ({
+      ...m,
+      sequenceNumber: i + 1,
+    }));
 
-    itemA.sequenceNumber = seqB;
-    itemB.sequenceNumber = seqA;
+    // Update entire team list preserving others
+    const otherMembers = team.filter(
+      (m) => (m.category || "Leadership").toLowerCase() !== selectedFilter.toLowerCase()
+    );
 
-    if (itemA.sequenceNumber === itemB.sequenceNumber) {
-      itemA.sequenceNumber = targetIndex + 1;
-      itemB.sequenceNumber = index + 1;
-    }
-
-    const updatedTeam = team.map((m) => {
-      if (m.id === itemA.id) return itemA;
-      if (m.id === itemB.id) return itemB;
-      return m;
-    });
-
-    updatedTeam.sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+    const updatedTeam = [...otherMembers, ...reindexedCategoryMembers];
     setTeam(updatedTeam);
 
     await fetch("/api/team", {

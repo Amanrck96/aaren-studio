@@ -33,6 +33,7 @@ export default function AdminNav() {
     { label: "🏢 Brands", href: "/admin/brands" },
     { label: "🖼️ Showcase Projects", href: "/admin/projects" },
     { label: "📦 Products", href: "/admin/products" },
+    { label: "❓ FAQ Management", href: "/admin/faq" },
     { label: "💬 Testimonials", href: "/admin/testimonials" },
     { label: "✍️ Blogs", href: "/admin/blogs" },
     { label: "⏱️ Designer Time & Activity Audit", href: "/admin/analytics" },

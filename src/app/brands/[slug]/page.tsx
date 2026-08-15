@@ -698,8 +698,8 @@ export default function BrandDetailPage({ params }: Props) {
       <style>{`
         /* ── Brand Detail Page ── */
         .brand-detail {
-          background: #eaeef4;
-          color: #000;
+          background: #E6E2D8;
+          color: #1e1e1e;
           min-height: 100vh;
           padding-top: 8rem;
         }
@@ -832,7 +832,8 @@ export default function BrandDetailPage({ params }: Props) {
           flex-direction: column;
           gap: 2.4rem;
           padding: 3.2rem 0.8rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.1);
+          background: #E6E2D8;
+          border-bottom: 0.1rem solid rgba(129,102,63,0.2);
         }
 
         @media (min-width: 768px) {
@@ -849,7 +850,7 @@ export default function BrandDetailPage({ params }: Props) {
           font-weight: 600;
           letter-spacing: -0.03em;
           line-height: 1.2;
-          color: rgba(0,0,0,0.6);
+          color: #81663F;
           font-style: italic;
         }
 
@@ -862,28 +863,29 @@ export default function BrandDetailPage({ params }: Props) {
         .bd-info-stat {
           display: flex;
           flex-direction: column;
-          gap: 0.3rem;
+          gap: 0.2rem;
         }
 
         .bd-info-stat__label {
           font-size: 1.0rem;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: rgba(0,0,0,0.35);
+          color: rgba(0,0,0,0.45);
         }
 
         .bd-info-stat__value {
           font-size: 1.4rem;
           font-weight: 700;
           letter-spacing: -0.02em;
-          color: #000;
+          color: #81663F;
         }
 
         /* ── Description ── */
         .bd-description {
           position: relative;
           padding: 6rem 0.8rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.1);
+          background: #E6E2D8;
+          border-bottom: 0.1rem solid rgba(129,102,63,0.2);
           overflow: hidden;
         }
 
@@ -899,20 +901,22 @@ export default function BrandDetailPage({ params }: Props) {
 
         .bd-description__label {
           margin-bottom: 1.6rem;
+          color: #81663F !important;
         }
 
         .bd-description__text {
           font-size: clamp(1.5rem, 2vw, 1.9rem);
           line-height: 1.6;
           letter-spacing: -0.01em;
-          color: rgba(0,0,0,0.75);
+          color: rgba(0,0,0,0.8);
           max-width: 72rem;
         }
 
         .bd-description__accent-line {
           width: 0.3rem;
           height: 100%;
-          opacity: 0.5;
+          background: #81663F !important;
+          opacity: 0.6;
           border-radius: 2px;
           display: none;
         }
@@ -926,7 +930,8 @@ export default function BrandDetailPage({ params }: Props) {
         /* ── Products ── */
         .bd-products {
           padding: 0 0 6rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.1);
+          background: #E6E2D8;
+          border-bottom: 0.1rem solid rgba(129,102,63,0.2);
         }
 
         .bd-products__header {
@@ -945,7 +950,7 @@ export default function BrandDetailPage({ params }: Props) {
           letter-spacing: -0.05em;
           line-height: 0.9;
           text-transform: uppercase;
-          color: #000;
+          color: #81663F !important;
           margin-bottom: 3.2rem;
         }
 
@@ -955,7 +960,7 @@ export default function BrandDetailPage({ params }: Props) {
           align-items: center;
           gap: 2.4rem;
           padding: 0 0.8rem 3.2rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.08);
+          border-bottom: 0.1rem solid rgba(129,102,63,0.15);
           margin-bottom: 3.2rem;
           overflow-x: auto;
         }
@@ -990,8 +995,8 @@ export default function BrandDetailPage({ params }: Props) {
           border-radius: 50%;
           overflow: hidden;
           position: relative;
-          border: 0.2rem solid rgba(0,0,0,0.12);
-          background: #e2e8f0;
+          border: 0.2rem solid rgba(129,102,63,0.25);
+          background: #dcd6c8;
           transition: border-color 0.2s, box-shadow 0.2s;
         }
 
@@ -1003,6 +1008,8 @@ export default function BrandDetailPage({ params }: Props) {
         }
 
         .bd-cat-circle-card.is-active .bd-cat-circle__img-wrap {
+          border-color: #81663F !important;
+          box-shadow: 0 0 0 3px rgba(129,102,63,0.3) !important;
           border-width: 0.25rem;
         }
 
@@ -1015,13 +1022,13 @@ export default function BrandDetailPage({ params }: Props) {
         }
 
         .bd-cat-circle-card.is-active .bd-cat-circle__title {
-          color: #000;
+          color: #81663F !important;
           font-weight: 700;
         }
 
         .bd-cat-circle__count {
           font-size: 1.1rem;
-          color: rgba(0,0,0,0.4);
+          color: rgba(0,0,0,0.45);
           font-weight: 500;
         }
 
@@ -1049,8 +1056,9 @@ export default function BrandDetailPage({ params }: Props) {
         .bd-product-card {
           display: flex;
           flex-direction: column;
-          border: 0.05rem solid rgba(0,0,0,0.08);
+          border: 0.05rem solid rgba(129,102,63,0.15);
           overflow: hidden;
+          background: #E6E2D8;
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           animation: fadeInUp 0.4s ease both;
         }
@@ -1066,7 +1074,7 @@ export default function BrandDetailPage({ params }: Props) {
 
         .bd-product-card:hover {
           z-index: 2;
-          box-shadow: 0 0.8rem 3.2rem rgba(0,0,0,0.1);
+          box-shadow: 0 0.8rem 3.2rem rgba(129,102,63,0.15);
           transform: translateY(-0.2rem);
         }
 
@@ -1107,8 +1115,8 @@ export default function BrandDetailPage({ params }: Props) {
           font-size: 0.9rem;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          background: rgba(0,0,0,0.75);
-          color: rgba(255,255,255,0.9);
+          background: #81663F;
+          color: #ffffff;
           padding: 0.3rem 0.8rem;
           backdrop-filter: blur(4px);
         }
@@ -1118,34 +1126,35 @@ export default function BrandDetailPage({ params }: Props) {
           flex-direction: column;
           gap: 0.3rem;
           padding: 1.4rem 1.2rem;
-          background: #eaeef4;
+          background: #E6E2D8;
         }
 
         .bd-product-card__collection {
           font-size: 0.9rem;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: rgba(0,0,0,0.3);
+          color: rgba(0,0,0,0.45);
         }
 
         .bd-product-card__name {
           font-size: clamp(1.2rem, 1.4vw, 1.4rem);
           font-weight: 700;
           letter-spacing: -0.02em;
-          color: #000;
+          color: #1e1e1e;
           line-height: 1.2;
         }
 
         .bd-product-card__finish {
           font-size: 1.0rem;
-          color: rgba(0,0,0,0.4);
+          color: rgba(0,0,0,0.5);
           letter-spacing: 0.03em;
         }
 
         /* ── Catalogues ── */
         .bd-catalogues {
           padding: 6rem 0.8rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.1);
+          background: #E6E2D8;
+          border-bottom: 0.1rem solid rgba(129,102,63,0.2);
         }
 
         @media (min-width: 768px) {
@@ -1164,13 +1173,13 @@ export default function BrandDetailPage({ params }: Props) {
           letter-spacing: -0.05em;
           line-height: 0.9;
           text-transform: uppercase;
-          color: #000;
+          color: #81663F !important;
           margin-bottom: 1.2rem;
         }
 
         .bd-catalogues__sub {
           font-size: 1.4rem;
-          color: rgba(0,0,0,0.45);
+          color: rgba(0,0,0,0.5);
           letter-spacing: -0.01em;
         }
 

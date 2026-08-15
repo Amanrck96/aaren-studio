@@ -130,15 +130,15 @@ export default function BrandsPage() {
       <style>{`
         /* ── Brands Page ── */
         .brands-page {
-          background: #eaeef4;
-          color: #000;
+          background: #E6E2D8;
+          color: #1e1e1e;
           min-height: 100vh;
           padding-top: 8rem;
         }
 
         .brands-header {
           padding: 6rem 0.8rem 4rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
         @media (min-width: 768px) {
@@ -153,7 +153,7 @@ export default function BrandsPage() {
           letter-spacing: -0.05em;
           line-height: 0.88;
           text-transform: uppercase;
-          color: #000;
+          color: #81663F;
           margin-bottom: 3.2rem;
         }
 
@@ -161,6 +161,7 @@ export default function BrandsPage() {
           font-size: 1.5rem;
           line-height: 1.5;
           letter-spacing: -0.01em;
+          color: rgba(0,0,0,0.7);
         }
 
         /* ── Grid ── */
@@ -250,7 +251,7 @@ export default function BrandsPage() {
           justify-content: space-between;
           gap: 1.6rem;
           padding: 1.6rem 0.8rem;
-          background: #eaeef4;
+          background: #E6E2D8;
           transition: background 0.25s ease;
         }
 
@@ -261,7 +262,7 @@ export default function BrandsPage() {
         }
 
         .brand-card:hover .brand-card__caption {
-          background: #dfe3e9;
+          background: #dbd6ca;
         }
 
         .brand-card__caption-left {

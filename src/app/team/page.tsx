@@ -25,15 +25,18 @@ export default function TeamPage() {
         if (json && json.success) {
           const list = json.team || (json.data && json.data.team) || (Array.isArray(json.data) ? json.data : null);
           if (list && list.length > 0) {
+            const sortedList = [...list].sort((a: any, b: any) => (a.sequenceNumber ?? 999) - (b.sequenceNumber ?? 999));
             setTeamMembers(
-              list.map((m: any, idx: number) => ({
+              sortedList.map((m: any, idx: number) => ({
+                id: m.id,
                 name: m.name,
                 role: m.designation || m.role || "Team Member",
                 category: m.category || "Leadership",
                 code: m.memberCode ? m.memberCode.split(" ")[0] : "MM",
-                num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : String(idx + 1).padStart(2, "0"),
+                num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : String(m.sequenceNumber || idx + 1).padStart(2, "0"),
                 image: m.photoUrl || m.image,
                 bio: m.bio,
+                sequenceNumber: m.sequenceNumber ?? idx + 1,
               }))
             );
           }
@@ -46,7 +49,9 @@ export default function TeamPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filteredMembers = teamMembers.filter((m) => m.category?.toLowerCase() === activeCategory.toLowerCase());
+  const filteredMembers = teamMembers
+    .filter((m) => m.category?.toLowerCase() === activeCategory.toLowerCase())
+    .sort((a, b) => (a.sequenceNumber ?? 999) - (b.sequenceNumber ?? 999));
 
   const getCategoryCount = (cat: string) => {
     return teamMembers.filter((m) => m.category?.toLowerCase() === cat.toLowerCase()).length;
@@ -57,10 +62,10 @@ export default function TeamPage() {
       {/* ── Page Header ── */}
       <div className="team-header">
         <div className="team-header__inner">
-          <div className="team-header__meta t-tag" style={{ color: "#8c764b", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+          <div className="team-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
             MEET THE TEAM
           </div>
-          <h1 className="team-header__title" style={{ color: "#8c764b" }}>OUR TEAM</h1>
+          <h1 className="team-header__title" style={{ color: "#81663F" }}>OUR TEAM</h1>
           <p className="team-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
             Aaren Intpro is built by a family of dedicated professionals across Sales, Operations, Installation, and Support Staff, united by a common passion for luxury spatial design.
           </p>
@@ -180,15 +185,15 @@ export default function TeamPage() {
 
       <style>{`
         .team-page {
-          background: #eaeef4;
-          color: #000;
+          background: #E6E2D8;
+          color: #1e1e1e;
           min-height: 100vh;
           padding-top: 8rem;
         }
 
         .team-header {
           padding: 6rem 0.8rem 4rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
         @media (min-width: 768px) {
@@ -203,7 +208,7 @@ export default function TeamPage() {
           letter-spacing: -0.05em;
           line-height: 0.88;
           text-transform: uppercase;
-          color: #000;
+          color: #81663F;
           margin-bottom: 3.2rem;
         }
 
@@ -211,12 +216,13 @@ export default function TeamPage() {
           font-size: 1.5rem;
           line-height: 1.5;
           letter-spacing: -0.01em;
+          color: rgba(0,0,0,0.7);
         }
 
         /* ── Sub Category Filter Navigation Bar ── */
         .team-category-nav-wrapper {
-          border-bottom: 1px solid rgba(0,0,0,0.12);
-          background: #eaeef4;
+          border-bottom: 1px solid rgba(129,102,63,0.18);
+          background: #E6E2D8;
           position: relative;
           z-index: 10;
           padding: 1.6rem 2.4rem;
