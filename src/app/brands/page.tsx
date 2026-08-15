@@ -5,21 +5,21 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 const DEFAULT_BRANDS = [
-  { id: "slashform", name: "Slashform", code: "SF", num: "01", hero: "/brands/brand_1_1.png", logo: "/brands/brand_1_2.png", category: "Doors & Windows", origin: "Italy", tagline: "Precision living systems" },
-  { id: "waltz", name: "Waltz by JB Glass", code: "WB", num: "02", hero: "/brands/brand_2_1.png", logo: "/brands/brand_2_2.png", category: "Glide NXT", origin: "India", tagline: "Architectural glass solutions" },
-  { id: "newtech-wood", name: "Newtech Wood", code: "NW", num: "03", hero: "/brands/brand_3_1.png", logo: "/brands/brand_3_2.png", category: "Decking", origin: "USA", tagline: "WPC composite excellence" },
-  { id: "formica", name: "Formica", code: "FC", num: "04", hero: "/brands/brand_4_1.png", logo: "/brands/brand_4_2.png", category: "Laminates", origin: "USA", tagline: "Iconic surface solutions" },
-  { id: "loco", name: "Loco", code: "LC", num: "05", hero: "/brands/brand_5_1.png", logo: "/brands/brand_5_2.png", category: "Furniture", origin: "Italy", tagline: "Bespoke millwork & furniture" },
-  { id: "falper", name: "Falper", code: "FP", num: "06", hero: "/brands/brand_6_1.png", logo: "/brands/brand_6_2.png", category: "Wash Basins", origin: "Italy", tagline: "Luxury bath environments" },
-  { id: "fima", name: "Fima Carlo Frattini", code: "FM", num: "07", hero: "/brands/brand_7_1.png", logo: "/brands/brand_7_2.png", category: "Bathroom Fittings", origin: "Italy", tagline: "Refined tapware & accessories" },
-  { id: "inkiostro-bianco", name: "Inkiostro Bianco", code: "IB", num: "08", hero: "/brands/brand_8_1.png", logo: "/brands/brand_8_2.png", category: "Wall Covering", origin: "Italy", tagline: "Creative thinking surfaces" },
-  { id: "mafi", name: "Mafi", code: "MF", num: "09", hero: "/brands/brand_9_1.png", logo: "/brands/brand_9_2.png", category: "Wooden Flooring", origin: "Austria", tagline: "Natural wood flooring" },
-  { id: "mirage", name: "Mirage", code: "MG", num: "10", hero: "/brands/brand_10_1.png", logo: "/brands/brand_10_2.png", category: "Surface Tiles", origin: "Italy", tagline: "Porcelain tile mastery" },
+  { id: "slashform", name: "Slashform", code: "SF", num: "01", hero: "/brands/brand_1_1.png", logo: "/brands/logos/slashform_logo.png", category: "Doors & Windows", origin: "Italy", tagline: "Precision living systems" },
+  { id: "waltz", name: "Waltz by JB Glass", code: "WB", num: "02", hero: "/brands/brand_2_1.png", logo: "/brands/logos/waltz_logo.png", category: "Glide NXT", origin: "India", tagline: "Architectural glass solutions" },
+  { id: "newtech-wood", name: "Newtech Wood", code: "NW", num: "03", hero: "/brands/brand_3_1.png", logo: "/brands/logos/newtechwood_logo.png", category: "Decking", origin: "USA", tagline: "WPC composite excellence" },
+  { id: "formica", name: "Formica", code: "FC", num: "04", hero: "/brands/brand_4_1.png", logo: "/brands/logos/formica_logo.png", category: "Laminates", origin: "USA", tagline: "Iconic surface solutions" },
+  { id: "loco", name: "Loco", code: "LC", num: "05", hero: "/brands/brand_5_1.png", logo: "/brands/logos/loco_logo.png", category: "Furniture", origin: "Italy", tagline: "Bespoke millwork & furniture" },
+  { id: "falper", name: "Falper", code: "FP", num: "06", hero: "/brands/brand_6_1.png", logo: "/brands/logos/falper_logo.png", category: "Wash Basins", origin: "Italy", tagline: "Luxury bath environments" },
+  { id: "fima", name: "Fima Carlo Frattini", code: "FM", num: "07", hero: "/brands/brand_7_1.png", logo: "/brands/logos/fima_logo.png", category: "Bathroom Fittings", origin: "Italy", tagline: "Refined tapware & accessories" },
+  { id: "inkiostro-bianco", name: "Inkiostro Bianco", code: "IB", num: "08", hero: "/brands/brand_8_1.png", logo: "/brands/logos/inkiostro_bianco_logo.png", category: "Wall Covering", origin: "Italy", tagline: "Creative thinking surfaces" },
+  { id: "mafi", name: "Mafi", code: "MF", num: "09", hero: "/brands/brand_9_1.png", logo: "/brands/logos/mafi_logo.png", category: "Wooden Flooring", origin: "Austria", tagline: "Natural wood flooring" },
+  { id: "mirage", name: "Mirage", code: "MG", num: "10", hero: "/brands/brand_10_1.png", logo: "/brands/logos/mirage_logo.png", category: "Surface Tiles", origin: "Italy", tagline: "Porcelain tile mastery" },
   { id: "freedom-screens", name: "Freedom Screens", code: "FS", num: "11", hero: "/brands/brand_1_1.png", logo: "/brands/brand_1_2.png", category: "Infinite Zip line", origin: "Australia", tagline: "Retractable screen systems" },
-  { id: "peelply", name: "Peelply", code: "PP", num: "12", hero: "/brands/brand_2_1.png", logo: "/brands/brand_2_2.png", category: "Plywood", origin: "India", tagline: "Engineered panel solutions" },
-  { id: "inclass", name: "Inclass", code: "IC", num: "13", hero: "/brands/brand_3_1.png", logo: "/brands/brand_3_2.png", category: "MillWork", origin: "Spain", tagline: "Seating and millwork" },
-  { id: "wow", name: "WOW", code: "WW", num: "14", hero: "/brands/brand_4_1.png", logo: "/brands/brand_4_2.png", category: "Highlighter Tiles", origin: "Spain", tagline: "3D decorative ceramic tiles" },
-  { id: "iww", name: "IWW", code: "IW", num: "15", hero: "/brands/brand_5_1.png", logo: "/brands/brand_5_2.png", category: "Surface Tiles", origin: "Italy", tagline: "Stone surface collections" },
+  { id: "peelply", name: "Peelply", code: "PP", num: "12", hero: "/brands/brand_2_1.png", logo: "/brands/logos/peelply_logo.png", category: "Plywood", origin: "India", tagline: "Engineered panel solutions" },
+  { id: "inclass", name: "Inclass", code: "IC", num: "13", hero: "/brands/brand_3_1.png", logo: "/brands/logos/inclass_logo.png", category: "MillWork", origin: "Spain", tagline: "Seating and millwork" },
+  { id: "wow", name: "WOW", code: "WW", num: "14", hero: "/brands/brand_4_1.png", logo: "/brands/logos/wow_logo.png", category: "Highlighter Tiles", origin: "Spain", tagline: "3D decorative ceramic tiles" },
+  { id: "iww", name: "IWW", code: "IW", num: "15", hero: "/brands/brand_5_1.png", logo: "/brands/logos/iww_logo.png", category: "Surface Tiles", origin: "Italy", tagline: "Stone surface collections" },
   { id: "living-ceramica", name: "Living Ceramica", code: "LC", num: "16", hero: "/brands/brand_6_1.png", logo: "/brands/brand_6_2.png", category: "Surface Tiles", origin: "Italy", tagline: "Contemporary ceramic surfaces" },
   { id: "florim", name: "Florim", code: "FL", num: "17", hero: "/brands/brand_7_1.png", logo: "/brands/brand_7_2.png", category: "Surface Tiles", origin: "Italy", tagline: "Porcelain slab mastery" },
   { id: "gelli", name: "Gelli", code: "GL", num: "18", hero: "/brands/brand_8_1.png", logo: "/brands/brand_8_2.png", category: "Bathroom Accessories", origin: "Italy", tagline: "Italian bathroom accessories" },
@@ -28,13 +28,13 @@ const DEFAULT_BRANDS = [
 ];
 
 export default function BrandsPage() {
-  const [brandsList, setBrandsList] = useState<any[]>([]);
+  const [brandsList, setBrandsList] = useState<any[]>(DEFAULT_BRANDS);
 
   useEffect(() => {
     fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
-        if (json.success && Array.isArray(json.data)) {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
           const mapped = json.data.map((b: any) => ({
             id: b.id,
             name: b.name,
@@ -86,6 +86,7 @@ export default function BrandsPage() {
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="brand-card__img"
                   style={{ objectFit: "cover" }}
+                  unoptimized
                 />
               </div>
 
@@ -98,6 +99,7 @@ export default function BrandsPage() {
                   height={40}
                   className="brand-card__logo"
                   style={{ objectFit: "contain", objectPosition: "left center" }}
+                  unoptimized
                 />
               </div>
             </div>
@@ -199,7 +201,7 @@ export default function BrandsPage() {
           position: relative;
           overflow: hidden;
           height: 26rem;
-          background: #111;
+          background: #d8d4c8;
         }
 
         @media (min-width: 768px) {

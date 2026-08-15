@@ -243,6 +243,7 @@ export default function BrandDetailPage({ params }: Props) {
             alt={activeBrand.name}
             fill
             priority
+            unoptimized
             sizes="100vw"
             className="bd-hero__img"
             style={{ objectFit: "cover" }}
