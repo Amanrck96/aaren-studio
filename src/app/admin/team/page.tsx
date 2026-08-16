@@ -4,13 +4,28 @@ import { useEffect, useState } from "react";
 import AdminNav from "@/components/AdminNav";
 import { TeamMemberItem } from "@/lib/types";
 
-const SUB_CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Support Staff", "Accounts"];
+export const TEAM_GROUPS = [
+  { id: "ALL", label: "ALL MEMBERS" },
+  { id: "Leadership", label: "1. LEADERSHIP" },
+  { id: "Team", label: "2. TEAM" },
+];
+
+export const TEAM_DEPARTMENTS = [
+  { id: "ALL", label: "ALL DEPARTMENTS", match: "all" },
+  { id: "Sales", label: "A. SALES", match: "sales" },
+  { id: "Operations", label: "B. OPERATIONS", match: "operations" },
+  { id: "Installation", label: "C. INSTALLATION", match: "installation" },
+  { id: "Support Staff", label: "D. SUPPORT STAFF", match: "support staff" },
+];
+
+export const ALL_SUB_CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Support Staff"];
 
 export default function AdminTeamPage() {
   const [team, setTeam] = useState<TeamMemberItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Partial<TeamMemberItem> | null>(null);
-  const [selectedFilter, setSelectedFilter] = useState("Leadership");
+  const [selectedGroupFilter, setSelectedGroupFilter] = useState<"ALL" | "Leadership" | "Team">("ALL");
+  const [selectedDeptFilter, setSelectedDeptFilter] = useState<string>("ALL");
 
   const [joinBanner, setJoinBanner] = useState({
     title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
@@ -24,16 +39,15 @@ export default function AdminTeamPage() {
   const [savingBanner, setSavingBanner] = useState(false);
 
   const [showRearrangeModal, setShowRearrangeModal] = useState(false);
-  const [rearrangeCategory, setRearrangeCategory] = useState("Leadership");
+  const [rearrangeCategory, setRearrangeCategory] = useState("ALL");
   const [rearrangeList, setRearrangeList] = useState<TeamMemberItem[]>([]);
 
   const fetchTeam = () => {
-    fetch("/api/team")
+    fetch("/api/team?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
         if (json && json.success) {
           const teamList = json.team || (json.data && json.data.team) || (Array.isArray(json.data) ? json.data : []);
-          // Sort team list by sequenceNumber ascending
           teamList.sort((a: any, b: any) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
           setTeam(teamList);
           if (json.joinBanner || (json.data && json.data.joinBanner)) {
@@ -49,36 +63,42 @@ export default function AdminTeamPage() {
     fetchTeam();
   }, []);
 
-  // Quick 1-click Move Up / Move Down handler
+  // 1-click Move Up / Move Down handler within current active filter
   const handleMoveMember = async (memberId: string, direction: "up" | "down") => {
-    const categoryMembers = team
-      .filter((m) => (m.category || "Leadership").toLowerCase() === selectedFilter.toLowerCase())
-      .sort((a, b) => (a.sequenceNumber ?? 99) - (b.sequenceNumber ?? 99));
+    const listToReorder = team.filter((m) => {
+      const isLeadership = (m.category || "Sales").toLowerCase() === "leadership";
+      if (selectedGroupFilter === "Leadership") return isLeadership;
+      if (selectedGroupFilter === "Team") {
+        if (isLeadership) return false;
+        if (selectedDeptFilter === "ALL") return true;
+        return (m.category || "").toLowerCase() === selectedDeptFilter.toLowerCase();
+      }
+      if (selectedDeptFilter !== "ALL") {
+        return (m.category || "").toLowerCase() === selectedDeptFilter.toLowerCase();
+      }
+      return true;
+    }).sort((a, b) => (a.sequenceNumber ?? 99) - (b.sequenceNumber ?? 99));
 
-    const index = categoryMembers.findIndex((m) => m.id === memberId);
+    const index = listToReorder.findIndex((m) => m.id === memberId);
     if (index === -1) return;
     if (direction === "up" && index === 0) return;
-    if (direction === "down" && index === categoryMembers.length - 1) return;
+    if (direction === "down" && index === listToReorder.length - 1) return;
 
     const targetIndex = direction === "up" ? index - 1 : index + 1;
     
-    // Move element in category array
-    const movedList = [...categoryMembers];
+    const movedList = [...listToReorder];
     const [removed] = movedList.splice(index, 1);
     movedList.splice(targetIndex, 0, removed);
 
-    // Re-index all category members cleanly with unique sequential sequence numbers
-    const reindexedCategoryMembers = movedList.map((m, i) => ({
+    const reindexedMoved = movedList.map((m, i) => ({
       ...m,
       sequenceNumber: i + 1,
     }));
 
-    // Update entire team list preserving others
-    const otherMembers = team.filter(
-      (m) => (m.category || "Leadership").toLowerCase() !== selectedFilter.toLowerCase()
-    );
+    const movedIds = new Set(reindexedMoved.map((m) => m.id));
+    const otherMembers = team.filter((m) => !movedIds.has(m.id));
+    const updatedTeam = [...otherMembers, ...reindexedMoved].sort((a, b) => (a.sequenceNumber ?? 99) - (b.sequenceNumber ?? 99));
 
-    const updatedTeam = [...otherMembers, ...reindexedCategoryMembers];
     setTeam(updatedTeam);
 
     await fetch("/api/team", {
@@ -97,17 +117,20 @@ export default function AdminTeamPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...editing,
-        category: editing.category || "Leadership",
-        memberCode: editing.memberCode || "MM 01",
+        category: editing.category || "Sales",
+        memberCode: editing.memberCode || "TM 01",
         photoUrl: editing.photoUrl || "",
+        sequenceNumber: editing.sequenceNumber ?? (team.length + 1),
       }),
     });
     const json = await res.json();
     if (json.success) {
-      alert("Team member saved!");
+      alert("Team member saved successfully!");
       setEditing(null);
       fetchTeam();
-    } else alert("Error: " + json.error);
+    } else {
+      alert("Error: " + json.error);
+    }
   };
 
   const handleSaveBanner = async (e: React.FormEvent) => {
@@ -136,25 +159,50 @@ export default function AdminTeamPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure?")) return;
+    if (!confirm("Are you sure you want to delete this team member?")) return;
     await fetch(`/api/team?id=${id}`, { method: "DELETE" });
     fetchTeam();
   };
 
-  const filteredTeam = team.filter((m) => (m.category || "Leadership").toLowerCase() === selectedFilter.toLowerCase());
+  // Filtered members list for admin display
+  const filteredTeam = team.filter((m) => {
+    const isLeadership = (m.category || "Sales").toLowerCase() === "leadership";
+
+    if (selectedGroupFilter === "Leadership") {
+      return isLeadership;
+    }
+
+    if (selectedGroupFilter === "Team") {
+      if (isLeadership) return false;
+      if (selectedDeptFilter === "ALL") return true;
+      return (m.category || "").toLowerCase() === selectedDeptFilter.toLowerCase();
+    }
+
+    if (selectedDeptFilter !== "ALL") {
+      return (m.category || "").toLowerCase() === selectedDeptFilter.toLowerCase();
+    }
+
+    return true;
+  });
+
+  const leadershipCount = team.filter((m) => (m.category || "Sales").toLowerCase() === "leadership").length;
+  const teamCount = team.filter((m) => (m.category || "Sales").toLowerCase() !== "leadership").length;
 
   return (
     <div style={{ background: "#0b0c10", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
 
       <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "1rem" }}>
+        {/* Top bar */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "1.2rem", flexWrap: "wrap", gap: "1rem" }}>
           <div>
-            <span style={{ color: "#d4af37", fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>TEAM MANAGEMENT</span>
+            <span style={{ color: "#d4af37", fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>ORGANIZATIONAL DIRECTORY</span>
             <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.2rem 0", color: "#fff" }}>Our Team CMS</h1>
-            <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Manage team members across Sales, Operations, Installation, and Support Staff, plus Join Banner settings.</p>
+            <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>
+              Manage and organize by <strong>1. Leadership</strong> and <strong>2. Team</strong> (Sales, Operations, Installation, Support Staff).
+            </p>
           </div>
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap" }}>
             <button
               onClick={() => {
                 setRearrangeList([...team].sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99)));
@@ -162,7 +210,7 @@ export default function AdminTeamPage() {
               }}
               style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: "#fff", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
             >
-              🔀 Rearrange Team Order
+              🔀 Rearrange Order
             </button>
             <button
               onClick={() => setShowBannerForm(!showBannerForm)}
@@ -171,7 +219,7 @@ export default function AdminTeamPage() {
               ⚙️ Join Banner Settings
             </button>
             <button
-              onClick={() => setEditing({ name: "", designation: "Sales Specialist", category: "Sales", memberCode: "TM 01", photoUrl: "", bio: "", sequenceNumber: team.length + 1 })}
+              onClick={() => setEditing({ name: "", designation: "Sales Consultant", category: "Sales", memberCode: "TM " + String(team.length + 1).padStart(2, "0"), photoUrl: "", bio: "", sequenceNumber: team.length + 1 })}
               style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
             >
               + Add Team Member
@@ -204,7 +252,7 @@ export default function AdminTeamPage() {
                   onChange={(e) => setJoinBanner({ ...joinBanner, fontSize: e.target.value as any })}
                   style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
                 >
-                  <option value="small">Small (Compact & Subtle)</option>
+                  <option value="small">Small (Compact)</option>
                   <option value="medium">Medium (Normal / Balanced - Recommended)</option>
                   <option value="large">Large (Prominent)</option>
                 </select>
@@ -270,34 +318,75 @@ export default function AdminTeamPage() {
           </form>
         )}
 
-        {/* Sub Category Filter Bar */}
-        <div style={{ display: "flex", gap: "0.8rem", marginBottom: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>
-          <span style={{ color: "#94a3b8", fontSize: "0.85rem", fontWeight: 700, marginRight: "0.5rem" }}>Filter Sub Category:</span>
-          {SUB_CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedFilter(cat)}
-              style={{
-                padding: "0.4rem 1rem",
-                borderRadius: "6px",
-                fontSize: "0.85rem",
-                fontWeight: 700,
-                cursor: "pointer",
-                border: "1px solid " + (selectedFilter === cat ? "#d4af37" : "rgba(255,255,255,0.1)"),
-                background: selectedFilter === cat ? "#d4af37" : "#12141c",
-                color: selectedFilter === cat ? "#000" : "#94a3b8",
-                transition: "all 0.2s ease"
-              }}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* PRIMARY GROUP FILTER TABS (1. Leadership vs 2. Team) */}
+        <div style={{ display: "flex", gap: "0.8rem", marginBottom: "1.2rem", alignItems: "center", flexWrap: "wrap" }}>
+          <span style={{ color: "#d4af37", fontSize: "0.85rem", fontWeight: 800, marginRight: "0.3rem" }}>ORGANIZATION TIER:</span>
+          {TEAM_GROUPS.map((grp) => {
+            const isActive = selectedGroupFilter === grp.id;
+            const count = grp.id === "ALL" ? team.length : (grp.id === "Leadership" ? leadershipCount : teamCount);
+            return (
+              <button
+                key={grp.id}
+                onClick={() => {
+                  setSelectedGroupFilter(grp.id as any);
+                  setSelectedDeptFilter("ALL");
+                }}
+                style={{
+                  padding: "0.55rem 1.2rem",
+                  borderRadius: "8px",
+                  fontSize: "0.88rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  border: "1px solid " + (isActive ? "#d4af37" : "rgba(255,255,255,0.15)"),
+                  background: isActive ? "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)" : "#12141c",
+                  color: isActive ? "#000" : "#cbd5e1",
+                  transition: "all 0.2s ease"
+                }}
+              >
+                {grp.label} ({count})
+              </button>
+            );
+          })}
         </div>
 
+        {/* SUB DEPARTMENT FILTER BAR (A. Sales, B. Operations, C. Installation, D. Support Staff) */}
+        {(selectedGroupFilter === "Team" || selectedGroupFilter === "ALL") && (
+          <div style={{ display: "flex", gap: "0.6rem", marginBottom: "1.8rem", alignItems: "center", flexWrap: "wrap", padding: "0.8rem 1.2rem", background: "rgba(255,255,255,0.03)", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <span style={{ color: "#94a3b8", fontSize: "0.82rem", fontWeight: 700, marginRight: "0.4rem" }}>TEAM DEPARTMENTS:</span>
+            {TEAM_DEPARTMENTS.map((dept) => {
+              const isActive = selectedDeptFilter === dept.id;
+              const count = dept.id === "ALL" ? teamCount : team.filter((m) => (m.category || "").toLowerCase() === dept.match).length;
+              return (
+                <button
+                  key={dept.id}
+                  onClick={() => setSelectedDeptFilter(dept.id)}
+                  style={{
+                    padding: "0.4rem 0.9rem",
+                    borderRadius: "6px",
+                    fontSize: "0.82rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    border: "1px solid " + (isActive ? "#3b82f6" : "rgba(255,255,255,0.1)"),
+                    background: isActive ? "#3b82f6" : "#0b0c10",
+                    color: isActive ? "#fff" : "#94a3b8",
+                    transition: "all 0.2s ease"
+                  }}
+                >
+                  {dept.label} ({count})
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ADD / EDIT MODAL / FORM */}
         {editing && (
-          <form onSubmit={handleSave} style={{ background: "#12141c", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.2)", marginBottom: "2rem" }}>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "1.2rem", color: "#d4af37" }}>{editing.id ? "Edit Team Member" : "Add Team Member"}</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "1rem" }}>
+          <form onSubmit={handleSave} style={{ background: "#12141c", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.3)", marginBottom: "2rem", boxShadow: "0 10px 30px rgba(0,0,0,0.5)" }}>
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "1.2rem", color: "#d4af37" }}>
+              {editing.id ? "Edit Team Member" : "+ Add New Team Member"}
+            </h2>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
               <div>
                 <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Full Name *</label>
                 <input
@@ -305,42 +394,55 @@ export default function AdminTeamPage() {
                   required
                   value={editing.name || ""}
                   onChange={(e) => setEditing({ ...editing, name: e.target.value })}
+                  placeholder="e.g. Madhusudhan MP"
                   style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
                 />
               </div>
+
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Sub Category *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Organization Tier &amp; Category *</label>
                 <select
                   value={editing.category || "Sales"}
                   onChange={(e) => setEditing({ ...editing, category: e.target.value })}
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px", fontWeight: 700 }}
                 >
-                  {SUB_CATEGORIES.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
+                  <optgroup label="1. LEADERSHIP">
+                    <option value="Leadership">1. Leadership</option>
+                  </optgroup>
+                  <optgroup label="2. TEAM (DEPARTMENTS)">
+                    <option value="Sales">A. Sales</option>
+                    <option value="Operations">B. Operations</option>
+                    <option value="Installation">C. Installation</option>
+                    <option value="Support Staff">D. Support Staff</option>
+                  </optgroup>
                 </select>
               </div>
+
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Designation / Role *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Designation / Title *</label>
                 <input
                   type="text"
                   required
                   value={editing.designation || ""}
                   onChange={(e) => setEditing({ ...editing, designation: e.target.value })}
+                  placeholder="e.g. Sales Specialist / Lead Installer"
                   style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
                 />
               </div>
+
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Member Code (e.g. MM 01)</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Member Code (e.g. MM 01, KS 04)</label>
                 <input
                   type="text"
                   value={editing.memberCode || ""}
                   onChange={(e) => setEditing({ ...editing, memberCode: e.target.value })}
+                  placeholder="e.g. MM 01"
                   style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
                 />
               </div>
+
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#d4af37", fontWeight: 700, marginBottom: "0.3rem" }}>Sequence # (Position)</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#d4af37", fontWeight: 700, marginBottom: "0.3rem" }}>Sequence # (Display Order)</label>
                 <input
                   type="number"
                   value={editing.sequenceNumber ?? 1}
@@ -351,7 +453,7 @@ export default function AdminTeamPage() {
             </div>
 
             <div style={{ marginTop: "1rem" }}>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Member Photo (Upload file or paste URL)</label>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Member Photo (Upload file or paste image URL)</label>
               <div style={{ display: "flex", gap: "0.8rem", alignItems: "center" }}>
                 <input
                   type="text"
@@ -388,18 +490,42 @@ export default function AdminTeamPage() {
               </div>
             </div>
 
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Phone Number</label>
+                <input
+                  type="text"
+                  value={editing.phone || ""}
+                  onChange={(e) => setEditing({ ...editing, phone: e.target.value })}
+                  placeholder="+91 88844 64444"
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>LinkedIn URL</label>
+                <input
+                  type="text"
+                  value={editing.linkedin || ""}
+                  onChange={(e) => setEditing({ ...editing, linkedin: e.target.value })}
+                  placeholder="https://linkedin.com/in/..."
+                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+            </div>
+
             <div style={{ marginTop: "1rem" }}>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Biography</label>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Biography / Role Description</label>
               <textarea
                 rows={3}
                 value={editing.bio || ""}
                 onChange={(e) => setEditing({ ...editing, bio: e.target.value })}
+                placeholder="Describe role, experience, achievements, and responsibilities..."
                 style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
               />
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" style={{ padding: "0.75rem 1.6rem", background: "#d4af37", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}>
+              <button type="submit" style={{ padding: "0.75rem 1.6rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}>
                 Save Member
               </button>
               <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.75rem 1.6rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
@@ -409,75 +535,85 @@ export default function AdminTeamPage() {
           </form>
         )}
 
+        {/* Member Cards Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-          {filteredTeam.map((m) => (
-            <div key={m.id || m.name} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "1.6rem", display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
-              <div>
-                <div style={{ display: "flex", gap: "1.2rem", alignItems: "center", marginBottom: "1rem" }}>
-                  {m.photoUrl ? (
-                    <img
-                      src={m.photoUrl}
-                      alt={m.name}
-                      style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: "2px solid #d4af37" }}
-                    />
-                  ) : (
-                    <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: "1.3rem" }}>
-                      {m.name ? m.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "TM"}
-                    </div>
-                  )}
+          {filteredTeam.length === 0 ? (
+            <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "4rem 2rem", background: "#12141c", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", color: "#94a3b8" }}>
+              No team members found in the current selection.
+            </div>
+          ) : (
+            filteredTeam.map((m) => {
+              const isLeadership = (m.category || "Sales").toLowerCase() === "leadership";
+              return (
+                <div key={m.id || m.name} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: isLeadership ? "2px solid rgba(212,175,55,0.5)" : "1px solid rgba(255,255,255,0.1)", borderRadius: "14px", padding: "1.6rem", display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
                   <div>
-                    <div style={{ display: "flex", gap: "0.4rem", alignItems: "center", flexWrap: "wrap", marginBottom: "0.3rem" }}>
-                      <span style={{ fontSize: "0.75rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 900 }}>
-                        {m.memberCode || "MM"}
-                      </span>
-                      <span style={{ fontSize: "0.75rem", background: "rgba(59, 130, 246, 0.2)", color: "#60a5fa", border: "1px solid rgba(59,130,246,0.4)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800 }}>
-                        {m.category || "Sales"}
-                      </span>
-                      <span style={{ fontSize: "0.75rem", background: "rgba(255, 255, 255, 0.1)", color: "#cbd5e1", padding: "0.2rem 0.5rem", borderRadius: "4px", fontWeight: 700 }}>
-                        Pos #{m.sequenceNumber || 1}
-                      </span>
+                    <div style={{ display: "flex", gap: "1.2rem", alignItems: "center", marginBottom: "1rem" }}>
+                      {m.photoUrl ? (
+                        <img
+                          src={m.photoUrl}
+                          alt={m.name}
+                          style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: isLeadership ? "2px solid #d4af37" : "2px solid #3b82f6" }}
+                        />
+                      ) : (
+                        <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: isLeadership ? "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)" : "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: isLeadership ? "#000" : "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: "1.3rem" }}>
+                          {m.name ? m.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "TM"}
+                        </div>
+                      )}
+                      <div>
+                        <div style={{ display: "flex", gap: "0.4rem", alignItems: "center", flexWrap: "wrap", marginBottom: "0.3rem" }}>
+                          <span style={{ fontSize: "0.75rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 900 }}>
+                            {m.memberCode || "TM"}
+                          </span>
+                          <span style={{ fontSize: "0.75rem", background: isLeadership ? "rgba(212,175,55,0.2)" : "rgba(59, 130, 246, 0.2)", color: isLeadership ? "#d4af37" : "#60a5fa", border: isLeadership ? "1px solid rgba(212,175,55,0.4)" : "1px solid rgba(59,130,246,0.4)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800 }}>
+                            {isLeadership ? "1. LEADERSHIP" : `2. TEAM · ${m.category?.toUpperCase() || "SALES"}`}
+                          </span>
+                          <span style={{ fontSize: "0.75rem", background: "rgba(255, 255, 255, 0.1)", color: "#cbd5e1", padding: "0.2rem 0.5rem", borderRadius: "4px", fontWeight: 700 }}>
+                            Pos #{m.sequenceNumber || 1}
+                          </span>
+                        </div>
+                        <h3 style={{ fontSize: "1.25rem", fontWeight: 900, color: "#ffffff", margin: "0.3rem 0" }}>{m.name}</h3>
+                        <div style={{ color: "#d4af37", fontSize: "0.88rem", fontWeight: 700 }}>{m.designation}</div>
+                      </div>
                     </div>
-                    <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0.3rem 0" }}>{m.name}</h3>
-                    <div style={{ color: "#d4af37", fontSize: "0.88rem", fontWeight: 700 }}>{m.designation}</div>
+                    <p style={{ color: "#cbd5e1", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1.2rem", fontWeight: 400 }}>{m.bio}</p>
+                  </div>
+
+                  <div style={{ display: "flex", gap: "0.5rem", paddingTop: "0.8rem", borderTop: "1px solid rgba(255,255,255,0.06)", flexWrap: "wrap", alignItems: "center" }}>
+                    <button
+                      onClick={() => handleMoveMember(m.id, "up")}
+                      title="Move Up in Display Order"
+                      style={{ padding: "0.45rem 0.8rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
+                    >
+                      ⬆️ Up
+                    </button>
+                    <button
+                      onClick={() => handleMoveMember(m.id, "down")}
+                      title="Move Down in Display Order"
+                      style={{ padding: "0.45rem 0.8rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
+                    >
+                      ⬇️ Down
+                    </button>
+                    <button onClick={() => setEditing(m)} style={{ padding: "0.45rem 1rem", background: "#1e2230", color: "#fff", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(m.id)} style={{ padding: "0.45rem 1rem", background: "rgba(239, 68, 68, 0.15)", color: "#f87171", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
+                      Delete
+                    </button>
                   </div>
                 </div>
-                <p style={{ color: "#cbd5e1", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1.2rem", fontWeight: 400 }}>{m.bio}</p>
-              </div>
-
-              <div style={{ display: "flex", gap: "0.5rem", paddingTop: "0.8rem", borderTop: "1px solid rgba(255,255,255,0.06)", flexWrap: "wrap" }}>
-                <button
-                  onClick={() => handleMoveMember(m.id, "up")}
-                  title="Move Up in Sequence Order"
-                  style={{ padding: "0.45rem 0.8rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
-                >
-                  ⬆️ Up
-                </button>
-                <button
-                  onClick={() => handleMoveMember(m.id, "down")}
-                  title="Move Down in Sequence Order"
-                  style={{ padding: "0.45rem 0.8rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
-                >
-                  ⬇️ Down
-                </button>
-                <button onClick={() => setEditing(m)} style={{ padding: "0.45rem 1rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
-                  Edit
-                </button>
-                <button onClick={() => handleDelete(m.id)} style={{ padding: "0.45rem 1rem", background: "rgba(239, 68, 68, 0.15)", color: "#f87171", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
+              );
+            })
+          )}
         </div>
 
         {/* REARRANGE TEAM ORDER MODAL */}
         {showRearrangeModal && (
           <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "2rem" }}>
-            <div style={{ background: "#12141c", border: "1px solid rgba(59, 130, 246, 0.4)", borderRadius: "14px", width: "100%", maxWidth: "750px", maxHeight: "90vh", overflowY: "auto", padding: "2rem", color: "#fff", boxShadow: "0 20px 50px rgba(0,0,0,0.9)" }}>
+            <div style={{ background: "#12141c", border: "1px solid rgba(59, 130, 246, 0.4)", borderRadius: "14px", width: "100%", maxWidth: "800px", maxHeight: "90vh", overflowY: "auto", padding: "2rem", color: "#fff", boxShadow: "0 20px 50px rgba(0,0,0,0.9)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1rem" }}>
                 <div>
                   <h2 style={{ margin: 0, fontSize: "1.4rem", fontWeight: 800, color: "#60a5fa" }}>🔀 Rearrange Team Display Order</h2>
-                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.85rem", color: "#94a3b8" }}>Change sequence numbers or use ▲ Up / ▼ Down buttons to order team members.</p>
+                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.85rem", color: "#94a3b8" }}>Set numerical positions to organize the exact visual flow on the live website.</p>
                 </div>
                 <button onClick={() => setShowRearrangeModal(false)} style={{ background: "none", border: "none", color: "#aaa", fontSize: "1.4rem", cursor: "pointer" }}>✕</button>
               </div>
@@ -499,7 +635,7 @@ export default function AdminTeamPage() {
                 >
                   ALL CATEGORIES
                 </button>
-                {SUB_CATEGORIES.map((cat) => (
+                {ALL_SUB_CATEGORIES.map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setRearrangeCategory(cat)}
@@ -519,131 +655,80 @@ export default function AdminTeamPage() {
                 ))}
               </div>
 
-              {/* Reordering list */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", marginBottom: "2rem" }}>
+              {/* Reorder Table */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", marginBottom: "1.5rem" }}>
                 {rearrangeList
-                  .filter((m) => rearrangeCategory === "ALL" || (m.category || "Leadership").toLowerCase() === rearrangeCategory.toLowerCase())
-                  .map((m, idx, arr) => (
+                  .filter((m) => rearrangeCategory === "ALL" || (m.category || "Sales").toLowerCase() === rearrangeCategory.toLowerCase())
+                  .map((m, idx) => (
                     <div
-                      key={m.id || m.name}
+                      key={m.id}
                       style={{
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
+                        padding: "0.8rem 1rem",
                         background: "#0b0c10",
-                        border: "1px solid rgba(255,255,255,0.1)",
+                        border: "1px solid #1e2230",
                         borderRadius: "8px",
-                        padding: "0.8rem 1.2rem",
-                        gap: "1rem",
+                        gap: "1rem"
                       }}
                     >
-                      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                        <div style={{ width: "70px" }}>
-                          <label style={{ display: "block", fontSize: "0.7rem", color: "#60a5fa", fontWeight: 700 }}>POS #</label>
-                          <input
-                            type="number"
-                            value={m.sequenceNumber ?? (idx + 1)}
-                            onChange={(e) => {
-                              const newSeq = parseInt(e.target.value) || 1;
-                              setRearrangeList((prev) =>
-                                prev.map((item) => (item.id === m.id ? { ...item, sequenceNumber: newSeq } : item))
-                              );
-                            }}
-                            style={{ width: "100%", padding: "0.3rem 0.5rem", background: "#12141c", border: "1px solid #3b82f6", color: "#fff", borderRadius: "4px", fontWeight: 800 }}
-                          />
-                        </div>
-
+                      <div style={{ display: "flex", alignItems: "center", gap: "1rem", flex: 1 }}>
+                        <span style={{ fontWeight: 800, color: "#d4af37", width: "30px", fontSize: "0.95rem" }}>#{idx + 1}</span>
                         {m.photoUrl ? (
-                          <img src={m.photoUrl} alt={m.name} style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover", border: "1px solid #d4af37" }} />
+                          <img src={m.photoUrl} alt="" style={{ width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover" }} />
                         ) : (
-                          <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#d4af37", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "0.85rem" }}>
-                            {m.name ? m.name.substring(0, 2).toUpperCase() : "TM"}
+                          <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#1e2230", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.8rem", fontWeight: 800, color: "#d4af37" }}>
+                            {m.name.substring(0, 2).toUpperCase()}
                           </div>
                         )}
-
                         <div>
-                          <div style={{ fontWeight: 800, color: "#fff", fontSize: "1rem" }}>{m.name}</div>
-                          <div style={{ fontSize: "0.8rem", color: "#94a3b8" }}>{m.designation} · <span style={{ color: "#d4af37" }}>{m.category}</span></div>
+                          <div style={{ fontWeight: 700, fontSize: "0.95rem" }}>{m.name}</div>
+                          <div style={{ fontSize: "0.78rem", color: "#94a3b8" }}>{m.designation} · <span style={{ color: "#60a5fa" }}>{m.category}</span></div>
                         </div>
                       </div>
 
-                      <div style={{ display: "flex", gap: "0.4rem" }}>
-                        <button
-                          type="button"
-                          disabled={idx === 0}
-                          onClick={() => {
-                            if (idx === 0) return;
-                            const newList = [...rearrangeList];
-                            const currentIdx = newList.findIndex((item) => item.id === m.id);
-                            const prevIdx = currentIdx - 1;
-                            if (prevIdx < 0) return;
-                            const temp = newList[currentIdx];
-                            newList[currentIdx] = newList[prevIdx];
-                            newList[prevIdx] = temp;
-                            // Re-assign sequence numbers
-                            newList.forEach((item, index) => {
-                              item.sequenceNumber = index + 1;
-                            });
-                            setRearrangeList(newList);
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <label style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Pos:</label>
+                        <input
+                          type="number"
+                          value={m.sequenceNumber || (idx + 1)}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value) || 1;
+                            setRearrangeList((prev) =>
+                              prev.map((item) => (item.id === m.id ? { ...item, sequenceNumber: val } : item))
+                            );
                           }}
-                          style={{ padding: "0.4rem 0.8rem", background: idx === 0 ? "#222" : "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", cursor: idx === 0 ? "not-allowed" : "pointer", fontWeight: 700, fontSize: "0.8rem" }}
-                        >
-                          ▲ Up
-                        </button>
-                        <button
-                          type="button"
-                          disabled={idx === arr.length - 1}
-                          onClick={() => {
-                            if (idx === arr.length - 1) return;
-                            const newList = [...rearrangeList];
-                            const currentIdx = newList.findIndex((item) => item.id === m.id);
-                            const nextIdx = currentIdx + 1;
-                            if (nextIdx >= newList.length) return;
-                            const temp = newList[currentIdx];
-                            newList[currentIdx] = newList[nextIdx];
-                            newList[nextIdx] = temp;
-                            newList.forEach((item, index) => {
-                              item.sequenceNumber = index + 1;
-                            });
-                            setRearrangeList(newList);
-                          }}
-                          style={{ padding: "0.4rem 0.8rem", background: idx === arr.length - 1 ? "#222" : "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", cursor: idx === arr.length - 1 ? "not-allowed" : "pointer", fontWeight: 700, fontSize: "0.8rem" }}
-                        >
-                          ▼ Down
-                        </button>
+                          style={{ width: "60px", padding: "0.4rem", background: "#12141c", border: "1px solid #3b82f6", color: "#fff", borderRadius: "4px", fontWeight: 800, textAlign: "center" }}
+                        />
                       </div>
                     </div>
                   ))}
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "1rem" }}>
-                <button type="button" onClick={() => setShowRearrangeModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+                <button
+                  onClick={() => setShowRearrangeModal(false)}
+                  style={{ padding: "0.75rem 1.4rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}
+                >
                   Cancel
                 </button>
                 <button
-                  type="button"
                   onClick={async () => {
-                    try {
-                      // Sort rearrangeList by sequenceNumber before saving
-                      const sortedList = [...rearrangeList].sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
-                      const res = await fetch("/api/team", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ type: "reorder", team: sortedList }),
-                      });
-                      const json = await res.json();
-                      if (json.success) {
-                        alert("Team display order saved successfully!");
-                        setShowRearrangeModal(false);
-                        fetchTeam();
-                      } else alert("Error: " + json.error);
-                    } catch (e: any) {
-                      alert("Error: " + e.message);
-                    }
+                    const sorted = [...rearrangeList].sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+                    const normalized = sorted.map((m, i) => ({ ...m, sequenceNumber: i + 1 }));
+                    setTeam(normalized);
+                    await fetch("/api/team", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ type: "reorder", team: normalized }),
+                    });
+                    setShowRearrangeModal(false);
+                    alert("Display order updated and saved live!");
                   }}
-                  style={{ padding: "0.75rem 1.5rem", background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 800 }}
+                  style={{ padding: "0.75rem 1.6rem", background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}
                 >
-                  💾 Save Team Display Order Live
+                  Save New Order
                 </button>
               </div>
             </div>

@@ -199,11 +199,15 @@ export type ProjectShowcaseItem = {
 
 export type ProjectItem = ProjectShowcaseItem;
 
+export type TeamGroup = "Leadership" | "Team";
+export type TeamDepartment = "Sales" | "Operations" | "Installation" | "Support Staff" | string;
+
 export type TeamMemberItem = {
   id: string;
   name: string;
   designation: string;
   category?: "Sales" | "Operations" | "Installation" | "Support Staff" | "Leadership" | string;
+  group?: TeamGroup;
   memberCode: string;
   photoUrl: string;
   phone?: string;
