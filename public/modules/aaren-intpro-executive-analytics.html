@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   /* ===================== LOCKED DESIGN TOKENS ===================== */
-  :root{
-    --navy:#08111F; --navy-2:#0D1929; --surface:#101C30; --surface-2:#152238;
-    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
-    --white:#F8FAFC; --slate:#93A2B8; --slate-dim:#5E6E85;
-    --purple:#7C3AED; --purple-soft:rgba(124,58,237,0.14);
+  :root, [data-theme="light"], [data-theme="dark"] {
+    --navy:#FFFFFF; --navy-2:#FAFAFA; --surface:#FFFFFF; --surface-2:#F8F6F0;
+    --border:#E8E3D7; --border-strong:#D8D0BE;
+    --white:#1C1917; --slate:#5E5852; --slate-dim:#8A8279;
+    --purple:#C8A96E; --purple-soft:rgba(200, 169, 110, 0.15);
     --blue:#2563EB;
     --radius-lg:20px; --radius-md:16px; --radius-sm:10px;
-    --shadow-glass: 0 8px 40px rgba(0,0,0,0.45);
+    --shadow-glass: 0 4px 20px rgba(0,0,0,0.04);
 
     --green:#22C55E; --green-soft:rgba(34,197,94,0.14);
     --amber:#F59E0B; --amber-soft:rgba(245,158,11,0.14);
@@ -24,30 +24,28 @@
     --red:#EF4444; --red-soft:rgba(239,68,68,0.14);
     --teal:#0D9488; --teal-soft:rgba(13,148,136,0.14);
 
-    --bg: var(--navy);
-    --bg-2: var(--navy-2);
-    --panel: var(--surface);
-    --panel-2: var(--surface-2);
-    --text: var(--white);
-    --text-dim: var(--slate);
-    --text-faint: var(--slate-dim);
-    --line: var(--border);
-    --line-strong: var(--border-strong);
+    --bg: #FFFFFF;
+    --bg-2: #FAFAFA;
+    --panel: #FFFFFF;
+    --panel-2: #F8F6F0;
+    --text: #1C1917;
+    --text-dim: #5E5852;
+    --text-faint: #8A8279;
+    --line: #E8E3D7;
+    --line-strong: #D8D0BE;
   }
 
-  [data-theme="light"]{
-    --bg:#F5F6F9; --bg-2:#EEF0F5; --panel:#FFFFFF; --panel-2:#F8F9FC;
-    --border:rgba(15,23,42,0.08); --border-strong:rgba(15,23,42,0.14);
-    --text:#0B1220; --text-dim:#54617A; --text-faint:#8792A6;
-    --line: var(--border); --line-strong: var(--border-strong);
-    --shadow-glass: 0 8px 40px rgba(15,23,42,0.10);
-    --purple-soft: rgba(124,58,237,0.10);
-    --green-soft: rgba(34,197,94,0.10);
-    --amber-soft: rgba(245,158,11,0.12);
-    --rose-soft: rgba(251,113,133,0.12);
-    --red-soft: rgba(239,68,68,0.10);
-    --teal-soft: rgba(13,148,136,0.10);
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:#FFFFFF;
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    font-size:14px;
+    line-height:1.5;
   }
+  h1, h2, h3, h4, .page-title, .brand-name { color: #81663F !important; }
 
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{height:100%;}
@@ -97,10 +95,10 @@
   .dot{position:absolute; top:6px; right:6px; width:7px; height:7px; border-radius:50%; background:var(--rose); border:2px solid var(--bg);}
   .btn{display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:var(--radius-sm); font-weight:700; font-size:13px; border:1px solid transparent; white-space:nowrap;}
   .btn svg{width:14px; height:14px;}
-  .btn-primary{background:linear-gradient(135deg, var(--purple), #6528d1); color:#fff; box-shadow:0 4px 18px rgba(124,58,237,0.35);}
-  .btn-primary:hover{filter:brightness(1.08);}
-  .btn-ghost{background:var(--panel); border:1px solid var(--line); color:var(--text);}
-  .btn-ghost:hover{border-color:var(--line-strong);}
+  .btn-primary{background:linear-gradient(135deg, #D4B67D 0%, #C8A96E 40%, #B38E46 100%) !important; color:#fff !important; box-shadow:0 4px 18px rgba(184, 147, 85, 0.35) !important;}
+  .btn-primary:hover{background:linear-gradient(135deg, #DFCA9B 0%, #D4B67D 40%, #C29B52 100%) !important; filter:brightness(1.05);}
+  .btn-ghost{background:#FFFFFF; border:1px solid #D8D0BE; color:#81663F;}
+  .btn-ghost:hover{border-color:#C8A96E; background:rgba(200, 169, 110, 0.12);}
   .btn-sm{padding:6px 12px; font-size:12px;}
 
   .avatar{width:36px; height:36px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,#F59E0B,#7C3AED); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12.5px; border:2px solid var(--line);}

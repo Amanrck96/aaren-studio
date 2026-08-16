@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,27 +7,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --navy:#08111F; --navy-2:#0D1929; --surface:#101C30; --surface-2:#152238;
-    --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.14);
-    --white:#F8FAFC; --slate:#93A2B8; --slate-dim:#5E6E85;
-    --purple:#7C3AED; --purple-soft:rgba(124,58,237,0.14);
+  :root, [data-theme="light"], [data-theme="dark"] {
+    --navy:#FFFFFF; --navy-2:#FAFAFA; --surface:#FFFFFF; --surface-2:#F8F6F0;
+    --border:#E8E3D7; --border-strong:#D8D0BE;
+    --white:#1C1917; --slate:#5E5852; --slate-dim:#8A8279;
+    --purple:#C8A96E; --purple-soft:rgba(200, 169, 110, 0.15);
     --blue:#2563EB;
     --radius-lg:20px; --radius-md:16px; --radius-sm:10px;
-    --shadow-glass: 0 8px 40px rgba(0,0,0,0.45);
+    --shadow-glass: 0 4px 20px rgba(0,0,0,0.04);
     --emerald:#10B981; --emerald-soft:rgba(16,185,129,.14);
     --amber:#F59E0B; --amber-soft:rgba(245,158,11,.14);
     --red:#EF4444; --red-soft:rgba(239,68,68,.14);
   }
-  [data-theme="light"]{
-    --navy:#F3F5F9; --navy-2:#FFFFFF; --surface:#FFFFFF; --surface-2:#F7F8FB;
-    --border:rgba(15,23,42,0.08); --border-strong:rgba(15,23,42,0.14);
-    --white:#0B1220; --slate:#54607A; --slate-dim:#8792A6;
-    --purple-soft:rgba(124,58,237,0.10);
-    --shadow-glass: 0 8px 40px rgba(15,23,42,0.10);
-  }
   *{box-sizing:border-box; margin:0; padding:0;}
-  body{font-family:'Inter',sans-serif; background:var(--navy); color:var(--white); -webkit-font-smoothing:antialiased; transition:background .25s ease, color .25s ease;}
+  body{font-family:'Inter',sans-serif; background:#FFFFFF; color:var(--white); -webkit-font-smoothing:antialiased; transition:background .25s ease, color .25s ease;}
+  h1, h2, h3, h4, .page-title, .brand-name { color: #81663F !important; }
   a{color:inherit; text-decoration:none;}
   button{font-family:inherit; cursor:pointer;}
   ::selection{background:var(--purple-soft);}
@@ -72,8 +66,8 @@
   .btn{padding:11px 18px; border-radius:var(--radius-sm); font-size:12.5px; font-weight:800; border:1px solid var(--border); background:var(--surface); color:var(--white); display:flex; align-items:center; gap:7px;}
   .btn svg{width:15px; height:15px;}
   .btn:hover{border-color:var(--border-strong);}
-  .btn.primary{background:linear-gradient(135deg,var(--purple),var(--blue)); border:none; box-shadow:0 10px 30px -10px rgba(124,58,237,.55);}
-  .btn.primary:hover{filter:brightness(1.08);}
+  .btn.primary{background:linear-gradient(135deg, #D4B67D 0%, #C8A96E 40%, #B38E46 100%) !important; color:#fff !important; border:none; box-shadow:0 10px 30px -10px rgba(184,147,85,.55) !important;}
+  .btn.primary:hover{background:linear-gradient(135deg, #DFCA9B 0%, #D4B67D 40%, #C29B52 100%) !important; filter:brightness(1.05);}
 
   .view{display:none;}
   .view.active{display:block; animation:fadein .35s ease;}
