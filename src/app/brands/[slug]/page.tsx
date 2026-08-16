@@ -283,37 +283,12 @@ export default function BrandDetailPage({ params }: Props) {
 
         {/* Hero overlay content */}
         <div className="bd-hero__content">
-          <div className="bd-hero__breadcrumb" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+          <div className="bd-hero__breadcrumb">
             <div>
               <Link href="/brands" className="bd-hero__breadcrumb-link">Brands</Link>
               <span className="bd-hero__breadcrumb-sep">→</span>
               <span>{activeBrand.name}</span>
             </div>
-
-            {/* Quick Admin Edit Button */}
-            <Link
-              href={`/admin/brands/${activeBrand.id}`}
-              className="bd-edit-admin-btn"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "6px 14px",
-                background: "rgba(0,0,0,0.65)",
-                backdropFilter: "blur(10px)",
-                border: "1px solid rgba(255,255,255,0.3)",
-                borderRadius: "999px",
-                color: "#ffffff",
-                fontSize: "11px",
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                textDecoration: "none",
-                transition: "all 0.2s ease",
-              }}
-            >
-              ✏️ Edit in Admin
-            </Link>
           </div>
 
           <div className="bd-hero__meta-row">

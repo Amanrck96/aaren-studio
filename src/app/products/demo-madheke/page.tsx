@@ -169,7 +169,7 @@ export default function MadhekeProductDetailPage() {
                 className="btn-add-cart"
                 onClick={() => setShowPdfModal(true)}
               >
-                📄 DOWNLOAD CATALOG PDF
+                📋 REQUEST CATALOGUE SPECS
               </button>
             </div>
 

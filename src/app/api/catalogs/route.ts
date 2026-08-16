@@ -39,17 +39,16 @@ export async function POST(request: Request) {
     }
 
     // Save lead details into Inquiries Store
-    const leadMessage = `Catalog PDF Downloaded: ${catalogTitle || fileName || "Architectural Catalog"}\nProfession: ${profession || "N/A"}\nCity: ${city || "N/A"}`;
+    const leadMessage = `Catalog Enquiry: ${catalogTitle || fileName || "Architectural Catalog"}\nProfession: ${profession || "N/A"}\nCity: ${city || "N/A"}`;
     
     const leadData = {
       name,
       email,
       phone,
-      type: "Catalog PDF Gate",
-      subject: `PDF Downloaded: ${catalogTitle || fileName}`,
+      type: "Catalog Enquiry",
+      subject: `Catalog Enquiry: ${catalogTitle || fileName}`,
       message: leadMessage,
       productOrBrand: `${catalogTitle || fileName} (${fileName})`,
-      downloadedFileName: fileName,
       catalogId,
       profession,
       city,
@@ -64,14 +63,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: "Lead recorded & catalog unlocked",
+      message: "Catalogue enquiry recorded successfully",
       fileUrl: fileUrl || `/catalogs/${fileName}`,
-      downloadUrl: fileUrl || `/catalogs/${fileName}`,
       fileName,
       data: inquiry,
     });
   } catch (err: any) {
     console.error("POST /api/catalogs Error:", err);
-    return NextResponse.json({ success: false, error: err.message || "Failed to log download lead" }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message || "Failed to log catalog enquiry" }, { status: 500 });
   }
 }

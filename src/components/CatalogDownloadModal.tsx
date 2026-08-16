@@ -16,8 +16,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
   const [profession, setProfession] = useState("Architect / Interior Designer");
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
-  const [unlocked, setUnlocked] = useState(false);
-  const [downloadUrl, setDownloadUrl] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   if (!catalog) return null;
 
@@ -50,12 +49,10 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
 
       const data = await res.json();
       if (data.success) {
-        setUnlocked(true);
-        setDownloadUrl(data.fileUrl || catalog.fileUrl);
-
+        setSubmitted(true);
         if (onSuccess) onSuccess();
       } else {
-        alert("Form submission failed: " + data.error);
+        alert("Submission failed: " + data.error);
       }
     } catch (err: any) {
       alert("Error: " + err.message);
@@ -84,7 +81,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
     >
       <div
         style={{
-          background: "#ffffff",
+          background: "#FFFFFF",
           borderRadius: "16px",
           maxWidth: "680px",
           width: "100%",
@@ -92,15 +89,15 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
           boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.35)",
           display: "grid",
           gridTemplateColumns: "240px 1fr",
-          border: "1px solid #e2e8f0",
+          border: "1px solid #E8E3D7",
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left Thumbnail & Info Bar */}
         <div
           style={{
-            background: "#0f172a",
-            color: "#ffffff",
+            background: "#FAF9F6",
+            borderRight: "1px solid #E8E3D7",
             padding: "1.8rem",
             display: "flex",
             flexDirection: "column",
@@ -117,45 +114,51 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
               aspectRatio: "3/4",
               borderRadius: "8px",
               overflow: "hidden",
-              boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
               marginBottom: "1rem",
-              border: "1px solid rgba(255,255,255,0.15)",
+              border: "1px solid #D8D0BE",
+              background: "#FFFFFF",
             }}
           >
-            {/* Cover Thumbnail Image rendered from 1st page of PDF */}
-            <img
-              src={catalog.thumbnailUrl}
-              alt={catalog.title}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              onError={(e) => {
-                // Fallback to placeholder if thumbnail is missing
-                (e.target as HTMLElement).style.display = "none";
-              }}
-            />
+            {catalog.thumbnailUrl ? (
+              <img
+                src={catalog.thumbnailUrl}
+                alt={catalog.title}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = "none";
+                }}
+              />
+            ) : (
+              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2.5rem" }}>
+                📖
+              </div>
+            )}
             <div
               style={{
                 position: "absolute",
                 top: "8px",
                 right: "8px",
-                background: "rgba(0,0,0,0.7)",
-                color: "#d4af37",
+                background: "rgba(0,0,0,0.75)",
+                color: "#D4B67D",
                 padding: "2px 8px",
                 borderRadius: "12px",
-                fontSize: "0.7rem",
+                fontSize: "0.68rem",
                 fontWeight: 800,
+                letterSpacing: "0.05em",
               }}
             >
-              OFFICIAL CATALOG
+              OFFICIAL CATALOGUE
             </div>
           </div>
 
-          <div style={{ fontSize: "0.75rem", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700 }}>
-            BRAND & CATEGORY
+          <div style={{ fontSize: "0.72rem", color: "#8A8279", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700 }}>
+            BRAND &amp; CATEGORY
           </div>
-          <div style={{ color: "#d4af37", fontWeight: 800, fontSize: "0.95rem", marginTop: "2px" }}>{catalog.brand}</div>
-          <div style={{ color: "#e2e8f0", fontSize: "0.8rem", marginTop: "2px", fontWeight: 600 }}>{catalog.category}</div>
+          <div style={{ color: "#81663F", fontWeight: 800, fontSize: "0.95rem", marginTop: "2px" }}>{catalog.brand}</div>
+          <div style={{ color: "#5E5852", fontSize: "0.8rem", marginTop: "2px", fontWeight: 600 }}>{catalog.category}</div>
 
-          <div style={{ marginTop: "1rem", display: "flex", gap: "0.6rem", fontSize: "0.75rem", color: "#94a3b8" }}>
+          <div style={{ marginTop: "1rem", display: "flex", gap: "0.6rem", fontSize: "0.75rem", color: "#8A8279" }}>
             <span>📄 {catalog.pageCount} Pages</span>
             <span>•</span>
             <span>💾 {catalog.fileSize}</span>
@@ -166,8 +169,8 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
         <div style={{ padding: "2rem 2.2rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
-              <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#8c764b", letterSpacing: "0.12em", textTransform: "uppercase" }}>
-                LUXURY ARCHITECTURAL CATALOG
+              <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#81663F", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                LUXURY ARCHITECTURAL CATALOGUE
               </span>
               <button
                 onClick={onClose}
@@ -176,7 +179,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                   border: "none",
                   fontSize: "1.4rem",
                   cursor: "pointer",
-                  color: "#64748b",
+                  color: "#8A8279",
                   lineHeight: 1,
                 }}
               >
@@ -184,76 +187,56 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
               </button>
             </div>
 
-            <h2 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#0f172a", margin: "0 0 0.4rem 0", lineHeight: 1.3 }}>
+            <h2 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#81663F", margin: "0 0 0.4rem 0", lineHeight: 1.3 }}>
               {catalog.title}
             </h2>
-            <p style={{ color: "#64748b", fontSize: "0.85rem", lineHeight: 1.4, margin: "0 0 1.2rem 0" }}>
+            <p style={{ color: "#5E5852", fontSize: "0.85rem", lineHeight: 1.4, margin: "0 0 1.2rem 0" }}>
               {catalog.description}
             </p>
 
-            {unlocked ? (
+            {submitted ? (
               <div
                 style={{
-                  background: "#f8fafc",
-                  border: "1px solid #cbd5e1",
+                  background: "#FAF9F6",
+                  border: "1px solid #E8E3D7",
                   borderRadius: "10px",
-                  padding: "1.2rem",
+                  padding: "1.8rem 1.4rem",
                   textAlign: "center",
-                  margin: "0.8rem 0",
+                  margin: "1rem 0",
                 }}
               >
-                <div style={{ fontSize: "1.8rem", marginBottom: "0.2rem" }}>📖</div>
-                <h3 style={{ color: "#0f172a", margin: "0 0 0.2rem 0", fontSize: "1.05rem", fontWeight: 800 }}>Catalog Unlocked!</h3>
-                <p style={{ color: "#64748b", fontSize: "0.8rem", margin: "0 0 0.8rem 0" }}>
-                  Digital view-only access activated. Explore the catalogue pages below:
+                <div style={{ width: "52px", height: "52px", borderRadius: "50%", background: "rgba(200, 169, 110, 0.15)", color: "#81663F", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem", margin: "0 auto 1rem", fontWeight: 900 }}>
+                  ✓
+                </div>
+                <h3 style={{ color: "#81663F", margin: "0 0 0.3rem 0", fontSize: "1.2rem", fontWeight: 800 }}>
+                  Enquiry Received!
+                </h3>
+                <p style={{ color: "#5E5852", fontSize: "0.88rem", margin: "0 0 1.4rem 0", lineHeight: 1.5 }}>
+                  Thank you for your interest in <strong>{catalog.title}</strong>. Our architectural consultant will connect with you to present specifications and sample mockups.
                 </p>
 
-                <div style={{ width: "100%", height: "340px", background: "#000", borderRadius: "8px", overflow: "hidden", marginBottom: "0.8rem" }}>
-                  <iframe
-                    src={
-                      downloadUrl.includes("/d/") || downloadUrl.includes("id=")
-                        ? `https://drive.google.com/file/d/${(downloadUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || downloadUrl.match(/id=([a-zA-Z0-9_-]+)/))?.[1]}/preview`
-                        : (downloadUrl.startsWith("http")
-                            ? `https://docs.google.com/viewer?url=${encodeURIComponent(downloadUrl)}&embedded=true`
-                            : (typeof window !== "undefined"
-                                ? `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + (downloadUrl.startsWith("/") ? downloadUrl : `/${downloadUrl}`))}&embedded=true`
-                                : downloadUrl))
-                    }
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                  />
-                </div>
-
-                <a
-                  href={
-                    downloadUrl.startsWith("http")
-                      ? `https://docs.google.com/viewer?url=${encodeURIComponent(downloadUrl)}`
-                      : (typeof window !== "undefined"
-                          ? `https://docs.google.com/viewer?url=${encodeURIComponent(window.location.origin + (downloadUrl.startsWith("/") ? downloadUrl : `/${downloadUrl}`))}`
-                          : downloadUrl)
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={onClose}
                   style={{
-                    display: "inline-block",
-                    background: "#0f172a",
-                    color: "#ffffff",
-                    padding: "0.6rem 1.2rem",
+                    background: "linear-gradient(135deg, #D4B67D 0%, #C8A96E 40%, #B38E46 100%)",
+                    color: "#FFFFFF",
+                    border: "none",
+                    padding: "0.65rem 1.8rem",
                     borderRadius: "6px",
-                    fontWeight: 700,
-                    textDecoration: "none",
-                    fontSize: "0.85rem",
+                    fontWeight: 800,
+                    cursor: "pointer",
+                    fontSize: "0.9rem",
+                    boxShadow: "0 4px 14px rgba(184, 147, 85, 0.35)",
                   }}
                 >
-                  👁️ Open Fullscreen Reader ↗
-                </a>
+                  Done / Close
+                </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#334155", marginBottom: "4px" }}>
-                    Full Name <span style={{ color: "#dc2626" }}>*</span>
+                  <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
+                    Full Name <span style={{ color: "#EF4444" }}>*</span>
                   </label>
                   <input
                     type="text"
@@ -263,19 +246,21 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                     onChange={(e) => setName(e.target.value)}
                     style={{
                       width: "100%",
-                      padding: "0.6rem 0.8rem",
+                      padding: "0.65rem 0.8rem",
                       borderRadius: "6px",
-                      border: "1px solid #cbd5e1",
+                      border: "1px solid #D8D0BE",
                       fontSize: "0.88rem",
-                      color: "#0f172a",
+                      color: "#1C1917",
+                      background: "#FAF9F6",
+                      outline: "none",
                     }}
                   />
                 </div>
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
                   <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#334155", marginBottom: "4px" }}>
-                      Work Email <span style={{ color: "#dc2626" }}>*</span>
+                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
+                      Work Email <span style={{ color: "#EF4444" }}>*</span>
                     </label>
                     <input
                       type="email"
@@ -285,18 +270,20 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                       onChange={(e) => setEmail(e.target.value)}
                       style={{
                         width: "100%",
-                        padding: "0.6rem 0.8rem",
+                        padding: "0.65rem 0.8rem",
                         borderRadius: "6px",
-                        border: "1px solid #cbd5e1",
+                        border: "1px solid #D8D0BE",
                         fontSize: "0.88rem",
-                        color: "#0f172a",
+                        color: "#1C1917",
+                        background: "#FAF9F6",
+                        outline: "none",
                       }}
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#334155", marginBottom: "4px" }}>
-                      Phone Number <span style={{ color: "#dc2626" }}>*</span>
+                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
+                      Phone Number <span style={{ color: "#EF4444" }}>*</span>
                     </label>
                     <input
                       type="tel"
@@ -306,11 +293,13 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                       onChange={(e) => setPhone(e.target.value)}
                       style={{
                         width: "100%",
-                        padding: "0.6rem 0.8rem",
+                        padding: "0.65rem 0.8rem",
                         borderRadius: "6px",
-                        border: "1px solid #cbd5e1",
+                        border: "1px solid #D8D0BE",
                         fontSize: "0.88rem",
-                        color: "#0f172a",
+                        color: "#1C1917",
+                        background: "#FAF9F6",
+                        outline: "none",
                       }}
                     />
                   </div>
@@ -318,7 +307,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
                   <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#334155", marginBottom: "4px" }}>
+                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
                       Profession / Role
                     </label>
                     <select
@@ -326,12 +315,13 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                       onChange={(e) => setProfession(e.target.value)}
                       style={{
                         width: "100%",
-                        padding: "0.6rem 0.8rem",
+                        padding: "0.65rem 0.8rem",
                         borderRadius: "6px",
-                        border: "1px solid #cbd5e1",
+                        border: "1px solid #D8D0BE",
                         fontSize: "0.85rem",
-                        color: "#0f172a",
-                        background: "#ffffff",
+                        color: "#1C1917",
+                        background: "#FAF9F6",
+                        outline: "none",
                       }}
                     >
                       <option value="Architect / Interior Designer">Architect / Interior Designer</option>
@@ -343,7 +333,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#334155", marginBottom: "4px" }}>
+                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
                       City / Location
                     </label>
                     <input
@@ -353,11 +343,13 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                       onChange={(e) => setCity(e.target.value)}
                       style={{
                         width: "100%",
-                        padding: "0.6rem 0.8rem",
+                        padding: "0.65rem 0.8rem",
                         borderRadius: "6px",
-                        border: "1px solid #cbd5e1",
+                        border: "1px solid #D8D0BE",
                         fontSize: "0.88rem",
-                        color: "#0f172a",
+                        color: "#1C1917",
+                        background: "#FAF9F6",
+                        outline: "none",
                       }}
                     />
                   </div>
@@ -370,25 +362,25 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                     marginTop: "0.5rem",
                     width: "100%",
                     padding: "0.85rem",
-                    background: "#8c764b",
-                    color: "#ffffff",
+                    background: "linear-gradient(135deg, #D4B67D 0%, #C8A96E 40%, #B38E46 100%)",
+                    color: "#FFFFFF",
                     border: "none",
                     borderRadius: "8px",
-                    fontWeight: 700,
+                    fontWeight: 800,
                     fontSize: "0.95rem",
                     cursor: loading ? "wait" : "pointer",
-                    boxShadow: "0 4px 12px rgba(140, 118, 75, 0.3)",
+                    boxShadow: "0 6px 20px rgba(184, 147, 85, 0.35)",
                     transition: "all 0.2s ease",
                   }}
                 >
-                  {loading ? "Loading Catalog..." : "View Catalogue On-Screen"}
+                  {loading ? "Submitting..." : "Submit Catalogue Enquiry"}
                 </button>
               </form>
             )}
           </div>
 
-          <div style={{ marginTop: "1rem", borderTop: "1px solid #f1f5f9", paddingTop: "0.8rem", fontSize: "0.72rem", color: "#94a3b8", textAlign: "center" }}>
-            Instant PDF access granted upon form submission. Zero spam guarantee.
+          <div style={{ marginTop: "1rem", borderTop: "1px solid #E8E3D7", paddingTop: "0.8rem", fontSize: "0.72rem", color: "#8A8279", textAlign: "center" }}>
+            Aaren Intpro Official Catalogue Specification Portal.
           </div>
         </div>
       </div>

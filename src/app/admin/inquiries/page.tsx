@@ -81,11 +81,11 @@ export default function AdminInquiriesPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem" }}>
           <div>
             <span style={{ color: "#8c764b", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>
-              LIVE LEAD MANAGEMENT & PDF DOWNLOAD TRACKER
+              LIVE LEAD MANAGEMENT & CATALOGUE ENQUIRIES
             </span>
             <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flexWrap: "wrap" }}>
               <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.4rem 0", color: "#8c764b" }}>
-                Inquiries & PDF Downloads ({inquiries.length})
+                Inquiries & Catalogue Requests ({inquiries.length})
               </h1>
               <span style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", padding: "0.3rem 0.75rem", background: "#dcfce7", color: "#166534", borderRadius: "20px", fontSize: "0.75rem", fontWeight: 700, border: "1px solid #bbf7d0" }}>
                 <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 8px #22c55e" }}></span>
@@ -93,7 +93,7 @@ export default function AdminInquiriesPage() {
               </span>
             </div>
             <p style={{ color: "#475569", fontSize: "0.95rem" }}>
-              Live exact data of visitors who downloaded catalog PDFs or submitted contact forms. Real-time updated.
+              Live exact data of visitors who submitted catalogue enquiries, quote requests, or contact forms. Real-time updated.
             </p>
           </div>
 
@@ -108,26 +108,24 @@ export default function AdminInquiriesPage() {
                 borderRadius: "6px",
                 cursor: "pointer",
                 fontWeight: 700,
-                fontSize: "0.9rem",
               }}
             >
-              🔄 Refresh Live
+              🔄 Refresh Leads
             </button>
             <button
               onClick={handleExportCSV}
               style={{
-                padding: "0.75rem 1.5rem",
-                background: "#8c764b",
+                padding: "0.75rem 1.4rem",
+                background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
                 color: "#ffffff",
                 border: "none",
                 borderRadius: "6px",
                 cursor: "pointer",
-                fontWeight: 700,
-                fontSize: "0.9rem",
-                boxShadow: "0 2px 8px rgba(140, 118, 75, 0.25)",
+                fontWeight: 800,
+                boxShadow: "0 4px 12px rgba(16,185,129,0.25)",
               }}
             >
-              📥 Export CSV / Excel
+              📊 Export CSV / Excel
             </button>
           </div>
         </div>
@@ -139,7 +137,7 @@ export default function AdminInquiriesPage() {
             <div style={{ fontSize: "2rem", fontWeight: 900, color: "#8c764b", marginTop: "0.2rem" }}>{inquiries.length}</div>
           </div>
           <div style={{ background: "#fefce8", border: "1px solid #fef08a", padding: "1.2rem 1.5rem", borderRadius: "10px" }}>
-            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#a16207", textTransform: "uppercase" }}>🔒 PDF Catalog Downloads</div>
+            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#a16207", textTransform: "uppercase" }}>📋 Catalogue Enquiries</div>
             <div style={{ fontSize: "2rem", fontWeight: 900, color: "#ca8a04", marginTop: "0.2rem" }}>{pdfLeadsCount}</div>
           </div>
           <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", padding: "1.2rem 1.5rem", borderRadius: "10px" }}>
@@ -152,7 +150,7 @@ export default function AdminInquiriesPage() {
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "1.2rem", borderRadius: "8px" }}>
           <input
             type="text"
-            placeholder="Search by visitor name, email, phone, or catalog PDF downloaded..."
+            placeholder="Search by visitor name, email, phone, or enquired catalogue..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
@@ -180,7 +178,7 @@ export default function AdminInquiriesPage() {
             }}
           >
             <option value="All">All Lead Sources</option>
-            <option value="Catalog PDF Gate">🔒 Catalog PDF Downloads</option>
+            <option value="Catalog Enquiry">📋 Catalogue Enquiries</option>
             <option value="Contact Form">💬 Contact Form</option>
             <option value="Project Debrief">📐 Project Debrief</option>
           </select>
@@ -194,9 +192,9 @@ export default function AdminInquiriesPage() {
                 <th style={{ padding: "1rem 1.2rem" }}>Lead Visitor</th>
                 <th style={{ padding: "1rem 1.2rem" }}>Contact Details</th>
                 <th style={{ padding: "1rem 1.2rem" }}>Lead Type</th>
-                <th style={{ padding: "1rem 1.2rem" }}>Exact Downloaded PDF / Catalog</th>
+                <th style={{ padding: "1rem 1.2rem" }}>Requested Catalogue / Product</th>
                 <th style={{ padding: "1rem 1.2rem" }}>Message / Role</th>
-                <th style={{ padding: "1rem 1.2rem" }}>Downloaded At</th>
+                <th style={{ padding: "1rem 1.2rem" }}>Submitted At</th>
                 <th style={{ padding: "1rem 1.2rem", textAlign: "right" }}>Action</th>
               </tr>
             </thead>
@@ -248,7 +246,7 @@ export default function AdminInquiriesPage() {
                           gap: "0.3rem",
                         }}
                       >
-                        {inq.type === "Catalog PDF Gate" ? "🔒 PDF Download" : inq.type}
+                        {inq.type?.includes("Catalog") ? "📋 Catalogue Enquiry" : inq.type}
                       </span>
                     </td>
                     <td style={{ padding: "1rem 1.2rem" }}>
