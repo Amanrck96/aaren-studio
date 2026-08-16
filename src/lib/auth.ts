@@ -11,11 +11,16 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials) return null;
-        if (credentials.username === "admin@aaren.com" && credentials.password === "admin123") {
-          return { id: "1", name: "Aaren Admin", email: "admin@aaren.com", role: "admin" };
+        const adminEmail = process.env.ADMIN_EMAIL || "admin@aarenstudio.com";
+        const adminPassword = process.env.ADMIN_PASSWORD || "Aaren@Admin2026!";
+        const editorEmail = process.env.EDITOR_EMAIL || "editor@aarenstudio.com";
+        const editorPassword = process.env.EDITOR_PASSWORD || "Aaren@Editor2026!";
+
+        if (credentials.username === adminEmail && credentials.password === adminPassword) {
+          return { id: "1", name: "Aaren Admin", email: adminEmail, role: "admin" };
         }
-        if (credentials.username === "editor@aaren.com" && credentials.password === "editor123") {
-          return { id: "2", name: "Aaren Editor", email: "editor@aaren.com", role: "editor" };
+        if (credentials.username === editorEmail && credentials.password === editorPassword) {
+          return { id: "2", name: "Aaren Editor", email: editorEmail, role: "editor" };
         }
         return null;
       }

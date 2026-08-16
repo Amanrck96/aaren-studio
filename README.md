@@ -38,5 +38,5 @@ A 100% production-ready, premium website inspired by the design language, scroll
    ```
 5. **CMS Login Details**:
    - URL: `/admin/login`
-   - Administrative login: `admin@aaren.com` / `admin123`
-   - Editor login: `editor@aaren.com` / `editor123`
+   - Access: Configured via environment variables (`ADMIN_EMAIL` / `ADMIN_PASSWORD`)
+   - Please configure your administrative credentials in your local `.env` or deployment environment settings.

@@ -10,22 +10,32 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Validate exact admin credentials requested by owner
-    if (email.trim().toLowerCase() === "info@aarenintpro.com" && password === "Admin012345") {
-      // Set session cookie for Middleware protection
-      document.cookie = "aaren_admin_session=authenticated; path=/; max-age=86400; SameSite=Lax";
-      localStorage.setItem("aaren_admin_session", "authenticated");
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
 
-      setTimeout(() => {
-        router.push("/admin/dashboard");
-      }, 300);
-    } else {
-      setError("Invalid Administrative Email or Password.");
+      if (data.success) {
+        document.cookie = "aaren_admin_session=authenticated; path=/; max-age=86400; SameSite=Lax";
+        localStorage.setItem("aaren_admin_session", "authenticated");
+
+        setTimeout(() => {
+          router.push("/admin/dashboard");
+        }, 300);
+      } else {
+        setError(data.error || "Invalid Administrative Email or Password.");
+        setLoading(false);
+      }
+    } catch (err) {
+      setError("Network or authentication error. Please try again.");
       setLoading(false);
     }
   };
