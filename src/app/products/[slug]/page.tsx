@@ -370,8 +370,6 @@ export default function ProductDetailPage({ params }: Props) {
               </div>
             )}
 
-            <div className="pdf-page-badge">PDF PAGE {selectedImgIdx + 1}</div>
-
             <button
               className="zoom-btn"
               onClick={() => {

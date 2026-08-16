@@ -190,11 +190,16 @@ export default function CatalogsPage() {
               >
                 {/* PDF First Page Cover Thumbnail Header */}
                 <div style={{ position: "relative", width: "100%", height: "280px", background: "#0f172a", overflow: "hidden" }}>
-                  <img
-                    src={cat.thumbnailUrl}
-                    alt={cat.title}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
-                  />
+                  {cat.thumbnailUrl ? (
+                    <img
+                      src={cat.thumbnailUrl}
+                      alt={cat.title}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLElement).style.display = "none";
+                      }}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                    />
+                  ) : null}
 
                   {/* Gradient Overlay & Badges */}
                   <div
