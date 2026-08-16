@@ -16,6 +16,11 @@ export type SiteSettingsItem = {
   headingColor?: string;
   textColor?: string;
   accentColor?: string;
+  aboutTitle?: string;
+  aboutSubtitle?: string;
+  aboutMission?: string;
+  aboutVision?: string;
+  aboutValues?: string;
 };
 
 export type CategoryItem = {
@@ -308,6 +313,11 @@ export const DEFAULT_SETTINGS: SiteSettingsItem = {
     "https://youtube.com/@aaren_intpro"
   ],
   copyrightText: "AAREN © 2026. All rights reserved.",
+  aboutTitle: "About Us",
+  aboutSubtitle: "Aaren Intpro is Bengaluru's premier material house and luxury lifestyle curator, dedicated to providing world-class interior products under one roof.",
+  aboutMission: "To provide premium, elite, and high-quality lifestyle products under one roof for the global Indian customer.",
+  aboutVision: "To remain the primary one-stop destination for architects, interior designers, builders, and homeowners seeking world-class materials.",
+  aboutValues: "Uniting as a family, prioritizing robust value systems, and providing curated designs focusing on unique client experiences.",
 };
 
 export type CatalogSettingsItem = {

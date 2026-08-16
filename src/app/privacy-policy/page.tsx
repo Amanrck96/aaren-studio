@@ -1,8 +1,21 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { DEFAULT_SETTINGS, SiteSettingsItem } from "@/lib/types";
 
 export default function PrivacyPolicyPage() {
+  const [settings, setSettings] = useState<SiteSettingsItem>(DEFAULT_SETTINGS);
+
+  useEffect(() => {
+    fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) setSettings(json.data);
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <div className="privacy-page">
       <div className="privacy-container">
@@ -98,9 +111,9 @@ export default function PrivacyPolicyPage() {
             </p>
             <div className="contact-box">
               <p><strong>AAREN Creative Studio &amp; Material House</strong></p>
-              <p>Email: <a href="mailto:hello@aarenstudio.com">hello@aarenstudio.com</a></p>
-              <p>Phone: +91 98200 00000</p>
-              <p>Address: Aaren Studio Atelier, Lower Parel, Mumbai, MH 400013, India</p>
+              <p>Email: <a href={`mailto:${settings.contactEmail || "info@aarenintpro.com"}`}>{settings.contactEmail || "info@aarenintpro.com"}</a></p>
+              <p>Phone: <a href={`tel:${settings.contactPhone || "8884464444"}`}>{settings.contactPhone || "8884464444"}</a></p>
+              <p>Address: {settings.contactAddress || "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026"}</p>
             </div>
           </div>
         </main>

@@ -4,6 +4,12 @@ import { getAllFAQsStore, saveFAQStore, deleteFAQStore, importFAQsBulkStore } fr
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  "Pragma": "no-cache",
+  "Expires": "0",
+};
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -28,9 +34,9 @@ export async function GET(request: Request) {
       categories,
       brands,
       data: faqs,
-    });
+    }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 

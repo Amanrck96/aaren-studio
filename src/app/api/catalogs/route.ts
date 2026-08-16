@@ -4,13 +4,19 @@ import { getCatalogsStore, logInquiryStore, incrementCatalogDownloadCount } from
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  "Pragma": "no-cache",
+  "Expires": "0",
+};
+
 export async function GET() {
   try {
     const catalogs = await getCatalogsStore();
-    return NextResponse.json({ success: true, count: catalogs.length, data: catalogs });
+    return NextResponse.json({ success: true, count: catalogs.length, data: catalogs }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
     console.error("GET /api/catalogs Error:", err);
-    return NextResponse.json({ success: false, error: err.message || "Failed to load catalogs" }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message || "Failed to load catalogs" }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 

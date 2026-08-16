@@ -10,7 +10,7 @@ export default function Footer() {
   const [settings, setSettings] = useState<SiteSettingsItem>(DEFAULT_SETTINGS);
 
   useEffect(() => {
-    fetch("/api/site-settings")
+    fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) setSettings(json.data);

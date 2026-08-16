@@ -4,12 +4,18 @@ import { getTestimonialsStore, saveTestimonialStore, deleteTestimonialStore } fr
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  "Pragma": "no-cache",
+  "Expires": "0",
+};
+
 export async function GET() {
   try {
     const testimonials = await getTestimonialsStore();
-    return NextResponse.json({ success: true, count: testimonials.length, data: testimonials });
+    return NextResponse.json({ success: true, count: testimonials.length, data: testimonials }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 

@@ -11,6 +11,7 @@ const DEFAULT_ROADMAP_STEPS = [
 
 export default function AboutPage() {
   const [roadmap, setRoadmap] = useState(DEFAULT_ROADMAP_STEPS);
+  const [siteSettings, setSiteSettings] = useState<any>(null);
 
   useEffect(() => {
     fetch(`/api/team?t=${Date.now()}`, { cache: "no-store" })
@@ -18,6 +19,15 @@ export default function AboutPage() {
       .then((json) => {
         if (json.success && json.roadmap && Array.isArray(json.roadmap) && json.roadmap.length > 0) {
           setRoadmap(json.roadmap);
+        }
+      })
+      .catch((e) => console.error(e));
+
+    fetch(`/api/site-settings?t=${Date.now()}`, { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          setSiteSettings(json.data);
         }
       })
       .catch((e) => console.error(e));
@@ -43,9 +53,11 @@ export default function AboutPage() {
       <div className="about-header">
         <div className="about-header__inner">
           <div className="about-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>THE HOUSE — Est. 1990</div>
-          <h1 className="about-header__title" style={{ color: "#81663F" }}>About Us</h1>
+          <h1 className="about-header__title" style={{ color: "#81663F" }}>
+            {siteSettings?.aboutTitle || "About Us"}
+          </h1>
           <p className="about-header__desc">
-            Aaren Intpro is Bengaluru&apos;s premier material house and luxury lifestyle curator, dedicated to providing world-class interior products under one roof.
+            {siteSettings?.aboutSubtitle || "Aaren Intpro is Bengaluru's premier material house and luxury lifestyle curator, dedicated to providing world-class interior products under one roof."}
           </p>
         </div>
       </div>
@@ -60,7 +72,7 @@ export default function AboutPage() {
             </div>
             <h3 className="value-card__title">Our Mission</h3>
             <p className="value-card__text">
-              To provide premium, elite, and high-quality lifestyle products under one roof for the global Indian customer.
+              {siteSettings?.aboutMission || "To provide premium, elite, and high-quality lifestyle products under one roof for the global Indian customer."}
             </p>
           </div>
 
@@ -71,7 +83,7 @@ export default function AboutPage() {
             </div>
             <h3 className="value-card__title">Our Vision</h3>
             <p className="value-card__text">
-              To remain the primary one-stop destination for architects, interior designers, builders, and homeowners seeking world-class materials.
+              {siteSettings?.aboutVision || "To remain the primary one-stop destination for architects, interior designers, builders, and homeowners seeking world-class materials."}
             </p>
           </div>
 
@@ -82,7 +94,7 @@ export default function AboutPage() {
             </div>
             <h3 className="value-card__title">Our Values</h3>
             <p className="value-card__text">
-              Uniting as a family, prioritizing robust value systems, and providing curated designs focusing on unique client experiences.
+              {siteSettings?.aboutValues || "Uniting as a family, prioritizing robust value systems, and providing curated designs focusing on unique client experiences."}
             </p>
           </div>
         </div>

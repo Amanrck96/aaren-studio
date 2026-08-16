@@ -20,7 +20,7 @@ export default function CatalogsPage() {
 
   async function fetchCatalogs() {
     try {
-      const res = await fetch("/api/catalogs");
+      const res = await fetch("/api/catalogs?t=" + Date.now(), { cache: "no-store" });
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
         setCatalogs(json.data);

@@ -4,14 +4,20 @@ import { getBlogsStore, saveBlogStore, deleteBlogStore, reorderBlogsStore } from
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  "Pragma": "no-cache",
+  "Expires": "0",
+};
+
 export async function GET() {
   try {
     const blogs = await getBlogsStore();
     // Sort by sequenceNumber if available
     const sorted = [...blogs].sort((a: any, b: any) => (a.sequenceNumber || 9999) - (b.sequenceNumber || 9999));
-    return NextResponse.json({ success: true, count: sorted.length, data: sorted });
+    return NextResponse.json({ success: true, count: sorted.length, data: sorted }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 

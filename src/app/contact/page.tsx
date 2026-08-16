@@ -1,13 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { DEFAULT_SETTINGS, SiteSettingsItem } from "@/lib/types";
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [settings, setSettings] = useState<SiteSettingsItem>(DEFAULT_SETTINGS);
+
+  useEffect(() => {
+    fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) setSettings(json.data);
+      })
+      .catch((e) => console.error(e));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +77,9 @@ export default function Contact() {
               <div className="info-item__icon"><Mail size={16} /></div>
               <div className="info-item__content">
                 <span className="info-item__label">Email Address</span>
-                <a href="mailto:info@aarenintpro.com" className="info-item__value">info@aarenintpro.com</a>
+                <a href={`mailto:${settings.contactEmail || "info@aarenintpro.com"}`} className="info-item__value">
+                  {settings.contactEmail || "info@aarenintpro.com"}
+                </a>
               </div>
             </div>
 
@@ -74,7 +87,9 @@ export default function Contact() {
               <div className="info-item__icon"><Phone size={16} /></div>
               <div className="info-item__content">
                 <span className="info-item__label">Phone Number</span>
-                <a href="tel:8884464444" className="info-item__value">8884464444</a>
+                <a href={`tel:${settings.contactPhone || "8884464444"}`} className="info-item__value">
+                  {settings.contactPhone || "8884464444"}
+                </a>
               </div>
             </div>
 
@@ -82,7 +97,9 @@ export default function Contact() {
               <div className="info-item__icon"><MapPin size={16} /></div>
               <div className="info-item__content">
                 <span className="info-item__label">Creative Office & Showroom</span>
-                <span className="info-item__value">AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026</span>
+                <span className="info-item__value">
+                  {settings.contactAddress || "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026"}
+                </span>
               </div>
             </div>
           </div>
@@ -91,7 +108,11 @@ export default function Contact() {
           <div className="google-map-container" style={{ position: "relative", height: "28rem", width: "100%", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(0,0,0,0.12)", boxShadow: "0 10px 30px rgba(0,0,0,0.06)" }}>
             <iframe
               title="AAREN INTPRO Google Map Location"
-              src="https://maps.google.com/maps?q=AAREN%20INTPRO%2C%20%23342%2F8%2C%20NTY%20Layout%2C%20Mysore%20Road%2C%20Bangalore%20-%20560026&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              src={
+                settings.googleMapUrl?.includes("output=embed")
+                  ? settings.googleMapUrl
+                  : `https://maps.google.com/maps?q=${encodeURIComponent(settings.contactAddress || "AAREN INTPRO Bangalore")}&t=&z=16&ie=UTF8&iwloc=&output=embed`
+              }
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -102,10 +123,10 @@ export default function Contact() {
             <div style={{ position: "absolute", bottom: "12px", left: "12px", right: "12px", background: "rgba(17, 17, 17, 0.92)", backdropFilter: "blur(8px)", padding: "0.8rem 1.2rem", borderRadius: "6px", color: "#ffffff", display: "flex", justifyContent: "space-between", alignItems: "center", pointerEvents: "auto", flexWrap: "wrap", gap: "0.5rem" }}>
               <div>
                 <div style={{ fontSize: "0.7rem", color: "#c8a96e", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>SHOWROOM & MATERIAL LAB</div>
-                <div style={{ fontSize: "0.85rem", fontWeight: 700, marginTop: "2px" }}>AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026</div>
+                <div style={{ fontSize: "0.85rem", fontWeight: 700, marginTop: "2px" }}>{settings.contactAddress || "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026"}</div>
               </div>
               <a
-                href="https://maps.google.com/?q=AAREN+INTPRO,+#342/8,+NTY+Layout,+Mysore+Road,+Bangalore+-+560026"
+                href={settings.googleMapUrl || `https://maps.google.com/?q=${encodeURIComponent(settings.contactAddress || "AAREN INTPRO Bangalore")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ padding: "0.4rem 0.86rem", background: "#8c764b", color: "#ffffff", borderRadius: "4px", fontSize: "0.75rem", fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" }}

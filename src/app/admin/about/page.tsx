@@ -6,9 +6,11 @@ import { RoadmapStepItem } from "@/lib/types";
 import { Edit2, Trash2, ArrowUp, ArrowDown, Check, X, Plus, Save } from "lucide-react";
 
 export default function AdminAboutPage() {
-  const [mission, setMission] = useState("To redefine Indian architecture through zero-compromise European surface craftsmanship.");
-  const [vision, setVision] = useState("To be India's premier destination for luxury interior materials, smart nano-tech surfaces, and bespoke living systems.");
-  const [values, setValues] = useState("Precision, Authenticity, Sustainability, and Customer Delight.");
+  const [mission, setMission] = useState("To provide premium, elite, and high-quality lifestyle products under one roof for the global Indian customer.");
+  const [vision, setVision] = useState("To remain the primary one-stop destination for architects, interior designers, builders, and homeowners seeking world-class materials.");
+  const [values, setValues] = useState("Uniting as a family, prioritizing robust value systems, and providing curated designs focusing on unique client experiences.");
+  const [aboutTitle, setAboutTitle] = useState("About Us");
+  const [aboutSubtitle, setAboutSubtitle] = useState("Aaren Intpro is Bengaluru's premier material house and luxury lifestyle curator, dedicated to providing world-class interior products under one roof.");
 
   const [roadmap, setRoadmap] = useState<RoadmapStepItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,21 +38,69 @@ export default function AdminAboutPage() {
   async function fetchData() {
     setLoading(true);
     try {
-      const res = await fetch(`/api/team?t=${Date.now()}`, { cache: "no-store" });
-      const json = await res.json();
-      if (json.success && json.roadmap) {
-        setRoadmap(json.roadmap);
+      const [teamRes, settingsRes] = await Promise.all([
+        fetch(`/api/team?t=${Date.now()}`, { cache: "no-store" }),
+        fetch(`/api/site-settings?t=${Date.now()}`, { cache: "no-store" }),
+      ]);
+      const teamJson = await teamRes.json();
+      const settingsJson = await settingsRes.json();
+
+      if (teamJson.success && teamJson.roadmap) {
+        setRoadmap(teamJson.roadmap);
         if (!editingStepId) {
           setStepForm((prev) => ({
             ...prev,
-            stepNumber: `0${json.roadmap.length + 1}`,
+            stepNumber: `0${teamJson.roadmap.length + 1}`,
           }));
         }
+      }
+
+      if (settingsJson.success && settingsJson.data) {
+        const d = settingsJson.data;
+        if (d.aboutMission) setMission(d.aboutMission);
+        if (d.aboutVision) setVision(d.aboutVision);
+        if (d.aboutValues) setValues(d.aboutValues);
+        if (d.aboutTitle) setAboutTitle(d.aboutTitle);
+        if (d.aboutSubtitle) setAboutSubtitle(d.aboutSubtitle);
       }
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleSaveAboutTexts() {
+    setSaving(true);
+    try {
+      const currentRes = await fetch("/api/site-settings");
+      const currentJson = await currentRes.json();
+      const currentSettings = currentJson.success ? currentJson.data : {};
+
+      const payload = {
+        ...currentSettings,
+        aboutTitle,
+        aboutSubtitle,
+        aboutMission: mission,
+        aboutVision: vision,
+        aboutValues: values,
+      };
+
+      const res = await fetch("/api/site-settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (json.success) {
+        showToast("🎉 About page text updated & synced live!");
+      } else {
+        showToast("Error: " + (json.error || "Failed to save"));
+      }
+    } catch (e: any) {
+      showToast("Error: " + e.message);
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -180,10 +230,36 @@ export default function AdminAboutPage() {
         {/* Mission, Vision, Values Form */}
         <div style={{ background: "#141418", border: "1px solid #222", borderRadius: "12px", padding: "2rem", marginBottom: "2rem" }}>
           <h2 style={{ fontSize: "1.4rem", marginBottom: "1.5rem", borderBottom: "1px solid #222", paddingBottom: "0.8rem" }}>
-            Mission, Vision & Values
+            About Page Text & Mission, Vision, Values
           </h2>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>
+                  Page Header Title *
+                </label>
+                <input
+                  type="text"
+                  value={aboutTitle}
+                  onChange={(e) => setAboutTitle(e.target.value)}
+                  style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>
+                  Page Subtitle Description *
+                </label>
+                <input
+                  type="text"
+                  value={aboutSubtitle}
+                  onChange={(e) => setAboutSubtitle(e.target.value)}
+                  style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
+            </div>
+
             <div>
               <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>
                 Our Mission *
@@ -221,19 +297,20 @@ export default function AdminAboutPage() {
             </div>
 
             <button
-              onClick={() => showToast("🎉 About page text updated successfully!")}
+              onClick={handleSaveAboutTexts}
+              disabled={saving}
               style={{
                 padding: "0.8rem 1.4rem",
                 background: "#14b8a6",
                 color: "#fff",
                 border: "none",
                 borderRadius: "6px",
-                cursor: "pointer",
+                cursor: saving ? "wait" : "pointer",
                 fontWeight: 700,
                 width: "fit-content",
               }}
             >
-              Save Text Settings
+              {saving ? "Saving Changes..." : "💾 Save About Us Text Settings"}
             </button>
           </div>
         </div>
