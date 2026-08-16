@@ -94,8 +94,8 @@ window.logUserActivity = logUserActivity;
 
 <style>
 :root{
-  --navy:#FAF9F5;--navy-2:#F5F2EB;--surface:#FFFFFF;--surface-2:#F8F6F1;
-  --border:#E5E0D8;--border-strong:#D8D2C5;
+  --navy:#E6E2D8;--navy-2:#DDD9CE;--surface:#FFFFFF;--surface-2:#F4F0E8;
+  --border:#D5CEBE;--border-strong:#C4BCAC;
   --white:#1C1917;--slate:#5E5852;--slate-dim:#8A8279;
   --purple:#7C3AED;--purple-soft:rgba(124,58,237,0.1);
   --blue:#2563EB;--blue-soft:rgba(37,99,235,0.1);
@@ -104,7 +104,7 @@ window.logUserActivity = logUserActivity;
   --red:#DC2626;--red-soft:rgba(220,38,38,0.1);
   --gold:#81663F;--gold-soft:rgba(129,102,63,0.12);
   --radius-lg:16px;--radius-md:12px;--radius-sm:8px;
-  --shadow-glass:0 4px 20px rgba(0,0,0,0.06);
+  --shadow-glass:0 4px 20px rgba(0,0,0,0.05);
   --sidebar-w:240px;
 }
 [data-theme="dark"]{
@@ -114,6 +114,9 @@ window.logUserActivity = logUserActivity;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--navy);color:var(--white);-webkit-font-smoothing:antialiased;}
+h1, h2, h3, h4, .dash-greeting, .card-title, .modal-title, .brand-header, .page h1, .page h2, .page h3 {
+  color: #81663F !important;
+}
 a{color:inherit;text-decoration:none;}
 button{font-family:inherit;cursor:pointer;transition:all .15s;}
 input,select,textarea{font-family:inherit;}
@@ -136,8 +139,8 @@ input,select,textarea{font-family:inherit;}
 .user-role{font-size:10.5px;color:var(--slate-dim);}
 
 /* ──── MAIN AREA ──── */
-.main-wrap{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
-.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:58px;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.main-wrap{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;background:var(--navy);}
+.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:58px;background:rgba(230,226,216,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
 [data-theme="dark"] .topbar{background:rgba(30,29,27,0.92);}
 .topbar-left{display:flex;align-items:center;gap:12px;}
 .breadcrumb{font-size:13px;color:var(--slate-dim);}
@@ -3115,11 +3118,92 @@ function openRoom(room){
 window.openRoom = openRoom;
 
 function renderRoom() {
-  // Room product view
+  const container = document.getElementById('roomProductGrid');
+  if (!container) return;
+
+  const roomName = currentRoom?.name || 'Living Room';
+  const roomSpecs = (state.schedules || []).filter(s => s.room === roomName || s.room === 'All' || !s.room);
+
+  if (roomSpecs.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:36px 16px;color:var(--slate);">
+        <div style="font-size:32px;margin-bottom:8px;">🛋️</div>
+        <div style="font-weight:800;font-size:14px;color:var(--white);">No products specified for ${roomName} yet</div>
+        <p style="font-size:12px;margin:4px 0 14px;">Add luxury tapware, tiles, vanities or custom joinery to this room.</p>
+        <button class="btn-primary sm" onclick="openModal('addProductModal')">+ Add Product to ${roomName}</button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = roomSpecs.map(s => `
+    <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow-glass);">
+      <div>
+        <div style="height:120px;border-radius:8px;overflow:hidden;background:#e5e2dc;margin-bottom:8px;">
+          <img src="${s.img || '/brands/brand_1_1.png'}" style="width:100%;height:100%;object-fit:cover;" alt="">
+        </div>
+        <div style="font-size:13px;font-weight:800;color:var(--white);">${s.name}</div>
+        <div style="font-size:11px;color:var(--slate);margin:2px 0 8px;">${s.supplier || 'Aaren Studio'} · ${s.trade || 'Fixtures'}</div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:8px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:13px;font-weight:800;color:var(--gold);">₹${(s.clientPrice || 0).toLocaleString()}</span>
+        <span class="badge ${s.status === 'Approved' ? 'green' : 'amber'}">${s.status || 'Pending'}</span>
+      </div>
+    </div>
+  `).join('');
 }
+window.renderRoom = renderRoom;
+
 function renderTwin() {
-  // Digital Twin view
+  const treeEl = document.getElementById('twin-tree-content');
+  const canvasEl = document.getElementById('twin-canvas-content');
+
+  if (treeEl) {
+    treeEl.innerHTML = `
+      <div style="font-size:13px;font-weight:800;color:var(--white);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em;">Spatial Room Tree</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        ${ROOM_DATA.map(r => `
+          <div style="padding:10px;border-radius:8px;background:${currentRoom?.name === r.name ? 'var(--surface-2)' : 'transparent'};border:1px solid ${currentRoom?.name === r.name ? 'var(--gold)' : 'var(--border)'};cursor:pointer;transition:all 0.2s;" onclick="openRoom(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong style="font-size:12.5px;color:var(--white);">${r.name}</strong>
+              <span class="badge ${r.status==='done'?'green':'gold'}" style="font-size:9.5px;">${r.progress}%</span>
+            </div>
+            <div style="font-size:11px;color:var(--slate);margin-top:2px;">${r.floor} · ${r.area} · ${r.budget}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  if (canvasEl) {
+    canvasEl.innerHTML = `
+      <div style="width:100%;height:100%;min-height:440px;position:relative;background:#FAF8F5;border-radius:12px;border:1px solid var(--border);padding:20px;overflow:hidden;">
+        <div style="position:absolute;top:16px;left:16px;font-size:12px;font-weight:800;color:var(--slate);letter-spacing:0.05em;text-transform:uppercase;">
+          🏛️ 2D Interactive BIM Floorplan (Level 01 & Level 02)
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:16px;margin-top:40px;height:calc(100% - 50px);">
+          ${ROOM_DATA.map(r => `
+            <div style="background:var(--surface);border:2px dashed ${currentRoom?.name === r.name ? 'var(--gold)' : 'var(--border-strong)'};border-radius:12px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow-glass);" onclick="openRoom(${JSON.stringify(r).replace(/"/g,'&quot;')})" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='${currentRoom?.name === r.name ? 'var(--gold)' : 'var(--border-strong)'}';this.style.transform='none'">
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                  <span class="badge blue" style="font-size:10px;">${r.floor}</span>
+                  <span style="font-size:11px;font-weight:700;color:var(--gold);">${r.area}</span>
+                </div>
+                <h4 style="font-size:15px;font-weight:800;color:var(--white);">${r.name}</h4>
+                <div style="font-size:11.5px;color:var(--slate);margin-top:4px;">Target Budget: ${r.budget}</div>
+              </div>
+              <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:8px;">
+                <span style="font-size:11px;color:var(--green);font-weight:700;">${r.progress}% Complete</span>
+                <span style="font-size:11.5px;color:var(--gold);font-weight:800;">Open Specs →</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
 }
+window.renderTwin = renderTwin;
 
 // ──── ADMIN AUDIT TRAIL ────
 function renderAuditLogs(){

@@ -30,6 +30,7 @@ export default function ProductDetailPage({ params }: Props) {
   const [allProducts, setAllProducts] = useState<ProductItem[]>(DEFAULT_PRODUCTS);
   const [quickViewProduct, setQuickViewProduct] = useState<ProductItem | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   // Gallery state
   const [selectedImgIdx, setSelectedImgIdx] = useState<number>(0);
@@ -65,6 +66,10 @@ export default function ProductDetailPage({ params }: Props) {
 
   // Fetch product & all catalog data
   useEffect(() => {
+    try {
+      setIsAdmin(localStorage.getItem("aaren_admin_auth") === "true" || localStorage.getItem("aaren_admin_logged_in") === "true");
+    } catch(e) {}
+
     fetch("/api/products?t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
@@ -75,14 +80,25 @@ export default function ProductDetailPage({ params }: Props) {
           const mergedList = Array.from(mergedMap.values());
           setAllProducts(mergedList);
 
-          const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
-          const match = mergedList.find(
-            (p: ProductItem) =>
-              p.id === slug ||
-              norm(p.id) === norm(slug) ||
-              norm(p.name) === norm(slug) ||
-              norm(p.name).includes(norm(slug))
-          );
+          const cleanSlug = decodeURIComponent(slug).toLowerCase().trim();
+          const slugNorm = cleanSlug.replace(/[^a-z0-9]/g, "");
+
+          const match = mergedList.find((p: ProductItem) => {
+            const pId = (p.id || "").toLowerCase();
+            const pName = (p.name || "").toLowerCase();
+            const pSlug = (p as any).slug ? (p as any).slug.toLowerCase() : pName.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+            const pNameNorm = pName.replace(/[^a-z0-9]/g, "");
+            const pIdNorm = pId.replace(/[^a-z0-9]/g, "");
+
+            return (
+              pId === cleanSlug ||
+              pSlug === cleanSlug ||
+              pNameNorm === slugNorm ||
+              pIdNorm === slugNorm ||
+              (slugNorm.length > 5 && pNameNorm.includes(slugNorm)) ||
+              (slugNorm.length > 5 && slugNorm.includes(pNameNorm))
+            );
+          });
 
           if (match) {
             setProduct(match);
@@ -393,27 +409,29 @@ export default function ProductDetailPage({ params }: Props) {
               <ChevronRight size={10} />
               <span>{product.brand}</span>
             </div>
-            <Link
-              href={`/admin/products/${product.id}`}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "6px 12px",
-                background: "#f1f5f9",
-                border: "1px solid #cbd5e1",
-                borderRadius: "6px",
-                fontSize: "11px",
-                fontWeight: 700,
-                color: "#1e1e1e",
-                textDecoration: "none",
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                transition: "all 0.2s",
-              }}
-            >
-              ✏️ Edit in Admin
-            </Link>
+            {isAdmin && (
+              <Link
+                href={`/admin/products/${product.id}`}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "6px 12px",
+                  background: "#f1f5f9",
+                  border: "1px solid #cbd5e1",
+                  borderRadius: "6px",
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  color: "#1e1e1e",
+                  textDecoration: "none",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  transition: "all 0.2s",
+                }}
+              >
+                ✏️ Edit in Admin
+              </Link>
+            )}
           </div>
 
           <h1 className="product-title">{product.name}</h1>

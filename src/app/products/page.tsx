@@ -165,12 +165,47 @@ function ProductsContent() {
         selectedBrands.some((sb) => normBrand.includes(sb) || sb.includes(normBrand));
 
       // Category & Collection/Tags filter
-      const matchesCategory =
-        selectedCategory === "All" ||
-        normCat.includes(selectedCategory.toLowerCase()) ||
-        selectedCategory.toLowerCase().includes(normCat) ||
-        (p.subcategory && p.subcategory.toLowerCase().includes(selectedCategory.toLowerCase())) ||
-        (p.tags && p.tags.some((t) => t.toLowerCase().includes(selectedCategory.toLowerCase())));
+      const normCatQuery = (selectedCategory || "").toLowerCase().trim();
+      let matchesCategory = selectedCategory === "All" || !normCatQuery;
+
+      if (!matchesCategory) {
+        const normBrandLower = (p.brand || "").toLowerCase();
+        const normSubCat = (p.subcategory || "").toLowerCase();
+
+        if (normCat.includes(normCatQuery) || normCatQuery.includes(normCat)) {
+          matchesCategory = true;
+        } else if (normSubCat && (normSubCat.includes(normCatQuery) || normCatQuery.includes(normSubCat))) {
+          matchesCategory = true;
+        } else if (Boolean(p.tags && p.tags.some((t) => t.toLowerCase().includes(normCatQuery) || normCatQuery.includes(t.toLowerCase())))) {
+          matchesCategory = true;
+        } else if (normCatQuery.includes("plywood") || normCatQuery === "ply") {
+          matchesCategory = normName.includes("ply") || normCat.includes("ply") || normBrandLower.includes("peelply") || Boolean(p.tags && p.tags.some((t) => t.toLowerCase().includes("ply")));
+        } else if (normCatQuery.includes("facade")) {
+          matchesCategory = normCat.includes("cladding") || normCat.includes("decking") || normName.includes("facade") || normName.includes("beam") || normName.includes("cladding") || Boolean(p.tags && p.tags.some((t) => t.toLowerCase().includes("facade")));
+        } else if (normCatQuery.includes("laminate") || normCatQuery.includes("decorative")) {
+          matchesCategory = normCat.includes("surface") || normCat.includes("laminate") || normName.includes("laminate") || normName.includes("fenix") || normName.includes("vis") || normBrandLower.includes("formica");
+        } else if (normCatQuery.includes("floor") || normCatQuery.includes("wood")) {
+          matchesCategory = normCat.includes("floor") || normName.includes("floor") || normBrandLower.includes("mafi");
+        } else if (normCatQuery.includes("screen") || normCatQuery.includes("zipline")) {
+          matchesCategory = normCat.includes("screen") || normName.includes("screen") || normBrandLower.includes("freedom");
+        } else if (normCatQuery.includes("door")) {
+          matchesCategory = normCat.includes("door") || normName.includes("door") || Boolean(normSubCat && normSubCat.includes("door"));
+        } else if (normCatQuery.includes("window")) {
+          matchesCategory = normCat.includes("window") || normName.includes("window");
+        } else if (normCatQuery.includes("kitchen")) {
+          matchesCategory = normCat.includes("kitchen") || normName.includes("kitchen") || Boolean(normSubCat && normSubCat.includes("kitchen"));
+        } else if (normCatQuery.includes("wardrobe")) {
+          matchesCategory = normCat.includes("wardrobe") || normName.includes("wardrobe");
+        } else if (normCatQuery.includes("tile")) {
+          matchesCategory = normCat.includes("tile") || normName.includes("tile") || normName.includes("slab") || normBrandLower.includes("mirage") || normBrandLower.includes("wow") || normBrandLower.includes("living");
+        } else if (normCatQuery.includes("bath") || normCatQuery.includes("sanitary")) {
+          matchesCategory = normCat.includes("bath") || normCat.includes("basin") || normCat.includes("shower") || normBrandLower.includes("falper") || normBrandLower.includes("fima");
+        } else if (normCatQuery.includes("mirror")) {
+          matchesCategory = normCat.includes("mirror") || normName.includes("mirror") || normBrandLower.includes("waltz");
+        } else {
+          matchesCategory = normName.includes(normCatQuery);
+        }
+      }
 
       // Query filter
       const matchesQuery =
@@ -204,7 +239,28 @@ function ProductsContent() {
       counts[c] = (counts[c] || 0) + 1;
     });
 
-    const defaultCategories = ["All", "Decking", "Cladding", "Surfaces", "Bathroom", "Flooring", "Doors", "Kitchen", "Tiles"];
+    const defaultCategories = [
+      "All",
+      "Plywood",
+      "Laminate",
+      "Facade",
+      "Decking",
+      "Cladding",
+      "Surfaces",
+      "Wooden Flooring",
+      "Flooring",
+      "Screens",
+      "Doors",
+      "Door System",
+      "Windows",
+      "Kitchen",
+      "Wardrobe",
+      "Tiles",
+      "Bathroom Fittings",
+      "Sanitary Ware",
+      "Mirrors",
+      "Bathroom",
+    ];
     const allCatNames = Array.from(new Set([...defaultCategories, ...Object.keys(counts)]));
 
     return allCatNames.map((catName) => ({
@@ -447,7 +503,7 @@ function ProductsContent() {
               </div>
             ) : (
               paginatedProducts.map((prod) => {
-                const prodSlug = prod.id || prod.name.toLowerCase().replace(/\s+/g, "-");
+                const prodSlug = (prod as any).slug || (prod.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || prod.id;
                 const coverColor = (prod as any).coverColor || "#e2e8f0";
 
                 return (

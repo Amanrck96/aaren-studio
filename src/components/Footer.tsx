@@ -160,7 +160,9 @@ export default function Footer() {
         }}
       >
         <span style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em" }}>
-          {settings.copyrightText}
+          {settings.copyrightText && !settings.copyrightText.toLowerCase().includes("midas")
+            ? settings.copyrightText
+            : "AAREN © 2026. All rights reserved."}
         </span>
 
         {/* Social media icons redirecting to official channels */}

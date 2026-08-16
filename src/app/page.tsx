@@ -455,6 +455,78 @@ export default function Home() {
     return () => ctx.revert();
   }, []);
 
+  const getCategoryHref = (cat: { id?: string; name: string }) => {
+    return `/products?category=${encodeURIComponent(cat.name)}`;
+  };
+
+  const getBrandHref = (brand: { id?: string; name?: string; slug?: string }) => {
+    const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    const idNorm = norm(brand.id || "");
+    const nameNorm = norm(brand.name || "");
+
+    if (idNorm === "newtech" || idNorm.includes("newtech") || nameNorm.includes("newtech") || nameNorm.includes("new-tech") || nameNorm.includes("new tech")) {
+      return "/brands/newtech-wood";
+    }
+    if (idNorm === "inkiostro" || idNorm.includes("inkiostro") || nameNorm.includes("inkiostro")) {
+      return "/brands/inkiostro-bianco";
+    }
+    if (idNorm === "peelply" || idNorm.includes("peelply") || nameNorm.includes("peelply") || nameNorm.includes("peel ply")) {
+      return "/brands/peelply";
+    }
+    if (idNorm === "freedom" || idNorm.includes("freedom") || nameNorm.includes("freedom")) {
+      return "/brands/freedom-screens";
+    }
+    if (idNorm === "living-ceramica" || nameNorm.includes("living ceramic")) {
+      return "/brands/living-ceramica";
+    }
+    if (idNorm === "alex-turco" || nameNorm.includes("alex turco")) {
+      return "/brands/alex-turco";
+    }
+    if (idNorm === "fima" || nameNorm.includes("fima")) {
+      return "/brands/fima";
+    }
+    if (idNorm === "falper" || nameNorm.includes("falper")) {
+      return "/brands/falper";
+    }
+    if (idNorm === "formica" || nameNorm.includes("formica")) {
+      return "/brands/formica";
+    }
+    if (idNorm === "slashform" || nameNorm.includes("slashform")) {
+      return "/brands/slashform";
+    }
+    if (idNorm === "waltz" || nameNorm.includes("waltz")) {
+      return "/brands/waltz";
+    }
+    if (idNorm === "loco" || nameNorm.includes("loco")) {
+      return "/brands/loco";
+    }
+    if (idNorm === "mafi" || nameNorm.includes("mafi")) {
+      return "/brands/mafi";
+    }
+    if (idNorm === "mirage" || nameNorm.includes("mirage")) {
+      return "/brands/mirage";
+    }
+    if (idNorm === "inclass" || nameNorm.includes("inclass")) {
+      return "/brands/inclass";
+    }
+    if (idNorm === "wow" || nameNorm.includes("wow")) {
+      return "/brands/wow";
+    }
+    if (idNorm === "iww" || nameNorm.includes("iww")) {
+      return "/brands/iww";
+    }
+    if (idNorm === "florim" || nameNorm.includes("florim")) {
+      return "/brands/florim";
+    }
+    if (idNorm === "gelli" || nameNorm.includes("gelli")) {
+      return "/brands/gelli";
+    }
+    if (idNorm === "jacuzzi" || nameNorm.includes("jacuzzi")) {
+      return "/brands/jacuzzi";
+    }
+    return `/brands/${brand.slug || brand.id || nameNorm}`;
+  };
+
   const hovProject = projectsList.find((p) => p.slug === hovered);
 
   return (
@@ -599,16 +671,18 @@ export default function Home() {
             }}
           >
             {(siteSettings?.heroCategories || SERVICES).map((svc, i) => (
-              <span
+              <Link
                 key={i}
+                href={`/products?category=${encodeURIComponent(svc)}`}
                 className="btn btn--secondary"
                 style={{
                   fontSize: "1.1rem",
                   padding: "0.6rem 1.2rem",
+                  textDecoration: "none",
                 }}
               >
                 {svc}
-              </span>
+              </Link>
             ))}
           </div>
         </div>
@@ -771,7 +845,7 @@ export default function Home() {
             {categoriesList.map((cat) => (
               <Link
                 key={cat.id}
-                href="/products"
+                href={getCategoryHref(cat)}
                 id={`home-cat-${cat.id}`}
                 style={{
                   flex: `0 0 ${100 / catTotal}%`,
@@ -862,7 +936,7 @@ export default function Home() {
           {brandsList.slice(0, 4).map((brand, i) => (
             <Link
               key={brand.id}
-              href="/brands"
+              href={getBrandHref(brand)}
               id={`home-brand-top-${brand.id}`}
               style={{
                 display: "flex",
@@ -897,7 +971,7 @@ export default function Home() {
           {brandsList.slice(4, 6).map((brand, i) => (
             <Link
               key={brand.id}
-              href="/brands"
+              href={getBrandHref(brand)}
               id={`home-brand-bot-${brand.id}`}
               style={{
                 display: "flex",

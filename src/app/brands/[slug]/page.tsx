@@ -459,14 +459,16 @@ export default function BrandDetailPage({ params }: Props) {
                 className={`bd-product-grid${mounted ? " is-mounted" : ""}`}
                 style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "1.5rem" }}
               >
-                {paginatedProducts.map((product, i) => (
-                  <Link
-                    href={`/products/${product.id}`}
-                    key={product.id}
-                    className="bd-product-card"
-                    style={{ animationDelay: `${i * 0.04}s`, textDecoration: "none", color: "inherit" }}
-                    id={`brand-product-${product.id}`}
-                  >
+                {paginatedProducts.map((product, i) => {
+                  const prodSlug = (product as any).slug || (product.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || product.id;
+                  return (
+                    <Link
+                      href={`/products/${prodSlug}`}
+                      key={product.id}
+                      className="bd-product-card"
+                      style={{ animationDelay: `${i * 0.04}s`, textDecoration: "none", color: "inherit" }}
+                      id={`brand-product-${product.id}`}
+                    >
                     {/* Image area */}
                     <div className="bd-product-card__swatch" style={{ height: "260px", position: "relative" }}>
                       {product.image ? (
@@ -501,8 +503,9 @@ export default function BrandDetailPage({ params }: Props) {
                       )}
                     </div>
                   </Link>
-                ))}
-              </div>
+                );
+              })}
+            </div>
 
               {/* Pagination (20 products per page) */}
               {totalPages > 1 && (
