@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PdfCatalogItem } from "@/lib/types";
+import OnScreenPdfViewer from "./OnScreenPdfViewer";
 
 interface Props {
   catalog: PdfCatalogItem | null;
@@ -28,20 +29,6 @@ export function getPdfCoverThumbnail(url?: string, title?: string): string {
     return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`;
   }
   return "/catalogs/thumbnails/aquarelle_thumb.jpg";
-}
-
-export function getProtectedPdfViewerUrl(url: string): string {
-  if (!url) return "";
-  const trimmed = url.trim();
-  const driveMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/id=([a-zA-Z0-9_-]+)/);
-  if (driveMatch && driveMatch[1]) {
-    return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
-  }
-  if (trimmed.startsWith("/") || trimmed.startsWith("http")) {
-    const cleanUrl = trimmed.split("#")[0];
-    return `${cleanUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`;
-  }
-  return `/catalogs/${trimmed}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`;
 }
 
 export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Props) {
@@ -97,7 +84,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
   }
 
   const thumbUrl = catalog.thumbnailUrl || getPdfCoverThumbnail(catalog.fileUrl, catalog.title);
-  const viewerUrl = getProtectedPdfViewerUrl(catalog.fileUrl || `/catalogs/${catalog.fileName}`);
+  const pdfUrl = catalog.fileUrl || `/catalogs/${catalog.fileName}`;
 
   return (
     <div
@@ -107,151 +94,71 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
         left: 0,
         right: 0,
         bottom: 0,
-        background: "rgba(0, 0, 0, 0.85)",
+        background: "rgba(0, 0, 0, 0.88)",
         backdropFilter: "blur(10px)",
         zIndex: 9999,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: unlocked ? "1rem" : "1.5rem",
+        padding: unlocked ? "0.8rem" : "1.5rem",
       }}
       onClick={onClose}
     >
       <div
         style={{
-          background: "#FFFFFF",
+          background: unlocked ? "#0F1117" : "#FFFFFF",
           borderRadius: "16px",
-          maxWidth: unlocked ? "1200px" : "680px",
+          maxWidth: unlocked ? "1280px" : "680px",
           width: "100%",
-          height: unlocked ? "92vh" : "auto",
-          maxHeight: "94vh",
+          height: unlocked ? "94vh" : "auto",
+          maxHeight: "96vh",
           overflow: "hidden",
-          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.35)",
+          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.4)",
           display: unlocked ? "flex" : "grid",
           flexDirection: unlocked ? "column" : undefined,
           gridTemplateColumns: unlocked ? undefined : "240px 1fr",
           border: "1px solid #E8E3D7",
           position: "relative",
-          padding: unlocked ? "1.5rem" : 0,
+          padding: unlocked ? "0" : 0,
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "16px",
-            background: "rgba(0, 0, 0, 0.06)",
-            border: "none",
-            fontSize: "1.2rem",
-            cursor: "pointer",
-            color: "#666",
-            width: "34px",
-            height: "34px",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 30,
-            transition: "all 0.2s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#EF4444";
-            e.currentTarget.style.color = "#FFFFFF";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(0, 0, 0, 0.06)";
-            e.currentTarget.style.color = "#666";
-          }}
-        >
-          ×
-        </button>
-
-        {unlocked ? (
-          /* Unlocked On-Screen Preview Player (All Pages Scrollable, View-Only, No Downloads) */
-          <div style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "0.8rem",
-                borderBottom: "1px solid #E8E3D7",
-                paddingBottom: "0.6rem",
-                flexWrap: "wrap",
-                gap: "0.6rem",
-              }}
-            >
-              <div>
-                <span
-                  style={{
-                    fontSize: "0.72rem",
-                    background: "rgba(200, 169, 110, 0.2)",
-                    color: "#81663F",
-                    border: "1px solid rgba(200, 169, 110, 0.4)",
-                    padding: "0.15rem 0.55rem",
-                    borderRadius: "4px",
-                    fontWeight: 800,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  ✓ Full Catalogue On-Screen Access Unlocked
-                </span>
-                <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "0.25rem 0 0 0", color: "#81663F" }}>
-                  {catalog.title} — {catalog.brand}
-                </h3>
-              </div>
-
-              <div style={{ display: "flex", gap: "0.8rem", alignItems: "center", marginRight: "45px" }}>
-                <span style={{ fontSize: "0.75rem", color: "#8A8279", fontWeight: 600 }}>
-                  📄 Scroll to browse all {catalog.pageCount || ""} pages • 🔒 View-Only Mode
-                </span>
-                <button
-                  onClick={onClose}
-                  style={{
-                    background: "#81663F",
-                    color: "#FFFFFF",
-                    border: "none",
-                    padding: "0.45rem 1.1rem",
-                    borderRadius: "6px",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    fontSize: "0.82rem",
-                  }}
-                >
-                  Done / Close
-                </button>
-              </div>
-            </div>
-
-            {/* Embedded View-Only PDF Viewer (All Pages Scrollable) */}
-            <div
-              onContextMenu={(e) => e.preventDefault()}
-              style={{
-                flex: 1,
-                minHeight: "68vh",
-                background: "#0F172A",
-                borderRadius: "8px",
-                overflow: "hidden",
-                border: "1px solid #E8E3D7",
-                position: "relative",
-              }}
-            >
-              <iframe
-                title={`${catalog.title} On-Screen Full Catalogue Preview`}
-                src={viewerUrl}
-                width="100%"
-                height="100%"
-                style={{ border: 0, minHeight: "68vh" }}
-                allowFullScreen={true}
-              />
-            </div>
-          </div>
-        ) : (
+        {!unlocked ? (
           /* Mandatory Enquiry Form with Page 1 Cover Preview */
           <>
+            {/* Close Button */}
+            <button
+              onClick={onClose}
+              style={{
+                position: "absolute",
+                top: "16px",
+                right: "16px",
+                background: "rgba(0, 0, 0, 0.06)",
+                border: "none",
+                fontSize: "1.2rem",
+                cursor: "pointer",
+                color: "#666",
+                width: "34px",
+                height: "34px",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 30,
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#EF4444";
+                e.currentTarget.style.color = "#FFFFFF";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(0, 0, 0, 0.06)";
+                e.currentTarget.style.color = "#666";
+              }}
+            >
+              ×
+            </button>
+
             {/* Left Thumbnail & Info Bar */}
             <div
               style={{
@@ -484,6 +391,13 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
               </div>
             </div>
           </>
+        ) : (
+          /* Unlocked On-Screen Canvas Preview Player (All Pages Scrollable, Zero Downloads) */
+          <OnScreenPdfViewer
+            pdfUrl={pdfUrl}
+            title={`${catalog.title} — ${catalog.brand}`}
+            onClose={onClose}
+          />
         )}
       </div>
     </div>
