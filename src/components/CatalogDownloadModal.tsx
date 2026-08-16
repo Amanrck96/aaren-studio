@@ -39,9 +39,9 @@ export function getProtectedPdfViewerUrl(url: string): string {
   }
   if (trimmed.startsWith("/") || trimmed.startsWith("http")) {
     const cleanUrl = trimmed.split("#")[0];
-    return `${cleanUrl}#toolbar=0&navpanes=0&scrollbar=1&page=1`;
+    return `${cleanUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`;
   }
-  return `/catalogs/${trimmed}#toolbar=0&navpanes=0&scrollbar=1&page=1`;
+  return `/catalogs/${trimmed}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`;
 }
 
 export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Props) {
@@ -121,9 +121,9 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
         style={{
           background: "#FFFFFF",
           borderRadius: "16px",
-          maxWidth: unlocked ? "1100px" : "680px",
+          maxWidth: unlocked ? "1200px" : "680px",
           width: "100%",
-          height: unlocked ? "90vh" : "auto",
+          height: unlocked ? "92vh" : "auto",
           maxHeight: "94vh",
           overflow: "hidden",
           boxShadow: "0 25px 60px rgba(0, 0, 0, 0.35)",
@@ -169,7 +169,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
         </button>
 
         {unlocked ? (
-          /* Unlocked On-Screen Page 1 Preview Player (View-Only) */
+          /* Unlocked On-Screen Preview Player (All Pages Scrollable, View-Only, No Downloads) */
           <div style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
             <div
               style={{
@@ -197,7 +197,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                     letterSpacing: "0.05em",
                   }}
                 >
-                  ✓ On-Screen Page 1 Preview
+                  ✓ Full Catalogue On-Screen Access Unlocked
                 </span>
                 <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "0.25rem 0 0 0", color: "#81663F" }}>
                   {catalog.title} — {catalog.brand}
@@ -206,7 +206,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
 
               <div style={{ display: "flex", gap: "0.8rem", alignItems: "center", marginRight: "45px" }}>
                 <span style={{ fontSize: "0.75rem", color: "#8A8279", fontWeight: 600 }}>
-                  🔒 View-Only Mode (Downloads Disabled)
+                  📄 Scroll to browse all {catalog.pageCount || ""} pages • 🔒 View-Only Mode
                 </span>
                 <button
                   onClick={onClose}
@@ -221,17 +221,17 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                     fontSize: "0.82rem",
                   }}
                 >
-                  Done
+                  Done / Close
                 </button>
               </div>
             </div>
 
-            {/* Embedded View-Only PDF Viewer Starting from Page 1 */}
+            {/* Embedded View-Only PDF Viewer (All Pages Scrollable) */}
             <div
               onContextMenu={(e) => e.preventDefault()}
               style={{
                 flex: 1,
-                minHeight: "65vh",
+                minHeight: "68vh",
                 background: "#0F172A",
                 borderRadius: "8px",
                 overflow: "hidden",
@@ -240,17 +240,17 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
               }}
             >
               <iframe
-                title={`${catalog.title} On-Screen Page 1 Preview`}
+                title={`${catalog.title} On-Screen Full Catalogue Preview`}
                 src={viewerUrl}
                 width="100%"
                 height="100%"
-                style={{ border: 0, minHeight: "65vh" }}
+                style={{ border: 0, minHeight: "68vh" }}
                 allowFullScreen={true}
               />
             </div>
           </div>
         ) : (
-          /* Gated Enquiry Form with Page 1 Cover Preview */
+          /* Mandatory Enquiry Form with Page 1 Cover Preview */
           <>
             {/* Left Thumbnail & Info Bar */}
             <div
@@ -301,7 +301,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                     letterSpacing: "0.05em",
                   }}
                 >
-                  PAGE 1 PREVIEW
+                  PAGE 1 COVER
                 </div>
               </div>
 
@@ -474,7 +474,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                       transition: "all 0.2s ease",
                     }}
                   >
-                    {loading ? "Unlocking Preview..." : "Preview Catalogue On-Screen (Page 1)"}
+                    {loading ? "Unlocking Preview..." : "Unlock Full Catalogue On-Screen Preview 📖"}
                   </button>
                 </form>
               </div>
