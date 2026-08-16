@@ -8,6 +8,27 @@ type Props = {
   onClose: () => void;
 };
 
+export function getPdfCoverThumbnail(url: string, title?: string): string {
+  const combined = `${url || ""} ${title || ""}`.toLowerCase();
+  if (combined.includes("aquarelle")) return "/catalogs/thumbnails/aquarelle_thumb.jpg";
+  if (combined.includes("bits")) return "/catalogs/thumbnails/bits_thumb.jpg";
+  if (combined.includes("nouvelle") || combined.includes("nouveau")) return "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg";
+  if (combined.includes("sabil")) return "/catalogs/thumbnails/catalogo-sabil_thumb.jpg";
+  if (combined.includes("terre")) return "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
+  if (combined.includes("vestige")) return "/catalogs/thumbnails/catalogo-vestige_thumb.jpg";
+  if (combined.includes("60 degree") || combined.includes("60grados") || combined.includes("60 grados")) return "/catalogs/thumbnails/catalogo60grados_thumb.jpg";
+  if (combined.includes("materia") || combined.includes("prima") || combined.includes("inkiostro")) return "/catalogs/thumbnails/catalogo_materiaprima_2026_2a_thumb.jpg";
+  if (combined.includes("bejmat")) return "/catalogs/thumbnails/catalogobejmat_thumb.jpg";
+  if (combined.includes("clay") || combined.includes("elysian") || combined.includes("mirage")) return "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg";
+  if (combined.includes("arpa") || combined.includes("vis") || combined.includes("fenix") || combined.includes("formica")) return "/catalogs/thumbnails/arpa-vis-brochure_250122_thumb.jpg";
+  
+  const driveMatch = (url || "").match(/\/d\/([a-zA-Z0-9_-]+)/) || (url || "").match(/id=([a-zA-Z0-9_-]+)/);
+  if (driveMatch && driveMatch[1]) {
+    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`;
+  }
+  return "/catalogs/thumbnails/aquarelle_thumb.jpg";
+}
+
 export function getProtectedPdfViewerUrl(url: string): string {
   if (!url) return "";
   const trimmed = url.trim();
@@ -33,31 +54,20 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
   const [submitting, setSubmitting] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
   const [settings, setSettings] = useState({
-    modalBgColor: "#FFFFFF",
-    modalTextColor: "#1C1917",
-    badgeText: "OFFICIAL CATALOGUE PREVIEW",
-    buttonText: "Preview Catalogue On-Screen",
-    modalTitle: `${itemTitle} — Catalogue Preview`,
-    modalSubtext: "Submit your details below to unlock on-screen digital preview access for this official architectural specification PDF.",
+    badgeText: "PAGE 1 CATALOGUE ENQUIRY",
+    buttonText: "Preview Catalogue On-Screen (Page 1)",
+    modalTitle: `${itemTitle} — Official Catalogue`,
+    modalSubtext: "Please fill in your details below to unlock on-screen digital preview access for this official architectural specification PDF.",
   });
 
   useEffect(() => {
-    // Auto-unlock if user previously submitted enquiry in this session
-    if (typeof window !== "undefined") {
-      const alreadySubmitted = sessionStorage.getItem("aaren_enquiry_submitted");
-      if (alreadySubmitted) {
-        setUnlocked(true);
-      }
-    }
-
+    // ENQUIRY FORM ALWAYS APPEARS FIRST — No sessionStorage bypass
     fetch("/api/catalog-settings")
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) {
           setSettings((prev) => ({
             ...prev,
-            modalBgColor: json.data.modalBgColor || prev.modalBgColor,
-            modalTextColor: json.data.modalTextColor || prev.modalTextColor,
             badgeText: json.data.badgeText ? `📋 ${json.data.badgeText}` : prev.badgeText,
             buttonText: json.data.buttonText || prev.buttonText,
             modalTitle: json.data.modalTitle ? `${json.data.modalTitle} - ${itemTitle}` : prev.modalTitle,
@@ -93,10 +103,6 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
         }),
       });
 
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem("aaren_enquiry_submitted", "true");
-      }
-
       setUnlocked(true);
     } catch (e) {
       console.error("Enquiry submission error:", e);
@@ -106,6 +112,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
     }
   }
 
+  const coverThumb = getPdfCoverThumbnail(catalogPdfUrl, itemTitle);
   const viewerUrl = getProtectedPdfViewerUrl(catalogPdfUrl);
 
   return (
@@ -131,11 +138,11 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
           border: "1px solid #E8E3D7",
           borderRadius: "16px",
           width: "100%",
-          maxWidth: unlocked ? "1200px" : "540px",
-          height: unlocked ? "92vh" : "auto",
+          maxWidth: unlocked ? "1100px" : "540px",
+          height: unlocked ? "90vh" : "auto",
           maxHeight: "94vh",
           overflowY: unlocked ? "hidden" : "auto",
-          padding: unlocked ? "1.5rem" : "2.4rem",
+          padding: unlocked ? "1.5rem" : "2.2rem",
           color: "#1C1917",
           position: "relative",
           boxShadow: "0 25px 60px rgba(0, 0, 0, 0.35)",
@@ -143,6 +150,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
           flexDirection: "column",
         }}
       >
+        {/* Close Button */}
         <button
           onClick={onClose}
           style={{
@@ -160,7 +168,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 20,
+            zIndex: 30,
             transition: "all 0.2s ease",
           }}
           onMouseEnter={(e) => {
@@ -176,48 +184,97 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
         </button>
 
         {!unlocked ? (
+          /* ── STEP 1: ENQUIRY FORM WITH PAGE 1 COVER THUMBNAIL ── */
           <>
+            {/* Page 1 Cover Preview Header */}
             <div
               style={{
-                fontSize: "0.75rem",
-                color: "#81663F",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                fontWeight: 800,
-                marginBottom: "0.5rem",
                 display: "flex",
+                gap: "1.2rem",
                 alignItems: "center",
-                gap: "0.4rem",
+                background: "#FAF9F6",
+                border: "1px solid #E8E3D7",
+                padding: "1rem",
+                borderRadius: "12px",
+                marginBottom: "1.4rem",
               }}
             >
-              📋 {settings.badgeText}
-            </div>
-            <h3
-              style={{
-                fontSize: "1.6rem",
-                fontWeight: 800,
-                lineHeight: 1.25,
-                marginBottom: "0.6rem",
-                color: "#81663F",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              {itemTitle}
-            </h3>
-            <p
-              style={{
-                color: "#5E5852",
-                fontSize: "0.9rem",
-                lineHeight: 1.5,
-                marginBottom: "1.6rem",
-              }}
-            >
-              {settings.modalSubtext}
-            </p>
+              <div
+                style={{
+                  width: "72px",
+                  height: "96px",
+                  borderRadius: "6px",
+                  overflow: "hidden",
+                  border: "1px solid #D8D0BE",
+                  flexShrink: 0,
+                  position: "relative",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                  background: "#181920",
+                }}
+              >
+                <img
+                  src={coverThumb}
+                  alt={`${itemTitle} Page 1 Cover`}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLElement).style.display = "none";
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "2px",
+                    left: "2px",
+                    right: "2px",
+                    background: "rgba(0,0,0,0.8)",
+                    color: "#D4B67D",
+                    fontSize: "0.55rem",
+                    fontWeight: 900,
+                    textAlign: "center",
+                    padding: "1px 0",
+                    borderRadius: "2px",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  PAGE 1
+                </div>
+              </div>
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.8rem", color: "#5E5852", fontWeight: 700, marginBottom: "0.4rem" }}>
+                <div
+                  style={{
+                    fontSize: "0.72rem",
+                    color: "#81663F",
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    fontWeight: 800,
+                    marginBottom: "0.2rem",
+                  }}
+                >
+                  📋 OFFICIAL ARCHITECTURAL CATALOGUE
+                </div>
+                <h3
+                  style={{
+                    fontSize: "1.25rem",
+                    fontWeight: 800,
+                    lineHeight: 1.25,
+                    margin: "0 0 0.3rem 0",
+                    color: "#81663F",
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  {itemTitle}
+                </h3>
+                <p style={{ color: "#5E5852", fontSize: "0.82rem", margin: 0, lineHeight: 1.4 }}>
+                  Fill details below to unlock on-screen Page 1 preview.
+                </p>
+              </div>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.9rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.78rem", color: "#5E5852", fontWeight: 700, marginBottom: "0.3rem" }}>
                   Full Name <span style={{ color: "#EF4444" }}>*</span>
                 </label>
                 <input
@@ -228,20 +285,20 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   style={{
                     width: "100%",
-                    padding: "0.75rem 1rem",
+                    padding: "0.7rem 0.9rem",
                     background: "#FAF9F6",
                     border: "1px solid #D8D0BE",
                     color: "#1C1917",
                     borderRadius: "8px",
-                    fontSize: "0.95rem",
+                    fontSize: "0.9rem",
                     outline: "none",
                   }}
                 />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", color: "#5E5852", fontWeight: 700, marginBottom: "0.4rem" }}>
+                  <label style={{ display: "block", fontSize: "0.78rem", color: "#5E5852", fontWeight: 700, marginBottom: "0.3rem" }}>
                     Work Email <span style={{ color: "#EF4444" }}>*</span>
                   </label>
                   <input
@@ -252,20 +309,20 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     style={{
                       width: "100%",
-                      padding: "0.75rem 1rem",
+                      padding: "0.7rem 0.9rem",
                       background: "#FAF9F6",
                       border: "1px solid #D8D0BE",
                       color: "#1C1917",
                       borderRadius: "8px",
-                      fontSize: "0.95rem",
+                      fontSize: "0.9rem",
                       outline: "none",
                     }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", color: "#5E5852", fontWeight: 700, marginBottom: "0.4rem" }}>
-                    Phone / WhatsApp <span style={{ color: "#EF4444" }}>*</span>
+                  <label style={{ display: "block", fontSize: "0.78rem", color: "#5E5852", fontWeight: 700, marginBottom: "0.3rem" }}>
+                    Phone Number <span style={{ color: "#EF4444" }}>*</span>
                   </label>
                   <input
                     type="tel"
@@ -275,12 +332,12 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     style={{
                       width: "100%",
-                      padding: "0.75rem 1rem",
+                      padding: "0.7rem 0.9rem",
                       background: "#FAF9F6",
                       border: "1px solid #D8D0BE",
                       color: "#1C1917",
                       borderRadius: "8px",
-                      fontSize: "0.95rem",
+                      fontSize: "0.9rem",
                       outline: "none",
                     }}
                   />
@@ -288,7 +345,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.8rem", color: "#5E5852", fontWeight: 700, marginBottom: "0.4rem" }}>
+                <label style={{ display: "block", fontSize: "0.78rem", color: "#5E5852", fontWeight: 700, marginBottom: "0.3rem" }}>
                   Profession / Role
                 </label>
                 <select
@@ -296,12 +353,12 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                   onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
                   style={{
                     width: "100%",
-                    padding: "0.75rem 1rem",
+                    padding: "0.7rem 0.9rem",
                     background: "#FAF9F6",
                     border: "1px solid #D8D0BE",
                     color: "#1C1917",
                     borderRadius: "8px",
-                    fontSize: "0.95rem",
+                    fontSize: "0.9rem",
                     outline: "none",
                   }}
                 >
@@ -315,22 +372,22 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.8rem", color: "#5E5852", fontWeight: 700, marginBottom: "0.4rem" }}>
-                  Project Details / Requirements <span style={{ fontSize: "0.75rem", color: "#8A8279" }}>(Optional)</span>
+                <label style={{ display: "block", fontSize: "0.78rem", color: "#5E5852", fontWeight: 700, marginBottom: "0.3rem" }}>
+                  Project Note <span style={{ fontSize: "0.72rem", color: "#8A8279" }}>(Optional)</span>
                 </label>
                 <textarea
                   rows={2}
-                  placeholder="Tell us briefly about your spatial requirements or project location..."
+                  placeholder="Project location or requirement details..."
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   style={{
                     width: "100%",
-                    padding: "0.75rem 1rem",
+                    padding: "0.65rem 0.9rem",
                     background: "#FAF9F6",
                     border: "1px solid #D8D0BE",
                     color: "#1C1917",
                     borderRadius: "8px",
-                    fontSize: "0.95rem",
+                    fontSize: "0.9rem",
                     outline: "none",
                     resize: "vertical",
                   }}
@@ -341,39 +398,63 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                 type="submit"
                 disabled={submitting}
                 style={{
-                  marginTop: "0.5rem",
-                  padding: "0.95rem",
+                  marginTop: "0.4rem",
+                  padding: "0.9rem",
                   background: "linear-gradient(135deg, #D4B67D 0%, #C8A96E 40%, #B38E46 100%)",
                   color: "#FFFFFF",
                   border: "none",
                   borderRadius: "8px",
                   fontWeight: 800,
-                  fontSize: "1rem",
+                  fontSize: "0.95rem",
                   cursor: submitting ? "wait" : "pointer",
                   boxShadow: "0 6px 20px rgba(184, 147, 85, 0.35)",
                   transition: "all 0.2s ease",
                 }}
               >
-                {submitting ? "Unlocking Preview..." : "View Catalogue On-Screen"}
+                {submitting ? "Unlocking Preview..." : "Preview Catalogue On-Screen (Page 1)"}
               </button>
             </form>
           </>
         ) : (
+          /* ── STEP 2: ON-SCREEN PAGE 1 PREVIEW PLAYER (VIEW-ONLY, NO DOWNLOADS) ── */
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-            {/* Header in Preview Mode */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", borderBottom: "1px solid #E8E3D7", paddingBottom: "0.8rem", flexWrap: "wrap", gap: "0.8rem" }}>
+            {/* Top Bar */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "0.8rem",
+                borderBottom: "1px solid #E8E3D7",
+                paddingBottom: "0.6rem",
+                flexWrap: "wrap",
+                gap: "0.6rem",
+              }}
+            >
               <div>
-                <span style={{ fontSize: "0.75rem", background: "rgba(200, 169, 110, 0.2)", color: "#81663F", border: "1px solid rgba(200, 169, 110, 0.4)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  ✓ On-Screen View-Only Access
+                <span
+                  style={{
+                    fontSize: "0.72rem",
+                    background: "rgba(200, 169, 110, 0.2)",
+                    color: "#81663F",
+                    border: "1px solid rgba(200, 169, 110, 0.4)",
+                    padding: "0.15rem 0.55rem",
+                    borderRadius: "4px",
+                    fontWeight: 800,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  ✓ On-Screen Page 1 Preview
                 </span>
-                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, margin: "0.3rem 0 0 0", color: "#81663F" }}>
-                  {itemTitle} — Official Specification Catalogue
+                <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "0.25rem 0 0 0", color: "#81663F" }}>
+                  {itemTitle}
                 </h3>
               </div>
 
-              <div style={{ display: "flex", gap: "0.8rem", alignItems: "center", marginRight: "35px" }}>
-                <span style={{ fontSize: "0.78rem", color: "#8A8279", fontWeight: 600 }}>
-                  🔒 Protected Digital Preview (Page 1)
+              <div style={{ display: "flex", gap: "0.8rem", alignItems: "center", marginRight: "45px" }}>
+                <span style={{ fontSize: "0.75rem", color: "#8A8279", fontWeight: 600 }}>
+                  🔒 View-Only Mode (Downloads Disabled)
                 </span>
                 <button
                   onClick={onClose}
@@ -381,11 +462,11 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                     background: "#81663F",
                     color: "#FFFFFF",
                     border: "none",
-                    padding: "0.5rem 1.2rem",
+                    padding: "0.45rem 1.1rem",
                     borderRadius: "6px",
                     fontWeight: 700,
                     cursor: "pointer",
-                    fontSize: "0.85rem",
+                    fontSize: "0.82rem",
                   }}
                 >
                   Done
@@ -393,17 +474,25 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
               </div>
             </div>
 
-            {/* Embedded View-Only PDF Viewer Starting from Page 1 */}
+            {/* On-Screen View-Only PDF Viewer Starting from Page 1 */}
             <div
               onContextMenu={(e) => e.preventDefault()}
-              style={{ flex: 1, minHeight: "68vh", background: "#0F172A", borderRadius: "8px", overflow: "hidden", border: "1px solid #E8E3D7", position: "relative" }}
+              style={{
+                flex: 1,
+                minHeight: "65vh",
+                background: "#0F172A",
+                borderRadius: "8px",
+                overflow: "hidden",
+                border: "1px solid #E8E3D7",
+                position: "relative",
+              }}
             >
               <iframe
-                title={`${itemTitle} View-Only PDF Catalogue`}
+                title={`${itemTitle} On-Screen Page 1 Preview`}
                 src={viewerUrl}
                 width="100%"
                 height="100%"
-                style={{ border: 0, minHeight: "68vh" }}
+                style={{ border: 0, minHeight: "65vh" }}
                 allowFullScreen={true}
               />
             </div>

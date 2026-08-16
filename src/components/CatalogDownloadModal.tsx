@@ -9,6 +9,27 @@ interface Props {
   onSuccess?: () => void;
 }
 
+export function getPdfCoverThumbnail(url?: string, title?: string): string {
+  const combined = `${url || ""} ${title || ""}`.toLowerCase();
+  if (combined.includes("aquarelle")) return "/catalogs/thumbnails/aquarelle_thumb.jpg";
+  if (combined.includes("bits")) return "/catalogs/thumbnails/bits_thumb.jpg";
+  if (combined.includes("nouvelle") || combined.includes("nouveau")) return "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg";
+  if (combined.includes("sabil")) return "/catalogs/thumbnails/catalogo-sabil_thumb.jpg";
+  if (combined.includes("terre")) return "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
+  if (combined.includes("vestige")) return "/catalogs/thumbnails/catalogo-vestige_thumb.jpg";
+  if (combined.includes("60 degree") || combined.includes("60grados") || combined.includes("60 grados")) return "/catalogs/thumbnails/catalogo60grados_thumb.jpg";
+  if (combined.includes("materia") || combined.includes("prima") || combined.includes("inkiostro")) return "/catalogs/thumbnails/catalogo_materiaprima_2026_2a_thumb.jpg";
+  if (combined.includes("bejmat")) return "/catalogs/thumbnails/catalogobejmat_thumb.jpg";
+  if (combined.includes("clay") || combined.includes("elysian") || combined.includes("mirage")) return "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg";
+  if (combined.includes("arpa") || combined.includes("vis") || combined.includes("fenix") || combined.includes("formica")) return "/catalogs/thumbnails/arpa-vis-brochure_250122_thumb.jpg";
+  
+  const driveMatch = (url || "").match(/\/d\/([a-zA-Z0-9_-]+)/) || (url || "").match(/id=([a-zA-Z0-9_-]+)/);
+  if (driveMatch && driveMatch[1]) {
+    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`;
+  }
+  return "/catalogs/thumbnails/aquarelle_thumb.jpg";
+}
+
 export function getProtectedPdfViewerUrl(url: string): string {
   if (!url) return "";
   const trimmed = url.trim();
@@ -75,6 +96,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
     }
   }
 
+  const thumbUrl = catalog.thumbnailUrl || getPdfCoverThumbnail(catalog.fileUrl, catalog.title);
   const viewerUrl = getProtectedPdfViewerUrl(catalog.fileUrl || `/catalogs/${catalog.fileName}`);
 
   return (
@@ -99,9 +121,9 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
         style={{
           background: "#FFFFFF",
           borderRadius: "16px",
-          maxWidth: unlocked ? "1200px" : "680px",
+          maxWidth: unlocked ? "1100px" : "680px",
           width: "100%",
-          height: unlocked ? "92vh" : "auto",
+          height: unlocked ? "90vh" : "auto",
           maxHeight: "94vh",
           overflow: "hidden",
           boxShadow: "0 25px 60px rgba(0, 0, 0, 0.35)",
@@ -147,21 +169,44 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
         </button>
 
         {unlocked ? (
-          /* Unlocked On-Screen Protected Preview Player */
+          /* Unlocked On-Screen Page 1 Preview Player (View-Only) */
           <div style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", borderBottom: "1px solid #E8E3D7", paddingBottom: "0.8rem", flexWrap: "wrap", gap: "0.8rem" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "0.8rem",
+                borderBottom: "1px solid #E8E3D7",
+                paddingBottom: "0.6rem",
+                flexWrap: "wrap",
+                gap: "0.6rem",
+              }}
+            >
               <div>
-                <span style={{ fontSize: "0.75rem", background: "rgba(200, 169, 110, 0.2)", color: "#81663F", border: "1px solid rgba(200, 169, 110, 0.4)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  ✓ On-Screen View-Only Access
+                <span
+                  style={{
+                    fontSize: "0.72rem",
+                    background: "rgba(200, 169, 110, 0.2)",
+                    color: "#81663F",
+                    border: "1px solid rgba(200, 169, 110, 0.4)",
+                    padding: "0.15rem 0.55rem",
+                    borderRadius: "4px",
+                    fontWeight: 800,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  ✓ On-Screen Page 1 Preview
                 </span>
-                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, margin: "0.3rem 0 0 0", color: "#81663F" }}>
+                <h3 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "0.25rem 0 0 0", color: "#81663F" }}>
                   {catalog.title} — {catalog.brand}
                 </h3>
               </div>
 
               <div style={{ display: "flex", gap: "0.8rem", alignItems: "center", marginRight: "45px" }}>
-                <span style={{ fontSize: "0.78rem", color: "#8A8279", fontWeight: 600 }}>
-                  🔒 Protected Digital Preview (Page 1)
+                <span style={{ fontSize: "0.75rem", color: "#8A8279", fontWeight: 600 }}>
+                  🔒 View-Only Mode (Downloads Disabled)
                 </span>
                 <button
                   onClick={onClose}
@@ -169,11 +214,11 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                     background: "#81663F",
                     color: "#FFFFFF",
                     border: "none",
-                    padding: "0.5rem 1.2rem",
+                    padding: "0.45rem 1.1rem",
                     borderRadius: "6px",
                     fontWeight: 700,
                     cursor: "pointer",
-                    fontSize: "0.85rem",
+                    fontSize: "0.82rem",
                   }}
                 >
                   Done
@@ -184,20 +229,28 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
             {/* Embedded View-Only PDF Viewer Starting from Page 1 */}
             <div
               onContextMenu={(e) => e.preventDefault()}
-              style={{ flex: 1, minHeight: "68vh", background: "#0F172A", borderRadius: "8px", overflow: "hidden", border: "1px solid #E8E3D7", position: "relative" }}
+              style={{
+                flex: 1,
+                minHeight: "65vh",
+                background: "#0F172A",
+                borderRadius: "8px",
+                overflow: "hidden",
+                border: "1px solid #E8E3D7",
+                position: "relative",
+              }}
             >
               <iframe
-                title={`${catalog.title} View-Only PDF Catalogue`}
+                title={`${catalog.title} On-Screen Page 1 Preview`}
                 src={viewerUrl}
                 width="100%"
                 height="100%"
-                style={{ border: 0, minHeight: "68vh" }}
+                style={{ border: 0, minHeight: "65vh" }}
                 allowFullScreen={true}
               />
             </div>
           </div>
         ) : (
-          /* Gated Enquiry & 1st Page Cover View */
+          /* Gated Enquiry Form with Page 1 Cover Preview */
           <>
             {/* Left Thumbnail & Info Bar */}
             <div
@@ -223,23 +276,17 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                   boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
                   marginBottom: "1rem",
                   border: "1px solid #D8D0BE",
-                  background: "#FFFFFF",
+                  background: "#181920",
                 }}
               >
-                {catalog.thumbnailUrl ? (
-                  <img
-                    src={catalog.thumbnailUrl}
-                    alt={catalog.title}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = "none";
-                    }}
-                  />
-                ) : (
-                  <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2.5rem" }}>
-                    📖
-                  </div>
-                )}
+                <img
+                  src={thumbUrl}
+                  alt={catalog.title}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/aquarelle_thumb.jpg";
+                  }}
+                />
                 <div
                   style={{
                     position: "absolute",
@@ -427,7 +474,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                       transition: "all 0.2s ease",
                     }}
                   >
-                    {loading ? "Unlocking Preview..." : "View Catalogue On-Screen"}
+                    {loading ? "Unlocking Preview..." : "Preview Catalogue On-Screen (Page 1)"}
                   </button>
                 </form>
               </div>
