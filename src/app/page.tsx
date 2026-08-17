@@ -871,12 +871,12 @@ export default function Home() {
                 {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#E6E2D8", transition: "background 0.25s ease" }} className="home-ticket-caption">
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
-                    <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, textTransform: "uppercase", color: "#000" }}>{cat.name}</span>
-                    <span style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.2 }}>{cat.sub}</span>
+                    <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, textTransform: "uppercase", color: "#81663F" }}>{cat.name}</span>
+                    <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.2 }}>{cat.sub}</span>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
-                    <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{cat.code}</span>
-                    <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{cat.num}</span>
+                    <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{cat.code}</span>
+                    <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{cat.num}</span>
                   </div>
                 </div>
               </Link>
@@ -890,9 +890,9 @@ export default function Home() {
             style={{
               position: "absolute", left: "1.6rem", top: "50%", transform: "translateY(-50%)",
               zIndex: 10, width: "5rem", height: "5rem", borderRadius: "50%",
-              background: "rgba(255,255,255,0.92)", border: "0.1rem solid rgba(0,0,0,0.1)",
+              background: "rgba(255,255,255,0.92)", border: "0.1rem solid #D8D0BE",
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "2rem", color: "#000", boxShadow: "0 0.4rem 2rem rgba(0,0,0,0.15)",
+              fontSize: "2rem", color: "#81663F", boxShadow: "0 0.4rem 2rem rgba(0,0,0,0.15)",
               transition: "transform 0.2s ease, box-shadow 0.2s ease",
               backdropFilter: "blur(8px)",
             }}
@@ -906,9 +906,9 @@ export default function Home() {
             style={{
               position: "absolute", right: "1.6rem", top: "50%", transform: "translateY(-50%)",
               zIndex: 10, width: "5rem", height: "5rem", borderRadius: "50%",
-              background: "rgba(255,255,255,0.92)", border: "0.1rem solid rgba(0,0,0,0.1)",
+              background: "rgba(255,255,255,0.92)", border: "0.1rem solid #D8D0BE",
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "2rem", color: "#000", boxShadow: "0 0.4rem 2rem rgba(0,0,0,0.15)",
+              fontSize: "2rem", color: "#81663F", boxShadow: "0 0.4rem 2rem rgba(0,0,0,0.15)",
               transition: "transform 0.2s ease, box-shadow 0.2s ease",
               backdropFilter: "blur(8px)",
             }}
@@ -954,12 +954,12 @@ export default function Home() {
               </div>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.8rem", padding: "1.2rem 0.8rem", background: "#E6E2D8", transition: "background 0.25s ease" }} className="home-ticket-caption">
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                  <span style={{ fontSize: "clamp(1.0rem, 1.1vw, 1.3rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#000" }}>{brand.name}</span>
-                  <span style={{ fontSize: "1.0rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.2 }}>{brand.sub}</span>
+                  <span style={{ fontSize: "clamp(1.0rem, 1.1vw, 1.3rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#81663F" }}>{brand.name}</span>
+                  <span style={{ fontSize: "1.0rem", color: "#5E5852", letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.2 }}>{brand.sub}</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexShrink: 0 }}>
-                  <span style={{ fontSize: "clamp(1.4rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{brand.code}</span>
-                  <span style={{ fontSize: "clamp(1.2rem, 1.8vw, 2.6rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{brand.num}</span>
+                  <span style={{ fontSize: "clamp(1.4rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{brand.code}</span>
+                  <span style={{ fontSize: "clamp(1.2rem, 1.8vw, 2.6rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{brand.num}</span>
                 </div>
               </div>
             </Link>
@@ -1001,12 +1001,12 @@ export default function Home() {
               </div>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem", padding: "1.6rem 1.4rem", background: "#E6E2D8", transition: "background 0.25s ease" }} className="home-ticket-caption">
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                  <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 1.8rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#000" }}>{brand.name}</span>
-                  <span style={{ fontSize: "1.1rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{brand.sub}</span>
+                  <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 1.8rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#81663F" }}>{brand.name}</span>
+                  <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.05em", textTransform: "uppercase" }}>{brand.sub}</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "1.4rem", flexShrink: 0 }}>
-                  <span style={{ fontSize: "clamp(2.8rem, 5vw, 7rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{brand.code}</span>
-                  <span style={{ fontSize: "clamp(2.4rem, 4vw, 6rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{brand.num}</span>
+                  <span style={{ fontSize: "clamp(2.8rem, 5vw, 7rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{brand.code}</span>
+                  <span style={{ fontSize: "clamp(2.4rem, 4vw, 6rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{brand.num}</span>
                 </div>
               </div>
             </Link>
@@ -1023,10 +1023,10 @@ export default function Home() {
         {/* Centered Header bar */}
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
           {/* Centered Title */}
-          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Selected Projects</span>
+          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Selected Projects</span>
 
           {/* Right link */}
-          <Link href="/work" className="t-tag ul-link" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "rgba(0,0,0,0.6)", letterSpacing: "0.08em", fontSize: "1.25rem" }}>View all</Link>
+          <Link href="/work" className="t-tag ul-link" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.25rem", fontWeight: 700 }}>View all</Link>
         </div>
 
         {/* 4-across on desktop, 2-across on mobile */}
@@ -1052,12 +1052,12 @@ export default function Home() {
               </div>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.8rem", padding: "1.2rem 0.8rem", background: "#E6E2D8", transition: "background 0.25s ease" }} className="home-ticket-caption">
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                  <span style={{ fontSize: "clamp(1.0rem, 1.1vw, 1.3rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#000" }}>{project.client}</span>
-                  <span style={{ fontSize: "1.0rem", color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.2 }}>{project.sub}</span>
+                  <span style={{ fontSize: "clamp(1.0rem, 1.1vw, 1.3rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#81663F" }}>{project.client}</span>
+                  <span style={{ fontSize: "1.0rem", color: "#5E5852", letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.2 }}>{project.sub}</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flexShrink: 0 }}>
-                  <span style={{ fontSize: "clamp(1.4rem, 2.2vw, 2.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#000" }}>{project.code}</span>
-                  <span style={{ fontSize: "clamp(1.2rem, 1.8vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(0,0,0,0.18)" }}>{project.num}</span>
+                  <span style={{ fontSize: "clamp(1.4rem, 2.2vw, 2.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{project.code}</span>
+                  <span style={{ fontSize: "clamp(1.2rem, 1.8vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{project.num}</span>
                 </div>
               </div>
             </Link>
@@ -1092,7 +1092,7 @@ export default function Home() {
               fontWeight: 700,
               textTransform: "uppercase",
               lineHeight: 1.0,
-              color: "#000",
+              color: "#81663F",
               marginBottom: "6rem",
             }}
           >
@@ -1105,7 +1105,7 @@ export default function Home() {
             <p
               style={{
                 fontSize: "1.4rem",
-                color: "rgba(0,0,0,0.5)",
+                color: "#5E5852",
                 letterSpacing: "-0.01em",
               }}
             >

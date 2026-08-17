@@ -818,20 +818,21 @@ input,select,textarea{font-family:inherit;}
   </div>
 
   <!-- ======================================================== -->
-  <!-- 3. PROJECT DETAIL (Prestige Villa) -->
+  <!-- 3. PROJECT DETAIL (Active Project) -->
   <!-- ======================================================== -->
   <div class="page" id="page-detail">
     <div class="content-area">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
         <div>
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-            <span class="badge blue">In Progress</span>
-            <span style="font-size:12px;color:var(--slate);">ID: PRJ-001 · Residential Villa</span>
+            <span class="badge blue" id="detailProjectBadge">In Progress</span>
+            <span style="font-size:12px;color:var(--slate);" id="detailProjectId">ID: PRJ-001 · Residential</span>
           </div>
-          <h1 style="font-size:26px;font-weight:900;color:var(--white);">Prestige Villa — Master Residence</h1>
-          <p style="font-size:12.5px;color:var(--slate);margin-top:2px;">Client: Rohan Mehta · ₹86L Budget · 9 Rooms · Bangalore</p>
+          <h1 style="font-size:26px;font-weight:900;color:var(--white);" id="detailProjectTitle">AJK Project</h1>
+          <p style="font-size:12.5px;color:var(--slate);margin-top:2px;" id="detailProjectMeta">Client: Client AJK · Bespoke Architecture</p>
         </div>
-        <div style="display:flex;gap:8px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn-primary sm" onclick="openModal('addRoomModal')">+ Add Room</button>
           <button class="btn-ghost" onclick="goTo('schedules')">📋 Schedules</button>
           <button class="btn-ghost" onclick="goTo('moodboards')">◐ Moodboards</button>
           <button class="btn-ghost" onclick="goTo('client-portal')">👥 Client Link</button>
@@ -840,9 +841,12 @@ input,select,textarea{font-family:inherit;}
       </div>
 
       <!-- Floor by Floor Room Grid -->
-      <h3 style="font-size:14px;font-weight:800;color:var(--slate);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em;">
-        Floor-By-Floor Room Specifications
-      </h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 style="font-size:14px;font-weight:800;color:var(--slate);text-transform:uppercase;letter-spacing:.05em;margin:0;">
+          Floor-By-Floor Room Specifications
+        </h3>
+        <button class="btn-ghost sm" onclick="openModal('addRoomModal')" style="font-size:11px;">+ Add Room Space</button>
+      </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:24px;" id="detailRoomsGrid">
         <!-- Rendered dynamically -->
       </div>
@@ -1321,6 +1325,23 @@ input,select,textarea{font-family:inherit;}
   </div>
 </div>
 
+<!-- Add Room Space Modal -->
+<div class="modal-backdrop" id="addRoomModal">
+  <div class="modal">
+    <div class="modal-title">Add Room Space to Project <button class="modal-close" onclick="closeModal('addRoomModal')">✕</button></div>
+    <form onsubmit="handleAddRoomSpace(event)">
+      <div class="field"><label>Room Space Name *</label><input type="text" id="rmName" required placeholder="e.g. Master Bedroom, Kitchen, Living Room"></div>
+      <div class="field"><label>Floor Level</label><input type="text" id="rmFloor" placeholder="e.g. Ground Floor, First Floor"></div>
+      <div class="field"><label>Area (sqft / sqm)</label><input type="text" id="rmArea" placeholder="e.g. 450 sqft"></div>
+      <div class="field"><label>Allocated Budget (₹)</label><input type="text" id="rmBudget" placeholder="e.g. ₹12L"></div>
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <button type="button" class="btn-ghost" style="flex:1;" onclick="closeModal('addRoomModal')">Cancel</button>
+        <button type="submit" class="btn-primary" style="flex:2;">Create Room Space ✓</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Subscription Plan Modal -->
 <div class="modal-backdrop" id="subscriptionModal">
   <div class="modal" style="max-width:560px;">
@@ -1485,17 +1506,19 @@ function getDefaultPhrases() {
 
 function getDefaultMilestones() {
   return [
-    { id: 'm-1', title: 'Concept Presentation & Moodboards', project: 'Prestige Villa', date: 'Aug 20, 2026', status: 'Completed', color: 'green' },
-    { id: 'm-2', title: 'Detailed Joinery & Lighting Signoff', project: 'Prestige Villa', date: 'Sep 05, 2026', status: 'In Progress', color: 'blue' },
-    { id: 'm-3', title: 'Trade PO Release (Falper & FIMA Italy)', project: 'Prestige Villa', date: 'Sep 25, 2026', status: 'Upcoming', color: 'gold' },
-    { id: 'm-4', title: 'On-Site Marble & Flooring Installation', project: 'Prestige Villa', date: 'Oct 15, 2026', status: 'Scheduled', color: 'purple' },
-    { id: 'm-5', title: 'Final Snagging & Practical Handover', project: 'Prestige Villa', date: 'Nov 10, 2026', status: 'Scheduled', color: 'amber' }
+    { id: 'm-1', title: 'Concept Presentation & Moodboards', project: 'AJK Project', date: 'Aug 20, 2026', status: 'Completed', color: 'green' },
+    { id: 'm-2', title: 'Detailed Joinery & Lighting Signoff', project: 'AJK Project', date: 'Sep 05, 2026', status: 'In Progress', color: 'blue' },
+    { id: 'm-3', title: 'Trade PO Release', project: 'AJK Project', date: 'Sep 25, 2026', status: 'Upcoming', color: 'gold' },
+    { id: 'm-4', title: 'On-Site Marble & Flooring Installation', project: 'AJK Project', date: 'Oct 15, 2026', status: 'Scheduled', color: 'purple' },
+    { id: 'm-5', title: 'Final Snagging & Practical Handover', project: 'AJK Project', date: 'Nov 10, 2026', status: 'Scheduled', color: 'amber' }
   ];
 }
 
 function getBlankWorkspace() {
   return {
-    projects: [],
+    projects: [
+      { id: 'ajk-001', name: 'AJK Project', client: 'Client AJK', type: 'Residential · Bespoke Architecture', status: 'inprogress', statusLabel: 'In Progress', statusColor: 'blue', progress: 60, budget: 'Custom Budget', due: '2026', daysRemaining: 45, pinned: true, cover: '/brands/brand_1_1.png', team: ['Principal Architect'], categories: ['Joinery', 'Surfaces'], rooms: [] }
+    ],
     tasks: [],
     schedules: [],
     moodboards: [],
@@ -1504,7 +1527,7 @@ function getBlankWorkspace() {
     files: [],
     boq: [],
     bookmarks: [
-      { id: 'bm-1', title: '📌 Luxury Villa Inspiration (Pinterest)', url: 'https://pinterest.com', category: 'Moodboard & Inspiration' },
+      { id: 'bm-1', title: '📌 Luxury Architecture Inspiration', url: 'https://pinterest.com', category: 'Moodboard & Inspiration' },
       { id: 'bm-2', title: '📐 DWG & 3D CAD Drive Folder', url: 'https://drive.google.com', category: 'CAD & Elevation Drawings' }
     ],
     phrases: getDefaultPhrases(),
@@ -1516,12 +1539,12 @@ function getBlankWorkspace() {
     ],
     chatMessages: [
       { id: 'cm-1', sender: 'Principal Architect', time: '10:30 AM', text: 'Welcome to the Aaren Studio collaborative chat! You can coordinate specs and client notes here.', isMe: false },
-      { id: 'cm-2', sender: 'Studio Member', time: '10:32 AM', text: 'All Falper vanities and FIMA tapware have been verified with trade markups.', isMe: true }
+      { id: 'cm-2', sender: 'Studio Member', time: '10:32 AM', text: 'All product specifications and moodboards are synced.', isMe: true }
     ],
     presentationMode: 'architect',
     currentStageIndex: 2,
     approvalStatuses: { team: 'Approved', principal: 'Approved', client: 'Pending' },
-    activeProjectId: null
+    activeProjectId: 'ajk-001'
   };
 }
 
@@ -1565,8 +1588,22 @@ window.loadUserWorkspace = async function(user) {
     }
   }
 
-  // Ensure all arrays are initialized
-  state.projects = Array.isArray(state.projects) ? state.projects : [];
+  // Ensure all arrays are initialized and clean up any old dummy mock data
+  if (Array.isArray(state.projects)) {
+    state.projects = state.projects.filter(p => p && !p.name?.toLowerCase().includes("prestige villa") && !p.name?.toLowerCase().includes("altius sky") && !p.name?.toLowerCase().includes("glass pavilion"));
+    if (state.projects.length === 0) {
+      state.projects = [
+        { id: 'ajk-001', name: 'AJK Project', client: 'Client AJK', type: 'Residential · Bespoke Architecture', status: 'inprogress', statusLabel: 'In Progress', statusColor: 'blue', progress: 60, budget: 'Custom Budget', due: '2026', daysRemaining: 45, pinned: true, cover: '/brands/brand_1_1.png', team: ['Principal Architect'], categories: ['Joinery', 'Surfaces'], rooms: [] }
+      ];
+      state.activeProjectId = 'ajk-001';
+    }
+  } else {
+    state.projects = [
+      { id: 'ajk-001', name: 'AJK Project', client: 'Client AJK', type: 'Residential · Bespoke Architecture', status: 'inprogress', statusLabel: 'In Progress', statusColor: 'blue', progress: 60, budget: 'Custom Budget', due: '2026', daysRemaining: 45, pinned: true, cover: '/brands/brand_1_1.png', team: ['Principal Architect'], categories: ['Joinery', 'Surfaces'], rooms: [] }
+    ];
+    state.activeProjectId = 'ajk-001';
+  }
+
   state.tasks = Array.isArray(state.tasks) ? state.tasks : [];
   state.schedules = Array.isArray(state.schedules) ? state.schedules : [];
   state.moodboards = Array.isArray(state.moodboards) ? state.moodboards : [];
@@ -3119,35 +3156,92 @@ function openProjectDetail(projId){
   const proj = state.projects.find(p=>p.id===projId) || state.projects[0];
   if(proj){
     state.activeProjectId = proj.id;
-    const detailTitle = document.querySelector('#page-detail h1');
-    const detailMeta = document.querySelector('#page-detail p');
+    const detailTitle = document.getElementById('detailProjectTitle');
+    const detailMeta = document.getElementById('detailProjectMeta');
+    const detailBadge = document.getElementById('detailProjectBadge');
+    const detailId = document.getElementById('detailProjectId');
     if(detailTitle) detailTitle.textContent = proj.name;
     if(detailMeta) detailMeta.textContent = `Client: ${proj.client} · ${proj.budget} Budget · ${proj.type}`;
+    if(detailBadge) detailBadge.textContent = proj.statusLabel || 'In Progress';
+    if(detailId) detailId.textContent = `ID: ${proj.id} · ${proj.type || 'Residential'}`;
   }
   goTo('detail');
 }
 window.openProjectDetail = openProjectDetail;
 
+function handleAddRoomSpace(event) {
+  event.preventDefault();
+  const name = (document.getElementById('rmName')?.value || '').trim();
+  const floor = (document.getElementById('rmFloor')?.value || '').trim() || 'Ground Floor';
+  const area = (document.getElementById('rmArea')?.value || '').trim() || 'Custom Area';
+  const budget = (document.getElementById('rmBudget')?.value || '').trim() || 'Custom';
+
+  if (!name) {
+    showToast("Please enter a room name", "error");
+    return;
+  }
+
+  const activeProj = state.projects?.find(p => p.id === state.activeProjectId) || state.projects?.[0];
+  if (!activeProj) {
+    showToast("Please select a project first", "error");
+    return;
+  }
+
+  if (!Array.isArray(activeProj.rooms)) {
+    activeProj.rooms = [];
+  }
+
+  activeProj.rooms.push({
+    name,
+    floor,
+    area,
+    budget,
+    progress: 0,
+    status: 'progress'
+  });
+
+  saveState();
+  closeModal('addRoomModal');
+  renderDetailRooms();
+  showToast(`Room "${name}" created for ${activeProj.name}!`, "success");
+}
+window.handleAddRoomSpace = handleAddRoomSpace;
+
 function renderDetailRooms(){
-  const el=document.getElementById('detailRoomsGrid');
-  if(!el)return;
-  el.innerHTML=ROOM_DATA.map(r=>`
+  const el = document.getElementById('detailRoomsGrid');
+  if(!el) return;
+  const activeProj = state.projects?.find(p => p.id === state.activeProjectId) || state.projects?.[0];
+  const rooms = activeProj?.rooms || [];
+
+  if (rooms.length === 0) {
+    el.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:48px 24px;background:var(--surface);border:1px dashed var(--border-strong);border-radius:14px;">
+        <div style="font-size:36px;margin-bottom:10px;">📐</div>
+        <h4 style="font-size:16px;font-weight:900;color:var(--white);margin:0 0 6px 0;">No Room Spaces Added Yet</h4>
+        <p style="font-size:12.5px;color:var(--slate);margin:0 0 16px 0;">Organize specifications by adding room spaces for ${activeProj ? activeProj.name : 'this project'}.</p>
+        <button class="btn-primary sm" onclick="openModal('addRoomModal')">+ Add First Room Space</button>
+      </div>
+    `;
+    return;
+  }
+
+  el.innerHTML = rooms.map(r => `
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;box-shadow:var(--shadow-glass);" onclick="openRoom(${JSON.stringify(r).replace(/"/g,'&quot;')})">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
         <h4 style="font-size:14px;font-weight:800;color:var(--white);">${r.name}</h4>
         <span class="badge ${r.status==='done'?'green':'gold'}">${r.status==='done'?'Completed':'In Progress'}</span>
       </div>
-      <div style="font-size:11.5px;color:var(--slate);">${r.floor} · ${r.area}</div>
-      <div style="font-size:13px;font-weight:800;color:var(--gold);margin-top:10px;">Budget: ${r.budget}</div>
+      <div style="font-size:11.5px;color:var(--slate);">${r.floor || 'Ground Floor'} · ${r.area || 'Custom Area'}</div>
+      <div style="font-size:13px;font-weight:800;color:var(--gold);margin-top:10px;">Budget: ${r.budget || 'Custom'}</div>
     </div>`).join('');
 }
 
 function openRoom(room){
-  currentRoom=room;
+  currentRoom = room;
   const rt = document.getElementById('roomTitle');
   const rm = document.getElementById('roomMeta');
   if(rt) rt.textContent = room.name;
-  if(rm) rm.textContent = `${room.floor} · ${room.area}`;
+  if(rm) rm.textContent = `${room.floor || 'Ground Floor'} · ${room.area || 'Custom Area'}`;
   goTo('room');
 }
 window.openRoom = openRoom;

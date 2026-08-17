@@ -401,8 +401,8 @@ export default function AllProjectsPage() {
 
       <style>{`
         .projects-page {
-          background-color: #0d0d0d;
-          color: #f2f2f2;
+          background-color: #E6E2D8;
+          color: #1C1917;
           min-height: 100vh;
           padding-top: 9rem;
           font-family: var(--font-jost), 'Jost', sans-serif;
@@ -416,16 +416,16 @@ export default function AllProjectsPage() {
           height: 240px;
           border-radius: 0.4rem;
           overflow: hidden;
-          box-shadow: 0 2rem 4rem rgba(0,0,0,0.6);
-          border: 1px solid rgba(255,255,255,0.15);
+          box-shadow: 0 1.5rem 3.5rem rgba(0,0,0,0.25);
+          border: 1px solid #D8D0BE;
           transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .projects-header {
-          padding: 6rem 2.4rem 4rem;
+          padding: 5rem 2.4rem 3.5rem;
           max-width: 1400px;
           margin: 0 auto;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
+          border-bottom: 1px solid #D8D0BE;
         }
 
         .projects-header__top {
@@ -433,29 +433,29 @@ export default function AllProjectsPage() {
           justify-content: space-between;
           align-items: center;
           font-size: 1.1rem;
-          letter-spacing: 0.12em;
-          color: rgba(255,255,255,0.4);
-          font-weight: 700;
-          margin-bottom: 1.6rem;
+          letter-spacing: 0.15em;
+          color: #81663F;
+          font-weight: 800;
+          margin-bottom: 1.4rem;
         }
 
         .projects-title {
-          font-size: clamp(4rem, 11vw, 15rem);
+          font-size: clamp(3.5rem, 9vw, 9.5rem);
           font-weight: 800;
-          letter-spacing: -0.05em;
-          line-height: 0.9;
-          color: #ffffff;
+          letter-spacing: -0.03em;
+          line-height: 0.95;
+          color: #81663F;
           text-transform: uppercase;
-          margin-bottom: 2.4rem;
+          margin-bottom: 2rem;
         }
 
         .projects-desc {
-          font-size: clamp(1.4rem, 2vw, 2rem);
+          font-size: clamp(1.3rem, 1.8vw, 1.8rem);
           line-height: 1.5;
-          color: rgba(255,255,255,0.6);
+          color: #5E5852;
           max-width: 72rem;
-          margin-bottom: 4rem;
-          font-weight: 300;
+          margin-bottom: 3.5rem;
+          font-weight: 400;
         }
 
         .projects-toolbar {
@@ -479,31 +479,31 @@ export default function AllProjectsPage() {
         }
 
         .cat-btn {
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.12);
-          color: rgba(255,255,255,0.7);
-          padding: 0.8rem 1.6rem;
+          background: #FAF9F6;
+          border: 1px solid #D8D0BE;
+          color: #5E5852;
+          padding: 0.75rem 1.6rem;
           border-radius: 999px;
           font-size: 1.2rem;
-          font-weight: 600;
+          font-weight: 700;
           letter-spacing: 0.04em;
           cursor: pointer;
           transition: all 0.25s ease;
         }
 
         .cat-btn:hover {
-          background: rgba(255,255,255,0.15);
-          color: #ffffff;
+          background: #E8E3D7;
+          color: #81663F;
         }
 
         .cat-btn.is-active {
-          background: #ffffff;
-          color: #000000;
-          border-color: #ffffff;
+          background: #81663F;
+          color: #FFFFFF;
+          border-color: #81663F;
         }
 
         .cat-count {
-          opacity: 0.6;
+          opacity: 0.75;
           font-size: 1rem;
         }
 
@@ -522,10 +522,10 @@ export default function AllProjectsPage() {
 
         .search-input {
           width: 100%;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.15);
-          color: #ffffff;
-          padding: 1rem 1.6rem;
+          background: #FAF9F6;
+          border: 1px solid #D8D0BE;
+          color: #1C1917;
+          padding: 0.9rem 1.6rem;
           border-radius: 999px;
           font-size: 1.2rem;
           outline: none;
@@ -533,7 +533,7 @@ export default function AllProjectsPage() {
         }
 
         .search-input:focus {
-          border-color: rgba(255,255,255,0.5);
+          border-color: #81663F;
         }
 
         .search-clear {
@@ -543,23 +543,23 @@ export default function AllProjectsPage() {
           transform: translateY(-50%);
           background: none;
           border: none;
-          color: rgba(255,255,255,0.4);
+          color: #8A8279;
           cursor: pointer;
         }
 
         .view-switcher {
           display: flex;
-          background: rgba(255,255,255,0.06);
+          background: #FAF9F6;
           border-radius: 999px;
           padding: 0.3rem;
-          border: 1px solid rgba(255,255,255,0.12);
+          border: 1px solid #D8D0BE;
         }
 
         .view-btn {
           background: none;
           border: none;
-          color: rgba(255,255,255,0.5);
-          padding: 0.6rem 1.4rem;
+          color: #8A8279;
+          padding: 0.55rem 1.3rem;
           border-radius: 999px;
           font-size: 1.1rem;
           font-weight: 700;
@@ -569,8 +569,8 @@ export default function AllProjectsPage() {
         }
 
         .view-btn.is-active {
-          background: rgba(255,255,255,0.2);
-          color: #ffffff;
+          background: #81663F;
+          color: #FFFFFF;
         }
 
         .projects-main {
@@ -600,27 +600,28 @@ export default function AllProjectsPage() {
         }
 
         .project-card {
-          background: rgba(255,255,255,0.02);
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 0.6rem;
+          background: #FAF9F6;
+          border: 1px solid #D8D0BE;
+          border-radius: 0.8rem;
           overflow: hidden;
           text-decoration: none;
           color: inherit;
           display: flex;
           flex-direction: column;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.04);
           transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
         }
 
         .project-card:hover {
-          transform: translateY(-0.6rem);
-          border-color: rgba(255,255,255,0.25);
-          box-shadow: 0 2rem 4rem rgba(0,0,0,0.5);
+          transform: translateY(-0.5rem);
+          border-color: #81663F;
+          box-shadow: 0 1.5rem 3.5rem rgba(129, 102, 63, 0.12);
         }
 
         .project-card__img-wrap {
           position: relative;
           height: 32rem;
-          background: #151515;
+          background: #E8E3D7;
           overflow: hidden;
         }
 
@@ -630,13 +631,13 @@ export default function AllProjectsPage() {
         }
 
         .project-card:hover .project-card__img {
-          transform: scale(1.06);
+          transform: scale(1.05);
         }
 
         .project-card__overlay {
           position: absolute;
           inset: 0;
-          background: rgba(0,0,0,0.3);
+          background: rgba(0,0,0,0.25);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -649,35 +650,36 @@ export default function AllProjectsPage() {
         }
 
         .view-project-badge {
-          background: #ffffff;
-          color: #000000;
+          background: #81663F;
+          color: #FFFFFF;
           font-size: 1.1rem;
-          font-weight: 700;
+          font-weight: 800;
           letter-spacing: 0.1em;
-          padding: 1rem 2.2rem;
+          padding: 0.9rem 2.2rem;
           border-radius: 999px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .project-card__code-badge {
           position: absolute;
           top: 1.6rem;
           left: 1.6rem;
-          background: rgba(0,0,0,0.7);
+          background: rgba(0,0,0,0.75);
           backdrop-filter: blur(8px);
-          color: #ffffff;
+          color: #D4B67D;
           font-size: 1.1rem;
-          font-weight: 700;
+          font-weight: 800;
           letter-spacing: 0.08em;
           padding: 0.4rem 1rem;
           border-radius: 0.4rem;
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid rgba(212, 182, 125, 0.3);
         }
 
         .project-card__body {
-          padding: 2.8rem;
+          padding: 2.4rem;
           display: flex;
           flex-direction: column;
-          gap: 1.2rem;
+          gap: 1rem;
           flex: 1;
         }
 
@@ -689,38 +691,38 @@ export default function AllProjectsPage() {
 
         .project-card__client {
           font-size: 1.1rem;
-          font-weight: 700;
+          font-weight: 800;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.45);
+          color: #81663F;
         }
 
         .project-card__year {
           font-size: 1.1rem;
-          color: rgba(255,255,255,0.3);
-          font-weight: 600;
+          color: #8A8279;
+          font-weight: 700;
         }
 
         .project-card__title {
           font-size: 2.2rem;
-          font-weight: 700;
+          font-weight: 800;
           line-height: 1.2;
-          color: #ffffff;
+          color: #81663F;
           margin: 0;
         }
 
         .project-card__desc {
           font-size: 1.3rem;
           line-height: 1.6;
-          color: rgba(255,255,255,0.55);
-          font-weight: 300;
+          color: #5E5852;
+          font-weight: 400;
           margin: 0;
         }
 
         .project-card__footer {
           margin-top: auto;
           padding-top: 1.6rem;
-          border-top: 1px solid rgba(255,255,255,0.06);
+          border-top: 1px solid #E8E3D7;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -730,7 +732,8 @@ export default function AllProjectsPage() {
 
         .project-card__location {
           font-size: 1.1rem;
-          color: rgba(255,255,255,0.4);
+          color: #8A8279;
+          font-weight: 600;
         }
 
         .project-card__tags {
@@ -740,16 +743,17 @@ export default function AllProjectsPage() {
 
         .tag-chip {
           font-size: 1rem;
-          background: rgba(255,255,255,0.06);
-          color: rgba(255,255,255,0.7);
-          padding: 0.2rem 0.8rem;
+          background: #E8E3D7;
+          color: #81663F;
+          font-weight: 700;
+          padding: 0.3rem 0.8rem;
           border-radius: 0.3rem;
           letter-spacing: 0.04em;
         }
 
         /* LIST VIEW */
         .projects-list {
-          border-top: 1px solid rgba(255,255,255,0.1);
+          border-top: 1px solid #D8D0BE;
         }
 
         .list-header {
@@ -757,31 +761,31 @@ export default function AllProjectsPage() {
           grid-template-columns: 80px 1fr 1fr 100px;
           padding: 1.6rem 2rem;
           font-size: 1.1rem;
-          font-weight: 700;
+          font-weight: 800;
           letter-spacing: 0.1em;
-          color: rgba(255,255,255,0.3);
-          border-bottom: 1px solid rgba(255,255,255,0.08);
+          color: #81663F;
+          border-bottom: 1px solid #D8D0BE;
         }
 
         .list-row {
           display: grid;
           grid-template-columns: 80px 1fr 1fr 100px;
           align-items: center;
-          padding: 2.4rem 2rem;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
+          padding: 2.2rem 2rem;
+          border-bottom: 1px solid #D8D0BE;
           text-decoration: none;
           color: inherit;
           transition: background 0.2s ease;
         }
 
         .list-row:hover {
-          background: rgba(255,255,255,0.04);
+          background: #FAF9F6;
         }
 
         .list-idx {
           font-size: 1.2rem;
-          color: rgba(255,255,255,0.3);
-          font-weight: 700;
+          color: #8A8279;
+          font-weight: 800;
         }
 
         .list-main {
@@ -794,13 +798,14 @@ export default function AllProjectsPage() {
           font-size: 1.1rem;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.4);
+          color: #81663F;
+          font-weight: 700;
         }
 
         .list-title {
           font-size: 1.8rem;
-          font-weight: 600;
-          color: #ffffff;
+          font-weight: 700;
+          color: #81663F;
           margin: 0;
         }
 
@@ -809,44 +814,44 @@ export default function AllProjectsPage() {
           flex-direction: column;
           gap: 0.4rem;
           font-size: 1.2rem;
-          color: rgba(255,255,255,0.5);
+          color: #5E5852;
         }
 
         .list-year {
           font-size: 1.3rem;
-          font-weight: 600;
-          color: rgba(255,255,255,0.4);
+          font-weight: 700;
+          color: #8A8279;
           text-align: right;
         }
 
         .no-results {
           text-align: center;
           padding: 8rem 2rem;
-          color: rgba(255,255,255,0.5);
+          color: #5E5852;
         }
 
         .no-results h3 {
           font-size: 2.4rem;
-          color: #ffffff;
+          color: #81663F;
           margin-bottom: 1rem;
         }
 
         .reset-btn {
           margin-top: 2rem;
-          background: #ffffff;
-          color: #000000;
+          background: #81663F;
+          color: #FFFFFF;
           border: none;
           padding: 1rem 2.4rem;
           border-radius: 999px;
-          font-weight: 700;
+          font-weight: 800;
           cursor: pointer;
         }
 
         /* CTA */
         .projects-cta {
-          border-top: 1px solid rgba(255,255,255,0.1);
-          padding: 8rem 2.4rem;
-          background: #111111;
+          border-top: 1px solid #D8D0BE;
+          padding: 7rem 2.4rem;
+          background: #FAF9F6;
           text-align: center;
         }
 
@@ -856,40 +861,41 @@ export default function AllProjectsPage() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 2rem;
+          gap: 1.8rem;
         }
 
         .projects-cta h2 {
-          font-size: clamp(2.4rem, 4vw, 4.2rem);
+          font-size: clamp(2.2rem, 3.5vw, 3.8rem);
           font-weight: 800;
           letter-spacing: -0.02em;
-          color: #ffffff;
-          line-height: 1.1;
+          color: #81663F;
+          line-height: 1.15;
         }
 
         .projects-cta p {
-          font-size: 1.6rem;
-          color: rgba(255,255,255,0.5);
+          font-size: 1.5rem;
+          color: #5E5852;
           line-height: 1.5;
         }
 
         .cta-link {
-          margin-top: 1rem;
+          margin-top: 0.8rem;
           display: inline-block;
-          background: #ffffff;
-          color: #000000;
-          padding: 1.4rem 3.2rem;
+          background: linear-gradient(135deg, #D4B67D 0%, #C8A96E 40%, #B38E46 100%);
+          color: #FFFFFF;
+          padding: 1.2rem 3rem;
           border-radius: 999px;
-          font-weight: 700;
+          font-weight: 800;
           font-size: 1.2rem;
           letter-spacing: 0.08em;
           text-decoration: none;
-          transition: transform 0.25s ease, background 0.25s ease;
+          box-shadow: 0 6px 20px rgba(184, 147, 85, 0.35);
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
         .cta-link:hover {
           transform: translateY(-0.2rem);
-          background: #e0e0e0;
+          box-shadow: 0 10px 25px rgba(184, 147, 85, 0.45);
         }
       `}</style>
     </div>

@@ -54,22 +54,23 @@ export default function CatalogsPage() {
       {/* Hero Banner Section */}
       <section
         style={{
-          background: "linear-gradient(135deg, #181920 0%, #0f1015 100%)",
-          color: "#ffffff",
-          padding: "4.5rem 2rem 3.5rem",
+          background: "#E6E2D8",
+          color: "#1C1917",
+          padding: "5rem 2rem 3rem",
           textAlign: "center",
           position: "relative",
+          borderBottom: "1px solid #D8D0BE",
         }}
       >
         <div style={{ maxWidth: "900px", margin: "0 auto" }}>
           <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 800 }}>
-            ARCHITECTURAL SPECIFICATION & MATERIAL LAB
+            ARCHITECTURAL SPECIFICATION &amp; MATERIAL LAB
           </span>
           <h1 style={{ color: "#81663F", fontSize: "2.8rem", fontWeight: 900, margin: "0.6rem 0 1rem", letterSpacing: "-0.02em" }}>
             AAREN Architectural PDF Catalogs
           </h1>
-          <p style={{ color: "#cbd5e1", fontSize: "1.1rem", lineHeight: 1.6, maxWidth: "700px", margin: "0 auto" }}>
-            Explore official product brochures, high-res finish collections, and technical joinery specification guides from top European & Italian surface brands.
+          <p style={{ color: "#5E5852", fontSize: "1.15rem", lineHeight: 1.6, maxWidth: "700px", margin: "0 auto", fontWeight: 400 }}>
+            Explore official product brochures, high-res finish collections, and technical joinery specification guides from top European &amp; Italian surface brands.
           </p>
         </div>
       </section>
