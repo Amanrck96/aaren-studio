@@ -238,16 +238,17 @@ export default function AllProjectsPage() {
         </div>
       )}
 
-      {/* Header */}
+      {/* ── Page Header ── */}
       <section className="projects-header">
-        <div className="projects-header__top">
-          <span className="projects-tag">CURATED PORTFOLIO</span>
-          <span className="projects-count">[{filteredProjects.length} PROJECTS]</span>
-        </div>
-        <h1 className="projects-title">ALL PROJECTS</h1>
-        <p className="projects-desc">
-          Explore spatial experiences, bespoke interior architectures, and luxury material installations crafted for prestigious clients across India & globally.
-        </p>
+        <div className="projects-header__inner">
+          <div className="projects-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span>CURATED PORTFOLIO</span>
+            <span className="projects-count">[{filteredProjects.length} PROJECTS]</span>
+          </div>
+          <h1 className="projects-title" style={{ color: "#81663F" }}>ALL PROJECTS</h1>
+          <p className="projects-desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
+            Explore spatial experiences, bespoke interior architectures, and luxury material installations crafted for prestigious clients across India & globally.
+          </p>
 
         {/* Toolbar: Category tabs + Search + View switcher */}
         <div className="projects-toolbar">
@@ -300,7 +301,8 @@ export default function AllProjectsPage() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* Main Content */}
       <main className="projects-main">
@@ -422,40 +424,55 @@ export default function AllProjectsPage() {
         }
 
         .projects-header {
-          padding: 5rem 2.4rem 3.5rem;
-          max-width: 1400px;
-          margin: 0 auto;
-          border-bottom: 1px solid #D8D0BE;
+          padding: 6rem 1.6rem 4rem;
+          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.2);
+          text-align: left;
         }
 
-        .projects-header__top {
+        @media (min-width: 768px) {
+          .projects-header {
+            padding: 8rem 2.4rem 5rem;
+          }
+        }
+
+        .projects-header__inner {
+          max-width: 1600px;
+          margin: 0 auto;
+          display: block;
+        }
+
+        .projects-header__meta {
           display: flex;
           justify-content: space-between;
           align-items: center;
           font-size: 1.1rem;
-          letter-spacing: 0.15em;
+          letter-spacing: 0.12em;
           color: #81663F;
-          font-weight: 800;
-          margin-bottom: 1.4rem;
+          font-weight: 700;
+          margin-bottom: 1.6rem;
+          text-transform: uppercase;
         }
 
         .projects-title {
-          font-size: clamp(3.5rem, 9vw, 9.5rem);
-          font-weight: 800;
-          letter-spacing: -0.03em;
-          line-height: 0.95;
+          font-family: var(--font-jost), 'Jost', sans-serif;
+          font-size: clamp(6rem, 15vw, 22rem);
+          font-weight: 700;
+          letter-spacing: -0.05em;
+          line-height: 0.88;
           color: #81663F;
           text-transform: uppercase;
-          margin-bottom: 2rem;
+          margin-bottom: 2.8rem;
+          text-align: left;
         }
 
         .projects-desc {
-          font-size: clamp(1.3rem, 1.8vw, 1.8rem);
-          line-height: 1.5;
-          color: #5E5852;
-          max-width: 72rem;
+          font-family: var(--font-jost), 'Jost', sans-serif;
+          font-size: 1.6rem;
+          line-height: 1.6;
+          color: rgba(0, 0, 0, 0.65);
+          max-width: 58rem;
           margin-bottom: 3.5rem;
-          font-weight: 400;
+          text-align: left;
         }
 
         .projects-toolbar {

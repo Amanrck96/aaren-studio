@@ -105,12 +105,13 @@ export default function WorkPage() {
         </div>
         <h1
           style={{
-            fontSize: "clamp(2.5rem, 8vw, 8rem)",
+            fontFamily: "var(--font-jost), 'Jost', sans-serif",
+            fontSize: "clamp(6rem, 15vw, 22rem)",
             fontWeight: 700,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.0,
+            letterSpacing: "-0.05em",
+            lineHeight: 0.88,
             color: "#81663F",
-            marginBottom: "40px",
+            marginBottom: "2.8rem",
             textTransform: "uppercase",
           }}
         >
