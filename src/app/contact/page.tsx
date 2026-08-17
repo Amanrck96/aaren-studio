@@ -276,7 +276,7 @@ export default function Contact() {
         /* ── Info Side ── */
         .contact-info {
           flex: 1;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
           display: flex;
           flex-direction: column;
         }
@@ -284,7 +284,7 @@ export default function Contact() {
         @media (min-width: 992px) {
           .contact-info {
             border-bottom: none;
-            border-right: 0.1rem solid rgba(0,0,0,0.12);
+            border-right: 0.1rem solid rgba(129, 102, 63, 0.18);
           }
         }
 
@@ -293,11 +293,13 @@ export default function Contact() {
           display: flex;
           flex-direction: column;
           gap: 2.4rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
         }
 
         .info-block__title {
-          color: rgba(0,0,0,0.45);
+          color: #81663F;
+          font-weight: 700;
+          letter-spacing: 0.12em;
         }
 
         .info-item {
@@ -309,13 +311,13 @@ export default function Contact() {
         .info-item__icon {
           width: 4rem;
           height: 4rem;
-          background: #dfe3e9;
-          border: 0.1rem solid rgba(0,0,0,0.08);
+          background: #FAF9F6;
+          border: 0.1rem solid rgba(129, 102, 63, 0.25);
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #000;
+          color: #81663F;
         }
 
         .info-item__content {
@@ -327,7 +329,7 @@ export default function Contact() {
         .info-item__label {
           font-size: 1.1rem;
           text-transform: uppercase;
-          color: rgba(0,0,0,0.4);
+          color: #5E5852;
           letter-spacing: 0.05em;
           font-weight: 700;
         }
@@ -335,7 +337,7 @@ export default function Contact() {
         .info-item__value {
           font-size: 1.4rem;
           font-weight: 700;
-          color: #000;
+          color: #81663F;
           text-decoration: none;
         }
 
@@ -343,7 +345,7 @@ export default function Contact() {
         .mock-map {
           height: 28rem;
           position: relative;
-          background: #111;
+          background: #1C1917;
           overflow: hidden;
           display: flex;
           align-items: flex-end;
@@ -354,7 +356,7 @@ export default function Contact() {
           position: absolute;
           inset: 0;
           opacity: 0.15;
-          background-image: radial-gradient(circle, #fff 0.1rem, transparent 0.1rem);
+          background-image: radial-gradient(circle, #81663F 0.1rem, transparent 0.1rem);
           background-size: 1.6rem 1.6rem;
         }
 
@@ -368,8 +370,8 @@ export default function Contact() {
 
         .mock-map__tag {
           font-size: 1.1rem;
-          color: #eaeef4;
-          opacity: 0.5;
+          color: #81663F;
+          opacity: 0.9;
           font-weight: 700;
           letter-spacing: 0.08em;
         }
@@ -415,22 +417,23 @@ export default function Contact() {
           text-transform: uppercase;
           letter-spacing: 0.05em;
           font-weight: 700;
-          color: rgba(0,0,0,0.5);
+          color: #5E5852;
         }
 
         .form-input {
           width: 100%;
-          background: transparent;
-          border: 0.1rem solid rgba(0,0,0,0.12);
+          background: #FAF9F6;
+          border: 0.1rem solid rgba(129, 102, 63, 0.25);
+          border-radius: 4px;
           padding: 1.6rem;
           font-size: 1.4rem;
-          color: #000;
+          color: #1C1917;
           outline: none;
           transition: border-color 0.2s;
         }
 
         .form-input:focus {
-          border-color: #000;
+          border-color: #81663F;
         }
 
         .form-textarea {
@@ -440,29 +443,34 @@ export default function Contact() {
         .form-submit-btn {
           width: 100%;
           padding: 1.8rem;
-          background: #000;
+          background: #81663F;
           color: #fff;
           border: none;
+          border-radius: 4px;
           font-size: 1.2rem;
-          font-weight: 700;
+          font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.08em;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: background 0.2s;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 14px rgba(129, 102, 63, 0.25);
         }
 
         .form-submit-btn:hover {
-          background: #222;
+          background: #6a5332;
+          transform: translateY(-1px);
+          box-shadow: 0 6px 18px rgba(129, 102, 63, 0.35);
         }
 
         /* Success Message */
         .success-message {
           padding: 4rem 2.4rem;
-          background: #dfe3e9;
-          border: 0.1rem solid rgba(0,0,0,0.08);
+          background: #FAF9F6;
+          border: 0.1rem solid rgba(129, 102, 63, 0.25);
+          border-radius: 6px;
           display: flex;
           flex-direction: column;
           gap: 1.2rem;
@@ -472,11 +480,12 @@ export default function Contact() {
           font-size: 1.8rem;
           font-weight: 700;
           text-transform: uppercase;
+          color: #81663F;
         }
 
         .success-message__text {
           font-size: 1.4rem;
-          color: rgba(0,0,0,0.6);
+          color: #5E5852;
           line-height: 1.5;
         }
       `}</style>

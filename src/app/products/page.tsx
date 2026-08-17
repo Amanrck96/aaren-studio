@@ -598,14 +598,14 @@ function ProductsContent() {
 
       <style jsx global>{`
         :root {
-          --surface-0: #f8fafc;
-          --surface-1: #ffffff;
-          --surface-2: #f1f5f9;
-          --border: #e2e8f0;
-          --border-strong: #cbd5e1;
-          --text-primary: #0f172a;
-          --text-secondary: #475569;
-          --text-muted: #94a3b8;
+          --surface-0: #E6E2D8;
+          --surface-1: #FAF9F6;
+          --surface-2: #EDE8DF;
+          --border: rgba(129, 102, 63, 0.18);
+          --border-strong: rgba(129, 102, 63, 0.35);
+          --text-primary: #1C1917;
+          --text-secondary: #5E5852;
+          --text-muted: rgba(129, 102, 63, 0.6);
           --radius: 6px;
         }
 
@@ -614,30 +614,31 @@ function ProductsContent() {
           color: var(--text-primary);
           min-height: 100vh;
           padding-top: 5rem;
-          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          font-family: var(--font-jost), 'Jost', system-ui, sans-serif;
         }
 
         .products-page-header {
           padding: 48px 32px 24px;
           border-bottom: 0.5px solid var(--border);
-          background: #ffffff;
+          background: #FAF9F6;
         }
 
         .products-page-header .eyebrow {
           font-size: 11px;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: #8c764b;
-          font-weight: 700;
+          color: #81663F;
+          font-weight: 800;
           margin-bottom: 8px;
         }
 
         .products-page-header .title {
           font-size: 30px;
-          font-family: Georgia, serif;
-          font-weight: 500;
+          font-family: var(--font-jost), 'Jost', sans-serif;
+          font-weight: 800;
           letter-spacing: -0.02em;
-          color: var(--text-primary);
+          text-transform: uppercase;
+          color: #81663F;
         }
 
         .products-page-header .subtitle {
