@@ -98,23 +98,30 @@ model Brand {
 }
 
 model Project {
-  id               String        @id @default(cuid())
+  id               String            @id @default(cuid())
   title            String
-  slug             String        @unique
+  slug             String            @unique
   description      String
   category         String
   client           String
-  projectCode      String        // e.g. OB 01, TJ 02
-  sequenceNumber   Int           @default(0)
+  clientId         String?
+  clientRel        Client?           @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  projectCode      String            // e.g. OB 01, TJ 02
+  sequenceNumber   Int               @default(0)
   videoUrl         String?
   imageUrl         String
   gallery          String[]
   brandDetails     String?
-  featured         Boolean       @default(false)
+  featured         Boolean           @default(false)
   pdfUrl           String?
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  status           String            @default("IN_PROGRESS") // "IN_PROGRESS", "COMPLETED", "ON_HOLD", "ARCHIVED"
+  budget           Float?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
   items            ProjectItem[]
+  scheduleItems    ScheduleItem[]
+  documents        ProjectDocument[]
+  invoices         Invoice[]
 }
 
 model Product {
@@ -293,12 +300,103 @@ model FAQ {
   createdAt DateTime @default(now())
 }
 
+enum ScheduleStatus {
+  PENDING
+  APPROVED
+  NEEDS_REVIEW
+  REJECTED
+}
+
+enum InvoiceStatus {
+  UNPAID
+  PAID
+  VOID
+}
+
 model Client {
-  id         String   @id @default(cuid())
-  name       String   @unique
-  logoUrl    String?
-  industry   String?
-  createdAt  DateTime @default(now())
+  id            String            @id @default(cuid())
+  name          String            @unique
+  email         String?           @unique
+  phone         String?
+  company       String?
+  address       String?
+  logoUrl       String?
+  industry      String?
+  passwordHash  String?
+  accessCode    String?           @unique
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  projects      Project[]
+  invoices      Invoice[]
+  documents     ProjectDocument[]
+}
+
+model ScheduleItem {
+  id           String            @id @default(cuid())
+  projectId    String
+  project      Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name         String
+  room         String?
+  category     String?
+  supplier     String?
+  tradePrice   Float?
+  clientPrice  Float?
+  price        Float?
+  status       ScheduleStatus    @default(PENDING)
+  imageUrl     String?
+  specs        String?
+  dimensions   String?
+  quantity     Int               @default(1)
+  unit         String?           @default("nos")
+  approvedAt   DateTime?
+  approvedBy   String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  comments     ScheduleComment[]
+}
+
+model ScheduleComment {
+  id             String       @id @default(cuid())
+  scheduleItemId String
+  scheduleItem   ScheduleItem @relation(fields: [scheduleItemId], references: [id], onDelete: Cascade)
+  authorName     String
+  authorEmail    String?
+  authorRole     String       @default("CLIENT") // "CLIENT", "ARCHITECT", "ADMIN"
+  content        String       @db.Text
+  createdAt      DateTime     @default(now())
+}
+
+model ProjectDocument {
+  id          String    @id @default(cuid())
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  clientId    String?
+  client      Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  name        String
+  fileUrl     String    // Cloudinary URL
+  fileType    String    // Drawing, Contract, Specification, 3D Render, BOQ
+  fileSize    Int?      // In bytes, max 200MB (209,715,200 bytes)
+  uploadedBy  String?
+  createdAt   DateTime  @default(now())
+}
+
+model Invoice {
+  id                    String        @id @default(cuid())
+  invoiceNumber         String        @unique
+  projectId             String
+  project               Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  clientId              String
+  client                Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  title                 String
+  amount                Float
+  currency              String        @default("INR")
+  status                InvoiceStatus @default(UNPAID)
+  dueDate               DateTime?
+  stripePaymentLink     String?
+  stripeSessionId       String?
+  paidAt                DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
 }
 
 model Career {
