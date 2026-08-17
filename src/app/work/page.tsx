@@ -61,7 +61,7 @@ export default function WorkPage() {
 
   return (
     <div
-      style={{ background: "#0a0a0a", color: "#f0f0f0", minHeight: "100vh", paddingTop: "80px" }}
+      style={{ background: "#E6E2D8", color: "#1e1e1e", minHeight: "100vh", paddingTop: "80px" }}
       onMouseMove={handleMouseMove}
     >
       {/* ── Floating hover preview image — Sturdy.co style ── */}
@@ -79,6 +79,9 @@ export default function WorkPage() {
           transform: hoveredProject ? "translateY(0) scale(1)" : "translateY(12px) scale(0.97)",
           transition: "opacity 0.25s ease, transform 0.3s ease",
           overflow: "hidden",
+          borderRadius: "6px",
+          boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+          border: "1px solid rgba(129, 102, 63, 0.3)",
         }}
       >
         {hoveredData && (
@@ -94,24 +97,28 @@ export default function WorkPage() {
       <div
         style={{
           padding: "60px 28px 0",
-          borderBottom: "1px solid #1a1a1a",
+          borderBottom: "1px solid rgba(129, 102, 63, 0.2)",
         }}
       >
+        <div style={{ fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.12em", color: "#81663F", marginBottom: "1.2rem", textTransform: "uppercase" }}>
+          PORTFOLIO ARCHIVE
+        </div>
         <h1
           style={{
             fontSize: "clamp(2.5rem, 8vw, 8rem)",
             fontWeight: 700,
             letterSpacing: "-0.03em",
             lineHeight: 1.0,
-            color: "#ffffff",
+            color: "#81663F",
             marginBottom: "40px",
+            textTransform: "uppercase",
           }}
         >
           Work
         </h1>
 
-        {/* Filter tabs — exactly like Sturdy */}
-        <div style={{ display: "flex", gap: "0", marginBottom: "0" }}>
+        {/* Filter tabs */}
+        <div style={{ display: "flex", gap: "0", marginBottom: "0", overflowX: "auto" }}>
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
@@ -119,26 +126,27 @@ export default function WorkPage() {
               style={{
                 background: "none",
                 border: "none",
-                borderRight: "1px solid #1a1a1a",
+                borderRight: "1px solid rgba(129, 102, 63, 0.18)",
                 padding: "14px 20px",
                 fontSize: "12px",
-                fontWeight: 500,
+                fontWeight: 700,
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
-                color: activeFilter === cat ? "#ffffff" : "rgba(255,255,255,0.35)",
+                color: activeFilter === cat ? "#81663F" : "rgba(129, 102, 63, 0.5)",
                 transition: "color 0.2s",
-                borderBottom: activeFilter === cat ? "1px solid #ffffff" : "1px solid transparent",
+                borderBottom: activeFilter === cat ? "2px solid #81663F" : "2px solid transparent",
+                cursor: "pointer",
               }}
-              onMouseEnter={(e) => { if (activeFilter !== cat) (e.currentTarget.style.color = "rgba(255,255,255,0.7)"); }}
-              onMouseLeave={(e) => { if (activeFilter !== cat) (e.currentTarget.style.color = "rgba(255,255,255,0.35)"); }}
+              onMouseEnter={(e) => { if (activeFilter !== cat) (e.currentTarget.style.color = "#81663F"); }}
+              onMouseLeave={(e) => { if (activeFilter !== cat) (e.currentTarget.style.color = "rgba(129, 102, 63, 0.5)"); }}
             >
-              {cat} {cat === "All" ? `[${ALL_PROJECTS.length}]` : `[${ALL_PROJECTS.filter(p => p.category === cat).length}]`}
+              {cat} {cat === "All" ? `[${projectsList.length}]` : `[${projectsList.filter(p => p.category === cat).length}]`}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Project List — exact Sturdy.co row style */}
+      {/* Project List */}
       <div>
         {filtered.map((project, idx) => (
           <Link
@@ -151,21 +159,21 @@ export default function WorkPage() {
               gridTemplateColumns: "60px 1fr auto",
               alignItems: "center",
               padding: "24px 28px",
-              borderBottom: "1px solid #1a1a1a",
+              borderBottom: "1px solid rgba(129, 102, 63, 0.15)",
               gap: "24px",
               textDecoration: "none",
               transition: "background 0.2s",
             }}
-            onMouseOver={(e) => (e.currentTarget.style.background = "#111111")}
+            onMouseOver={(e) => (e.currentTarget.style.background = "#FAF9F6")}
             onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
           >
             {/* Index */}
             <span
               style={{
                 fontSize: "12px",
-                color: "rgba(255,255,255,0.2)",
+                color: "rgba(129, 102, 63, 0.4)",
                 letterSpacing: "0.05em",
-                fontWeight: 500,
+                fontWeight: 700,
               }}
             >
               {String(idx + 1).padStart(2, "0")}
@@ -173,15 +181,16 @@ export default function WorkPage() {
 
             {/* Client + title */}
             <div>
-              <p style={{ fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "4px" }}>
+              <p style={{ fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", color: "#5E5852", marginBottom: "4px", fontWeight: 600 }}>
                 {project.client}
               </p>
               <h2
                 style={{
-                  fontSize: "clamp(1rem, 2vw, 1.5rem)",
-                  fontWeight: 600,
+                  fontSize: "clamp(1.2rem, 2vw, 1.6rem)",
+                  fontWeight: 700,
                   letterSpacing: "-0.01em",
-                  color: "#ffffff",
+                  color: "#81663F",
+                  margin: 0,
                 }}
               >
                 {project.title}
@@ -190,10 +199,10 @@ export default function WorkPage() {
 
             {/* Right meta */}
             <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <p style={{ fontSize: "11px", letterSpacing: "0.05em", color: "rgba(255,255,255,0.3)", marginBottom: "4px" }}>
+              <p style={{ fontSize: "11px", letterSpacing: "0.05em", color: "#5E5852", marginBottom: "4px", fontWeight: 600 }}>
                 {project.year}
               </p>
-              <p style={{ fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }}>
+              <p style={{ fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", color: "#81663F", fontWeight: 700 }}>
                 {project.code} {project.num}
               </p>
             </div>
