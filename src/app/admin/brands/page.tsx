@@ -217,18 +217,40 @@ export default function AdminBrandsPage() {
           <div style={{ padding: "3rem", textAlign: "center", color: "#888" }}>Loading partner brands...</div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-            {brands.map((b) => (
-              <div key={b.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "12px", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
-                <Link href={`/admin/brands/${b.id}`} style={{ textDecoration: "none", position: "relative", height: "140px", background: "#1a1a20", display: "block" }}>
-                  <Image src={b.bannerUrl || "/brands/brand_1_1.png"} alt={b.name} fill style={{ objectFit: "cover" }} />
-                  <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.4)" }} />
-                  <div style={{ position: "absolute", bottom: "10px", left: "15px", background: "rgba(255,255,255,0.9)", padding: "0.4rem 0.8rem", borderRadius: "4px" }}>
-                    <Image src={b.logoUrl || "/brands/brand_1_2.png"} alt={b.name} width={80} height={28} style={{ objectFit: "contain" }} />
-                  </div>
-                  <span style={{ position: "absolute", top: "10px", right: "10px", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.3rem 0.7rem", borderRadius: "4px", fontSize: "0.8rem", fontWeight: 900 }}>
-                    {b.shortCode || "BR"}
-                  </span>
-                </Link>
+            {brands.map((b) => {
+              const bannerImg = b.bannerUrl || (b as any).hero || (b as any).imageUrl || (b as any).image || (b as any).coverImage || "/brands/brand_1_1.png";
+              const logoImg = b.logoUrl || (b as any).logo || (b as any).logoImage || "/brands/brand_1_2.png";
+              return (
+                <div key={b.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "12px", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
+                  <Link href={`/admin/brands/${b.id}`} style={{ textDecoration: "none", position: "relative", width: "100%", aspectRatio: "1980 / 1020", minHeight: "150px", background: "#1a1a20", display: "block", overflow: "hidden" }}>
+                    <Image
+                      src={bannerImg}
+                      alt={b.name}
+                      fill
+                      unoptimized
+                      style={{ objectFit: "cover" }}
+                      onError={(e: any) => {
+                        e.currentTarget.src = "/brands/brand_1_1.png";
+                      }}
+                    />
+                    <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />
+                    <div style={{ position: "absolute", bottom: "10px", left: "15px", background: "rgba(255,255,255,0.92)", padding: "0.4rem 0.8rem", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", minWidth: "60px", minHeight: "26px" }}>
+                      <Image
+                        src={logoImg}
+                        alt={b.name}
+                        width={80}
+                        height={28}
+                        unoptimized
+                        style={{ objectFit: "contain", maxHeight: "28px" }}
+                        onError={(e: any) => {
+                          e.currentTarget.src = "/brands/brand_1_2.png";
+                        }}
+                      />
+                    </div>
+                    <span style={{ position: "absolute", top: "10px", right: "10px", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.3rem 0.7rem", borderRadius: "4px", fontSize: "0.8rem", fontWeight: 900 }}>
+                      {b.shortCode || "BR"}
+                    </span>
+                  </Link>
                 <div style={{ padding: "1.4rem", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                   <div>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
@@ -284,7 +306,8 @@ export default function AdminBrandsPage() {
                   </div>
                 </div>
               </div>
-            ))}
+            );
+          })}
           </div>
         )}
 

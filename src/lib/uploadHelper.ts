@@ -13,10 +13,10 @@ export async function uploadFileWithCompression(
   try {
     let fileToUpload: File = file;
 
-    // Compress images client-side if > 800KB for fast uploads
+    // Compress images client-side if > 800KB for fast uploads (1980x1020 standard)
     if (file.type.startsWith("image/") && file.size > 800 * 1024) {
       try {
-        fileToUpload = await compressImageClient(file, 1920, 0.82);
+        fileToUpload = await compressImageClient(file, 1980, 0.88);
       } catch (cErr) {
         console.warn("Client image compression fallback:", cErr);
       }

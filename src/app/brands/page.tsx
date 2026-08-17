@@ -20,7 +20,7 @@ const DEFAULT_BRANDS = [
   { id: "inclass", name: "Inclass", code: "IC", num: "13", hero: "/brands/brand_3_1.png", logo: "/brands/logos/inclass_logo.png", category: "MillWork", origin: "Spain", tagline: "Seating and millwork" },
   { id: "wow", name: "WOW", code: "WW", num: "14", hero: "/brands/brand_4_1.png", logo: "/brands/logos/wow_logo.png", category: "Highlighter Tiles", origin: "Spain", tagline: "3D decorative ceramic tiles" },
   { id: "iww", name: "IWW", code: "IW", num: "15", hero: "/brands/brand_5_1.png", logo: "/brands/logos/iww_logo.png", category: "Surface Tiles", origin: "Italy", tagline: "Stone surface collections" },
-  { id: "living-ceramica", name: "Living Ceramica", code: "LC", num: "16", hero: "/brands/brand_6_1.png", logo: "/brands/brand_6_2.png", category: "Surface Tiles", origin: "Italy", tagline: "Contemporary ceramic surfaces" },
+  { id: "living-ceramica", name: "Living Ceramica", code: "LC", num: "16", hero: "/brands/brand_6_1.png", logo: "/brands/brand_6_2.png", category: "Surface Tiles", origin: "Spain", tagline: "Contemporary ceramic surfaces" },
   { id: "florim", name: "Florim", code: "FL", num: "17", hero: "/brands/brand_7_1.png", logo: "/brands/brand_7_2.png", category: "Surface Tiles", origin: "Italy", tagline: "Porcelain slab mastery" },
   { id: "gelli", name: "Gelli", code: "GL", num: "18", hero: "/brands/brand_8_1.png", logo: "/brands/brand_8_2.png", category: "Bathroom Accessories", origin: "Italy", tagline: "Italian bathroom accessories" },
   { id: "jacuzzi", name: "Jacuzzi", code: "JZ", num: "19", hero: "/brands/brand_9_1.png", logo: "/brands/brand_9_2.png", category: "Wellness", origin: "USA", tagline: "World-class wellness systems" },
@@ -39,12 +39,12 @@ export default function BrandsPage() {
             id: b.id,
             name: b.name,
             code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
-            num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : "01",
-            hero: b.bannerUrl || "/brands/brand_1_1.png",
-            logo: b.logoUrl || "/brands/brand_1_2.png",
-            category: b.description || "Architectural Brand",
-            origin: "Global",
-            tagline: b.description || "Partner Brand",
+            num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : (b.shortCode && b.shortCode.split(" ")[1] ? b.shortCode.split(" ")[1] : "01"),
+            hero: b.bannerUrl || b.hero || b.imageUrl || b.image || "/brands/brand_1_1.png",
+            logo: b.logoUrl || b.logo || "/brands/brand_1_2.png",
+            category: b.category || b.tagline || b.description || "Architectural Brand",
+            origin: b.origin || "Global",
+            tagline: b.tagline || b.description || "Partner Brand",
           }));
           setBrandsList(mapped);
         }
@@ -57,11 +57,11 @@ export default function BrandsPage() {
       {/* ── Page Header ── */}
       <div className="brands-header">
         <div className="brands-header__inner">
-          <div className="brands-header__meta t-tag" style={{ color: "rgba(0,0,0,0.4)", marginBottom: "2.4rem" }}>
-            Exclusive Partners — {brandsList.length} Brands
+          <div className="brands-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+            EXCLUSIVE PARTNERS — {brandsList.length} BRANDS
           </div>
-          <h1 className="brands-header__title">Brands</h1>
-          <p className="brands-header__desc t-body" style={{ color: "rgba(0,0,0,0.5)", maxWidth: "52rem" }}>
+          <h1 className="brands-header__title">BRANDS</h1>
+          <p className="brands-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "56rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
             A curated selection of the world&apos;s finest material and design brands — each chosen for their craft, innovation, and alignment with the Aaren philosophy.
           </p>
         </div>
@@ -76,7 +76,7 @@ export default function BrandsPage() {
             className="brand-card"
             id={`brand-card-${brand.id}`}
           >
-            {/* Hero Image */}
+            {/* Hero Image — 1980x1020 Aspect Ratio Container */}
             <div className="brand-card__fig-wrapper">
               <div className="brand-card__fig">
                 <Image
@@ -87,6 +87,9 @@ export default function BrandsPage() {
                   className="brand-card__img"
                   style={{ objectFit: "cover" }}
                   unoptimized
+                  onError={(e: any) => {
+                    e.currentTarget.src = "/brands/brand_1_1.png";
+                  }}
                 />
               </div>
 
@@ -95,20 +98,23 @@ export default function BrandsPage() {
                 <Image
                   src={brand.logo}
                   alt={`${brand.name} logo`}
-                  width={80}
-                  height={40}
+                  width={90}
+                  height={36}
                   className="brand-card__logo"
-                  style={{ objectFit: "contain", objectPosition: "left center" }}
+                  style={{ objectFit: "contain", objectPosition: "left center", maxHeight: "36px" }}
                   unoptimized
+                  onError={(e: any) => {
+                    e.currentTarget.src = "/brands/brand_1_2.png";
+                  }}
                 />
               </div>
             </div>
 
-            {/* Bottom caption bar — ticket style */}
+            {/* Bottom caption bar — luxury ticket style */}
             <div className="brand-card__caption">
               <div className="brand-card__caption-left">
                 <span className="brand-card__caption-name">{brand.name}</span>
-                <span className="brand-card__caption-cat t-tag">{brand.category}</span>
+                <span className="brand-card__caption-cat">{brand.category}</span>
               </div>
               <div className="brand-card__caption-right">
                 <span className="brand-card__caption-code">{brand.code}</span>
@@ -124,8 +130,8 @@ export default function BrandsPage() {
         <p className="brands-cta__text">
           Interested in a specific brand or product line? Let&apos;s discuss your project requirements.
         </p>
-        <Link href="/contact" className="ul-link t-cta-1" id="brands-cta-enquire">
-          Enquire Now →
+        <Link href="/contact" className="brands-cta__btn" id="brands-cta-enquire">
+          ENQUIRE NOW →
         </Link>
       </div>
 
@@ -139,14 +145,19 @@ export default function BrandsPage() {
         }
 
         .brands-header {
-          padding: 6rem 0.8rem 4rem;
-          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
+          padding: 6rem 1.6rem 4rem;
+          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.2);
         }
 
         @media (min-width: 768px) {
           .brands-header {
-            padding: 8rem 1.2rem 4rem;
+            padding: 8rem 2.4rem 5rem;
           }
+        }
+
+        .brands-header__inner {
+          max-width: 1600px;
+          margin: 0 auto;
         }
 
         .brands-header__title {
@@ -156,14 +167,7 @@ export default function BrandsPage() {
           line-height: 0.88;
           text-transform: uppercase;
           color: #81663F;
-          margin-bottom: 3.2rem;
-        }
-
-        .brands-header__desc {
-          font-size: 1.5rem;
-          line-height: 1.5;
-          letter-spacing: -0.01em;
-          color: rgba(0,0,0,0.7);
+          margin-bottom: 2.8rem;
         }
 
         /* ── Grid ── */
@@ -179,42 +183,32 @@ export default function BrandsPage() {
           flex-direction: column;
           flex: 0 0 100%;
           width: 100%;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.2);
           text-decoration: none;
           color: inherit;
           overflow: hidden;
+          background: #E6E2D8;
         }
 
         @media (min-width: 768px) {
           .brand-card {
             flex: 0 0 50%;
             width: 50%;
-            border-right: 0.1rem solid rgba(0,0,0,0.12);
+            border-right: 0.1rem solid rgba(129, 102, 63, 0.2);
           }
           .brand-card:nth-child(2n) {
             border-right: none;
           }
         }
 
-        /* Image wrapper */
+        /* Image wrapper — 1980x1020 resolution aspect ratio (1.94:1) */
         .brand-card__fig-wrapper {
           position: relative;
           overflow: hidden;
-          height: 26rem;
+          width: 100%;
+          aspect-ratio: 1980 / 1020;
+          min-height: 24rem;
           background: #d8d4c8;
-        }
-
-        @media (min-width: 768px) {
-          .brand-card__fig-wrapper {
-            height: 38rem;
-          }
-        }
-
-        @media (min-width: 1240px) {
-          .brand-card__fig-wrapper {
-            height: 44vw;
-            max-height: 64rem;
-          }
         }
 
         .brand-card__fig {
@@ -235,110 +229,137 @@ export default function BrandsPage() {
           position: absolute;
           bottom: 1.6rem;
           left: 1.6rem;
-          background: rgba(255,255,255,0.9);
+          background: rgba(255,255,255,0.92);
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
-          padding: 0.8rem 1.2rem;
+          padding: 0.8rem 1.4rem;
+          border-radius: 4px;
+          border: 1px solid rgba(129, 102, 63, 0.15);
           display: flex;
           align-items: center;
           justify-content: center;
-          max-width: 14rem;
+          max-width: 15rem;
           height: 4.8rem;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
 
-        /* Caption bar — ticket style */
+        /* Caption bar — luxury ticket style */
         .brand-card__caption {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
           gap: 1.6rem;
-          padding: 1.6rem 0.8rem;
-          background: #E6E2D8;
+          padding: 1.8rem 2.4rem;
+          background: #FAF9F6;
+          border-top: 1px solid rgba(129, 102, 63, 0.15);
           transition: background 0.25s ease;
         }
 
-        @media (min-width: 1240px) {
-          .brand-card__caption {
-            padding: 1.2rem 0.71429vw;
-          }
-        }
-
         .brand-card:hover .brand-card__caption {
-          background: #dbd6ca;
+          background: #F2EFE8;
         }
 
         .brand-card__caption-left {
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
+          gap: 0.5rem;
         }
 
         .brand-card__caption-name {
-          font-size: clamp(1.3rem, 1.6vw, 1.5rem);
-          font-weight: 700;
+          font-size: clamp(1.4rem, 1.8vw, 1.9rem);
+          font-weight: 800;
           letter-spacing: -0.02em;
-          line-height: 1.0;
+          line-height: 1.1;
           text-transform: uppercase;
-          color: #000;
+          color: #81663F;
         }
 
         .brand-card__caption-cat {
-          font-size: 1.1rem;
-          color: rgba(0,0,0,0.4);
-          letter-spacing: 0.06em;
+          font-size: 1.15rem;
+          color: #5E5852;
+          letter-spacing: 0.05em;
           text-transform: uppercase;
+          font-weight: 600;
+          line-height: 1.25;
         }
 
         .brand-card__caption-right {
           display: flex;
           align-items: center;
-          gap: 2rem;
+          gap: 1.6rem;
           flex-shrink: 0;
         }
 
         .brand-card__caption-code {
-          font-size: clamp(2rem, 4vw, 4rem);
-          font-weight: 700;
+          font-size: clamp(2.2rem, 4vw, 4.2rem);
+          font-weight: 800;
           letter-spacing: -0.04em;
           line-height: 1;
-          color: #000;
+          color: #81663F;
           font-family: var(--font-geist), sans-serif;
         }
 
         .brand-card__caption-num {
-          font-size: clamp(1.8rem, 3.5vw, 3.6rem);
-          font-weight: 700;
+          font-size: clamp(2rem, 3.6vw, 3.8rem);
+          font-weight: 800;
           letter-spacing: -0.04em;
           line-height: 1;
-          color: rgba(0,0,0,0.2);
+          color: rgba(129, 102, 63, 0.35);
           font-family: var(--font-geist), sans-serif;
         }
 
         /* ── CTA ── */
         .brands-cta {
-          padding: 8rem 0.8rem 10rem;
-          border-top: 0.1rem solid rgba(0,0,0,0.12);
+          padding: 8rem 2.4rem 10rem;
+          border-top: 0.1rem solid rgba(129, 102, 63, 0.2);
+          background: #FAF9F6;
           display: flex;
           flex-direction: column;
           gap: 2.4rem;
+          align-items: center;
+          text-align: center;
         }
 
         @media (min-width: 768px) {
           .brands-cta {
-            padding: 8rem 1.2rem 10rem;
+            padding: 8rem 4rem 10rem;
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
+            text-align: left;
           }
         }
 
         .brands-cta__text {
-          font-size: clamp(1.4rem, 2vw, 2rem);
-          font-weight: 600;
+          font-size: clamp(1.6rem, 2.2vw, 2.4rem);
+          font-weight: 700;
           letter-spacing: -0.02em;
-          color: #000;
-          max-width: 48rem;
-          line-height: 1.3;
+          color: #81663F;
+          max-width: 54rem;
+          line-height: 1.35;
+          margin: 0;
+        }
+
+        .brands-cta__btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.8rem;
+          padding: 1.4rem 2.8rem;
+          background: #81663F;
+          color: #ffffff;
+          border-radius: 9999px;
+          font-size: 1.3rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-decoration: none;
+          transition: all 0.25s ease;
+          box-shadow: 0 4px 14px rgba(129, 102, 63, 0.25);
+        }
+
+        .brands-cta__btn:hover {
+          background: #6a5332;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(129, 102, 63, 0.35);
         }
       `}</style>
     </div>

@@ -554,7 +554,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
                   <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
                     <div className="logo-preview-box">
                       {formData.logoUrl ? (
-                        <Image src={formData.logoUrl} alt="Logo" width={100} height={40} style={{ objectFit: "contain" }} />
+                        <Image src={formData.logoUrl} alt="Logo" width={100} height={40} unoptimized style={{ objectFit: "contain", maxHeight: "40px" }} />
                       ) : (
                         <span style={{ fontSize: "11px", color: "#94a3b8" }}>No Logo</span>
                       )}

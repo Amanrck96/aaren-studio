@@ -3,12 +3,111 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Support Staff", "Accounts"];
+const CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Accountant", "Support Staff"];
+
+const INITIAL_DEFAULT_TEAM = [
+  { id: "tm-01", name: "MOHANLAL MP", role: "Founder", category: "Leadership", code: "MM", num: "01", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", phone: "+91 88844 64444", bio: "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team.", sequenceNumber: 1 },
+  { id: "tm-02", name: "RAMNIKLAL M VAGADIYA", role: "Founder & Chairman", category: "Leadership", code: "RV", num: "02", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg", phone: "+91 88844 64444", bio: "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision.", sequenceNumber: 2 },
+  { id: "tm-03", name: "MADHUSUDHAN MP", role: "Envisioner & Chief Planner", category: "Leadership", code: "MP", num: "03", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg", phone: "+91 88844 64444", bio: "He is the vision of AAREN. Responsible for creating the strategy, driving the business and scouting for world class products.", sequenceNumber: 3 },
+  { id: "tm-04", name: "KOU SHIK", role: "Sales Specialist", category: "Sales", code: "KS", num: "04", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg", phone: "+91 88844 64444", bio: "He guides customers to optimize space utility, is abreast with market trends, and coordinates layouts for luxury projects.", sequenceNumber: 4 },
+  { id: "tm-05", name: "ASHWIN", role: "Architectural Sales Consultant", category: "Sales", code: "AW", num: "05", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", phone: "+91 88844 64444", bio: "Consults with architects and developers to find surface and material solutions, manages customer relations and outreach.", sequenceNumber: 5 },
+  { id: "tm-06", name: "MUKUND", role: "Sales & Curation", category: "Sales", code: "MK", num: "06", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", phone: "+91 88844 64444", bio: "Curates the products, educates customers on the product mix and manages the store display.", sequenceNumber: 6 },
+  { id: "tm-07", name: "JIGNESH", role: "Channel Sales Manager", category: "Sales", code: "JG", num: "07", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg", phone: "+91 88844 64444", bio: "Maintains communication narratives, manages sales channels, and reaches out to clients for Bagno & Surface solutions.", sequenceNumber: 7 },
+  { id: "tm-08", name: "SURESH KUMAR", role: "Operations Head", category: "Operations", code: "SK", num: "08", image: "", phone: "+91 88844 64444", bio: "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites.", sequenceNumber: 8 },
+  { id: "tm-09", name: "PRAVEEN NAIR", role: "Lead Installation Specialist", category: "Installation", code: "PN", num: "09", image: "", phone: "+91 88844 64444", bio: "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations.", sequenceNumber: 9 },
+  { id: "tm-10", name: "ANITHA REDDY", role: "Client Support & Relations", category: "Support Staff", code: "AR", num: "10", image: "", phone: "+91 88844 64444", bio: "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction.", sequenceNumber: 10 },
+  { id: "tm-11", name: "HARSHITHA N", role: "Sales Executive", category: "Sales", code: "HN", num: "11", image: "", phone: "+91 88844 64444", bio: "Dedicated sales professional specializing in luxury surface presentations and client consultations.", sequenceNumber: 11 },
+  { id: "tm-12", name: "VISHWAS GEORGE", role: "Sales Consultant", category: "Sales", code: "VG", num: "12", image: "", phone: "+91 88844 64444", bio: "Experienced consultant guiding clients through premium architectural product selections.", sequenceNumber: 12 },
+  { id: "tm-13", name: "PRASHANTH M S", role: "Technical Support Staff", category: "Support Staff", code: "PM", num: "13", image: "", phone: "+91 88844 64444", bio: "Provides comprehensive after-sales support and technical assistance to clients.", sequenceNumber: 13 },
+  { id: "tm-14", name: "LOKESH G V", role: "Client Support Staff", category: "Support Staff", code: "LG", num: "14", image: "", phone: "+91 88844 64444", bio: "Ensures seamless client experience through dedicated support and coordination.", sequenceNumber: 14 },
+  { id: "tm-15", name: "KISHORE P", role: "Accounts & Finance Support", category: "Accountant", code: "KP", num: "15", image: "", phone: "+91 88844 64444", bio: "Manages financial operations, billing, and accounts to ensure smooth business transactions.", sequenceNumber: 15 },
+  { id: "tm-16", name: "NARASIMHA PRASAD B S", role: "Sales Executive", category: "Sales", code: "NP", num: "16", image: "", phone: "+91 88844 64444", bio: "Proactive sales executive focused on building client relationships and driving revenue growth.", sequenceNumber: 16 },
+  { id: "tm-17", name: "ROOPA C B", role: "Accounts & Support Executive", category: "Accountant", code: "RC", num: "17", image: "", phone: "+91 88844 64444", bio: "Handles financial records, invoicing, and accounting processes with precision and accuracy.", sequenceNumber: 17 },
+  { id: "tm-18", name: "ABDUL REHMAN KHAN", role: "Sales Executive", category: "Sales", code: "AR", num: "18", image: "", phone: "+91 88844 64444", bio: "Dynamic sales professional with expertise in luxury material presentations and client engagement.", sequenceNumber: 18 },
+  { id: "tm-19", name: "UTKALIKA NAYAK", role: "Sales Executive", category: "Sales", code: "UN", num: "19", image: "", phone: "+91 88844 64444", bio: "Result-oriented sales professional dedicated to delivering exceptional client experiences.", sequenceNumber: 19 },
+  { id: "tm-20", name: "AMBUJA MATHAPATI", role: "Sales Executive", category: "Sales", code: "AM", num: "20", image: "", phone: "+91 88844 64444", bio: "Passionate about connecting clients with world-class architectural solutions.", sequenceNumber: 20 },
+  { id: "tm-21", name: "SAWAN VISHWAKARMA", role: "Operations Executive", category: "Operations", code: "SV", num: "21", image: "", phone: "+91 88844 64444", bio: "Manages day-to-day operational workflows ensuring timely delivery and project coordination.", sequenceNumber: 21 },
+  { id: "tm-22", name: "D S SHANKAR", role: "Operations Coordinator", category: "Operations", code: "DS", num: "22", image: "", phone: "+91 88844 64444", bio: "Coordinates operational activities and logistics to maintain smooth project execution.", sequenceNumber: 22 },
+  { id: "tm-23", name: "JABIR KHAN", role: "Operations Logistics", category: "Operations", code: "JK", num: "23", image: "", phone: "+91 88844 64444", bio: "Supports operations with efficient handling and coordination of project requirements.", sequenceNumber: 23 },
+  { id: "tm-24", name: "NARASIMHA RAJU", role: "Accountant", category: "Accountant", code: "NR", num: "24", image: "", phone: "+91 88844 64444", bio: "Manages financial records and supports the accounts team with diligent accounting operations", sequenceNumber: 24 },
+];
+
+function normalizeCategory(m: any): string {
+  const cat = (m.category || "").trim();
+  const catLower = cat.toLowerCase();
+  const nameLower = (m.name || "").toLowerCase();
+  const desigLower = (m.designation || m.role || "").toLowerCase();
+  const codeLower = (m.memberCode || "").toLowerCase();
+
+  // Leadership check
+  if (
+    catLower === "leadership" ||
+    catLower.includes("leader") ||
+    desigLower.includes("founder") ||
+    desigLower.includes("chairman") ||
+    desigLower.includes("envisioner") ||
+    desigLower.includes("chief planner") ||
+    nameLower.includes("mohanlal") ||
+    nameLower.includes("ramniklal") ||
+    nameLower.includes("madhusudhan") ||
+    codeLower.startsWith("mm") ||
+    codeLower.startsWith("rv") ||
+    codeLower.startsWith("mp")
+  ) {
+    return "Leadership";
+  }
+
+  // Accountant check
+  if (
+    catLower === "accountant" ||
+    catLower.includes("account") ||
+    desigLower.includes("account") ||
+    desigLower.includes("finance") ||
+    nameLower.includes("raju") ||
+    nameLower.includes("kishore") ||
+    nameLower.includes("roopa")
+  ) {
+    return "Accountant";
+  }
+
+  // Installation check
+  if (catLower.includes("install") || desigLower.includes("install") || nameLower.includes("praveen")) {
+    return "Installation";
+  }
+
+  // Operations check
+  if (
+    catLower.includes("operation") ||
+    desigLower.includes("operation") ||
+    desigLower.includes("logistics") ||
+    nameLower.includes("suresh") ||
+    nameLower.includes("sawan") ||
+    nameLower.includes("shankar") ||
+    nameLower.includes("jabir")
+  ) {
+    return "Operations";
+  }
+
+  // Support Staff check
+  if (
+    catLower.includes("support") ||
+    desigLower.includes("support") ||
+    desigLower.includes("relations") ||
+    nameLower.includes("anitha") ||
+    nameLower.includes("prashanth") ||
+    nameLower.includes("lokesh")
+  ) {
+    return "Support Staff";
+  }
+
+  return "Sales";
+}
 
 export default function TeamPage() {
-  const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  const [teamMembers, setTeamMembers] = useState<any[]>(INITIAL_DEFAULT_TEAM);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("Leadership");
+  const [selectedMember, setSelectedMember] = useState<any | null>(null);
   const [joinBanner, setJoinBanner] = useState({
     title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
     fontSize: "medium",
@@ -25,16 +124,22 @@ export default function TeamPage() {
         if (json && json.success) {
           const list = json.team || (json.data && json.data.team) || (Array.isArray(json.data) ? json.data : null);
           if (list && list.length > 0) {
+            const sorted = [...list].sort((a: any, b: any) => (a.sequenceNumber ?? 999) - (b.sequenceNumber ?? 999));
             setTeamMembers(
-              list.map((m: any, idx: number) => ({
-                name: m.name,
-                role: m.designation || m.role || "Team Member",
-                category: m.category || "Leadership",
-                code: m.memberCode ? m.memberCode.split(" ")[0] : "MM",
-                num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : String(idx + 1).padStart(2, "0"),
-                image: m.photoUrl || m.image,
-                bio: m.bio,
-              }))
+              sorted.map((m: any, idx: number) => {
+                const cat = normalizeCategory(m);
+                return {
+                  name: m.name,
+                  role: m.designation || m.role || "Team Member",
+                  category: cat,
+                  code: m.memberCode ? m.memberCode.split(" ")[0] : (cat === "Leadership" ? "MM" : "TM"),
+                  num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : String(m.sequenceNumber || idx + 1).padStart(2, "0"),
+                  image: m.photoUrl || m.image,
+                  bio: m.bio,
+                  phone: m.phone,
+                  sequenceNumber: m.sequenceNumber ?? idx + 1,
+                };
+              })
             );
           }
           if (json.joinBanner || (json.data && json.data.joinBanner)) {
@@ -46,10 +151,14 @@ export default function TeamPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filteredMembers = teamMembers.filter((m) => m.category?.toLowerCase() === activeCategory.toLowerCase());
+  const filteredMembers = teamMembers.filter(
+    (m) => (m.category || "").toLowerCase().trim() === (activeCategory || "").toLowerCase().trim()
+  );
 
   const getCategoryCount = (cat: string) => {
-    return teamMembers.filter((m) => m.category?.toLowerCase() === cat.toLowerCase()).length;
+    return teamMembers.filter(
+      (m) => (m.category || "").toLowerCase().trim() === cat.toLowerCase().trim()
+    ).length;
   };
 
   return (
@@ -57,26 +166,27 @@ export default function TeamPage() {
       {/* ── Page Header ── */}
       <div className="team-header">
         <div className="team-header__inner">
-          <div className="team-header__meta t-tag" style={{ color: "#8c764b", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+          <div className="team-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
             MEET THE TEAM
           </div>
-          <h1 className="team-header__title" style={{ color: "#8c764b" }}>OUR TEAM</h1>
+          <h1 className="team-header__title" style={{ color: "#81663F" }}>OUR TEAM</h1>
           <p className="team-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
-            Aaren Intpro is built by a family of dedicated professionals across Sales, Operations, Installation, and Support Staff, united by a common passion for luxury spatial design.
+            Aaren Intpro is built by a family of dedicated professionals across Leadership, Sales, Operations, Installation, Accountant, and Support Staff, united by a common passion for luxury spatial design.
           </p>
         </div>
       </div>
 
-      {/* ── Sub Category Filter Navigation ── */}
+      {/* ── Sub Category Filter Navigation Bar ── */}
       <div className="team-category-nav-wrapper">
         <div className="team-category-nav">
           <span className="team-category-label">SUB CATEGORIES:</span>
           {CATEGORIES.map((cat) => {
             const count = getCategoryCount(cat);
-            const isActive = activeCategory === cat;
+            const isActive = activeCategory.toLowerCase() === cat.toLowerCase();
             return (
               <button
                 key={cat}
+                type="button"
                 onClick={() => setActiveCategory(cat)}
                 className={`team-cat-btn ${isActive ? "active" : ""}`}
               >
@@ -97,7 +207,12 @@ export default function TeamPage() {
         ) : (
           <div className="team-grid">
             {filteredMembers.map((member) => (
-              <div key={member.name} className="team-card">
+              <div
+                key={member.name}
+                className="team-card"
+                onClick={() => setSelectedMember(member)}
+                style={{ cursor: "pointer" }}
+              >
                 <div className="team-card__fig-wrapper">
                   <div className="team-card__fig">
                     {member.image ? (
@@ -110,50 +225,25 @@ export default function TeamPage() {
                         style={{ objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(100%)" }}
                       />
                     ) : (
-                      <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #1e2230 0%, #0b0c10 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#8c764b", fontSize: "4rem", fontWeight: 800, letterSpacing: "0.05em" }}>
+                      <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #1e2230 0%, #0b0c10 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#81663F", fontSize: "4rem", fontWeight: 800, letterSpacing: "0.05em" }}>
                         {member.name ? member.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "AA"}
                       </div>
                     )}
                   </div>
                   {/* Category Pill Overlay */}
                   <div className="team-card__category-badge">
-                    {member.category || "Sales"}
+                    {member.category}
                   </div>
                 </div>
-                <div className="team-card__caption" style={{ display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2.4rem 2rem 3rem" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: "1.6rem" }}>
-                    <div className="team-card__caption-left">
-                      <span className="team-card__caption-name" style={{ color: "#8c764b", fontSize: "1.7rem", fontWeight: 700, letterSpacing: "0.02em" }}>{member.name}</span>
-                      <span className="team-card__caption-role t-tag" style={{ marginTop: "0.4rem", color: "#000", fontWeight: 700, fontSize: "1.2rem" }}>{member.role}</span>
-                    </div>
-                    <div className="team-card__caption-right">
-                      <span className="team-card__caption-code">{member.code}</span>
-                      <span className="team-card__caption-num">{member.num}</span>
-                    </div>
-                  </div>
-                  <p style={{ fontSize: "1.35rem", lineHeight: 1.6, color: "rgba(0,0,0,0.6)", margin: 0, fontWeight: 400 }}>
-                    {member.bio}
-                  </p>
 
-                  {/* Minimal sharing/profile social media icons */}
-                  <div style={{ display: "flex", gap: "1rem", marginTop: "0.6rem" }}>
-                    <a href="#" className="team-member-social-icon" aria-label="Facebook">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                      </svg>
-                    </a>
-                    <a href="#" className="team-member-social-icon" aria-label="Twitter">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                      </svg>
-                    </a>
-                    <a href="#" className="team-member-social-icon" aria-label="LinkedIn">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                        <rect x="2" y="9" width="4" height="12"></rect>
-                        <circle cx="4" cy="4" r="2"></circle>
-                      </svg>
-                    </a>
+                <div className="team-card__caption">
+                  <div className="team-card__caption-left">
+                    <h2 className="team-card__caption-name">{member.name}</h2>
+                    <p className="team-card__caption-role">{member.role}</p>
+                  </div>
+                  <div className="team-card__caption-right">
+                    <span className="team-card__caption-code">{member.code}</span>
+                    <span className="team-card__caption-num">{member.num}</span>
                   </div>
                 </div>
               </div>
@@ -162,33 +252,139 @@ export default function TeamPage() {
         )}
       </div>
 
+      {/* ── Modal Pop-up for Member Details ── */}
+      {selectedMember && (
+        <div
+          className="team-modal-backdrop"
+          onClick={() => setSelectedMember(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
+            backdropFilter: "blur(6px)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "2rem",
+          }}
+        >
+          <div
+            className="team-modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: "#E6E2D8",
+              border: "1px solid #81663F",
+              borderRadius: "0.8rem",
+              maxWidth: "600px",
+              width: "100%",
+              overflow: "hidden",
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div style={{ position: "relative", height: "28rem", background: "#111" }}>
+              {selectedMember.image ? (
+                <Image
+                  src={selectedMember.image}
+                  alt={selectedMember.name}
+                  fill
+                  style={{ objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(100%)" }}
+                />
+              ) : (
+                <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #1e2230 0%, #0b0c10 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#81663F", fontSize: "5rem", fontWeight: 800 }}>
+                  {selectedMember.name ? selectedMember.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "AA"}
+                </div>
+              )}
+              <button
+                onClick={() => setSelectedMember(null)}
+                style={{
+                  position: "absolute",
+                  top: "1.2rem",
+                  right: "1.2rem",
+                  background: "rgba(0,0,0,0.7)",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "#fff",
+                  width: "3.2rem",
+                  height: "3.2rem",
+                  borderRadius: "50%",
+                  fontSize: "1.6rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            <div style={{ padding: "2.4rem", display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <h3 style={{ fontSize: "2rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase", margin: 0 }}>
+                    {selectedMember.name}
+                  </h3>
+                  <p style={{ fontSize: "1.3rem", color: "rgba(0,0,0,0.6)", fontWeight: 600, margin: "0.4rem 0 0" }}>
+                    {selectedMember.role}
+                  </p>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <span style={{ fontSize: "2.4rem", fontWeight: 800, color: "#81663F" }}>
+                    {selectedMember.code}
+                  </span>
+                  <span style={{ fontSize: "2.2rem", fontWeight: 800, color: "rgba(129,102,63,0.4)", marginLeft: "0.4rem" }}>
+                    {selectedMember.num}
+                  </span>
+                </div>
+              </div>
+
+              {selectedMember.bio && (
+                <p style={{ fontSize: "1.35rem", lineHeight: 1.6, color: "rgba(0,0,0,0.7)", margin: "0.8rem 0 0" }}>
+                  {selectedMember.bio}
+                </p>
+              )}
+
+              {selectedMember.phone && (
+                <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid rgba(129,102,63,0.2)" }}>
+                  <a href={`tel:${selectedMember.phone}`} style={{ color: "#81663F", fontWeight: 700, textDecoration: "none", fontSize: "1.3rem" }}>
+                    📞 {selectedMember.phone}
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Call to Action Join Section ── */}
       <div className="team-join-section">
         <h2 className={`team-join-title size-${joinBanner.fontSize || "medium"}`}>
-          {joinBanner.title || "DO YOU WANT TO JOIN THE CREATIVE TEAM?"}
+          {joinBanner.title}
         </h2>
         <div className="team-join-info">
           <div className="team-join-circle-icon">i</div>
-          <p className="team-join-hours">{joinBanner.hoursText || "Open 9am to 9pm (All days)"}</p>
+          <p className="team-join-hours">{joinBanner.hoursText}</p>
           <div className="team-join-contacts">
-            <a href={`tel:${(joinBanner.phone || "+918884464444").replace(/[^+0-9]/g, "")}`} className="team-join-link">{joinBanner.phone || "+91 88844 64444"}</a>
-            <a href={`mailto:${joinBanner.email || "info@aarenintpro.com"}`} className="team-join-link">{joinBanner.email || "info@aarenintpro.com"}</a>
-            <p className="team-join-address">{joinBanner.address || "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026"}</p>
+            <a href={`tel:${joinBanner.phone.replace(/[^0-9+]/g, "")}`} className="team-join-link">{joinBanner.phone}</a>
+            <a href={`mailto:${joinBanner.email}`} className="team-join-link">{joinBanner.email}</a>
+            <p className="team-join-address">{joinBanner.address}</p>
           </div>
         </div>
       </div>
 
       <style>{`
         .team-page {
-          background: #eaeef4;
-          color: #000;
+          background: #E6E2D8;
+          color: #1e1e1e;
           min-height: 100vh;
           padding-top: 8rem;
         }
 
         .team-header {
           padding: 6rem 0.8rem 4rem;
-          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
+          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
+          text-align: center;
         }
 
         @media (min-width: 768px) {
@@ -197,13 +393,21 @@ export default function TeamPage() {
           }
         }
 
+        .team-header__inner {
+          max-width: 1600px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
         .team-header__title {
           font-size: clamp(6rem, 15vw, 22rem);
           font-weight: 700;
           letter-spacing: -0.05em;
           line-height: 0.88;
           text-transform: uppercase;
-          color: #000;
+          color: #81663F;
           margin-bottom: 3.2rem;
         }
 
@@ -215,8 +419,8 @@ export default function TeamPage() {
 
         /* ── Sub Category Filter Navigation Bar ── */
         .team-category-nav-wrapper {
-          border-bottom: 1px solid rgba(0,0,0,0.12);
-          background: #eaeef4;
+          border-bottom: 1px solid rgba(129,102,63,0.18);
+          background: #E6E2D8;
           position: relative;
           z-index: 10;
           padding: 1.6rem 2.4rem;
@@ -263,7 +467,7 @@ export default function TeamPage() {
           font-size: 1.1rem;
           font-weight: 800;
           letter-spacing: 0.12em;
-          color: #8c764b;
+          color: #81663F;
           margin-right: 0.8rem;
         }
 
@@ -273,8 +477,8 @@ export default function TeamPage() {
           gap: 0.6rem;
           padding: 0.7rem 1.4rem;
           border-radius: 9999px;
-          border: 1px solid rgba(0,0,0,0.15);
-          background: #fff;
+          border: 1px solid rgba(129,102,63,0.25);
+          background: #FAF9F6;
           color: #222;
           font-size: 1.2rem;
           font-weight: 700;
@@ -284,16 +488,16 @@ export default function TeamPage() {
         }
 
         .team-cat-btn:hover {
-          border-color: #8c764b;
-          color: #8c764b;
+          border-color: #81663F;
+          color: #81663F;
           transform: translateY(-1px);
         }
 
         .team-cat-btn.active {
-          background: #8c764b;
+          background: #81663F;
           color: #fff;
-          border-color: #8c764b;
-          box-shadow: 0 4px 14px rgba(140, 118, 75, 0.25);
+          border-color: #81663F;
+          box-shadow: 0 4px 14px rgba(129, 102, 63, 0.25);
         }
 
         .team-cat-count {
@@ -344,8 +548,8 @@ export default function TeamPage() {
         .team-card {
           display: flex;
           flex-direction: column;
-          background: #eaeef4;
-          border: 0.1rem solid rgba(0, 0, 0, 0.12);
+          background: #E6E2D8;
+          border: 0.1rem solid rgba(129, 102, 63, 0.2);
           overflow: hidden;
           transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -404,12 +608,13 @@ export default function TeamPage() {
           justify-content: space-between;
           gap: 1.6rem;
           padding: 1.6rem 2.4rem;
-          background: #eaeef4;
+          background: #FAF9F6;
+          border-top: 1px solid rgba(129,102,63,0.12);
           transition: background 0.25s ease;
         }
 
         .team-card:hover .team-card__caption {
-          background: #dfe3e9;
+          background: #F2EFE8;
         }
 
         .team-card__caption-left {
@@ -424,11 +629,12 @@ export default function TeamPage() {
           letter-spacing: -0.02em;
           line-height: 1.0;
           text-transform: uppercase;
+          color: #81663F;
         }
 
         .team-card__caption-role {
           font-size: 1.1rem;
-          color: rgba(0,0,0,0.4);
+          color: rgba(0,0,0,0.5);
           letter-spacing: 0.04em;
           text-transform: uppercase;
         }
@@ -445,6 +651,7 @@ export default function TeamPage() {
           font-weight: 700;
           letter-spacing: -0.04em;
           line-height: 1;
+          color: #81663F;
         }
 
         .team-card__caption-num {
@@ -452,19 +659,19 @@ export default function TeamPage() {
           font-weight: 700;
           letter-spacing: -0.04em;
           line-height: 1;
-          color: rgba(0,0,0,0.25);
+          color: rgba(129,102,63,0.35);
         }
 
         /* ── Team Join Section Styling & Font Sizing ── */
         .team-join-section {
           padding: 6rem 2.4rem;
-          background: #ffffff;
-          border-top: 1px solid rgba(0,0,0,0.1);
+          background: #FAF9F6;
+          border-top: 1px solid rgba(129,102,63,0.18);
           text-align: center;
         }
 
         .team-join-title {
-          color: #8c764b;
+          color: #81663F;
           font-weight: 800;
           letter-spacing: -0.02em;
           line-height: 1.25;
@@ -496,8 +703,8 @@ export default function TeamPage() {
           width: 3.6rem;
           height: 3.6rem;
           border-radius: 50%;
-          border: 1px solid #8c764b;
-          color: #8c764b;
+          border: 1px solid #81663F;
+          color: #81663F;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -523,7 +730,7 @@ export default function TeamPage() {
 
         .team-join-link {
           font-size: 1.6rem;
-          color: #8c764b;
+          color: #81663F;
           font-weight: 700;
           text-decoration: none;
           transition: opacity 0.2s ease;
