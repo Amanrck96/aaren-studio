@@ -3,18 +3,12 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-export const TEAM_SECTIONS = [
-  { id: "leadership", title: "1. LEADERSHIP", match: "leadership" },
-  { id: "sales", title: "A. SALES TEAM", match: "sales" },
-  { id: "operations", title: "B. OPERATIONS TEAM", match: "operations" },
-  { id: "installation", title: "C. INSTALLATION TEAM", match: "installation" },
-  { id: "support", title: "D. SUPPORT STAFF", match: "support staff" },
-];
+const CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Support Staff", "Accounts"];
 
 export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [activeCategory, setActiveCategory] = useState("Leadership");
   const [joinBanner, setJoinBanner] = useState({
     title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
     fontSize: "medium",
@@ -31,27 +25,16 @@ export default function TeamPage() {
         if (json && json.success) {
           const list = json.team || (json.data && json.data.team) || (Array.isArray(json.data) ? json.data : null);
           if (list && list.length > 0) {
-            const sortedList = [...list].sort((a: any, b: any) => (a.sequenceNumber ?? 999) - (b.sequenceNumber ?? 999));
             setTeamMembers(
-              sortedList.map((m: any, idx: number) => {
-                const catLower = (m.category || "Sales").toLowerCase();
-                const isLeadership = catLower === "leadership" || (m.group && m.group.toLowerCase() === "leadership");
-                return {
-                  id: m.id,
-                  name: m.name,
-                  role: m.designation || m.role || "Team Member",
-                  category: m.category || (isLeadership ? "Leadership" : "Sales"),
-                  group: isLeadership ? "Leadership" : "Team",
-                  code: m.memberCode ? m.memberCode.split(" ")[0] : (isLeadership ? "MM" : "TM"),
-                  num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : String(m.sequenceNumber || idx + 1).padStart(2, "0"),
-                  image: m.photoUrl || m.image,
-                  bio: m.bio,
-                  sequenceNumber: m.sequenceNumber ?? idx + 1,
-                  phone: m.phone,
-                  linkedin: m.linkedin,
-                  instagram: m.instagram,
-                };
-              })
+              list.map((m: any, idx: number) => ({
+                name: m.name,
+                role: m.designation || m.role || "Team Member",
+                category: m.category || "Leadership",
+                code: m.memberCode ? m.memberCode.split(" ")[0] : "MM",
+                num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : String(idx + 1).padStart(2, "0"),
+                image: m.photoUrl || m.image,
+                bio: m.bio,
+              }))
             );
           }
           if (json.joinBanner || (json.data && json.data.joinBanner)) {
@@ -63,484 +46,499 @@ export default function TeamPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const filteredMembers = teamMembers.filter((m) => m.category?.toLowerCase() === activeCategory.toLowerCase());
+
+  const getCategoryCount = (cat: string) => {
+    return teamMembers.filter((m) => m.category?.toLowerCase() === cat.toLowerCase()).length;
+  };
+
   return (
     <div className="team-page">
       {/* ── Page Header ── */}
       <div className="team-header">
         <div className="team-header__inner">
-          <div className="team-header__meta" style={{ color: "#81663F", fontWeight: 800, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "1.4rem", fontSize: "1.1rem" }}>
-            ORGANIZATIONAL STRUCTURE
+          <div className="team-header__meta t-tag" style={{ color: "#8c764b", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+            MEET THE TEAM
           </div>
-          <h1 className="team-header__title" style={{ color: "#81663F" }}>OUR TEAM</h1>
-          <p className="team-header__desc" style={{ color: "#5E5852", maxWidth: "68rem", fontSize: "1.5rem", lineHeight: 1.6, margin: "0 auto" }}>
-            Structured under <strong>1. Leadership</strong> and <strong>2. Team</strong> (comprising <strong>A. Sales</strong>, <strong>B. Operations</strong>, <strong>C. Installation</strong>, and <strong>D. Support Staff</strong>) — delivering world-class architectural solutions across India.
+          <h1 className="team-header__title" style={{ color: "#8c764b" }}>OUR TEAM</h1>
+          <p className="team-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
+            Aaren Intpro is built by a family of dedicated professionals across Sales, Operations, Installation, and Support Staff, united by a common passion for luxury spatial design.
           </p>
         </div>
       </div>
 
-      {/* ── Direct Stacked Sections: No Dropdowns, No Filters ── */}
-      <div className="team-sections-container">
-        {TEAM_SECTIONS.map((section) => {
-          const members = teamMembers.filter((m) => {
-            const cat = (m.category || "").toLowerCase();
-            if (section.id === "leadership") {
-              return cat === "leadership" || m.group === "Leadership";
-            }
-            if (section.id === "sales") {
-              return cat.includes("sales");
-            }
-            if (section.id === "operations") {
-              return cat.includes("operation");
-            }
-            if (section.id === "installation") {
-              return cat.includes("installation");
-            }
-            if (section.id === "support") {
-              return cat.includes("support") || cat.includes("accounts") || cat.includes("finance");
-            }
-            return false;
-          }).sort((a, b) => (a.sequenceNumber ?? 999) - (b.sequenceNumber ?? 999));
+      {/* ── Sub Category Filter Navigation ── */}
+      <div className="team-category-nav-wrapper">
+        <div className="team-category-nav">
+          <span className="team-category-label">SUB CATEGORIES:</span>
+          {CATEGORIES.map((cat) => {
+            const count = getCategoryCount(cat);
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`team-cat-btn ${isActive ? "active" : ""}`}
+              >
+                <span>{cat.toUpperCase()}</span>
+                <span className="team-cat-count">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-          if (members.length === 0 && !loading) return null;
-
-          return (
-            <section key={section.id} className="team-department-section" id={`team-${section.id}`}>
-              {/* Department Heading */}
-              <div className="department-header">
-                <div className="department-heading-wrapper">
-                  <h2 className="department-title">{section.title}</h2>
-                  <span className="department-badge">[{members.length} MEMBERS]</span>
-                </div>
-                <div className="department-divider" />
-              </div>
-
-              {/* Members Photo Grid */}
-              <div className="team-grid">
-                {members.map((member) => (
-                  <div key={member.id} className="team-card">
-                    {/* Photo Box */}
-                    <div className="team-card__img-wrap">
-                      {member.image ? (
-                        <Image
-                          src={member.image}
-                          alt={member.name}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                          className="team-card__img"
-                        />
-                      ) : (
-                        <div className="team-card__placeholder">
-                          <span className="team-card__initials">
-                            {member.name
-                              .split(" ")
-                              .map((n: string) => n[0])
-                              .slice(0, 2)
-                              .join("")}
-                          </span>
-                          <span className="team-card__role-tag">{member.role}</span>
-                        </div>
-                      )}
-                      <div className="team-card__num-tag">{member.num}</div>
-                    </div>
-
-                    {/* Member Details */}
-                    <div className="team-card__body">
-                      <div className="team-card__top">
-                        <span className="team-card__dept-tag">{member.category}</span>
-                        <span className="team-card__code">{member.code}</span>
+      {/* ── Team Grid ── */}
+      <div className="team-grid-container">
+        {filteredMembers.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "6rem 2rem", color: "rgba(0,0,0,0.5)", fontSize: "1.6rem" }}>
+            No team members found in the <strong>{activeCategory}</strong> sub category.
+          </div>
+        ) : (
+          <div className="team-grid">
+            {filteredMembers.map((member) => (
+              <div key={member.name} className="team-card">
+                <div className="team-card__fig-wrapper">
+                  <div className="team-card__fig">
+                    {member.image ? (
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="team-card__img"
+                        style={{ objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(100%)" }}
+                      />
+                    ) : (
+                      <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #1e2230 0%, #0b0c10 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#8c764b", fontSize: "4rem", fontWeight: 800, letterSpacing: "0.05em" }}>
+                        {member.name ? member.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "AA"}
                       </div>
-                      <h3 className="team-card__name">{member.name}</h3>
-                      <p className="team-card__role">{member.role}</p>
-
-                      {member.bio && (
-                        <p className="team-card__bio">{member.bio}</p>
-                      )}
-
-                      {member.phone && (
-                        <div className="team-card__contact">
-                          <a href={`tel:${member.phone}`} className="team-card__phone">
-                            📞 {member.phone}
-                          </a>
-                        </div>
-                      )}
+                    )}
+                  </div>
+                  {/* Category Pill Overlay */}
+                  <div className="team-card__category-badge">
+                    {member.category || "Sales"}
+                  </div>
+                </div>
+                <div className="team-card__caption" style={{ display: "flex", flexDirection: "column", gap: "1.2rem", padding: "2.4rem 2rem 3rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: "1.6rem" }}>
+                    <div className="team-card__caption-left">
+                      <span className="team-card__caption-name" style={{ color: "#8c764b", fontSize: "1.7rem", fontWeight: 700, letterSpacing: "0.02em" }}>{member.name}</span>
+                      <span className="team-card__caption-role t-tag" style={{ marginTop: "0.4rem", color: "#000", fontWeight: 700, fontSize: "1.2rem" }}>{member.role}</span>
+                    </div>
+                    <div className="team-card__caption-right">
+                      <span className="team-card__caption-code">{member.code}</span>
+                      <span className="team-card__caption-num">{member.num}</span>
                     </div>
                   </div>
-                ))}
+                  <p style={{ fontSize: "1.35rem", lineHeight: 1.6, color: "rgba(0,0,0,0.6)", margin: 0, fontWeight: 400 }}>
+                    {member.bio}
+                  </p>
+
+                  {/* Minimal sharing/profile social media icons */}
+                  <div style={{ display: "flex", gap: "1rem", marginTop: "0.6rem" }}>
+                    <a href="#" className="team-member-social-icon" aria-label="Facebook">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                      </svg>
+                    </a>
+                    <a href="#" className="team-member-social-icon" aria-label="Twitter">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                      </svg>
+                    </a>
+                    <a href="#" className="team-member-social-icon" aria-label="LinkedIn">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
               </div>
-            </section>
-          );
-        })}
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* ── Join the Creative Team Banner ── */}
-      <section className="join-banner-section">
-        <div className="join-banner-inner">
-          <span className="join-banner-eyebrow">CAREERS AT AAREN STUDIO</span>
-          <h2 className="join-banner-title">{joinBanner.title}</h2>
-          <p className="join-banner-subtitle">
-            We are always seeking visionary architects, sales consultants, and material specialists to join our Bangalore flagship studio.
-          </p>
-
-          <div className="join-banner-details">
-            <div className="join-detail-item">
-              <span className="join-detail-label">HOURS</span>
-              <span className="join-detail-val">{joinBanner.hoursText}</span>
-            </div>
-            <div className="join-detail-item">
-              <span className="join-detail-label">CALL US</span>
-              <a href={`tel:${joinBanner.phone}`} className="join-detail-val">
-                {joinBanner.phone}
-              </a>
-            </div>
-            <div className="join-detail-item">
-              <span className="join-detail-label">EMAIL US</span>
-              <a href={`mailto:${joinBanner.email}`} className="join-detail-val">
-                {joinBanner.email}
-              </a>
-            </div>
-          </div>
-
-          <div className="join-banner-address">
-            📍 {joinBanner.address}
+      {/* ── Call to Action Join Section ── */}
+      <div className="team-join-section">
+        <h2 className={`team-join-title size-${joinBanner.fontSize || "medium"}`}>
+          {joinBanner.title || "DO YOU WANT TO JOIN THE CREATIVE TEAM?"}
+        </h2>
+        <div className="team-join-info">
+          <div className="team-join-circle-icon">i</div>
+          <p className="team-join-hours">{joinBanner.hoursText || "Open 9am to 9pm (All days)"}</p>
+          <div className="team-join-contacts">
+            <a href={`tel:${(joinBanner.phone || "+918884464444").replace(/[^+0-9]/g, "")}`} className="team-join-link">{joinBanner.phone || "+91 88844 64444"}</a>
+            <a href={`mailto:${joinBanner.email || "info@aarenintpro.com"}`} className="team-join-link">{joinBanner.email || "info@aarenintpro.com"}</a>
+            <p className="team-join-address">{joinBanner.address || "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026"}</p>
           </div>
         </div>
-      </section>
+      </div>
 
-      <style jsx>{`
+      <style>{`
         .team-page {
-          background-color: #E6E2D8;
-          color: #1C1917;
+          background: #eaeef4;
+          color: #000;
           min-height: 100vh;
           padding-top: 8rem;
-          font-family: var(--font-jost), 'Jost', sans-serif;
         }
 
         .team-header {
-          padding: 5rem 2.4rem 3.5rem;
-          text-align: center;
-          border-bottom: 1px solid #D8D0BE;
-          background: #E6E2D8;
+          padding: 6rem 0.8rem 4rem;
+          border-bottom: 0.1rem solid rgba(0,0,0,0.12);
         }
 
-        .team-header__inner {
-          max-width: 1000px;
-          margin: 0 auto;
+        @media (min-width: 768px) {
+          .team-header {
+            padding: 8rem 1.2rem 5rem;
+          }
         }
 
         .team-header__title {
-          font-size: clamp(3.5rem, 8vw, 8.5rem);
-          font-weight: 800;
-          letter-spacing: -0.03em;
-          line-height: 0.95;
-          color: #81663F;
+          font-size: clamp(6rem, 15vw, 22rem);
+          font-weight: 700;
+          letter-spacing: -0.05em;
+          line-height: 0.88;
           text-transform: uppercase;
-          margin-bottom: 1.8rem;
+          color: #000;
+          margin-bottom: 3.2rem;
         }
 
-        .team-sections-container {
-          max-width: 1400px;
+        .team-header__desc {
+          font-size: 1.5rem;
+          line-height: 1.5;
+          letter-spacing: -0.01em;
+        }
+
+        /* ── Sub Category Filter Navigation Bar ── */
+        .team-category-nav-wrapper {
+          border-bottom: 1px solid rgba(0,0,0,0.12);
+          background: #eaeef4;
+          position: relative;
+          z-index: 10;
+          padding: 1.6rem 2.4rem;
+          margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+          .team-category-nav-wrapper {
+            padding: 1rem 1.2rem;
+          }
+        }
+
+        .team-category-nav {
+          max-width: 1600px;
           margin: 0 auto;
-          padding: 3rem 2.4rem 6rem;
           display: flex;
-          flex-direction: column;
-          gap: 5rem;
-        }
-
-        .team-department-section {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-
-        .department-header {
-          display: flex;
-          flex-direction: column;
-          gap: 0.8rem;
-        }
-
-        .department-heading-wrapper {
-          display: flex;
-          align-items: baseline;
-          justify-content: space-between;
+          align-items: center;
+          gap: 1.2rem;
           flex-wrap: wrap;
-          gap: 1rem;
         }
 
-        .department-title {
-          font-size: clamp(2rem, 3.2vw, 3.4rem);
-          font-weight: 800;
-          letter-spacing: -0.02em;
-          color: #81663F;
-          text-transform: uppercase;
-          margin: 0;
+        @media (max-width: 768px) {
+          .team-category-nav {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 0.4rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .team-category-nav::-webkit-scrollbar {
+            display: none;
+          }
+          .team-category-label {
+            white-space: nowrap;
+            flex-shrink: 0;
+          }
+          .team-cat-btn {
+            white-space: nowrap;
+            flex-shrink: 0;
+          }
         }
 
-        .department-badge {
+        .team-category-label {
           font-size: 1.1rem;
           font-weight: 800;
-          letter-spacing: 0.1em;
-          color: #81663F;
-          background: #FAF9F6;
-          padding: 0.35rem 1rem;
-          border-radius: 999px;
-          border: 1px solid #D8D0BE;
+          letter-spacing: 0.12em;
+          color: #8c764b;
+          margin-right: 0.8rem;
         }
 
-        .department-divider {
-          width: 100%;
-          height: 2px;
-          background: linear-gradient(90deg, #81663F 0%, rgba(129, 102, 63, 0.2) 60%, transparent 100%);
+        .team-cat-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.7rem 1.4rem;
+          border-radius: 9999px;
+          border: 1px solid rgba(0,0,0,0.15);
+          background: #fff;
+          color: #222;
+          font-size: 1.2rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+
+        .team-cat-btn:hover {
+          border-color: #8c764b;
+          color: #8c764b;
+          transform: translateY(-1px);
+        }
+
+        .team-cat-btn.active {
+          background: #8c764b;
+          color: #fff;
+          border-color: #8c764b;
+          box-shadow: 0 4px 14px rgba(140, 118, 75, 0.25);
+        }
+
+        .team-cat-count {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0,0,0,0.06);
+          color: inherit;
+          padding: 0.15rem 0.6rem;
+          border-radius: 9999px;
+          font-size: 1rem;
+          font-weight: 800;
+        }
+
+        .team-cat-btn.active .team-cat-count {
+          background: rgba(255,255,255,0.25);
+          color: #fff;
+        }
+
+        /* ── Team Grid with Sturdy-style Spacing & Row Gaps ── */
+        .team-grid-container {
+          max-width: 1600px;
+          margin: 0 auto;
         }
 
         .team-grid {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 2.4rem;
+          gap: 4rem 2.4rem;
+          padding: 4rem 1.2rem 8rem;
         }
 
-        @media (min-width: 640px) {
+        @media (min-width: 768px) {
           .team-grid {
             grid-template-columns: repeat(2, 1fr);
+            padding: 6rem 2.4rem 10rem;
+            gap: 5rem 3.2rem;
           }
         }
 
-        @media (min-width: 1024px) {
+        @media (min-width: 1200px) {
           .team-grid {
             grid-template-columns: repeat(3, 1fr);
-            gap: 2.8rem;
-          }
-        }
-
-        @media (min-width: 1280px) {
-          .team-grid {
-            grid-template-columns: repeat(4, 1fr);
+            gap: 6rem 3.6rem;
           }
         }
 
         .team-card {
-          background: #FAF9F6;
-          border: 1px solid #D8D0BE;
-          border-radius: 0.8rem;
-          overflow: hidden;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 6px 20px rgba(0,0,0,0.04);
-          transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+          background: #eaeef4;
+          border: 0.1rem solid rgba(0, 0, 0, 0.12);
+          overflow: hidden;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .team-card:hover {
           transform: translateY(-0.4rem);
-          border-color: #81663F;
-          box-shadow: 0 1.2rem 3rem rgba(129, 102, 63, 0.12);
+          box-shadow: 0 1.2rem 3.2rem rgba(0,0,0,0.08);
         }
 
-        .team-card__img-wrap {
+        .team-card__fig-wrapper {
           position: relative;
-          height: 26rem;
-          background: #E8E3D7;
           overflow: hidden;
+          height: 38rem;
+          background: #111;
+        }
+
+        @media (min-width: 768px) {
+          .team-card__fig-wrapper {
+            height: 44rem;
+          }
+        }
+
+        .team-card__fig {
+          position: absolute;
+          inset: 0;
+        }
+
+        .team-card__category-badge {
+          position: absolute;
+          top: 1.2rem;
+          right: 1.2rem;
+          z-index: 2;
+          background: rgba(0, 0, 0, 0.75);
+          backdrop-filter: blur(8px);
+          color: #d4af37;
+          border: 1px solid rgba(212, 175, 55, 0.4);
+          font-size: 1rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 0.4rem 1rem;
+          border-radius: 4px;
         }
 
         .team-card__img {
-          object-fit: cover;
-          transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+          transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
         }
 
         .team-card:hover .team-card__img {
           transform: scale(1.04);
         }
 
-        .team-card__placeholder {
-          width: 100%;
-          height: 100%;
+        .team-card__caption {
           display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          background: #EDE8DF;
-          color: #81663F;
-          gap: 0.6rem;
-        }
-
-        .team-card__initials {
-          font-size: 3.5rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-        }
-
-        .team-card__role-tag {
-          font-size: 1rem;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #8A8279;
-        }
-
-        .team-card__num-tag {
-          position: absolute;
-          top: 1.2rem;
-          right: 1.2rem;
-          background: rgba(0,0,0,0.75);
-          backdrop-filter: blur(6px);
-          color: #D4B67D;
-          font-size: 1rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          padding: 0.3rem 0.8rem;
-          border-radius: 0.4rem;
-          border: 1px solid rgba(212, 182, 125, 0.3);
-        }
-
-        .team-card__body {
-          padding: 2rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.8rem;
-          flex: 1;
-        }
-
-        .team-card__top {
-          display: flex;
+          align-items: flex-start;
           justify-content: space-between;
-          align-items: center;
+          gap: 1.6rem;
+          padding: 1.6rem 2.4rem;
+          background: #eaeef4;
+          transition: background 0.25s ease;
         }
 
-        .team-card__dept-tag {
-          font-size: 0.95rem;
-          font-weight: 800;
-          letter-spacing: 0.1em;
+        .team-card:hover .team-card__caption {
+          background: #dfe3e9;
+        }
+
+        .team-card__caption-left {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+        }
+
+        .team-card__caption-name {
+          font-size: 1.5rem;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          line-height: 1.0;
           text-transform: uppercase;
-          color: #81663F;
         }
 
-        .team-card__code {
-          font-size: 1rem;
-          font-weight: 700;
-          color: #8A8279;
-        }
-
-        .team-card__name {
-          font-size: 1.7rem;
-          font-weight: 800;
-          line-height: 1.2;
-          color: #81663F;
-          margin: 0;
-        }
-
-        .team-card__role {
-          font-size: 1.2rem;
-          color: #5E5852;
-          font-weight: 600;
-          margin: 0;
-        }
-
-        .team-card__bio {
-          font-size: 1.15rem;
-          line-height: 1.5;
-          color: #5E5852;
-          font-weight: 400;
-          margin: 0;
-          margin-top: 0.4rem;
-        }
-
-        .team-card__contact {
-          margin-top: auto;
-          padding-top: 1.2rem;
-          border-top: 1px solid #E8E3D7;
-        }
-
-        .team-card__phone {
+        .team-card__caption-role {
           font-size: 1.1rem;
-          color: #81663F;
+          color: rgba(0,0,0,0.4);
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        .team-card__caption-right {
+          display: flex;
+          align-items: center;
+          gap: 1.6rem;
+          flex-shrink: 0;
+        }
+
+        .team-card__caption-code {
+          font-size: 3rem;
           font-weight: 700;
-          text-decoration: none;
-          display: inline-block;
-          transition: color 0.2s ease;
+          letter-spacing: -0.04em;
+          line-height: 1;
         }
 
-        .team-card__phone:hover {
-          color: #B38E46;
+        .team-card__caption-num {
+          font-size: 2.6rem;
+          font-weight: 700;
+          letter-spacing: -0.04em;
+          line-height: 1;
+          color: rgba(0,0,0,0.25);
         }
 
-        /* JOIN BANNER */
-        .join-banner-section {
-          background: #FAF9F6;
-          border-top: 1px solid #D8D0BE;
+        /* ── Team Join Section Styling & Font Sizing ── */
+        .team-join-section {
           padding: 6rem 2.4rem;
+          background: #ffffff;
+          border-top: 1px solid rgba(0,0,0,0.1);
           text-align: center;
         }
 
-        .join-banner-inner {
+        .team-join-title {
+          color: #8c764b;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          line-height: 1.25;
+          text-transform: uppercase;
+          margin: 0 auto 2.5rem;
           max-width: 900px;
-          margin: 0 auto;
+        }
+
+        .team-join-title.size-small {
+          font-size: clamp(1.6rem, 3vw, 2.2rem);
+        }
+
+        .team-join-title.size-medium {
+          font-size: clamp(2rem, 3.8vw, 3rem);
+        }
+
+        .team-join-title.size-large {
+          font-size: clamp(2.6rem, 5vw, 4.2rem);
+        }
+
+        .team-join-info {
           display: flex;
           flex-direction: column;
           align-items: center;
           gap: 1.6rem;
         }
 
-        .join-banner-eyebrow {
-          font-size: 1.1rem;
-          font-weight: 800;
-          letter-spacing: 0.15em;
-          color: #81663F;
-        }
-
-        .join-banner-title {
-          font-size: clamp(2.2rem, 3.8vw, 3.6rem);
-          font-weight: 800;
-          letter-spacing: -0.02em;
-          color: #81663F;
-          line-height: 1.2;
-          margin: 0;
-        }
-
-        .join-banner-subtitle {
-          font-size: 1.4rem;
-          color: #5E5852;
-          line-height: 1.5;
-          max-width: 700px;
-          margin: 0;
-        }
-
-        .join-banner-details {
+        .team-join-circle-icon {
+          width: 3.6rem;
+          height: 3.6rem;
+          border-radius: 50%;
+          border: 1px solid #8c764b;
+          color: #8c764b;
           display: flex;
+          align-items: center;
           justify-content: center;
-          gap: 2.4rem;
-          flex-wrap: wrap;
-          margin-top: 1rem;
-          padding: 1.6rem 2.4rem;
-          background: #E6E2D8;
-          border-radius: 0.8rem;
-          border: 1px solid #D8D0BE;
+          font-family: Georgia, serif;
+          font-style: italic;
+          font-size: 1.8rem;
+          font-weight: 700;
         }
 
-        .join-detail-item {
+        .team-join-hours {
+          font-size: 1.4rem;
+          color: rgba(0,0,0,0.6);
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .team-join-contacts {
           display: flex;
           flex-direction: column;
-          gap: 0.3rem;
-          text-align: center;
+          align-items: center;
+          gap: 0.8rem;
         }
 
-        .join-detail-label {
-          font-size: 0.9rem;
-          font-weight: 800;
-          letter-spacing: 0.1em;
-          color: #81663F;
-        }
-
-        .join-detail-val {
-          font-size: 1.25rem;
+        .team-join-link {
+          font-size: 1.6rem;
+          color: #8c764b;
           font-weight: 700;
-          color: #1C1917;
           text-decoration: none;
+          transition: opacity 0.2s ease;
         }
 
-        .join-banner-address {
+        .team-join-link:hover {
+          opacity: 0.8;
+        }
+
+        .team-join-address {
           font-size: 1.2rem;
-          color: #8A8279;
-          font-weight: 600;
-          letter-spacing: 0.02em;
+          color: rgba(0,0,0,0.45);
+          letter-spacing: 0.05em;
+          margin-top: 0.8rem;
+          max-width: 500px;
         }
       `}</style>
     </div>
