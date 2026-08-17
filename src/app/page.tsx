@@ -282,10 +282,19 @@ export default function Home() {
   const [catIdx, setCatIdx] = useState(0);
   const catTotal = categoriesList.length;
   useEffect(() => {
-    const t = setInterval(() => setCatIdx((p) => (p + 1) % catTotal), 2800);
+    if (catTotal <= 1) return;
+    const t = setInterval(() => setCatIdx((p) => (p + 1) % catTotal), 3200);
     return () => clearInterval(t);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [catTotal]);
+
+  /* ── Brands full-width carousel state ── */
+  const [brandIdx, setBrandIdx] = useState(0);
+  const brandTotal = brandsList.length;
+  useEffect(() => {
+    if (brandTotal <= 1) return;
+    const t = setInterval(() => setBrandIdx((p) => (p + 1) % brandTotal), 3600);
+    return () => clearInterval(t);
+  }, [brandTotal]);
 
   /* ── Intro scroll-driven text refs ── */
   const introSectionRef = useRef<HTMLDivElement>(null);
@@ -800,7 +809,7 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════
-          BROWSE BY CATEGORY — 2-card carousel
+          BROWSE BY CATEGORY — 2-card carousel (1920x1080)
           ══════════════════════════════════════ */}
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
@@ -817,17 +826,17 @@ export default function Home() {
                   key={i}
                   onClick={() => setCatIdx(i)}
                   aria-label={`Category ${i + 1}`}
-                  style={{ width: catIdx === i ? "2.4rem" : "0.5rem", height: "0.5rem", borderRadius: "0.25rem", background: catIdx === i ? "#000" : "rgba(0,0,0,0.18)", border: "none", cursor: "pointer", padding: 0, transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)" }}
+                  style={{ width: catIdx === i ? "2.4rem" : "0.5rem", height: "0.5rem", borderRadius: "0.25rem", background: catIdx === i ? "#81663F" : "rgba(0,0,0,0.18)", border: "none", cursor: "pointer", padding: 0, transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)" }}
                 />
               ))}
             </div>
           </div>
 
           {/* Centered Title */}
-          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Browse by Category</span>
+          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Browse by Category</span>
 
           {/* Right link */}
-          <Link href="/products" id="cat-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "rgba(0,0,0,0.5)", letterSpacing: "0.08em", fontSize: "1.25rem" }}>View all</Link>
+          <Link href="/products" id="cat-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.25rem", fontWeight: 700 }}>View all</Link>
         </div>
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
@@ -857,8 +866,8 @@ export default function Home() {
                 }}
                 className="home-ticket-card"
               >
-                {/* Large Image (same height limit and transition) */}
-                <div style={{ position: "relative", overflow: "hidden", height: "clamp(30rem, 44vw, 68rem)", background: "#111" }}>
+                {/* 1920x1080 Image Container */}
+                <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "#d8d4c8" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={cat.img}
@@ -869,7 +878,7 @@ export default function Home() {
                 </div>
 
                 {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#E6E2D8", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", transition: "background 0.25s ease" }} className="home-ticket-caption">
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
                     <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, textTransform: "uppercase", color: "#81663F" }}>{cat.name}</span>
                     <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.2 }}>{cat.sub}</span>
@@ -918,99 +927,120 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════
-          BROWSE BY BRANDS — 4-col small top + 2-col large bottom
+          BROWSE BY BRANDS — 2-card full carousel showing ALL ~20 brands (1920x1080)
           ══════════════════════════════════════ */}
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
         {/* Centered Header bar */}
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
+        <div className="cat-header-bar" style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
+          {/* Left pagination & controls */}
+          <div style={{ position: "absolute", left: "2.4rem", bottom: "2.4rem", display: "flex", alignItems: "center", gap: "1.6rem" }} className="cat-header-left">
+            <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 600, color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em" }}>
+              {String(brandIdx + 1).padStart(2, "0")} / {String(brandTotal).padStart(2, "0")}
+            </span>
+            <div className="cat-header-dots" style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+              {brandsList.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setBrandIdx(i)}
+                  aria-label={`Brand ${i + 1}`}
+                  style={{ width: brandIdx === i ? "2.4rem" : "0.5rem", height: "0.5rem", borderRadius: "0.25rem", background: brandIdx === i ? "#81663F" : "rgba(0,0,0,0.18)", border: "none", cursor: "pointer", padding: 0, transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)" }}
+                />
+              ))}
+            </div>
+          </div>
+
           {/* Centered Title */}
-          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(0,0,0,0.75)", textAlign: "center" }}>Browse by Brands</span>
+          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Browse by Brands</span>
 
           {/* Right link */}
-          <Link href="/brands" className="t-tag ul-link" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "rgba(0,0,0,0.6)", letterSpacing: "0.08em", fontSize: "1.25rem" }}>View all</Link>
+          <Link href="/brands" id="brand-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.25rem", fontWeight: 700 }}>View all</Link>
         </div>
 
-        {/* TOP ROW: 4 small columns */}
-        <div className="brands-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", width: "100%", borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
-          {brandsList.slice(0, 4).map((brand, i) => (
-            <Link
-              key={brand.id}
-              href={getBrandHref(brand)}
-              id={`home-brand-top-${brand.id}`}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                borderRight: i < 3 ? "0.1rem solid rgba(0,0,0,0.12)" : "none",
-                textDecoration: "none",
-                color: "inherit",
-                overflow: "hidden",
-              }}
-              className="home-ticket-card"
-            >
-              <div style={{ overflow: "hidden", height: "clamp(14rem, 18vw, 30rem)", background: "#111", flexShrink: 0 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={brand.img} alt={brand.name} className="home-ticket-img" style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }} />
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.8rem", padding: "1.2rem 0.8rem", background: "#E6E2D8", transition: "background 0.25s ease" }} className="home-ticket-caption">
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                  <span style={{ fontSize: "clamp(1.0rem, 1.1vw, 1.3rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#81663F" }}>{brand.name}</span>
-                  <span style={{ fontSize: "1.0rem", color: "#5E5852", letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.2 }}>{brand.sub}</span>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexShrink: 0 }}>
-                  <span style={{ fontSize: "clamp(1.4rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{brand.code}</span>
-                  <span style={{ fontSize: "clamp(1.2rem, 1.8vw, 2.6rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{brand.num}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {/* 2-card carousel — overflow hidden, slides via CSS transform */}
+        <div style={{ position: "relative", overflow: "hidden", width: "100%" }}>
 
-        {/* BOTTOM ROW: 2 large columns with fast photo carousel */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", width: "100%" }}>
-          {brandsList.slice(4, 6).map((brand, i) => (
-            <Link
-              key={brand.id}
-              href={getBrandHref(brand)}
-              id={`home-brand-bot-${brand.id}`}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                borderRight: i === 0 ? "0.1rem solid rgba(0,0,0,0.12)" : "none",
-                textDecoration: "none",
-                color: "inherit",
-                overflow: "hidden",
-                position: "relative",
-              }}
-              className="home-ticket-card"
-            >
-              {/* Static image */}
-              <div style={{ overflow: "hidden", height: "clamp(28rem, 42vw, 64rem)", background: "#111", flexShrink: 0 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={BRAND_CAROUSEL_IMGS[i][0]}
-                  alt={brand.name}
-                  className="home-ticket-img"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)",
-                  }}
-                />
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem", padding: "1.6rem 1.4rem", background: "#E6E2D8", transition: "background 0.25s ease" }} className="home-ticket-caption">
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                  <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 1.8rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#81663F" }}>{brand.name}</span>
-                  <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.05em", textTransform: "uppercase" }}>{brand.sub}</span>
+          {/* Slide track — shifts by 50% per step (showing 2 cards on desktop) */}
+          <div
+            style={{
+              display: "flex",
+              width: `${brandTotal * 50}%`,
+              transform: `translateX(-${(brandIdx * 100) / brandTotal}%)`,
+              transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          >
+            {brandsList.map((brand) => (
+              <Link
+                key={brand.id}
+                href={getBrandHref(brand)}
+                id={`home-brand-${brand.id}`}
+                style={{
+                  flex: `0 0 ${100 / brandTotal}%`,
+                  display: "flex",
+                  flexDirection: "column",
+                  textDecoration: "none",
+                  color: "inherit",
+                  borderRight: "0.1rem solid rgba(0,0,0,0.12)",
+                }}
+                className="home-ticket-card"
+              >
+                {/* 1920x1080 Image Container */}
+                <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "#d8d4c8" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={brand.img}
+                    alt={brand.name}
+                    className="home-ticket-img"
+                    style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
+                  />
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1.4rem", flexShrink: 0 }}>
-                  <span style={{ fontSize: "clamp(2.8rem, 5vw, 7rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{brand.code}</span>
-                  <span style={{ fontSize: "clamp(2.4rem, 4vw, 6rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{brand.num}</span>
+
+                {/* Caption Bar: Brand Name (Left), Short Code & Number side-by-side (Right) */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
+                    <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, textTransform: "uppercase", color: "#81663F" }}>{brand.name}</span>
+                    <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.2 }}>{brand.sub}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
+                    <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{brand.code}</span>
+                    <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{brand.num}</span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
+
+          {/* LEFT arrow — large, always visible */}
+          <button
+            onClick={() => setBrandIdx((p) => (p - 1 + brandTotal) % brandTotal)}
+            aria-label="Previous brand"
+            style={{
+              position: "absolute", left: "1.6rem", top: "50%", transform: "translateY(-50%)",
+              zIndex: 10, width: "5rem", height: "5rem", borderRadius: "50%",
+              background: "rgba(255,255,255,0.92)", border: "0.1rem solid #D8D0BE",
+              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "2rem", color: "#81663F", boxShadow: "0 0.4rem 2rem rgba(0,0,0,0.15)",
+              transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              backdropFilter: "blur(8px)",
+            }}
+            className="cat-nav-btn"
+          >←</button>
+
+          {/* RIGHT arrow — large, always visible */}
+          <button
+            onClick={() => setBrandIdx((p) => (p + 1) % brandTotal)}
+            aria-label="Next brand"
+            style={{
+              position: "absolute", right: "1.6rem", top: "50%", transform: "translateY(-50%)",
+              zIndex: 10, width: "5rem", height: "5rem", borderRadius: "50%",
+              background: "rgba(255,255,255,0.92)", border: "0.1rem solid #D8D0BE",
+              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "2rem", color: "#81663F", boxShadow: "0 0.4rem 2rem rgba(0,0,0,0.15)",
+              transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              backdropFilter: "blur(8px)",
+            }}
+            className="cat-nav-btn"
+          >→</button>
         </div>
       </section>
 

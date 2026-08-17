@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { subscribeToAuth, logoutUser } from "@/lib/firebaseAuth";
 import { User } from "firebase/auth";
-import { LogOut, User as UserIcon } from "lucide-react";
+import { LogOut, User as UserIcon, Search } from "lucide-react";
+import GlobalSearchModal from "./GlobalSearchModal";
 
 type NavLink = {
   label: string;
@@ -23,6 +24,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const path = usePathname();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -34,10 +36,23 @@ export default function Header() {
     return () => unsubscribe();
   }, []);
 
+  // Keyboard shortcut (Cmd+K / Ctrl+K) to open search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setShowSearch((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   /* Close menu on route change */
   useEffect(() => {
     setOpen(false);
     setShowProfileMenu(false);
+    setShowSearch(false);
   }, [path]);
 
   if (path?.startsWith("/admin")) {
@@ -79,6 +94,8 @@ export default function Header() {
 
   return (
     <>
+      <GlobalSearchModal isOpen={showSearch} onClose={() => setShowSearch(false)} />
+
       {/* Fixed Header */}
       <header className="site-header">
         {/* Logo */}
@@ -103,6 +120,25 @@ export default function Header() {
 
         {/* Desktop nav */}
         <nav className="site-header__nav">
+          {/* Quick Global Search Button */}
+          <button
+            type="button"
+            onClick={() => setShowSearch(true)}
+            className="btn btn--primary btn--blur"
+            style={{
+              fontSize: "1.2rem",
+              color: "#eaeef4",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.6rem",
+              cursor: "pointer",
+            }}
+            aria-label="Search 1,061+ products"
+          >
+            <Search size={13} />
+            <span>Search</span>
+          </button>
+
           {desktopNavLinks.map((l) => (
             <Link
               key={l.href}
@@ -222,16 +258,29 @@ export default function Header() {
           )}
         </nav>
 
-        {/* Mobile hamburger */}
-        <button
-          className="site-header__menu-btn btn btn--primary btn--blur"
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          style={{ fontSize: "1.2rem", color: "#eaeef4" }}
-        >
-          {open ? "CLOSE" : "MENU"}
-        </button>
+        {/* Mobile buttons: Search + Menu */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+          <button
+            type="button"
+            onClick={() => setShowSearch(true)}
+            className="site-header__menu-btn btn btn--primary btn--blur"
+            aria-label="Search products"
+            style={{ fontSize: "1.2rem", color: "#eaeef4", padding: "0.8rem 1.2rem", display: "flex", alignItems: "center", gap: "0.4rem" }}
+          >
+            <Search size={14} />
+          </button>
+
+          {/* Mobile hamburger */}
+          <button
+            className="site-header__menu-btn btn btn--primary btn--blur"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            style={{ fontSize: "1.2rem", color: "#eaeef4" }}
+          >
+            {open ? "CLOSE" : "MENU"}
+          </button>
+        </div>
       </header>
 
       {/* Mobile full-screen menu */}

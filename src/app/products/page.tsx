@@ -48,7 +48,7 @@ function ProductsContent() {
   useEffect(() => {
     const bp = searchParams.get("brand") || "";
     const cp = searchParams.get("category") || "All";
-    const qp = searchParams.get("q") || "";
+    const qp = searchParams.get("q") || searchParams.get("search") || "";
 
     setSelectedBrands(bp ? bp.split(",").map((s) => s.trim().toLowerCase()) : []);
     setSelectedCategory(cp);

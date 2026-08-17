@@ -1514,10 +1514,37 @@ function getDefaultMilestones() {
   ];
 }
 
-function getBlankWorkspace() {
+function getBlankWorkspace(user) {
+  const userName = user?.name || (user?.email ? user.email.split('@')[0] : 'Studio Member');
+  const userInitials = user?.initials || (userName.slice(0, 2).toUpperCase());
+  const uid = user?.uid || 'guest';
+  const email = user?.email || 'guest@aarenstudio.com';
+  const projId = 'proj-' + Math.random().toString(36).slice(2, 8);
+
   return {
+    ownerUid: uid,
+    ownerEmail: email,
     projects: [
-      { id: 'ajk-001', name: 'AJK Project', client: 'Client AJK', type: 'Residential · Bespoke Architecture', status: 'inprogress', statusLabel: 'In Progress', statusColor: 'blue', progress: 60, budget: 'Custom Budget', due: '2026', daysRemaining: 45, pinned: true, cover: '/brands/brand_1_1.png', team: ['Principal Architect'], categories: ['Joinery', 'Surfaces'], rooms: [] }
+      {
+        id: projId,
+        name: userName + ' Project Space',
+        client: 'Private Client',
+        type: 'Residential · Bespoke Architecture',
+        status: 'inprogress',
+        statusLabel: 'In Progress',
+        statusColor: 'blue',
+        progress: 25,
+        budget: 'Custom Budget',
+        due: '2026',
+        daysRemaining: 60,
+        pinned: true,
+        cover: '/brands/brand_1_1.png',
+        team: [userName],
+        categories: ['Joinery', 'Surfaces'],
+        rooms: [],
+        ownerUid: uid,
+        ownerEmail: email,
+      }
     ],
     tasks: [],
     schedules: [],
@@ -1533,18 +1560,15 @@ function getBlankWorkspace() {
     phrases: getDefaultPhrases(),
     milestones: getDefaultMilestones(),
     teamMembers: [
-      { id: 'tm-1', name: 'Anand M.', role: 'Principal Architect', hours: 42.5, activeTasks: 6, avatar: 'AM' },
-      { id: 'tm-2', name: 'Ananya S.', role: 'Senior Interior Stylist', hours: 38.0, activeTasks: 8, avatar: 'AS' },
-      { id: 'tm-3', name: 'Rohan K.', role: '3D BIM & CAD Lead', hours: 28.5, activeTasks: 4, avatar: 'RK' }
+      { id: 'tm-1', name: userName, role: 'Principal Architect', hours: 0, activeTasks: 0, avatar: userInitials }
     ],
     chatMessages: [
-      { id: 'cm-1', sender: 'Principal Architect', time: '10:30 AM', text: 'Welcome to the Aaren Studio collaborative chat! You can coordinate specs and client notes here.', isMe: false },
-      { id: 'cm-2', sender: 'Studio Member', time: '10:32 AM', text: 'All product specifications and moodboards are synced.', isMe: true }
+      { id: 'cm-1', sender: userName, time: '10:00 AM', text: 'Welcome to your private workspace at Aaren Studio OS! Create projects, moodboards, and BOQ specifications here.', isMe: true }
     ],
     presentationMode: 'architect',
-    currentStageIndex: 2,
-    approvalStatuses: { team: 'Approved', principal: 'Approved', client: 'Pending' },
-    activeProjectId: 'ajk-001'
+    currentStageIndex: 0,
+    approvalStatuses: { team: 'Pending', principal: 'Pending', client: 'Pending' },
+    activeProjectId: projId
   };
 }
 
@@ -1558,17 +1582,22 @@ function getUserStorageKey(user) {
 
 // User-scoped workspace loader
 window.loadUserWorkspace = async function(user) {
+  if (!user || !user.uid) return;
   currentUserStorageKey = getUserStorageKey(user);
   let localData = localStorage.getItem(currentUserStorageKey);
 
   if (localData) {
     try {
       state = JSON.parse(localData);
+      // Validate owner matches active user
+      if (state.ownerUid && state.ownerUid !== user.uid && !user.isGuest) {
+        state = getBlankWorkspace(user);
+      }
     } catch (e) {
-      state = getBlankWorkspace();
+      state = getBlankWorkspace(user);
     }
   } else {
-    // Check if cloud Firebase RTDB has data for this user
+    // Check if cloud Firebase RTDB has data for this specific user
     if (window.__firebaseDb && window.__firebaseGet && window.__firebaseRef && user && user.uid && !user.isGuest) {
       try {
         const snap = await window.__firebaseGet(window.__firebaseRef(window.__firebaseDb, 'user_workspaces/' + user.uid));
@@ -1576,32 +1605,31 @@ window.loadUserWorkspace = async function(user) {
           state = snap.val();
           localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
         } else {
-          state = getBlankWorkspace();
+          state = getBlankWorkspace(user);
           localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
         }
       } catch (err) {
-        state = getBlankWorkspace();
+        state = getBlankWorkspace(user);
       }
     } else {
-      state = getBlankWorkspace();
+      state = getBlankWorkspace(user);
       localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
     }
   }
 
-  // Ensure all arrays are initialized and clean up any old dummy mock data
-  if (Array.isArray(state.projects)) {
-    state.projects = state.projects.filter(p => p && !p.name?.toLowerCase().includes("prestige villa") && !p.name?.toLowerCase().includes("altius sky") && !p.name?.toLowerCase().includes("glass pavilion"));
-    if (state.projects.length === 0) {
-      state.projects = [
-        { id: 'ajk-001', name: 'AJK Project', client: 'Client AJK', type: 'Residential · Bespoke Architecture', status: 'inprogress', statusLabel: 'In Progress', statusColor: 'blue', progress: 60, budget: 'Custom Budget', due: '2026', daysRemaining: 45, pinned: true, cover: '/brands/brand_1_1.png', team: ['Principal Architect'], categories: ['Joinery', 'Surfaces'], rooms: [] }
-      ];
-      state.activeProjectId = 'ajk-001';
-    }
-  } else {
-    state.projects = [
-      { id: 'ajk-001', name: 'AJK Project', client: 'Client AJK', type: 'Residential · Bespoke Architecture', status: 'inprogress', statusLabel: 'In Progress', statusColor: 'blue', progress: 60, budget: 'Custom Budget', due: '2026', daysRemaining: 45, pinned: true, cover: '/brands/brand_1_1.png', team: ['Principal Architect'], categories: ['Joinery', 'Surfaces'], rooms: [] }
-    ];
-    state.activeProjectId = 'ajk-001';
+  // Ensure all arrays are initialized
+  state.ownerUid = user.uid;
+  state.ownerEmail = user.email;
+
+  if (!Array.isArray(state.projects) || state.projects.length === 0) {
+    const blank = getBlankWorkspace(user);
+    state.projects = blank.projects;
+    state.activeProjectId = blank.activeProjectId;
+  }
+
+  // Ensure active project ID is valid
+  if (!state.projects.some(p => p.id === state.activeProjectId)) {
+    state.activeProjectId = state.projects[0].id;
   }
 
   state.tasks = Array.isArray(state.tasks) ? state.tasks : [];
@@ -1621,11 +1649,11 @@ window.loadUserWorkspace = async function(user) {
 };
 
 function saveState() {
-  if (currentUserStorageKey) {
+  if (currentUserStorageKey && state) {
     localStorage.setItem(currentUserStorageKey, JSON.stringify(state));
   }
 
-  // Sync to Firebase Cloud if user is authenticated
+  // Sync to Firebase Cloud strictly scoped by user UID
   if (window.__firebaseDb && window.__firebaseSet && window.__firebaseRef && window.__aarenUser && window.__aarenUser.uid && !window.__aarenUser.isGuest) {
     try {
       window.__firebaseSet(window.__firebaseRef(window.__firebaseDb, 'user_workspaces/' + window.__aarenUser.uid), state);
@@ -3355,23 +3383,19 @@ function renderAuditLogs(){
     </tr>`).join('');
 }
 
-function handleWorkspaceLogout(){
+async function handleWorkspaceLogout(){
   if(confirm("Are you sure you want to log out from your Designer Workspace?")){
     try {
       localStorage.removeItem('aaren_auth_user');
       localStorage.removeItem('aaren_token');
       sessionStorage.clear();
+      state = null;
+      window.__aarenUser = null;
       if (window.__firebaseAuth) {
-        import("https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js").then(({ signOut }) => {
-          signOut(window.__firebaseAuth).finally(() => {
-            window.location.href = '/login';
-          });
-        }).catch(() => {
-          window.location.href = '/login';
-        });
-      } else {
-        window.location.href = '/login';
+        const { signOut } = await import("https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js");
+        await signOut(window.__firebaseAuth);
       }
+      window.location.href = '/login';
     } catch(e) {
       window.location.href = '/login';
     }

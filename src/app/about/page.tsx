@@ -225,7 +225,7 @@ export default function AboutPage() {
         }
 
         .value-card {
-          background: #fff;
+          background: #FAF9F6;
           border: 0.1rem solid var(--color-border);
           padding: 3.6rem 3rem;
           display: flex;
@@ -275,6 +275,7 @@ export default function AboutPage() {
           font-weight: 700;
           letter-spacing: -0.01em;
           text-transform: uppercase;
+          color: #81663F;
         }
 
         .value-card__text {
@@ -395,7 +396,7 @@ export default function AboutPage() {
         }
 
         .roadmap__card {
-          background: #fff;
+          background: #FAF9F6;
           border: 0.1rem solid var(--color-border);
           padding: 3rem 3.2rem;
           max-width: 46rem;
@@ -419,13 +420,13 @@ export default function AboutPage() {
           font-size: 3.6rem;
           font-weight: 700;
           letter-spacing: -0.03em;
-          color: #000;
+          color: #81663F;
         }
 
         .roadmap__num {
           font-size: 1.6rem;
           font-weight: 700;
-          color: rgba(0,0,0,0.22);
+          color: rgba(129, 102, 63, 0.4);
         }
 
         .roadmap__event {

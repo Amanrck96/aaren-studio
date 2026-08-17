@@ -154,61 +154,114 @@ export default function WorkPage() {
             href={`/work/${project.slug}`}
             onMouseEnter={() => setHoveredProject(project.slug)}
             onMouseLeave={() => setHoveredProject(null)}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "60px 1fr auto",
-              alignItems: "center",
-              padding: "24px 28px",
-              borderBottom: "1px solid rgba(129, 102, 63, 0.15)",
-              gap: "24px",
-              textDecoration: "none",
-              transition: "background 0.2s",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.background = "#FAF9F6")}
-            onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
+            className="work-row"
           >
             {/* Index */}
-            <span
-              style={{
-                fontSize: "12px",
-                color: "rgba(129, 102, 63, 0.4)",
-                letterSpacing: "0.05em",
-                fontWeight: 700,
-              }}
-            >
+            <span className="work-row__idx">
               {String(idx + 1).padStart(2, "0")}
             </span>
 
             {/* Client + title */}
-            <div>
-              <p style={{ fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", color: "#5E5852", marginBottom: "4px", fontWeight: 600 }}>
+            <div className="work-row__info">
+              <p className="work-row__client">
                 {project.client}
               </p>
-              <h2
-                style={{
-                  fontSize: "clamp(1.2rem, 2vw, 1.6rem)",
-                  fontWeight: 700,
-                  letterSpacing: "-0.01em",
-                  color: "#81663F",
-                  margin: 0,
-                }}
-              >
+              <h2 className="work-row__title">
                 {project.title}
               </h2>
             </div>
 
             {/* Right meta */}
-            <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <p style={{ fontSize: "11px", letterSpacing: "0.05em", color: "#5E5852", marginBottom: "4px", fontWeight: 600 }}>
+            <div className="work-row__meta">
+              <p className="work-row__year">
                 {project.year}
               </p>
-              <p style={{ fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", color: "#81663F", fontWeight: 700 }}>
+              <p className="work-row__code">
                 {project.code} {project.num}
               </p>
             </div>
           </Link>
         ))}
       </div>
+
+      <style jsx>{`
+        .work-row {
+          display: grid;
+          grid-template-columns: 40px 1fr auto;
+          align-items: center;
+          padding: 18px 16px;
+          border-bottom: 1px solid rgba(129, 102, 63, 0.15);
+          gap: 12px;
+          text-decoration: none;
+          transition: background 0.2s ease;
+        }
+
+        @media (min-width: 768px) {
+          .work-row {
+            grid-template-columns: 60px 1fr auto;
+            padding: 24px 28px;
+            gap: 24px;
+          }
+        }
+
+        .work-row:hover {
+          background: #FAF9F6;
+        }
+
+        .work-row__idx {
+          font-size: 12px;
+          color: rgba(129, 102, 63, 0.4);
+          letter-spacing: 0.05em;
+          font-weight: 700;
+        }
+
+        .work-row__info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          min-width: 0;
+        }
+
+        .work-row__client {
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #5E5852;
+          margin: 0;
+          font-weight: 600;
+        }
+
+        .work-row__title {
+          font-size: clamp(1.15rem, 2vw, 1.6rem);
+          font-weight: 700;
+          letter-spacing: -0.01em;
+          color: #81663F;
+          margin: 0;
+          line-height: 1.25;
+        }
+
+        .work-row__meta {
+          text-align: right;
+          flex-shrink: 0;
+        }
+
+        .work-row__year {
+          font-size: 11px;
+          letter-spacing: 0.05em;
+          color: #5E5852;
+          margin: 0 0 4px 0;
+          font-weight: 600;
+        }
+
+        .work-row__code {
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #81663F;
+          font-weight: 700;
+          margin: 0;
+        }
+      `}</style>
     </div>
   );
 }

@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const id = searchParams.get("id");
     const category = searchParams.get("category");
     const brand = searchParams.get("brand");
-    const query = searchParams.get("q");
+    const query = searchParams.get("q") || searchParams.get("search");
 
     if (id) {
       const product = await getProductByIdStore(id);
