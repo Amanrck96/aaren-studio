@@ -382,23 +382,21 @@ export default function TeamPage() {
         }
 
         .team-header {
-          padding: 6rem 0.8rem 4rem;
-          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
-          text-align: center;
+          padding: 6rem 1.6rem 4rem;
+          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.2);
+          text-align: left;
         }
 
         @media (min-width: 768px) {
           .team-header {
-            padding: 8rem 1.2rem 5rem;
+            padding: 8rem 2.4rem 5rem;
           }
         }
 
         .team-header__inner {
           max-width: 1600px;
           margin: 0 auto;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
+          display: block;
         }
 
         .team-header__title {
@@ -408,13 +406,16 @@ export default function TeamPage() {
           line-height: 0.88;
           text-transform: uppercase;
           color: #81663F;
-          margin-bottom: 3.2rem;
+          margin-bottom: 2.8rem;
+          text-align: left;
         }
 
         .team-header__desc {
-          font-size: 1.5rem;
-          line-height: 1.5;
-          letter-spacing: -0.01em;
+          font-size: 1.6rem;
+          line-height: 1.6;
+          color: rgba(0, 0, 0, 0.65);
+          max-width: 56rem;
+          text-align: left;
         }
 
         /* ── Sub Category Filter Navigation Bar ── */
