@@ -543,12 +543,16 @@ input, select, textarea {
 .site-header__nav {
   display: none;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: flex-end;
+  margin-left: auto;
+  gap: 0.6rem;
 }
 
 @media (min-width: 768px) {
   .site-header__nav {
     display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
   }
 }
 

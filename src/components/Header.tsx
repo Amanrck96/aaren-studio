@@ -118,8 +118,17 @@ export default function Header() {
           AAREN
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="site-header__nav">
+        {/* Desktop nav (Right Aligned) */}
+        <nav
+          className="site-header__nav"
+          style={{
+            marginLeft: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            gap: "0.6rem",
+          }}
+        >
           {/* Quick Global Search Button */}
           <button
             type="button"
