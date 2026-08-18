@@ -556,6 +556,18 @@ input, select, textarea {
   }
 }
 
+.site-header__mobile-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+@media (min-width: 768px) {
+  .site-header__mobile-controls {
+    display: none !important;
+  }
+}
+
 .site-header__menu-btn {
   display: flex;
   align-items: center;
@@ -567,7 +579,7 @@ input, select, textarea {
 
 @media (min-width: 768px) {
   .site-header__menu-btn {
-    display: none;
+    display: none !important;
   }
 }
 

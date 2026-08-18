@@ -129,25 +129,6 @@ export default function Header() {
             gap: "0.6rem",
           }}
         >
-          {/* Quick Global Search Button */}
-          <button
-            type="button"
-            onClick={() => setShowSearch(true)}
-            className="btn btn--primary btn--blur"
-            style={{
-              fontSize: "1.2rem",
-              color: "#eaeef4",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.6rem",
-              cursor: "pointer",
-            }}
-            aria-label="Search 1,061+ products"
-          >
-            <Search size={13} />
-            <span>Search</span>
-          </button>
-
           {desktopNavLinks.map((l) => (
             <Link
               key={l.href}
@@ -162,6 +143,26 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
+
+          {/* Single Search Icon Button at Right End */}
+          <button
+            type="button"
+            onClick={() => setShowSearch(true)}
+            className="btn btn--primary btn--blur"
+            style={{
+              fontSize: "1.2rem",
+              color: "#eaeef4",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "0.8rem 1.1rem",
+              cursor: "pointer",
+            }}
+            aria-label="Search 1,061+ products"
+            title="Search products (Cmd+K / Ctrl+K)"
+          >
+            <Search size={14} />
+          </button>
 
           {/* User Profile Pill when logged in */}
           {user && (
@@ -268,7 +269,7 @@ export default function Header() {
         </nav>
 
         {/* Mobile buttons: Search + Menu */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+        <div className="site-header__mobile-controls" style={{ alignItems: "center", gap: "0.8rem" }}>
           <button
             type="button"
             onClick={() => setShowSearch(true)}
