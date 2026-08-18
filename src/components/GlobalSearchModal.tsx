@@ -362,7 +362,7 @@ export default function GlobalSearchModal({ isOpen, onClose }: GlobalSearchModal
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", color: "#81663F", fontWeight: 800, fontSize: "1.25rem", marginBottom: "0.4rem" }}>
-                    <Layers size={16} /> Full Catalog
+                    <Layers size={16} /> Products
                   </div>
                   <p style={{ margin: 0, fontSize: "1.15rem", color: "#5E5852" }}>Browse all 1,061+ curated materials</p>
                 </div>
