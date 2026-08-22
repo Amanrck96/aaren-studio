@@ -77,3 +77,16 @@
 [debug] [2026-08-22T14:45:08.582Z] > refreshing access token with scopes: []
 [debug] [2026-08-22T14:45:08.583Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
 [debug] [2026-08-22T14:45:08.583Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-08-22T14:45:15.168Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 400
+[debug] [2026-08-22T14:45:15.168Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-08-22T14:45:15.168Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/aarenintpro-1c09f/sites pageToken=&pageSize=10
+[debug] [2026-08-22T14:45:16.610Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/aarenintpro-1c09f/sites 401
+[debug] [2026-08-22T14:45:16.610Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/aarenintpro-1c09f/sites {"error":{"code":401,"message":"Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.","status":"UNAUTHENTICATED"}}
+[debug] [2026-08-22T14:45:16.610Z] Got a 401 Unauthenticated error for a call that required authentication. Refreshing tokens.
+[debug] [2026-08-22T14:45:16.610Z] Checked if tokens are valid: false, expires at: 1746174705650
+[debug] [2026-08-22T14:45:16.610Z] Checked if tokens are valid: false, expires at: 1746174705650
+[debug] [2026-08-22T14:45:16.610Z] > refreshing access token with scopes: []
+[debug] [2026-08-22T14:45:16.611Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-08-22T14:45:16.611Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-08-22T14:45:17.083Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 400
+[debug] [2026-08-22T14:45:17.083Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
