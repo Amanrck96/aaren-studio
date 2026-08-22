@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "genkit": "genkit",
+    "genkit:start": "genkit start -- tsx --watch src/lib/genkit.ts",
+    "deploy": "firebase deploy --only hosting",
+    "deploy:firebase": "firebase deploy --only hosting"
   },
   "dependencies": {
     "@auth/core": "^0.37.2",
@@ -42,9 +46,12 @@
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "genkit-cli": "^1.41.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.12",
     "typescript": "^5.9.3"
   }
 }
