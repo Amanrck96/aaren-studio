@@ -1,9 +1,6 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
-
-const CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Accounts", "Support Staff"];
 
 const INITIAL_DEFAULT_TEAM = [
   { id: "tm-01", name: "MOHANLAL MP", role: "Founder", category: "Leadership", code: "MM", num: "01", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", phone: "+91 88844 64444", bio: "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team.", sequenceNumber: 1 },
@@ -31,6 +28,8 @@ const INITIAL_DEFAULT_TEAM = [
   { id: "tm-23", name: "JABIR KHAN", role: "Operations Logistics", category: "Operations", code: "JK", num: "23", image: "", phone: "+91 88844 64444", bio: "Supports operations with efficient handling and coordination of project requirements.", sequenceNumber: 23 },
   { id: "tm-24", name: "NARASIMHA RAJU", role: "Accountant", category: "Accounts", code: "NR", num: "24", image: "", phone: "+91 88844 64444", bio: "Manages financial records and supports the accounts team with diligent accounting operations", sequenceNumber: 24 },
 ];
+
+const KNOWN_DEPARTMENTS = ["Sales", "Operations", "Installation", "Accounts", "Support Staff"];
 
 function normalizeCategory(m: any): string {
   const cat = (m.category || "").trim();
@@ -106,17 +105,9 @@ function normalizeCategory(m: any): string {
 
 export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState<any[]>(INITIAL_DEFAULT_TEAM);
-  const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("Leadership");
+  const [view, setView] = useState<"leadership" | "team">("leadership");
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
   const [selectedMember, setSelectedMember] = useState<any | null>(null);
-  const [joinBanner, setJoinBanner] = useState({
-    title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
-    fontSize: "medium",
-    hoursText: "Open 9am to 9pm (All days)",
-    phone: "+91 88844 64444",
-    email: "info@aarenintpro.com",
-    address: "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026",
-  });
 
   useEffect(() => {
     fetch("/api/team?t=" + Date.now(), { cache: "no-store" })
@@ -130,226 +121,207 @@ export default function TeamPage() {
               sorted.map((m: any, idx: number) => {
                 const cat = normalizeCategory(m);
                 return {
+                  id: m.id || `tm-${idx + 1}`,
                   name: m.name,
                   role: m.designation || m.role || "Team Member",
                   category: cat,
                   code: m.memberCode ? m.memberCode.split(" ")[0] : (cat === "Leadership" ? "MM" : "TM"),
                   num: m.memberCode && m.memberCode.split(" ")[1] ? m.memberCode.split(" ")[1] : String(m.sequenceNumber || idx + 1).padStart(2, "0"),
-                  image: m.photoUrl || m.image,
-                  bio: m.bio,
-                  phone: m.phone,
+                  image: m.photoUrl || m.image || "",
+                  bio: m.bio || "",
+                  phone: m.phone || "",
                   sequenceNumber: m.sequenceNumber ?? idx + 1,
                 };
               })
             );
           }
-          if (json.joinBanner || (json.data && json.data.joinBanner)) {
-            setJoinBanner(json.joinBanner || json.data.joinBanner);
-          }
         }
       })
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false));
+      .catch((e) => console.error(e));
   }, []);
 
-  const filteredMembers = teamMembers.filter(
-    (m) => (m.category || "").toLowerCase().trim() === (activeCategory || "").toLowerCase().trim()
+  const leadershipMembers = teamMembers.filter(
+    (m) => m.category === "Leadership"
   );
 
-  const getCategoryCount = (cat: string) => {
-    return teamMembers.filter(
-      (m) => (m.category || "").toLowerCase().trim() === cat.toLowerCase().trim()
-    ).length;
-  };
+  const nonLeadershipMembers = teamMembers.filter(
+    (m) => m.category !== "Leadership"
+  );
+
+  // Collect all unique departments present in data
+  const existingDepartments = Array.from(
+    new Set(nonLeadershipMembers.map((m) => m.category))
+  );
+
+  // Order them nicely by KNOWN_DEPARTMENTS first, then any additional categories
+  const orderedDepartments = [
+    ...KNOWN_DEPARTMENTS.filter((d) => existingDepartments.includes(d)),
+    ...existingDepartments.filter((d) => !KNOWN_DEPARTMENTS.includes(d)),
+  ];
 
   return (
-    <div className="team-page">
-      {/* ── Page Header ── */}
-      <div className="team-header">
-        <div className="team-header__inner">
-          <div className="team-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
-            MEET THE TEAM
+    <div className="aaren-team-wrapper">
+      <main className="team-page-content">
+        {/* ── Top Bar ── */}
+        <header className="topbar">
+          <div>
+            <div className="eyebrow">AAREN INTPRO</div>
+            <h1 id="page-heading">
+              {view === "leadership" ? "Leadership." : "Team."}
+            </h1>
           </div>
-          <h1 className="team-header__title" style={{ color: "#81663F" }}>OUR TEAM</h1>
-          <p className="team-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
-            Aaren Intpro is built by a family of dedicated professionals across Leadership, Sales, Operations, Installation, Accountant, and Support Staff, united by a common passion for luxury spatial design.
-          </p>
-        </div>
-      </div>
+          <nav className="nav" aria-label="Team navigation">
+            <button
+              type="button"
+              className={view === "leadership" ? "active" : ""}
+              onClick={() => setView("leadership")}
+            >
+              Leadership
+            </button>
+            <button
+              type="button"
+              className={view === "team" ? "active" : ""}
+              onClick={() => setView("team")}
+            >
+              Team
+            </button>
+          </nav>
+        </header>
 
-      {/* ── Sub Category Filter Navigation Bar ── */}
-      <div className="team-category-nav-wrapper">
-        <div className="team-category-nav">
-          <span className="team-category-label">SUB CATEGORIES:</span>
-          {CATEGORIES.map((cat) => {
-            const count = getCategoryCount(cat);
-            const isActive = activeCategory.toLowerCase() === cat.toLowerCase();
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setActiveCategory(cat)}
-                className={`team-cat-btn ${isActive ? "active" : ""}`}
-              >
-                <span>{cat.toUpperCase()}</span>
-                <span className="team-cat-count">{count}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── Team Grid ── */}
-      <div className="team-grid-container">
-        {filteredMembers.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "6rem 2rem", color: "rgba(0,0,0,0.5)", fontSize: "1.6rem" }}>
-            No team members found in the <strong>{activeCategory}</strong> sub category.
-          </div>
-        ) : (
-          <div className="team-grid">
-            {filteredMembers.map((member) => (
-              <div
-                key={member.name}
-                className="team-card"
-                onClick={() => setSelectedMember(member)}
-                style={{ cursor: "pointer" }}
-              >
-                <div className="team-card__fig-wrapper">
-                  <div className="team-card__fig">
-                    {member.image ? (
-                      <Image
-                        src={member.image}
-                        alt={member.name}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        className="team-card__img"
-                        style={{ objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(100%)" }}
-                      />
-                    ) : (
-                      <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #1e2230 0%, #0b0c10 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#81663F", fontSize: "4rem", fontWeight: 800, letterSpacing: "0.05em" }}>
-                        {member.name ? member.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "AA"}
-                      </div>
-                    )}
-                  </div>
-                  {/* Category Pill Overlay */}
-                  <div className="team-card__category-badge">
-                    {member.category}
-                  </div>
-                </div>
-
-                <div className="team-card__caption">
-                  <div className="team-card__caption-left">
-                    <h2 className="team-card__caption-name">{member.name}</h2>
-                    <p className="team-card__caption-role">{member.role}</p>
-                  </div>
-                  <div className="team-card__caption-right">
-                    <span className="team-card__caption-code">{member.code}</span>
-                    <span className="team-card__caption-num">{member.num}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* ── LEADERSHIP VIEW ── */}
+        {view === "leadership" && (
+          <section id="leadership" className="view active">
+            <h2 className="section-title">Leadership</h2>
+            <div className="people-grid">
+              {leadershipMembers.map((member) => {
+                const hasImage = Boolean(member.image) && !imageErrors[member.id];
+                return (
+                  <article
+                    key={member.id || member.name}
+                    className="person-card"
+                    onClick={() => setSelectedMember(member)}
+                  >
+                    <div className={`person-photo ${!hasImage ? "img-fallback" : ""}`}>
+                      {hasImage ? (
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          onError={() =>
+                            setImageErrors((prev) => ({ ...prev, [member.id]: true }))
+                          }
+                        />
+                      ) : null}
+                    </div>
+                    <div className="person-info">
+                      <div className="person-name">{member.name}</div>
+                      <div className="person-role">{member.role}</div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
         )}
-      </div>
 
-      {/* ── Modal Pop-up for Member Details ── */}
+        {/* ── TEAM VIEW ── */}
+        {view === "team" && (
+          <section id="team" className="view active">
+            {orderedDepartments.map((dept) => {
+              const deptMembers = nonLeadershipMembers.filter((m) => m.category === dept);
+              if (deptMembers.length === 0) return null;
+
+              return (
+                <section key={dept} className="department">
+                  <div className="department-title">
+                    <h3>{dept}</h3>
+                  </div>
+                  <div className="people-grid">
+                    {deptMembers.map((member) => {
+                      const hasImage = Boolean(member.image) && !imageErrors[member.id];
+                      return (
+                        <article
+                          key={member.id || member.name}
+                          className="person-card"
+                          onClick={() => setSelectedMember(member)}
+                        >
+                          <div className={`person-photo ${!hasImage ? "img-fallback" : ""}`}>
+                            {hasImage ? (
+                              <img
+                                src={member.image}
+                                alt={member.name}
+                                onError={() =>
+                                  setImageErrors((prev) => ({ ...prev, [member.id]: true }))
+                                }
+                              />
+                            ) : null}
+                          </div>
+                          <div className="person-info">
+                            <div className="person-name">{member.name}</div>
+                            <div className="person-role">{member.role}</div>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </section>
+              );
+            })}
+          </section>
+        )}
+      </main>
+
+      {/* ── Optional Detail Modal for Member ── */}
       {selectedMember && (
         <div
-          className="team-modal-backdrop"
+          className="team-modal-overlay"
           onClick={() => setSelectedMember(null)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.75)",
-            backdropFilter: "blur(6px)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "2rem",
-          }}
         >
           <div
-            className="team-modal-content"
+            className="team-modal-box"
             onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: "#E6E2D8",
-              border: "1px solid #81663F",
-              borderRadius: "0.8rem",
-              maxWidth: "600px",
-              width: "100%",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
-              display: "flex",
-              flexDirection: "column",
-            }}
           >
-            <div style={{ position: "relative", height: "28rem", background: "#111" }}>
-              {selectedMember.image ? (
-                <Image
+            <div className="team-modal-header-photo">
+              {selectedMember.image && !imageErrors[selectedMember.id] ? (
+                <img
                   src={selectedMember.image}
                   alt={selectedMember.name}
-                  fill
-                  style={{ objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(100%)" }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               ) : (
-                <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #1e2230 0%, #0b0c10 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#81663F", fontSize: "5rem", fontWeight: 800 }}>
-                  {selectedMember.name ? selectedMember.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "AA"}
+                <div className="team-modal-photo-placeholder">
+                  {selectedMember.name ? selectedMember.name.substring(0, 2).toUpperCase() : "AA"}
                 </div>
               )}
               <button
+                type="button"
+                className="team-modal-close-btn"
                 onClick={() => setSelectedMember(null)}
-                style={{
-                  position: "absolute",
-                  top: "1.2rem",
-                  right: "1.2rem",
-                  background: "rgba(0,0,0,0.7)",
-                  border: "1px solid rgba(255,255,255,0.2)",
-                  color: "#fff",
-                  width: "3.2rem",
-                  height: "3.2rem",
-                  borderRadius: "50%",
-                  fontSize: "1.6rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                }}
+                aria-label="Close dialog"
               >
                 ✕
               </button>
             </div>
-            <div style={{ padding: "2.4rem", display: "flex", flexDirection: "column", gap: "1.2rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div className="team-modal-body">
+              <div className="team-modal-topline">
                 <div>
-                  <h3 style={{ fontSize: "2rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase", margin: 0 }}>
-                    {selectedMember.name}
-                  </h3>
-                  <p style={{ fontSize: "1.3rem", color: "rgba(0,0,0,0.6)", fontWeight: 600, margin: "0.4rem 0 0" }}>
-                    {selectedMember.role}
-                  </p>
+                  <h3 className="team-modal-name">{selectedMember.name}</h3>
+                  <p className="team-modal-role">{selectedMember.role}</p>
                 </div>
-                <div style={{ textAlign: "right" }}>
-                  <span style={{ fontSize: "2.4rem", fontWeight: 800, color: "#81663F" }}>
-                    {selectedMember.code}
-                  </span>
-                  <span style={{ fontSize: "2.2rem", fontWeight: 800, color: "rgba(129,102,63,0.4)", marginLeft: "0.4rem" }}>
-                    {selectedMember.num}
-                  </span>
-                </div>
+                {selectedMember.code && (
+                  <div className="team-modal-codes">
+                    <span className="team-modal-code-main">{selectedMember.code}</span>
+                    <span className="team-modal-code-sub">{selectedMember.num}</span>
+                  </div>
+                )}
               </div>
 
               {selectedMember.bio && (
-                <p style={{ fontSize: "1.35rem", lineHeight: 1.6, color: "rgba(0,0,0,0.7)", margin: "0.8rem 0 0" }}>
-                  {selectedMember.bio}
-                </p>
+                <p className="team-modal-bio">{selectedMember.bio}</p>
               )}
 
               {selectedMember.phone && (
-                <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid rgba(129,102,63,0.2)" }}>
-                  <a href={`tel:${selectedMember.phone}`} style={{ color: "#81663F", fontWeight: 700, textDecoration: "none", fontSize: "1.3rem" }}>
+                <div className="team-modal-phone-row">
+                  <a href={`tel:${selectedMember.phone}`} className="team-modal-phone-link">
                     📞 {selectedMember.phone}
                   </a>
                 </div>
@@ -359,396 +331,417 @@ export default function TeamPage() {
         </div>
       )}
 
-      {/* ── Call to Action Join Section ── */}
-      <div className="team-join-section">
-        <h2 className={`team-join-title size-${joinBanner.fontSize || "medium"}`}>
-          {joinBanner.title}
-        </h2>
-        <div className="team-join-info">
-          <div className="team-join-circle-icon">i</div>
-          <p className="team-join-hours">{joinBanner.hoursText}</p>
-          <div className="team-join-contacts">
-            <a href={`tel:${joinBanner.phone.replace(/[^0-9+]/g, "")}`} className="team-join-link">{joinBanner.phone}</a>
-            <a href={`mailto:${joinBanner.email}`} className="team-join-link">{joinBanner.email}</a>
-            <p className="team-join-address">{joinBanner.address}</p>
-          </div>
-        </div>
-      </div>
-
+      {/* ── Scoped Styling matching provided design ── */}
       <style>{`
-        .team-page {
-          background: #E6E2D8;
-          color: #1e1e1e;
+        :root {
+          --team-bg: #f7f5f0;
+          --team-surface: #ffffff;
+          --team-text: #171717;
+          --team-muted: #77736c;
+          --team-line: #d8d4cc;
+          --team-accent: #9a8b72;
+          --team-radius: 18px;
+        }
+
+        .aaren-team-wrapper {
           min-height: 100vh;
-          padding-top: 8rem;
+          background: var(--team-bg);
+          color: var(--team-text);
+          font-family: Inter, Arial, Helvetica, sans-serif !important;
+          padding-top: 60px;
         }
 
-        .team-header {
-          padding: 6rem 1.6rem 4rem;
-          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.2);
-          text-align: left;
-        }
-
-        @media (min-width: 768px) {
-          .team-header {
-            padding: 8rem 2.4rem 5rem;
-          }
-        }
-
-        .team-header__inner {
-          max-width: 1600px;
+        .team-page-content {
+          width: min(1200px, 100%);
           margin: 0 auto;
+          padding: 56px 48px 100px;
+          box-sizing: border-box;
+        }
+
+        /* ---------- top bar ---------- */
+        .topbar {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 24px;
+          margin-bottom: 60px;
+          padding-bottom: 28px;
+          border-bottom: 1px solid var(--team-line);
+        }
+
+        .eyebrow {
+          margin-bottom: 10px;
+          color: var(--team-muted) !important;
+          font-family: Inter, Arial, Helvetica, sans-serif !important;
+          font-size: 12px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.18em !important;
+          text-transform: uppercase !important;
+        }
+
+        .topbar h1 {
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: clamp(38px, 5vw, 64px) !important;
+          font-weight: 400 !important;
+          line-height: 0.95 !important;
+          letter-spacing: -0.04em !important;
+          text-transform: none !important;
+          color: var(--team-text) !important;
+          margin: 0 !important;
+        }
+
+        .nav {
+          display: inline-flex;
+          gap: 6px;
+          border: 1px solid var(--team-line);
+          border-radius: 999px;
+          padding: 4px;
+          background: var(--team-surface);
+        }
+
+        .nav button {
+          display: inline-flex;
+          align-items: center;
+          padding: 10px 22px;
+          border: 0;
+          border-radius: 999px;
+          background: transparent;
+          color: var(--team-muted) !important;
+          cursor: pointer;
+          font-family: Inter, Arial, Helvetica, sans-serif !important;
+          font-size: 13px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.02em !important;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .nav button:hover {
+          color: var(--team-text) !important;
+        }
+
+        .nav button.active {
+          background: var(--team-text) !important;
+          color: var(--team-bg) !important;
+        }
+
+        /* ---------- views ---------- */
+        .view {
           display: block;
         }
 
-        .team-header__title {
-          font-size: clamp(6rem, 15vw, 22rem);
-          font-weight: 700;
-          letter-spacing: -0.05em;
-          line-height: 0.88;
-          text-transform: uppercase;
-          color: #81663F;
-          margin-bottom: 2.8rem;
-          text-align: left;
+        .section-title {
+          display: inline-flex;
+          align-items: center;
+          min-height: 54px;
+          padding: 0 22px;
+          border: 1px solid var(--team-text) !important;
+          border-radius: 999px;
+          margin-bottom: 42px;
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: 24px !important;
+          font-weight: 400 !important;
+          text-transform: none !important;
+          color: var(--team-text) !important;
         }
 
-        .team-header__desc {
-          font-size: 1.6rem;
-          line-height: 1.6;
-          color: rgba(0, 0, 0, 0.65);
-          max-width: 56rem;
-          text-align: left;
+        .department {
+          margin-bottom: 58px;
+        }
+        .department:last-child {
+          margin-bottom: 0;
         }
 
-        /* ── Sub Category Filter Navigation Bar ── */
-        .team-category-nav-wrapper {
-          border-bottom: 1px solid rgba(129,102,63,0.18);
-          background: #E6E2D8;
-          position: relative;
-          z-index: 10;
-          padding: 1.6rem 2.4rem;
-          margin-top: 1rem;
-        }
-
-        @media (max-width: 768px) {
-          .team-category-nav-wrapper {
-            padding: 1rem 1.2rem;
-          }
-        }
-
-        .team-category-nav {
-          max-width: 1600px;
-          margin: 0 auto;
+        .department-title {
           display: flex;
           align-items: center;
-          gap: 1.2rem;
-          flex-wrap: wrap;
+          gap: 18px;
+          margin-bottom: 24px;
         }
 
-        @media (max-width: 768px) {
-          .team-category-nav {
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            padding-bottom: 0.4rem;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-          }
-          .team-category-nav::-webkit-scrollbar {
-            display: none;
-          }
-          .team-category-label {
-            white-space: nowrap;
-            flex-shrink: 0;
-          }
-          .team-cat-btn {
-            white-space: nowrap;
-            flex-shrink: 0;
-          }
+        .department-title h3 {
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: 29px !important;
+          font-weight: 400 !important;
+          letter-spacing: -0.025em !important;
+          text-transform: none !important;
+          color: var(--team-text) !important;
+          margin: 0 !important;
         }
 
-        .team-category-label {
-          font-size: 1.1rem;
-          font-weight: 800;
-          letter-spacing: 0.12em;
-          color: #81663F;
-          margin-right: 0.8rem;
+        .department-title::after {
+          content: "";
+          height: 1px;
+          flex: 1;
+          background: var(--team-line);
         }
 
-        .team-cat-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.6rem;
-          padding: 0.7rem 1.4rem;
-          border-radius: 9999px;
-          border: 1px solid rgba(129,102,63,0.25);
-          background: #FAF9F6;
-          color: #222;
-          font-size: 1.2rem;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          cursor: pointer;
-          transition: all 0.25s ease;
-        }
-
-        .team-cat-btn:hover {
-          border-color: #81663F;
-          color: #81663F;
-          transform: translateY(-1px);
-        }
-
-        .team-cat-btn.active {
-          background: #81663F;
-          color: #fff;
-          border-color: #81663F;
-          box-shadow: 0 4px 14px rgba(129, 102, 63, 0.25);
-        }
-
-        .team-cat-count {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(0,0,0,0.06);
-          color: inherit;
-          padding: 0.15rem 0.6rem;
-          border-radius: 9999px;
-          font-size: 1rem;
-          font-weight: 800;
-        }
-
-        .team-cat-btn.active .team-cat-count {
-          background: rgba(255,255,255,0.25);
-          color: #fff;
-        }
-
-        /* ── Team Grid with Sturdy-style Spacing & Row Gaps ── */
-        .team-grid-container {
-          max-width: 1600px;
-          margin: 0 auto;
-        }
-
-        .team-grid {
+        /* ---------- card grid ---------- */
+        .people-grid {
           display: grid;
-          grid-template-columns: 1fr;
-          gap: 4rem 2.4rem;
-          padding: 4rem 1.2rem 8rem;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 30px 24px;
         }
 
-        @media (min-width: 768px) {
-          .team-grid {
-            grid-template-columns: repeat(2, 1fr);
-            padding: 6rem 2.4rem 10rem;
-            gap: 5rem 3.2rem;
-          }
+        .person-card {
+          min-width: 0;
+          cursor: pointer;
+          transition: transform 0.25s ease;
         }
 
-        @media (min-width: 1200px) {
-          .team-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6rem 3.6rem;
-          }
+        .person-card:hover {
+          transform: translateY(-3px);
         }
 
-        .team-card {
-          display: flex;
-          flex-direction: column;
-          background: #E6E2D8;
-          border: 0.1rem solid rgba(129, 102, 63, 0.2);
-          overflow: hidden;
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .team-card:hover {
-          transform: translateY(-0.4rem);
-          box-shadow: 0 1.2rem 3.2rem rgba(0,0,0,0.08);
-        }
-
-        .team-card__fig-wrapper {
+        .person-photo {
           position: relative;
+          width: 100%;
+          aspect-ratio: 0.82;
           overflow: hidden;
-          height: 38rem;
-          background: #111;
+          border: 1px solid var(--team-line);
+          border-radius: var(--team-radius);
+          background: linear-gradient(135deg, rgba(154, 139, 114, 0.14), rgba(255, 255, 255, 0.9));
         }
 
-        @media (min-width: 768px) {
-          .team-card__fig-wrapper {
-            height: 44rem;
-          }
+        .person-photo img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transition: transform 0.4s ease;
         }
 
-        .team-card__fig {
-          position: absolute;
-          inset: 0;
+        .person-card:hover .person-photo img {
+          transform: scale(1.03);
         }
 
-        .team-card__category-badge {
-          position: absolute;
-          top: 1.2rem;
-          right: 1.2rem;
-          z-index: 2;
-          background: rgba(0, 0, 0, 0.75);
-          backdrop-filter: blur(8px);
-          color: #d4af37;
-          border: 1px solid rgba(212, 175, 55, 0.4);
-          font-size: 1rem;
-          font-weight: 800;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          padding: 0.4rem 1rem;
-          border-radius: 4px;
-        }
-
-        .team-card__img {
-          transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-        }
-
-        .team-card:hover .team-card__img {
-          transform: scale(1.04);
-        }
-
-        .team-card__caption {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 1.6rem;
-          padding: 1.6rem 2.4rem;
-          background: #FAF9F6;
-          border-top: 1px solid rgba(129,102,63,0.12);
-          transition: background 0.25s ease;
-        }
-
-        .team-card:hover .team-card__caption {
-          background: #F2EFE8;
-        }
-
-        .team-card__caption-left {
-          display: flex;
-          flex-direction: column;
-          gap: 0.4rem;
-        }
-
-        .team-card__caption-name {
-          font-size: 1.5rem;
-          font-weight: 700;
-          letter-spacing: -0.02em;
-          line-height: 1.0;
-          text-transform: uppercase;
-          color: #81663F;
-        }
-
-        .team-card__caption-role {
-          font-size: 1.1rem;
-          color: rgba(0,0,0,0.5);
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
-
-        .team-card__caption-right {
-          display: flex;
-          align-items: center;
-          gap: 1.6rem;
-          flex-shrink: 0;
-        }
-
-        .team-card__caption-code {
-          font-size: 3rem;
-          font-weight: 700;
-          letter-spacing: -0.04em;
-          line-height: 1;
-          color: #81663F;
-        }
-
-        .team-card__caption-num {
-          font-size: 2.6rem;
-          font-weight: 700;
-          letter-spacing: -0.04em;
-          line-height: 1;
-          color: rgba(129,102,63,0.35);
-        }
-
-        /* ── Team Join Section Styling & Font Sizing ── */
-        .team-join-section {
-          padding: 6rem 2.4rem;
-          background: #FAF9F6;
-          border-top: 1px solid rgba(129,102,63,0.18);
-          text-align: center;
-        }
-
-        .team-join-title {
-          color: #81663F;
-          font-weight: 800;
-          letter-spacing: -0.02em;
-          line-height: 1.25;
-          text-transform: uppercase;
-          margin: 0 auto 2.5rem;
-          max-width: 900px;
-        }
-
-        .team-join-title.size-small {
-          font-size: clamp(1.6rem, 3vw, 2.2rem);
-        }
-
-        .team-join-title.size-medium {
-          font-size: clamp(2rem, 3.8vw, 3rem);
-        }
-
-        .team-join-title.size-large {
-          font-size: clamp(2.6rem, 5vw, 4.2rem);
-        }
-
-        .team-join-info {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 1.6rem;
-        }
-
-        .team-join-circle-icon {
-          width: 3.6rem;
-          height: 3.6rem;
-          border-radius: 50%;
-          border: 1px solid #81663F;
-          color: #81663F;
+        /* shown automatically if a photo file isn't found yet */
+        .person-photo.img-fallback {
           display: flex;
           align-items: center;
           justify-content: center;
-          font-family: Georgia, serif;
-          font-style: italic;
-          font-size: 1.8rem;
-          font-weight: 700;
         }
 
-        .team-join-hours {
-          font-size: 1.4rem;
-          color: rgba(0,0,0,0.6);
-          font-weight: 600;
-          margin: 0;
+        .person-photo.img-fallback img {
+          display: none;
         }
 
-        .team-join-contacts {
+        .person-photo.img-fallback::after {
+          content: "";
+          width: 42%;
+          height: 42%;
+          background: rgba(23, 23, 23, 0.28);
+          -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>') center/contain no-repeat;
+          mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>') center/contain no-repeat;
+        }
+
+        .person-info {
+          padding-top: 13px;
+        }
+
+        .person-name {
+          font-family: Inter, Arial, Helvetica, sans-serif !important;
+          font-size: 14px !important;
+          font-weight: 600 !important;
+          line-height: 1.25 !important;
+          color: var(--team-text) !important;
+          letter-spacing: normal !important;
+          text-transform: none !important;
+        }
+
+        .person-role {
+          margin-top: 4px;
+          color: var(--team-muted) !important;
+          font-family: Inter, Arial, Helvetica, sans-serif !important;
+          font-size: 11px !important;
+          line-height: 1.4 !important;
+          letter-spacing: normal !important;
+          text-transform: none !important;
+        }
+
+        /* Modal styling */
+        .team-modal-overlay {
+          position: fixed;
+          inset: 0;
+          background-color: rgba(0, 0, 0, 0.65);
+          backdrop-filter: blur(6px);
+          z-index: 99999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+        }
+
+        .team-modal-box {
+          background: #ffffff;
+          border: 1px solid var(--team-line);
+          border-radius: var(--team-radius);
+          max-width: 520px;
+          width: 100%;
+          max-height: 90vh;
+          overflow-y: auto;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
           display: flex;
           flex-direction: column;
+        }
+
+        .team-modal-header-photo {
+          position: relative;
+          height: 280px;
+          background: linear-gradient(135deg, rgba(154, 139, 114, 0.18), rgba(255, 255, 255, 0.9));
+        }
+
+        .team-modal-photo-placeholder {
+          width: 100%;
+          height: 100%;
+          display: flex;
           align-items: center;
-          gap: 0.8rem;
-        }
-
-        .team-join-link {
-          font-size: 1.6rem;
-          color: #81663F;
+          justify-content: center;
+          font-size: 48px;
           font-weight: 700;
-          text-decoration: none;
-          transition: opacity 0.2s ease;
+          color: var(--team-accent);
         }
 
-        .team-join-link:hover {
-          opacity: 0.8;
+        .team-modal-close-btn {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          background: rgba(0, 0, 0, 0.6);
+          border: 0;
+          color: #ffffff;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          font-size: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background 0.2s;
         }
 
-        .team-join-address {
-          font-size: 1.2rem;
-          color: rgba(0,0,0,0.45);
-          letter-spacing: 0.05em;
-          margin-top: 0.8rem;
-          max-width: 500px;
+        .team-modal-close-btn:hover {
+          background: rgba(0, 0, 0, 0.85);
+        }
+
+        .team-modal-body {
+          padding: 28px;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        .team-modal-topline {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 16px;
+        }
+
+        .team-modal-name {
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: 24px !important;
+          font-weight: 600 !important;
+          color: var(--team-text) !important;
+          margin: 0 !important;
+          line-height: 1.2 !important;
+          text-transform: none !important;
+        }
+
+        .team-modal-role {
+          font-family: Inter, Arial, Helvetica, sans-serif !important;
+          font-size: 13px !important;
+          color: var(--team-muted) !important;
+          font-weight: 500 !important;
+          margin-top: 4px !important;
+        }
+
+        .team-modal-codes {
+          text-align: right;
+          font-family: Inter, Arial, Helvetica, sans-serif !important;
+        }
+
+        .team-modal-code-main {
+          font-size: 20px;
+          font-weight: 700;
+          color: var(--team-accent);
+        }
+
+        .team-modal-code-sub {
+          font-size: 18px;
+          font-weight: 700;
+          color: var(--team-muted);
+          margin-left: 4px;
+        }
+
+        .team-modal-bio {
+          font-family: Inter, Arial, Helvetica, sans-serif !important;
+          font-size: 14px !important;
+          line-height: 1.6 !important;
+          color: #4a4742 !important;
+          margin: 6px 0 0 !important;
+        }
+
+        .team-modal-phone-row {
+          margin-top: 12px;
+          padding-top: 12px;
+          border-top: 1px solid var(--team-line);
+        }
+
+        .team-modal-phone-link {
+          font-family: Inter, Arial, Helvetica, sans-serif !important;
+          color: var(--team-text) !important;
+          font-weight: 600 !important;
+          text-decoration: none !important;
+          font-size: 13px !important;
+        }
+
+        /* ---------- tablet ---------- */
+        @media (max-width: 900px) {
+          .team-page-content {
+            padding: 44px 28px 80px;
+          }
+          .people-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px 16px;
+          }
+          .section-title {
+            font-size: 21px !important;
+            padding: 0 18px;
+          }
+        }
+
+        /* ---------- mobile ---------- */
+        @media (max-width: 680px) {
+          .team-page-content {
+            padding: 36px 18px 70px;
+          }
+          .topbar {
+            align-items: flex-start;
+          }
+          .nav {
+            width: 100%;
+          }
+          .nav button {
+            flex: 1;
+            justify-content: center;
+          }
+          .people-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 26px 14px;
+          }
+          .department-title h3 {
+            font-size: 26px !important;
+          }
+        }
+
+        @media (max-width: 420px) {
+          .person-name {
+            font-size: 13px !important;
+          }
+          .person-role {
+            font-size: 10px !important;
+          }
         }
       `}</style>
     </div>
