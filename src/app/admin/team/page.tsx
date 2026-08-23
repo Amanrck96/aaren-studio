@@ -15,11 +15,11 @@ export const TEAM_DEPARTMENTS = [
   { id: "Sales", label: "A. SALES", match: "sales" },
   { id: "Operations", label: "B. OPERATIONS", match: "operations" },
   { id: "Installation", label: "C. INSTALLATION", match: "installation" },
-  { id: "Accountant", label: "D. ACCOUNTANT", match: "account" },
+  { id: "Accounts", label: "D. ACCOUNTS", match: "account" },
   { id: "Support Staff", label: "E. SUPPORT STAFF", match: "support staff" },
 ];
 
-export const ALL_SUB_CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Accountant", "Support Staff"];
+export const ALL_SUB_CATEGORIES = ["Leadership", "Sales", "Operations", "Installation", "Accounts", "Support Staff"];
 
 export default function AdminTeamPage() {
   const [team, setTeam] = useState<TeamMemberItem[]>([]);
