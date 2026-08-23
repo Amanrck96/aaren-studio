@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 
 const INITIAL_DEFAULT_TEAM = [
   { id: "tm-01", name: "MOHANLAL MP", role: "Founder", category: "Leadership", code: "MM", num: "01", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", phone: "+91 88844 64444", bio: "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team.", sequenceNumber: 1 },
-  { id: "tm-02", name: "RAMNIKLAL M VAGADIYA", role: "Founder & Chairman", category: "Leadership", code: "RV", num: "02", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg", phone: "+91 88844 64444", bio: "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision.", sequenceNumber: 2 },
+  { id: "tm-02", name: "Late RAMNIKLAL M VAGADIYA", role: "Founder & Chairman", category: "Leadership", code: "RV", num: "02", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg", phone: "+91 88844 64444", bio: "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision.", sequenceNumber: 2 },
   { id: "tm-03", name: "MADHUSUDHAN MP", role: "Envisioner & Chief Planner", category: "Leadership", code: "MP", num: "03", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg", phone: "+91 88844 64444", bio: "He is the vision of AAREN. Responsible for creating the strategy, driving the business and scouting for world class products.", sequenceNumber: 3 },
-  { id: "tm-04", name: "KOU SHIK", role: "Sales Specialist", category: "Sales", code: "KS", num: "04", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg", phone: "+91 88844 64444", bio: "He guides customers to optimize space utility, is abreast with market trends, and coordinates layouts for luxury projects.", sequenceNumber: 4 },
-  { id: "tm-05", name: "ASHWIN", role: "Architectural Sales Consultant", category: "Sales", code: "AW", num: "05", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", phone: "+91 88844 64444", bio: "Consults with architects and developers to find surface and material solutions, manages customer relations and outreach.", sequenceNumber: 5 },
-  { id: "tm-06", name: "MUKUND", role: "Sales & Curation", category: "Sales", code: "MK", num: "06", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", phone: "+91 88844 64444", bio: "Curates the products, educates customers on the product mix and manages the store display.", sequenceNumber: 6 },
-  { id: "tm-07", name: "JIGNESH", role: "Channel Sales Manager", category: "Sales", code: "JG", num: "07", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg", phone: "+91 88844 64444", bio: "Maintains communication narratives, manages sales channels, and reaches out to clients for Bagno & Surface solutions.", sequenceNumber: 7 },
+  { id: "tm-04", name: "KOUSHIK", role: "Director", category: "Leadership", code: "KS", num: "04", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-1-min.jpg", phone: "+91 88844 64444", bio: "Directs client solutions, space optimization, and luxury architectural interior curation across premium projects.", sequenceNumber: 4 },
+  { id: "tm-05", name: "ASHWIN", role: "Director", category: "Leadership", code: "AW", num: "05", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", phone: "+91 88844 64444", bio: "Directs architectural partnerships, surface technology consulting, developer alliances, and luxury material innovation.", sequenceNumber: 5 },
+  { id: "tm-06", name: "MUKUND", role: "Director", category: "Leadership", code: "MK", num: "06", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", phone: "+91 88844 64444", bio: "Directs world-class brand curation, premium material experiences, and state-of-the-art gallery displays.", sequenceNumber: 6 },
+  { id: "tm-07", name: "JIGNESH", role: "Director", category: "Leadership", code: "JG", num: "07", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg", phone: "+91 88844 64444", bio: "Directs strategic channel operations, Bagno & Surface architectural solutions, and pan-India client relations.", sequenceNumber: 7 },
   { id: "tm-08", name: "SURESH KUMAR", role: "Operations Head", category: "Operations", code: "SK", num: "08", image: "", phone: "+91 88844 64444", bio: "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites.", sequenceNumber: 8 },
   { id: "tm-09", name: "PRAVEEN NAIR", role: "Lead Installation Specialist", category: "Installation", code: "PN", num: "09", image: "", phone: "+91 88844 64444", bio: "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations.", sequenceNumber: 9 },
   { id: "tm-10", name: "ANITHA REDDY", role: "Client Support & Relations", category: "Support Staff", code: "AR", num: "10", image: "", phone: "+91 88844 64444", bio: "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction.", sequenceNumber: 10 },
@@ -29,7 +29,13 @@ const INITIAL_DEFAULT_TEAM = [
   { id: "tm-24", name: "NARASIMHA RAJU", role: "Accountant", category: "Accounts", code: "NR", num: "24", image: "", phone: "+91 88844 64444", bio: "Manages financial records and supports the accounts team with diligent accounting operations", sequenceNumber: 24 },
 ];
 
-const KNOWN_DEPARTMENTS = ["Sales", "Operations", "Installation", "Accounts", "Support Staff"];
+const DEPARTMENTS_ORDER = [
+  "Sales",
+  "Operations",
+  "Installation",
+  "Accounts",
+  "Support Staff",
+];
 
 function normalizeCategory(m: any): string {
   const cat = (m.category || "").trim();
@@ -44,14 +50,24 @@ function normalizeCategory(m: any): string {
     catLower.includes("leader") ||
     desigLower.includes("founder") ||
     desigLower.includes("chairman") ||
+    desigLower.includes("director") ||
     desigLower.includes("envisioner") ||
     desigLower.includes("chief planner") ||
     nameLower.includes("mohanlal") ||
     nameLower.includes("ramniklal") ||
     nameLower.includes("madhusudhan") ||
+    nameLower.includes("koushik") ||
+    nameLower.includes("kou shik") ||
+    nameLower.includes("ashwin") ||
+    nameLower.includes("mukund") ||
+    nameLower.includes("jignesh") ||
     codeLower.startsWith("mm") ||
     codeLower.startsWith("rv") ||
-    codeLower.startsWith("mp")
+    codeLower.startsWith("mp") ||
+    codeLower.startsWith("ks") ||
+    codeLower.startsWith("aw") ||
+    codeLower.startsWith("mk") ||
+    codeLower.startsWith("jg")
   ) {
     return "Leadership";
   }
@@ -105,9 +121,16 @@ function normalizeCategory(m: any): string {
 
 export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState<any[]>(INITIAL_DEFAULT_TEAM);
-  const [view, setView] = useState<"leadership" | "team">("leadership");
-  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+  const [activeMainView, setActiveMainView] = useState<"LEADERSHIP" | "TEAM">("LEADERSHIP");
   const [selectedMember, setSelectedMember] = useState<any | null>(null);
+  const [joinBanner, setJoinBanner] = useState({
+    title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
+    fontSize: "medium",
+    hoursText: "Open 9am to 9pm (All days)",
+    phone: "+91 88844 64444",
+    email: "info@aarenintpro.com",
+    address: "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026",
+  });
 
   useEffect(() => {
     fetch("/api/team?t=" + Date.now(), { cache: "no-store" })
@@ -135,184 +158,190 @@ export default function TeamPage() {
               })
             );
           }
+          if (json.joinBanner || (json.data && json.data.joinBanner)) {
+            setJoinBanner(json.joinBanner || json.data.joinBanner);
+          }
         }
       })
       .catch((e) => console.error(e));
   }, []);
 
-  const leadershipMembers = teamMembers.filter(
-    (m) => m.category === "Leadership"
-  );
+  const leadershipMembers = teamMembers.filter((m) => m.category === "Leadership");
+  const nonLeadershipMembers = teamMembers.filter((m) => m.category !== "Leadership");
 
-  const nonLeadershipMembers = teamMembers.filter(
-    (m) => m.category !== "Leadership"
-  );
-
-  // Collect all unique departments present in data
-  const existingDepartments = Array.from(
-    new Set(nonLeadershipMembers.map((m) => m.category))
-  );
-
-  // Order them nicely by KNOWN_DEPARTMENTS first, then any additional categories
+  // Collect unique non-leadership departments in specified order
+  const presentDepartments = Array.from(new Set(nonLeadershipMembers.map((m) => m.category)));
   const orderedDepartments = [
-    ...KNOWN_DEPARTMENTS.filter((d) => existingDepartments.includes(d)),
-    ...existingDepartments.filter((d) => !KNOWN_DEPARTMENTS.includes(d)),
+    ...DEPARTMENTS_ORDER.filter((d) => presentDepartments.includes(d)),
+    ...presentDepartments.filter((d) => !DEPARTMENTS_ORDER.includes(d)),
   ];
 
-  return (
-    <div className="aaren-team-wrapper">
-      <main className="team-page-content">
-        {/* ── Top Bar ── */}
-        <header className="topbar">
-          <div>
-            <div className="eyebrow">AAREN INTPRO</div>
-            <h1 id="page-heading">
-              {view === "leadership" ? "Leadership." : "Team."}
-            </h1>
-          </div>
-          <nav className="nav" aria-label="Team navigation">
-            <button
-              type="button"
-              className={view === "leadership" ? "active" : ""}
-              onClick={() => setView("leadership")}
-            >
-              Leadership
-            </button>
-            <button
-              type="button"
-              className={view === "team" ? "active" : ""}
-              onClick={() => setView("team")}
-            >
-              Team
-            </button>
-          </nav>
-        </header>
-
-        {/* ── LEADERSHIP VIEW ── */}
-        {view === "leadership" && (
-          <section id="leadership" className="view active">
-            <h2 className="section-title">Leadership</h2>
-            <div className="people-grid">
-              {leadershipMembers.map((member) => {
-                const hasImage = Boolean(member.image) && !imageErrors[member.id];
-                return (
-                  <article
-                    key={member.id || member.name}
-                    className="person-card"
-                    onClick={() => setSelectedMember(member)}
-                  >
-                    <div className={`person-photo ${!hasImage ? "img-fallback" : ""}`}>
-                      {hasImage ? (
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          onError={() =>
-                            setImageErrors((prev) => ({ ...prev, [member.id]: true }))
-                          }
-                        />
-                      ) : null}
-                    </div>
-                    <div className="person-info">
-                      <div className="person-name">{member.name}</div>
-                      <div className="person-role">{member.role}</div>
-                    </div>
-                  </article>
-                );
-              })}
+  const renderCard = (member: any, idx: number) => (
+    <div
+      key={member.id || member.name + idx}
+      className="team-card"
+      onClick={() => setSelectedMember(member)}
+      style={{ cursor: "pointer" }}
+    >
+      <div className="team-card__fig-wrapper">
+        <div className="team-card__fig">
+          {member.image ? (
+            <img
+              src={member.image}
+              alt={member.name}
+              className="team-card__img"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          ) : (
+            <div className="team-card__placeholder">
+              {member.name
+                ? member.name
+                    .split(" ")
+                    .map((n: string) => n[0])
+                    .join("")
+                    .substring(0, 2)
+                    .toUpperCase()
+                : "AA"}
             </div>
-          </section>
+          )}
+        </div>
+        {/* Category Pill Overlay */}
+        <div className="team-card__category-badge">
+          {member.category}
+        </div>
+      </div>
+
+      <div className="team-card__caption">
+        <div className="team-card__caption-left">
+          <h2 className="team-card__caption-name">{member.name}</h2>
+          <p className="team-card__caption-role">{member.role}</p>
+        </div>
+        <div className="team-card__caption-right">
+          <span className="team-card__caption-code">{member.code}</span>
+          <span className="team-card__caption-num">{member.num}</span>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="team-page">
+      {/* ── Page Header ── */}
+      <div className="team-header">
+        <div className="team-header__inner">
+          <div className="team-header__meta t-tag">
+            MEET THE TEAM
+          </div>
+          <h1 className="team-header__title">OUR TEAM</h1>
+          <p className="team-header__desc t-body">
+            Aaren Intpro is built by a family of dedicated professionals across Leadership, Sales, Operations, Installation, Accounts, and Support Staff, united by a common passion for luxury spatial design.
+          </p>
+        </div>
+      </div>
+
+      {/* ── Only Two Buttons: LEADERSHIP and TEAM ── */}
+      <div className="team-category-nav-wrapper">
+        <div className="team-category-nav">
+          <span className="team-category-label">DEPARTMENTS:</span>
+          <button
+            type="button"
+            onClick={() => setActiveMainView("LEADERSHIP")}
+            className={`team-cat-btn ${activeMainView === "LEADERSHIP" ? "active" : ""}`}
+          >
+            <span>LEADERSHIP</span>
+            <span className="team-cat-count">{leadershipMembers.length}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveMainView("TEAM")}
+            className={`team-cat-btn ${activeMainView === "TEAM" ? "active" : ""}`}
+          >
+            <span>TEAM</span>
+            <span className="team-cat-count">{nonLeadershipMembers.length}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* ── Main Content Container ── */}
+      <div className="team-grid-container">
+        {activeMainView === "LEADERSHIP" && (
+          <div className="team-grid">
+            {leadershipMembers.map((member, idx) => renderCard(member, idx))}
+          </div>
         )}
 
-        {/* ── TEAM VIEW ── */}
-        {view === "team" && (
-          <section id="team" className="view active">
+        {/* ── All Departments Displayed on ONE Page Sequentially (Without sub-tabs) ── */}
+        {activeMainView === "TEAM" && (
+          <div className="team-departments-wrapper">
             {orderedDepartments.map((dept) => {
-              const deptMembers = nonLeadershipMembers.filter((m) => m.category === dept);
+              const deptMembers = nonLeadershipMembers.filter(
+                (m) => (m.category || "").toLowerCase() === dept.toLowerCase()
+              );
               if (deptMembers.length === 0) return null;
 
               return (
-                <section key={dept} className="department">
-                  <div className="department-title">
-                    <h3>{dept}</h3>
+                <section key={dept} className="team-department-section">
+                  <div className="team-department-header">
+                    <h3 className="team-department-title">
+                      {dept.toUpperCase()}{" "}
+                      <span className="team-department-count">({deptMembers.length})</span>
+                    </h3>
+                    <div className="team-department-line" />
                   </div>
-                  <div className="people-grid">
-                    {deptMembers.map((member) => {
-                      const hasImage = Boolean(member.image) && !imageErrors[member.id];
-                      return (
-                        <article
-                          key={member.id || member.name}
-                          className="person-card"
-                          onClick={() => setSelectedMember(member)}
-                        >
-                          <div className={`person-photo ${!hasImage ? "img-fallback" : ""}`}>
-                            {hasImage ? (
-                              <img
-                                src={member.image}
-                                alt={member.name}
-                                onError={() =>
-                                  setImageErrors((prev) => ({ ...prev, [member.id]: true }))
-                                }
-                              />
-                            ) : null}
-                          </div>
-                          <div className="person-info">
-                            <div className="person-name">{member.name}</div>
-                            <div className="person-role">{member.role}</div>
-                          </div>
-                        </article>
-                      );
-                    })}
+                  <div className="team-grid">
+                    {deptMembers.map((member, idx) => renderCard(member, idx))}
                   </div>
                 </section>
               );
             })}
-          </section>
+          </div>
         )}
-      </main>
+      </div>
 
-      {/* ── Optional Detail Modal for Member ── */}
+      {/* ── Modal Pop-up for Member Details ── */}
       {selectedMember && (
         <div
-          className="team-modal-overlay"
+          className="team-modal-backdrop"
           onClick={() => setSelectedMember(null)}
         >
           <div
-            className="team-modal-box"
+            className="team-modal-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="team-modal-header-photo">
-              {selectedMember.image && !imageErrors[selectedMember.id] ? (
+            <button
+              onClick={() => setSelectedMember(null)}
+              className="team-modal-close"
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+
+            <div className="team-modal-photo-wrapper">
+              {selectedMember.image ? (
                 <img
                   src={selectedMember.image}
                   alt={selectedMember.name}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  className="team-modal-photo"
                 />
               ) : (
-                <div className="team-modal-photo-placeholder">
+                <div className="team-modal-placeholder">
                   {selectedMember.name ? selectedMember.name.substring(0, 2).toUpperCase() : "AA"}
                 </div>
               )}
-              <button
-                type="button"
-                className="team-modal-close-btn"
-                onClick={() => setSelectedMember(null)}
-                aria-label="Close dialog"
-              >
-                ✕
-              </button>
             </div>
+
             <div className="team-modal-body">
-              <div className="team-modal-topline">
+              <div className="team-modal-header-row">
                 <div>
                   <h3 className="team-modal-name">{selectedMember.name}</h3>
                   <p className="team-modal-role">{selectedMember.role}</p>
                 </div>
-                {selectedMember.code && (
-                  <div className="team-modal-codes">
-                    <span className="team-modal-code-main">{selectedMember.code}</span>
-                    <span className="team-modal-code-sub">{selectedMember.num}</span>
-                  </div>
-                )}
+                <div className="team-modal-codes">
+                  <span className="team-modal-code-main">{selectedMember.code}</span>
+                  <span className="team-modal-code-sub">{selectedMember.num}</span>
+                </div>
               </div>
 
               {selectedMember.bio && (
@@ -320,8 +349,9 @@ export default function TeamPage() {
               )}
 
               {selectedMember.phone && (
-                <div className="team-modal-phone-row">
-                  <a href={`tel:${selectedMember.phone}`} className="team-modal-phone-link">
+                <div className="team-modal-contact-row">
+                  <span className="team-modal-contact-label">Contact:</span>
+                  <a href={`tel:${selectedMember.phone}`} className="team-modal-contact-link">
                     📞 {selectedMember.phone}
                   </a>
                 </div>
@@ -331,417 +361,621 @@ export default function TeamPage() {
         </div>
       )}
 
-      {/* ── Scoped Styling matching provided design ── */}
+      {/* ── Team Join Section ── */}
+      <section className="team-join-section">
+        <h2 className={`team-join-title size-${joinBanner.fontSize || "medium"}`}>
+          {joinBanner.title}
+        </h2>
+        <div className="team-join-info">
+          <div className="team-join-circle-icon">i</div>
+          {joinBanner.hoursText && <p className="team-join-hours">{joinBanner.hoursText}</p>}
+          <div className="team-join-contacts">
+            {joinBanner.phone && (
+              <a href={`tel:${joinBanner.phone.replace(/[^0-9+]/g, "")}`} className="team-join-link">
+                {joinBanner.phone}
+              </a>
+            )}
+            {joinBanner.email && (
+              <a href={`mailto:${joinBanner.email}`} className="team-join-link">
+                {joinBanner.email}
+              </a>
+            )}
+            {joinBanner.address && <div className="team-join-address">{joinBanner.address}</div>}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Scoped Styling Restoring the Older Layout & Proportions ── */}
       <style>{`
-        :root {
-          --team-bg: #f7f5f0;
-          --team-surface: #ffffff;
-          --team-text: #171717;
-          --team-muted: #77736c;
-          --team-line: #d8d4cc;
-          --team-accent: #9a8b72;
-          --team-radius: 18px;
-        }
-
-        .aaren-team-wrapper {
+        .team-page {
+          background: #FAF9F6;
+          color: #111;
           min-height: 100vh;
-          background: var(--team-bg);
-          color: var(--team-text);
-          font-family: Inter, Arial, Helvetica, sans-serif !important;
-          padding-top: 60px;
         }
 
-        .team-page-content {
-          width: min(1200px, 100%);
+        /* ── Header ── */
+        .team-header {
+          padding: 12rem 2.4rem 3.5rem;
+          max-width: 1600px;
           margin: 0 auto;
-          padding: 56px 48px 100px;
-          box-sizing: border-box;
         }
 
-        /* ---------- top bar ---------- */
-        .topbar {
+        @media (max-width: 768px) {
+          .team-header {
+            padding: 9rem 1.6rem 2.5rem;
+          }
+        }
+
+        .team-header__meta {
+          color: #81663F;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          margin-bottom: 1.2rem;
+          font-size: 1.3rem;
+          text-transform: uppercase;
+        }
+
+        .team-header__title {
+          color: #81663F;
+          font-size: clamp(3.6rem, 6vw, 6.4rem);
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          margin-bottom: 1.6rem;
+          line-height: 1.05;
+        }
+
+        .team-header__desc {
+          color: rgba(0,0,0,0.65);
+          max-width: 58rem;
+          font-size: 1.6rem;
+          line-height: 1.6;
+        }
+
+        /* ── Sub Categories / Departments Nav Bar ── */
+        .team-category-nav-wrapper {
+          padding: 1.5rem 2.4rem 2rem;
+          max-width: 1600px;
+          margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+          .team-category-nav-wrapper {
+            padding: 1rem 1.6rem 1.5rem;
+          }
+        }
+
+        .team-category-nav {
           display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
+          align-items: center;
+          gap: 1.2rem;
           flex-wrap: wrap;
-          gap: 24px;
-          margin-bottom: 60px;
-          padding-bottom: 28px;
-          border-bottom: 1px solid var(--team-line);
         }
 
-        .eyebrow {
-          margin-bottom: 10px;
-          color: var(--team-muted) !important;
-          font-family: Inter, Arial, Helvetica, sans-serif !important;
-          font-size: 12px !important;
-          font-weight: 600 !important;
-          letter-spacing: 0.18em !important;
-          text-transform: uppercase !important;
+        @media (max-width: 768px) {
+          .team-category-nav {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .team-category-nav::-webkit-scrollbar {
+            display: none;
+          }
         }
 
-        .topbar h1 {
-          font-family: Georgia, "Times New Roman", serif !important;
-          font-size: clamp(38px, 5vw, 64px) !important;
-          font-weight: 400 !important;
-          line-height: 0.95 !important;
-          letter-spacing: -0.04em !important;
-          text-transform: none !important;
-          color: var(--team-text) !important;
-          margin: 0 !important;
+        .team-category-label {
+          font-size: 1.15rem;
+          font-weight: 800;
+          letter-spacing: 0.12em;
+          color: #81663F;
+          margin-right: 0.8rem;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
 
-        .nav {
-          display: inline-flex;
-          gap: 6px;
-          border: 1px solid var(--team-line);
-          border-radius: 999px;
-          padding: 4px;
-          background: var(--team-surface);
-        }
-
-        .nav button {
+        .team-cat-btn {
           display: inline-flex;
           align-items: center;
-          padding: 10px 22px;
-          border: 0;
-          border-radius: 999px;
-          background: transparent;
-          color: var(--team-muted) !important;
+          gap: 0.65rem;
+          padding: 0.75rem 1.6rem;
+          border-radius: 9999px;
+          border: 1px solid rgba(129,102,63,0.25);
+          background: #FAF9F6;
+          color: #222;
+          font-size: 1.25rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
           cursor: pointer;
-          font-family: Inter, Arial, Helvetica, sans-serif !important;
-          font-size: 13px !important;
-          font-weight: 600 !important;
-          letter-spacing: 0.02em !important;
-          transition: background 0.2s ease, color 0.2s ease;
+          transition: all 0.25s ease;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
 
-        .nav button:hover {
-          color: var(--team-text) !important;
+        .team-cat-btn:hover {
+          border-color: #81663F;
+          color: #81663F;
+          transform: translateY(-1px);
         }
 
-        .nav button.active {
-          background: var(--team-text) !important;
-          color: var(--team-bg) !important;
+        .team-cat-btn.active {
+          background: #81663F;
+          color: #fff;
+          border-color: #81663F;
+          box-shadow: 0 4px 14px rgba(129, 102, 63, 0.25);
         }
 
-        /* ---------- views ---------- */
-        .view {
-          display: block;
-        }
-
-        .section-title {
+        .team-cat-count {
           display: inline-flex;
           align-items: center;
-          min-height: 54px;
-          padding: 0 22px;
-          border: 1px solid var(--team-text) !important;
-          border-radius: 999px;
-          margin-bottom: 42px;
-          font-family: Georgia, "Times New Roman", serif !important;
-          font-size: 24px !important;
-          font-weight: 400 !important;
-          text-transform: none !important;
-          color: var(--team-text) !important;
+          justify-content: center;
+          background: rgba(0,0,0,0.06);
+          color: inherit;
+          padding: 0.15rem 0.65rem;
+          border-radius: 9999px;
+          font-size: 1.05rem;
+          font-weight: 800;
         }
 
-        .department {
-          margin-bottom: 58px;
-        }
-        .department:last-child {
-          margin-bottom: 0;
+        .team-cat-btn.active .team-cat-count {
+          background: rgba(255,255,255,0.25);
+          color: #fff;
         }
 
-        .department-title {
+        /* ── Departments Organized Sections ── */
+        .team-departments-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 5rem;
+          padding-bottom: 8rem;
+        }
+
+        .team-department-section {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .team-department-header {
           display: flex;
           align-items: center;
-          gap: 18px;
-          margin-bottom: 24px;
+          gap: 1.8rem;
+          margin-bottom: 2.5rem;
+          padding: 0 2.4rem;
         }
 
-        .department-title h3 {
-          font-family: Georgia, "Times New Roman", serif !important;
-          font-size: 29px !important;
-          font-weight: 400 !important;
-          letter-spacing: -0.025em !important;
-          text-transform: none !important;
-          color: var(--team-text) !important;
-          margin: 0 !important;
+        @media (max-width: 768px) {
+          .team-department-header {
+            padding: 0 1.6rem;
+            margin-bottom: 1.8rem;
+          }
         }
 
-        .department-title::after {
-          content: "";
-          height: 1px;
+        .team-department-title {
+          font-size: 2rem;
+          font-weight: 800;
+          color: #81663F;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          margin: 0;
+          white-space: nowrap;
+        }
+
+        .team-department-count {
+          font-size: 1.5rem;
+          color: rgba(129,102,63,0.6);
+          font-weight: 700;
+          margin-left: 0.4rem;
+        }
+
+        .team-department-line {
           flex: 1;
-          background: var(--team-line);
+          height: 1px;
+          background: rgba(129,102,63,0.2);
         }
 
-        /* ---------- card grid ---------- */
-        .people-grid {
+        /* ── Team Grid with Older Layout Spacing & Card Dimensions ── */
+        .team-grid-container {
+          max-width: 1600px;
+          margin: 0 auto;
+        }
+
+        .team-grid {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 30px 24px;
+          grid-template-columns: 1fr;
+          gap: 4rem 2.4rem;
+          padding: 1.5rem 2.4rem 6rem;
         }
 
-        .person-card {
-          min-width: 0;
-          cursor: pointer;
-          transition: transform 0.25s ease;
+        @media (min-width: 768px) {
+          .team-grid {
+            grid-template-columns: repeat(2, 1fr);
+            padding: 2rem 2.4rem 6rem;
+            gap: 5rem 3.2rem;
+          }
         }
 
-        .person-card:hover {
-          transform: translateY(-3px);
+        @media (min-width: 1200px) {
+          .team-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6rem 3.6rem;
+          }
         }
 
-        .person-photo {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 0.82;
+        .team-card {
+          display: flex;
+          flex-direction: column;
+          background: #E6E2D8;
+          border: 0.1rem solid rgba(129, 102, 63, 0.2);
           overflow: hidden;
-          border: 1px solid var(--team-line);
-          border-radius: var(--team-radius);
-          background: linear-gradient(135deg, rgba(154, 139, 114, 0.14), rgba(255, 255, 255, 0.9));
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .person-photo img {
+        .team-card:hover {
+          transform: translateY(-0.4rem);
+          box-shadow: 0 1.2rem 3.2rem rgba(0,0,0,0.08);
+        }
+
+        .team-card__fig-wrapper {
+          position: relative;
+          overflow: hidden;
+          height: 38rem;
+          background: #111;
+        }
+
+        @media (min-width: 768px) {
+          .team-card__fig-wrapper {
+            height: 44rem;
+          }
+        }
+
+        .team-card__fig {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .team-card__img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center 15%;
+          filter: grayscale(100%);
+          transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s ease;
           display: block;
-          transition: transform 0.4s ease;
         }
 
-        .person-card:hover .person-photo img {
-          transform: scale(1.03);
+        .team-card:hover .team-card__img {
+          transform: scale(1.04);
+          filter: grayscale(0%);
         }
 
-        /* shown automatically if a photo file isn't found yet */
-        .person-photo.img-fallback {
+        .team-card__placeholder {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #1e2230 0%, #0b0c10 100%);
           display: flex;
           align-items: center;
           justify-content: center;
+          color: #81663F;
+          font-size: 4rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
         }
 
-        .person-photo.img-fallback img {
-          display: none;
+        .team-card__category-badge {
+          position: absolute;
+          top: 1.2rem;
+          right: 1.2rem;
+          z-index: 2;
+          background: rgba(0, 0, 0, 0.75);
+          backdrop-filter: blur(8px);
+          color: #d4af37;
+          border: 1px solid rgba(212, 175, 55, 0.4);
+          font-size: 1rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 0.4rem 1rem;
+          border-radius: 4px;
         }
 
-        .person-photo.img-fallback::after {
-          content: "";
-          width: 42%;
-          height: 42%;
-          background: rgba(23, 23, 23, 0.28);
-          -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>') center/contain no-repeat;
-          mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>') center/contain no-repeat;
+        .team-card__caption {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 1.6rem;
+          padding: 1.6rem 2.4rem;
+          background: #FAF9F6;
+          border-top: 1px solid rgba(129,102,63,0.12);
+          transition: background 0.25s ease;
         }
 
-        .person-info {
-          padding-top: 13px;
+        .team-card:hover .team-card__caption {
+          background: #F2EFE8;
         }
 
-        .person-name {
-          font-family: Inter, Arial, Helvetica, sans-serif !important;
-          font-size: 14px !important;
-          font-weight: 600 !important;
-          line-height: 1.25 !important;
-          color: var(--team-text) !important;
-          letter-spacing: normal !important;
-          text-transform: none !important;
+        .team-card__caption-left {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
         }
 
-        .person-role {
-          margin-top: 4px;
-          color: var(--team-muted) !important;
-          font-family: Inter, Arial, Helvetica, sans-serif !important;
-          font-size: 11px !important;
-          line-height: 1.4 !important;
-          letter-spacing: normal !important;
-          text-transform: none !important;
+        .team-card__caption-name {
+          font-size: 1.5rem;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+          text-transform: uppercase;
+          color: #81663F;
+          margin: 0;
         }
 
-        /* Modal styling */
-        .team-modal-overlay {
+        .team-card__caption-role {
+          font-size: 1.1rem;
+          color: rgba(0,0,0,0.5);
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          margin: 0;
+        }
+
+        .team-card__caption-right {
+          display: flex;
+          align-items: center;
+          gap: 1.6rem;
+          flex-shrink: 0;
+        }
+
+        .team-card__caption-code {
+          font-size: 3rem;
+          font-weight: 700;
+          letter-spacing: -0.04em;
+          line-height: 1;
+          color: #81663F;
+        }
+
+        .team-card__caption-num {
+          font-size: 2.6rem;
+          font-weight: 700;
+          letter-spacing: -0.04em;
+          line-height: 1;
+          color: rgba(129,102,63,0.35);
+        }
+
+        /* ── Modal Pop-up ── */
+        .team-modal-backdrop {
           position: fixed;
           inset: 0;
-          background-color: rgba(0, 0, 0, 0.65);
+          background-color: rgba(0, 0, 0, 0.75);
           backdrop-filter: blur(6px);
           z-index: 99999;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 24px;
+          padding: 2rem;
         }
 
-        .team-modal-box {
-          background: #ffffff;
-          border: 1px solid var(--team-line);
-          border-radius: var(--team-radius);
-          max-width: 520px;
+        .team-modal-content {
+          background-color: #FAF9F6;
+          border: 1px solid rgba(129, 102, 63, 0.3);
+          border-radius: 8px;
+          max-width: 600px;
           width: 100%;
           max-height: 90vh;
           overflow-y: auto;
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-          display: flex;
-          flex-direction: column;
-        }
-
-        .team-modal-header-photo {
           position: relative;
-          height: 280px;
-          background: linear-gradient(135deg, rgba(154, 139, 114, 0.18), rgba(255, 255, 255, 0.9));
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
-        .team-modal-photo-placeholder {
+        .team-modal-close {
+          position: absolute;
+          top: 1.5rem;
+          right: 1.5rem;
+          background: rgba(0,0,0,0.6);
+          border: none;
+          border-radius: 50%;
+          width: 3.2rem;
+          height: 3.2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.6rem;
+          cursor: pointer;
+          z-index: 10;
+          color: #fff;
+          font-weight: bold;
+          transition: background 0.2s ease;
+        }
+
+        .team-modal-close:hover {
+          background: rgba(0,0,0,0.85);
+        }
+
+        .team-modal-photo-wrapper {
+          position: relative;
+          width: 100%;
+          height: 32rem;
+          background: #111;
+        }
+
+        .team-modal-photo {
           width: 100%;
           height: 100%;
+          object-fit: cover;
+          object-position: center 15%;
+          display: block;
+        }
+
+        .team-modal-placeholder {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #1e2230 0%, #0b0c10 100%);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 48px;
-          font-weight: 700;
-          color: var(--team-accent);
-        }
-
-        .team-modal-close-btn {
-          position: absolute;
-          top: 16px;
-          right: 16px;
-          background: rgba(0, 0, 0, 0.6);
-          border: 0;
-          color: #ffffff;
-          width: 34px;
-          height: 34px;
-          border-radius: 50%;
-          font-size: 16px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: background 0.2s;
-        }
-
-        .team-modal-close-btn:hover {
-          background: rgba(0, 0, 0, 0.85);
+          color: #81663F;
+          font-size: 5rem;
+          font-weight: 800;
         }
 
         .team-modal-body {
-          padding: 28px;
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
+          padding: 2.8rem 2.4rem;
         }
 
-        .team-modal-topline {
+        .team-modal-header-row {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          gap: 16px;
+          margin-bottom: 1.6rem;
+          gap: 1.6rem;
         }
 
         .team-modal-name {
-          font-family: Georgia, "Times New Roman", serif !important;
-          font-size: 24px !important;
-          font-weight: 600 !important;
-          color: var(--team-text) !important;
-          margin: 0 !important;
-          line-height: 1.2 !important;
-          text-transform: none !important;
+          font-size: 2.2rem;
+          font-weight: 800;
+          color: #81663F;
+          text-transform: uppercase;
+          margin: 0;
         }
 
         .team-modal-role {
-          font-family: Inter, Arial, Helvetica, sans-serif !important;
-          font-size: 13px !important;
-          color: var(--team-muted) !important;
-          font-weight: 500 !important;
-          margin-top: 4px !important;
+          font-size: 1.3rem;
+          color: rgba(0,0,0,0.6);
+          text-transform: uppercase;
+          margin: 0.4rem 0 0;
+          font-weight: 600;
         }
 
         .team-modal-codes {
-          text-align: right;
-          font-family: Inter, Arial, Helvetica, sans-serif !important;
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
         }
 
         .team-modal-code-main {
-          font-size: 20px;
-          font-weight: 700;
-          color: var(--team-accent);
+          font-size: 2.8rem;
+          font-weight: 800;
+          color: #81663F;
         }
 
         .team-modal-code-sub {
-          font-size: 18px;
-          font-weight: 700;
-          color: var(--team-muted);
-          margin-left: 4px;
+          font-size: 2.4rem;
+          font-weight: 800;
+          color: rgba(129,102,63,0.35);
         }
 
         .team-modal-bio {
-          font-family: Inter, Arial, Helvetica, sans-serif !important;
-          font-size: 14px !important;
-          line-height: 1.6 !important;
-          color: #4a4742 !important;
-          margin: 6px 0 0 !important;
+          font-size: 1.4rem;
+          line-height: 1.7;
+          color: rgba(0,0,0,0.75);
+          margin: 0 0 2rem;
         }
 
-        .team-modal-phone-row {
-          margin-top: 12px;
-          padding-top: 12px;
-          border-top: 1px solid var(--team-line);
+        .team-modal-contact-row {
+          border-top: 1px solid rgba(129,102,63,0.15);
+          padding-top: 1.6rem;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
         }
 
-        .team-modal-phone-link {
-          font-family: Inter, Arial, Helvetica, sans-serif !important;
-          color: var(--team-text) !important;
-          font-weight: 600 !important;
-          text-decoration: none !important;
-          font-size: 13px !important;
+        .team-modal-contact-label {
+          font-size: 1.3rem;
+          color: #81663F;
+          font-weight: 700;
         }
 
-        /* ---------- tablet ---------- */
-        @media (max-width: 900px) {
-          .team-page-content {
-            padding: 44px 28px 80px;
-          }
-          .people-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 22px 16px;
-          }
-          .section-title {
-            font-size: 21px !important;
-            padding: 0 18px;
-          }
+        .team-modal-contact-link {
+          font-size: 1.35rem;
+          color: #222;
+          text-decoration: none;
+          font-weight: 600;
         }
 
-        /* ---------- mobile ---------- */
-        @media (max-width: 680px) {
-          .team-page-content {
-            padding: 36px 18px 70px;
-          }
-          .topbar {
-            align-items: flex-start;
-          }
-          .nav {
-            width: 100%;
-          }
-          .nav button {
-            flex: 1;
-            justify-content: center;
-          }
-          .people-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 26px 14px;
-          }
-          .department-title h3 {
-            font-size: 26px !important;
-          }
+        /* ── Team Join Section ── */
+        .team-join-section {
+          padding: 6rem 2.4rem;
+          background: #FAF9F6;
+          border-top: 1px solid rgba(129,102,63,0.18);
+          text-align: center;
         }
 
-        @media (max-width: 420px) {
-          .person-name {
-            font-size: 13px !important;
-          }
-          .person-role {
-            font-size: 10px !important;
-          }
+        .team-join-title {
+          color: #81663F;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          line-height: 1.25;
+          text-transform: uppercase;
+          margin: 0 auto 2.5rem;
+          max-width: 900px;
+        }
+
+        .team-join-title.size-small {
+          font-size: clamp(1.6rem, 3vw, 2.2rem);
+        }
+
+        .team-join-title.size-medium {
+          font-size: clamp(2rem, 3.8vw, 3rem);
+        }
+
+        .team-join-title.size-large {
+          font-size: clamp(2.6rem, 5vw, 4.2rem);
+        }
+
+        .team-join-info {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1.6rem;
+        }
+
+        .team-join-circle-icon {
+          width: 3.6rem;
+          height: 3.6rem;
+          border-radius: 50%;
+          border: 1px solid #81663F;
+          color: #81663F;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: Georgia, serif;
+          font-style: italic;
+          font-size: 1.8rem;
+          font-weight: 700;
+        }
+
+        .team-join-hours {
+          font-size: 1.4rem;
+          color: rgba(0,0,0,0.6);
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .team-join-contacts {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.8rem;
+        }
+
+        .team-join-link {
+          font-size: 1.6rem;
+          color: #81663F;
+          font-weight: 700;
+          text-decoration: none;
+          transition: opacity 0.2s ease;
+        }
+
+        .team-join-link:hover {
+          opacity: 0.8;
+        }
+
+        .team-join-address {
+          font-size: 1.2rem;
+          color: rgba(0,0,0,0.45);
+          letter-spacing: 0.05em;
+          margin-top: 0.8rem;
+          max-width: 500px;
         }
       `}</style>
     </div>

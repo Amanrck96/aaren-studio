@@ -41,33 +41,11 @@ declare global {
 const FIREBASE_RTDB_STORE_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || "https://aarenintpro-1c09f-default-rtdb.firebaseio.com";
 
 async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 3000);
-    const res = await fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
-      cache: "no-store",
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
-    if (res.ok) {
-      const data = await res.json();
-      if (data && (Array.isArray(data) ? data.length > 0 : Object.keys(data).length > 0)) {
-        return data;
-      }
-    }
-  } catch (e) {}
   return null;
 }
 
-
 async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
-  try {
-    await fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-  } catch (e) {}
+  return;
 }
 
 function getActiveStorePath(): string {
