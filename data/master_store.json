@@ -23710,7 +23710,7 @@
       "designation": "Operations Head",
       "category": "Operations",
       "memberCode": "SK 08",
-      "photoUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites.",
       "sequenceNumber": 8
@@ -23721,7 +23721,7 @@
       "designation": "Lead Installation Specialist",
       "category": "Installation",
       "memberCode": "PN 09",
-      "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations.",
       "sequenceNumber": 9
@@ -23732,7 +23732,7 @@
       "designation": "Client Support & Relations",
       "category": "Support Staff",
       "memberCode": "AR 10",
-      "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction.",
       "sequenceNumber": 10
@@ -23743,7 +23743,7 @@
       "designation": "Sales Executive",
       "category": "Sales",
       "memberCode": "HN 11",
-      "photoUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Dedicated sales professional specializing in luxury surface presentations and client consultations.",
       "sequenceNumber": 11
@@ -23754,7 +23754,7 @@
       "designation": "Sales Consultant",
       "category": "Sales",
       "memberCode": "VG 12",
-      "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Experienced consultant guiding clients through premium architectural product selections.",
       "sequenceNumber": 12
@@ -23765,7 +23765,7 @@
       "designation": "Technical Support Staff",
       "category": "Support Staff",
       "memberCode": "PM 13",
-      "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Provides comprehensive after-sales support and technical assistance to clients.",
       "sequenceNumber": 13
@@ -23776,7 +23776,7 @@
       "designation": "Client Support Staff",
       "category": "Support Staff",
       "memberCode": "LG 14",
-      "photoUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Ensures seamless client experience through dedicated support and coordination.",
       "sequenceNumber": 14
@@ -23785,9 +23785,9 @@
       "id": "tm-15",
       "name": "KISHORE P",
       "designation": "Accounts & Finance Support",
-      "category": "Support Staff",
+      "category": "Accounts",
       "memberCode": "KP 15",
-      "photoUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Manages financial operations, billing, and accounts to ensure smooth business transactions.",
       "sequenceNumber": 15
@@ -23798,7 +23798,7 @@
       "designation": "Sales Executive",
       "category": "Sales",
       "memberCode": "NP 16",
-      "photoUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Proactive sales executive focused on building client relationships and driving revenue growth.",
       "sequenceNumber": 16
@@ -23807,9 +23807,9 @@
       "id": "tm-17",
       "name": "ROOPA C B",
       "designation": "Accounts & Support Executive",
-      "category": "Support Staff",
+      "category": "Accounts",
       "memberCode": "RC 17",
-      "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Handles financial records, invoicing, and accounting processes with precision and accuracy.",
       "sequenceNumber": 17
@@ -23820,7 +23820,7 @@
       "designation": "Sales Executive",
       "category": "Sales",
       "memberCode": "AR 18",
-      "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Dynamic sales professional with expertise in luxury material presentations and client engagement.",
       "sequenceNumber": 18
@@ -23831,7 +23831,7 @@
       "designation": "Sales Executive",
       "category": "Sales",
       "memberCode": "UN 19",
-      "photoUrl": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Result-oriented sales professional dedicated to delivering exceptional client experiences.",
       "sequenceNumber": 19
@@ -23842,7 +23842,7 @@
       "designation": "Sales Executive",
       "category": "Sales",
       "memberCode": "AM 20",
-      "photoUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Passionate about connecting clients with world-class architectural solutions.",
       "sequenceNumber": 20
@@ -23853,7 +23853,7 @@
       "designation": "Operations Executive",
       "category": "Operations",
       "memberCode": "SV 21",
-      "photoUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Manages day-to-day operational workflows ensuring timely delivery and project coordination.",
       "sequenceNumber": 21
@@ -23864,7 +23864,7 @@
       "designation": "Operations Coordinator",
       "category": "Operations",
       "memberCode": "DS 22",
-      "photoUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Coordinates operational activities and logistics to maintain smooth project execution.",
       "sequenceNumber": 22
@@ -23875,7 +23875,7 @@
       "designation": "Operations Logistics",
       "category": "Operations",
       "memberCode": "JK 23",
-      "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Supports operations with efficient handling and coordination of project requirements.",
       "sequenceNumber": 23
@@ -23884,9 +23884,9 @@
       "id": "tm-24",
       "name": "NARASIMHA RAJU",
       "designation": "Accountant",
-      "category": "Support Staff",
+      "category": "Accounts",
       "memberCode": "NR 24",
-      "photoUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+      "photoUrl": "",
       "phone": "+91 88844 64444",
       "bio": "Manages financial records and supports the accounts team with diligent accounting operations",
       "sequenceNumber": 24
