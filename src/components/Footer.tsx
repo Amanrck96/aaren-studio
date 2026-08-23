@@ -141,9 +141,7 @@ export default function Footer() {
       {/* ── Bottom copyright ── */}
       <div className="footer-bottom-row">
         <span style={{ fontSize: "1.1rem", color: "#8A8279", letterSpacing: "0.04em", fontWeight: 600 }}>
-          {settings.copyrightText && !settings.copyrightText.toLowerCase().includes("midas")
-            ? settings.copyrightText
-            : "AAREN © 2026. All rights reserved."}
+          {settings.copyrightText || "AAREN © 2026. All rights reserved."}
         </span>
 
         {/* Social media icons redirecting to official channels */}
@@ -189,9 +187,15 @@ export default function Footer() {
           </a>
         </div>
 
-        <span style={{ fontSize: "1.1rem", color: "#8A8279", letterSpacing: "0.02em", fontWeight: 600 }}>
-          Creative Studio &amp; Material House
-        </span>
+        {/* Right - Studio Tagline & Created By Attribution */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.25rem" }}>
+          <span style={{ fontSize: "1.1rem", color: "#8A8279", letterSpacing: "0.02em", fontWeight: 600 }}>
+            Creative Studio &amp; Material House
+          </span>
+          <span style={{ fontSize: "0.85rem", color: "#81663F", letterSpacing: "0.04em", fontWeight: 600, opacity: 0.9 }}>
+            Created by Midas Touch Enterprises
+          </span>
+        </div>
       </div>
 
       <style jsx>{`

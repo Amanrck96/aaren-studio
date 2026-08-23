@@ -610,7 +610,7 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
         webhookUrl: db.webhookUrl || "",
         footerLinks: Array.from(new Set([...(db.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
         socialLinks: db.socialLinks,
-        copyrightText: db.copyrightText && !db.copyrightText.toLowerCase().includes("midas") ? db.copyrightText : "AAREN © 2026. All rights reserved.",
+        copyrightText: db.copyrightText || "AAREN © 2026. All rights reserved.",
       };
       json.settings = result;
       globalThis.__AAREN_MEMORY_STORE__ = json;
