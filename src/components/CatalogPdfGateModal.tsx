@@ -187,7 +187,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
                   alt={`${itemTitle} Page 1 Cover`}
                   style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
                   onError={(e) => {
-                    (e.currentTarget as HTMLElement).style.display = "none";
+                    (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
                   }}
                 />
                 <div

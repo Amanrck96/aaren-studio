@@ -19,6 +19,7 @@ import {
 import { ProductItem } from "@/lib/types";
 import { DEFAULT_PRODUCTS } from "@/lib/client_constants";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
+import { getPdfThumbnail } from "@/utils/pdfThumbnail";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -486,6 +487,82 @@ export default function ProductDetailPage({ params }: Props) {
               </button>
             </div>
           </div>
+
+          {/* ── HERO PDF SPECIFICATION CALLOUT WITH PAGE-1 THUMBNAIL ── */}
+          <div
+            onClick={() => setPdfModalOpen(true)}
+            style={{
+              marginTop: "1.4rem",
+              background: "#F9F8F5",
+              border: "1px solid #D8D0BE",
+              borderRadius: "12px",
+              padding: "0.9rem 1.1rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+            }}
+          >
+            {/* Page 1 Cover Thumbnail */}
+            <div
+              style={{
+                width: "48px",
+                height: "64px",
+                borderRadius: "6px",
+                overflow: "hidden",
+                border: "1px solid #D8D0BE",
+                background: "#181920",
+                flexShrink: 0,
+                position: "relative",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={getPdfThumbnail(product.catalogPdfUrl || "", { title: product.name })}
+                alt={`${product.name} PDF Cover`}
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "1px",
+                  left: "1px",
+                  right: "1px",
+                  background: "rgba(0,0,0,0.85)",
+                  color: "#D4B67D",
+                  fontSize: "0.45rem",
+                  fontWeight: 900,
+                  textAlign: "center",
+                  padding: "1px 0",
+                  borderRadius: "1px",
+                }}
+              >
+                PAGE 1
+              </div>
+            </div>
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: "0.68rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                📄 {product.brand} Official Catalogue
+              </div>
+              <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#1C1917", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                Full Technical Specification &amp; Brochure
+              </div>
+              <div style={{ fontSize: "0.72rem", color: "#666", marginTop: "2px" }}>
+                Protected On-Screen Preview • Zero Download Leaks
+              </div>
+            </div>
+
+            <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#81663F", padding: "0.4rem 0.8rem", background: "rgba(129,102,63,0.1)", borderRadius: "6px", whiteSpace: "nowrap" }}>
+              Preview ↗
+            </span>
+          </div>
         </div>
       </div>
 
@@ -556,6 +633,125 @@ export default function ProductDetailPage({ params }: Props) {
           <div className="specs-row">
             <div className="spec-key">MAINTENANCE</div>
             <div className="spec-val">Low maintenance — clean with damp cloth</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── SECTION 3.5 — OFFICIAL ARCHITECTURAL PDF CATALOGUE SHOWCASE ── */}
+      <div className="section-container pdf-catalog-section" style={{ marginTop: "3.5rem", marginBottom: "3.5rem" }}>
+        <div
+          style={{
+            background: "linear-gradient(135deg, #1C1917 0%, #0F1117 100%)",
+            borderRadius: "16px",
+            border: "1px solid rgba(212,182,125,0.3)",
+            padding: "2.2rem 2.5rem",
+            color: "#FFFFFF",
+            display: "grid",
+            gridTemplateColumns: "1fr auto",
+            gap: "2.5rem",
+            alignItems: "center",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.25)",
+          }}
+        >
+          <div style={{ display: "flex", gap: "2rem", alignItems: "center", flexWrap: "wrap" }}>
+            {/* Page 1 Cover Thumbnail */}
+            <div
+              style={{
+                width: "120px",
+                height: "160px",
+                borderRadius: "10px",
+                overflow: "hidden",
+                border: "2px solid rgba(212,182,125,0.5)",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+                background: "#181920",
+                position: "relative",
+                flexShrink: 0,
+                cursor: "pointer",
+              }}
+              onClick={() => setPdfModalOpen(true)}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={getPdfThumbnail(product.catalogPdfUrl || "", { title: product.name })}
+                alt={`${product.name} Official Catalogue Page 1`}
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "4px",
+                  left: "4px",
+                  right: "4px",
+                  background: "rgba(0,0,0,0.85)",
+                  color: "#D4B67D",
+                  fontSize: "0.62rem",
+                  fontWeight: 900,
+                  textAlign: "center",
+                  padding: "3px 0",
+                  borderRadius: "4px",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                PAGE 1 COVER
+              </div>
+            </div>
+
+            {/* Info & Meta */}
+            <div style={{ flex: 1, minWidth: "260px" }}>
+              <div style={{ display: "flex", gap: "0.6rem", alignItems: "center", marginBottom: "0.5rem" }}>
+                <span style={{ background: "linear-gradient(135deg, #D4B67D 0%, #B38E46 100%)", color: "#000000", fontSize: "0.7rem", fontWeight: 900, padding: "0.2rem 0.6rem", borderRadius: "4px", textTransform: "uppercase" }}>
+                  OFFICIAL CATALOGUE
+                </span>
+                <span style={{ fontSize: "0.75rem", color: "#D4B67D", fontWeight: 700 }}>
+                  {product.brand} • {product.category}
+                </span>
+              </div>
+
+              <h3 style={{ fontSize: "1.4rem", fontWeight: 900, margin: "0 0 0.5rem 0", color: "#FFFFFF", letterSpacing: "-0.01em" }}>
+                {product.name} Specification Guide
+              </h3>
+
+              <p style={{ color: "#A8A29E", fontSize: "0.88rem", lineHeight: 1.5, margin: "0 0 1rem 0", maxWidth: "600px" }}>
+                Official architectural brochure containing high-resolution finish swatches, structural joinery cross-sections, CAD profiles, and complete installation guidelines.
+              </p>
+
+              <div style={{ display: "flex", gap: "1rem", fontSize: "0.78rem", color: "#D6D3D1", fontWeight: 600, flexWrap: "wrap" }}>
+                <span>✓ Protected On-Screen Canvas Preview</span>
+                <span>✓ Full High-Res Pages</span>
+                <span>✓ Zero Download Leaks</span>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", minWidth: "200px" }}>
+            <button
+              onClick={() => setPdfModalOpen(true)}
+              style={{
+                padding: "0.9rem 1.6rem",
+                background: "linear-gradient(135deg, #D4B67D 0%, #C8A96E 40%, #B38E46 100%)",
+                color: "#000000",
+                border: "none",
+                borderRadius: "8px",
+                fontWeight: 800,
+                fontSize: "0.95rem",
+                cursor: "pointer",
+                boxShadow: "0 6px 20px rgba(212,182,125,0.3)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.5rem",
+                transition: "all 0.2s ease",
+              }}
+            >
+              <Eye size={16} /> Preview Full Catalogue ↗
+            </button>
+            <span style={{ fontSize: "0.72rem", color: "#78716C", textAlign: "center" }}>
+              Fill enquiry to unlock instant view
+            </span>
           </div>
         </div>
       </div>
