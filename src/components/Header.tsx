@@ -30,12 +30,9 @@ const ALL_NAV_LINKS: NavLink[] = [
 ];
 
 const DESKTOP_PRIMARY_LINKS: NavLink[] = [
-  { label: "Projects", href: "/projects" },
-  { label: "Products", href: "/products" },
-  { label: "Brands", href: "/brands" },
   { label: "About Us", href: "/about" },
   { label: "Our Team", href: "/team" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact Us", href: "/contact" },
   { label: "Shop", href: "/shop" },
 ];
 
