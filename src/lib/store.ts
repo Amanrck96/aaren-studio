@@ -60,6 +60,10 @@ function getActiveStorePath(): string {
 }
 
 function readJsonStore() {
+  if (globalThis.__AAREN_MEMORY_STORE__) {
+    return globalThis.__AAREN_MEMORY_STORE__;
+  }
+
   const targetPath = getActiveStorePath();
   try {
     if (fs.existsSync(targetPath)) {
@@ -76,10 +80,6 @@ function readJsonStore() {
       return data;
     }
   } catch (err) {}
-
-  if (globalThis.__AAREN_MEMORY_STORE__) {
-    return globalThis.__AAREN_MEMORY_STORE__;
-  }
 
   const initial = {
     settings: DEFAULT_SETTINGS,
@@ -585,24 +585,19 @@ export const DEFAULT_ROADMAP: RoadmapStepItem[] = [
 
 // SITE SETTINGS STORE
 export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
-  // 1. PRIMARY: Firebase Cloud Database (Guaranteed 100% persistent across Vercel serverless cold restarts)
-  const fbData = await fetchFromFirebaseCloudStore("settings");
-  if (fbData && typeof fbData === "object" && fbData.heroTitle) {
-    const result = {
-      ...fbData,
-      footerLinks: Array.from(new Set([...(fbData.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
+  const json = readJsonStore();
+  if (json.settings && json.settings.heroTitle) {
+    return {
+      ...json.settings,
+      footerLinks: Array.from(new Set([...(json.settings.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
     };
-    const json = readJsonStore();
-    json.settings = result;
-    globalThis.__AAREN_MEMORY_STORE__ = json;
-    return result;
   }
 
-  // 2. Prisma DB fallback
+  // Fallback to Firebase / Prisma if memory unpopulated
   try {
     const db = await prisma.siteSettings.findUnique({ where: { id: "default" } });
     if (db) {
-      const result = {
+      const result: SiteSettingsItem = {
         heroTitle: db.heroTitle,
         heroTagline: db.heroTagline,
         heroSubtext: db.heroSubtext,
@@ -617,22 +612,11 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
         socialLinks: db.socialLinks,
         copyrightText: db.copyrightText && !db.copyrightText.toLowerCase().includes("midas") ? db.copyrightText : "AAREN © 2026. All rights reserved.",
       };
-      const json = readJsonStore();
       json.settings = result;
       globalThis.__AAREN_MEMORY_STORE__ = json;
-      syncToFirebaseCloudStore("settings", result);
       return result;
     }
   } catch (e) {}
-
-  // 3. JSON store fallback
-  const json = readJsonStore();
-  if (json.settings) {
-    return {
-      ...json.settings,
-      footerLinks: Array.from(new Set([...(json.settings.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
-    };
-  }
 
   return {
     ...DEFAULT_SETTINGS,
@@ -644,15 +628,16 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
   const current = await getSiteSettingsStore();
   const updated = { ...current, ...data };
 
-  // 1. PRIMARY: Save directly to Firebase Cloud
-  await syncToFirebaseCloudStore("settings", updated);
-
-  // 2. Update local memory
+  // 1. Update local memory immediately
   const json = readJsonStore();
   json.settings = updated;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
-  // 3. Background Prisma (fails silently on Vercel with local DB)
+  // 2. Primary: Save directly to Firebase Cloud
+  await syncToFirebaseCloudStore("settings", updated);
+
+  // 3. Background Prisma
   try {
     await prisma.siteSettings.upsert({
       where: { id: "default" },
@@ -666,13 +651,15 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
 
 // CATALOG SETTINGS STORE
 export async function getCatalogSettingsStore(): Promise<CatalogSettingsItem> {
+  const json = readJsonStore();
+  if (json.catalogSettings && json.catalogSettings.modalTitle) {
+    return { ...DEFAULT_CATALOG_SETTINGS, ...json.catalogSettings };
+  }
   const fbData = await fetchFromFirebaseCloudStore("catalogSettings");
   if (fbData && typeof fbData === "object" && fbData.modalTitle) {
+    json.catalogSettings = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
     return { ...DEFAULT_CATALOG_SETTINGS, ...fbData };
-  }
-  const json = readJsonStore();
-  if (json.catalogSettings) {
-    return { ...DEFAULT_CATALOG_SETTINGS, ...json.catalogSettings };
   }
   return DEFAULT_CATALOG_SETTINGS;
 }
@@ -680,25 +667,22 @@ export async function getCatalogSettingsStore(): Promise<CatalogSettingsItem> {
 export async function saveCatalogSettingsStore(data: Partial<CatalogSettingsItem>): Promise<CatalogSettingsItem> {
   const current = await getCatalogSettingsStore();
   const updated = { ...current, ...data };
-  await syncToFirebaseCloudStore("catalogSettings", updated);
   const json = readJsonStore();
   json.catalogSettings = updated;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+  await syncToFirebaseCloudStore("catalogSettings", updated);
   return updated;
 }
 
 // CATEGORIES STORE
 export async function getCategoriesStore(): Promise<CategoryItem[]> {
-  // 1. PRIMARY: Firebase Cloud Database
-  const fbData = await fetchFromFirebaseCloudStore("categories");
-  if (fbData && Array.isArray(fbData)) {
-    const json = readJsonStore();
-    json.categories = fbData;
-    globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+  const json = readJsonStore();
+  if (json.categories && Array.isArray(json.categories) && json.categories.length > 0) {
+    return json.categories;
   }
 
-  // 2. Prisma DB fallback
+  // Fallback to Prisma if memory empty
   try {
     const dbCats = await prisma.category.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (dbCats && dbCats.length > 0) {
@@ -710,37 +694,23 @@ export async function getCategoriesStore(): Promise<CategoryItem[]> {
         shortCode: c.shortCode || "",
         sequenceNumber: c.sequenceNumber || 1,
       }));
-      const json = readJsonStore();
       json.categories = mapped;
       globalThis.__AAREN_MEMORY_STORE__ = json;
-      syncToFirebaseCloudStore("categories", mapped);
       return mapped;
     }
   } catch (e) {}
 
-  // 3. JSON store fallback
-  const json = readJsonStore();
-  if (json.categories && Array.isArray(json.categories) && json.categories.length > 0) {
-    return json.categories;
-  }
   return DEFAULT_CATEGORIES;
 }
 
-
-
-
 // BRANDS STORE
 export async function getBrandsStore(): Promise<BrandItem[]> {
-  // 1. PRIMARY: Firebase Cloud Database
-  const fbData = await fetchFromFirebaseCloudStore("brands");
-  if (fbData && Array.isArray(fbData)) {
-    const json = readJsonStore();
-    json.brands = fbData;
-    globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+  const json = readJsonStore();
+  if (json.brands && Array.isArray(json.brands) && json.brands.length > 0) {
+    return json.brands;
   }
 
-  // 2. Prisma DB fallback
+  // Fallback to Prisma if memory empty
   try {
     const dbBrands = await prisma.brand.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (dbBrands && dbBrands.length > 0) {
@@ -755,19 +725,12 @@ export async function getBrandsStore(): Promise<BrandItem[]> {
         catalogPdfUrl: b.catalogPdfUrl || undefined,
         galleryImages: b.galleryImages || undefined,
       }));
-      const json = readJsonStore();
       json.brands = mapped;
       globalThis.__AAREN_MEMORY_STORE__ = json;
-      syncToFirebaseCloudStore("brands", mapped);
       return mapped;
     }
   } catch (e) {}
 
-  // 3. JSON store fallback
-  const json = readJsonStore();
-  if (json.brands && Array.isArray(json.brands) && json.brands.length > 0) {
-    return json.brands;
-  }
   return DEFAULT_BRANDS;
 }
 
@@ -841,16 +804,12 @@ export async function deleteBrandStore(id: string) {
 
 // PRODUCTS STORE
 export async function getAllProductsStore(): Promise<ProductItem[]> {
-  // 1. PRIMARY: Firebase Cloud Database
-  const fbData = await fetchFromFirebaseCloudStore("products");
-  if (fbData && Array.isArray(fbData)) {
-    const json = readJsonStore();
-    json.products = fbData;
-    globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+  const json = readJsonStore();
+  if (json.products && Array.isArray(json.products) && json.products.length > 0) {
+    return json.products;
   }
 
-  // 2. Prisma DB fallback
+  // Fallback to Prisma if memory empty
   try {
     const dbProducts = await prisma.product.findMany({ orderBy: { slNo: "asc" } });
     if (dbProducts && dbProducts.length > 0) {
@@ -877,19 +836,12 @@ export async function getAllProductsStore(): Promise<ProductItem[]> {
         price: p.price || undefined,
         finishOptions: p.finishOptions ? (typeof p.finishOptions === "string" ? JSON.parse(p.finishOptions) : p.finishOptions) : undefined,
       }));
-      const json = readJsonStore();
       json.products = mapped;
       globalThis.__AAREN_MEMORY_STORE__ = json;
-      syncToFirebaseCloudStore("products", mapped);
       return mapped;
     }
   } catch (e) {}
 
-  // 3. JSON store fallback
-  const json = readJsonStore();
-  if (json.products && Array.isArray(json.products) && json.products.length > 0) {
-    return json.products;
-  }
   return DEFAULT_PRODUCTS;
 }
 
@@ -1148,25 +1100,22 @@ export async function parseAndImportExcelProducts(fileBuffer: Buffer): Promise<P
 
 // SHOWCASE PROJECTS STORE
 export async function getAllProjectsStore(): Promise<ProjectShowcaseItem[]> {
-  // 1. Firebase Cloud (primary persistent source)
-  const fbData = await fetchFromFirebaseCloudStore("projects");
-  if (fbData && Array.isArray(fbData)) {
-    const json = readJsonStore(); json.projects = fbData; globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+  const json = readJsonStore();
+  if (json.projects && Array.isArray(json.projects) && json.projects.length > 0) {
+    return json.projects;
   }
-  // 2. Prisma fallback
+
+  // Fallback to Prisma if memory empty
   try {
     const dbProjects = await prisma.project.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (dbProjects && dbProjects.length > 0) {
       const mapped: ProjectShowcaseItem[] = dbProjects.map((p: any) => ({ id: p.id, title: p.title, slug: p.slug, description: p.description || "", category: p.category || "", client: p.client || "", projectCode: p.projectCode || "", sequenceNumber: p.sequenceNumber || 1, imageUrl: p.imageUrl || "", gallery: p.gallery || [] }));
-      const json = readJsonStore(); json.projects = mapped; globalThis.__AAREN_MEMORY_STORE__ = json;
-      syncToFirebaseCloudStore("projects", mapped);
+      json.projects = mapped;
+      globalThis.__AAREN_MEMORY_STORE__ = json;
       return mapped;
     }
   } catch (e) {}
-  // 3. JSON fallback
-  const json = readJsonStore();
-  if (json.projects && Array.isArray(json.projects) && json.projects.length > 0) return json.projects;
+
   return DEFAULT_PROJECTS;
 }
 

@@ -197,69 +197,53 @@ export default function Home() {
   const [projectsList, setProjectsList] = useState(PROJECTS);
 
   useEffect(() => {
-    fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && json.data) {
-          setSiteSettings(json.data);
-        }
-      })
-      .catch((err) => console.error(err));
-
-    fetch("/api/categories?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setCategoriesList(
-            json.data.map((c: any) => ({
-              id: c.id,
-              code: c.shortCode ? c.shortCode.split(" ")[0] : "CAT",
-              num: c.sequenceNumber ? String(c.sequenceNumber).padStart(2, "0") : "01",
-              name: c.name,
-              sub: c.description || "Architectural Surface",
-              img: c.coverImage || "/categories/cat_1.png",
-            }))
-          );
-        }
-      })
-      .catch((err) => console.error(err));
-
-    fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setBrandsList(
-            json.data.map((b: any) => ({
-              id: b.id,
-              code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
-              num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : "01",
-              name: b.name,
-              sub: b.description || "Partner Brand",
-              img: b.bannerUrl || "/brands/brand_1_1.png",
-            }))
-          );
-        }
-      })
-      .catch((err) => console.error(err));
-
-    fetch("/api/projects?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setProjectsList(
-            json.data.map((p: any, idx: number) => ({
-              client: p.client || p.title,
-              sub: p.title || p.description || "Architectural Project",
-              year: p.year || "2025",
-              code: p.code || (p.client ? p.client.slice(0, 2).toUpperCase() : "PR"),
-              num: String(idx + 1).padStart(2, "0"),
-              slug: p.slug || p.id,
-              img: p.image || p.imageUrl || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80",
-            }))
-          );
-        }
-      })
-      .catch((err) => console.error(err));
+    Promise.all([
+      fetch("/api/site-settings").then((r) => r.json()).catch(() => null),
+      fetch("/api/categories").then((r) => r.json()).catch(() => null),
+      fetch("/api/brands").then((r) => r.json()).catch(() => null),
+      fetch("/api/projects").then((r) => r.json()).catch(() => null),
+    ]).then(([settingsJson, catsJson, brandsJson, projectsJson]) => {
+      if (settingsJson?.success && settingsJson?.data) {
+        setSiteSettings(settingsJson.data);
+      }
+      if (catsJson?.success && Array.isArray(catsJson.data) && catsJson.data.length > 0) {
+        setCategoriesList(
+          catsJson.data.map((c: any) => ({
+            id: c.id,
+            code: c.shortCode ? c.shortCode.split(" ")[0] : "CAT",
+            num: c.sequenceNumber ? String(c.sequenceNumber).padStart(2, "0") : "01",
+            name: c.name,
+            sub: c.description || "Architectural Surface",
+            img: c.coverImage || "/categories/cat_1.png",
+          }))
+        );
+      }
+      if (brandsJson?.success && Array.isArray(brandsJson.data) && brandsJson.data.length > 0) {
+        setBrandsList(
+          brandsJson.data.map((b: any) => ({
+            id: b.id,
+            code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
+            num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : "01",
+            name: b.name,
+            sub: b.description || "Partner Brand",
+            img: b.bannerUrl || "/brands/brand_1_1.png",
+          }))
+        );
+      }
+      if (projectsJson?.success && Array.isArray(projectsJson.data) && projectsJson.data.length > 0) {
+        setProjectsList(
+          projectsJson.data.map((p: any, idx: number) => ({
+            client: p.client || p.title,
+            sub: p.title || p.description || "Architectural Project",
+            year: p.year || "2025",
+            code: p.code || (p.client ? p.client.slice(0, 2).toUpperCase() : "PR"),
+            num: String(idx + 1).padStart(2, "0"),
+            slug: p.slug || p.id,
+            img: p.image || p.imageUrl || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80",
+          }))
+        );
+      }
+    });
   }, []);
 
   const logoLetters = (siteSettings?.heroTitle || "AAREN").split("");

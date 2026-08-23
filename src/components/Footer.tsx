@@ -9,12 +9,12 @@ export default function Footer() {
   const [settings, setSettings] = useState<SiteSettingsItem>(DEFAULT_SETTINGS);
 
   useEffect(() => {
-    fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" })
+    fetch("/api/site-settings")
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) setSettings(json.data);
       })
-      .catch((e) => console.error(e));
+      .catch(() => {});
   }, []);
 
   if (pathname?.startsWith("/admin")) {
