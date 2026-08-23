@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useMemo, use } from "react";
 import { getBrandById } from "@/lib/brands";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
+import { getPdfThumbnail } from "@/utils/pdfThumbnail";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -536,26 +537,8 @@ export default function BrandDetailPage({ params }: Props) {
               else if (lowerTitle.includes("aquarelle")) pdfUrl = "/catalogs/aquarelle.pdf";
               else if (lowerTitle.includes("bits")) pdfUrl = "/catalogs/bits.pdf";
 
-              // Thumbnail resolver
-              let thumbImage = cat.coverImage;
-              if (!thumbImage) {
-                if (lowerTitle.includes("60 degree") || lowerTitle.includes("60grados")) thumbImage = "/catalogs/thumbnails/catalogo60grados_thumb.jpg";
-                else if (lowerTitle.includes("bejmat")) thumbImage = "/catalogs/thumbnails/catalogobejmat_thumb.jpg";
-                else if (lowerTitle.includes("nouvelle") || lowerTitle.includes("nouveau")) thumbImage = "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg";
-                else if (lowerTitle.includes("sabil") || lowerTitle.includes("sahli")) thumbImage = "/catalogs/thumbnails/catalogo-sabil_thumb.jpg";
-                else if (lowerTitle.includes("terre")) thumbImage = "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
-                else if (lowerTitle.includes("vestige")) thumbImage = "/catalogs/thumbnails/catalogo-vestige_thumb.jpg";
-                else if (lowerTitle.includes("aquarelle")) thumbImage = "/catalogs/thumbnails/aquarelle_thumb.jpg";
-                else if (lowerTitle.includes("bits")) thumbImage = "/catalogs/thumbnails/bits_thumb.jpg";
-                else if (lowerTitle.includes("clay") || lowerTitle.includes("elysian")) thumbImage = "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg";
-                else if (lowerTitle.includes("materia") || lowerTitle.includes("prima")) thumbImage = "/catalogs/thumbnails/catalogo_materiaprima_2026_2a_thumb.jpg";
-                else if (lowerTitle.includes("arpa") || lowerTitle.includes("vis") || lowerTitle.includes("fenix")) thumbImage = "/catalogs/thumbnails/arpa-vis-brochure_250122_thumb.jpg";
-              }
-
-              // Extract Google Drive thumbnail if available
-              const driveMatch = rawPdf.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawPdf.match(/id=([a-zA-Z0-9_-]+)/);
-              const driveId = driveMatch ? driveMatch[1] : null;
-              const coverThumbUrl = thumbImage || (driveId ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w800` : null);
+              // Exact Page 1 Thumbnail resolver
+              const coverThumbUrl = getPdfThumbnail(pdfUrl || rawPdf || cat.title, { title: cat.title });
 
               return (
                 <div
@@ -625,12 +608,7 @@ export default function BrandDetailPage({ params }: Props) {
                         src={coverThumbUrl}
                         alt={`${cat.title} Cover`}
                         onError={(e) => {
-                          if (driveId && !(e.currentTarget as any).dataset.triedSecondary) {
-                            (e.currentTarget as any).dataset.triedSecondary = "true";
-                            e.currentTarget.src = `https://lh3.googleusercontent.com/d/${driveId}=s800`;
-                          } else if (activeBrand.hero) {
-                            e.currentTarget.src = activeBrand.hero;
-                          }
+                          (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
                         }}
                         style={{
                           width: "100%",

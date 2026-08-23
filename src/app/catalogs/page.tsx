@@ -177,10 +177,7 @@ export default function CatalogsPage() {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "2rem" }}>
             {filteredCatalogs.map((cat) => {
-              const coverThumb =
-                (cat as any).pdfPublicId
-                  ? getPdfThumbnail((cat as any).pdfPublicId)
-                  : cat.thumbnailUrl || getPdfCoverThumbnail(cat.fileUrl, cat.title, (cat as any).pdfPublicId);
+              const coverThumb = getPdfThumbnail((cat as any).pdfPublicId || cat.fileUrl || cat.title || "", { title: cat.title });
 
               return (
                 <div
@@ -198,16 +195,14 @@ export default function CatalogsPage() {
                 >
                   {/* PDF First Page Cover Thumbnail Header */}
                   <div style={{ position: "relative", width: "100%", height: "280px", background: "#0f172a", overflow: "hidden" }}>
-                    {coverThumb ? (
-                      <img
-                        src={coverThumb}
-                        alt={cat.title}
-                        onError={(e) => {
-                          (e.currentTarget as HTMLElement).style.display = "none";
-                        }}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
-                      />
-                    ) : null}
+                    <img
+                      src={coverThumb}
+                      alt={cat.title}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
+                      }}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                    />
 
                   {/* Gradient Overlay & Badges */}
                   <div
