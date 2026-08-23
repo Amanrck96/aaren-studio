@@ -3,7 +3,7 @@ import path from "path";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {
-    root: process.cwd(),
+    root: path.resolve("."),
   },
   images: {
     minimumCacheTTL: 31536000, // 1 year Vercel CDN cache for images

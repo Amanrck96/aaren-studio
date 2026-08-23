@@ -42,7 +42,13 @@ const FIREBASE_RTDB_STORE_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ||
 
 async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
   try {
-    const res = await fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, { cache: "no-store" });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3000);
+    const res = await fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
     if (res.ok) {
       const data = await res.json();
       if (data && (Array.isArray(data) ? data.length > 0 : Object.keys(data).length > 0)) {
@@ -52,6 +58,7 @@ async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
   } catch (e) {}
   return null;
 }
+
 
 async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
   try {
