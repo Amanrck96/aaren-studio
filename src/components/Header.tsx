@@ -1,22 +1,41 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { subscribeToAuth, logoutUser } from "@/lib/firebaseAuth";
 import { User } from "firebase/auth";
-import { LogOut, User as UserIcon, Search } from "lucide-react";
+import { LogOut, User as UserIcon, Search, Menu, X, ArrowUpRight } from "lucide-react";
 import GlobalSearchModal from "./GlobalSearchModal";
 
 type NavLink = {
   label: string;
   href: string;
-  ext?: boolean;
+  badge?: string;
 };
 
-const BASE_NAV_LINKS: NavLink[] = [
-  { label: "About us", href: "/about" },
-  { label: "Our team", href: "/team" },
-  { label: "Contact us", href: "/contact" },
+// Complete Navigation Links for Mobile & Desktop
+const ALL_NAV_LINKS: NavLink[] = [
+  { label: "Showcase Projects", href: "/projects" },
+  { label: "Products", href: "/products" },
+  { label: "Brands", href: "/brands" },
+  { label: "About Us", href: "/about" },
+  { label: "Our Team", href: "/team" },
+  { label: "Services", href: "/services" },
+  { label: "Catalogs", href: "/catalogs" },
+  { label: "Blog & Journal", href: "/blog" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Contact Us", href: "/contact" },
+  { label: "Shop", href: "/shop" },
+];
+
+const DESKTOP_PRIMARY_LINKS: NavLink[] = [
+  { label: "Projects", href: "/projects" },
+  { label: "Products", href: "/products" },
+  { label: "Brands", href: "/brands" },
+  { label: "About Us", href: "/about" },
+  { label: "Our Team", href: "/team" },
+  { label: "Contact", href: "/contact" },
   { label: "Shop", href: "/shop" },
 ];
 
@@ -55,28 +74,21 @@ export default function Header() {
     setShowSearch(false);
   }, [path]);
 
-  if (path?.startsWith("/admin")) {
-    return null;
-  }
-
   /* Lock body scroll when menu open */
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
     return () => {
       document.body.style.overflow = "";
     };
   }, [open]);
 
-  /* Slide menu in/out */
-  useEffect(() => {
-    const menu = menuRef.current;
-    if (!menu) return;
-    if (open) {
-      menu.classList.add("is-open");
-    } else {
-      menu.classList.remove("is-open");
-    }
-  }, [open]);
+  if (path?.startsWith("/admin")) {
+    return null;
+  }
 
   const handleLogout = async () => {
     await logoutUser();
@@ -84,283 +96,662 @@ export default function Header() {
     router.push("/");
   };
 
-  const desktopNavLinks: NavLink[] = user
-    ? BASE_NAV_LINKS
-    : [...BASE_NAV_LINKS, { label: "Sign up", href: "/signup" }];
-
-  const mobileNavLinks: NavLink[] = user
-    ? [...BASE_NAV_LINKS]
-    : [...BASE_NAV_LINKS, { label: "Sign up", href: "/signup" }];
-
   return (
     <>
       <GlobalSearchModal isOpen={showSearch} onClose={() => setShowSearch(false)} />
 
-      {/* Fixed Header */}
-      <header className="site-header">
+      {/* ── Fixed Header ── */}
+      <header className="aaren-header">
         {/* Logo */}
         <Link
           href="/"
-          className="site-header__logo"
+          className="aaren-header__logo"
           aria-label="Aaren Home Page"
-          style={{
-            color: path === "/" ? "#ffffff" : "#333333",
-            fontFamily: "var(--font-jost), 'Jost', sans-serif",
-            mixBlendMode: "normal",
-            fontWeight: 400,
-            fontSize: "1.4rem",
-            letterSpacing: "0.35em",
-            textTransform: "uppercase",
-            transition: "color 0.25s ease",
-            textDecoration: "none",
-          }}
         >
           AAREN
         </Link>
 
-        {/* Desktop nav (Right Aligned) */}
-        <nav
-          className="site-header__nav"
-          style={{
-            marginLeft: "auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            gap: "0.6rem",
-          }}
-        >
-          {desktopNavLinks.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="btn btn--primary btn--blur"
-              style={{
-                fontSize: "1.2rem",
-                color: "#eaeef4",
-                opacity: path === l.href ? 1 : 0.85,
-              }}
-            >
-              {l.label}
-            </Link>
-          ))}
+        {/* Desktop Nav Links (Hidden on Mobile) */}
+        <nav className="aaren-header__desktop-nav">
+          {DESKTOP_PRIMARY_LINKS.map((l) => {
+            const isActive = path === l.href;
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`aaren-header__nav-btn ${isActive ? "active" : ""}`}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
 
-          {/* Single Search Icon Button at Right End */}
+          {/* Search Trigger Button */}
           <button
             type="button"
             onClick={() => setShowSearch(true)}
-            className="btn btn--primary btn--blur"
-            style={{
-              fontSize: "1.2rem",
-              color: "#eaeef4",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "0.8rem 1.1rem",
-              cursor: "pointer",
-            }}
-            aria-label="Search 1,061+ products"
-            title="Search products (Cmd+K / Ctrl+K)"
+            className="aaren-header__nav-btn search-icon-btn"
+            aria-label="Search products, brands and projects"
+            title="Search (Cmd+K / Ctrl+K)"
           >
             <Search size={14} />
           </button>
 
-          {/* User Profile Pill when logged in */}
-          {user && (
+          {/* User Auth or Profile Button */}
+          {user ? (
             <div style={{ position: "relative", display: "inline-block" }}>
               <button
                 type="button"
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="btn btn--primary btn--blur"
-                style={{
-                  fontSize: "1.2rem",
-                  color: "#ffffff",
-                  background: "#80673f",
-                  border: "1px solid #9e8254",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.6rem",
-                  cursor: "pointer",
-                }}
+                className="aaren-header__nav-btn profile-btn"
               >
                 <UserIcon size={13} />
                 <span>{user.displayName?.split(" ")[0] || "Account"}</span>
               </button>
 
-              {/* Profile Dropdown Menu */}
               {showProfileMenu && (
-                <div
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    top: "100%",
-                    marginTop: "0.8rem",
-                    background: "#1e1b16",
-                    border: "1px solid #332d25",
-                    padding: "1.2rem",
-                    borderRadius: "0.8rem",
-                    minWidth: "20rem",
-                    boxShadow: "0 1rem 2.5rem rgba(0,0,0,0.4)",
-                    zIndex: 999,
-                  }}
-                >
-                  <div style={{ paddingBottom: "0.8rem", marginBottom: "0.8rem", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-                    <p style={{ color: "#ffffff", fontSize: "1.2rem", fontWeight: 700, margin: 0 }}>
-                      {user.displayName || "Member"}
-                    </p>
-                    <p style={{ color: "#a1988a", fontSize: "1rem", margin: 0, overflow: "hidden", textOverflow: "ellipsis" }}>
-                      {user.email}
-                    </p>
+                <div className="aaren-header__profile-dropdown">
+                  <div className="dropdown-user-info">
+                    <p className="user-name">{user.displayName || "Member"}</p>
+                    <p className="user-email">{user.email}</p>
                   </div>
 
-                  {/* Direct Link to Designer Workspace */}
                   <a
                     href="/modules/aaren-intpro-designer-workspace.html"
                     onClick={() => setShowProfileMenu(false)}
-                    style={{
-                      width: "100%",
-                      background: "#80673f",
-                      color: "#ffffff",
-                      border: "none",
-                      padding: "0.8rem 1.2rem",
-                      borderRadius: "0.4rem",
-                      fontSize: "1.1rem",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: "0.6rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      marginBottom: "0.6rem",
-                      textDecoration: "none",
-                      boxSizing: "border-box",
-                    }}
+                    className="dropdown-workspace-link"
                   >
                     <span>🏛️ Designer Workspace</span>
-                    <span>↗</span>
+                    <ArrowUpRight size={14} />
                   </a>
 
                   <button
                     onClick={handleLogout}
-                    style={{
-                      width: "100%",
-                      background: "#332a1e",
-                      color: "#e8c389",
-                      border: "none",
-                      padding: "0.8rem 1.2rem",
-                      borderRadius: "0.4rem",
-                      fontSize: "1.1rem",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.6rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
+                    className="dropdown-signout-btn"
                   >
-                    <LogOut size={12} /> Sign Out
+                    <LogOut size={13} /> Sign Out
                   </button>
                 </div>
               )}
             </div>
+          ) : (
+            <Link
+              href="/signup"
+              className="aaren-header__nav-btn signup-btn"
+            >
+              Sign up
+            </Link>
           )}
         </nav>
 
-        {/* Mobile buttons: Search + Menu */}
-        <div className="site-header__mobile-controls" style={{ alignItems: "center", gap: "0.8rem" }}>
+        {/* Mobile Controls (Visible ONLY on Mobile < 1024px) */}
+        <div className="aaren-header__mobile-controls">
+          {/* Mobile Search Button */}
           <button
             type="button"
             onClick={() => setShowSearch(true)}
-            className="site-header__menu-btn btn btn--primary btn--blur"
-            aria-label="Search products"
-            style={{ fontSize: "1.2rem", color: "#eaeef4", padding: "0.8rem 1.2rem", display: "flex", alignItems: "center", gap: "0.4rem" }}
+            className="aaren-header__mobile-btn"
+            aria-label="Search"
           >
-            <Search size={14} />
+            <Search size={16} />
           </button>
 
-          {/* Mobile hamburger */}
+          {/* Mobile Full Menu Toggle Button */}
           <button
-            className="site-header__menu-btn btn btn--primary btn--blur"
+            type="button"
+            className={`aaren-header__mobile-btn menu-toggle ${open ? "is-open" : ""}`}
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            style={{ fontSize: "1.2rem", color: "#eaeef4" }}
           >
-            {open ? "CLOSE" : "MENU"}
+            {open ? (
+              <>
+                <X size={16} />
+                <span>CLOSE</span>
+              </>
+            ) : (
+              <>
+                <Menu size={16} />
+                <span>MENU</span>
+              </>
+            )}
           </button>
         </div>
       </header>
 
-      {/* Mobile full-screen menu */}
-      <div ref={menuRef} className="mobile-menu" aria-hidden={!open}>
-        <nav>
-          {mobileNavLinks.map((l, i) => (
-            <div
-              key={l.href}
-              style={{
-                transitionDelay: open ? `${i * 0.06}s` : "0s",
-                opacity: open ? 1 : 0,
-                transform: open ? "translateY(0)" : "translateY(2rem)",
-                transition: "opacity 0.4s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1)",
-              }}
+      {/* ── Mobile Full-Screen Overlay Navigation ── */}
+      <div className={`aaren-mobile-overlay ${open ? "is-active" : ""}`} ref={menuRef}>
+        <div className="aaren-mobile-overlay__inner">
+          <div className="aaren-mobile-overlay__header">
+            <span className="overlay-meta">ALL SECTIONS & EXPLORER</span>
+            <button
+              onClick={() => setShowSearch(true)}
+              className="overlay-search-bar-btn"
             >
-              <Link
-                href={l.href}
-                className={`mobile-menu__link${path === l.href ? " is-active" : ""}`}
-                onClick={() => setOpen(false)}
-              >
-                {l.label}
-              </Link>
-            </div>
-          ))}
+              <Search size={14} />
+              <span>Search materials, brands, projects...</span>
+            </button>
+          </div>
 
-          {user && (
-            <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <a
-                href="/modules/aaren-intpro-designer-workspace.html"
-                onClick={() => setOpen(false)}
-                className="btn btn--primary"
-                style={{ background: "#80673f", color: "#fff", border: "none", padding: "1.2rem 2.4rem", cursor: "pointer", fontWeight: 700, textAlign: "center", textDecoration: "none" }}
-              >
-                🏛️ DESIGNER WORKSPACE (PROGRAMA OS) ↗
-              </a>
-              <button
-                onClick={handleLogout}
-                className="btn btn--primary"
-                style={{ background: "#332a1e", color: "#e8c389", border: "none", padding: "1.2rem 2.4rem", cursor: "pointer", fontWeight: 700 }}
-              >
-                SIGN OUT ({user.displayName?.split(" ")[0]})
-              </button>
-            </div>
-          )}
-        </nav>
+          <nav className="aaren-mobile-overlay__nav">
+            {ALL_NAV_LINKS.map((l, idx) => {
+              const isActive = path === l.href;
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={`overlay-nav-link ${isActive ? "active" : ""}`}
+                  onClick={() => setOpen(false)}
+                  style={{
+                    animationDelay: `${0.04 * (idx + 1)}s`,
+                  }}
+                >
+                  <span className="link-num">0{idx + 1}</span>
+                  <span className="link-text">{l.label}</span>
+                  <ArrowUpRight size={18} className="link-arrow" />
+                </Link>
+              );
+            })}
+          </nav>
 
-        {/* Bottom bar */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: "4rem",
-            paddingTop: "1.6rem",
-            borderTop: "0.1rem solid rgba(255,255,255,0.1)",
-            opacity: open ? 1 : 0,
-            transition: "opacity 0.4s ease 0.35s",
-          }}
-        >
-          <span style={{ fontSize: "1.1rem", color: "rgba(234,238,244,0.3)", letterSpacing: "0.05em" }}>
-            AAREN.© {new Date().getFullYear()}
-          </span>
-          <a
-            href="mailto:info@aarenintpro.com"
-            style={{ fontSize: "1.1rem", color: "rgba(234,238,244,0.5)", letterSpacing: "0.03em" }}
-          >
-            info@aarenintpro.com
-          </a>
+          {/* User Auth & Workspace Section on Mobile */}
+          <div className="aaren-mobile-overlay__footer">
+            {user ? (
+              <div className="overlay-user-card">
+                <div className="overlay-user-details">
+                  <span className="user-label">Signed in as:</span>
+                  <strong className="user-name">{user.displayName || user.email}</strong>
+                </div>
+                <a
+                  href="/modules/aaren-intpro-designer-workspace.html"
+                  onClick={() => setOpen(false)}
+                  className="overlay-workspace-btn"
+                >
+                  <span>🏛️ Launch Designer Workspace</span>
+                  <ArrowUpRight size={16} />
+                </a>
+                <button
+                  onClick={handleLogout}
+                  className="overlay-signout-btn"
+                >
+                  <LogOut size={14} /> Sign Out
+                </button>
+              </div>
+            ) : (
+              <div className="overlay-auth-buttons">
+                <Link
+                  href="/signup"
+                  onClick={() => setOpen(false)}
+                  className="overlay-signup-btn"
+                >
+                  Sign Up / Register
+                </Link>
+                <Link
+                  href="/login"
+                  onClick={() => setOpen(false)}
+                  className="overlay-login-btn"
+                >
+                  Sign In
+                </Link>
+              </div>
+            )}
+
+            <div className="overlay-contact-info">
+              <p>Direct Inquiries: <a href="tel:+918884464444">+91 88844 64444</a></p>
+              <p>Email: <a href="mailto:info@aarenintpro.com">info@aarenintpro.com</a></p>
+              <span className="overlay-copyright">AAREN INTPRO © {new Date().getFullYear()}</span>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* ── Scoped Header & Mobile Menu Styles ── */}
+      <style jsx global>{`
+        .aaren-header {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          box-sizing: border-box;
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1.2rem 1.6rem;
+          background: rgba(10, 12, 16, 0.35);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          transition: all 0.3s ease;
+        }
+
+        @media (min-width: 1024px) {
+          .aaren-header {
+            padding: 1.2rem 2.8rem;
+          }
+        }
+
+        .aaren-header__logo {
+          font-family: var(--font-jost), 'Jost', sans-serif;
+          font-weight: 500;
+          font-size: 1.4rem;
+          letter-spacing: 0.35em;
+          text-transform: uppercase;
+          color: #ffffff;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          transition: opacity 0.2s ease;
+        }
+
+        .aaren-header__logo:hover {
+          opacity: 0.85;
+        }
+
+        /* Desktop Nav: Hidden on mobile screens < 1024px */
+        .aaren-header__desktop-nav {
+          display: none;
+          align-items: center;
+          gap: 0.6rem;
+          margin-left: auto;
+        }
+
+        @media (min-width: 1024px) {
+          .aaren-header__desktop-nav {
+            display: flex;
+          }
+        }
+
+        .aaren-header__nav-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.4rem;
+          border-radius: 9999px;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          color: #f1f5f9;
+          font-size: 1.15rem;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          text-decoration: none;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          white-space: nowrap;
+        }
+
+        .aaren-header__nav-btn:hover {
+          background: rgba(255, 255, 255, 0.18);
+          border-color: rgba(255, 255, 255, 0.25);
+          color: #ffffff;
+          transform: translateY(-1px);
+        }
+
+        .aaren-header__nav-btn.active {
+          background: rgba(212, 175, 55, 0.22);
+          border-color: rgba(212, 175, 55, 0.6);
+          color: #fce8a5;
+        }
+
+        .aaren-header__nav-btn.search-icon-btn {
+          padding: 0.75rem 1.1rem;
+        }
+
+        .aaren-header__nav-btn.profile-btn {
+          background: #80673f;
+          border-color: #9e8254;
+          color: #ffffff;
+        }
+
+        .aaren-header__nav-btn.signup-btn {
+          background: #81663F;
+          border-color: #81663F;
+          color: #ffffff;
+        }
+
+        .aaren-header__nav-btn.signup-btn:hover {
+          background: #96774a;
+        }
+
+        /* Profile Dropdown Menu */
+        .aaren-header__profile-dropdown {
+          position: absolute;
+          right: 0;
+          top: 100%;
+          margin-top: 0.8rem;
+          background: #18191c;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          padding: 1.2rem;
+          border-radius: 0.8rem;
+          min-width: 22rem;
+          box-shadow: 0 1.2rem 3.5rem rgba(0, 0, 0, 0.5);
+          z-index: 9999;
+        }
+
+        .dropdown-user-info {
+          padding-bottom: 0.8rem;
+          margin-bottom: 0.8rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .dropdown-user-info .user-name {
+          color: #ffffff;
+          font-size: 1.2rem;
+          font-weight: 700;
+          margin: 0;
+        }
+
+        .dropdown-user-info .user-email {
+          color: #94a3b8;
+          font-size: 1rem;
+          margin: 0.2rem 0 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .dropdown-workspace-link {
+          width: 100%;
+          background: #80673f;
+          color: #ffffff;
+          border: none;
+          padding: 0.8rem 1.2rem;
+          border-radius: 0.5rem;
+          font-size: 1.1rem;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          text-transform: uppercase;
+          margin-bottom: 0.6rem;
+          text-decoration: none;
+          box-sizing: border-box;
+        }
+
+        .dropdown-signout-btn {
+          width: 100%;
+          background: rgba(255, 255, 255, 0.05);
+          color: #e2e8f0;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 0.8rem 1.2rem;
+          border-radius: 0.5rem;
+          font-size: 1.1rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          cursor: pointer;
+        }
+
+        /* Mobile Controls: Visible ONLY on screens < 1024px */
+        .aaren-header__mobile-controls {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+        }
+
+        @media (min-width: 1024px) {
+          .aaren-header__mobile-controls {
+            display: none !important;
+          }
+        }
+
+        .aaren-header__mobile-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.7rem 1.2rem;
+          border-radius: 9999px;
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          color: #ffffff;
+          font-size: 1.15rem;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          cursor: pointer;
+          backdrop-filter: blur(8px);
+          transition: all 0.2s ease;
+        }
+
+        .aaren-header__mobile-btn.menu-toggle.is-open {
+          background: #81663F;
+          border-color: #81663F;
+          color: #ffffff;
+        }
+
+        /* ── Fullscreen Mobile Navigation Drawer ── */
+        .aaren-mobile-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          height: 100dvh;
+          background: #0d0f12;
+          z-index: 9999;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          transform: translateY(-100%);
+          opacity: 0;
+          pointer-events: none;
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        }
+
+        .aaren-mobile-overlay.is-active {
+          transform: translateY(0);
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        .aaren-mobile-overlay__inner {
+          padding: 8.5rem 2rem 4rem;
+          max-width: 600px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 2.5rem;
+        }
+
+        .aaren-mobile-overlay__header {
+          display: flex;
+          flex-direction: column;
+          gap: 1.2rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          padding-bottom: 1.8rem;
+        }
+
+        .overlay-meta {
+          font-size: 1.05rem;
+          font-weight: 800;
+          letter-spacing: 0.15em;
+          color: #81663F;
+          text-transform: uppercase;
+        }
+
+        .overlay-search-bar-btn {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 8px;
+          padding: 1.2rem 1.4rem;
+          color: #94a3b8;
+          font-size: 1.25rem;
+          cursor: pointer;
+          text-align: left;
+          transition: background 0.2s ease;
+        }
+
+        .overlay-search-bar-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .aaren-mobile-overlay__nav {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+        }
+
+        .overlay-nav-link {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1.4rem 1rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          color: #e2e8f0;
+          text-decoration: none;
+          transition: all 0.2s ease;
+        }
+
+        .overlay-nav-link:hover,
+        .overlay-nav-link.active {
+          color: #d4af37;
+          background: rgba(212, 175, 55, 0.05);
+          padding-left: 1.6rem;
+        }
+
+        .overlay-nav-link .link-num {
+          font-size: 1.1rem;
+          font-weight: 800;
+          color: rgba(255, 255, 255, 0.3);
+          font-family: monospace;
+          margin-right: 1.4rem;
+        }
+
+        .overlay-nav-link .link-text {
+          font-size: 2rem;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          flex: 1;
+        }
+
+        .overlay-nav-link .link-arrow {
+          color: rgba(255, 255, 255, 0.3);
+          transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .overlay-nav-link:hover .link-arrow {
+          color: #d4af37;
+          transform: translate(2px, -2px);
+        }
+
+        .aaren-mobile-overlay__footer {
+          margin-top: 1.5rem;
+          padding-top: 2rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+        }
+
+        .overlay-auth-buttons {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+        }
+
+        .overlay-signup-btn {
+          background: #81663F;
+          color: #ffffff;
+          padding: 1.2rem;
+          border-radius: 8px;
+          font-size: 1.25rem;
+          font-weight: 700;
+          text-align: center;
+          text-decoration: none;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+
+        .overlay-login-btn {
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: #f1f5f9;
+          padding: 1.2rem;
+          border-radius: 8px;
+          font-size: 1.25rem;
+          font-weight: 700;
+          text-align: center;
+          text-decoration: none;
+          text-transform: uppercase;
+        }
+
+        .overlay-user-card {
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 1.6rem;
+          border-radius: 10px;
+          display: flex;
+          flex-direction: column;
+          gap: 1.2rem;
+        }
+
+        .overlay-user-details .user-label {
+          display: block;
+          font-size: 1.05rem;
+          color: #94a3b8;
+          margin-bottom: 0.2rem;
+        }
+
+        .overlay-user-details .user-name {
+          font-size: 1.4rem;
+          color: #ffffff;
+        }
+
+        .overlay-workspace-btn {
+          background: #80673f;
+          color: #ffffff;
+          padding: 1rem 1.4rem;
+          border-radius: 6px;
+          font-size: 1.2rem;
+          font-weight: 700;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          text-transform: uppercase;
+        }
+
+        .overlay-signout-btn {
+          background: transparent;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: #ef4444;
+          padding: 0.9rem;
+          border-radius: 6px;
+          font-size: 1.15rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.6rem;
+          cursor: pointer;
+        }
+
+        .overlay-contact-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.6rem;
+          font-size: 1.2rem;
+          color: #94a3b8;
+        }
+
+        .overlay-contact-info a {
+          color: #d4af37;
+          text-decoration: none;
+        }
+
+        .overlay-copyright {
+          margin-top: 0.8rem;
+          font-size: 1.05rem;
+          color: rgba(255, 255, 255, 0.3);
+          letter-spacing: 0.05em;
+        }
+      `}</style>
     </>
   );
 }
