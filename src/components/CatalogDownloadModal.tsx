@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PdfCatalogItem } from "@/lib/types";
 import OnScreenPdfViewer from "./OnScreenPdfViewer";
+import { getPdfThumbnail } from "@/utils/pdfThumbnail";
 
 interface Props {
   catalog: PdfCatalogItem | null;
@@ -10,35 +11,21 @@ interface Props {
   onSuccess?: () => void;
 }
 
-export function getPdfCoverThumbnail(url?: string, title?: string): string {
-  const combined = `${url || ""} ${title || ""}`.toLowerCase();
-  if (combined.includes("aquarelle")) return "/catalogs/thumbnails/aquarelle_thumb.jpg";
-  if (combined.includes("bits")) return "/catalogs/thumbnails/bits_thumb.jpg";
-  if (combined.includes("nouvelle") || combined.includes("nouveau")) return "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg";
-  if (combined.includes("sabil")) return "/catalogs/thumbnails/catalogo-sabil_thumb.jpg";
-  if (combined.includes("terre")) return "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
-  if (combined.includes("vestige")) return "/catalogs/thumbnails/catalogo-vestige_thumb.jpg";
-  if (combined.includes("60 degree") || combined.includes("60grados") || combined.includes("60 grados")) return "/catalogs/thumbnails/catalogo60grados_thumb.jpg";
-  if (combined.includes("materia") || combined.includes("prima") || combined.includes("inkiostro")) return "/catalogs/thumbnails/catalogo_materiaprima_2026_2a_thumb.jpg";
-  if (combined.includes("bejmat")) return "/catalogs/thumbnails/catalogobejmat_thumb.jpg";
-  if (combined.includes("clay") || combined.includes("elysian") || combined.includes("mirage")) return "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg";
-  if (combined.includes("arpa") || combined.includes("vis") || combined.includes("fenix") || combined.includes("formica")) return "/catalogs/thumbnails/arpa-vis-brochure_250122_thumb.jpg";
-  
-  const driveMatch = (url || "").match(/\/d\/([a-zA-Z0-9_-]+)/) || (url || "").match(/id=([a-zA-Z0-9_-]+)/);
-  if (driveMatch && driveMatch[1]) {
-    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`;
-  }
-  return "/catalogs/thumbnails/aquarelle_thumb.jpg";
+export function getPdfCoverThumbnail(url?: string, title?: string, publicId?: string): string {
+  return getPdfThumbnail(publicId || url || "", { title });
 }
 
 export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [company, setCompany] = useState("");
   const [profession, setProfession] = useState("Architect / Interior Designer");
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
+  const [viewToken, setViewToken] = useState("");
+  const [viewSlug, setViewSlug] = useState("");
 
   if (!catalog) return null;
 
@@ -53,28 +40,30 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
 
     setLoading(true);
     try {
-      const res = await fetch("/api/catalogs", {
+      const slug = (catalog as any).slug || catalog.id;
+      const res = await fetch("/api/enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim(),
+          company: company.trim(),
           profession,
           city: city.trim(),
           catalogId: catalog.id,
-          catalogTitle: catalog.title,
-          fileName: catalog.fileName,
-          fileUrl: catalog.fileUrl,
+          slug,
         }),
       });
 
       const data = await res.json();
       if (data.success) {
+        setViewToken(data.token);
+        setViewSlug(data.slug || slug);
         setUnlocked(true);
         if (onSuccess) onSuccess();
       } else {
-        alert("Submission failed: " + data.error);
+        alert("Submission failed: " + (data.error || "Unknown error"));
       }
     } catch (err: any) {
       alert("Error: " + err.message);
@@ -83,8 +72,10 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
     }
   }
 
-  const thumbUrl = catalog.thumbnailUrl || getPdfCoverThumbnail(catalog.fileUrl, catalog.title);
-  const pdfUrl = catalog.fileUrl || `/catalogs/${catalog.fileName}`;
+  const thumbUrl = catalog.thumbnailUrl || getPdfCoverThumbnail(catalog.fileUrl, catalog.title, (catalog as any).pdfPublicId);
+  const pdfUrl = viewToken && viewSlug
+    ? `/api/catalogs/${viewSlug}/stream?token=${encodeURIComponent(viewToken)}`
+    : catalog.fileUrl || `/catalogs/${catalog.fileName}`;
 
   return (
     <div
@@ -316,28 +307,24 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
                     <div>
                       <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
-                        Profession / Role
+                        Company / Studio
                       </label>
-                      <select
-                        value={profession}
-                        onChange={(e) => setProfession(e.target.value)}
+                      <input
+                        type="text"
+                        placeholder="e.g. Aaren Designs"
+                        value={company}
+                        onChange={(e) => setCompany(e.target.value)}
                         style={{
                           width: "100%",
                           padding: "0.65rem 0.8rem",
                           borderRadius: "6px",
                           border: "1px solid #D8D0BE",
-                          fontSize: "0.85rem",
+                          fontSize: "0.88rem",
                           color: "#1C1917",
                           background: "#FAF9F6",
                           outline: "none",
                         }}
-                      >
-                        <option value="Architect / Interior Designer">Architect / Interior Designer</option>
-                        <option value="Builder / Developer">Builder / Developer</option>
-                        <option value="Contractor / Consultant">Contractor / Consultant</option>
-                        <option value="Homeowner / Private Client">Homeowner / Private Client</option>
-                        <option value="Other">Other</option>
-                      </select>
+                      />
                     </div>
 
                     <div>
@@ -361,6 +348,32 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                         }}
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
+                      Profession / Role
+                    </label>
+                    <select
+                      value={profession}
+                      onChange={(e) => setProfession(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "0.65rem 0.8rem",
+                        borderRadius: "6px",
+                        border: "1px solid #D8D0BE",
+                        fontSize: "0.85rem",
+                        color: "#1C1917",
+                        background: "#FAF9F6",
+                        outline: "none",
+                      }}
+                    >
+                      <option value="Architect / Interior Designer">Architect / Interior Designer</option>
+                      <option value="Builder / Developer">Builder / Developer</option>
+                      <option value="Contractor / Consultant">Contractor / Consultant</option>
+                      <option value="Homeowner / Private Client">Homeowner / Private Client</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </div>
 
                   <button

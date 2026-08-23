@@ -487,3 +487,36 @@ model Comment {
   createdAt  DateTime @default(now())
   blog       BlogPost @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
 }
+
+model Catalog {
+  id           String    @id @default(cuid())
+  brand        String
+  name         String
+  title        String?
+  slug         String    @unique
+  pdfPublicId  String    // Cloudinary public_id of the uploaded PDF
+  category     String?
+  subcategory  String?
+  description  String?
+  fileSize     String?
+  pageCount    Int?      @default(0)
+  tags         String[]  @default([])
+  isLocked     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  enquiries    Enquiry[]
+}
+
+model Enquiry {
+  id         String   @id @default(cuid())
+  catalogId  String
+  catalog    Catalog  @relation(fields: [catalogId], references: [id], onDelete: Cascade)
+  name       String
+  email      String
+  phone      String?
+  company    String?
+  profession String?
+  city       String?
+  createdAt  DateTime @default(now())
+}
+

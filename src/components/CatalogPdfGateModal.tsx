@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import OnScreenPdfViewer from "./OnScreenPdfViewer";
+import { getPdfThumbnail } from "@/utils/pdfThumbnail";
 
 type Props = {
   catalogPdfUrl: string;
@@ -10,24 +11,7 @@ type Props = {
 };
 
 export function getPdfCoverThumbnail(url: string, title?: string): string {
-  const combined = `${url || ""} ${title || ""}`.toLowerCase();
-  if (combined.includes("aquarelle")) return "/catalogs/thumbnails/aquarelle_thumb.jpg";
-  if (combined.includes("bits")) return "/catalogs/thumbnails/bits_thumb.jpg";
-  if (combined.includes("nouvelle") || combined.includes("nouveau")) return "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg";
-  if (combined.includes("sabil")) return "/catalogs/thumbnails/catalogo-sabil_thumb.jpg";
-  if (combined.includes("terre")) return "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
-  if (combined.includes("vestige")) return "/catalogs/thumbnails/catalogo-vestige_thumb.jpg";
-  if (combined.includes("60 degree") || combined.includes("60grados") || combined.includes("60 grados")) return "/catalogs/thumbnails/catalogo60grados_thumb.jpg";
-  if (combined.includes("materia") || combined.includes("prima") || combined.includes("inkiostro")) return "/catalogs/thumbnails/catalogo_materiaprima_2026_2a_thumb.jpg";
-  if (combined.includes("bejmat")) return "/catalogs/thumbnails/catalogobejmat_thumb.jpg";
-  if (combined.includes("clay") || combined.includes("elysian") || combined.includes("mirage")) return "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg";
-  if (combined.includes("arpa") || combined.includes("vis") || combined.includes("fenix") || combined.includes("formica")) return "/catalogs/thumbnails/arpa-vis-brochure_250122_thumb.jpg";
-  
-  const driveMatch = (url || "").match(/\/d\/([a-zA-Z0-9_-]+)/) || (url || "").match(/id=([a-zA-Z0-9_-]+)/);
-  if (driveMatch && driveMatch[1]) {
-    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`;
-  }
-  return "/catalogs/thumbnails/aquarelle_thumb.jpg";
+  return getPdfThumbnail(url, { title });
 }
 
 export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose }: Props) {

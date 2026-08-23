@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import CatalogDownloadModal from "@/components/CatalogDownloadModal";
+import CatalogDownloadModal, { getPdfCoverThumbnail } from "@/components/CatalogDownloadModal";
 import { PdfCatalogItem } from "@/lib/types";
+import { getPdfThumbnail } from "@/utils/pdfThumbnail";
 
 export default function CatalogsPage() {
   const [catalogs, setCatalogs] = useState<PdfCatalogItem[]>([]);
@@ -175,32 +176,38 @@ export default function CatalogsPage() {
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "2rem" }}>
-            {filteredCatalogs.map((cat) => (
-              <div
-                key={cat.id}
-                style={{
-                  background: "#ffffff",
-                  borderRadius: "16px",
-                  overflow: "hidden",
-                  border: "1px solid #e2e8f0",
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
-                  display: "flex",
-                  flexDirection: "column",
-                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
-                }}
-              >
-                {/* PDF First Page Cover Thumbnail Header */}
-                <div style={{ position: "relative", width: "100%", height: "280px", background: "#0f172a", overflow: "hidden" }}>
-                  {cat.thumbnailUrl ? (
-                    <img
-                      src={cat.thumbnailUrl}
-                      alt={cat.title}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLElement).style.display = "none";
-                      }}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
-                    />
-                  ) : null}
+            {filteredCatalogs.map((cat) => {
+              const coverThumb =
+                (cat as any).pdfPublicId
+                  ? getPdfThumbnail((cat as any).pdfPublicId)
+                  : cat.thumbnailUrl || getPdfCoverThumbnail(cat.fileUrl, cat.title, (cat as any).pdfPublicId);
+
+              return (
+                <div
+                  key={cat.id}
+                  style={{
+                    background: "#ffffff",
+                    borderRadius: "16px",
+                    overflow: "hidden",
+                    border: "1px solid #e2e8f0",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
+                    display: "flex",
+                    flexDirection: "column",
+                    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                  }}
+                >
+                  {/* PDF First Page Cover Thumbnail Header */}
+                  <div style={{ position: "relative", width: "100%", height: "280px", background: "#0f172a", overflow: "hidden" }}>
+                    {coverThumb ? (
+                      <img
+                        src={coverThumb}
+                        alt={cat.title}
+                        onError={(e) => {
+                          (e.currentTarget as HTMLElement).style.display = "none";
+                        }}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                      />
+                    ) : null}
 
                   {/* Gradient Overlay & Badges */}
                   <div
@@ -283,7 +290,7 @@ export default function CatalogsPage() {
                   </div>
                 </div>
               </div>
-            ))}
+            ); })}
           </div>
         )}
       </main>
