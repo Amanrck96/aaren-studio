@@ -9,11 +9,10 @@
     "lint": "eslint",
     "genkit": "genkit",
     "genkit:start": "genkit start -- tsx --watch src/lib/genkit.ts",
-    "deploy": "firebase deploy --only hosting",
-    "deploy:firebase": "firebase deploy --only hosting"
+    "deploy": "cross-env NODE_OPTIONS=\"--dns-result-order=ipv4first\" firebase deploy --only hosting",
+    "deploy:firebase": "cross-env NODE_OPTIONS=\"--dns-result-order=ipv4first\" firebase deploy --only hosting"
   },
   "dependencies": {
-    "@auth/core": "^0.37.2",
     "@genkit-ai/googleai": "^1.28.0",
     "@prisma/client": "^6.19.3",
     "@react-three/drei": "^10.7.7",
@@ -46,6 +45,7 @@
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",

@@ -33,8 +33,11 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# vercel
+# vercel & firebase & genkit
 .vercel
+.firebase
+.genkit
+firebase-debug.log*
 
 # typescript
 *.tsbuildinfo
@@ -45,4 +48,5 @@ public/catalogues/Mirage/catalogue-jewels-2-0-pdf.pdf
 public/catalogues/Mirage/catalogue-jurupa-pdf.pdf
 public/catalogues/Mirage/catalogue-elysian-pdf.pdf
 public/catalogues/Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf
+
 
