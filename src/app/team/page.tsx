@@ -10,30 +10,29 @@ const INITIAL_DEFAULT_TEAM = [
   { id: "tm-05", name: "ASHWIN", role: "Director", category: "Leadership", code: "AW", num: "05", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", phone: "+91 88844 64444", bio: "Directs architectural partnerships, surface technology consulting, developer alliances, and luxury material innovation.", sequenceNumber: 5 },
   { id: "tm-06", name: "MUKUND", role: "Director", category: "Leadership", code: "MK", num: "06", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", phone: "+91 88844 64444", bio: "Directs world-class brand curation, premium material experiences, and state-of-the-art gallery displays.", sequenceNumber: 6 },
   { id: "tm-07", name: "JIGNESH", role: "Director", category: "Leadership", code: "JG", num: "07", image: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg", phone: "+91 88844 64444", bio: "Directs strategic channel operations, Bagno & Surface architectural solutions, and pan-India client relations.", sequenceNumber: 7 },
-  { id: "tm-08", name: "SURESH KUMAR", role: "Operations Head", category: "Operations", code: "SK", num: "08", image: "", phone: "+91 88844 64444", bio: "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites.", sequenceNumber: 8 },
-  { id: "tm-09", name: "PRAVEEN NAIR", role: "Lead Installation Specialist", category: "Installation", code: "PN", num: "09", image: "", phone: "+91 88844 64444", bio: "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations.", sequenceNumber: 9 },
-  { id: "tm-10", name: "ANITHA REDDY", role: "Client Support & Relations", category: "Support Staff", code: "AR", num: "10", image: "", phone: "+91 88844 64444", bio: "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction.", sequenceNumber: 10 },
-  { id: "tm-11", name: "HARSHITHA N", role: "Sales Executive", category: "Sales", code: "HN", num: "11", image: "", phone: "+91 88844 64444", bio: "Dedicated sales professional specializing in luxury surface presentations and client consultations.", sequenceNumber: 11 },
-  { id: "tm-12", name: "VISHWAS GEORGE", role: "Sales Consultant", category: "Sales", code: "VG", num: "12", image: "", phone: "+91 88844 64444", bio: "Experienced consultant guiding clients through premium architectural product selections.", sequenceNumber: 12 },
-  { id: "tm-13", name: "PRASHANTH M S", role: "Technical Support Staff", category: "Support Staff", code: "PM", num: "13", image: "", phone: "+91 88844 64444", bio: "Provides comprehensive after-sales support and technical assistance to clients.", sequenceNumber: 13 },
-  { id: "tm-14", name: "LOKESH G V", role: "Client Support Staff", category: "Support Staff", code: "LG", num: "14", image: "", phone: "+91 88844 64444", bio: "Ensures seamless client experience through dedicated support and coordination.", sequenceNumber: 14 },
-  { id: "tm-15", name: "KISHORE P", role: "Accounts & Finance Support", category: "Accounts", code: "KP", num: "15", image: "", phone: "+91 88844 64444", bio: "Manages financial operations, billing, and accounts to ensure smooth business transactions.", sequenceNumber: 15 },
-  { id: "tm-16", name: "NARASIMHA PRASAD B S", role: "Sales Executive", category: "Sales", code: "NP", num: "16", image: "", phone: "+91 88844 64444", bio: "Proactive sales executive focused on building client relationships and driving revenue growth.", sequenceNumber: 16 },
-  { id: "tm-17", name: "ROOPA C B", role: "Accounts & Support Executive", category: "Accounts", code: "RC", num: "17", image: "", phone: "+91 88844 64444", bio: "Handles financial records, invoicing, and accounting processes with precision and accuracy.", sequenceNumber: 17 },
-  { id: "tm-18", name: "ABDUL REHMAN KHAN", role: "Sales Executive", category: "Sales", code: "AR", num: "18", image: "", phone: "+91 88844 64444", bio: "Dynamic sales professional with expertise in luxury material presentations and client engagement.", sequenceNumber: 18 },
-  { id: "tm-19", name: "UTKALIKA NAYAK", role: "Sales Executive", category: "Sales", code: "UN", num: "19", image: "", phone: "+91 88844 64444", bio: "Result-oriented sales professional dedicated to delivering exceptional client experiences.", sequenceNumber: 19 },
-  { id: "tm-20", name: "AMBUJA MATHAPATI", role: "Sales Executive", category: "Sales", code: "AM", num: "20", image: "", phone: "+91 88844 64444", bio: "Passionate about connecting clients with world-class architectural solutions.", sequenceNumber: 20 },
-  { id: "tm-21", name: "SAWAN VISHWAKARMA", role: "Operations Executive", category: "Operations", code: "SV", num: "21", image: "", phone: "+91 88844 64444", bio: "Manages day-to-day operational workflows ensuring timely delivery and project coordination.", sequenceNumber: 21 },
-  { id: "tm-22", name: "D S SHANKAR", role: "Operations Coordinator", category: "Operations", code: "DS", num: "22", image: "", phone: "+91 88844 64444", bio: "Coordinates operational activities and logistics to maintain smooth project execution.", sequenceNumber: 22 },
-  { id: "tm-23", name: "JABIR KHAN", role: "Operations Logistics", category: "Operations", code: "JK", num: "23", image: "", phone: "+91 88844 64444", bio: "Supports operations with efficient handling and coordination of project requirements.", sequenceNumber: 23 },
-  { id: "tm-24", name: "NARASIMHA RAJU", role: "Accountant", category: "Accounts", code: "NR", num: "24", image: "", phone: "+91 88844 64444", bio: "Manages financial records and supports the accounts team with diligent accounting operations", sequenceNumber: 24 },
+  { id: "tm-08", name: "SURESH KUMAR", role: "Operations Head", category: "Operations", code: "SK", num: "08", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites.", sequenceNumber: 8 },
+  { id: "tm-09", name: "PRAVEEN NAIR", role: "Lead Installation Specialist", category: "Installation", code: "PN", num: "09", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations.", sequenceNumber: 9 },
+  { id: "tm-10", name: "ANITHA REDDY", role: "Client Support & Relations", category: "Support Staff", code: "AR", num: "10", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction.", sequenceNumber: 10 },
+  { id: "tm-11", name: "HARSHITHA N", role: "Sales Executive", category: "Sales", code: "HN", num: "11", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Dedicated sales professional specializing in luxury surface presentations and client consultations.", sequenceNumber: 11 },
+  { id: "tm-12", name: "VISHWAS GEORGE", role: "Sales Consultant", category: "Sales", code: "VG", num: "12", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Experienced consultant guiding clients through premium architectural product selections.", sequenceNumber: 12 },
+  { id: "tm-13", name: "PRASHANTH M S", role: "Technical Support Staff", category: "Support Staff", code: "PM", num: "13", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Provides comprehensive after-sales support and technical assistance to clients.", sequenceNumber: 13 },
+  { id: "tm-14", name: "LOKESH G V", role: "Client Support Staff", category: "Support Staff", code: "LG", num: "14", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Ensures seamless client experience through dedicated support and coordination.", sequenceNumber: 14 },
+  { id: "tm-15", name: "KISHORE P", role: "Accounts & Finance Support", category: "Support Staff", code: "KP", num: "15", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Manages financial operations, billing, and accounts to ensure smooth business transactions.", sequenceNumber: 15 },
+  { id: "tm-16", name: "NARASIMHA PRASAD B S", role: "Sales Executive", category: "Sales", code: "NP", num: "16", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Proactive sales executive focused on building client relationships and driving revenue growth.", sequenceNumber: 16 },
+  { id: "tm-17", name: "ROOPA C B", role: "Accounts & Support Executive", category: "Support Staff", code: "RC", num: "17", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Handles financial records, invoicing, and accounting processes with precision and accuracy.", sequenceNumber: 17 },
+  { id: "tm-18", name: "ABDUL REHMAN KHAN", role: "Sales Executive", category: "Sales", code: "AR", num: "18", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Dynamic sales professional with expertise in luxury material presentations and client engagement.", sequenceNumber: 18 },
+  { id: "tm-19", name: "UTKALIKA NAYAK", role: "Sales Executive", category: "Sales", code: "UN", num: "19", image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Result-oriented sales professional dedicated to delivering exceptional client experiences.", sequenceNumber: 19 },
+  { id: "tm-20", name: "AMBUJA MATHAPATI", role: "Sales Executive", category: "Sales", code: "AM", num: "20", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Passionate about connecting clients with world-class architectural solutions.", sequenceNumber: 20 },
+  { id: "tm-21", name: "SAWAN VISHWAKARMA", role: "Operations Executive", category: "Operations", code: "SV", num: "21", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Manages day-to-day operational workflows ensuring timely delivery and project coordination.", sequenceNumber: 21 },
+  { id: "tm-22", name: "D S SHANKAR", role: "Operations Coordinator", category: "Operations", code: "DS", num: "22", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Coordinates operational activities and logistics to maintain smooth project execution.", sequenceNumber: 22 },
+  { id: "tm-23", name: "JABIR KHAN", role: "Operations Logistics", category: "Operations", code: "JK", num: "23", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Supports operations with efficient handling and coordination of project requirements.", sequenceNumber: 23 },
+  { id: "tm-24", name: "NARASIMHA RAJU", role: "Accountant", category: "Support Staff", code: "NR", num: "24", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80", phone: "+91 88844 64444", bio: "Manages financial records and supports the accounts team with diligent accounting operations", sequenceNumber: 24 },
 ];
 
 const DEPARTMENTS_ORDER = [
   "Sales",
   "Operations",
   "Installation",
-  "Accounts",
   "Support Staff",
 ];
 
@@ -72,20 +71,6 @@ function normalizeCategory(m: any): string {
     return "Leadership";
   }
 
-  // Accounts check
-  if (
-    catLower === "accounts" ||
-    catLower === "accountant" ||
-    catLower.includes("account") ||
-    desigLower.includes("account") ||
-    desigLower.includes("finance") ||
-    nameLower.includes("raju") ||
-    nameLower.includes("kishore") ||
-    nameLower.includes("roopa")
-  ) {
-    return "Accounts";
-  }
-
   // Installation check
   if (catLower.includes("install") || desigLower.includes("install") || nameLower.includes("praveen")) {
     return "Installation";
@@ -104,14 +89,20 @@ function normalizeCategory(m: any): string {
     return "Operations";
   }
 
-  // Support Staff check
+  // Support Staff & Accounts check (All 6 members)
   if (
     catLower.includes("support") ||
+    catLower.includes("account") ||
     desigLower.includes("support") ||
     desigLower.includes("relations") ||
+    desigLower.includes("account") ||
+    desigLower.includes("finance") ||
     nameLower.includes("anitha") ||
     nameLower.includes("prashanth") ||
-    nameLower.includes("lokesh")
+    nameLower.includes("lokesh") ||
+    nameLower.includes("kishore") ||
+    nameLower.includes("roopa") ||
+    nameLower.includes("raju")
   ) {
     return "Support Staff";
   }
@@ -236,7 +227,7 @@ export default function TeamPage() {
           </div>
           <h1 className="team-header__title">OUR TEAM</h1>
           <p className="team-header__desc t-body">
-            Aaren Intpro is built by a family of dedicated professionals across Leadership, Sales, Operations, Installation, Accounts, and Support Staff, united by a common passion for luxury spatial design.
+            Aaren Intpro is built by a family of dedicated professionals across Leadership, Sales, Operations, Installation, and Support Staff, united by a common passion for luxury spatial design.
           </p>
         </div>
       </div>
