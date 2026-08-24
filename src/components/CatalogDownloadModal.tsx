@@ -78,40 +78,9 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
     : catalog.fileUrl || `/catalogs/${catalog.fileName}`;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "rgba(0, 0, 0, 0.88)",
-        backdropFilter: "blur(10px)",
-        zIndex: 9999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: unlocked ? "0.8rem" : "1.5rem",
-      }}
-      onClick={onClose}
-    >
+    <div className="catalog-modal-overlay" onClick={onClose}>
       <div
-        style={{
-          background: unlocked ? "#0F1117" : "#FFFFFF",
-          borderRadius: "16px",
-          maxWidth: unlocked ? "1280px" : "680px",
-          width: "100%",
-          height: unlocked ? "94vh" : "auto",
-          maxHeight: "96vh",
-          overflow: "hidden",
-          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.4)",
-          display: unlocked ? "flex" : "grid",
-          flexDirection: unlocked ? "column" : undefined,
-          gridTemplateColumns: unlocked ? undefined : "240px 1fr",
-          border: "1px solid #E8E3D7",
-          position: "relative",
-          padding: unlocked ? "0" : 0,
-        }}
+        className={`catalog-modal-card ${unlocked ? "unlocked" : ""}`}
         onClick={(e) => e.stopPropagation()}
       >
         {!unlocked ? (
@@ -120,286 +89,136 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
             {/* Close Button */}
             <button
               onClick={onClose}
-              style={{
-                position: "absolute",
-                top: "16px",
-                right: "16px",
-                background: "rgba(0, 0, 0, 0.06)",
-                border: "none",
-                fontSize: "1.2rem",
-                cursor: "pointer",
-                color: "#666",
-                width: "34px",
-                height: "34px",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 30,
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#EF4444";
-                e.currentTarget.style.color = "#FFFFFF";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(0, 0, 0, 0.06)";
-                e.currentTarget.style.color = "#666";
-              }}
+              className="catalog-modal-close"
+              aria-label="Close dialog"
             >
-              ×
+              ✕
             </button>
 
             {/* Left Thumbnail & Info Bar */}
-            <div
-              style={{
-                background: "#FAF9F6",
-                borderRight: "1px solid #E8E3D7",
-                padding: "1.8rem",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                position: "relative",
-              }}
-            >
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  aspectRatio: "3/4",
-                  borderRadius: "8px",
-                  overflow: "hidden",
-                  boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
-                  marginBottom: "1rem",
-                  border: "1px solid #D8D0BE",
-                  background: "#181920",
-                }}
-              >
+            <div className="catalog-modal-sidebar">
+              <div className="catalog-thumb-box">
                 <img
                   src={thumbUrl}
                   alt={catalog.title}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
                   onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/aquarelle_thumb.jpg";
+                    (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
                   }}
                 />
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "8px",
-                    right: "8px",
-                    background: "rgba(0,0,0,0.75)",
-                    color: "#D4B67D",
-                    padding: "2px 8px",
-                    borderRadius: "12px",
-                    fontSize: "0.68rem",
-                    fontWeight: 800,
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  PAGE 1 COVER
+                <div className="catalog-cover-badge">PAGE 1 COVER</div>
+              </div>
+
+              <div className="catalog-meta-info">
+                <span className="catalog-meta-eyebrow">OFFICIAL CATALOGUE</span>
+                <h4 className="catalog-brand-title">{catalog.brand}</h4>
+                <p className="catalog-category-tag">{catalog.category}</p>
+
+                <div className="catalog-stats-row">
+                  <span>📄 {catalog.pageCount} Pages</span>
+                  <span>•</span>
+                  <span>💾 {catalog.fileSize}</span>
                 </div>
-              </div>
-
-              <div style={{ fontSize: "0.72rem", color: "#8A8279", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700 }}>
-                BRAND &amp; CATEGORY
-              </div>
-              <div style={{ color: "#81663F", fontWeight: 800, fontSize: "0.95rem", marginTop: "2px" }}>{catalog.brand}</div>
-              <div style={{ color: "#5E5852", fontSize: "0.8rem", marginTop: "2px", fontWeight: 600 }}>{catalog.category}</div>
-
-              <div style={{ marginTop: "1rem", display: "flex", gap: "0.6rem", fontSize: "0.75rem", color: "#8A8279" }}>
-                <span>📄 {catalog.pageCount} Pages</span>
-                <span>•</span>
-                <span>💾 {catalog.fileSize}</span>
               </div>
             </div>
 
             {/* Right Form Column */}
-            <div style={{ padding: "2rem 2.2rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
-                  <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#81663F", letterSpacing: "0.12em", textTransform: "uppercase" }}>
-                    LUXURY ARCHITECTURAL CATALOGUE
-                  </span>
+            <div className="catalog-modal-form-col">
+              <div className="catalog-form-header">
+                <span className="catalog-form-eyebrow">
+                  LUXURY ARCHITECTURAL CATALOGUE
+                </span>
+                <h2 className="catalog-form-title">{catalog.title}</h2>
+                <p className="catalog-form-desc">{catalog.description}</p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="catalog-enquiry-form">
+                <div className="catalog-form-field">
+                  <label>
+                    Full Name <span className="req-star">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Rahul Sharma"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 </div>
 
-                <h2 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#81663F", margin: "0 0 0.4rem 0", lineHeight: 1.3 }}>
-                  {catalog.title}
-                </h2>
-                <p style={{ color: "#5E5852", fontSize: "0.85rem", lineHeight: 1.4, margin: "0 0 1.2rem 0" }}>
-                  {catalog.description}
-                </p>
-
-                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
-                      Full Name <span style={{ color: "#EF4444" }}>*</span>
+                <div className="catalog-form-grid">
+                  <div className="catalog-form-field">
+                    <label>
+                      Work Email <span className="req-star">*</span>
                     </label>
                     <input
-                      type="text"
+                      type="email"
                       required
-                      placeholder="e.g. Rahul Sharma"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "0.65rem 0.8rem",
-                        borderRadius: "6px",
-                        border: "1px solid #D8D0BE",
-                        fontSize: "0.88rem",
-                        color: "#1C1917",
-                        background: "#FAF9F6",
-                        outline: "none",
-                      }}
+                      placeholder="rahul@studio.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
-                    <div>
-                      <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
-                        Work Email <span style={{ color: "#EF4444" }}>*</span>
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        placeholder="rahul@studio.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        style={{
-                          width: "100%",
-                          padding: "0.65rem 0.8rem",
-                          borderRadius: "6px",
-                          border: "1px solid #D8D0BE",
-                          fontSize: "0.88rem",
-                          color: "#1C1917",
-                          background: "#FAF9F6",
-                          outline: "none",
-                        }}
-                      />
-                    </div>
-
-                    <div>
-                      <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
-                        Phone Number <span style={{ color: "#EF4444" }}>*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        placeholder="+91 98800 12345"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        style={{
-                          width: "100%",
-                          padding: "0.65rem 0.8rem",
-                          borderRadius: "6px",
-                          border: "1px solid #D8D0BE",
-                          fontSize: "0.88rem",
-                          color: "#1C1917",
-                          background: "#FAF9F6",
-                          outline: "none",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
-                    <div>
-                      <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
-                        Company / Studio
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Aaren Designs"
-                        value={company}
-                        onChange={(e) => setCompany(e.target.value)}
-                        style={{
-                          width: "100%",
-                          padding: "0.65rem 0.8rem",
-                          borderRadius: "6px",
-                          border: "1px solid #D8D0BE",
-                          fontSize: "0.88rem",
-                          color: "#1C1917",
-                          background: "#FAF9F6",
-                          outline: "none",
-                        }}
-                      />
-                    </div>
-
-                    <div>
-                      <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
-                        City / Location
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Bangalore"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        style={{
-                          width: "100%",
-                          padding: "0.65rem 0.8rem",
-                          borderRadius: "6px",
-                          border: "1px solid #D8D0BE",
-                          fontSize: "0.88rem",
-                          color: "#1C1917",
-                          background: "#FAF9F6",
-                          outline: "none",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "#5E5852", marginBottom: "4px" }}>
-                      Profession / Role
+                  <div className="catalog-form-field">
+                    <label>
+                      Phone Number <span className="req-star">*</span>
                     </label>
-                    <select
-                      value={profession}
-                      onChange={(e) => setProfession(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "0.65rem 0.8rem",
-                        borderRadius: "6px",
-                        border: "1px solid #D8D0BE",
-                        fontSize: "0.85rem",
-                        color: "#1C1917",
-                        background: "#FAF9F6",
-                        outline: "none",
-                      }}
-                    >
-                      <option value="Architect / Interior Designer">Architect / Interior Designer</option>
-                      <option value="Builder / Developer">Builder / Developer</option>
-                      <option value="Contractor / Consultant">Contractor / Consultant</option>
-                      <option value="Homeowner / Private Client">Homeowner / Private Client</option>
-                      <option value="Other">Other</option>
-                    </select>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="+91 98800 12345"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="catalog-form-grid">
+                  <div className="catalog-form-field">
+                    <label>Company / Studio</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Aaren Designs"
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
+                    />
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    style={{
-                      marginTop: "0.5rem",
-                      width: "100%",
-                      padding: "0.85rem",
-                      background: "linear-gradient(135deg, #D4B67D 0%, #C8A96E 40%, #B38E46 100%)",
-                      color: "#FFFFFF",
-                      border: "none",
-                      borderRadius: "8px",
-                      fontWeight: 800,
-                      fontSize: "0.95rem",
-                      cursor: loading ? "wait" : "pointer",
-                      boxShadow: "0 6px 20px rgba(184, 147, 85, 0.35)",
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    {loading ? "Unlocking Preview..." : "Unlock Full Catalogue On-Screen Preview 📖"}
-                  </button>
-                </form>
-              </div>
+                  <div className="catalog-form-field">
+                    <label>City / Location</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Bangalore"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                    />
+                  </div>
+                </div>
 
-              <div style={{ marginTop: "1rem", borderTop: "1px solid #E8E3D7", paddingTop: "0.8rem", fontSize: "0.72rem", color: "#8A8279", textAlign: "center" }}>
+                <div className="catalog-form-field">
+                  <label>Profession / Role</label>
+                  <select
+                    value={profession}
+                    onChange={(e) => setProfession(e.target.value)}
+                  >
+                    <option value="Architect / Interior Designer">Architect / Interior Designer</option>
+                    <option value="Builder / Developer">Builder / Developer</option>
+                    <option value="Contractor / Consultant">Contractor / Consultant</option>
+                    <option value="Homeowner / Private Client">Homeowner / Private Client</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="catalog-submit-btn"
+                >
+                  {loading ? "Unlocking Preview..." : "Unlock Full Catalogue On-Screen Preview 📖"}
+                </button>
+              </form>
+
+              <div className="catalog-form-footer">
                 Aaren Intpro Official Protected Architectural Catalogue Portal.
               </div>
             </div>
@@ -413,6 +232,337 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
           />
         )}
       </div>
+
+      <style jsx>{`
+        .catalog-modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.88);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          z-index: 99999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 1rem;
+          overflow-y: auto;
+        }
+
+        .catalog-modal-card {
+          background: #ffffff;
+          border-radius: 16px;
+          max-width: 720px;
+          width: 100%;
+          max-height: 94vh;
+          overflow-y: auto;
+          box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+          display: grid;
+          grid-template-columns: 240px 1fr;
+          border: 1px solid #e8e3d7;
+          position: relative;
+          color: #1c1917;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .catalog-modal-card.unlocked {
+          background: #0f1117;
+          max-width: 1280px;
+          height: 94vh;
+          display: flex;
+          flex-direction: column;
+          padding: 0;
+          overflow: hidden;
+        }
+
+        .catalog-modal-close {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          background: rgba(0, 0, 0, 0.08);
+          border: none;
+          font-size: 1.1rem;
+          font-weight: 700;
+          cursor: pointer;
+          color: #475569;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 50;
+          transition: all 0.2s ease;
+        }
+
+        .catalog-modal-close:hover {
+          background: #ef4444;
+          color: #ffffff;
+        }
+
+        .catalog-modal-sidebar {
+          background: #faf9f6;
+          border-right: 1px solid #e8e3d7;
+          padding: 1.8rem 1.4rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+        }
+
+        .catalog-thumb-box {
+          position: relative;
+          width: 100%;
+          max-width: 170px;
+          aspect-ratio: 3/4;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+          margin-bottom: 1rem;
+          border: 1px solid #d8d0be;
+          background: #181920;
+        }
+
+        .catalog-thumb-box img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: top;
+          display: block;
+        }
+
+        .catalog-cover-badge {
+          position: absolute;
+          top: 6px;
+          right: 6px;
+          background: rgba(0, 0, 0, 0.8);
+          color: #d4b67d;
+          padding: 2px 6px;
+          border-radius: 10px;
+          font-size: 0.65rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+        }
+
+        .catalog-meta-info {
+          width: 100%;
+        }
+
+        .catalog-meta-eyebrow {
+          display: block;
+          font-size: 0.7rem;
+          color: #8a8279;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          font-weight: 800;
+        }
+
+        .catalog-brand-title {
+          color: #81663f;
+          font-weight: 800;
+          font-size: 1.05rem;
+          margin: 0.2rem 0;
+        }
+
+        .catalog-category-tag {
+          color: #5e5852;
+          font-size: 0.82rem;
+          margin: 0;
+          font-weight: 600;
+        }
+
+        .catalog-stats-row {
+          margin-top: 0.8rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          font-size: 0.75rem;
+          color: #8a8279;
+          font-weight: 600;
+        }
+
+        .catalog-modal-form-col {
+          padding: 2rem 2.2rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .catalog-form-eyebrow {
+          display: block;
+          font-size: 0.72rem;
+          font-weight: 800;
+          color: #81663f;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          margin-bottom: 0.3rem;
+        }
+
+        .catalog-form-title {
+          font-size: 1.3rem;
+          font-weight: 800;
+          color: #81663f;
+          margin: 0 0 0.3rem 0;
+          line-height: 1.3;
+        }
+
+        .catalog-form-desc {
+          color: #5e5852;
+          font-size: 0.84rem;
+          line-height: 1.45;
+          margin: 0 0 1.2rem 0;
+        }
+
+        .catalog-enquiry-form {
+          display: flex;
+          flex-direction: column;
+          gap: 0.85rem;
+        }
+
+        .catalog-form-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.75rem;
+        }
+
+        .catalog-form-field label {
+          display: block;
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: #5e5852;
+          margin-bottom: 4px;
+        }
+
+        .req-star {
+          color: #ef4444;
+        }
+
+        .catalog-form-field input,
+        .catalog-form-field select {
+          width: 100%;
+          padding: 0.7rem 0.85rem;
+          border-radius: 8px;
+          border: 1px solid #d8d0be;
+          font-size: 0.9rem;
+          color: #1c1917;
+          background: #faf9f6;
+          outline: none;
+          box-sizing: border-box;
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .catalog-form-field input:focus,
+        .catalog-form-field select:focus {
+          border-color: #81663f;
+          box-shadow: 0 0 0 3px rgba(129, 102, 63, 0.15);
+          background: #ffffff;
+        }
+
+        .catalog-submit-btn {
+          margin-top: 0.4rem;
+          width: 100%;
+          padding: 0.9rem 1rem;
+          background: linear-gradient(135deg, #d4b67d 0%, #c8a96e 40%, #b38e46 100%);
+          color: #ffffff;
+          border: none;
+          border-radius: 8px;
+          font-weight: 800;
+          font-size: 0.95rem;
+          cursor: pointer;
+          box-shadow: 0 6px 20px rgba(184, 147, 85, 0.35);
+          transition: all 0.2s ease;
+        }
+
+        .catalog-submit-btn:hover:not(:disabled) {
+          transform: translateY(-1px);
+          box-shadow: 0 8px 25px rgba(184, 147, 85, 0.45);
+        }
+
+        .catalog-submit-btn:disabled {
+          opacity: 0.7;
+          cursor: wait;
+        }
+
+        .catalog-form-footer {
+          margin-top: 1rem;
+          border-top: 1px solid #e8e3d7;
+          padding-top: 0.8rem;
+          font-size: 0.72rem;
+          color: #8a8279;
+          text-align: center;
+        }
+
+        /* ── Mobile Viewport Overrides (<= 768px) ── */
+        @media (max-width: 768px) {
+          .catalog-modal-overlay {
+            padding: 0.6rem;
+            align-items: flex-start;
+          }
+
+          .catalog-modal-card {
+            grid-template-columns: 1fr;
+            max-height: 94vh;
+            margin-top: 1rem;
+            border-radius: 12px;
+          }
+
+          .catalog-modal-sidebar {
+            border-right: none;
+            border-bottom: 1px solid #e8e3d7;
+            padding: 1.2rem 1rem;
+            flex-direction: row;
+            text-align: left;
+            gap: 1rem;
+            align-items: center;
+          }
+
+          .catalog-thumb-box {
+            width: 70px;
+            max-width: 70px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+          }
+
+          .catalog-meta-info {
+            flex: 1;
+          }
+
+          .catalog-stats-row {
+            justify-content: flex-start;
+            margin-top: 0.4rem;
+          }
+
+          .catalog-modal-form-col {
+            padding: 1.2rem 1rem 1.6rem;
+          }
+
+          .catalog-form-title {
+            font-size: 1.15rem;
+          }
+
+          .catalog-form-desc {
+            font-size: 0.8rem;
+            margin-bottom: 0.9rem;
+          }
+
+          .catalog-form-grid {
+            grid-template-columns: 1fr;
+            gap: 0.85rem;
+          }
+
+          .catalog-form-field input,
+          .catalog-form-field select {
+            padding: 0.8rem;
+            font-size: 0.95rem;
+          }
+
+          .catalog-submit-btn {
+            padding: 0.95rem;
+            font-size: 0.92rem;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -305,10 +305,10 @@ export type InquiryItem = {
 
 export const DEFAULT_SETTINGS: SiteSettingsItem = {
   heroTitle: "AAREN",
-  heroTagline: "Creative Studio & Material Lab",
+  heroTagline: "Material Lab",
   heroSubtext: "Architectural surfaces, luxury furniture, and bespoke interior solutions.",
   heroVideoUrl: "/hero_bg.mp4",
-  heroCategories: ["Plywood", "Laminate", "Facade", "Wooden Flooring", "Screens", "Door System", "Doors", "Windows", "Kitchen", "Wardrobe", "Furniture", "Tiles", "Bathroom Fittings", "Sanitary Ware", "Mirrors"],
+  heroCategories: ["Plywood", "Decorative surfaces", "Cladding & Decking", "Wooden flooring", "Screens", "Doors", "Windows", "Kitchen", "Wardrobe", "Hardware", "Partition", "FF&E", "Tiles", "Wellness"],
   contactEmail: "info@aarenintpro.com",
   contactPhone: "8884464444",
   contactAddress: "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026",

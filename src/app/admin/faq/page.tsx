@@ -312,7 +312,7 @@ export default function AdminFaqPage() {
     <div className="admin-page-container font-['Jost',sans-serif]">
       <AdminNav />
 
-      <main className="admin-main">
+      <main className="admin-main-content admin-main">
         {/* HEADER SECTION */}
         <div className="top-header-nav">
           <div>

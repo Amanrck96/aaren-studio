@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import AdminNav from "@/components/AdminNav";
 import {
   TrendingUp,
   DollarSign,
@@ -86,7 +87,10 @@ export default function ExecutiveAnalyticsPage() {
   }, []);
 
   return (
-    <div className="aaren-os-root">
+    <div style={{ display: "flex", minHeight: "100vh", background: "#08111F" }}>
+      <AdminNav />
+
+      <main className="admin-main-content aaren-os-root" style={{ flex: 1, padding: "2.5rem 3rem", background: "#08111F" }}>
       <style jsx global>{`
         :root {
           --navy: #08111F;
@@ -502,6 +506,7 @@ export default function ExecutiveAnalyticsPage() {
           </table>
         </div>
       </div>
+      </main>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import AdminNav from "@/components/AdminNav";
 import { ShieldAlert, Server, Activity, Users, Key, ToggleLeft, ToggleRight, FileText, CheckCircle, RefreshCw, Cpu, Database } from "lucide-react";
 
 export default function AdminConsolePage() {
@@ -35,7 +36,10 @@ export default function AdminConsolePage() {
   };
 
   return (
-    <div className="aaren-os-root">
+    <div style={{ display: "flex", minHeight: "100vh", background: "#08111F" }}>
+      <AdminNav />
+
+      <main className="admin-main-content aaren-os-root" style={{ flex: 1, padding: "2.5rem 3rem", background: "#08111F" }}>
       <style jsx global>{`
         :root {
           --navy: #08111F;
@@ -369,6 +373,7 @@ export default function AdminConsolePage() {
           </div>
         ) : null}
       </div>
+      </main>
     </div>
   );
 }

@@ -277,7 +277,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
     return (
       <div className="admin-page-container font-['Jost',sans-serif]">
         <AdminNav />
-        <main className="admin-main" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
+        <main className="admin-main-content admin-main" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
           <div style={{ textAlign: "center", color: "#8c764b" }}>
             <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>🏢</div>
             <div style={{ fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }}>Loading Brand Details...</div>
@@ -291,7 +291,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
     <div className="admin-page-container font-['Jost',sans-serif]">
       <AdminNav />
 
-      <main className="admin-main">
+      <main className="admin-main-content admin-main">
         {/* TOP HEADER BAR */}
         <div className="top-header-nav">
           <div className="left-meta">

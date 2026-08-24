@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import CatalogDownloadModal, { getPdfCoverThumbnail } from "@/components/CatalogDownloadModal";
 import { PdfCatalogItem } from "@/lib/types";
 import { getPdfThumbnail } from "@/utils/pdfThumbnail";
@@ -50,14 +48,12 @@ export default function CatalogsPage() {
 
   return (
     <div style={{ background: "#E6E2D8", color: "#1e1e1e", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <Header />
-
       {/* Hero Banner Section */}
       <section
         style={{
           background: "#E6E2D8",
           color: "#1C1917",
-          padding: "5rem 2rem 3rem",
+          padding: "7.5rem 1.5rem 3rem",
           textAlign: "center",
           position: "relative",
           borderBottom: "1px solid #D8D0BE",
@@ -289,8 +285,6 @@ export default function CatalogsPage() {
           </div>
         )}
       </main>
-
-      <Footer />
 
       {/* Lead Capture Modal */}
       {activeCatalog && (

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 import { logInquiryStore, getCatalogsStore } from "@/lib/store";
+import { sendInquiryEmailNotification } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -92,6 +93,21 @@ export async function POST(req: Request) {
       });
     } catch (storeErr) {
       console.error("Store inquiry log error:", storeErr);
+    }
+
+    // Send instant email notification to info@aarenintpro.com and admin
+    try {
+      await sendInquiryEmailNotification({
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone ? phone.trim() : "N/A",
+        type: "Catalog PDF Access Lead",
+        subject: `📖 New Catalog Lead: ${name.trim()} (${catalogTitle || targetSlug})`,
+        productOrBrand: catalogTitle || targetSlug,
+        message: `Customer viewed/requested architectural catalog.\nCatalog: ${catalogTitle || targetSlug}\nCompany: ${company || "N/A"}\nProfession: ${profession || "N/A"}\nCity: ${city || "N/A"}`,
+      });
+    } catch (emailErr) {
+      console.error("Catalog inquiry email notification error:", emailErr);
     }
 
     // Mint short-lived, single-purpose signed JWT (30 min validity)

@@ -354,7 +354,7 @@ export default function AdminProductsPage() {
     <div className="admin-page-container font-['Jost',sans-serif]">
       <AdminNav />
 
-      <main className="admin-main">
+      <main className="admin-main-content admin-main">
         {/* Header Bar */}
         <div className="header-bar">
           <div>

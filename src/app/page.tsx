@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { SiteSettingsItem } from "@/lib/types";
+import { SiteSettingsItem, DEFAULT_SETTINGS } from "@/lib/types";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -191,7 +191,7 @@ function useInView(threshold = 0.15) {
 }
 
 export default function Home() {
-  const [siteSettings, setSiteSettings] = useState<SiteSettingsItem | null>(null);
+  const [siteSettings, setSiteSettings] = useState<SiteSettingsItem>(DEFAULT_SETTINGS);
   const [categoriesList, setCategoriesList] = useState(HOME_CATEGORIES);
   const [brandsList, setBrandsList] = useState(HOME_BRANDS);
   const [projectsList, setProjectsList] = useState(PROJECTS);
@@ -631,12 +631,12 @@ export default function Home() {
           }}
         >
           {/* Tagline */}
-          <p
+          <div
             className="text-splitter"
             style={{
               fontSize: "clamp(1.6rem, 2.2vw, 2.4rem)",
               letterSpacing: "-0.03em",
-              lineHeight: 1.1,
+              lineHeight: 1.15,
               color: "#eaeef4",
               textTransform: "uppercase",
               maxWidth: "70rem",
@@ -645,13 +645,15 @@ export default function Home() {
               transition: "opacity 0.7s ease 0.7s, transform 0.7s cubic-bezier(0.16,1,0.3,1) 0.7s",
             }}
           >
-            {siteSettings?.heroTagline || "Visual innovation and spatial experiences for world class clients and brands."}
+            <p style={{ margin: 0, fontWeight: 700, textTransform: "uppercase", color: "#eaeef4" }}>
+              {siteSettings?.heroTagline || "Material Lab"}
+            </p>
             {siteSettings?.heroSubtext && (
-              <span style={{ display: "block", marginTop: "0.8rem", fontSize: "1.4rem", opacity: 0.75, textTransform: "none", fontWeight: 400, lineHeight: 1.4 }}>
+              <span style={{ display: "block", marginTop: "0.8rem", fontSize: "1.35rem", opacity: 0.8, textTransform: "none", fontWeight: 400, lineHeight: 1.45, color: "#cbd5e1" }}>
                 {siteSettings.heroSubtext}
               </span>
             )}
-          </p>
+          </div>
 
           {/* Service pill tags */}
           <div

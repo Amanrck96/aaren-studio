@@ -222,9 +222,8 @@ export default function AdminNav() {
         :global(main.admin-main-content) {
           margin-left: ${isOpen ? "300px" : "0px"} !important;
           transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-          background-color: #ffffff !important;
-          color: #111111 !important;
           min-height: 100vh;
+          box-sizing: border-box;
         }
       `}</style>
     </>

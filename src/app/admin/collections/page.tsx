@@ -236,16 +236,16 @@ export default function CollectionsAdminPage() {
   }, [brandProducts, previewFilter, collections]);
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#0b0c10", color: "#e2e8f0" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#ffffff", color: "#1e293b" }}>
       <AdminNav />
 
-      <main style={{ flex: 1, padding: "2rem", overflowY: "auto" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", overflowY: "auto" }}>
         {/* Top Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
               <span style={{ fontSize: "1.8rem" }}>🗃️</span>
-              <h1 style={{ fontSize: "1.8rem", fontWeight: 800, color: "#fff", margin: 0 }}>
+              <h1 style={{ fontSize: "1.8rem", fontWeight: 800, color: "#8c764b", margin: 0 }}>
                 Brand-Scoped Collection Management
               </h1>
             </div>

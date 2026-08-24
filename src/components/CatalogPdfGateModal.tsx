@@ -103,6 +103,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
     >
       <div
         onClick={(e) => e.stopPropagation()}
+        className="catalog-pdf-gate-card"
         style={{
           background: unlocked ? "#0F1117" : "#FFFFFF",
           border: "1px solid #E8E3D7",
@@ -112,7 +113,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
           height: unlocked ? "94vh" : "auto",
           maxHeight: "96vh",
           overflowY: unlocked ? "hidden" : "auto",
-          padding: unlocked ? "0" : "2.2rem",
+          padding: unlocked ? "0" : "2rem",
           color: unlocked ? "#FFFFFF" : "#1C1917",
           position: "relative",
           boxShadow: "0 25px 60px rgba(0, 0, 0, 0.4)",
@@ -394,6 +395,16 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
           />
         )}
       </div>
+
+      <style jsx>{`
+        @media (max-width: 640px) {
+          :global(.catalog-pdf-gate-card) {
+            padding: 1.2rem !important;
+            max-height: 94vh !important;
+            border-radius: 12px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

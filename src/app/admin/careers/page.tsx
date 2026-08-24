@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Loader2, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import AdminNav from "@/components/AdminNav";
 
 export default function AdminCareers() {
   const [positions, setPositions] = useState<any[]>([]);
@@ -70,9 +71,12 @@ export default function AdminCareers() {
   };
 
   return (
-    <div className="min-h-screen bg-[#eaeef4] text-[#1e1e1e] pt-32 pb-24 px-6 md:px-12 font-sans">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center gap-4 mb-12">
+    <div style={{ display: "flex", minHeight: "100vh", background: "#eaeef4" }}>
+      <AdminNav />
+
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#eaeef4" }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center gap-4 mb-12">
           <Link href="/admin/dashboard" className="text-xs font-black uppercase tracking-widest px-4 py-2 bg-white/80 border border-black/10 hover:bg-black hover:text-white rounded-lg transition-all">
             ← Dashboard
           </Link>
@@ -183,6 +187,7 @@ export default function AdminCareers() {
           </div>
         </div>
       </div>
+      </main>
     </div>
   );
 }

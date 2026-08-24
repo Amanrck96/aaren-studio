@@ -14,19 +14,17 @@ type NavLink = {
   badge?: string;
 };
 
-// Complete Navigation Links for Mobile & Desktop
+// Navigation Links for Mobile Drawer (Services and Showcase Projects removed as requested)
 const ALL_NAV_LINKS: NavLink[] = [
-  { label: "Showcase Projects", href: "/projects" },
-  { label: "Products", href: "/products" },
-  { label: "Brands", href: "/brands" },
   { label: "About Us", href: "/about" },
   { label: "Our Team", href: "/team" },
-  { label: "Services", href: "/services" },
-  { label: "Catalogs", href: "/catalogs" },
-  { label: "Blog & Journal", href: "/blog" },
-  { label: "FAQ", href: "/faq" },
   { label: "Contact Us", href: "/contact" },
   { label: "Shop", href: "/shop" },
+  { label: "Products", href: "/products" },
+  { label: "Brands", href: "/brands" },
+  { label: "Catalogs", href: "/catalogs" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Blog & Journal", href: "/blog" },
 ];
 
 const DESKTOP_PRIMARY_LINKS: NavLink[] = [
