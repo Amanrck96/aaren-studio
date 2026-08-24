@@ -182,7 +182,7 @@ h5 {
 a {
   color: inherit;
   text-decoration: none;
-  cursor: none;
+  cursor: pointer;
 }
 
 img {
@@ -195,11 +195,7 @@ button {
   border: none;
   color: inherit;
   font: inherit;
-  cursor: none;
-}
-
-a, button, input, select, textarea {
-  cursor: none !important;
+  cursor: pointer;
 }
 
 input, select, textarea {
@@ -289,36 +285,9 @@ input, select, textarea {
   }
 }
 
-/* ── Custom Cursor — exact Sturdy.co ── */
+/* ── Custom Cursor disabled for standard normal browser pointer ── */
 .s-cursor {
-  position: fixed;
-  width: 7.2rem;
-  height: 7.2rem;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99999;
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              opacity 0.2s ease;
-  backdrop-filter: blur(1rem);
-  -webkit-backdrop-filter: blur(1rem);
-  background: rgba(0, 0, 0, 0.4);
-  border: 0.1rem solid rgba(255, 255, 255, 0.2);
-  will-change: left, top, transform;
-}
-
-.s-cursor.is-visible {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.s-cursor.is-link {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-@media (pointer: coarse), (hover: none) {
-  .s-cursor {
-    display: none !important;
-  }
+  display: none !important;
 }
 
 /* ── Page curtain transition ── */
