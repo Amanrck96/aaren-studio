@@ -1519,33 +1519,11 @@ function getBlankWorkspace(user) {
   const userInitials = user?.initials || (userName.slice(0, 2).toUpperCase());
   const uid = user?.uid || 'guest';
   const email = user?.email || 'guest@aarenstudio.com';
-  const projId = 'proj-' + Math.random().toString(36).slice(2, 8);
 
   return {
     ownerUid: uid,
     ownerEmail: email,
-    projects: [
-      {
-        id: projId,
-        name: userName + ' Project Space',
-        client: 'Private Client',
-        type: 'Residential · Bespoke Architecture',
-        status: 'inprogress',
-        statusLabel: 'In Progress',
-        statusColor: 'blue',
-        progress: 25,
-        budget: 'Custom Budget',
-        due: '2026',
-        daysRemaining: 60,
-        pinned: true,
-        cover: '/brands/brand_1_1.png',
-        team: [userName],
-        categories: ['Joinery', 'Surfaces'],
-        rooms: [],
-        ownerUid: uid,
-        ownerEmail: email,
-      }
-    ],
+    projects: [],
     tasks: [],
     schedules: [],
     moodboards: [],
@@ -1553,22 +1531,19 @@ function getBlankWorkspace(user) {
     timeLogs: [],
     files: [],
     boq: [],
-    bookmarks: [
-      { id: 'bm-1', title: '📌 Luxury Architecture Inspiration', url: 'https://pinterest.com', category: 'Moodboard & Inspiration' },
-      { id: 'bm-2', title: '📐 DWG & 3D CAD Drive Folder', url: 'https://drive.google.com', category: 'CAD & Elevation Drawings' }
-    ],
+    bookmarks: [],
     phrases: getDefaultPhrases(),
     milestones: getDefaultMilestones(),
     teamMembers: [
       { id: 'tm-1', name: userName, role: 'Principal Architect', hours: 0, activeTasks: 0, avatar: userInitials }
     ],
     chatMessages: [
-      { id: 'cm-1', sender: userName, time: '10:00 AM', text: 'Welcome to your private workspace at Aaren Studio OS! Create projects, moodboards, and BOQ specifications here.', isMe: true }
+      { id: 'cm-1', sender: userName, time: '10:00 AM', text: 'Welcome to your private workspace! Click "+ Create Project" to start your first project.', isMe: true }
     ],
     presentationMode: 'architect',
     currentStageIndex: 0,
     approvalStatuses: { team: 'Pending', principal: 'Pending', client: 'Pending' },
-    activeProjectId: projId
+    activeProjectId: null
   };
 }
 
@@ -1621,14 +1596,12 @@ window.loadUserWorkspace = async function(user) {
   state.ownerUid = user.uid;
   state.ownerEmail = user.email;
 
-  if (!Array.isArray(state.projects) || state.projects.length === 0) {
-    const blank = getBlankWorkspace(user);
-    state.projects = blank.projects;
-    state.activeProjectId = blank.activeProjectId;
-  }
+  state.projects = Array.isArray(state.projects) ? state.projects : [];
 
-  // Ensure active project ID is valid
-  if (!state.projects.some(p => p.id === state.activeProjectId)) {
+  // Ensure active project ID is valid or null
+  if (state.projects.length === 0) {
+    state.activeProjectId = null;
+  } else if (!state.projects.some(p => p.id === state.activeProjectId)) {
     state.activeProjectId = state.projects[0].id;
   }
 
