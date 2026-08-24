@@ -5,9 +5,9 @@ A 100% production-ready, premium website inspired by the design language, scroll
 ## Tech Stack
 * **Framework**: Next.js 16.2 (App Router)
 * **Design & Animations**: Tailwind CSS, GSAP, Framer Motion, Lenis Smooth Scroll
-* **Database**: Prisma ORM, PostgreSQL
-* **Authentication**: Credentials authentication
-* **Media & Optimization**: Cloudinary streaming integrations
+* **Cloud Storage & Database**: Google Firebase Storage & Firebase Realtime Database Cloud Store
+* **Authentication**: Firebase Authentication & Admin Credentials
+* **Media & Optimization**: Google Firebase Storage & Edge CDN streaming integrations
 
 ---
 
@@ -23,20 +23,16 @@ A 100% production-ready, premium website inspired by the design language, scroll
 ## Run Locally
 
 1. **Verify environment files**:
-   Ensure `.env` in the root matches the requested local credentials.
+   Ensure `.env` in the root matches the requested Firebase credentials.
 2. **Install modules**:
    ```bash
    npm install --legacy-peer-deps
    ```
-3. **Execute migration / generation**:
-   ```bash
-   npx prisma generate
-   ```
-4. **Launch development server**:
+3. **Launch development server**:
    ```bash
    npm run dev
    ```
-5. **CMS Login Details**:
+4. **CMS Login Details**:
    - URL: `/admin/login`
    - Access: Configured via environment variables (`ADMIN_EMAIL` / `ADMIN_PASSWORD`)
    - Please configure your administrative credentials in your local `.env` or deployment environment settings.

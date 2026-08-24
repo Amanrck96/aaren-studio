@@ -52,22 +52,59 @@ export default function AdminMediaPage() {
     if (!file) return;
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "PC Uploads");
+      let finalUrl = "";
+      let fileName = file.name;
+      let kbSize = (file.size / 1024).toFixed(1) + " KB";
+      const ext = file.name.split(".").pop()?.toLowerCase() || "";
+      let fileType: "PDF" | "Image" | "Video" | "Document" = "Document";
+      if (["jpg", "jpeg", "png", "webp", "gif", "svg", "avif"].includes(ext)) fileType = "Image";
+      else if (ext === "pdf") fileType = "PDF";
+      else if (["mp4", "webm", "mov", "mkv"].includes(ext)) fileType = "Video";
 
-      const res = await fetch("/api/upload", {
+      // 1. Try direct upload to Google Firebase Storage
+      try {
+        const fbResult = await uploadFileToFirebase(file, "media_library");
+        if (fbResult && fbResult.url) {
+          finalUrl = fbResult.url;
+        }
+      } catch (fbErr) {
+        console.warn("Firebase Storage direct upload fallback to API:", fbErr);
+      }
+
+      // 2. Fallback to /api/upload if Firebase Storage direct failed
+      if (!finalUrl) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "PC Uploads");
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const json = await res.json();
+        if (json.success) {
+          finalUrl = json.url;
+        } else {
+          throw new Error(json.error || "Upload failed");
+        }
+      }
+
+      // 3. Register asset in Central Media Store
+      await fetch("/api/media", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName,
+          fileUrl: finalUrl,
+          fileType,
+          folder: "Firebase Storage",
+          size: kbSize,
+        }),
       });
 
-      const json = await res.json();
-      if (json.success) {
-        alert("✅ File uploaded successfully from computer to " + json.url);
-        fetchMedia();
-      } else {
-        alert("❌ Upload failed: " + json.error);
-      }
+      alert("✅ File uploaded successfully to " + finalUrl);
+      fetchMedia();
     } catch (err: any) {
       alert("❌ Upload error: " + (err.message || err));
     } finally {

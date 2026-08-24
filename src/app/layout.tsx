@@ -34,6 +34,8 @@ export const metadata: Metadata = {
 
 import { getSiteSettingsStore } from "@/lib/store";
 
+import CustomCursor from "@/components/CustomCursor";
+
 export default async function RootLayout({
   children,
 }: {
@@ -76,6 +78,7 @@ export default async function RootLayout({
       </head>
       <body className={jost.className} suppressHydrationWarning>
         <SmoothScroll>
+          <CustomCursor />
           <Header />
           <main>{children}</main>
           <Footer />

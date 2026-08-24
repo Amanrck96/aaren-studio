@@ -315,6 +315,12 @@ input, select, textarea {
   transform: translate(-50%, -50%) scale(1);
 }
 
+@media (pointer: coarse), (hover: none) {
+  .s-cursor {
+    display: none !important;
+  }
+}
+
 /* ── Page curtain transition ── */
 .curtain {
   position: fixed;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, use } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useParams } from "next/navigation";
 
@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-export default function CatalogViewPage() {
+function CatalogViewer() {
   const params = useParams();
   const searchParams = useSearchParams();
   const slug = (params?.slug as string) || "";
@@ -619,5 +619,19 @@ export default function CatalogViewPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+export default function CatalogViewPage() {
+  return (
+    <Suspense
+      fallback={
+        <div style={{ minHeight: "100vh", background: "#0B0C10", display: "flex", alignItems: "center", justifyContent: "center", color: "#D4B67D" }}>
+          Loading Protected Catalogue...
+        </div>
+      }
+    >
+      <CatalogViewer />
+    </Suspense>
   );
 }

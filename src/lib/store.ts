@@ -41,11 +41,33 @@ declare global {
 const FIREBASE_RTDB_STORE_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || "https://aarenintpro-1c09f-default-rtdb.firebaseio.com";
 
 async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
+  try {
+    const res = await fetch(`${FIREBASE_RTDB_STORE_URL}/${key}.json`, {
+      headers: { "Cache-Control": "no-cache" },
+      next: { revalidate: 0 },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data !== null && data !== undefined) {
+        return data;
+      }
+    }
+  } catch (err) {
+    // Fail-safe to local store
+  }
   return null;
 }
 
 async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
-  return;
+  try {
+    await fetch(`${FIREBASE_RTDB_STORE_URL}/${key}.json`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+  } catch (err) {
+    // Fail-safe
+  }
 }
 
 function getActiveStorePath(): string {
@@ -1837,6 +1859,26 @@ export async function getMediaStore(): Promise<MediaAsset[]> {
     if (t.photoUrl) addAsset(`${t.name} Member Profile Photo`, t.photoUrl, "Image", "Team");
   });
 
+  // 8. Architectural PDF Catalogs & Thumbnails
+  (json.pdfCatalogs || []).forEach((pc: any) => {
+    if (pc.fileUrl) addAsset(`${pc.title || pc.fileName} (Official Catalogue)`, pc.fileUrl, "PDF", "PDF Catalogues", pc.fileSize);
+    if (pc.thumbnailUrl) addAsset(`${pc.title || pc.fileName} Cover Preview`, pc.thumbnailUrl, "Image", "Catalog Thumbnails");
+  });
+
+  // 9. Read Fallback Catalogs from data/catalogs.json if not present
+  try {
+    const catalogsPath = path.join(process.cwd(), "data", "catalogs.json");
+    if (fs.existsSync(catalogsPath)) {
+      const catalogsData = JSON.parse(fs.readFileSync(catalogsPath, "utf-8"));
+      if (Array.isArray(catalogsData)) {
+        catalogsData.forEach((pc: any) => {
+          if (pc.fileUrl) addAsset(`${pc.title || pc.fileName} (Official Catalogue)`, pc.fileUrl.replace(/\\/g, "/"), "PDF", "PDF Catalogues", pc.fileSize);
+          if (pc.thumbnailUrl) addAsset(`${pc.title || pc.fileName} Cover Preview`, pc.thumbnailUrl.replace(/\\/g, "/"), "Image", "Catalog Thumbnails");
+        });
+      }
+    }
+  } catch (e) {}
+
   return assets;
 }
 
@@ -1854,6 +1896,7 @@ export async function saveMediaStore(media: Omit<MediaAsset, "id"> & { id?: stri
   if (!json.media) json.media = [];
   json.media.unshift(full);
   writeJsonStore(json);
+  await syncToFirebaseCloudStore("media", json.media);
   return full;
 }
 
@@ -1864,6 +1907,7 @@ export async function deleteMediaStore(id: string) {
   const json = readJsonStore();
   if (json.media) json.media = json.media.filter((m: any) => m.id !== id);
   writeJsonStore(json);
+  await syncToFirebaseCloudStore("media", json.media || []);
 }
 
 // TAXONOMIES & DROPDOWNS STORE

@@ -91,7 +91,7 @@ const PROJECTS = [
 const SERVICES = [
   "Plywood",
   "Decorative surfaces",
-  "Cladding & Declining",
+  "Cladding & Decking",
   "Wooden flooring",
   "Screens",
   "Doors",
@@ -100,7 +100,7 @@ const SERVICES = [
   "Wardrobe",
   "Hardware",
   "Partition",
-  "Ffne",
+  "FF&E",
   "Tiles",
   "Wellness",
 ];

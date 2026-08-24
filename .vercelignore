@@ -1,1 +1,5 @@
-install-command=npm install --legacy-peer-deps
+# Vercel Ignore
+scratch/
+.git
+.genkit
+*.tsbuildinfo

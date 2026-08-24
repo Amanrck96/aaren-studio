@@ -130,11 +130,18 @@ export async function GET(req: Request, { params }: RouteProps) {
         }
       }
 
-      // If local filesystem asset (e.g. /catalogs/aquarelle.pdf or public/catalogs/...)
-      const cleanRelative = rawPath.replace(/^\/+/, "");
-      const localFilePath = path.join(process.cwd(), "public", cleanRelative.startsWith("catalogs") ? cleanRelative : `catalogs/${cleanRelative}`);
+      // If local filesystem asset (e.g. /catalogs/aquarelle.pdf or /catalogues/Formica/...)
+      const cleanRelative = decodeURIComponent(rawPath.replace(/\\/g, "/").replace(/^\/+/, ""));
+      const candidates = [
+        path.join(process.cwd(), "public", cleanRelative),
+        path.join(process.cwd(), "public", cleanRelative.startsWith("catalogs") || cleanRelative.startsWith("catalogues") ? cleanRelative : `catalogs/${cleanRelative}`),
+        path.join(process.cwd(), "public", "catalogs", path.basename(cleanRelative)),
+        path.join(process.cwd(), "public", "catalogues", path.basename(cleanRelative)),
+      ];
 
-      if (fs.existsSync(localFilePath)) {
+      const localFilePath = candidates.find((p) => fs.existsSync(p));
+
+      if (localFilePath) {
         const fileBuffer = fs.readFileSync(localFilePath);
         return new Response(fileBuffer, {
           headers: {
