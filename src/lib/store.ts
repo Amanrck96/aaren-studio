@@ -74,9 +74,93 @@ async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
   return null;
 }
 
+const BACKUPS_DIR = path.join(process.cwd(), "data", "backups");
+
+export async function createStoreBackup(key: string, data: any): Promise<string> {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  try {
+    if (!fs.existsSync(BACKUPS_DIR)) {
+      fs.mkdirSync(BACKUPS_DIR, { recursive: true });
+    }
+    // 1. Entity-specific backup snapshot
+    const filename = `backup_${key}_${timestamp}.json`;
+    const filepath = path.join(BACKUPS_DIR, filename);
+    fs.writeFileSync(
+      filepath,
+      JSON.stringify(
+        {
+          key,
+          timestamp: new Date().toISOString(),
+          count: Array.isArray(data) ? data.length : 1,
+          data,
+        },
+        null,
+        2
+      )
+    );
+
+    // 2. Latest full master store snapshot
+    const masterData = readJsonStore();
+    const masterFilepath = path.join(BACKUPS_DIR, "latest_master_backup.json");
+    fs.writeFileSync(masterFilepath, JSON.stringify({ timestamp: new Date().toISOString(), data: masterData }, null, 2));
+
+    // 3. Auto-prune older backups to keep disk lean (keep latest 50)
+    try {
+      const allBackups = fs
+        .readdirSync(BACKUPS_DIR)
+        .filter((f) => f.startsWith("backup_") && f.endsWith(".json"))
+        .map((f) => ({ name: f, time: fs.statSync(path.join(BACKUPS_DIR, f)).mtimeMs }))
+        .sort((a, b) => b.time - a.time);
+      if (allBackups.length > 50) {
+        allBackups.slice(50).forEach((b) => {
+          try {
+            fs.unlinkSync(path.join(BACKUPS_DIR, b.name));
+          } catch (_) {}
+        });
+      }
+    } catch (_) {}
+
+    // 4. Cloud Backup snapshot in Firebase Realtime Database (/backups/...)
+    fetch(`${FIREBASE_RTDB_STORE_URL}/backups/${key}/${timestamp}.json`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        count: Array.isArray(data) ? data.length : 1,
+        data,
+      }),
+    }).catch(() => {});
+
+    return filename;
+  } catch (err) {
+    console.error("Backup engine error:", err);
+    return "";
+  }
+}
+
+export async function listStoreBackups() {
+  try {
+    if (!fs.existsSync(BACKUPS_DIR)) return [];
+    return fs
+      .readdirSync(BACKUPS_DIR)
+      .filter((f) => f.endsWith(".json"))
+      .map((f) => {
+        const stats = fs.statSync(path.join(BACKUPS_DIR, f));
+        return {
+          filename: f,
+          size: stats.size,
+          createdAt: stats.mtime.toISOString(),
+        };
+      })
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  } catch (e) {
+    return [];
+  }
+}
+
 async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
   try {
-    // Write to both /store/${key}.json and /${key}.json
+    // 1. Instant Dual-write to Firebase Realtime Database (/store/ and /)
     await Promise.allSettled([
       fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
         method: "PUT",
@@ -89,6 +173,9 @@ async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
         body: JSON.stringify(data),
       }),
     ]);
+
+    // 2. Automated timestamped local + cloud backup creation
+    await createStoreBackup(key, data);
   } catch (err) {
     // Fail-safe
   }

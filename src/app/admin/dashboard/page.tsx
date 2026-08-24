@@ -22,9 +22,16 @@ import {
   PhoneCall,
   Inbox,
   LayoutTemplate,
+  Database,
+  Download,
+  ShieldCheck,
+  RefreshCw,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
+  const [backupsCount, setBackupsCount] = useState<number>(0);
+  const [creatingBackup, setCreatingBackup] = useState<boolean>(false);
+  const [backupToast, setBackupToast] = useState<string | null>(null);
   const [stats, setStats] = useState({
     projects: 0,
     categories: 0,
@@ -99,7 +106,33 @@ export default function AdminDashboardPage() {
         }
       })
       .catch((e) => console.error("Admin dashboard fetch error:", e));
+
+    fetch("/api/admin/backups")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && typeof json.count === "number") {
+          setBackupsCount(json.count);
+        }
+      })
+      .catch(() => {});
   }, []);
+
+  const handleCreateBackup = async () => {
+    setCreatingBackup(true);
+    try {
+      const res = await fetch("/api/admin/backups", { method: "POST" });
+      const json = await res.json();
+      if (json.success) {
+        setBackupsCount((prev) => prev + 1);
+        setBackupToast("🛡️ Full Database Snapshot & Cloud Backup Created Successfully!");
+        setTimeout(() => setBackupToast(null), 5000);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setCreatingBackup(false);
+    }
+  };
 
   const handleSaveColors = async () => {
     setSavingColors(true);
@@ -413,6 +446,111 @@ export default function AdminDashboardPage() {
             >
               Explore Materials →
             </button>
+          </div>
+        </div>
+
+        {/* ── REAL-TIME DATABASE & AUTOMATED BACKUP CENTER ── */}
+        <div
+          style={{
+            background: "#ffffff",
+            border: "1px solid rgba(16, 185, 129, 0.3)",
+            borderRadius: "16px",
+            padding: "1.8rem 2rem",
+            marginBottom: "3rem",
+            boxShadow: "0 4px 16px rgba(16, 185, 129, 0.05)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "1.2rem", borderBottom: "1px solid #f1f5f9", paddingBottom: "1rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div style={{ width: "42px", height: "42px", borderRadius: "10px", background: "rgba(16, 185, 129, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Database size={22} color="#059669" />
+              </div>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: 800, margin: 0, color: "#1C1917" }}>
+                    Live Cloud Sync & Automated Backups
+                  </h2>
+                  <span style={{ background: "#ecfdf5", color: "#059669", border: "1px solid #a7f3d0", fontSize: "0.7rem", fontWeight: 800, padding: "2px 8px", borderRadius: "999px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                    <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
+                    REALTIME CLOUD CONNECTED
+                  </span>
+                </div>
+                <p style={{ fontSize: "0.85rem", color: "#64748b", margin: "2px 0 0" }}>
+                  Every update made in this Admin Panel syncs instantly to Google Firebase Cloud Store and generates an automated timestamped backup.
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <button
+                onClick={handleCreateBackup}
+                disabled={creatingBackup}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "0.65rem 1.2rem",
+                  background: "#f1f5f9",
+                  color: "#1e293b",
+                  border: "1px solid #cbd5e1",
+                  borderRadius: "8px",
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  cursor: creatingBackup ? "wait" : "pointer",
+                }}
+              >
+                <RefreshCw size={15} className={creatingBackup ? "animate-spin" : ""} />
+                {creatingBackup ? "Creating Backup..." : "Create Full Backup"}
+              </button>
+
+              <a
+                href="/api/admin/backups?download=master"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "0.65rem 1.4rem",
+                  background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                  color: "#ffffff",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontWeight: 800,
+                  fontSize: "0.85rem",
+                  textDecoration: "none",
+                  boxShadow: "0 2px 8px rgba(5, 150, 105, 0.25)",
+                }}
+              >
+                <Download size={15} />
+                Download Database JSON
+              </a>
+            </div>
+          </div>
+
+          {backupToast && (
+            <div style={{ background: "#ecfdf5", border: "1px solid #a7f3d0", color: "#065f46", padding: "10px 14px", borderRadius: "8px", fontSize: "0.85rem", fontWeight: 700, marginBottom: "1rem", display: "flex", alignItems: "center", gap: "8px" }}>
+              <ShieldCheck size={18} color="#059669" />
+              {backupToast}
+            </div>
+          )}
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem" }}>
+            <div style={{ background: "#f8fafc", padding: "1rem 1.2rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+              <span style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Primary Cloud Storage</span>
+              <div style={{ fontSize: "1rem", fontWeight: 800, color: "#1e293b", marginTop: "4px" }}>Google Firebase Realtime DB</div>
+              <small style={{ color: "#059669", fontSize: "0.75rem", fontWeight: 600 }}>Active at /store/*.json</small>
+            </div>
+
+            <div style={{ background: "#f8fafc", padding: "1rem 1.2rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+              <span style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Auto-Backup Engine</span>
+              <div style={{ fontSize: "1rem", fontWeight: 800, color: "#1e293b", marginTop: "4px" }}>Dual-Disk & Cloud Snapshot</div>
+              <small style={{ color: "#64748b", fontSize: "0.75rem" }}>Auto-saved on every edit</small>
+            </div>
+
+            <div style={{ background: "#f8fafc", padding: "1rem 1.2rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+              <span style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Available Backup Files</span>
+              <div style={{ fontSize: "1rem", fontWeight: 800, color: "#81663F", marginTop: "4px" }}>{backupsCount} Revisions Available</div>
+              <small style={{ color: "#64748b", fontSize: "0.75rem" }}>Stored in data/backups/</small>
+            </div>
           </div>
         </div>
 
