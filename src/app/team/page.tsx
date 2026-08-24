@@ -194,8 +194,13 @@ export default function TeamPage() {
             />
           ) : (
             <div className="team-card__placeholder">
-              <span className="team-card__placeholder-code">{member.code}</span>
-              <span className="team-card__placeholder-num">{member.num}</span>
+              <div className="team-card__placeholder-emblem">
+                <span className="team-card__placeholder-code">{member.code}</span>
+              </div>
+              <div className="team-card__placeholder-meta">
+                <span className="team-card__placeholder-num">{member.code} {member.num}</span>
+                <span className="team-card__placeholder-brand">AAREN INTPRO</span>
+              </div>
             </div>
           )}
         </div>
@@ -646,29 +651,74 @@ export default function TeamPage() {
         .team-card__placeholder {
           width: 100%;
           height: 100%;
-          background: radial-gradient(circle at center, #2a251e 0%, #151310 100%);
+          background: linear-gradient(145deg, #1e1a15 0%, #131210 60%, #0d0c0a 100%);
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 0.8rem;
+          gap: 1.4rem;
+          position: relative;
+          overflow: hidden;
           border-bottom: 1px solid rgba(129, 102, 63, 0.3);
         }
 
+        .team-card__placeholder::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 50% 40%, rgba(212, 175, 55, 0.15), transparent 70%);
+          pointer-events: none;
+        }
+
+        .team-card__placeholder-emblem {
+          width: 11rem;
+          height: 11rem;
+          border-radius: 50%;
+          background: rgba(212, 175, 55, 0.08);
+          border: 1px solid rgba(212, 175, 55, 0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 0 30px rgba(129, 102, 63, 0.15);
+          transition: transform 0.4s ease, border-color 0.4s ease;
+        }
+
+        .team-card:hover .team-card__placeholder-emblem {
+          transform: scale(1.06);
+          border-color: rgba(212, 175, 55, 0.7);
+        }
+
         .team-card__placeholder-code {
-          color: #d4af37;
-          font-size: 5.5rem;
+          color: #fce8a5;
+          font-family: var(--font-jost), 'Jost', sans-serif;
+          font-size: 3.8rem;
           font-weight: 800;
-          letter-spacing: -0.02em;
+          letter-spacing: 0.04em;
           line-height: 1;
         }
 
+        .team-card__placeholder-meta {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.3rem;
+          z-index: 1;
+        }
+
         .team-card__placeholder-num {
-          color: rgba(212, 175, 55, 0.4);
-          font-size: 2.8rem;
+          color: rgba(212, 175, 55, 0.75);
+          font-size: 1.2rem;
           font-weight: 700;
-          line-height: 1;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        .team-card__placeholder-brand {
+          color: rgba(255, 255, 255, 0.35);
+          font-size: 0.95rem;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
         }
 
         .team-card__category-badge {
