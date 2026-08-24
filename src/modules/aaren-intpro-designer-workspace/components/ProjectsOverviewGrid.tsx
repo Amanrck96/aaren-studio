@@ -1,21 +1,48 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { WorkspaceProjectData } from "../types/workspace";
-import { Layers, Clock, CheckCircle2, AlertCircle, FileText, ArrowRight, DollarSign } from "lucide-react";
+import {
+  Layers,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  FileText,
+  ArrowRight,
+  DollarSign,
+  Plus,
+  Sparkles,
+  Building,
+  Mail,
+  X,
+} from "lucide-react";
 
 interface ProjectsOverviewGridProps {
   projects: WorkspaceProjectData[];
+  client?: any;
+  token?: string | null;
   onSelectProject: (proj: WorkspaceProjectData) => void;
   onOpenInvoices: () => void;
+  onProjectCreated?: (proj: WorkspaceProjectData) => void;
 }
 
 export default function ProjectsOverviewGrid({
   projects,
+  client,
+  token,
   onSelectProject,
   onOpenInvoices,
+  onProjectCreated,
 }: ProjectsOverviewGridProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("Residential Architecture");
+  const [description, setDescription] = useState("");
+  const [budget, setBudget] = useState("");
+  const [creating, setCreating] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   // Aggregate stats
   const totalProjects = projects.length;
   const allItems = projects.flatMap((p) => p.scheduleItems || []);
@@ -24,6 +51,50 @@ export default function ProjectsOverviewGrid({
   const allInvoices = projects.flatMap((p) => p.invoices || []);
   const unpaidInvoices = allInvoices.filter((inv) => inv.status === "UNPAID");
   const unpaidAmount = unpaidInvoices.reduce((sum, inv) => sum + inv.amount, 0);
+
+  const handleCreateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) {
+      setErrorMsg("Please enter a project title.");
+      return;
+    }
+
+    setCreating(true);
+    setErrorMsg(null);
+
+    try {
+      const headers: any = { "Content-Type": "application/json" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
+      const res = await fetch("/api/workspace/projects", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          title: title.trim(),
+          category,
+          description: description.trim(),
+          budget: budget ? parseFloat(budget) : undefined,
+        }),
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        setErrorMsg(json.error || "Failed to create project workspace.");
+      } else {
+        setIsModalOpen(false);
+        setTitle("");
+        setDescription("");
+        setBudget("");
+        if (onProjectCreated) {
+          onProjectCreated(json.data);
+        }
+      }
+    } catch (err: any) {
+      setErrorMsg("Network error while creating project.");
+    } finally {
+      setCreating(false);
+    }
+  };
 
   return (
     <div style={{ maxWidth: "1600px", margin: "0 auto", padding: "3rem 2.4rem 6rem" }}>
@@ -183,44 +254,128 @@ export default function ProjectsOverviewGrid({
       </div>
 
       {/* Projects Grid Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2.4rem", flexWrap: "wrap", gap: "1.6rem" }}>
         <div>
+          <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.4rem" }}>
+            {client?.name ? `Client: ${client.name}` : "Client Portfolio"}
+          </div>
           <h2
             style={{
               fontFamily: "var(--font-jost), 'Jost', sans-serif",
-              fontSize: "2.4rem",
-              fontWeight: 700,
-              color: "#81663F",
-              margin: "0 0 0.4rem",
-              textTransform: "uppercase",
+              fontSize: "2.6rem",
+              fontWeight: 800,
+              color: "#1C1917",
+              margin: 0,
               letterSpacing: "-0.02em",
             }}
           >
-            Your Curated Projects
+            Your Curated Workspaces
           </h2>
-          <p style={{ fontSize: "1.35rem", color: "#5E5852", margin: 0 }}>
-            Select a project to review specification schedules, architectural drawings, and milestone sign-offs.
+          <p style={{ fontSize: "1.35rem", color: "#5E5852", margin: "0.4rem 0 0" }}>
+            Review material specification schedules, approve drawing packages, and sign off milestones.
           </p>
         </div>
+
+        <button
+          onClick={() => setIsModalOpen(true)}
+          style={{
+            background: "#81663F",
+            color: "#FFFFFF",
+            border: "none",
+            borderRadius: "0.8rem",
+            padding: "1.2rem 2.2rem",
+            fontSize: "1.3rem",
+            fontWeight: 700,
+            cursor: "pointer",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.8rem",
+            boxShadow: "0 4px 14px rgba(129, 102, 63, 0.25)",
+            transition: "all 0.2s ease",
+          }}
+        >
+          <Plus size={18} />
+          <span>+ Create New Project</span>
+        </button>
       </div>
 
-      {/* Projects Grid */}
+      {/* Projects Grid or New User Empty State */}
       {projects.length === 0 ? (
         <div
           style={{
             background: "#FAF9F6",
-            borderRadius: "1.2rem",
-            border: "1px solid rgba(129, 102, 63, 0.2)",
-            padding: "6rem 2rem",
+            borderRadius: "1.6rem",
+            border: "1px solid rgba(129, 102, 63, 0.25)",
+            padding: "5rem 3rem",
             textAlign: "center",
+            boxShadow: "0 10px 30px rgba(129, 102, 63, 0.05)",
           }}
         >
-          <p style={{ fontSize: "1.6rem", color: "#81663F", fontWeight: 700, margin: "0 0 0.8rem" }}>
-            No Projects Linked Yet
+          <div
+            style={{
+              width: "64px",
+              height: "64px",
+              borderRadius: "50%",
+              background: "rgba(129, 102, 63, 0.1)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#81663F",
+              margin: "0 auto 2rem",
+            }}
+          >
+            <Sparkles size={32} />
+          </div>
+
+          <h3 style={{ fontSize: "2.4rem", fontWeight: 800, color: "#1C1917", margin: "0 0 1rem", letterSpacing: "-0.01em" }}>
+            Welcome to Your Private Design Portal, {client?.name?.split(" ")[0] || "Client"}!
+          </h3>
+
+          <p style={{ fontSize: "1.45rem", color: "#5E5852", maxWidth: "56rem", margin: "0 auto 2.8rem", lineHeight: 1.6 }}>
+            You do not have any active project workspaces yet. You can start your first project space right now to begin collaborating on 3D drawings, luxury material schedules, and milestone approvals.
           </p>
-          <p style={{ fontSize: "1.35rem", color: "#5E5852", maxWidth: "42rem", margin: "0 auto 1.8rem" }}>
-            Your Aaren Studio design team is preparing your project space. Please check back shortly or reach out to your lead architect.
-          </p>
+
+          <div style={{ display: "flex", justifyContent: "center", gap: "1.4rem", flexWrap: "wrap" }}>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              style={{
+                background: "#81663F",
+                color: "#FFFFFF",
+                border: "none",
+                borderRadius: "0.8rem",
+                padding: "1.4rem 3rem",
+                fontSize: "1.4rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.8rem",
+              }}
+            >
+              <Plus size={20} />
+              <span>Start Your First Project Workspace</span>
+            </button>
+
+            <a
+              href="mailto:leadarchitect@aarenstudio.com"
+              style={{
+                background: "#FFFFFF",
+                color: "#81663F",
+                border: "1px solid rgba(129, 102, 63, 0.4)",
+                borderRadius: "0.8rem",
+                padding: "1.4rem 2.4rem",
+                fontSize: "1.35rem",
+                fontWeight: 700,
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.8rem",
+              }}
+            >
+              <Mail size={18} />
+              <span>Email Lead Architect Desk</span>
+            </a>
+          </div>
         </div>
       ) : (
         <div
@@ -234,8 +389,8 @@ export default function ProjectsOverviewGrid({
             const items = proj.scheduleItems || [];
             const pending = items.filter((i) => i.status === "PENDING" || i.status === "NEEDS_REVIEW").length;
             const approved = items.filter((i) => i.status === "APPROVED").length;
-            const progress = items.length > 0 ? Math.round((approved / items.length) * 100) : 10;
-            const img = proj.imageUrl || "/brands/brand_1_1.png";
+            const progress = items.length > 0 ? Math.round((approved / items.length) * 100) : 0;
+            const img = proj.imageUrl || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80";
 
             return (
               <div
@@ -263,8 +418,8 @@ export default function ProjectsOverviewGrid({
                   e.currentTarget.style.boxShadow = "0 10px 30px rgba(0,0,0,0.04)";
                 }}
               >
-                {/* Image Aspect Ratio 1920/1080 Container */}
-                <div style={{ position: "relative", width: "100%", aspectRatio: "1920 / 1080", background: "#d8d4c8" }}>
+                {/* Image Container */}
+                <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", background: "#d8d4c8" }}>
                   <Image src={img} alt={proj.title} fill style={{ objectFit: "cover" }} unoptimized />
                   <div
                     style={{
@@ -328,6 +483,198 @@ export default function ProjectsOverviewGrid({
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* CREATE PROJECT MODAL */}
+      {isModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(4px)",
+            zIndex: 100,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "2rem",
+          }}
+        >
+          <div
+            style={{
+              background: "#FAF9F6",
+              borderRadius: "1.6rem",
+              border: "1px solid rgba(129, 102, 63, 0.3)",
+              maxWidth: "540px",
+              width: "100%",
+              padding: "3.2rem",
+              boxShadow: "0 25px 60px rgba(0,0,0,0.2)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.6rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", color: "#81663F", fontWeight: 800, textTransform: "uppercase", fontSize: "1.1rem" }}>
+                <Building size={16} /> New Design Workspace
+              </div>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                style={{ background: "none", border: "none", cursor: "pointer", color: "#5E5852" }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <h3 style={{ fontSize: "2.2rem", fontWeight: 800, color: "#1C1917", margin: "0 0 0.8rem" }}>
+              Start New Project Workspace
+            </h3>
+            <p style={{ fontSize: "1.3rem", color: "#5E5852", margin: "0 0 2rem" }}>
+              Set up your private project to collaborate on drawings, approvals, and milestone invoices.
+            </p>
+
+            {errorMsg && (
+              <div
+                style={{
+                  background: "rgba(220, 38, 38, 0.08)",
+                  border: "1px solid rgba(220, 38, 38, 0.3)",
+                  color: "#991B1B",
+                  padding: "1rem",
+                  borderRadius: "0.8rem",
+                  fontSize: "1.2rem",
+                  marginBottom: "1.6rem",
+                }}
+              >
+                {errorMsg}
+              </div>
+            )}
+
+            <form onSubmit={handleCreateSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "1.15rem", fontWeight: 700, color: "#1C1917", marginBottom: "0.4rem" }}>
+                  Project Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Indiranagar Luxury Villa / BKC Corporate Suite"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "1.2rem",
+                    borderRadius: "0.8rem",
+                    border: "1px solid rgba(129, 102, 63, 0.3)",
+                    background: "#FFFFFF",
+                    fontSize: "1.3rem",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "1.15rem", fontWeight: 700, color: "#1C1917", marginBottom: "0.4rem" }}>
+                  Space Category
+                </label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "1.2rem",
+                    borderRadius: "0.8rem",
+                    border: "1px solid rgba(129, 102, 63, 0.3)",
+                    background: "#FFFFFF",
+                    fontSize: "1.3rem",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <option value="Residential Architecture">Residential Architecture & Villa</option>
+                  <option value="Hospitality Architecture">Hospitality & Penthouse</option>
+                  <option value="Commercial Architecture">Commercial Workspace & Corporate</option>
+                  <option value="Retail & Showroom">Retail & Luxury Showroom</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "1.15rem", fontWeight: 700, color: "#1C1917", marginBottom: "0.4rem" }}>
+                  Brief / Description (Optional)
+                </label>
+                <textarea
+                  placeholder="Tell us about the scope, rooms, or spatial requirements..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={3}
+                  style={{
+                    width: "100%",
+                    padding: "1.2rem",
+                    borderRadius: "0.8rem",
+                    border: "1px solid rgba(129, 102, 63, 0.3)",
+                    background: "#FFFFFF",
+                    fontSize: "1.3rem",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "1.15rem", fontWeight: 700, color: "#1C1917", marginBottom: "0.4rem" }}>
+                  Estimated Spatial Budget (INR)
+                </label>
+                <input
+                  type="number"
+                  placeholder="e.g. 5000000"
+                  value={budget}
+                  onChange={(e) => setBudget(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "1.2rem",
+                    borderRadius: "0.8rem",
+                    border: "1px solid rgba(129, 102, 63, 0.3)",
+                    background: "#FFFFFF",
+                    fontSize: "1.3rem",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  style={{
+                    flex: 1,
+                    background: "transparent",
+                    color: "#5E5852",
+                    border: "1px solid rgba(129, 102, 63, 0.3)",
+                    borderRadius: "0.8rem",
+                    padding: "1.2rem",
+                    fontSize: "1.3rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={creating}
+                  style={{
+                    flex: 2,
+                    background: "#81663F",
+                    color: "#FFFFFF",
+                    border: "none",
+                    borderRadius: "0.8rem",
+                    padding: "1.2rem",
+                    fontSize: "1.3rem",
+                    fontWeight: 700,
+                    cursor: creating ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {creating ? "Creating Workspace..." : "Create Workspace"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

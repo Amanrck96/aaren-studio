@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getVerifiedWorkspaceClient } from "@/lib/workspaceAuth";
+import { addWorkspaceDocumentStore } from "@/lib/store";
 import { v2 as cloudinary } from "cloudinary";
 
 // Configure Cloudinary
@@ -138,9 +139,10 @@ export async function POST(req: NextRequest) {
       secureUrl = `data:${file.type || "application/octet-stream"};base64,${base64}`;
     }
 
-    // 4. Save to Database
+    // 4. Save to Database & Store
+    let docRecord: any = null;
     try {
-      const docRecord = await prisma.projectDocument.create({
+      docRecord = await prisma.projectDocument.create({
         data: {
           projectId,
           clientId: clientUser.clientId,
@@ -151,22 +153,25 @@ export async function POST(req: NextRequest) {
           uploadedBy: clientUser.name,
         },
       });
-
-      return NextResponse.json({ success: true, data: docRecord });
     } catch (e) {}
+
+    const newDoc = docRecord || {
+      id: "doc-" + Date.now(),
+      projectId,
+      clientId: clientUser.clientId,
+      name: customName || file.name,
+      fileUrl: secureUrl,
+      fileType,
+      fileSize: file.size,
+      uploadedBy: clientUser.name,
+      createdAt: new Date().toISOString(),
+    };
+
+    await addWorkspaceDocumentStore(newDoc);
 
     return NextResponse.json({
       success: true,
-      data: {
-        id: "doc-" + Date.now(),
-        projectId,
-        name: customName || file.name,
-        fileUrl: secureUrl,
-        fileType,
-        fileSize: file.size,
-        uploadedBy: clientUser.name,
-        createdAt: new Date().toISOString(),
-      },
+      data: newDoc,
     });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

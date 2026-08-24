@@ -54,22 +54,15 @@ export async function POST(req: NextRequest) {
     } catch (e) {}
 
     if (!client) {
-      // Demo Client Fallback
-      if (
-        input === "AC-8492" ||
-        input.includes("@") ||
-        input.startsWith("AC-") ||
-        input.toLowerCase().includes("midas") ||
-        input.toLowerCase().includes("demo") ||
-        input.length >= 3
-      ) {
+      // 1. Midas Touch Account
+      if (input === "AC-8492" || input.toLowerCase() === "midas" || input.toLowerCase() === "client@midastouch.com") {
         return NextResponse.json({
           success: true,
           token: input,
           client: {
             id: "client-midas",
             name: "Midas Touch Architecture & Interiors",
-            email: input.includes("@") ? input : "client@midastouch.com",
+            email: "client@midastouch.com",
             company: "Midas Touch Luxury Studios",
             accessCode: "AC-8492",
             logoUrl: "/brands/logos/loco_logo.png",
@@ -77,7 +70,31 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      return NextResponse.json({ success: false, error: "No matching client account found. Try access code: AC-8492 or client@midastouch.com" }, { status: 404 });
+      // 2. Dynamic New Client Account
+      if (input.length >= 2) {
+        const cleanInput = input.toLowerCase().trim();
+        const clientId = "client_" + Buffer.from(cleanInput).toString("hex").slice(0, 10);
+        const name = input.includes("@")
+          ? input.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) + " (Private Client)"
+          : input.startsWith("AC-")
+          ? "Client Account " + input
+          : input.replace(/\b\w/g, (l: string) => l.toUpperCase()) + " (Client Workspace)";
+
+        return NextResponse.json({
+          success: true,
+          token: input,
+          client: {
+            id: clientId,
+            name,
+            email: input.includes("@") ? input : `${cleanInput}@client.aarenstudio.com`,
+            company: name,
+            accessCode: input,
+            logoUrl: "/brands/logos/loco_logo.png",
+          },
+        });
+      }
+
+      return NextResponse.json({ success: false, error: "Please provide a valid client email or access code." }, { status: 400 });
     }
 
     // Verify code or password if provided

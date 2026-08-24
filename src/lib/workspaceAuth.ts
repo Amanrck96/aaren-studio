@@ -44,14 +44,33 @@ export async function getVerifiedWorkspaceClient(req: NextRequest): Promise<Work
         };
       }
 
-      // Fallback for demo token
-      if (token === "AC-8492" || token.includes("@") || token.startsWith("AC-") || token.length >= 3) {
+      // Specific Midas Touch demo account
+      if (token === "AC-8492" || token.toLowerCase() === "midas" || token.toLowerCase() === "client@midastouch.com") {
         return {
           id: "client-midas",
           name: "Midas Touch Architecture & Interiors",
-          email: token.includes("@") ? token : "client@midastouch.com",
+          email: "client@midastouch.com",
           role: "CLIENT",
           clientId: "client-midas",
+        };
+      }
+
+      // Dynamic unique client account for new users
+      if (token.length >= 2) {
+        const cleanToken = token.toLowerCase().trim();
+        const clientId = "client_" + Buffer.from(cleanToken).toString("hex").slice(0, 10);
+        const name = token.includes("@")
+          ? token.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) + " (Private Client)"
+          : token.startsWith("AC-")
+          ? "Client Account " + token
+          : token.replace(/\b\w/g, (l: string) => l.toUpperCase()) + " (Client Workspace)";
+
+        return {
+          id: clientId,
+          name,
+          email: token.includes("@") ? token : `${cleanToken}@client.aarenstudio.com`,
+          role: "CLIENT",
+          clientId,
         };
       }
     }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getVerifiedWorkspaceClient } from "@/lib/workspaceAuth";
+import { updateWorkspaceInvoiceStatusStore } from "@/lib/store";
 import Stripe from "stripe";
 
 const stripe = process.env.STRIPE_SECRET_KEY
@@ -135,21 +136,19 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, error: "Invoice ID required" }, { status: 400 });
       }
 
+      let updated: any = null;
       try {
-        const updated = await prisma.invoice.update({
+        updated = await prisma.invoice.update({
           where: { id: invoiceId },
           data: {
             status: "PAID",
             paidAt: new Date(),
           },
         });
-        return NextResponse.json({ success: true, data: updated });
       } catch (e) {}
 
-      return NextResponse.json({
-        success: true,
-        data: { id: invoiceId, status: "PAID", paidAt: new Date().toISOString() },
-      });
+      const synced = await updateWorkspaceInvoiceStatusStore(invoiceId, "PAID");
+      return NextResponse.json({ success: true, data: updated || synced });
     }
 
     // 3. CREATE INVOICE (Admin or Project Initiation)

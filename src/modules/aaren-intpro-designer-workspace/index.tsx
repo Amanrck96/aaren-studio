@@ -288,6 +288,8 @@ export default function AarenDesignerWorkspace() {
         // DASHBOARD OVERVIEW: All Projects Card Grid
         <ProjectsOverviewGrid
           projects={projects}
+          client={client}
+          token={token}
           onSelectProject={(proj) => {
             setSelectedProject(proj);
             setActiveTab("approvals");
@@ -297,6 +299,10 @@ export default function AarenDesignerWorkspace() {
               setSelectedProject(projects[0]);
               setActiveTab("invoices");
             }
+          }}
+          onProjectCreated={(newProj) => {
+            setProjects((prev) => [newProj, ...prev]);
+            setSelectedProject(newProj);
           }}
         />
       ) : (

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getVerifiedWorkspaceClient } from "@/lib/workspaceAuth";
+import { updateWorkspaceScheduleStatusStore, addWorkspaceCommentStore } from "@/lib/store";
 
 export async function GET(req: NextRequest) {
   try {
@@ -82,17 +83,23 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, error: "Access denied to comment on this item" }, { status: 403 });
       }
 
-      const newComment = await prisma.scheduleComment.create({
-        data: {
-          scheduleItemId,
-          authorName: clientUser.name,
-          authorEmail: clientUser.email,
-          authorRole: clientUser.role === "admin" ? "ADMIN" : "CLIENT",
-          content: comment.trim(),
-        },
-      });
+      const authorRole = clientUser.role === "admin" ? "ADMIN" : "CLIENT";
+      let newComment: any = null;
+      try {
+        newComment = await prisma.scheduleComment.create({
+          data: {
+            scheduleItemId,
+            authorName: clientUser.name,
+            authorEmail: clientUser.email,
+            authorRole,
+            content: comment.trim(),
+          },
+        });
+      } catch (e) {}
 
-      return NextResponse.json({ success: true, data: newComment });
+      // Store sync
+      const syncedComment = await addWorkspaceCommentStore(scheduleItemId, comment, clientUser.name, authorRole);
+      return NextResponse.json({ success: true, data: newComment || syncedComment });
     }
 
     // 2. APPROVE / REJECT / NEEDS_REVIEW STATUS UPDATE
@@ -106,55 +113,45 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, error: "Invalid status value" }, { status: 400 });
       }
 
+      let updated: any = null;
       try {
-        // Verify ownership
-        const item = await prisma.scheduleItem.findUnique({
+        updated = await prisma.scheduleItem.update({
           where: { id: scheduleItemId },
-          include: { project: true },
+          data: {
+            status: status as any,
+            approvedAt: status === "APPROVED" ? new Date() : null,
+            approvedBy: status === "APPROVED" ? clientUser.name : null,
+          },
+          include: {
+            comments: {
+              orderBy: { createdAt: "asc" },
+            },
+          },
         });
 
-        if (item) {
-          const updated = await prisma.scheduleItem.update({
-            where: { id: scheduleItemId },
+        if (comment && comment.trim()) {
+          await prisma.scheduleComment.create({
             data: {
-              status: status as any,
-              approvedAt: status === "APPROVED" ? new Date() : null,
-              approvedBy: status === "APPROVED" ? clientUser.name : null,
-            },
-            include: {
-              comments: {
-                orderBy: { createdAt: "asc" },
-              },
+              scheduleItemId,
+              authorName: clientUser.name,
+              authorEmail: clientUser.email,
+              authorRole: clientUser.role === "admin" ? "ADMIN" : "CLIENT",
+              content: `Status updated to ${status}: ${comment.trim()}`,
             },
           });
-
-          // If a comment was supplied with the status change, create comment record
-          if (comment && comment.trim()) {
-            await prisma.scheduleComment.create({
-              data: {
-                scheduleItemId,
-                authorName: clientUser.name,
-                authorEmail: clientUser.email,
-                authorRole: clientUser.role === "admin" ? "ADMIN" : "CLIENT",
-                content: `Status updated to ${status}: ${comment.trim()}`,
-              },
-            });
-          }
-
-          return NextResponse.json({ success: true, data: updated });
         }
       } catch (e) {}
 
-      return NextResponse.json({
-        success: true,
-        data: {
-          id: scheduleItemId,
-          status,
-          approvedAt: status === "APPROVED" ? new Date().toISOString() : null,
-          approvedBy: status === "APPROVED" ? clientUser.name : null,
-          comments: comment ? [{ id: "c-" + Date.now(), content: comment, authorName: clientUser.name, authorRole: "CLIENT", createdAt: new Date().toISOString() }] : [],
-        },
-      });
+      // Store / Firebase sync
+      const syncedItem = await updateWorkspaceScheduleStatusStore(
+        scheduleItemId,
+        status,
+        comment,
+        clientUser.name,
+        clientUser.role === "admin" ? "ADMIN" : "CLIENT"
+      );
+
+      return NextResponse.json({ success: true, data: updated || syncedItem });
     }
 
     // 3. CREATE NEW SPECIFICATION / SCHEDULE ITEM

@@ -2338,5 +2338,419 @@ export async function deleteCollectionStore(id: string): Promise<void> {
   globalThis.__AAREN_MEMORY_STORE__ = json;
 }
 
+export const DEFAULT_WORKSPACE_PROJECTS: any[] = [
+  {
+    id: "proj-ws-01",
+    title: "Oberoi Presidential Penthouse & Suite",
+    slug: "oberoi-presidential-penthouse",
+    description: "Spatial overhaul featuring custom Italian marble cladding, bespoke veneer panelling, and integrated indirect lighting.",
+    category: "Hospitality Architecture",
+    client: "Midas Touch Architecture & Interiors",
+    clientId: "client-midas",
+    projectCode: "OB 01",
+    imageUrl: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80",
+    gallery: ["/brands/brand_1_1.png", "/brands/brand_2_1.png"],
+    status: "IN_PROGRESS",
+    budget: 6500000,
+    createdAt: "2026-08-20T10:00:00.000Z",
+    scheduleItems: [
+      {
+        id: "item-01",
+        projectId: "proj-ws-01",
+        name: "Mirage Italian Calacatta Marble Slabs (120x240cm)",
+        room: "Master Bathroom",
+        category: "Surface Tiles",
+        supplier: "Mirage Italy",
+        tradePrice: 1200000,
+        clientPrice: 1450000,
+        price: 1450000,
+        status: "APPROVED",
+        imageUrl: "/brands/brand_10_1.png",
+        specs: "Polished Bookmatch Finish, 9mm Porcelain Slim Slab",
+        dimensions: "1200mm x 2400mm x 9mm",
+        quantity: 32,
+        unit: "Slabs",
+        approvedAt: "2026-08-20T10:00:00Z",
+        approvedBy: "Lead Architect",
+        comments: [
+          {
+            id: "com-01",
+            scheduleItemId: "item-01",
+            authorName: "Aaren Studio Architect",
+            authorEmail: "studio@aarenstudio.com",
+            authorRole: "ARCHITECT",
+            content: "Samples inspected at Bangalore lab. Veining direction aligns with master elevation.",
+            createdAt: "2026-08-19T14:30:00Z",
+          },
+        ],
+      },
+      {
+        id: "item-02",
+        projectId: "proj-ws-01",
+        name: "Slashform Bespoke Acoustic Pivot Glass Door",
+        room: "Grand Foyer",
+        category: "Door Systems",
+        supplier: "Slashform Living",
+        tradePrice: 580000,
+        clientPrice: 680000,
+        price: 680000,
+        status: "PENDING",
+        imageUrl: "/brands/brand_1_1.png",
+        specs: "Matte Bronze Anodized Aluminum Frame with Fluted Soundproof Glass",
+        dimensions: "1500mm x 2800mm",
+        quantity: 1,
+        unit: "Set",
+        comments: [],
+      },
+      {
+        id: "item-03",
+        projectId: "proj-ws-01",
+        name: "Mafi Austrian Natural Volcano Oak Flooring",
+        room: "Living Area & Library",
+        category: "Wooden Flooring",
+        supplier: "Mafi Austria",
+        tradePrice: 950000,
+        clientPrice: 1120000,
+        price: 1120000,
+        status: "NEEDS_REVIEW",
+        imageUrl: "/brands/brand_9_1.png",
+        specs: "Naturally oiled wide plank, engineered 3-layer symmetry",
+        dimensions: "300mm x 2400mm x 16mm",
+        quantity: 140,
+        unit: "sq.m",
+        comments: [
+          {
+            id: "com-02",
+            scheduleItemId: "item-03",
+            authorName: "Midas Touch (Client)",
+            authorEmail: "client@midastouch.com",
+            authorRole: "CLIENT",
+            content: "Please provide moisture barrier specification test for the monsoon season.",
+            createdAt: "2026-08-22T09:15:00Z",
+          },
+        ],
+      },
+      {
+        id: "item-04",
+        projectId: "proj-ws-01",
+        name: "FIMA Carlo Frattini Gold Thermostatic Bath Mixer Suite",
+        room: "Powder Room",
+        category: "Bathroom Fittings",
+        supplier: "FIMA Carlo Frattini",
+        tradePrice: 350000,
+        clientPrice: 430000,
+        price: 430000,
+        status: "APPROVED",
+        imageUrl: "/brands/brand_7_1.png",
+        specs: "Brushed Pale Gold PVD Finish, Concealed Body included",
+        dimensions: "Standard Wall Mounted",
+        quantity: 3,
+        unit: "Sets",
+        approvedAt: "2026-08-21T16:00:00Z",
+        approvedBy: "Client Sign-off",
+        comments: [],
+      },
+    ],
+    documents: [
+      {
+        id: "doc-01",
+        projectId: "proj-ws-01",
+        name: "Oberoi-Penthouse-Elevations-RevC.pdf",
+        fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        fileType: "Architectural Drawing (PDF)",
+        fileSize: 4200000,
+        uploadedBy: "Aaren Lead CAD Team",
+        createdAt: "2026-08-20T12:00:00Z",
+      },
+      {
+        id: "doc-02",
+        projectId: "proj-ws-01",
+        name: "Foyer-Slashform-Pivot-Detail.dwg",
+        fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        fileType: "Shop Drawing (DWG)",
+        fileSize: 8500000,
+        uploadedBy: "Slashform Technical Desk",
+        createdAt: "2026-08-18T10:00:00Z",
+      },
+      {
+        id: "doc-03",
+        projectId: "proj-ws-01",
+        name: "Master-Specification-Schedule-v4.xlsx",
+        fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        fileType: "BOQ / Material Spec (Excel)",
+        fileSize: 1200000,
+        uploadedBy: "Project PM",
+        createdAt: "2026-08-22T15:00:00Z",
+      },
+    ],
+    invoices: [
+      {
+        id: "inv-01",
+        invoiceNumber: "INV-AA-2026-001",
+        projectId: "proj-ws-01",
+        clientId: "client-midas",
+        title: "Milestone 1: Advance Material Sourcing & Italian Reservation (40%)",
+        amount: 1800000,
+        currency: "INR",
+        status: "PAID",
+        dueDate: "2026-08-15T00:00:00Z",
+        paidAt: "2026-08-14T11:00:00Z",
+        createdAt: "2026-08-01T00:00:00Z",
+      },
+      {
+        id: "inv-02",
+        invoiceNumber: "INV-AA-2026-002",
+        projectId: "proj-ws-01",
+        clientId: "client-midas",
+        title: "Milestone 2: Custom Millwork Fabrication & Dispatch Sign-off (30%)",
+        amount: 1350000,
+        currency: "INR",
+        status: "UNPAID",
+        dueDate: "2026-09-01T00:00:00Z",
+        stripePaymentLink: "https://checkout.stripe.com/demo",
+        createdAt: "2026-08-20T00:00:00Z",
+      },
+    ],
+  },
+  {
+    id: "proj-ws-02",
+    title: "Ratan Corporate Headquarters — BKC",
+    slug: "ratan-corporate-hq",
+    description: "Multi-floor workspace featuring acoustic wooden partitions, aluminum frame systems, and custom executive suites.",
+    category: "Commercial Architecture",
+    client: "Midas Touch Architecture & Interiors",
+    clientId: "client-midas",
+    projectCode: "RG 02",
+    imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+    gallery: ["/brands/brand_3_1.png", "/brands/brand_4_1.png"],
+    status: "IN_PROGRESS",
+    budget: 12000000,
+    createdAt: "2026-08-18T10:00:00.000Z",
+    scheduleItems: [
+      {
+        id: "item-05",
+        projectId: "proj-ws-02",
+        name: "NewtechWood Exterior Composite Louvers",
+        room: "Atrium Facade",
+        category: "Decking & Cladding",
+        supplier: "NewtechWood USA",
+        tradePrice: 1800000,
+        clientPrice: 2200000,
+        price: 2200000,
+        status: "APPROVED",
+        imageUrl: "/brands/brand_3_1.png",
+        specs: "UltraShield All-Weather Co-extrusion Technology",
+        dimensions: "100mm x 50mm x 3000mm",
+        quantity: 180,
+        unit: "Profiles",
+        approvedAt: "2026-08-15T12:00:00Z",
+        approvedBy: "Lead Facade Consultant",
+        comments: [],
+      },
+    ],
+    documents: [],
+    invoices: [
+      {
+        id: "inv-03",
+        invoiceNumber: "INV-AA-2026-003",
+        projectId: "proj-ws-02",
+        clientId: "client-midas",
+        title: "Milestone 1: Architectural Facade Retainer (50%)",
+        amount: 3000000,
+        currency: "INR",
+        status: "PAID",
+        dueDate: "2026-08-10T00:00:00Z",
+        paidAt: "2026-08-09T15:00:00Z",
+        createdAt: "2026-08-01T00:00:00Z",
+      },
+    ],
+  },
+];
+
+export async function getAllWorkspaceProjectsStore(): Promise<any[]> {
+  const json = readJsonStore();
+  if (Array.isArray(json.workspace_projects) && json.workspace_projects.length > 0) {
+    return json.workspace_projects;
+  }
+
+  // Try Firebase
+  const fb = await fetchFromFirebaseCloudStore("workspace_projects");
+  if (Array.isArray(fb) && fb.length > 0) {
+    json.workspace_projects = fb;
+    writeJsonStore(json);
+    return fb;
+  }
+
+  // Default
+  json.workspace_projects = DEFAULT_WORKSPACE_PROJECTS;
+  writeJsonStore(json);
+  syncToFirebaseCloudStore("workspace_projects", DEFAULT_WORKSPACE_PROJECTS).catch(() => {});
+  return DEFAULT_WORKSPACE_PROJECTS;
+}
+
+export async function getWorkspaceProjectsByClientIdStore(clientId: string): Promise<any[]> {
+  const all = await getAllWorkspaceProjectsStore();
+  if (!clientId || clientId === "admin-scope" || clientId === "admin") {
+    return all;
+  }
+  return all.filter((p: any) => p.clientId === clientId);
+}
+
+export async function getWorkspaceProjectByIdStore(projectId: string, clientId?: string): Promise<any | null> {
+  const all = await getAllWorkspaceProjectsStore();
+  const found = all.find((p: any) => p.id === projectId || p.slug === projectId);
+  if (!found) return null;
+  if (clientId && clientId !== "admin-scope" && clientId !== "admin" && found.clientId && found.clientId !== clientId) {
+    return null;
+  }
+  return found;
+}
+
+export async function saveWorkspaceProjectStore(project: any): Promise<any> {
+  const all = await getAllWorkspaceProjectsStore();
+  const idx = all.findIndex((p: any) => p.id === project.id);
+  if (idx >= 0) {
+    all[idx] = { ...all[idx], ...project };
+  } else {
+    all.unshift(project);
+  }
+
+  const json = readJsonStore();
+  json.workspace_projects = all;
+  writeJsonStore(json);
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  syncToFirebaseCloudStore("workspace_projects", all).catch(() => {});
+  return project;
+}
+
+export async function updateWorkspaceScheduleStatusStore(
+  itemId: string,
+  status: string,
+  comment?: string,
+  authorName?: string,
+  authorRole?: string
+): Promise<any> {
+  const all = await getAllWorkspaceProjectsStore();
+  let updatedItem: any = null;
+
+  for (const proj of all) {
+    if (Array.isArray(proj.scheduleItems)) {
+      const it = proj.scheduleItems.find((i: any) => i.id === itemId);
+      if (it) {
+        it.status = status;
+        if (status === "APPROVED") {
+          it.approvedAt = new Date().toISOString();
+          it.approvedBy = authorName || "Client Sign-off";
+        }
+        if (comment) {
+          if (!Array.isArray(it.comments)) it.comments = [];
+          it.comments.push({
+            id: "c-" + Date.now(),
+            scheduleItemId: itemId,
+            authorName: authorName || "You (Client)",
+            authorRole: authorRole || "CLIENT",
+            content: `Status updated to ${status}: ${comment.trim()}`,
+            createdAt: new Date().toISOString(),
+          });
+        }
+        updatedItem = it;
+        break;
+      }
+    }
+  }
+
+  if (updatedItem) {
+    const json = readJsonStore();
+    json.workspace_projects = all;
+    writeJsonStore(json);
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    syncToFirebaseCloudStore("workspace_projects", all).catch(() => {});
+  }
+
+  return updatedItem || { id: itemId, status };
+}
+
+export async function addWorkspaceCommentStore(
+  itemId: string,
+  content: string,
+  authorName: string,
+  authorRole: string
+): Promise<any> {
+  const all = await getAllWorkspaceProjectsStore();
+  let newComment: any = null;
+
+  for (const proj of all) {
+    if (Array.isArray(proj.scheduleItems)) {
+      const it = proj.scheduleItems.find((i: any) => i.id === itemId);
+      if (it) {
+        if (!Array.isArray(it.comments)) it.comments = [];
+        newComment = {
+          id: "com-" + Date.now(),
+          scheduleItemId: itemId,
+          authorName: authorName || "You (Client)",
+          authorRole: authorRole || "CLIENT",
+          content: content.trim(),
+          createdAt: new Date().toISOString(),
+        };
+        it.comments.push(newComment);
+        break;
+      }
+    }
+  }
+
+  if (newComment) {
+    const json = readJsonStore();
+    json.workspace_projects = all;
+    writeJsonStore(json);
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    syncToFirebaseCloudStore("workspace_projects", all).catch(() => {});
+  }
+
+  return newComment || { id: "com-" + Date.now(), content, authorName, createdAt: new Date().toISOString() };
+}
+
+export async function addWorkspaceDocumentStore(doc: any): Promise<any> {
+  const all = await getAllWorkspaceProjectsStore();
+  const proj = all.find((p: any) => p.id === doc.projectId);
+  if (proj) {
+    if (!Array.isArray(proj.documents)) proj.documents = [];
+    proj.documents.unshift(doc);
+    const json = readJsonStore();
+    json.workspace_projects = all;
+    writeJsonStore(json);
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    syncToFirebaseCloudStore("workspace_projects", all).catch(() => {});
+  }
+  return doc;
+}
+
+export async function updateWorkspaceInvoiceStatusStore(invoiceId: string, status: string): Promise<any> {
+  const all = await getAllWorkspaceProjectsStore();
+  let updatedInv: any = null;
+
+  for (const proj of all) {
+    if (Array.isArray(proj.invoices)) {
+      const inv = proj.invoices.find((i: any) => i.id === invoiceId);
+      if (inv) {
+        inv.status = status;
+        if (status === "PAID") inv.paidAt = new Date().toISOString();
+        updatedInv = inv;
+        break;
+      }
+    }
+  }
+
+  if (updatedInv) {
+    const json = readJsonStore();
+    json.workspace_projects = all;
+    writeJsonStore(json);
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    syncToFirebaseCloudStore("workspace_projects", all).catch(() => {});
+  }
+
+  return updatedInv || { id: invoiceId, status, paidAt: new Date().toISOString() };
+}
+
+
 
 
