@@ -215,8 +215,12 @@ export default function Header() {
         </div>
       </header>
 
-      {/* ── Mobile Full-Screen Overlay Navigation ── */}
-      <div className={`aaren-mobile-overlay ${open ? "is-active" : ""}`} ref={menuRef}>
+      {/* ── Mobile Full-Screen Overlay Navigation (Guaranteed hidden on page open) ── */}
+      <div
+        className={`aaren-mobile-overlay ${open ? "is-active" : ""}`}
+        ref={menuRef}
+        style={{ display: open ? "block" : "none" }}
+      >
         <div className="aaren-mobile-overlay__inner">
           <div className="aaren-mobile-overlay__header">
             <span className="overlay-meta">ALL SECTIONS & EXPLORER</span>
