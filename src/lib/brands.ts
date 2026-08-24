@@ -186,7 +186,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Precision living systems",
     description:
-      "Slashform engineers kitchens and wardrobe systems where Italian craft meets architectural rigour. Every component is resolved to the millimetre — flush profiles, integrated hardware, and surfaces that age with grace. The result is a living system that disappears into the architecture and reveals itself only in use.",
+      "Italian precision kitchen and wardrobes.",
     founded: "2003",
     collections: ["All", "Kitchen", "Wardrobe", "Door Systems"],
     products: [
@@ -212,7 +212,7 @@ const BRANDS: Brand[] = [
     origin: "India",
     tagline: "Architectural glass solutions",
     description:
-      "Waltz by JB Glass redefines how space is divided. Born from decades of precision glass manufacturing in India, the brand offers frameless partitions, zipline screens, and bespoke shower enclosures that command attention through their clarity and structural confidence. Each panel is a conversation between light and transparency.",
+      "Architectural glass and frameless partitions.",
     founded: "1998",
     collections: ["All", "Partitions", "Shower Enclosures", "Balustrades", "Zipline"],
     products: [
@@ -238,7 +238,7 @@ const BRANDS: Brand[] = [
     origin: "USA",
     tagline: "WPC composite excellence",
     description:
-      "Newtech Wood pioneers wood-plastic composite technology that outlasts timber without compromising on natural beauty. Their WPC profiles resist moisture, insects, and UV degradation — making them ideal for facades, decks, and outdoor living spaces across India's challenging climate. Beauty that is built to endure.",
+      "Premium composite cladding and decking.",
     founded: "2005",
     collections: ["All", "Decking", "Cladding", "Screens", "Fencing"],
     products: [
@@ -270,7 +270,7 @@ const BRANDS: Brand[] = [
     origin: "USA",
     tagline: "Iconic surface solutions",
     description:
-      "For over a century, Formica has defined the language of surfaces. From postmodern kitchens to landmark public spaces, Formica laminates carry an unmatched breadth of finishes — including the revolutionary FENIX nano-tech matte, the mineral richness of Decometal, and the organic warmth of wood-effect collections. A surface for every vision.",
+      "Iconic decorative and nano surfaces.",
     founded: "1913",
     collections: ["All", "Fenix", "VIS", "Homapal"],
     products: [
@@ -302,7 +302,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Bespoke millwork & furniture",
     description:
-      "Loco approaches furniture and millwork as spatial sculpture. Each piece is drawn from a rigorous Italian design process — where proportion, joinery, and material selection converge into objects that transcend trend. From bespoke reception counters to residential cabinetry, Loco delivers furniture with the permanence of architecture.",
+      "Bespoke Italian furniture and millwork.",
     founded: "2010",
     collections: ["All", "Seating", "Tables", "Storage", "Millwork", "Lighting"],
     products: [
@@ -328,7 +328,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Luxury bath environments",
     description:
-      "Falper transforms the bathroom into an intimate destination. Their complete bath collections — vanities, bathtubs, shower systems, and accessories — are conceived as unified environments rather than isolated fixtures. Italian manufacturing precision and a restrained material palette result in spaces of uncommon calm.",
+      "Luxury Italian bespoke bath environments.",
     founded: "1990",
     collections: ["All", "Senzafine", "Minimum", "Edge Metal"],
     products: [
@@ -354,7 +354,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Refined tapware & accessories",
     description:
-      "Fima Carlo Frattini has been sculpting water since 1945. Their tapware collections — basin mixers, thermostatic shower systems, and bath fillers — are machined from solid brass and finished by hand. The brand bridges Italian industrial heritage with contemporary minimalism, producing objects worthy of museum display.",
+      "Mastercrafted Italian architectural luxury tapware.",
     founded: "1945",
     collections: ["All", "Basin Mixers", "Shower Systems", "Bath Fillers", "Accessories"],
     products: [
@@ -380,7 +380,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Creative thinking surfaces",
     description:
-      "Inkiostro Bianco is where art meets architecture. Their decorative wallcoverings, printed surfaces, and bespoke installations transform flat planes into narrative environments. With the 2026 Materia Prima collection, the brand pushes further into the territory of raw material — celebrating concrete, mineral, and organic textures rendered with extraordinary depth and resolution.",
+      "Artistic Italian designer wallpaper murals.",
     founded: "2008",
     collections: ["All", "Materia Prima", "Architectural", "Floral", "Geometric", "Bespoke"],
     products: [
@@ -408,7 +408,7 @@ const BRANDS: Brand[] = [
     origin: "Austria",
     tagline: "Natural wood flooring",
     description:
-      "Mafi brings the forest indoors. Their Austrian engineered wood floors are produced with painstaking attention to the grain, knot, and character of each plank — never homogenised, never fake. The Unique collection pairs ancient timber species with hand-rubbed natural oil finishes that develop a living patina. Flooring that improves with age.",
+      "Pure natural Austrian wood flooring.",
     founded: "1975",
     collections: ["All", "Solid", "Engineered", "Unique", "SPC"],
     products: [
@@ -434,7 +434,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Porcelain tile mastery",
     description:
-      "Mirage is Italy's benchmark for high-performance porcelain. Their collections push the limits of digital print technology to recreate the nuanced beauty of natural stone, clay, and mineral surfaces — with the durability and consistency that only porcelain can provide. From intimate residential floors to monumental public facades, Mirage tiles command space.",
+      "Italian luxury large porcelain slabs.",
     founded: "1992",
     collections: ["All", "Clay", "Elysian", "Elysian Travertini", "Glocal", "Indomita", "Izumi", "Jewels", "Jurupa"],
     products: [
@@ -471,7 +471,7 @@ const BRANDS: Brand[] = [
     origin: "Australia",
     tagline: "Infinite Zipline retractable screen systems",
     description:
-      "Freedom Screens is Australia's leading innovator in motorised and manual retractable screen systems. The Infinite Zipline collection delivers architectural-grade outdoor screens for patios, pergolas, and facade applications — providing seamless control over light, privacy, and ventilation. Smart motorised and manual options available across residential and hospitality projects.",
+      "Innovative retractable architectural screen systems.",
     founded: "2008",
     collections: ["All", "Infinite Zip line", "Smart Motorised", "Smart Manual"],
     products: [
@@ -493,7 +493,7 @@ const BRANDS: Brand[] = [
     origin: "India",
     tagline: "Premium plywood and engineered panel solutions",
     description:
-      "Peelply offers a comprehensive range of high-quality plywood, blockboard, veneer, and flush door solutions engineered for premium interior applications. Their products meet the most demanding structural and aesthetic requirements, combining natural timber beauty with superior manufacturing precision for residential and commercial projects.",
+      "Engineered premium plywood and veneers.",
     founded: "2000",
     collections: ["All", "Plywood", "Blockboard", "Veneer", "Flush Door"],
     products: [
@@ -515,7 +515,7 @@ const BRANDS: Brand[] = [
     origin: "Spain",
     tagline: "Innovative seating and MillWork solutions",
     description:
-      "Inclass is a Spanish furniture brand celebrated for its architectural approach to seating and millwork. Rooted in a design-first philosophy, their collections bridge the gap between sculptural craft and functional precision — making them the choice for premium hospitality, corporate, and residential environments seeking furniture with genuine character.",
+      "Contemporary Spanish designer lifestyle furniture.",
     founded: "1995",
     collections: ["All", "Seating", "MillWork", "Lounge"],
     products: [
@@ -537,7 +537,7 @@ const BRANDS: Brand[] = [
     origin: "Spain",
     tagline: "Architectural 3D decorative ceramic collections",
     description:
-      "WOW is a Spanish ceramic tile brand that has redefined the language of wall surfaces. Combining traditional craft with digital precision, WOW produces 3D dimensional tiles, handcrafted bejmat tiles, and bold geometric collections that transform walls into architectural statements. Their Highlighter Tiles collection is especially sought-after for feature walls and facade accents.",
+      "Creative 3D architectural ceramic tiles.",
     founded: "2010",
     collections: ["All", "3D Tiles", "Highlighter Tiles", "Bejmat", "Pool Area"],
     products: [
@@ -560,7 +560,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Premium Italian stone surface collections",
     description:
-      "IWW delivers premium Italian stone-effect porcelain surfaces, large-format tiles, and architectural wall covering systems for both residential and commercial interiors. Their Décor Tiles and 3mm ultra-thin slab collections represent the forefront of Italian ceramic engineering — combining extraordinary visual fidelity with lightweight installation advantages.",
+      "Custom architectural joinery and doors.",
     founded: "2005",
     collections: ["All", "Surface Tiles", "Décor Tiles", "3mm Tiles", "Façade Tiles"],
     products: [
@@ -582,7 +582,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Contemporary Italian ceramic surface collections",
     description:
-      "Living Ceramica is an Italian ceramic specialist offering a refined portfolio of surface tiles and sanitaryware for premium residential and hospitality environments. Their collections are characterised by considered proportions, natural material references, and a restrained Italian aesthetic that integrates effortlessly into architectural interiors.",
+      "Large-format architectural porcelain surfaces.",
     founded: "1988",
     collections: ["All", "Surface Tiles", "Sanitaryware", "Outdoor Tiles"],
     products: [
@@ -604,7 +604,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Large format Italian porcelain slab mastery",
     description:
-      "Florim is one of Italy's most innovative porcelain manufacturers, producing large-format slabs and architectural tiles with an emphasis on sustainable production. Their Surface Tiles and Décor Tiles collections offer extraordinary material fidelity — from natural stone reproductions to abstract mineral effects — suited to residential floors, walls, and monumental facades.",
+      "Sustainable Italian luxury porcelain surfaces.",
     founded: "1962",
     collections: ["All", "Surface Tiles", "Décor Tiles", "Outdoor Tiles"],
     products: [
@@ -626,7 +626,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Premium Italian bathroom accessories",
     description:
-      "Gelli specialises in meticulously crafted Italian bathroom accessories and wellness products. Their collections bring refined details to the bathroom environment — from precision-engineered towel rails and robe hooks to bespoke mirror frames and vanity accessories — completing the luxury bathroom experience with Italian manufacturing excellence.",
+      "Artisanal decorative glass and mirrors.",
     founded: "2001",
     collections: ["All", "Bathroom Accessories", "Wellness"],
     products: [
@@ -648,7 +648,7 @@ const BRANDS: Brand[] = [
     origin: "USA",
     tagline: "World-class wellness and whirlpool systems",
     description:
-      "Jacuzzi is the world's original wellness brand — inventor of the whirlpool bath and pioneer of hydrotherapy design. From freestanding soaking tubs and chromotherapy shower systems to full spa installations, Jacuzzi products transform the bathroom into a sanctuary of restoration. Trusted by luxury hospitality groups and discerning homeowners for over 60 years.",
+      "Pioneering luxury wellness hydrotherapy baths.",
     founded: "1956",
     collections: ["All", "Wellness", "Bathtub", "Sanitaryware"],
     products: [
@@ -671,7 +671,7 @@ const BRANDS: Brand[] = [
     origin: "Italy",
     tagline: "Exclusive Italian wall art and decorative panels",
     description:
-      "Alex Turco creates bespoke Italian wall art panels that occupy the intersection of architecture and fine art. Each piece is produced using a proprietary aluminium composite technology that allows extraordinary dimensional detail, vibrant colour depth, and architectural-scale installations. From residential feature walls to luxury hotel lobbies, Alex Turco transforms flat surfaces into immersive spatial experiences.",
+      "Handcrafted waterproof decorative art panels.",
     founded: "2009",
     collections: ["All", "Wall Art Panels", "Feature Walls", "Custom"],
     products: [
