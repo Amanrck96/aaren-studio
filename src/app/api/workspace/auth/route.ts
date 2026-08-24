@@ -51,7 +51,9 @@ export async function POST(req: NextRequest) {
           ],
         },
       });
-    } catch (e) {}
+    } catch (e) {
+      console.warn("Prisma client lookup failed (non-fatal):", e);
+    }
 
     if (!client) {
       // 1. Midas Touch Account

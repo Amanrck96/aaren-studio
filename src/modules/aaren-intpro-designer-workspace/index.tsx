@@ -68,7 +68,7 @@ export default function AarenDesignerWorkspace() {
   const fetchProjects = async (authToken?: string) => {
     setLoading(true);
     try {
-      const headers: any = {};
+      const headers: Record<string, string> = {};
       if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
 
       const res = await fetch("/api/workspace/projects", { headers });
@@ -107,63 +107,108 @@ export default function AarenDesignerWorkspace() {
     status: ScheduleStatus,
     comment?: string
   ) => {
-    const headers: any = { "Content-Type": "application/json" };
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
 
-    const res = await fetch("/api/workspace/schedule", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        action: "update_status",
-        scheduleItemId: itemId,
-        status,
-        comment,
-      }),
-    });
+      const res = await fetch("/api/workspace/schedule", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          action: "update_status",
+          scheduleItemId: itemId,
+          status,
+          comment,
+        }),
+      });
 
-    const json = await res.json();
-    if (json.success) {
-      // Update in memory
-      setProjects((prev) =>
-        prev.map((p) => {
-          if (!p.scheduleItems) return p;
-          return {
-            ...p,
-            scheduleItems: p.scheduleItems.map((item) =>
-              item.id === itemId ? { ...item, status } : item
-            ),
-          };
-        })
-      );
+      const json = await res.json();
+      if (json.success) {
+        // Update in memory
+        setProjects((prev) =>
+          prev.map((p) => {
+            if (!p.scheduleItems) return p;
+            return {
+              ...p,
+              scheduleItems: p.scheduleItems.map((item) =>
+                item.id === itemId ? { ...item, status } : item
+              ),
+            };
+          })
+        );
 
-      if (selectedProject) {
-        setSelectedProject((prev) => {
-          if (!prev) return null;
-          return {
-            ...prev,
-            scheduleItems: (prev.scheduleItems || []).map((item) =>
-              item.id === itemId ? { ...item, status } : item
-            ),
-          };
-        });
+        if (selectedProject) {
+          setSelectedProject((prev) => {
+            if (!prev) return null;
+            return {
+              ...prev,
+              scheduleItems: (prev.scheduleItems || []).map((item) =>
+                item.id === itemId ? { ...item, status } : item
+              ),
+            };
+          });
+        }
       }
+    } catch (err) {
+      console.error("Failed to update schedule status:", err);
     }
   };
 
   // Add threaded comment
   const handleAddScheduleComment = async (itemId: string, text: string) => {
-    const headers: any = { "Content-Type": "application/json" };
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
 
-    await fetch("/api/workspace/schedule", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        action: "comment",
-        scheduleItemId: itemId,
-        comment: text,
-      }),
-    });
+      const res = await fetch("/api/workspace/schedule", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          action: "comment",
+          scheduleItemId: itemId,
+          comment: text,
+        }),
+      });
+
+      const json = await res.json();
+      if (json.success) {
+        // H2 fix: Update local state so new comment appears instantly
+        const newComment = json.data || {
+          id: "temp-" + Date.now(),
+          scheduleItemId: itemId,
+          authorName: client?.name || "Client",
+          authorRole: "CLIENT" as const,
+          content: text,
+          createdAt: new Date().toISOString(),
+        };
+
+        const updateComments = (items: ScheduleItemData[]) =>
+          items.map((item) =>
+            item.id === itemId
+              ? { ...item, comments: [...(item.comments || []), newComment] }
+              : item
+          );
+
+        setProjects((prev) =>
+          prev.map((p) => ({
+            ...p,
+            scheduleItems: updateComments(p.scheduleItems || []),
+          }))
+        );
+
+        if (selectedProject) {
+          setSelectedProject((prev) => {
+            if (!prev) return null;
+            return {
+              ...prev,
+              scheduleItems: updateComments(prev.scheduleItems || []),
+            };
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Failed to add comment:", err);
+    }
   };
 
   // Document upload callback
@@ -180,62 +225,85 @@ export default function AarenDesignerWorkspace() {
     }
   };
 
+  // Document delete callback
+  const handleDocumentDeleted = (docId: string) => {
+    if (selectedProject) {
+      const updated = {
+        ...selectedProject,
+        documents: (selectedProject.documents || []).filter((d) => d.id !== docId),
+      };
+      setSelectedProject(updated);
+      setProjects((prev) =>
+        prev.map((p) => (p.id === selectedProject.id ? updated : p))
+      );
+    }
+  };
+
   // Stripe checkout call
   const handlePayInvoice = async (invoiceId: string): Promise<string | null> => {
-    const headers: any = { "Content-Type": "application/json" };
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
 
-    const res = await fetch("/api/workspace/invoices", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        action: "pay_stripe",
-        invoiceId,
-      }),
-    });
+      const res = await fetch("/api/workspace/invoices", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          action: "pay_stripe",
+          invoiceId,
+        }),
+      });
 
-    const json = await res.json();
-    if (json.success && json.url) {
-      return json.url;
+      const json = await res.json();
+      if (json.success && json.url) {
+        return json.url;
+      }
+      return null;
+    } catch (err) {
+      console.error("Failed to initiate payment:", err);
+      return null;
     }
-    return null;
   };
 
   // Mark as paid
   const handleMarkPaid = async (invoiceId: string) => {
-    const headers: any = { "Content-Type": "application/json" };
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
 
-    await fetch("/api/workspace/invoices", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        action: "mark_paid",
-        invoiceId,
-      }),
-    });
-
-    // Update in memory
-    if (selectedProject) {
-      setSelectedProject((prev) => {
-        if (!prev) return null;
-        return {
-          ...prev,
-          invoices: (prev.invoices || []).map((inv) =>
-            inv.id === invoiceId ? { ...inv, status: "PAID" as const, paidAt: new Date() } : inv
-          ),
-        };
+      await fetch("/api/workspace/invoices", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          action: "mark_paid",
+          invoiceId,
+        }),
       });
-    }
 
-    setProjects((prev) =>
-      prev.map((p) => ({
-        ...p,
-        invoices: (p.invoices || []).map((inv) =>
-          inv.id === invoiceId ? { ...inv, status: "PAID" as const, paidAt: new Date() } : inv
-        ),
-      }))
-    );
+      // Update in memory
+      if (selectedProject) {
+        setSelectedProject((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            invoices: (prev.invoices || []).map((inv) =>
+              inv.id === invoiceId ? { ...inv, status: "PAID" as const, paidAt: new Date().toISOString() } : inv
+            ),
+          };
+        });
+      }
+
+      setProjects((prev) =>
+        prev.map((p) => ({
+          ...p,
+          invoices: (p.invoices || []).map((inv) =>
+            inv.id === invoiceId ? { ...inv, status: "PAID" as const, paidAt: new Date().toISOString() } : inv
+          ),
+        }))
+      );
+    } catch (err) {
+      console.error("Failed to mark invoice as paid:", err);
+    }
   };
 
   if (loading) {
@@ -296,7 +364,10 @@ export default function AarenDesignerWorkspace() {
           }}
           onOpenInvoices={() => {
             if (projects.length > 0) {
-              setSelectedProject(projects[0]);
+              const projectWithUnpaid = projects.find(
+                (p) => p.invoices?.some((inv) => inv.status === "UNPAID")
+              );
+              setSelectedProject(projectWithUnpaid || projects[0]);
               setActiveTab("invoices");
             }
           }}
@@ -429,7 +500,9 @@ export default function AarenDesignerWorkspace() {
             <CloudinaryUploadBlock
               projectId={selectedProject.id}
               documents={selectedProject.documents || []}
+              token={token}
               onUploadSuccess={handleDocumentUploaded}
+              onDocumentDelete={handleDocumentDeleted}
             />
           )}
 

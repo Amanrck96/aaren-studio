@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { ScheduleCommentData } from "../types/workspace";
-import { MessageSquare, Send, User, ShieldAlert, Sparkles } from "lucide-react";
+import { MessageSquare, Send } from "lucide-react";
 
 interface ScheduleCommentBoxProps {
   scheduleItemId: string;
@@ -17,6 +17,7 @@ export default function ScheduleCommentBox({
 }: ScheduleCommentBoxProps) {
   const [commentText, setCommentText] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,8 +27,10 @@ export default function ScheduleCommentBox({
     try {
       await onAddComment(scheduleItemId, commentText.trim());
       setCommentText("");
+      setError(null);
     } catch (err) {
       console.error("Failed to post comment:", err);
+      setError("Failed to post comment. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -137,6 +140,11 @@ export default function ScheduleCommentBox({
           <span>{submitting ? "..." : "Send"}</span>
         </button>
       </form>
+      {error && (
+        <div style={{ color: "#DC2626", fontSize: "1.1rem", marginTop: "0.4rem" }}>
+          {error}
+        </div>
+      )}
     </div>
   );
 }

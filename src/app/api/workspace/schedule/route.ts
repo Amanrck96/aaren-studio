@@ -95,7 +95,9 @@ export async function POST(req: NextRequest) {
             content: comment.trim(),
           },
         });
-      } catch (e) {}
+      } catch (e) {
+        console.warn("Prisma schedule operation failed (falling back to store):", e);
+      }
 
       // Store sync
       const syncedComment = await addWorkspaceCommentStore(scheduleItemId, comment, clientUser.name, authorRole);
@@ -140,7 +142,9 @@ export async function POST(req: NextRequest) {
             },
           });
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn("Prisma schedule operation failed (falling back to store):", e);
+      }
 
       // Store / Firebase sync
       const syncedItem = await updateWorkspaceScheduleStatusStore(

@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ScheduleItemData, ScheduleStatus } from "../types/workspace";
 import ScheduleCommentBox from "./ScheduleCommentBox";
-import { CheckCircle2, XCircle, AlertCircle, Clock, Eye, MessageSquare, ChevronDown, Filter } from "lucide-react";
+import { CheckCircle2, XCircle, AlertCircle, Clock, Eye, Filter } from "lucide-react";
 
 interface ScheduleApprovalManagerProps {
   items: ScheduleItemData[];
@@ -19,9 +19,20 @@ export default function ScheduleApprovalManager({
 }: ScheduleApprovalManagerProps) {
   const [activeStatusFilter, setActiveStatusFilter] = useState<string>("ALL");
   const [activeRoomFilter, setActiveRoomFilter] = useState<string>("ALL");
-  const [selectedItemForModal, setSelectedItemForModal] = useState<ScheduleItemData | null>(null);
-  const [actionComment, setActionComment] = useState("");
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const selectedItemForModal = selectedItemId ? items.find(i => i.id === selectedItemId) || null : null;
   const [processingId, setProcessingId] = useState<string | null>(null);
+
+  // Close modal on Escape key (M6 fix)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && selectedItemId) {
+        setSelectedItemId(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedItemId]);
 
   // Extract unique rooms
   const rooms = Array.from(new Set(items.map((i) => i.room || "General").filter(Boolean)));
@@ -49,11 +60,7 @@ export default function ScheduleApprovalManager({
   const handleAction = async (itemId: string, status: ScheduleStatus) => {
     setProcessingId(itemId);
     try {
-      await onUpdateStatus(itemId, status, actionComment.trim() || undefined);
-      setActionComment("");
-      if (selectedItemForModal?.id === itemId) {
-        setSelectedItemForModal((prev) => (prev ? { ...prev, status } : null));
-      }
+      await onUpdateStatus(itemId, status, undefined);
     } catch (err) {
       console.error("Action error:", err);
     } finally {
@@ -267,7 +274,7 @@ export default function ScheduleApprovalManager({
                     </p>
                   )}
 
-                  {item.price ? (
+                  {typeof item.price === 'number' ? (
                     <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#81663F" }}>
                       ₹{item.price.toLocaleString("en-IN")}
                       {item.quantity > 1 && <span style={{ fontSize: "1.1rem", fontWeight: 500, color: "#5E5852" }}> ({item.quantity} {item.unit || "units"})</span>}
@@ -287,7 +294,7 @@ export default function ScheduleApprovalManager({
                     }}
                   >
                     <button
-                      onClick={() => setSelectedItemForModal(item)}
+                      onClick={() => setSelectedItemId(item.id)}
                       style={{
                         background: "none",
                         border: "none",
@@ -361,7 +368,7 @@ export default function ScheduleApprovalManager({
       {/* Modal for In-Depth Spec View, Threaded Discussion & Status Update */}
       {selectedItemForModal && (
         <div
-          onClick={() => setSelectedItemForModal(null)}
+          onClick={() => setSelectedItemId(null)}
           style={{
             position: "fixed",
             inset: 0,
@@ -401,7 +408,7 @@ export default function ScheduleApprovalManager({
                 </h2>
               </div>
               <button
-                onClick={() => setSelectedItemForModal(null)}
+                onClick={() => setSelectedItemId(null)}
                 style={{ background: "none", border: "none", fontSize: "1.8rem", color: "#5E5852", cursor: "pointer" }}
               >
                 ✕
@@ -429,70 +436,81 @@ export default function ScheduleApprovalManager({
             </div>
 
             {/* Status Change Action Buttons */}
-            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <button
-                onClick={() => handleAction(selectedItemForModal.id, "APPROVED")}
-                style={{
-                  flex: 1,
-                  background: selectedItemForModal.status === "APPROVED" ? "#059669" : "#FAF9F6",
-                  color: selectedItemForModal.status === "APPROVED" ? "#FFFFFF" : "#059669",
-                  border: "2px solid #059669",
-                  padding: "1rem",
-                  borderRadius: "0.8rem",
-                  fontSize: "1.25rem",
-                  fontWeight: 800,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "0.6rem",
-                }}
-              >
-                <CheckCircle2 size={16} /> Mark Approved
-              </button>
+            {(() => {
+              const isProcessing = processingId === selectedItemForModal.id;
+              return (
+                <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                  <button
+                    disabled={isProcessing}
+                    onClick={() => handleAction(selectedItemForModal.id, "APPROVED")}
+                    style={{
+                      flex: 1,
+                      background: selectedItemForModal.status === "APPROVED" ? "#059669" : "#FAF9F6",
+                      color: selectedItemForModal.status === "APPROVED" ? "#FFFFFF" : "#059669",
+                      border: "2px solid #059669",
+                      padding: "1rem",
+                      borderRadius: "0.8rem",
+                      fontSize: "1.25rem",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "0.6rem",
+                      opacity: isProcessing ? 0.5 : 1,
+                    }}
+                  >
+                    <CheckCircle2 size={16} /> Mark Approved
+                  </button>
 
-              <button
-                onClick={() => handleAction(selectedItemForModal.id, "NEEDS_REVIEW")}
-                style={{
-                  flex: 1,
-                  background: selectedItemForModal.status === "NEEDS_REVIEW" ? "#D97706" : "#FAF9F6",
-                  color: selectedItemForModal.status === "NEEDS_REVIEW" ? "#FFFFFF" : "#D97706",
-                  border: "2px solid #D97706",
-                  padding: "1rem",
-                  borderRadius: "0.8rem",
-                  fontSize: "1.25rem",
-                  fontWeight: 800,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "0.6rem",
-                }}
-              >
-                <AlertCircle size={16} /> Request Changes
-              </button>
+                  <button
+                    disabled={isProcessing}
+                    onClick={() => handleAction(selectedItemForModal.id, "NEEDS_REVIEW")}
+                    style={{
+                      flex: 1,
+                      background: selectedItemForModal.status === "NEEDS_REVIEW" ? "#D97706" : "#FAF9F6",
+                      color: selectedItemForModal.status === "NEEDS_REVIEW" ? "#FFFFFF" : "#D97706",
+                      border: "2px solid #D97706",
+                      padding: "1rem",
+                      borderRadius: "0.8rem",
+                      fontSize: "1.25rem",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "0.6rem",
+                      opacity: isProcessing ? 0.5 : 1,
+                    }}
+                  >
+                    <AlertCircle size={16} /> Request Changes
+                  </button>
 
-              <button
-                onClick={() => handleAction(selectedItemForModal.id, "REJECTED")}
-                style={{
-                  flex: 1,
-                  background: selectedItemForModal.status === "REJECTED" ? "#DC2626" : "#FAF9F6",
-                  color: selectedItemForModal.status === "REJECTED" ? "#FFFFFF" : "#DC2626",
-                  border: "2px solid #DC2626",
-                  padding: "1rem",
-                  borderRadius: "0.8rem",
-                  fontSize: "1.25rem",
-                  fontWeight: 800,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "0.6rem",
-                }}
-              >
-                <XCircle size={16} /> Reject
-              </button>
-            </div>
+                  <button
+                    disabled={isProcessing}
+                    onClick={() => handleAction(selectedItemForModal.id, "REJECTED")}
+                    style={{
+                      flex: 1,
+                      background: selectedItemForModal.status === "REJECTED" ? "#DC2626" : "#FAF9F6",
+                      color: selectedItemForModal.status === "REJECTED" ? "#FFFFFF" : "#DC2626",
+                      border: "2px solid #DC2626",
+                      padding: "1rem",
+                      borderRadius: "0.8rem",
+                      fontSize: "1.25rem",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "0.6rem",
+                      opacity: isProcessing ? 0.5 : 1,
+                    }}
+                  >
+                    <XCircle size={16} /> Reject
+                  </button>
+                </div>
+              );
+            })()}
 
             {/* Threaded comments */}
             <ScheduleCommentBox
@@ -500,19 +518,6 @@ export default function ScheduleApprovalManager({
               comments={selectedItemForModal.comments || []}
               onAddComment={async (itemId, text) => {
                 await onAddComment(itemId, text);
-                // Update local modal comments
-                setSelectedItemForModal((prev) => {
-                  if (!prev) return null;
-                  const newC = {
-                    id: "temp-" + Date.now(),
-                    scheduleItemId: itemId,
-                    authorName: "You (Client)",
-                    authorRole: "CLIENT" as const,
-                    content: text,
-                    createdAt: new Date(),
-                  };
-                  return { ...prev, comments: [...(prev.comments || []), newC] };
-                });
               }}
             />
           </div>

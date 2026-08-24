@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getVerifiedWorkspaceClient } from "@/lib/workspaceAuth";
-import { addWorkspaceDocumentStore } from "@/lib/store";
+import { addWorkspaceDocumentStore, deleteWorkspaceDocumentStore } from "@/lib/store";
 import { v2 as cloudinary } from "cloudinary";
 
 // Configure Cloudinary
@@ -153,7 +153,9 @@ export async function POST(req: NextRequest) {
           uploadedBy: clientUser.name,
         },
       });
-    } catch (e) {}
+    } catch (e) {
+      console.warn("Prisma document create failed (falling back to store):", e);
+    }
 
     const newDoc = docRecord || {
       id: "doc-" + Date.now(),
@@ -174,6 +176,40 @@ export async function POST(req: NextRequest) {
       data: newDoc,
     });
   } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const clientUser = await getVerifiedWorkspaceClient(req);
+    if (!clientUser) {
+      return NextResponse.json({ success: false, error: "Unauthorized access" }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const docId = searchParams.get("docId");
+    const projectId = searchParams.get("projectId");
+
+    if (!docId) {
+      return NextResponse.json({ success: false, error: "Document ID is required" }, { status: 400 });
+    }
+
+    // Try deleting from database
+    try {
+      await prisma.projectDocument.delete({
+        where: { id: docId },
+      });
+    } catch (e) {
+      console.warn("Prisma document delete skipped/failed:", e);
+    }
+
+    // Delete from store
+    await deleteWorkspaceDocumentStore(docId, projectId || undefined);
+
+    return NextResponse.json({ success: true, message: "Document deleted successfully" });
+  } catch (error: any) {
+    console.error("Error deleting project document:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }

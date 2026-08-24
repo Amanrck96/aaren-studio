@@ -2,12 +2,14 @@
 
 import React, { useState, useRef } from "react";
 import { ProjectDocumentData } from "../types/workspace";
-import { UploadCloud, FileText, Download, CheckCircle, AlertTriangle, Trash2, FileCode } from "lucide-react";
+import { UploadCloud, FileText, Download, AlertTriangle, Trash2 } from "lucide-react";
 
 interface CloudinaryUploadBlockProps {
   projectId: string;
   documents: ProjectDocumentData[];
+  token?: string | null;
   onUploadSuccess: (doc: ProjectDocumentData) => void;
+  onDocumentDelete?: (docId: string) => void;
 }
 
 const MAX_SIZE_BYTES = 200 * 1024 * 1024; // 200MB
@@ -15,9 +17,12 @@ const MAX_SIZE_BYTES = 200 * 1024 * 1024; // 200MB
 export default function CloudinaryUploadBlock({
   projectId,
   documents,
+  token,
   onUploadSuccess,
+  onDocumentDelete,
 }: CloudinaryUploadBlockProps) {
   const [dragActive, setDragActive] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [fileType, setFileType] = useState("Drawing");
   const [customName, setCustomName] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -47,26 +52,59 @@ export default function CloudinaryUploadBlock({
 
     try {
       setProgress(50);
+      const headers: Record<string, string> = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
       const res = await fetch("/api/workspace/upload", {
         method: "POST",
+        headers,
         body: formData,
       });
 
       setProgress(90);
-      const json = await res.json();
+      const json = await res.json().catch(() => null);
 
-      if (!res.ok || !json.success) {
-        setErrorMsg(json.error || "Upload failed. Please try again.");
+      if (!res.ok || !json || !json.success) {
+        setErrorMsg(json?.error || "Failed to upload document.");
       } else {
-        onUploadSuccess(json.data);
+        setProgress(100);
         setCustomName("");
-        if (fileInputRef.current) fileInputRef.current.value = "";
+        onUploadSuccess(json.data);
       }
-    } catch (err: any) {
-      setErrorMsg("Network error during file upload.");
+    } catch {
+      setErrorMsg("Network error occurred during document upload.");
     } finally {
       setUploading(false);
-      setProgress(0);
+      setTimeout(() => setProgress(0), 1200);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleDelete = async (docId: string) => {
+    if (!confirm("Are you sure you want to remove this document from the project workspace?")) return;
+    setDeletingId(docId);
+    try {
+      const headers: Record<string, string> = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
+      const res = await fetch(`/api/workspace/upload?docId=${docId}&projectId=${projectId}`, {
+        method: "DELETE",
+        headers,
+      });
+      const json = await res.json().catch(() => null);
+      if (res.ok && json?.success) {
+        if (onDocumentDelete) {
+          onDocumentDelete(docId);
+        }
+      } else {
+        alert(json?.error || "Failed to delete document.");
+      }
+    } catch {
+      alert("Network error while deleting document.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -211,6 +249,7 @@ export default function CloudinaryUploadBlock({
           <input
             ref={fileInputRef}
             type="file"
+            accept=".pdf,.dwg,.dxf,.png,.jpg,.jpeg,.zip,.xlsx"
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
                 handleUpload(e.target.files[0]);
@@ -318,27 +357,52 @@ export default function CloudinaryUploadBlock({
                     </div>
                   </div>
 
-                  <a
-                    href={doc.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      background: "rgba(129, 102, 63, 0.08)",
-                      border: "1px solid rgba(129, 102, 63, 0.2)",
-                      color: "#81663F",
-                      padding: "0.6rem 1.2rem",
-                      borderRadius: "0.6rem",
-                      fontSize: "1.15rem",
-                      fontWeight: 700,
-                      textDecoration: "none",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "0.4rem",
-                    }}
-                  >
-                    <Download size={13} />
-                    <span>Download</span>
-                  </a>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flexShrink: 0 }}>
+                    <a
+                      href={doc.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        background: "rgba(129, 102, 63, 0.08)",
+                        border: "1px solid rgba(129, 102, 63, 0.2)",
+                        color: "#81663F",
+                        padding: "0.6rem 1.2rem",
+                        borderRadius: "0.6rem",
+                        fontSize: "1.15rem",
+                        fontWeight: 700,
+                        textDecoration: "none",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.4rem",
+                      }}
+                    >
+                      <Download size={13} />
+                      <span>Download</span>
+                    </a>
+
+                    <button
+                      onClick={() => handleDelete(doc.id)}
+                      disabled={deletingId === doc.id}
+                      title="Delete document"
+                      style={{
+                        background: "rgba(220, 38, 38, 0.08)",
+                        border: "1px solid rgba(220, 38, 38, 0.2)",
+                        color: "#DC2626",
+                        padding: "0.6rem 0.9rem",
+                        borderRadius: "0.6rem",
+                        fontSize: "1.15rem",
+                        fontWeight: 700,
+                        cursor: deletingId === doc.id ? "not-allowed" : "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.4rem",
+                        opacity: deletingId === doc.id ? 0.5 : 1,
+                      }}
+                    >
+                      <Trash2 size={13} />
+                      <span>{deletingId === doc.id ? "Deleting..." : "Delete"}</span>
+                    </button>
+                  </div>
                 </div>
               );
             })}

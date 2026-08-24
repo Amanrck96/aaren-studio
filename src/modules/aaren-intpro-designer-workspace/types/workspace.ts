@@ -1,5 +1,6 @@
 export type ScheduleStatus = "PENDING" | "APPROVED" | "NEEDS_REVIEW" | "REJECTED";
 export type InvoiceStatus = "UNPAID" | "PAID" | "VOID";
+export type ProjectStatus = "ACTIVE" | "IN_PROGRESS" | "ON_HOLD" | "COMPLETED" | "ARCHIVED";
 
 export interface ClientData {
   id: string;
@@ -20,7 +21,7 @@ export interface ScheduleCommentData {
   authorEmail?: string | null;
   authorRole: "CLIENT" | "ARCHITECT" | "ADMIN";
   content: string;
-  createdAt: string | Date;
+  createdAt: string;
 }
 
 export interface ScheduleItemData {
@@ -39,7 +40,7 @@ export interface ScheduleItemData {
   dimensions?: string | null;
   quantity: number;
   unit?: string | null;
-  approvedAt?: string | Date | null;
+  approvedAt?: string | null;
   approvedBy?: string | null;
   comments: ScheduleCommentData[];
 }
@@ -53,7 +54,7 @@ export interface ProjectDocumentData {
   fileType: string;
   fileSize?: number | null;
   uploadedBy?: string | null;
-  createdAt: string | Date;
+  createdAt: string;
 }
 
 export interface InvoiceData {
@@ -65,11 +66,11 @@ export interface InvoiceData {
   amount: number;
   currency: string;
   status: InvoiceStatus;
-  dueDate?: string | Date | null;
+  dueDate?: string | null;
   stripePaymentLink?: string | null;
   stripeSessionId?: string | null;
-  paidAt?: string | Date | null;
-  createdAt: string | Date;
+  paidAt?: string | null;
+  createdAt: string;
 }
 
 export interface WorkspaceProjectData {
@@ -83,9 +84,9 @@ export interface WorkspaceProjectData {
   projectCode: string;
   imageUrl: string;
   gallery: string[];
-  status: string;
+  status: ProjectStatus;
   budget?: number | null;
-  createdAt: string | Date;
+  createdAt: string;
   scheduleItems: ScheduleItemData[];
   documents: ProjectDocumentData[];
   invoices: InvoiceData[];

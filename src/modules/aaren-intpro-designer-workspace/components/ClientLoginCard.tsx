@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Lock, Mail, KeyRound, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
+import { Lock, Mail, KeyRound, ArrowRight, ShieldCheck } from "lucide-react";
 
 interface ClientLoginCardProps {
   onLoginSuccess: (client: any, token: string) => void;
@@ -30,8 +30,20 @@ export default function ClientLoginCard({ onLoginSuccess }: ClientLoginCardProps
         body: JSON.stringify({ emailOrCode: emailOrCode.trim(), password: password.trim() }),
       });
 
-      const json = await res.json();
-      if (!res.ok || !json.success) {
+      if (!res.ok) {
+        setError("Authentication failed. Please check your credentials.");
+        return;
+      }
+
+      let json;
+      try {
+        json = await res.json();
+      } catch (err) {
+        setError("Invalid response from server.");
+        return;
+      }
+
+      if (!json.success) {
         setError(json.error || "Authentication failed. Please check your credentials.");
       } else {
         localStorage.setItem("aaren_client_token", json.token);
@@ -129,6 +141,7 @@ export default function ClientLoginCard({ onLoginSuccess }: ClientLoginCardProps
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
           <div>
             <label
+              htmlFor="emailOrCode"
               style={{
                 display: "block",
                 fontSize: "1.15rem",
@@ -143,6 +156,7 @@ export default function ClientLoginCard({ onLoginSuccess }: ClientLoginCardProps
             </label>
             <div style={{ position: "relative" }}>
               <input
+                id="emailOrCode"
                 type="text"
                 value={emailOrCode}
                 onChange={(e) => setEmailOrCode(e.target.value)}
@@ -165,6 +179,7 @@ export default function ClientLoginCard({ onLoginSuccess }: ClientLoginCardProps
 
           <div>
             <label
+              htmlFor="password"
               style={{
                 display: "block",
                 fontSize: "1.15rem",
@@ -179,6 +194,7 @@ export default function ClientLoginCard({ onLoginSuccess }: ClientLoginCardProps
             </label>
             <div style={{ position: "relative" }}>
               <input
+                id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

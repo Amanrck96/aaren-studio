@@ -70,7 +70,9 @@ export async function POST(req: NextRequest) {
           },
           include: { project: true },
         });
-      } catch (e) {}
+      } catch (e) {
+        console.warn("Prisma invoice operation failed (non-fatal):", e);
+      }
 
       const host = req.headers.get("origin") || req.headers.get("host") || "http://localhost:3000";
       const origin = host.startsWith("http") ? host : `http://${host}`;
@@ -145,7 +147,9 @@ export async function POST(req: NextRequest) {
             paidAt: new Date(),
           },
         });
-      } catch (e) {}
+      } catch (e) {
+        console.warn("Prisma invoice operation failed (non-fatal):", e);
+      }
 
       const synced = await updateWorkspaceInvoiceStatusStore(invoiceId, "PAID");
       return NextResponse.json({ success: true, data: updated || synced });

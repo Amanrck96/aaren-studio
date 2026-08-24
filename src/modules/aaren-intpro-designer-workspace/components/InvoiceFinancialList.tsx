@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { InvoiceData } from "../types/workspace";
-import { CreditCard, CheckCircle2, Clock, DollarSign, ExternalLink, AlertCircle } from "lucide-react";
+import { CreditCard, CheckCircle2 } from "lucide-react";
 
 interface InvoiceFinancialListProps {
   invoices: InvoiceData[];
@@ -37,6 +37,8 @@ export default function InvoiceFinancialList({
         } else {
           window.location.href = url;
         }
+      } else {
+        setMessage("Payment gateway unavailable. Please contact your architect.");
       }
     } catch (err: any) {
       setMessage("Failed to initiate Stripe Checkout. Please try again.");

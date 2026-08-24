@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { WorkspaceProjectData } from "../types/workspace";
+import { WorkspaceProjectData, ClientData } from "../types/workspace";
 import {
   Layers,
   Clock,
@@ -20,7 +20,7 @@ import {
 
 interface ProjectsOverviewGridProps {
   projects: WorkspaceProjectData[];
-  client?: any;
+  client?: ClientData | null;
   token?: string | null;
   onSelectProject: (proj: WorkspaceProjectData) => void;
   onOpenInvoices: () => void;
@@ -43,6 +43,17 @@ export default function ProjectsOverviewGrid({
   const [creating, setCreating] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Close modal on Escape key (M6 fix)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isModalOpen) {
+        setIsModalOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isModalOpen]);
+
   // Aggregate stats
   const totalProjects = projects.length;
   const allItems = projects.flatMap((p) => p.scheduleItems || []);
@@ -59,11 +70,21 @@ export default function ProjectsOverviewGrid({
       return;
     }
 
+    let parsedBudget: number | undefined = undefined;
+    if (budget.trim()) {
+      const num = parseFloat(budget.trim());
+      if (isNaN(num) || num < 0) {
+        setErrorMsg("Please enter a valid positive number for the budget.");
+        return;
+      }
+      parsedBudget = num;
+    }
+
     setCreating(true);
     setErrorMsg(null);
 
     try {
-      const headers: any = { "Content-Type": "application/json" };
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
       if (token) headers["Authorization"] = `Bearer ${token}`;
 
       const res = await fetch("/api/workspace/projects", {
@@ -73,13 +94,13 @@ export default function ProjectsOverviewGrid({
           title: title.trim(),
           category,
           description: description.trim(),
-          budget: budget ? parseFloat(budget) : undefined,
+          budget: parsedBudget,
         }),
       });
 
-      const json = await res.json();
-      if (!res.ok || !json.success) {
-        setErrorMsg(json.error || "Failed to create project workspace.");
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json || !json.success) {
+        setErrorMsg(json?.error || "Failed to create project workspace.");
       } else {
         setIsModalOpen(false);
         setTitle("");
@@ -89,7 +110,7 @@ export default function ProjectsOverviewGrid({
           onProjectCreated(json.data);
         }
       }
-    } catch (err: any) {
+    } catch {
       setErrorMsg("Network error while creating project.");
     } finally {
       setCreating(false);

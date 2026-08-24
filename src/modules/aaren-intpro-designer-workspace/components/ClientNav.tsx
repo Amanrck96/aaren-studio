@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ClientData, WorkspaceProjectData } from "../types/workspace";
-import { Building2, Layers, LogOut, ChevronDown, Sparkles } from "lucide-react";
+import { Building2, LogOut, ChevronDown } from "lucide-react";
 
 interface ClientNavProps {
   client: ClientData | null;
@@ -87,6 +87,7 @@ export default function ClientNav({
           {projects.length > 0 && (
             <div style={{ position: "relative" }}>
               <select
+                aria-label="Select Project Dashboard"
                 value={selectedProject?.id || "all"}
                 onChange={(e) => {
                   if (e.target.value === "all") onSelectProject(null);

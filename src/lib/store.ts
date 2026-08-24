@@ -2724,6 +2724,30 @@ export async function addWorkspaceDocumentStore(doc: any): Promise<any> {
   return doc;
 }
 
+export async function deleteWorkspaceDocumentStore(docId: string, projectId?: string): Promise<boolean> {
+  const all = await getAllWorkspaceProjectsStore();
+  let found = false;
+  for (const proj of all) {
+    if (projectId && proj.id !== projectId) continue;
+    if (Array.isArray(proj.documents)) {
+      const idx = proj.documents.findIndex((d: any) => d.id === docId);
+      if (idx !== -1) {
+        proj.documents.splice(idx, 1);
+        found = true;
+        break;
+      }
+    }
+  }
+  if (found) {
+    const json = readJsonStore();
+    json.workspace_projects = all;
+    writeJsonStore(json);
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    syncToFirebaseCloudStore("workspace_projects", all).catch(() => {});
+  }
+  return found;
+}
+
 export async function updateWorkspaceInvoiceStatusStore(invoiceId: string, status: string): Promise<any> {
   const all = await getAllWorkspaceProjectsStore();
   let updatedInv: any = null;

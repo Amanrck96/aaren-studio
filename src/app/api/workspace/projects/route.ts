@@ -52,7 +52,9 @@ export async function GET(req: NextRequest) {
           },
         });
         if (project) return NextResponse.json({ success: true, data: project });
-      } catch (e) {}
+      } catch (e) {
+        console.warn("Prisma project lookup failed (falling back to store):", e);
+      }
 
       // 2. Try Store
       const storeProject = await getWorkspaceProjectByIdStore(projectId, clientUser.clientId);
@@ -88,7 +90,9 @@ export async function GET(req: NextRequest) {
         },
         orderBy: { createdAt: "desc" },
       });
-    } catch (e) {}
+    } catch (e) {
+      console.warn("Prisma projects list failed (falling back to store):", e);
+    }
 
     // Fallback to Store
     if (!projects || projects.length === 0) {
@@ -190,7 +194,9 @@ export async function POST(req: NextRequest) {
           status: projectData.status,
         },
       });
-    } catch (e) {}
+    } catch (e) {
+      console.warn("Prisma project create failed (falling back to store):", e);
+    }
 
     // Save to Store / Firebase
     await saveWorkspaceProjectStore(projectData);
