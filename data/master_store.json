@@ -23052,125 +23052,15 @@
       "sequenceNumber": 7
     },
     {
-      "id": "tm-08",
-      "name": "SURESH KUMAR",
-      "designation": "Operations Head",
-      "category": "Operations",
-      "memberCode": "SK 08",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites.",
-      "sequenceNumber": 8
-    },
-    {
-      "id": "tm-09",
-      "name": "PRAVEEN NAIR",
-      "designation": "Lead Installation Specialist",
-      "category": "Installation",
-      "memberCode": "PN 09",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations.",
-      "sequenceNumber": 9
-    },
-    {
-      "id": "tm-10",
-      "name": "ANITHA REDDY",
-      "designation": "Client Support & Relations",
-      "category": "Support Staff",
-      "memberCode": "AR 10",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction.",
-      "sequenceNumber": 10
-    },
-    {
-      "id": "tm-11",
-      "name": "HARSHITHA N",
-      "designation": "Sales Executive",
-      "category": "Sales",
-      "memberCode": "HN 11",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Dedicated sales professional specializing in luxury surface presentations and client consultations.",
-      "sequenceNumber": 11
-    },
-    {
-      "id": "tm-12",
-      "name": "VISHWAS GEORGE",
-      "designation": "Sales Consultant",
-      "category": "Sales",
-      "memberCode": "VG 12",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Experienced consultant guiding clients through premium architectural product selections.",
-      "sequenceNumber": 12
-    },
-    {
-      "id": "tm-13",
-      "name": "PRASHANTH M S",
-      "designation": "Technical Support Staff",
-      "category": "Support Staff",
-      "memberCode": "PM 13",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Provides comprehensive after-sales support and technical assistance to clients.",
-      "sequenceNumber": 13
-    },
-    {
-      "id": "tm-14",
-      "name": "LOKESH G V",
-      "designation": "Client Support Staff",
-      "category": "Support Staff",
-      "memberCode": "LG 14",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Ensures seamless client experience through dedicated support and coordination.",
-      "sequenceNumber": 14
-    },
-    {
-      "id": "tm-15",
-      "name": "KISHORE P",
-      "designation": "Accounts & Finance Support",
-      "category": "Accounts",
-      "memberCode": "KP 15",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Manages financial operations, billing, and accounts to ensure smooth business transactions.",
-      "sequenceNumber": 15
-    },
-    {
       "id": "tm-16",
       "name": "NARASIMHA PRASAD B S",
-      "designation": "Sales Executive",
+      "designation": "Sales",
       "category": "Sales",
       "memberCode": "NP 16",
       "photoUrl": "",
       "phone": "+91 88844 64444",
-      "bio": "Proactive sales executive focused on building client relationships and driving revenue growth.",
-      "sequenceNumber": 16
-    },
-    {
-      "id": "tm-17",
-      "name": "ROOPA C B",
-      "designation": "Accounts & Support Executive",
-      "category": "Accounts",
-      "memberCode": "RC 17",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Handles financial records, invoicing, and accounting processes with precision and accuracy.",
-      "sequenceNumber": 17
-    },
-    {
-      "id": "tm-18",
-      "name": "ABDUL REHMAN KHAN",
-      "designation": "Sales Executive",
-      "category": "Sales",
-      "memberCode": "AR 18",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Dynamic sales professional with expertise in luxury material presentations and client engagement.",
-      "sequenceNumber": 18
+      "bio": "Proactive sales executive focused on building client relationships and driving luxury surface project conversions.",
+      "sequenceNumber": 8
     },
     {
       "id": "tm-19",
@@ -23180,19 +23070,41 @@
       "memberCode": "UN 19",
       "photoUrl": "",
       "phone": "+91 88844 64444",
-      "bio": "Result-oriented sales professional dedicated to delivering exceptional client experiences.",
-      "sequenceNumber": 19
+      "bio": "Result-oriented sales professional dedicated to delivering exceptional architectural client experiences.",
+      "sequenceNumber": 9
     },
     {
-      "id": "tm-20",
-      "name": "AMBUJA MATHAPATI",
+      "id": "tm-11",
+      "name": "HARSHITHA N",
       "designation": "Sales Executive",
       "category": "Sales",
-      "memberCode": "AM 20",
+      "memberCode": "HN 11",
       "photoUrl": "",
       "phone": "+91 88844 64444",
-      "bio": "Passionate about connecting clients with world-class architectural solutions.",
-      "sequenceNumber": 20
+      "bio": "Dedicated sales professional specializing in luxury surface presentations and material consultations.",
+      "sequenceNumber": 10
+    },
+    {
+      "id": "tm-12",
+      "name": "VISHWAS GEORGE",
+      "designation": "Sales Consultant",
+      "category": "Sales",
+      "memberCode": "VG 12",
+      "photoUrl": "",
+      "phone": "+91 88844 64444",
+      "bio": "Experienced consultant guiding architects and homeowners through premium international collections.",
+      "sequenceNumber": 11
+    },
+    {
+      "id": "tm-23",
+      "name": "JABIR KHAN",
+      "designation": "Operations Staff",
+      "category": "Operations",
+      "memberCode": "JK 23",
+      "photoUrl": "",
+      "phone": "+91 88844 64444",
+      "bio": "Supports operations with efficient material logistics and project delivery coordination.",
+      "sequenceNumber": 12
     },
     {
       "id": "tm-21",
@@ -23202,8 +23114,8 @@
       "memberCode": "SV 21",
       "photoUrl": "",
       "phone": "+91 88844 64444",
-      "bio": "Manages day-to-day operational workflows ensuring timely delivery and project coordination.",
-      "sequenceNumber": 21
+      "bio": "Manages day-to-day operational workflows ensuring timely delivery and site coordination.",
+      "sequenceNumber": 13
     },
     {
       "id": "tm-22",
@@ -23213,19 +23125,8 @@
       "memberCode": "DS 22",
       "photoUrl": "",
       "phone": "+91 88844 64444",
-      "bio": "Coordinates operational activities and logistics to maintain smooth project execution.",
-      "sequenceNumber": 22
-    },
-    {
-      "id": "tm-23",
-      "name": "JABIR KHAN",
-      "designation": "Operations Logistics",
-      "category": "Operations",
-      "memberCode": "JK 23",
-      "photoUrl": "",
-      "phone": "+91 88844 64444",
-      "bio": "Supports operations with efficient handling and coordination of project requirements.",
-      "sequenceNumber": 23
+      "bio": "Coordinates operational logistics and material handling across all ongoing projects.",
+      "sequenceNumber": 14
     },
     {
       "id": "tm-24",
@@ -23235,8 +23136,74 @@
       "memberCode": "NR 24",
       "photoUrl": "",
       "phone": "+91 88844 64444",
-      "bio": "Manages financial records and supports the accounts team with diligent accounting operations",
-      "sequenceNumber": 24
+      "bio": "Manages financial records, billing, and supports the accounts team with diligent accounting operations.",
+      "sequenceNumber": 15
+    },
+    {
+      "id": "tm-su-05",
+      "name": "Sumithramma",
+      "designation": "Support Staff",
+      "category": "Support Staff",
+      "memberCode": "SU 05",
+      "photoUrl": "",
+      "phone": "+91 88844 64444",
+      "bio": "Essential support staff member ensuring seamless studio operations and customer hospitality.",
+      "sequenceNumber": 16
+    },
+    {
+      "id": "tm-sh-01",
+      "name": "Shanthamma",
+      "designation": "Support Staff",
+      "category": "Support Staff",
+      "memberCode": "SH 01",
+      "photoUrl": "",
+      "phone": "+91 88844 64444",
+      "bio": "Dedicated support staff ensuring pristine gallery environment and day-to-day coordination.",
+      "sequenceNumber": 17
+    },
+    {
+      "id": "tm-la-05",
+      "name": "Latha",
+      "designation": "Support Staff",
+      "category": "Support Staff",
+      "memberCode": "LA 05",
+      "photoUrl": "",
+      "phone": "+91 88844 64444",
+      "bio": "Committed support staff supporting client hospitality and studio maintenance.",
+      "sequenceNumber": 18
+    },
+    {
+      "id": "tm-sm-08",
+      "name": "Sumithra M",
+      "designation": "Support Staff",
+      "category": "Support Staff",
+      "memberCode": "SM 08",
+      "photoUrl": "",
+      "phone": "+91 88844 64444",
+      "bio": "Support staff member dedicated to smooth administrative assistance and site hospitality.",
+      "sequenceNumber": 19
+    },
+    {
+      "id": "tm-13",
+      "name": "PRASHANTH M S",
+      "designation": "Support Staff",
+      "category": "Support Staff",
+      "memberCode": "PM 13",
+      "photoUrl": "",
+      "phone": "+91 88844 64444",
+      "bio": "Provides technical assistance and comprehensive operational support to the team.",
+      "sequenceNumber": 20
+    },
+    {
+      "id": "tm-14",
+      "name": "LOKESH G V",
+      "designation": "Support Staff",
+      "category": "Support Staff",
+      "memberCode": "LG 14",
+      "photoUrl": "",
+      "phone": "+91 88844 64444",
+      "bio": "Ensures seamless client experience and essential studio logistical support.",
+      "sequenceNumber": 21
     }
   ],
   "roadmap": [

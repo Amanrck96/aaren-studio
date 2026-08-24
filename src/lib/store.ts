@@ -43,9 +43,10 @@ const FIREBASE_RTDB_STORE_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ||
 
 async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
   try {
-    // 1. Check /store/${key}.json (Primary live admin path)
+    // 1. Check /store/${key}.json (Primary live admin path with 2s timeout)
     const storeRes = await fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
       headers: { "Cache-Control": "no-cache" },
+      signal: AbortSignal.timeout(2000),
       next: { revalidate: 0 },
     });
     if (storeRes.ok) {
@@ -58,6 +59,7 @@ async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
     // 2. Fallback to /${key}.json
     const rootRes = await fetch(`${FIREBASE_RTDB_STORE_URL}/${key}.json`, {
       headers: { "Cache-Control": "no-cache" },
+      signal: AbortSignal.timeout(2000),
       next: { revalidate: 0 },
     });
     if (rootRes.ok) {
@@ -67,7 +69,7 @@ async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
       }
     }
   } catch (err) {
-    // Fail-safe to local store
+    // Fail-safe to local store immediately
   }
   return null;
 }
@@ -595,6 +597,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
 ];
 
 export const DEFAULT_TEAM: TeamMemberItem[] = [
+  // LEADERSHIP (7)
   { id: "tm-01", name: "MOHANLAL MP", designation: "Founder", category: "Leadership", memberCode: "MM 01", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-4-min.jpg", phone: "+91 88844 64444", bio: "He is the face and voice of AAREN. The face that represents AAREN, the voice that tells the story of AAREN. He guides AAREN by guiding its culture, values and the well being of the team.", sequenceNumber: 1 },
   { id: "tm-02", name: "Late RAMNIKLAL M VAGADIYA", designation: "Founder & Chairman", category: "Leadership", memberCode: "RV 02", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-6-min.jpg", phone: "+91 88844 64444", bio: "A chartered accountant who is the backbone of the organization. He keeps the business focused, motivated, and sets concrete business plans for the team to achieve its vision.", sequenceNumber: 2 },
   { id: "tm-03", name: "MADHUSUDHAN MP", designation: "Envisioner & Chief Planner", category: "Leadership", memberCode: "MP 03", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-2-min.jpg", phone: "+91 88844 64444", bio: "He is the vision of AAREN. Responsible for creating the strategy, driving the business and scouting for world class products.", sequenceNumber: 3 },
@@ -602,23 +605,28 @@ export const DEFAULT_TEAM: TeamMemberItem[] = [
   { id: "tm-05", name: "ASHWIN", designation: "Director", category: "Leadership", memberCode: "AW 05", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-3-min.jpg", phone: "+91 88844 64444", bio: "Directs architectural partnerships, surface technology consulting, developer alliances, and luxury material innovation.", sequenceNumber: 5 },
   { id: "tm-06", name: "MUKUND", designation: "Director", category: "Leadership", memberCode: "MK 06", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-5-min.jpg", phone: "+91 88844 64444", bio: "Directs world-class brand curation, premium material experiences, and state-of-the-art gallery displays.", sequenceNumber: 6 },
   { id: "tm-07", name: "JIGNESH", designation: "Director", category: "Leadership", memberCode: "JG 07", photoUrl: "https://www.aarenintpro.com/wp-content/uploads/2016/08/about-us-7-min.jpg", phone: "+91 88844 64444", bio: "Directs strategic channel operations, Bagno & Surface architectural solutions, and pan-India client relations.", sequenceNumber: 7 },
-  { id: "tm-08", name: "SURESH KUMAR", designation: "Operations Head", category: "Operations", memberCode: "SK 08", photoUrl: "", phone: "+91 88844 64444", bio: "Oversees supply chain, warehouse inventory, logistics, and smooth project timeline executions across all client sites.", sequenceNumber: 8 },
-  { id: "tm-09", name: "PRAVEEN NAIR", designation: "Lead Installation Specialist", category: "Installation", memberCode: "PN 09", photoUrl: "", phone: "+91 88844 64444", bio: "Expert technician directing site measurements, precision zero-joint tile fitting, and high-end surface installations.", sequenceNumber: 9 },
-  { id: "tm-10", name: "ANITHA REDDY", designation: "Client Support & Relations", category: "Support Staff", memberCode: "AR 10", photoUrl: "", phone: "+91 88844 64444", bio: "Coordinates post-installation support, warranty assistance, client inquiries, and ensures customer satisfaction.", sequenceNumber: 10 },
-  { id: "tm-11", name: "HARSHITHA N", designation: "Sales Executive", category: "Sales", memberCode: "HN 11", photoUrl: "", phone: "+91 88844 64444", bio: "Dedicated sales professional specializing in luxury surface presentations and client consultations.", sequenceNumber: 11 },
-  { id: "tm-12", name: "VISHWAS GEORGE", designation: "Sales Consultant", category: "Sales", memberCode: "VG 12", photoUrl: "", phone: "+91 88844 64444", bio: "Experienced consultant guiding clients through premium architectural product selections.", sequenceNumber: 12 },
-  { id: "tm-13", name: "PRASHANTH M S", designation: "Technical Support Staff", category: "Support Staff", memberCode: "PM 13", photoUrl: "", phone: "+91 88844 64444", bio: "Provides comprehensive after-sales support and technical assistance to clients.", sequenceNumber: 13 },
-  { id: "tm-14", name: "LOKESH G V", designation: "Client Support Staff", category: "Support Staff", memberCode: "LG 14", photoUrl: "", phone: "+91 88844 64444", bio: "Ensures seamless client experience through dedicated support and coordination.", sequenceNumber: 14 },
-  { id: "tm-15", name: "KISHORE P", designation: "Accounts & Finance Support", category: "Accounts", memberCode: "KP 15", photoUrl: "", phone: "+91 88844 64444", bio: "Manages financial operations, billing, and accounts to ensure smooth business transactions.", sequenceNumber: 15 },
-  { id: "tm-16", name: "NARASIMHA PRASAD B S", designation: "Sales Executive", category: "Sales", memberCode: "NP 16", photoUrl: "", phone: "+91 88844 64444", bio: "Proactive sales executive focused on building client relationships and driving revenue growth.", sequenceNumber: 16 },
-  { id: "tm-17", name: "ROOPA C B", designation: "Accounts & Support Executive", category: "Accounts", memberCode: "RC 17", photoUrl: "", phone: "+91 88844 64444", bio: "Handles financial records, invoicing, and accounting processes with precision and accuracy.", sequenceNumber: 17 },
-  { id: "tm-18", name: "ABDUL REHMAN KHAN", designation: "Sales Executive", category: "Sales", memberCode: "AR 18", photoUrl: "", phone: "+91 88844 64444", bio: "Dynamic sales professional with expertise in luxury material presentations and client engagement.", sequenceNumber: 18 },
-  { id: "tm-19", name: "UTKALIKA NAYAK", designation: "Sales Executive", category: "Sales", memberCode: "UN 19", photoUrl: "", phone: "+91 88844 64444", bio: "Result-oriented sales professional dedicated to delivering exceptional client experiences.", sequenceNumber: 19 },
-  { id: "tm-20", name: "AMBUJA MATHAPATI", designation: "Sales Executive", category: "Sales", memberCode: "AM 20", photoUrl: "", phone: "+91 88844 64444", bio: "Passionate about connecting clients with world-class architectural solutions.", sequenceNumber: 20 },
-  { id: "tm-21", name: "SAWAN VISHWAKARMA", designation: "Operations Executive", category: "Operations", memberCode: "SV 21", photoUrl: "", phone: "+91 88844 64444", bio: "Manages day-to-day operational workflows ensuring timely delivery and project coordination.", sequenceNumber: 21 },
-  { id: "tm-22", name: "D S SHANKAR", designation: "Operations Coordinator", category: "Operations", memberCode: "DS 22", photoUrl: "", phone: "+91 88844 64444", bio: "Coordinates operational activities and logistics to maintain smooth project execution.", sequenceNumber: 22 },
-  { id: "tm-23", name: "JABIR KHAN", designation: "Operations Logistics", category: "Operations", memberCode: "JK 23", photoUrl: "", phone: "+91 88844 64444", bio: "Supports operations with efficient handling and coordination of project requirements.", sequenceNumber: 23 },
-  { id: "tm-24", name: "NARASIMHA RAJU", designation: "Accountant", category: "Accounts", memberCode: "NR 24", photoUrl: "", phone: "+91 88844 64444", bio: "Manages financial records and supports the accounts team with diligent accounting operations", sequenceNumber: 24 },
+
+  // SALES (4)
+  { id: "tm-16", name: "NARASIMHA PRASAD B S", designation: "Sales", category: "Sales", memberCode: "NP 16", photoUrl: "", phone: "+91 88844 64444", bio: "Proactive sales executive focused on building client relationships and driving luxury surface project conversions.", sequenceNumber: 8 },
+  { id: "tm-19", name: "UTKALIKA NAYAK", designation: "Sales Executive", category: "Sales", memberCode: "UN 19", photoUrl: "", phone: "+91 88844 64444", bio: "Result-oriented sales professional dedicated to delivering exceptional architectural client experiences.", sequenceNumber: 9 },
+  { id: "tm-11", name: "HARSHITHA N", designation: "Sales Executive", category: "Sales", memberCode: "HN 11", photoUrl: "", phone: "+91 88844 64444", bio: "Dedicated sales professional specializing in luxury surface presentations and material consultations.", sequenceNumber: 10 },
+  { id: "tm-12", name: "VISHWAS GEORGE", designation: "Sales Consultant", category: "Sales", memberCode: "VG 12", photoUrl: "", phone: "+91 88844 64444", bio: "Experienced consultant guiding architects and homeowners through premium international collections.", sequenceNumber: 11 },
+
+  // OPERATIONS (3)
+  { id: "tm-23", name: "JABIR KHAN", designation: "Operations Staff", category: "Operations", memberCode: "JK 23", photoUrl: "", phone: "+91 88844 64444", bio: "Supports operations with efficient material logistics and project delivery coordination.", sequenceNumber: 12 },
+  { id: "tm-21", name: "SAWAN VISHWAKARMA", designation: "Operations Executive", category: "Operations", memberCode: "SV 21", photoUrl: "", phone: "+91 88844 64444", bio: "Manages day-to-day operational workflows ensuring timely delivery and site coordination.", sequenceNumber: 13 },
+  { id: "tm-22", name: "D S SHANKAR", designation: "Operations Coordinator", category: "Operations", memberCode: "DS 22", photoUrl: "", phone: "+91 88844 64444", bio: "Coordinates operational logistics and material handling across all ongoing projects.", sequenceNumber: 14 },
+
+  // ACCOUNTS (1)
+  { id: "tm-24", name: "NARASIMHA RAJU", designation: "Accountant", category: "Accounts", memberCode: "NR 24", photoUrl: "", phone: "+91 88844 64444", bio: "Manages financial records, billing, and supports the accounts team with diligent accounting operations.", sequenceNumber: 15 },
+
+  // SUPPORT STAFF (6)
+  { id: "tm-su-05", name: "Sumithramma", designation: "Support Staff", category: "Support Staff", memberCode: "SU 05", photoUrl: "", phone: "+91 88844 64444", bio: "Essential support staff member ensuring seamless studio operations and customer hospitality.", sequenceNumber: 16 },
+  { id: "tm-sh-01", name: "Shanthamma", designation: "Support Staff", category: "Support Staff", memberCode: "SH 01", photoUrl: "", phone: "+91 88844 64444", bio: "Dedicated support staff ensuring pristine gallery environment and day-to-day coordination.", sequenceNumber: 17 },
+  { id: "tm-la-05", name: "Latha", designation: "Support Staff", category: "Support Staff", memberCode: "LA 05", photoUrl: "", phone: "+91 88844 64444", bio: "Committed support staff supporting client hospitality and studio maintenance.", sequenceNumber: 18 },
+  { id: "tm-sm-08", name: "Sumithra M", designation: "Support Staff", category: "Support Staff", memberCode: "SM 08", photoUrl: "", phone: "+91 88844 64444", bio: "Support staff member dedicated to smooth administrative assistance and site hospitality.", sequenceNumber: 19 },
+  { id: "tm-13", name: "PRASHANTH M S", designation: "Support Staff", category: "Support Staff", memberCode: "PM 13", photoUrl: "", phone: "+91 88844 64444", bio: "Provides technical assistance and comprehensive operational support to the team.", sequenceNumber: 20 },
+  { id: "tm-14", name: "LOKESH G V", designation: "Support Staff", category: "Support Staff", memberCode: "LG 14", photoUrl: "", phone: "+91 88844 64444", bio: "Ensures seamless client experience and essential studio logistical support.", sequenceNumber: 21 },
 ];
 
 export const DEFAULT_ROADMAP: RoadmapStepItem[] = [
