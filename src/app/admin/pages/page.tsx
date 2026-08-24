@@ -7,13 +7,21 @@ import { CustomPageItem, CustomPageSection } from "@/lib/types";
 export default function AdminPagesPage() {
   const [pages, setPages] = useState<CustomPageItem[]>([]);
   const [editing, setEditing] = useState<Partial<CustomPageItem> | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const fetchPages = () => {
-    fetch("/api/pages")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success) setPages(json.data);
-      });
+  const fetchPages = async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetch("/api/pages");
+      const json = await res.json();
+      if (json.success) setPages(json.data);
+    } catch (error) {
+      console.error("Error fetching pages:", error);
+      alert("Failed to fetch pages.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -24,23 +32,36 @@ export default function AdminPagesPage() {
     e.preventDefault();
     if (!editing?.title) return alert("Page Title is required.");
 
-    const res = await fetch("/api/pages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editing),
-    });
-    const json = await res.json();
-    if (json.success) {
-      alert("Page and section layout saved!");
-      setEditing(null);
-      fetchPages();
-    } else alert("Error: " + json.error);
+    try {
+      setIsSaving(true);
+      const res = await fetch("/api/pages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editing),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("Page and section layout saved!");
+        setEditing(null);
+        fetchPages();
+      } else alert("Error: " + json.error);
+    } catch (error) {
+      console.error("Error saving page:", error);
+      alert("Failed to save page.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure?")) return;
-    await fetch(`/api/pages?id=${id}`, { method: "DELETE" });
-    fetchPages();
+    try {
+      await fetch(`/api/pages?id=${id}`, { method: "DELETE" });
+      fetchPages();
+    } catch (error) {
+      console.error("Error deleting page:", error);
+      alert("Failed to delete page.");
+    }
   };
 
   const addSection = () => {
@@ -109,7 +130,7 @@ export default function AdminPagesPage() {
                 <input
                   type="text"
                   value={editing.slug || ""}
-                  onChange={(e) => setEditing({ ...editing, slug: e.target.value })}
+                  onChange={(e) => setEditing({ ...editing, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-") })}
                   style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
                 />
               </div>
@@ -201,8 +222,8 @@ export default function AdminPagesPage() {
             </div>
 
             <div style={{ display: "flex", gap: "1rem" }}>
-              <button type="submit" style={{ padding: "0.75rem 1.6rem", background: "#d4af37", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}>
-                Save Page & Layout
+              <button type="submit" disabled={isSaving} style={{ padding: "0.75rem 1.6rem", background: "#d4af37", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: isSaving ? "wait" : "pointer" }}>
+                {isSaving ? "Saving..." : "Save Page & Layout"}
               </button>
               <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.75rem 1.6rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
                 Cancel

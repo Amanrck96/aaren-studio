@@ -43,21 +43,32 @@ export default function AdminTeamPage() {
   const [rearrangeCategory, setRearrangeCategory] = useState("ALL");
   const [rearrangeList, setRearrangeList] = useState<TeamMemberItem[]>([]);
 
-  const fetchTeam = () => {
-    fetch("/api/team?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json && json.success) {
-          const teamList = json.team || (json.data && json.data.team) || (Array.isArray(json.data) ? json.data : []);
-          teamList.sort((a: any, b: any) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
-          setTeam(teamList);
-          if (json.joinBanner || (json.data && json.data.joinBanner)) {
-            setJoinBanner(json.joinBanner || json.data.joinBanner);
-          }
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSavingOrder, setIsSavingOrder] = useState(false);
+
+  const fetchTeam = async () => {
+    setLoading(true);
+    setErrorMsg(null);
+    try {
+      const res = await fetch("/api/team?t=" + Date.now(), { cache: "no-store" });
+      const json = await res.json();
+      if (json && json.success) {
+        const teamList = json.team || (json.data && json.data.team) || (Array.isArray(json.data) ? json.data : []);
+        teamList.sort((a: any, b: any) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+        setTeam(teamList);
+        if (json.joinBanner || (json.data && json.data.joinBanner)) {
+          setJoinBanner(json.joinBanner || json.data.joinBanner);
         }
-        setLoading(false);
-      })
-      .catch((err) => console.error(err));
+      } else {
+        throw new Error(json.error || "Failed to fetch team data");
+      }
+    } catch (err: any) {
+      console.error(err);
+      setErrorMsg(err.message || "Error fetching team data.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -161,8 +172,13 @@ export default function AdminTeamPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this team member?")) return;
-    await fetch(`/api/team?id=${id}`, { method: "DELETE" });
-    fetchTeam();
+    try {
+      await fetch(`/api/team?id=${id}`, { method: "DELETE" });
+      fetchTeam();
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting team member.");
+    }
   };
 
   // Filtered members list for admin display
@@ -203,6 +219,7 @@ export default function AdminTeamPage() {
               Manage and organize by <strong>1. Leadership</strong> and <strong>2. Team</strong> (Sales, Operations, Installation, Support Staff).
             </p>
           </div>
+          {errorMsg && <div style={{ width: "100%", padding: "1rem", background: "rgba(239, 68, 68, 0.2)", color: "#f87171", borderRadius: "8px", border: "1px solid rgba(239, 68, 68, 0.4)" }}>{errorMsg}</div>}
           <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap" }}>
             <button
               onClick={() => {
@@ -464,7 +481,7 @@ export default function AdminTeamPage() {
                   style={{ flex: 1, padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
                 />
                 <label style={{ padding: "0.75rem 1.2rem", background: "#d4af37", color: "#000", borderRadius: "6px", cursor: "pointer", fontWeight: 800, whiteSpace: "nowrap", fontSize: "0.85rem" }}>
-                  📁 Choose File
+                  {isUploading ? "Uploading..." : "📁 Choose File"}
                   <input
                     type="file"
                     accept="image/*"
@@ -472,6 +489,7 @@ export default function AdminTeamPage() {
                     onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
+                      setIsUploading(true);
                       const formData = new FormData();
                       formData.append("file", file);
                       formData.append("folder", "Team");
@@ -484,6 +502,8 @@ export default function AdminTeamPage() {
                         } else alert("Upload error: " + json.error);
                       } catch (err: any) {
                         alert("Upload failed: " + err.message);
+                      } finally {
+                        setIsUploading(false);
                       }
                     }}
                   />
@@ -695,7 +715,7 @@ export default function AdminTeamPage() {
                           type="number"
                           value={m.sequenceNumber || (idx + 1)}
                           onChange={(e) => {
-                            const val = parseInt(e.target.value) || 1;
+                            const val = isNaN(parseInt(e.target.value)) ? 1 : parseInt(e.target.value);
                             setRearrangeList((prev) =>
                               prev.map((item) => (item.id === m.id ? { ...item, sequenceNumber: val } : item))
                             );
@@ -715,21 +735,30 @@ export default function AdminTeamPage() {
                   Cancel
                 </button>
                 <button
+                  disabled={isSavingOrder}
                   onClick={async () => {
-                    const sorted = [...rearrangeList].sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
-                    const normalized = sorted.map((m, i) => ({ ...m, sequenceNumber: i + 1 }));
-                    setTeam(normalized);
-                    await fetch("/api/team", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ type: "reorder", team: normalized }),
-                    });
-                    setShowRearrangeModal(false);
-                    alert("Display order updated and saved live!");
+                    setIsSavingOrder(true);
+                    try {
+                      const sorted = [...rearrangeList].sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+                      const normalized = sorted.map((m, i) => ({ ...m, sequenceNumber: i + 1 }));
+                      setTeam(normalized);
+                      await fetch("/api/team", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ type: "reorder", team: normalized }),
+                      });
+                      setShowRearrangeModal(false);
+                      alert("Display order updated and saved live!");
+                    } catch (err) {
+                      console.error(err);
+                      alert("Error saving order");
+                    } finally {
+                      setIsSavingOrder(false);
+                    }
                   }}
-                  style={{ padding: "0.75rem 1.6rem", background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}
+                  style={{ padding: "0.75rem 1.6rem", background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 800, cursor: isSavingOrder ? "not-allowed" : "pointer" }}
                 >
-                  Save New Order
+                  {isSavingOrder ? "Saving..." : "Save New Order"}
                 </button>
               </div>
             </div>

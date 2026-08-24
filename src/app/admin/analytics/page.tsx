@@ -37,19 +37,34 @@ export default function ExecutiveAnalyticsPage() {
   const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d" | "1y">("30d");
   const [logs, setLogs] = useState<ActivityLogItem[]>([]);
 
+  const getMultiplier = (tr: string) => {
+    switch (tr) {
+      case "7d": return 0.25;
+      case "90d": return 2.8;
+      case "1y": return 11.5;
+      default: return 1.0; // 30d
+    }
+  };
+
+  const mult = getMultiplier(timeRange);
+  const totalHours = (329.0 * mult).toFixed(1);
+  const billableValue = Math.round(1026000 * mult).toLocaleString("en-IN");
+  const specItems = Math.round(128 * mult);
+  const gmvPipeline = (14.2 * mult).toFixed(1);
+
   const BRAND_PERFORMANCE = [
-    { name: "NewTechWood Composite", gmv: "₹4.8 Cr", orders: 142, growth: "+28.4%", share: "34%" },
-    { name: "Formica Decorative Laminates", gmv: "₹3.2 Cr", orders: 310, growth: "+18.2%", share: "22%" },
-    { name: "Fenix NTM Architectural", gmv: "₹2.6 Cr", orders: 98, growth: "+31.0%", share: "18%" },
-    { name: "Mirage Italian Porcelain Slabs", gmv: "₹2.1 Cr", orders: 64, growth: "+14.5%", share: "15%" },
-    { name: "Waltz Glass Partitions", gmv: "₹1.5 Cr", orders: 42, growth: "+22.1%", share: "11%" },
+    { name: "NewTechWood Composite", gmv: `₹${(4.8 * mult).toFixed(1)} Cr`, orders: Math.round(142 * mult), growth: "+28.4%", share: "34%" },
+    { name: "Formica Decorative Laminates", gmv: `₹${(3.2 * mult).toFixed(1)} Cr`, orders: Math.round(310 * mult), growth: "+18.2%", share: "22%" },
+    { name: "Fenix NTM Architectural", gmv: `₹${(2.6 * mult).toFixed(1)} Cr`, orders: Math.round(98 * mult), growth: "+31.0%", share: "18%" },
+    { name: "Mirage Italian Porcelain Slabs", gmv: `₹${(2.1 * mult).toFixed(1)} Cr`, orders: Math.round(64 * mult), growth: "+14.5%", share: "15%" },
+    { name: "Waltz Glass Partitions", gmv: `₹${(1.5 * mult).toFixed(1)} Cr`, orders: Math.round(42 * mult), growth: "+22.1%", share: "11%" },
   ];
 
   const DESIGNER_TIME_METRICS = [
-    { designer: "Anand M (Principal)", project: "Prestige Villa", hours: "142.5 hrs", billableRate: "₹3,500/hr", billableTotal: "₹4,98,750", activeStatus: "Tracking Now ⏱️" },
-    { designer: "Ananya S (Senior Designer)", project: "Oak Residency Kitchen", hours: "88.0 hrs", billableRate: "₹3,000/hr", billableTotal: "₹2,64,000", activeStatus: "Active" },
-    { designer: "Rohit K (3D Visualizer)", project: "Studio 42 Fitout", hours: "64.5 hrs", billableRate: "₹2,500/hr", billableTotal: "₹1,61,250", activeStatus: "Idle" },
-    { designer: "Meera P (Specification Lead)", project: "Whitepine Reno", hours: "34.0 hrs", billableRate: "₹3,000/hr", billableTotal: "₹1,02,000", activeStatus: "Active" },
+    { designer: "Anand M (Principal)", project: "Prestige Villa", hours: `${(142.5 * mult).toFixed(1)} hrs`, billableRate: "₹3,500/hr", billableTotal: `₹${Math.round(498750 * mult).toLocaleString("en-IN")}`, activeStatus: "Tracking Now ⏱️" },
+    { designer: "Ananya S (Senior Designer)", project: "Oak Residency Kitchen", hours: `${(88.0 * mult).toFixed(1)} hrs`, billableRate: "₹3,000/hr", billableTotal: `₹${Math.round(264000 * mult).toLocaleString("en-IN")}`, activeStatus: "Active" },
+    { designer: "Rohit K (3D Visualizer)", project: "Studio 42 Fitout", hours: `${(64.5 * mult).toFixed(1)} hrs`, billableRate: "₹2,500/hr", billableTotal: `₹${Math.round(161250 * mult).toLocaleString("en-IN")}`, activeStatus: "Idle" },
+    { designer: "Meera P (Specification Lead)", project: "Whitepine Reno", hours: `${(34.0 * mult).toFixed(1)} hrs`, billableRate: "₹3,000/hr", billableTotal: `₹${Math.round(102000 * mult).toLocaleString("en-IN")}`, activeStatus: "Active" },
   ];
 
   useEffect(() => {
@@ -294,8 +309,8 @@ export default function ExecutiveAnalyticsPage() {
               <button onClick={() => setTimeRange("1y")} className={`tab-btn ${timeRange === "1y" ? "active" : ""}`}>1Y</button>
             </div>
 
-            <Link href="/modules/aaren-intpro-designer-workspace.html" target="_blank" className="btn-launch-os">
-              <span>🚀 Launch Designer OS (Programa)</span>
+            <Link href="/workspace" target="_blank" className="btn-launch-os">
+              <span>🚀 Launch Designer Workspace</span>
               <ExternalLink size={14} />
             </Link>
           </div>
@@ -308,9 +323,9 @@ export default function ExecutiveAnalyticsPage() {
               <span>Total Designer Hours</span>
               <Clock size={16} color="#81663F" />
             </div>
-            <div className="kpi-val">329.0 hrs</div>
+            <div className="kpi-val">{totalHours} hrs</div>
             <div className="kpi-trend">
-              <ArrowUpRight size={14} /> +42 hrs this week
+              <ArrowUpRight size={14} /> Active timeframe: {timeRange.toUpperCase()}
             </div>
           </div>
 
@@ -319,7 +334,7 @@ export default function ExecutiveAnalyticsPage() {
               <span>Billable Studio Value</span>
               <DollarSign size={16} color="#10B981" />
             </div>
-            <div className="kpi-val">₹10,26,000</div>
+            <div className="kpi-val">₹{billableValue}</div>
             <div className="kpi-trend">
               <ArrowUpRight size={14} /> ₹3,120 avg hourly rate
             </div>
@@ -330,7 +345,7 @@ export default function ExecutiveAnalyticsPage() {
               <span>Specifications Active</span>
               <FileSpreadsheet size={16} color="#2563EB" />
             </div>
-            <div className="kpi-val">128 Items</div>
+            <div className="kpi-val">{specItems} Items</div>
             <div className="kpi-trend">
               <ArrowUpRight size={14} /> 94% Client approval rate
             </div>
@@ -341,7 +356,7 @@ export default function ExecutiveAnalyticsPage() {
               <span>Gross Spec Pipeline</span>
               <TrendingUp size={16} color="#EC4899" />
             </div>
-            <div className="kpi-val">₹14.2 Cr</div>
+            <div className="kpi-val">₹{gmvPipeline} Cr</div>
             <div className="kpi-trend">
               <ArrowUpRight size={14} /> 4 Live Villa projects
             </div>

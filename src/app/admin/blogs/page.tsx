@@ -128,10 +128,13 @@ function BlogRichTextEditor({
   const handleInsertNewPicture = () => {
     if (!imgInput.url) return alert("Please enter or upload an image URL.");
     
+    const safeUrl = imgInput.url.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const safeCaption = imgInput.caption.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
     const figHtml = `
       <figure class="article-figure" style="text-align: center; margin: 1.5rem 0;">
-        <img src="${imgInput.url}" class="${imgInput.style} ${imgInput.align}" style="width: ${imgInput.width}; height: ${imgInput.height};" alt="${imgInput.caption || 'Article Image'}" />
-        ${imgInput.caption ? `<figcaption style="font-size: 0.825rem; color: #80673f; font-style: italic; margin-top: 0.4rem;">${imgInput.caption}</figcaption>` : ""}
+        <img src="${safeUrl}" class="${imgInput.style} ${imgInput.align}" style="width: ${imgInput.width}; height: ${imgInput.height};" alt="${safeCaption || 'Article Image'}" />
+        ${safeCaption ? `<figcaption style="font-size: 0.825rem; color: #80673f; font-style: italic; margin-top: 0.4rem;">${safeCaption}</figcaption>` : ""}
       </figure><p></p>
     `;
 
@@ -525,15 +528,18 @@ export default function AdminBlogsPage() {
   const [showRearrangeModal, setShowRearrangeModal] = useState(false);
   const [reorderingList, setReorderingList] = useState<BlogItem[]>([]);
 
-  const fetchBlogs = () => {
-    fetch("/api/blogs")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success) {
-          setBlogs(json.data);
-          setReorderingList(json.data);
-        }
-      });
+  const fetchBlogs = async () => {
+    try {
+      const res = await fetch("/api/blogs");
+      const json = await res.json();
+      if (json.success) {
+        setBlogs(json.data);
+        setReorderingList(json.data);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to fetch blogs");
+    }
   };
 
   const fetchFontSettings = () => {
@@ -554,27 +560,32 @@ export default function AdminBlogsPage() {
     e.preventDefault();
     if (!editing?.title || !editing?.content) return alert("Title and Content are required.");
 
-    const generatedSlug = editing.slug || editing.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const generatedSlug = (editing.slug || editing.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")).replace(/-+$/g, '');
 
-    const res = await fetch("/api/blogs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...editing,
-        slug: generatedSlug,
-        category: editing.category || "Surfaces",
-        tags: typeof editing.tags === "string" ? (editing.tags as string).split(",").map((t) => t.trim()) : editing.tags || [],
-        status: editing.status || "Published",
-        author: editing.author || "Aaren Studio",
-        featuredImage: editing.featuredImage || "",
-      }),
-    });
-    const json = await res.json();
-    if (json.success) {
-      alert("✅ Blog article saved successfully to database!");
-      setEditing(null);
-      fetchBlogs();
-    } else alert("❌ Error saving blog: " + json.error);
+    try {
+      const res = await fetch("/api/blogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...editing,
+          slug: generatedSlug,
+          category: editing.category || "Surfaces",
+          tags: typeof editing.tags === "string" ? (editing.tags as string).split(",").map((t) => t.trim()) : editing.tags || [],
+          status: editing.status || "Published",
+          author: editing.author || "Aaren Studio",
+          featuredImage: editing.featuredImage || "",
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("✅ Blog article saved successfully to database!");
+        setEditing(null);
+        fetchBlogs();
+      } else alert("❌ Error saving blog: " + json.error);
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error saving blog.");
+    }
   };
 
   const handleSaveFontSettings = async () => {
@@ -606,11 +617,20 @@ export default function AdminBlogsPage() {
     setReorderingList(newList);
 
     // Save reordered list to backend
-    await fetch("/api/blogs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "reorder", blogs: newList }),
-    });
+    try {
+      const res = await fetch("/api/blogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "reorder", blogs: newList }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        alert("❌ Failed to reorder articles server-side.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error connecting to server to reorder articles.");
+    }
   };
 
   const handleSaveReorder = async () => {
@@ -633,8 +653,13 @@ export default function AdminBlogsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this blog post?")) return;
-    await fetch(`/api/blogs?id=${id}`, { method: "DELETE" });
-    fetchBlogs();
+    try {
+      await fetch(`/api/blogs?id=${id}`, { method: "DELETE" });
+      fetchBlogs();
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error deleting blog.");
+    }
   };
 
   const handleImageUpload = async (file: File) => {
@@ -1118,6 +1143,11 @@ export default function AdminBlogsPage() {
                 <span style={{ fontSize: "0.78rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.25rem 0.7rem", borderRadius: "4px", fontWeight: 900 }}>{b.category || "General"}</span>
                 <span style={{ fontSize: "0.75rem", color: "#d4af37", fontWeight: 800 }}>Sequence #{index + 1}</span>
               </div>
+              {b.featuredImage && (
+                <div style={{ width: "100%", height: "140px", marginBottom: "0.8rem", borderRadius: "8px", overflow: "hidden" }}>
+                  <img src={b.featuredImage} alt={b.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+              )}
               <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0.4rem 0 0.5rem" }}>{b.title}</h3>
               <div style={{ color: "#cbd5e1", fontSize: "0.88rem", margin: "0.5rem 0 1.4rem", lineHeight: 1.6, maxHeight: "70px", overflow: "hidden" }}>
                 {b.content ? b.content.replace(/<[^>]*>/g, "") : ""}

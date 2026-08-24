@@ -13,14 +13,18 @@ export default function AdminMediaPage() {
   const [selectedType, setSelectedType] = useState("All");
   const [uploading, setUploading] = useState(false);
 
-  const fetchMedia = () => {
+  const fetchMedia = async () => {
     setLoading(true);
-    fetch("/api/media?t=" + Date.now())
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.data)) setMedia(json.data);
-      })
-      .finally(() => setLoading(false));
+    try {
+      const res = await fetch("/api/media?t=" + Date.now());
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data)) setMedia(json.data);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to fetch media");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -31,21 +35,26 @@ export default function AdminMediaPage() {
     e.preventDefault();
     if (!editing?.fileName || !editing?.fileUrl) return alert("File Name and URL are required.");
 
-    const res = await fetch("/api/media", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...editing,
-        fileType: editing.fileType || "PDF",
-        folder: editing.folder || "General",
-      }),
-    });
-    const json = await res.json();
-    if (json.success) {
-      alert("✅ Media Asset added to Central Library!");
-      setEditing(null);
-      fetchMedia();
-    } else alert("Error: " + json.error);
+    try {
+      const res = await fetch("/api/media", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...editing,
+          fileType: editing.fileType || "PDF",
+          folder: editing.folder || "General",
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("✅ Media Asset added to Central Library!");
+        setEditing(null);
+        fetchMedia();
+      } else alert("Error: " + json.error);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save media");
+    }
   };
 
   const handleFileUpload = async (file: File) => {
@@ -75,7 +84,7 @@ export default function AdminMediaPage() {
       if (!finalUrl) {
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("folder", "PC Uploads");
+        formData.append("folder", fileType);
 
         const res = await fetch("/api/upload", {
           method: "POST",
@@ -114,8 +123,13 @@ export default function AdminMediaPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this media asset?")) return;
-    await fetch(`/api/media?id=${id}`, { method: "DELETE" });
-    fetchMedia();
+    try {
+      await fetch(`/api/media?id=${id}`, { method: "DELETE" });
+      fetchMedia();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete media");
+    }
   };
 
   const filteredMedia = media.filter((m) => {

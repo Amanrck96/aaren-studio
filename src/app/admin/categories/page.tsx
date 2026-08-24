@@ -13,17 +13,22 @@ const CARD_THEMES = [
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [editingCat, setEditingCat] = useState<Partial<CategoryItem> | null>(null);
   const [cardTheme, setCardTheme] = useState("navy");
+  const [isSaving, setIsSaving] = useState(false);
 
-  const fetchCategories = () => {
-    fetch("/api/categories")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success) setCategories(json.data);
-        setLoading(false);
-      });
+  const fetchCategories = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/categories");
+      const json = await res.json();
+      if (json.success) setCategories(json.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -33,24 +38,36 @@ export default function AdminCategoriesPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingCat?.name) return alert("Category Name is required.");
-
-    const res = await fetch("/api/categories", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editingCat),
-    });
-    const json = await res.json();
-    if (json.success) {
-      alert("Category saved successfully!");
-      setEditingCat(null);
-      fetchCategories();
-    } else alert("Error: " + json.error);
+    setIsSaving(true);
+    try {
+      const res = await fetch("/api/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editingCat),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("Category saved successfully!");
+        setEditingCat(null);
+        fetchCategories();
+      } else {
+        alert("Error: " + json.error);
+      }
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this category?")) return;
-    await fetch(`/api/categories?id=${id}`, { method: "DELETE" });
-    fetchCategories();
+    try {
+      await fetch(`/api/categories?id=${id}`, { method: "DELETE" });
+      fetchCategories();
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    }
   };
 
   const handleFileUpload = async (file: File) => {
@@ -200,8 +217,8 @@ export default function AdminCategoriesPage() {
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" style={{ padding: "0.75rem 1.6rem", background: "#d4af37", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}>
-                Save Category
+              <button type="submit" disabled={isSaving} style={{ padding: "0.75rem 1.6rem", background: "#d4af37", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}>
+                {isSaving ? "Saving..." : "Save Category"}
               </button>
               <button type="button" onClick={() => setEditingCat(null)} style={{ padding: "0.75rem 1.6rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
                 Cancel

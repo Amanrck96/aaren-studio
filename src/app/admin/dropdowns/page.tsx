@@ -7,13 +7,21 @@ import { TaxonomyItem } from "@/lib/types";
 export default function AdminDropdownsPage() {
   const [items, setItems] = useState<TaxonomyItem[]>([]);
   const [editing, setEditing] = useState<Partial<TaxonomyItem> | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const fetchDropdowns = () => {
-    fetch("/api/dropdowns")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success) setItems(json.data);
-      });
+  const fetchDropdowns = async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetch("/api/dropdowns");
+      const json = await res.json();
+      if (json.success) setItems(json.data);
+    } catch (error) {
+      console.error("Error fetching dropdowns:", error);
+      alert("Failed to fetch dropdowns.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -24,23 +32,36 @@ export default function AdminDropdownsPage() {
     e.preventDefault();
     if (!editing?.name || !editing?.type) return alert("Name and Type are required.");
 
-    const res = await fetch("/api/dropdowns", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editing),
-    });
-    const json = await res.json();
-    if (json.success) {
-      alert("Dropdown taxonomy saved!");
-      setEditing(null);
-      fetchDropdowns();
-    } else alert("Error: " + json.error);
+    try {
+      setIsSaving(true);
+      const res = await fetch("/api/dropdowns", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editing),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("Dropdown taxonomy saved!");
+        setEditing(null);
+        fetchDropdowns();
+      } else alert("Error: " + json.error);
+    } catch (error) {
+      console.error("Error saving dropdown:", error);
+      alert("Failed to save dropdown.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure?")) return;
-    await fetch(`/api/dropdowns?id=${id}`, { method: "DELETE" });
-    fetchDropdowns();
+    try {
+      await fetch(`/api/dropdowns?id=${id}`, { method: "DELETE" });
+      fetchDropdowns();
+    } catch (error) {
+      console.error("Error deleting dropdown:", error);
+      alert("Failed to delete dropdown.");
+    }
   };
 
   return (
@@ -54,7 +75,7 @@ export default function AdminDropdownsPage() {
             <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Manage dynamic categories, technologies, project types, and status options.</p>
           </div>
           <button
-            onClick={() => setEditing({ name: "", type: "Category", code: "", sequenceNumber: items.length + 1 })}
+            onClick={() => setEditing({ name: "", type: "Category", code: "", sequenceNumber: (items.length > 0 ? Math.max(...items.map((i: any) => i.sequenceNumber || 0)) : 0) + 1 })}
             style={{ padding: "0.7rem 1.4rem", background: "#a855f7", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}
           >
             + Add Dropdown Option
@@ -103,8 +124,8 @@ export default function AdminDropdownsPage() {
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" style={{ padding: "0.7rem 1.5rem", background: "#a855f7", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}>
-                Save Option
+              <button type="submit" disabled={isSaving} style={{ padding: "0.7rem 1.5rem", background: "#a855f7", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: isSaving ? "wait" : "pointer" }}>
+                {isSaving ? "Saving..." : "Save Option"}
               </button>
               <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.7rem 1.5rem", background: "#333", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
                 Cancel

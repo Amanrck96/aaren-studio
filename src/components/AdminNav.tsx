@@ -37,7 +37,7 @@ export default function AdminNav() {
     { label: "💬 Testimonials", href: "/admin/testimonials" },
     { label: "✍️ Blogs", href: "/admin/blogs" },
     { label: "⏱️ Designer Time & Activity Audit", href: "/admin/analytics" },
-    { label: "🚀 Launch Designer OS (Programa)", href: "/modules/aaren-intpro-designer-workspace.html" },
+    { label: "🚀 Launch Designer OS (Programa)", href: "/workspace" },
     { label: "📁 Media Library", href: "/admin/media" },
     { label: "🗂️ Dropdowns", href: "/admin/dropdowns" },
     { label: "ℹ️ About & Roadmap", href: "/admin/about" },
@@ -206,8 +206,8 @@ export default function AdminNav() {
         </div>
       </aside>
 
-      {/* Global CSS for Light Admin Theme */}
-      <style jsx global>{`
+      {/* Scoped CSS for Light Admin Theme */}
+      <style jsx>{`
         .admin-sidebar-nav::-webkit-scrollbar {
           width: 6px;
         }
@@ -219,7 +219,7 @@ export default function AdminNav() {
           background: #8c764b;
           border-radius: 4px;
         }
-        main.admin-main-content {
+        :global(main.admin-main-content) {
           margin-left: ${isOpen ? "300px" : "0px"} !important;
           transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
           background-color: #ffffff !important;

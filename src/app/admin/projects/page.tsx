@@ -36,6 +36,9 @@ export default function AdminProjectsPage() {
         fetch("/api/projects"),
       ]);
 
+      if (!prodRes.ok) throw new Error("Failed to fetch products: " + prodRes.statusText);
+      if (!projRes.ok) throw new Error("Failed to fetch projects: " + projRes.statusText);
+
       const prodJson = await prodRes.json();
       const projJson = await projRes.json();
 
@@ -71,6 +74,11 @@ export default function AdminProjectsPage() {
     e.preventDefault();
     if (!projectForm.title || !projectForm.client) {
       alert("Please fill in Project Title and Client Name");
+      return;
+    }
+
+    if (Object.keys(selectedProductMap).length === 0) {
+      alert("Please select at least one product for this project catalog.");
       return;
     }
 

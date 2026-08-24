@@ -196,6 +196,14 @@ export default function AdminIndividualProductPage({ params }: Props) {
       showToast("Product name is required.");
       return;
     }
+    if (formData.price !== undefined && (isNaN(Number(formData.price)) || Number(formData.price) < 0)) {
+      showToast("Price cannot be negative.");
+      return;
+    }
+    if (formData.qtyInStock !== undefined && (isNaN(Number(formData.qtyInStock)) || Number(formData.qtyInStock) < 0)) {
+      showToast("Quantity cannot be negative.");
+      return;
+    }
     setSaving(true);
     try {
       const res = await fetch("/api/products", {
@@ -222,6 +230,10 @@ export default function AdminIndividualProductPage({ params }: Props) {
     }
     try {
       const res = await fetch(`/api/products?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      if (!res.ok) {
+        alert("Delete failed: HTTP " + res.status);
+        return;
+      }
       const json = await res.json();
       if (json.success) {
         alert("Product deleted successfully.");
@@ -713,6 +725,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
                     <label>Unit Price (INR ₹)</label>
                     <input
                       type="number"
+                      min="0"
                       placeholder="e.g. 6400 (Leave blank for 'Quote on Request')"
                       value={formData.price !== undefined ? formData.price : ""}
                       onChange={(e) =>
@@ -753,6 +766,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
                     <label>Warehouse In-Stock Quantity</label>
                     <input
                       type="number"
+                      min="0"
                       placeholder="e.g. 50"
                       value={formData.qtyInStock ?? 50}
                       onChange={(e) =>

@@ -126,6 +126,10 @@ export default function AdminIndividualBrandPage({ params }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+      if (!res.ok) {
+        showToast("Error saving: HTTP " + res.status);
+        return;
+      }
       const json = await res.json();
       if (json.success) {
         showToast("✓ Brand page details updated successfully!");
@@ -145,6 +149,10 @@ export default function AdminIndividualBrandPage({ params }: Props) {
     }
     try {
       const res = await fetch(`/api/brands?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      if (!res.ok) {
+        alert("Delete failed: HTTP " + res.status);
+        return;
+      }
       const json = await res.json();
       if (json.success) {
         alert("Brand deleted successfully.");

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Loader2, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
 
 export default function AdminCareers() {
   const [positions, setPositions] = useState<any[]>([]);
@@ -17,8 +18,9 @@ export default function AdminCareers() {
       if (data && data.success && Array.isArray(data.data)) {
         setPositions(data.data);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      alert("Error fetching positions: " + e.message);
     } finally {
       setLoading(false);
     }
@@ -71,9 +73,9 @@ export default function AdminCareers() {
     <div className="min-h-screen bg-[#eaeef4] text-[#1e1e1e] pt-32 pb-24 px-6 md:px-12 font-sans">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center gap-4 mb-12">
-          <a href="/admin/dashboard" className="text-xs font-black uppercase tracking-widest px-4 py-2 bg-white/80 border border-black/10 hover:bg-black hover:text-white rounded-lg transition-all">
+          <Link href="/admin/dashboard" className="text-xs font-black uppercase tracking-widest px-4 py-2 bg-white/80 border border-black/10 hover:bg-black hover:text-white rounded-lg transition-all">
             ← Dashboard
-          </a>
+          </Link>
           <div>
             <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-[#1e1e1e]">MANAGE OPEN ROLES</h1>
             <p className="text-xs uppercase tracking-wider text-black/40 font-mono mt-0.5">Live Google Firebase Cloud Store</p>
@@ -114,16 +116,31 @@ export default function AdminCareers() {
                   className="w-full bg-[#eaeef4]/50 border border-black/10 rounded-lg p-3.5 text-black text-sm outline-none focus:border-black/30 focus:bg-white transition-all"
                 />
               </div>
-              <div>
-                <label className="block text-[10px] uppercase tracking-widest font-black text-black/55 mb-2">Location</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Bangalore / Remote"
-                  value={newRole.location}
-                  onChange={(e) => setNewRole({ ...newRole, location: e.target.value })}
-                  className="w-full bg-[#eaeef4]/50 border border-black/10 rounded-lg p-3.5 text-black text-sm outline-none focus:border-black/30 focus:bg-white transition-all"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest font-black text-black/55 mb-2">Location</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Bangalore / Remote"
+                    value={newRole.location}
+                    onChange={(e) => setNewRole({ ...newRole, location: e.target.value })}
+                    className="w-full bg-[#eaeef4]/50 border border-black/10 rounded-lg p-3.5 text-black text-sm outline-none focus:border-black/30 focus:bg-white transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest font-black text-black/55 mb-2">Job Type</label>
+                  <select
+                    value={newRole.type}
+                    onChange={(e) => setNewRole({ ...newRole, type: e.target.value })}
+                    className="w-full bg-[#eaeef4]/50 border border-black/10 rounded-lg p-3.5 text-black text-sm outline-none focus:border-black/30 focus:bg-white transition-all"
+                  >
+                    <option value="Full-Time">Full-Time</option>
+                    <option value="Part-Time">Part-Time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Internship">Internship</option>
+                  </select>
+                </div>
               </div>
               <button
                 type="submit"

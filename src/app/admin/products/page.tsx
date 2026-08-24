@@ -56,6 +56,7 @@ export default function AdminProductsPage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editingProduct, setEditingProduct] = useState<ProductItem | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   // Form State
   const [form, setForm] = useState({
@@ -162,6 +163,10 @@ export default function AdminProductsPage() {
     if (!confirm("Are you sure you want to delete this product?")) return;
     try {
       const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        showToast("Delete failed: HTTP " + res.status);
+        return;
+      }
       const json = await res.json();
       if (json.success) {
         setProducts((prev) => prev.filter((p) => p.id !== id));
@@ -178,6 +183,15 @@ export default function AdminProductsPage() {
   // Create or Update product submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (form.price && (isNaN(parseFloat(form.price)) || parseFloat(form.price) < 0)) {
+      showToast("Price cannot be negative.");
+      return;
+    }
+    if (form.qtyInStock && (isNaN(parseInt(form.qtyInStock, 10)) || parseInt(form.qtyInStock, 10) < 0)) {
+      showToast("Quantity cannot be negative.");
+      return;
+    }
+    setIsSaving(true);
     try {
       const isEdit = Boolean(editingProduct);
       const payload = {
@@ -219,6 +233,8 @@ export default function AdminProductsPage() {
     } catch (err: any) {
       console.error(err);
       showToast("Failed to save product: " + err.message);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -662,6 +678,7 @@ export default function AdminProductsPage() {
                 <label>In-Stock Quantity</label>
                 <input
                   type="number"
+                  min="0"
                   placeholder="50"
                   value={form.qtyInStock}
                   onChange={(e) => setForm({ ...form, qtyInStock: e.target.value })}
@@ -673,6 +690,7 @@ export default function AdminProductsPage() {
                 <label>Price (INR)</label>
                 <input
                   type="number"
+                  min="0"
                   placeholder="e.g. 6400"
                   value={form.price}
                   onChange={(e) => setForm({ ...form, price: e.target.value })}
@@ -736,8 +754,8 @@ export default function AdminProductsPage() {
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
               />
             </div>
-            <button type="submit" className="submit-btn">
-              {editingProduct ? "Update Product Details →" : "Save Product to Catalog →"}
+            <button type="submit" className="submit-btn" disabled={isSaving}>
+              {isSaving ? "Saving..." : editingProduct ? "Update Product Details →" : "Save Product to Catalog →"}
             </button>
           </form>
         </div>

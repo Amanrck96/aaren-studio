@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import AdminNav from "@/components/AdminNav";
 import { FaqItem } from "@/lib/types";
-import * as xlsx from "xlsx";
 import {
   HelpCircle,
   Plus,
@@ -19,8 +18,6 @@ import {
   X,
   CheckCircle,
   RefreshCw,
-  Tag,
-  FolderPlus,
   ArrowUp,
   ArrowDown,
 } from "lucide-react";
@@ -127,6 +124,11 @@ export default function AdminFaqPage() {
       return;
     }
 
+    if (customCategory !== "" && !customCategory.trim()) {
+      showToast("Custom Category cannot be empty.");
+      return;
+    }
+
     setSaving(true);
     try {
       const finalCategory = customCategory.trim() || editingFaq.category || "General";
@@ -181,6 +183,7 @@ export default function AdminFaqPage() {
 
     setImporting(true);
     try {
+      const xlsx = await import("xlsx");
       const data = await file.arrayBuffer();
       const workbook = xlsx.read(data, { type: "array" });
       const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -288,8 +291,9 @@ export default function AdminFaqPage() {
   };
 
   // Export FAQs as CSV
-  const handleExport = () => {
+  const handleExport = async () => {
     if (faqs.length === 0) return;
+    const xlsx = await import("xlsx");
     const ws = xlsx.utils.json_to_sheet(
       faqs.map((f, i) => ({
         "Sl No": i + 1,

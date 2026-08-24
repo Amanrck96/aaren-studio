@@ -61,7 +61,10 @@ export default function AdminBrandsPage() {
       .then((json) => {
         if (json.success && json.data) setCatalogSettings(json.data);
       })
-      .catch(() => {});
+      .catch((e) => {
+        console.error("Failed to fetch catalog settings:", e);
+        alert("Failed to load catalog settings: " + e.message);
+      });
   };
 
   useEffect(() => {
@@ -105,23 +108,40 @@ export default function AdminBrandsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formattedBrand),
       });
+      if (!res.ok) {
+        alert("Save failed: HTTP " + res.status);
+        return;
+      }
       const json = await res.json();
       if (json.success) {
         setShowModal(false);
         fetchBrands();
+      } else {
+        alert("Save failed: " + (json.error || "Unknown error"));
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      alert("Error saving brand: " + e.message);
     }
   }
 
   async function handleDelete(id: string) {
     if (!confirm("Are you sure you want to delete this brand?")) return;
     try {
-      await fetch(`/api/brands?id=${id}`, { method: "DELETE" });
-      fetchBrands();
-    } catch (e) {
+      const res = await fetch(`/api/brands?id=${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        alert("Delete failed: HTTP " + res.status);
+        return;
+      }
+      const json = await res.json();
+      if (json.success) {
+        fetchBrands();
+      } else {
+        alert("Delete failed: " + (json.error || "Unknown error"));
+      }
+    } catch (e: any) {
       console.error(e);
+      alert("Error deleting brand: " + e.message);
     }
   }
 

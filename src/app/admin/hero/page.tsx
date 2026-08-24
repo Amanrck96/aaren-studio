@@ -9,6 +9,7 @@ export default function AdminHeroPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const [categoryInput, setCategoryInput] = useState("");
 
@@ -58,7 +59,7 @@ export default function AdminHeroPage() {
 
   function addCategoryTag() {
     if (!categoryInput.trim() || !settings) return;
-    if (!settings.heroCategories.includes(categoryInput.trim())) {
+    if (!settings.heroCategories.some(c => c.toLowerCase() === categoryInput.trim().toLowerCase())) {
       setSettings({ ...settings, heroCategories: [...settings.heroCategories, categoryInput.trim()] });
     }
     setCategoryInput("");
@@ -71,6 +72,7 @@ export default function AdminHeroPage() {
 
   const handleVideoUpload = async (file: File) => {
     if (!file || !settings) return;
+    setIsUploading(true);
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -87,6 +89,8 @@ export default function AdminHeroPage() {
       } else alert("Upload failed: " + json.error);
     } catch (err: any) {
       alert("Error: " + err.message);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -166,16 +170,16 @@ export default function AdminHeroPage() {
                 htmlFor="heroVideoUpload"
                 style={{
                   padding: "0.8rem 1.2rem",
-                  background: "#2563eb",
+                  background: isUploading ? "#9ca3af" : "#2563eb",
                   color: "#fff",
                   borderRadius: "6px",
                   fontSize: "0.85rem",
                   fontWeight: 700,
-                  cursor: "pointer",
+                  cursor: isUploading ? "wait" : "pointer",
                   whiteSpace: "nowrap",
                 }}
               >
-                💻 Upload Video From Computer
+                {isUploading ? "Uploading..." : "💻 Upload Video From Computer"}
               </label>
             </div>
             <p style={{ fontSize: "0.8rem", color: "#777", marginTop: "0.4rem" }}>Direct link to MP4 video file or select any MP4 video directly from your computer.</p>

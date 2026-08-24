@@ -30,6 +30,11 @@ export default function AdminContactPage() {
     e.preventDefault();
     if (!settings) return;
 
+    if (settings.webhookUrl && !settings.webhookUrl.startsWith("https://")) {
+      setMessage("Error: Webhook URL must start with https://");
+      return;
+    }
+
     setSaving(true);
     setMessage(null);
 
@@ -95,6 +100,7 @@ export default function AdminContactPage() {
                   <input
                     type="text"
                     required
+                    pattern="[+0-9\s-]+"
                     value={settings.contactPhone}
                     onChange={(e) => setSettings({ ...settings, contactPhone: e.target.value })}
                     style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}

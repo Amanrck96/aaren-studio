@@ -8,14 +8,20 @@ export default function AdminServicesPage() {
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Partial<ServiceItem> | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const fetchServices = () => {
-    fetch("/api/services")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success) setServices(json.data);
-        setLoading(false);
-      });
+  const fetchServices = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/services");
+      const json = await res.json();
+      if (json.success) setServices(json.data);
+    } catch (err) {
+      console.error(err);
+      alert("Error fetching services.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -25,24 +31,36 @@ export default function AdminServicesPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editing?.title || !editing?.description) return alert("Title and Description are required.");
-
-    const res = await fetch("/api/services", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editing),
-    });
-    const json = await res.json();
-    if (json.success) {
-      alert("Service saved successfully!");
-      setEditing(null);
-      fetchServices();
-    } else alert("Error: " + json.error);
+    setIsSaving(true);
+    try {
+      const res = await fetch("/api/services", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editing),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("Service saved successfully!");
+        setEditing(null);
+        fetchServices();
+      } else alert("Error: " + json.error);
+    } catch (err) {
+      console.error(err);
+      alert("Error saving service.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this service?")) return;
-    await fetch(`/api/services?id=${id}`, { method: "DELETE" });
-    fetchServices();
+    try {
+      await fetch(`/api/services?id=${id}`, { method: "DELETE" });
+      fetchServices();
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting service.");
+    }
   };
 
   return (
@@ -100,8 +118,8 @@ export default function AdminServicesPage() {
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" style={{ padding: "0.7rem 1.5rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}>
-                Save Service
+              <button type="submit" disabled={isSaving} style={{ padding: "0.7rem 1.5rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: isSaving ? "not-allowed" : "pointer" }}>
+                {isSaving ? "Saving..." : "Save Service"}
               </button>
               <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.7rem 1.5rem", background: "#333", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
                 Cancel

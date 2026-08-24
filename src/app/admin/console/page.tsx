@@ -15,8 +15,23 @@ export default function AdminConsolePage() {
     cloudflareMcpBridge: true,
   });
 
-  const toggleFlag = (key: keyof typeof featureFlags) => {
-    setFeatureFlags((prev) => ({ ...prev, [key]: !prev[key] }));
+  const toggleFlag = async (key: keyof typeof featureFlags) => {
+    const enabled = !featureFlags[key];
+    setFeatureFlags((prev) => ({ ...prev, [key]: enabled }));
+    try {
+      await fetch("/api/site-settings", { 
+        method: "POST", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify({ action: "toggle_flag", key, enabled }) 
+      });
+    } catch (e) {
+      console.error("Failed to toggle flag", e);
+    }
+  };
+
+  const fetchAuditLogs = () => {
+    // Dummy function as requested
+    console.log('Fetching logs...');
   };
 
   return (
@@ -340,7 +355,7 @@ export default function AdminConsolePage() {
               <h3 className="panel-title">
                 <FileText size={18} color="#2563EB" /> System Audit Trail & Realtime Log Stream
               </h3>
-              <button style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--slate)", padding: "4px 10px", borderRadius: "4px", cursor: "pointer", fontSize: "12px", display: "flex", alignItems: "center", gap: "4px" }}>
+              <button onClick={() => fetchAuditLogs()} style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--slate)", padding: "4px 10px", borderRadius: "4px", cursor: "pointer", fontSize: "12px", display: "flex", alignItems: "center", gap: "4px" }}>
                 <RefreshCw size={12} /> Refresh Log
               </button>
             </div>

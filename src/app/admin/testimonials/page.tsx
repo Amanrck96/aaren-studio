@@ -8,12 +8,16 @@ export default function AdminTestimonialsPage() {
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
   const [editing, setEditing] = useState<Partial<TestimonialItem> | null>(null);
 
-  const fetchTestimonials = () => {
-    fetch("/api/testimonials")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success) setTestimonials(json.data);
-      });
+  const [isSaving, setIsSaving] = useState(false);
+
+  const fetchTestimonials = async () => {
+    try {
+      const res = await fetch("/api/testimonials");
+      const json = await res.json();
+      if (json.success) setTestimonials(json.data);
+    } catch (e: any) {
+      alert("Error fetching testimonials: " + e.message);
+    }
   };
 
   useEffect(() => {
@@ -23,24 +27,34 @@ export default function AdminTestimonialsPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editing?.clientName || !editing?.review) return alert("Client Name and Review are required.");
-
-    const res = await fetch("/api/testimonials", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editing),
-    });
-    const json = await res.json();
-    if (json.success) {
-      alert("Testimonial saved!");
-      setEditing(null);
-      fetchTestimonials();
-    } else alert("Error: " + json.error);
+    setIsSaving(true);
+    try {
+      const res = await fetch("/api/testimonials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editing),
+      });
+      const json = await res.json();
+      if (json.success) {
+        alert("Testimonial saved!");
+        setEditing(null);
+        fetchTestimonials();
+      } else alert("Error: " + json.error);
+    } catch (e: any) {
+      alert("Error saving testimonial: " + e.message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure?")) return;
-    await fetch(`/api/testimonials?id=${id}`, { method: "DELETE" });
-    fetchTestimonials();
+    try {
+      await fetch(`/api/testimonials?id=${id}`, { method: "DELETE" });
+      fetchTestimonials();
+    } catch (e: any) {
+      alert("Error deleting testimonial: " + e.message);
+    }
   };
 
   return (
@@ -84,6 +98,29 @@ export default function AdminTestimonialsPage() {
                   style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
                 />
               </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Rating (1-5)</label>
+                <select
+                  value={editing.rating || 5}
+                  onChange={(e) => setEditing({ ...editing, rating: Number(e.target.value) })}
+                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                >
+                  <option value={1}>1 Star</option>
+                  <option value={2}>2 Stars</option>
+                  <option value={3}>3 Stars</option>
+                  <option value={4}>4 Stars</option>
+                  <option value={5}>5 Stars</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Sequence Number</label>
+                <input
+                  type="number"
+                  value={editing.sequenceNumber || ""}
+                  onChange={(e) => setEditing({ ...editing, sequenceNumber: Number(e.target.value) })}
+                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                />
+              </div>
             </div>
 
             <div style={{ marginTop: "1rem" }}>
@@ -98,8 +135,8 @@ export default function AdminTestimonialsPage() {
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" style={{ padding: "0.7rem 1.5rem", background: "#14b8a6", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}>
-                Save Review
+              <button type="submit" disabled={isSaving} style={{ padding: "0.7rem 1.5rem", background: "#14b8a6", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}>
+                {isSaving ? "Saving..." : "Save Review"}
               </button>
               <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.7rem 1.5rem", background: "#333", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
                 Cancel
@@ -111,7 +148,7 @@ export default function AdminTestimonialsPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
           {testimonials.map((t) => (
             <div key={t.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "1.8rem", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
-              <div style={{ color: "#d4af37", fontSize: "1.2rem", marginBottom: "0.8rem", letterSpacing: "0.1em" }}>{"★".repeat(t.rating || 5)}</div>
+              <div style={{ color: "#d4af37", fontSize: "1.2rem", marginBottom: "0.8rem", letterSpacing: "0.1em" }}>{"★".repeat(Math.max(1, Math.min(5, Math.floor(Number(t.rating || 5)))))}</div>
               <p style={{ color: "#f1f5f9", fontSize: "0.98rem", fontStyle: "italic", marginBottom: "1.2rem", lineHeight: 1.6 }}>"{t.review}"</p>
               <div style={{ fontWeight: 900, fontSize: "1.2rem", color: "#ffffff" }}>{t.clientName}</div>
               <div style={{ color: "#d4af37", fontSize: "0.88rem", fontWeight: 700, marginBottom: "1.4rem" }}>{t.company}</div>

@@ -35,6 +35,7 @@ export default function CollectionsAdminPage() {
 
   const loadData = async () => {
     setLoading(true);
+    setMessage(null);
     try {
       const [colRes, brRes, prRes] = await Promise.all([
         fetch("/api/collections?includeCounts=true&t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()),
@@ -55,8 +56,9 @@ export default function CollectionsAdminPage() {
       if (prRes.success && Array.isArray(prRes.data)) {
         setProducts(prRes.data);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error("Failed to load collections data:", e);
+      setMessage({ text: "Failed to load data: " + e.message, type: "error" });
     } finally {
       setLoading(false);
     }
@@ -210,8 +212,13 @@ export default function CollectionsAdminPage() {
         setQuickProdName("");
         setMessage({ text: `Product "${newProd.name}" added to ${colObj?.name}!`, type: "success" });
         await loadData();
+      } else {
+        setMessage({ text: "Failed to add product: HTTP " + res.status, type: "error" });
       }
-    } catch (e) {}
+    } catch (e: any) {
+      console.error("Quick add product error:", e);
+      setMessage({ text: "Error adding product: " + e.message, type: "error" });
+    }
   };
 
   const activeBrandName = brands.find((b) => b.id === selectedBrand)?.name || selectedBrand;

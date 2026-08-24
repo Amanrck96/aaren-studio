@@ -12,12 +12,23 @@ export default function AdminInquiriesPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchInquiries();
-    // Auto refresh leads every 8 seconds for real-time live updates
-    const interval = setInterval(() => {
-      fetchInquiries(true);
-    }, 8000);
-    return () => clearInterval(interval);
+    let isMounted = true;
+    let timeoutId: NodeJS.Timeout;
+
+    const poll = async () => {
+      if (!isMounted) return;
+      await fetchInquiries(true);
+      if (isMounted) timeoutId = setTimeout(poll, 8000);
+    };
+
+    fetchInquiries().then(() => {
+      if (isMounted) timeoutId = setTimeout(poll, 8000);
+    });
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   async function fetchInquiries(silent = false) {
@@ -64,9 +75,9 @@ export default function AdminInquiriesPage() {
     const matchesType = filterType === "All" || inq.type === filterType;
     const matchesQuery =
       !searchQuery ||
-      inq.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      inq.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      inq.phone.includes(searchQuery) ||
+      (inq.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (inq.email || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (inq.phone || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       (inq.productOrBrand && inq.productOrBrand.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (inq.subject && inq.subject.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesType && matchesQuery;
@@ -150,6 +161,7 @@ export default function AdminInquiriesPage() {
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "1.2rem", borderRadius: "8px" }}>
           <input
             type="text"
+            aria-label="Search inquiries"
             placeholder="Search by visitor name, email, phone, or enquired catalogue..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

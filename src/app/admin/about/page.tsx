@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import AdminNav from "@/components/AdminNav";
 import { RoadmapStepItem } from "@/lib/types";
-import { Edit2, Trash2, ArrowUp, ArrowDown, Check, X, Plus, Save } from "lucide-react";
+import { Edit2, Trash2, ArrowUp, ArrowDown, X, Save } from "lucide-react";
 
 export default function AdminAboutPage() {
   const [mission, setMission] = useState("To provide premium, elite, and high-quality lifestyle products under one roof for the global Indian customer.");
@@ -107,6 +107,11 @@ export default function AdminAboutPage() {
   // Add or Update Step
   async function handleSubmitStep(e: React.FormEvent) {
     e.preventDefault();
+    const yearNum = Number(stepForm.year);
+    if (isNaN(yearNum) || yearNum < 1800 || yearNum > 2100) {
+      showToast("Please enter a valid year (e.g. 2024).");
+      return;
+    }
     setSaving(true);
     try {
       const payload = {
@@ -207,7 +212,8 @@ export default function AdminAboutPage() {
         body: JSON.stringify({ type: "reorder_roadmap", roadmap: updated }),
       });
       showToast("✓ Timeline order updated.");
-    } catch (e) {
+    } catch (e: any) {
+      showToast("Error updating order: " + e.message);
       fetchData();
     }
   }

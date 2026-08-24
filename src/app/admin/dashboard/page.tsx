@@ -127,8 +127,9 @@ export default function AdminDashboardPage() {
         setBackupToast("🛡️ Full Database Snapshot & Cloud Backup Created Successfully!");
         setTimeout(() => setBackupToast(null), 5000);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      setBackupToast("❌ Error: " + e.message);
     } finally {
       setCreatingBackup(false);
     }
@@ -152,8 +153,9 @@ export default function AdminDashboardPage() {
         setColorToast("✨ Website Branding Colors Saved Permanently!");
         setTimeout(() => setColorToast(null), 4000);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      setColorToast("❌ Error: " + e.message);
     } finally {
       setSavingColors(false);
     }
@@ -165,7 +167,7 @@ export default function AdminDashboardPage() {
     { label: "📦 Products in Catalog", count: stats.products, color: "#81663F", href: "/admin/products" },
     { label: "🗃️ Brand Collections", count: stats.collections, color: "#81663F", href: "/admin/collections" },
     { label: "🏷️ Categories", count: stats.categories, color: "#81663F", href: "/admin/categories" },
-    { label: "📄 PDF Catalogs", count: stats.catalogs, color: "#81663F", href: "/catalogs" },
+    { label: "📄 PDF Catalogs", count: stats.catalogs, color: "#81663F", href: "/admin/catalogs" },
     { label: "🖼️ Showcase Projects", count: stats.projects, color: "#81663F", href: "/admin/projects" },
     { label: "📥 Inquiries & Leads", count: stats.inquiries, color: "#81663F", href: "/admin/inquiries" },
     { label: "✍️ Blogs & Guides", count: stats.blogs, color: "#81663F", href: "/admin/blogs" },
