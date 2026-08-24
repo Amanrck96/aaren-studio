@@ -43,12 +43,25 @@ const FIREBASE_RTDB_STORE_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ||
 
 async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
   try {
-    const res = await fetch(`${FIREBASE_RTDB_STORE_URL}/${key}.json`, {
+    // 1. Check /store/${key}.json (Primary live admin path)
+    const storeRes = await fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
       headers: { "Cache-Control": "no-cache" },
       next: { revalidate: 0 },
     });
-    if (res.ok) {
-      const data = await res.json();
+    if (storeRes.ok) {
+      const data = await storeRes.json();
+      if (data !== null && data !== undefined) {
+        return data;
+      }
+    }
+
+    // 2. Fallback to /${key}.json
+    const rootRes = await fetch(`${FIREBASE_RTDB_STORE_URL}/${key}.json`, {
+      headers: { "Cache-Control": "no-cache" },
+      next: { revalidate: 0 },
+    });
+    if (rootRes.ok) {
+      const data = await rootRes.json();
       if (data !== null && data !== undefined) {
         return data;
       }
@@ -61,11 +74,19 @@ async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
 
 async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
   try {
-    await fetch(`${FIREBASE_RTDB_STORE_URL}/${key}.json`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    // Write to both /store/${key}.json and /${key}.json
+    await Promise.allSettled([
+      fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+      fetch(`${FIREBASE_RTDB_STORE_URL}/${key}.json`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    ]);
   } catch (err) {
     // Fail-safe
   }
