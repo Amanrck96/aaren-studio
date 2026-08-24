@@ -24,6 +24,7 @@ import {
   CatalogSettingsItem,
   FaqItem,
   CollectionItem,
+  CareerItem,
   DEFAULT_SETTINGS,
   DEFAULT_CATALOG_SETTINGS,
 } from "./types";
@@ -1122,21 +1123,18 @@ export async function parseAndImportExcelProducts(fileBuffer: Buffer): Promise<P
 
 // SHOWCASE PROJECTS STORE
 export async function getAllProjectsStore(): Promise<ProjectShowcaseItem[]> {
+  const fbData = await fetchFromFirebaseCloudStore("projects");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.projects = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+
   const json = readJsonStore();
   if (json.projects && Array.isArray(json.projects) && json.projects.length > 0) {
     return json.projects;
   }
-
-  // Fallback to Prisma if memory empty
-  try {
-    const dbProjects = await prisma.project.findMany({ orderBy: { sequenceNumber: "asc" } });
-    if (dbProjects && dbProjects.length > 0) {
-      const mapped: ProjectShowcaseItem[] = dbProjects.map((p: any) => ({ id: p.id, title: p.title, slug: p.slug, description: p.description || "", category: p.category || "", client: p.client || "", projectCode: p.projectCode || "", sequenceNumber: p.sequenceNumber || 1, imageUrl: p.imageUrl || "", gallery: p.gallery || [] }));
-      json.projects = mapped;
-      globalThis.__AAREN_MEMORY_STORE__ = json;
-      return mapped;
-    }
-  } catch (e) {}
 
   return DEFAULT_PROJECTS;
 }
@@ -1221,6 +1219,53 @@ export async function deleteProjectStore(id: string) {
   await syncToFirebaseCloudStore("projects", current);
   const json = readJsonStore(); json.projects = current; globalThis.__AAREN_MEMORY_STORE__ = json;
   try { await prisma.project.delete({ where: { id } }); } catch (e) {}
+}
+
+// CAREERS STORE
+export const DEFAULT_CAREERS: CareerItem[] = [
+  { id: "cr-1", title: "3D Generalist", department: "Motion Design", location: "Remote / Bangalore", type: "Full-Time", description: "Lead architectural visualization, spatial CGI rendering, and product mockups." },
+  { id: "cr-2", title: "Senior Creative Developer", department: "Engineering", location: "Bangalore, India", type: "Full-Time", description: "Build interactive digital material catalogs, WebGL configurators, and luxury design tools." },
+  { id: "cr-3", title: "Art Director", department: "Creative", location: "Hybrid / Bangalore", type: "Full-Time", description: "Direct visual language, spatial narratives, and brand installations." },
+];
+
+export async function getCareersStore(): Promise<CareerItem[]> {
+  const fbData = await fetchFromFirebaseCloudStore("careers");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.careers = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+  const json = readJsonStore();
+  if (json.careers && Array.isArray(json.careers) && json.careers.length > 0) {
+    return json.careers;
+  }
+  return DEFAULT_CAREERS;
+}
+
+export async function saveCareerStore(career: Omit<CareerItem, "id"> & { id?: string }): Promise<CareerItem> {
+  const id = career.id || `cr-${Date.now()}`;
+  const full: CareerItem = { ...career, id, createdAt: new Date().toISOString() };
+  let current: CareerItem[] = await getCareersStore();
+  const idx = current.findIndex((c) => c.id === id);
+  if (idx >= 0) current[idx] = full;
+  else current.unshift(full);
+  await syncToFirebaseCloudStore("careers", current);
+  const json = readJsonStore();
+  json.careers = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+  return full;
+}
+
+export async function deleteCareerStore(id: string) {
+  let current: CareerItem[] = await getCareersStore();
+  current = current.filter((c) => c.id !== id);
+  await syncToFirebaseCloudStore("careers", current);
+  const json = readJsonStore();
+  json.careers = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 }
 
 

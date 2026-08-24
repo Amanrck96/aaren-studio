@@ -1,25 +1,70 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Trash2, Loader2, CheckCircle2 } from "lucide-react";
 
 export default function AdminCareers() {
-  const [positions, setPositions] = useState([
-    { id: "1", title: "3D Generalist", department: "Motion Design", location: "Remote / Bangalore" },
-    { id: "2", title: "Senior Creative Developer", department: "Engineering", location: "Bangalore, India" },
-  ]);
+  const [positions, setPositions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [newRole, setNewRole] = useState({ title: "", department: "", location: "", type: "Full-Time" });
 
-  const [newRole, setNewRole] = useState({ title: "", department: "", location: "" });
-
-  const handleAdd = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newRole.title) return;
-    setPositions([...positions, { id: String(positions.length + 1), ...newRole }]);
-    setNewRole({ title: "", department: "", location: "" });
+  const fetchCareers = async () => {
+    try {
+      const res = await fetch("/api/careers?t=" + Date.now(), { cache: "no-store" });
+      const data = await res.json();
+      if (data && data.success && Array.isArray(data.data)) {
+        setPositions(data.data);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setPositions(positions.filter((pos) => pos.id !== id));
+  useEffect(() => {
+    fetchCareers();
+  }, []);
+
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newRole.title || !newRole.department) return;
+    setSaving(true);
+    try {
+      const res = await fetch("/api/careers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newRole),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setNotice("Role successfully created and saved to Google Firebase!");
+        setTimeout(() => setNotice(null), 3000);
+        setNewRole({ title: "", department: "", location: "", type: "Full-Time" });
+        fetchCareers();
+      }
+    } catch (err: any) {
+      alert("Error saving: " + err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this position?")) return;
+    try {
+      const res = await fetch(`/api/careers?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPositions((prev) => prev.filter((pos) => pos.id !== id));
+      }
+    } catch (err: any) {
+      alert("Error deleting: " + err.message);
+    }
   };
 
   return (
@@ -31,9 +76,16 @@ export default function AdminCareers() {
           </a>
           <div>
             <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-[#1e1e1e]">MANAGE OPEN ROLES</h1>
-            <p className="text-xs uppercase tracking-wider text-black/40 font-mono mt-0.5">Database records</p>
+            <p className="text-xs uppercase tracking-wider text-black/40 font-mono mt-0.5">Live Google Firebase Cloud Store</p>
           </div>
         </div>
+
+        {notice && (
+          <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl flex items-center gap-3 font-semibold text-sm">
+            <CheckCircle2 size={18} className="text-emerald-600" />
+            {notice}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Add form */}
@@ -45,6 +97,7 @@ export default function AdminCareers() {
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Senior Creative Developer"
                   value={newRole.title}
                   onChange={(e) => setNewRole({ ...newRole, title: e.target.value })}
                   className="w-full bg-[#eaeef4]/50 border border-black/10 rounded-lg p-3.5 text-black text-sm outline-none focus:border-black/30 focus:bg-white transition-all"
@@ -55,6 +108,7 @@ export default function AdminCareers() {
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Engineering / Motion"
                   value={newRole.department}
                   onChange={(e) => setNewRole({ ...newRole, department: e.target.value })}
                   className="w-full bg-[#eaeef4]/50 border border-black/10 rounded-lg p-3.5 text-black text-sm outline-none focus:border-black/30 focus:bg-white transition-all"
@@ -65,13 +119,18 @@ export default function AdminCareers() {
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Bangalore / Remote"
                   value={newRole.location}
                   onChange={(e) => setNewRole({ ...newRole, location: e.target.value })}
                   className="w-full bg-[#eaeef4]/50 border border-black/10 rounded-lg p-3.5 text-black text-sm outline-none focus:border-black/30 focus:bg-white transition-all"
                 />
               </div>
-              <button type="submit" className="w-full py-4 bg-black text-white font-black uppercase tracking-widest text-xs hover:bg-black/80 rounded-lg transition-all flex items-center justify-center gap-2">
-                <Plus size={14} /> Add Position
+              <button
+                type="submit"
+                disabled={saving}
+                className="w-full py-4 bg-black text-white font-black uppercase tracking-widest text-xs hover:bg-black/80 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {saving ? <Loader2 className="animate-spin" size={14} /> : <Plus size={14} />} Add Position
               </button>
             </form>
           </div>
@@ -81,24 +140,29 @@ export default function AdminCareers() {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-black uppercase tracking-tight">Active Job Positions ({positions.length})</h2>
             </div>
-            <div className="space-y-3.5">
-              {positions.map((pos) => (
-                <div key={pos.id} className="bg-white border border-black/10 rounded-xl p-5 flex justify-between items-center shadow-sm hover:shadow-md transition-all duration-300">
-                  <div>
-                    <h3 className="text-base font-black uppercase tracking-tight text-[#1e1e1e]">{pos.title}</h3>
-                    <p className="text-xs text-black/40 mt-1 uppercase font-bold tracking-wider">
-                      {pos.department} • <span className="text-black/60 font-black">{pos.location}</span>
-                    </p>
+            {loading ? (
+              <div className="p-8 text-center text-sm font-semibold text-black/50">Loading live positions...</div>
+            ) : (
+              <div className="space-y-3.5">
+                {positions.map((pos) => (
+                  <div key={pos.id} className="bg-white border border-black/10 rounded-xl p-5 flex justify-between items-center shadow-sm hover:shadow-md transition-all duration-300">
+                    <div>
+                      <h3 className="text-base font-black uppercase tracking-tight text-[#1e1e1e]">{pos.title}</h3>
+                      <p className="text-xs text-black/40 mt-1 uppercase font-bold tracking-wider">
+                        {pos.department} • <span className="text-black/60 font-black">{pos.location}</span>
+                      </p>
+                    </div>
+                    <button 
+                      onClick={() => handleDelete(pos.id)} 
+                      className="text-red-500 hover:bg-red-50 hover:text-red-600 p-2.5 rounded-lg border border-transparent hover:border-red-100 transition-all"
+                      title="Delete Role"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => handleDelete(pos.id)} 
-                    className="text-red-500 hover:bg-red-50 hover:text-red-600 p-2.5 rounded-lg border border-transparent hover:border-red-100 transition-all"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

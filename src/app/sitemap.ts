@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { getBrandsStore, getAllProjectsStore, getAllProductsStore, getBlogsStore } from "@/lib/store";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://aarenstudio.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://aarenstudio.vercel.app";
   const now = new Date();
 
   // Static core routes

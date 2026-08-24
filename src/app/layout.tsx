@@ -15,12 +15,12 @@ export const metadata: Metadata = {
   title: "AAREN | Creative Studio & Material House",
   description:
     "A creative studio and material house dedicated to designing and producing immersive spatial experiences — meant to evoke feeling. Our work spans disciplines, unified by the singular drive of crafting unforgettable environments.",
-  metadataBase: new URL("https://aarenstudio.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://aarenstudio.vercel.app"),
   openGraph: {
     title: "AAREN | Creative Studio & Material House",
     description:
       "A creative studio and material house dedicated to designing and producing immersive spatial experiences — meant to evoke feeling.",
-    url: "https://aarenstudio.com",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://aarenstudio.vercel.app",
     siteName: "Aaren Creative Studio",
     type: "website",
   },

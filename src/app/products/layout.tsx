@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: "Products — Aaren Creative Studio",
     description:
       "Premium architectural materials, surfaces, hardware, and wellness solutions for luxury interiors.",
-    url: "https://aarenstudio.com/products",
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://aarenstudio.vercel.app"}/products`,
     siteName: "Aaren Creative Studio",
     type: "website",
   },

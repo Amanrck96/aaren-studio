@@ -199,6 +199,16 @@ export type ProjectShowcaseItem = {
 
 export type ProjectItem = ProjectShowcaseItem;
 
+export type CareerItem = {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  type?: string;
+  description?: string;
+  createdAt?: string;
+};
+
 export type TeamGroup = "Leadership" | "Team";
 export type TeamDepartment = "Sales" | "Operations" | "Installation" | "Support Staff" | string;
 
