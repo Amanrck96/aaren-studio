@@ -41,6 +41,7 @@ function ProductsContent() {
   const [showAllBrands, setShowAllBrands] = useState<boolean>(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
 
+  const [loading, setLoading] = useState<boolean>(true);
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [brandsList, setBrandsList] = useState<{ id: string; name: string; count: number }[]>([]);
 
@@ -91,7 +92,8 @@ function ProductsContent() {
           setBrandsList(list);
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
   }, []);
 
   // Update URL params without page reload
@@ -494,7 +496,18 @@ function ProductsContent() {
 
           {/* Product Grid (4 columns on desktop, 3 on tablet, 2 on mobile) */}
           <div className="product-grid">
-            {paginatedProducts.length === 0 ? (
+            {loading && paginatedProducts.length === 0 ? (
+              Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="product-card skeleton-card" style={{ opacity: 0.7, pointerEvents: "none" }}>
+                  <div className="card-image-wrap" style={{ background: "#e2e8f0", animation: "pulse 1.5s infinite" }} />
+                  <div className="card-body">
+                    <div style={{ height: "14px", width: "40%", background: "#e2e8f0", borderRadius: "4px", marginBottom: "8px" }} />
+                    <div style={{ height: "18px", width: "80%", background: "#cbd5e1", borderRadius: "4px", marginBottom: "8px" }} />
+                    <div style={{ height: "12px", width: "60%", background: "#f1f5f9", borderRadius: "4px" }} />
+                  </div>
+                </div>
+              ))
+            ) : paginatedProducts.length === 0 ? (
               <div className="no-results">
                 <p>No products match your current filters.</p>
                 <button onClick={clearAllFilters} className="reset-btn">

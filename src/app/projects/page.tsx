@@ -212,7 +212,7 @@ export default function AllProjectsPage() {
     setMousePos({ x: e.clientX, y: e.clientY });
   };
 
-  const hoveredData = ALL_PROJECTS.find((p) => p.slug === hoveredProject);
+  const hoveredData = projectsList.find((p) => p.slug === hoveredProject);
 
   return (
     <div className="projects-page" onMouseMove={handleMouseMove}>

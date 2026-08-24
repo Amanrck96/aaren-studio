@@ -57,7 +57,7 @@ export default function WorkPage() {
     setFlipImage(e.clientX > window.innerWidth / 2);
   };
 
-  const hoveredData = ALL_PROJECTS.find((p) => p.slug === hoveredProject);
+  const hoveredData = projectsList.find((p) => p.slug === hoveredProject);
 
   return (
     <div
