@@ -1,10 +1,4 @@
-/**
- * Client-side direct Firebase Storage uploader with fallback.
- * Bypasses Vercel serverless payload limits (4.5MB) completely, allowing large PDFs (10MB, 25MB, 50MB+)
- * and high-resolution images to upload directly to Firebase Storage without errors.
- */
-
-const FIREBASE_STORAGE_BUCKET = "aarenintpro-1c09f.firebasestorage.app";
+import { uploadFileToFirebase } from "./firebaseStorage";
 
 export async function uploadFileWithCompression(
   file: File,
@@ -22,31 +16,31 @@ export async function uploadFileWithCompression(
       }
     }
 
-    const cleanFolder = folder.replace(/[^a-zA-Z0-9_-]/g, "_");
-    const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
-    const objectPath = `${cleanFolder}/${safeName}`;
-    const encodedPath = encodeURIComponent(objectPath);
+    // 1. Direct Google Firebase Storage Upload via Client SDK (Zero Vercel Limits)
+    try {
+      const fbResult = await uploadFileToFirebase(fileToUpload, folder);
+      if (fbResult && fbResult.url) {
+        // Register in Media Store non-blockingly
+        fetch("/api/media", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fileName: file.name,
+            fileUrl: fbResult.url,
+            fileType: file.type.startsWith("image/") ? "Image" : file.name.endsWith(".pdf") ? "PDF" : "Document",
+            folder: folder,
+            size: (file.size / 1024).toFixed(1) + " KB",
+          }),
+        }).catch(() => {});
 
-    // Direct Firebase Storage REST Upload
-    const directUploadUrl = `https://firebasestorage.googleapis.com/v0/b/${FIREBASE_STORAGE_BUCKET}/o?name=${encodedPath}&uploadType=media`;
-
-    const res = await fetch(directUploadUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": fileToUpload.type || "application/octet-stream",
-      },
-      body: fileToUpload,
-    });
-
-    if (res.ok) {
-      const json = await res.json();
-      const token = json.downloadTokens || json.generation || Date.now().toString();
-      const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${FIREBASE_STORAGE_BUCKET}/o/${encodedPath}?alt=media&token=${token}`;
-      return { success: true, url: publicUrl, dataUrl: publicUrl };
+        return { success: true, url: fbResult.url, dataUrl: fbResult.url };
+      }
+    } catch (fbErr: any) {
+      console.warn("Direct Firebase Storage client SDK upload failed, attempting fallback:", fbErr);
     }
 
-    // Fallback to Vercel upload endpoint if direct Firebase upload fails
-    console.warn("Direct Firebase upload returned non-200 status, attempting fallback api endpoint...");
+    // 2. Fallback to /api/upload if Firebase Storage direct SDK was blocked by local network
+    console.warn("Attempting fallback api endpoint...");
     const formData = new FormData();
     formData.append("file", fileToUpload);
     formData.append("folder", folder);
@@ -59,7 +53,7 @@ export async function uploadFileWithCompression(
     if (fallbackRes.status === 413) {
       return {
         success: false,
-        error: "File is too large for direct serverless upload (>4.5MB). Please paste a Google Drive share link or direct URL.",
+        error: "File is too large for fallback upload (>4.5MB). Please use Google Firebase Storage or paste a Google Drive link.",
       };
     }
 
@@ -70,9 +64,7 @@ export async function uploadFileWithCompression(
     } catch {
       return {
         success: false,
-        error: fallbackRes.status === 413
-          ? "File exceeds 4.5MB server upload limit. Please use a Google Drive share link instead."
-          : `Upload server returned an unexpected error (${fallbackRes.status}). For large PDF files, please use a Google Drive link.`,
+        error: `Upload server returned an unexpected error (${fallbackRes.status}). Please check your internet connection or use a Google Drive link.`,
       };
     }
 

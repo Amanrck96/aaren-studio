@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import AdminNav from "@/components/AdminNav";
 import { SiteSettingsItem } from "@/lib/types";
+import { uploadFileWithCompression } from "@/lib/uploadHelper";
 
 export default function AdminHeroPage() {
   const [settings, setSettings] = useState<SiteSettingsItem | null>(null);
@@ -74,19 +75,13 @@ export default function AdminHeroPage() {
     if (!file || !settings) return;
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "Hero Videos");
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const json = await res.json();
-      if (json.success && json.url) {
-        setSettings((prev) => (prev ? { ...prev, heroVideoUrl: json.url } : null));
-        alert("✅ Background MP4 Video uploaded successfully to " + json.url);
-      } else alert("Upload failed: " + json.error);
+      const result = await uploadFileWithCompression(file, "Hero Videos");
+      if (result.success && (result.url || result.dataUrl)) {
+        setSettings((prev) => (prev ? { ...prev, heroVideoUrl: result.dataUrl || result.url || "" } : null));
+        alert("✅ Background MP4 Video uploaded successfully to Google Firebase Storage!");
+      } else {
+        alert("Upload failed: " + (result.error || "Upload error"));
+      }
     } catch (err: any) {
       alert("Error: " + err.message);
     } finally {

@@ -6,6 +6,7 @@ import Link from "next/link";
 import * as xlsx from "xlsx";
 import AdminNav from "@/components/AdminNav";
 import { ProductItem } from "@/lib/types";
+import { uploadFileWithCompression } from "@/lib/uploadHelper";
 
 const CATEGORIES = [
   "All",
@@ -321,20 +322,12 @@ export default function AdminProductsPage() {
   const handleProductImageUpload = async (file: File) => {
     if (!file) return;
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "Products");
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const json = await res.json();
-      if (json.success && (json.dataUrl || json.url)) {
-        setForm((prev) => ({ ...prev, imageUrl: json.dataUrl || json.url }));
-        showToast("Product image uploaded successfully!");
+      const result = await uploadFileWithCompression(file, "Products");
+      if (result.success && (result.dataUrl || result.url)) {
+        setForm((prev) => ({ ...prev, imageUrl: result.dataUrl || result.url || "" }));
+        showToast("Product image uploaded successfully to Google Firebase Storage!");
       } else {
-        alert("Upload error: " + json.error);
+        alert("Upload error: " + (result.error || "Upload failed"));
       }
     } catch (e: any) {
       alert("Error: " + e.message);

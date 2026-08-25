@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import AdminNav from "@/components/AdminNav";
 import { CategoryItem } from "@/lib/types";
+import { uploadFileWithCompression } from "@/lib/uploadHelper";
 
 const CARD_THEMES = [
   { id: "navy", label: "Midnight Navy", bg: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "rgba(212,175,55,0.3)" },
@@ -73,19 +74,13 @@ export default function AdminCategoriesPage() {
   const handleFileUpload = async (file: File) => {
     if (!file || !editingCat) return;
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "Categories");
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const json = await res.json();
-      if (json.success && json.url) {
-        setEditingCat((prev) => (prev ? { ...prev, coverImage: json.dataUrl || json.url } : null));
-        alert("✅ Category Cover Image uploaded to " + json.url);
-      } else alert("Upload failed: " + json.error);
+      const result = await uploadFileWithCompression(file, "Categories");
+      if (result.success && (result.url || result.dataUrl)) {
+        setEditingCat((prev) => (prev ? { ...prev, coverImage: result.dataUrl || result.url } : null));
+        alert("✅ Category Cover Image uploaded successfully!");
+      } else {
+        alert("Upload failed: " + (result.error || "Upload error"));
+      }
     } catch (err: any) {
       alert("Error: " + err.message);
     }
