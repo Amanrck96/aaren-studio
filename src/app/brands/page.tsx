@@ -4,6 +4,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
+const LOGO_MAP: Record<string, string> = {
+  "slashform": "/brands/logos/slashform_logo.png",
+  "waltz": "/brands/logos/waltz_logo.png",
+  "newtech-wood": "/brands/logos/newtechwood_logo.png",
+  "newtechwood": "/brands/logos/newtechwood_logo.png",
+  "formica": "/brands/logos/formica_logo.png",
+  "loco": "/brands/logos/loco_logo.png",
+  "falper": "/brands/logos/falper_logo.png",
+  "fima": "/brands/logos/fima_logo.png",
+  "inkiostro-bianco": "/brands/logos/inkiostro_bianco_logo.png",
+  "mafi": "/brands/logos/mafi_logo.png",
+  "mirage": "/brands/logos/mirage_logo.png",
+  "freedom-screens": "/brands/logos/freedom_screens_logo.jpg",
+  "peelply": "/brands/logos/peelply_logo.png",
+  "inclass": "/brands/logos/inclass_logo.png",
+  "wow": "/brands/logos/wow_logo.png",
+  "iww": "/brands/logos/iww_logo.png",
+};
+
 const DEFAULT_BRANDS = [
   { id: "slashform", name: "Slashform", code: "SF", num: "01", hero: "/brands/brand_1_1.png", logo: "/brands/logos/slashform_logo.png", category: "Doors & Windows", origin: "Italy", tagline: "Precision living systems" },
   { id: "waltz", name: "Waltz by JB Glass", code: "WB", num: "02", hero: "/brands/brand_2_1.png", logo: "/brands/logos/waltz_logo.png", category: "Glide NXT", origin: "India", tagline: "Architectural glass solutions" },
@@ -15,16 +34,16 @@ const DEFAULT_BRANDS = [
   { id: "inkiostro-bianco", name: "Inkiostro Bianco", code: "IB", num: "08", hero: "/brands/brand_8_1.png", logo: "/brands/logos/inkiostro_bianco_logo.png", category: "Wall Covering", origin: "Italy", tagline: "Creative thinking surfaces" },
   { id: "mafi", name: "Mafi", code: "MF", num: "09", hero: "/brands/brand_9_1.png", logo: "/brands/logos/mafi_logo.png", category: "Wooden Flooring", origin: "Austria", tagline: "Natural wood flooring" },
   { id: "mirage", name: "Mirage", code: "MG", num: "10", hero: "/brands/brand_10_1.png", logo: "/brands/logos/mirage_logo.png", category: "Surface Tiles", origin: "Italy", tagline: "Porcelain tile mastery" },
-  { id: "freedom-screens", name: "Freedom Screens", code: "FS", num: "11", hero: "/brands/brand_1_1.png", logo: "/brands/brand_1_2.png", category: "Infinite Zip line", origin: "Australia", tagline: "Retractable screen systems" },
+  { id: "freedom-screens", name: "Freedom Screens", code: "FS", num: "11", hero: "/brands/brand_freedom_screens.jpg", logo: "/brands/logos/freedom_screens_logo.jpg", category: "Infinite Zip line", origin: "Australia", tagline: "Retractable screen systems" },
   { id: "peelply", name: "Peelply", code: "PP", num: "12", hero: "/brands/brand_2_1.png", logo: "/brands/logos/peelply_logo.png", category: "Plywood", origin: "India", tagline: "Engineered panel solutions" },
   { id: "inclass", name: "Inclass", code: "IC", num: "13", hero: "/brands/brand_3_1.png", logo: "/brands/logos/inclass_logo.png", category: "MillWork", origin: "Spain", tagline: "Seating and millwork" },
   { id: "wow", name: "WOW", code: "WW", num: "14", hero: "/brands/brand_4_1.png", logo: "/brands/logos/wow_logo.png", category: "Highlighter Tiles", origin: "Spain", tagline: "3D decorative ceramic tiles" },
   { id: "iww", name: "IWW", code: "IW", num: "15", hero: "/brands/brand_5_1.png", logo: "/brands/logos/iww_logo.png", category: "Surface Tiles", origin: "Italy", tagline: "Stone surface collections" },
-  { id: "living-ceramica", name: "Living Ceramica", code: "LC", num: "16", hero: "/brands/brand_6_1.png", logo: "/brands/brand_6_2.png", category: "Surface Tiles", origin: "Spain", tagline: "Contemporary ceramic surfaces" },
-  { id: "florim", name: "Florim", code: "FL", num: "17", hero: "/brands/brand_7_1.png", logo: "/brands/brand_7_2.png", category: "Surface Tiles", origin: "Italy", tagline: "Porcelain slab mastery" },
-  { id: "gelli", name: "Gelli", code: "GL", num: "18", hero: "/brands/brand_8_1.png", logo: "/brands/brand_8_2.png", category: "Bathroom Accessories", origin: "Italy", tagline: "Italian bathroom accessories" },
-  { id: "jacuzzi", name: "Jacuzzi", code: "JZ", num: "19", hero: "/brands/brand_9_1.png", logo: "/brands/brand_9_2.png", category: "Wellness", origin: "USA", tagline: "World-class wellness systems" },
-  { id: "alex-turco", name: "Alex Turco", code: "AT", num: "20", hero: "/brands/brand_10_1.png", logo: "/brands/brand_10_2.png", category: "Wall Art Panels", origin: "Italy", tagline: "Wall art panels" },
+  { id: "living-ceramica", name: "Living Ceramica", code: "LC", num: "16", hero: "/brands/brand_6_1.png", logo: "", category: "Surface Tiles", origin: "Spain", tagline: "Contemporary ceramic surfaces" },
+  { id: "florim", name: "Florim", code: "FL", num: "17", hero: "/brands/brand_7_1.png", logo: "", category: "Surface Tiles", origin: "Italy", tagline: "Porcelain slab mastery" },
+  { id: "gelli", name: "Gelli", code: "GL", num: "18", hero: "/brands/brand_8_1.png", logo: "", category: "Bathroom Accessories", origin: "Italy", tagline: "Italian bathroom accessories" },
+  { id: "jacuzzi", name: "Jacuzzi", code: "JZ", num: "19", hero: "/brands/brand_9_1.png", logo: "", category: "Wellness", origin: "USA", tagline: "World-class wellness systems" },
+  { id: "alex-turco", name: "Alex Turco", code: "AT", num: "20", hero: "/brands/brand_10_1.png", logo: "", category: "Wall Art Panels", origin: "Italy", tagline: "Wall art panels" },
 ];
 
 export default function BrandsPage() {
@@ -35,17 +54,22 @@ export default function BrandsPage() {
       .then((res) => res.json())
       .then((json) => {
         if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          const mapped = json.data.map((b: any) => ({
-            id: b.id,
-            name: b.name,
-            code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
-            num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : (b.shortCode && b.shortCode.split(" ")[1] ? b.shortCode.split(" ")[1] : "01"),
-            hero: b.bannerUrl || b.hero || b.imageUrl || b.image || "/brands/brand_1_1.png",
-            logo: b.logoUrl || b.logo || "/brands/brand_1_2.png",
-            category: b.category || b.tagline || b.description || "Architectural Brand",
-            origin: b.origin || "Global",
-            tagline: b.tagline || b.description || "Partner Brand",
-          }));
+          const mapped = json.data.map((b: any) => {
+            const explicitLogo = b.logoUrl && !b.logoUrl.includes("brand_") && !b.logoUrl.endsWith("_2.png") ? b.logoUrl : "";
+            const resolvedLogo = explicitLogo || LOGO_MAP[b.id] || LOGO_MAP[b.id?.toLowerCase()] || "";
+
+            return {
+              id: b.id,
+              name: b.name,
+              code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
+              num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : (b.shortCode && b.shortCode.split(" ")[1] ? b.shortCode.split(" ")[1] : "01"),
+              hero: b.bannerUrl || b.hero || b.imageUrl || b.image || "/brands/brand_1_1.png",
+              logo: resolvedLogo,
+              category: b.category || b.tagline || b.description || "Architectural Brand",
+              origin: b.origin || "Global",
+              tagline: b.tagline || b.description || "Partner Brand",
+            };
+          });
           setBrandsList(mapped);
         }
       })
@@ -94,20 +118,22 @@ export default function BrandsPage() {
               </div>
 
               {/* Logo overlay — bottom-left of image */}
-              <div className="brand-card__logo-wrap">
-                <Image
-                  src={brand.logo}
-                  alt={`${brand.name} logo`}
-                  width={90}
-                  height={36}
-                  className="brand-card__logo"
-                  style={{ objectFit: "contain", objectPosition: "left center", maxHeight: "36px" }}
-                  unoptimized
-                  onError={(e: any) => {
-                    e.currentTarget.src = "/brands/brand_1_2.png";
-                  }}
-                />
-              </div>
+              {brand.logo ? (
+                <div className="brand-card__logo-wrap">
+                  <Image
+                    src={brand.logo}
+                    alt={`${brand.name} logo`}
+                    width={90}
+                    height={36}
+                    className="brand-card__logo"
+                    style={{ objectFit: "contain", objectPosition: "left center", maxHeight: "36px" }}
+                    unoptimized
+                    onError={(e: any) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                </div>
+              ) : null}
             </div>
 
             {/* Bottom caption bar — luxury ticket style */}

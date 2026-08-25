@@ -9,6 +9,25 @@ import { getPdfThumbnail } from "@/utils/pdfThumbnail";
 
 type Props = { params: Promise<{ slug: string }> };
 
+const LOGO_MAP: Record<string, string> = {
+  "slashform": "/brands/logos/slashform_logo.png",
+  "waltz": "/brands/logos/waltz_logo.png",
+  "newtech-wood": "/brands/logos/newtechwood_logo.png",
+  "newtechwood": "/brands/logos/newtechwood_logo.png",
+  "formica": "/brands/logos/formica_logo.png",
+  "loco": "/brands/logos/loco_logo.png",
+  "falper": "/brands/logos/falper_logo.png",
+  "fima": "/brands/logos/fima_logo.png",
+  "inkiostro-bianco": "/brands/logos/inkiostro_bianco_logo.png",
+  "mafi": "/brands/logos/mafi_logo.png",
+  "mirage": "/brands/logos/mirage_logo.png",
+  "freedom-screens": "/brands/logos/freedom_screens_logo.jpg",
+  "peelply": "/brands/logos/peelply_logo.png",
+  "inclass": "/brands/logos/inclass_logo.png",
+  "wow": "/brands/logos/wow_logo.png",
+  "iww": "/brands/logos/iww_logo.png",
+};
+
 export default function BrandDetailPage({ params }: Props) {
   const { slug } = use(params);
   const staticBrand = getBrandById(slug);
@@ -87,13 +106,16 @@ export default function BrandDetailPage({ params }: Props) {
 
   // Merge static Brand fallback with dynamic database state from API
   const activeBrand = useMemo(() => {
+    const explicitLogo = apiBrand?.logoUrl && !apiBrand.logoUrl.includes("brand_") && !apiBrand.logoUrl.endsWith("_2.png") ? apiBrand.logoUrl : "";
+    const resolvedLogo = explicitLogo || LOGO_MAP[slug] || LOGO_MAP[slug?.toLowerCase()] || staticBrand?.logo || "";
+
     const base = staticBrand || {
       id: slug,
       name: slug.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
       code: "BR",
       num: "01",
       hero: "/brands/brand_1_1.png",
-      logo: "/brands/brand_1_2.png",
+      logo: resolvedLogo,
       category: "Architectural Products",
       origin: "International",
       tagline: "",
@@ -104,14 +126,14 @@ export default function BrandDetailPage({ params }: Props) {
       catalogues: [],
     };
 
-    if (!apiBrand) return base;
+    if (!apiBrand) return { ...base, logo: resolvedLogo };
 
     return {
       ...base,
       id: apiBrand.id || base.id,
       name: apiBrand.name || base.name,
       hero: apiBrand.bannerUrl || base.hero,
-      logo: apiBrand.logoUrl || base.logo,
+      logo: resolvedLogo,
       num: apiBrand.shortCode || base.num,
       code: apiBrand.shortCode || base.code,
       category: apiBrand.category || base.category,
@@ -608,7 +630,10 @@ export default function BrandDetailPage({ params }: Props) {
                         src={coverThumbUrl}
                         alt={`${cat.title} Cover`}
                         onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).style.display = "none";
+                          const target = e.currentTarget as HTMLImageElement;
+                          target.style.display = "none";
+                          const fallback = target.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = "flex";
                         }}
                         style={{
                           width: "100%",
@@ -620,15 +645,12 @@ export default function BrandDetailPage({ params }: Props) {
                       />
                     ) : null}
 
-                    {/* Luxury Branded Card when coverThumbUrl is empty or hidden */}
+                    {/* Luxury Branded Fallback Card (only shown when cover image is missing or errors) */}
                     <div
                       style={{
-                        position: coverThumbUrl ? "absolute" : "relative",
-                        inset: 0,
-                        zIndex: coverThumbUrl ? 1 : 2,
+                        display: coverThumbUrl ? "none" : "flex",
                         width: "100%",
                         height: "100%",
-                        display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
                         justifyContent: "center",
@@ -644,10 +666,10 @@ export default function BrandDetailPage({ params }: Props) {
                         <img
                           src={activeBrand.logo}
                           alt={activeBrand.name}
-                          style={{ maxHeight: "42px", maxWidth: "160px", objectFit: "contain", marginBottom: "1.2rem", filter: "brightness(0) invert(1)" }}
+                          style={{ maxHeight: "42px", maxWidth: "160px", objectFit: "contain", marginBottom: "1.2rem" }}
                         />
                       ) : (
-                        <span style={{ fontSize: "0.85rem", color: activeBrand.accentColor || "#d4af37", fontWeight: 800, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "0.8rem" }}>
+                        <span style={{ fontSize: "1.1rem", color: activeBrand.accentColor || "#d4af37", fontWeight: 800, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "0.8rem" }}>
                           {activeBrand.name}
                         </span>
                       )}
