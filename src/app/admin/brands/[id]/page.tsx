@@ -290,6 +290,36 @@ export default function AdminIndividualBrandPage({ params }: Props) {
     }
   };
 
+  // On-demand auto extraction of Page 1 from PDF URL
+  const handleAutoExtractCover = async (catalogIndex: number) => {
+    const cat = formData.pdfCatalogs?.[catalogIndex];
+    if (!cat?.pdfUrl) {
+      alert("Please provide or upload a PDF first.");
+      return;
+    }
+    setUploadingIndex({ idx: catalogIndex, type: "cover" });
+    try {
+      const coverFile = await extractFirstPageAsImage(cat.pdfUrl, cat.title || "catalog");
+      if (!coverFile) throw new Error("Could not render page 1 of the PDF. Please upload a cover image manually.");
+      const uploadRes = await uploadFileWithCompression(coverFile, "Catalog_Covers");
+      if (uploadRes.success && (uploadRes.url || uploadRes.dataUrl)) {
+        const finalUrl = uploadRes.url || uploadRes.dataUrl || "";
+        setFormData((prev) => {
+          const list = [...(prev.pdfCatalogs || [])];
+          if (list[catalogIndex]) list[catalogIndex].coverImage = finalUrl;
+          return { ...prev, pdfCatalogs: list };
+        });
+        showToast("✅ Page 1 cover thumbnail captured successfully!");
+      } else {
+        alert("Cover capture error: " + uploadRes.error);
+      }
+    } catch (e: any) {
+      alert("Cover capture note: " + e.message);
+    } finally {
+      setUploadingIndex(null);
+    }
+  };
+
   // Collection Chip Helpers
   const addCollectionChip = () => {
     if (!collectionInput.trim()) return;
@@ -865,6 +895,18 @@ export default function AdminIndividualBrandPage({ params }: Props) {
                                   <ImageIcon size={13} />
                                   <span>{isUploadingThisCover ? "Uploading..." : "Upload Cover"}</span>
                                 </label>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleAutoExtractCover(idx)}
+                                  disabled={!cat.pdfUrl || isUploadingThisCover}
+                                  className="btn-upload"
+                                  style={{ cursor: "pointer", whiteSpace: "nowrap", background: "#8c764b", border: "none", color: "#fff" }}
+                                  title="Automatically render Page 1 of this PDF as cover thumbnail"
+                                >
+                                  <Sparkles size={13} />
+                                  <span>{isUploadingThisCover ? "Capturing..." : "⚡ Auto Page 1"}</span>
+                                </button>
 
                                 {cat.coverImage && (
                                   <div style={{ width: "36px", height: "36px", borderRadius: "4px", overflow: "hidden", border: "1px solid #cbd5e1", flexShrink: 0 }}>

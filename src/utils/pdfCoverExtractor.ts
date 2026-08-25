@@ -1,29 +1,36 @@
 /**
  * Client-Side PDF Page-1 Cover Extractor
- * Automatically renders page 1 of any uploaded PDF file to a crisp JPEG image.
+ * Automatically renders page 1 of any uploaded PDF file or remote PDF URL to a crisp JPEG image.
  */
 
 export async function extractFirstPageAsImage(
-  pdfFileOrBuffer: File | ArrayBuffer,
+  pdfInput: File | ArrayBuffer | string,
   fileName?: string
 ): Promise<File | null> {
   if (typeof window === "undefined") return null;
 
   try {
     const pdfjsLib = await import("pdfjs-dist");
-    
-    if (pdfjsLib.GlobalWorkerOptions && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version || "3.11.174"}/pdf.worker.min.js`;
+
+    // Use same-origin local worker to prevent cross-origin worker SecurityErrors
+    if (pdfjsLib.GlobalWorkerOptions) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
     }
 
     let arrayBuffer: ArrayBuffer;
     let baseName = "catalog";
 
-    if (pdfFileOrBuffer instanceof File) {
-      arrayBuffer = await pdfFileOrBuffer.arrayBuffer();
-      baseName = pdfFileOrBuffer.name.replace(/\.[^/.]+$/, "");
+    if (typeof pdfInput === "string") {
+      if (!pdfInput || !pdfInput.startsWith("http")) return null;
+      const res = await fetch(pdfInput);
+      if (!res.ok) throw new Error(`Could not fetch PDF: ${res.statusText}`);
+      arrayBuffer = await res.arrayBuffer();
+      baseName = fileName || "catalog_remote";
+    } else if (pdfInput instanceof File) {
+      arrayBuffer = await pdfInput.arrayBuffer();
+      baseName = pdfInput.name.replace(/\.[^/.]+$/, "");
     } else {
-      arrayBuffer = pdfFileOrBuffer;
+      arrayBuffer = pdfInput;
       if (fileName) baseName = fileName.replace(/\.[^/.]+$/, "");
     }
 

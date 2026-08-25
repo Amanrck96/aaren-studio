@@ -212,11 +212,13 @@
       "origin": "Italy",
       "pdfCatalogs": [
         {
+          "coverImage": "/categories/cat_1.png",
           "id": "cat-1786509662646",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509682231_Slashform_Kitchen.pdf?alt=media&token=6204ef83-4e8d-4173-ad37-feadc45d8537",
           "title": "Kitchen"
         },
         {
+          "coverImage": "/categories/cat_2.png",
           "id": "cat-1786509691430",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509713565_Slasform_Wardrobe.pdf?alt=media&token=f94ecf41-5329-4c83-a47c-5f7d5d2675e5",
           "title": "Wardrobe"

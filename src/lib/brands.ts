@@ -88,13 +88,15 @@ export const BRAND_EXCEL_CATALOGS: Record<string, { title: string; subtitle?: st
       "title": "Slashform Kitchen Specification Guide",
       "subtitle": "Italian Precision Living Systems",
       "file": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509682231_Slashform_Kitchen.pdf?alt=media&token=6204ef83-4e8d-4173-ad37-feadc45d8537",
-      "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509682231_Slashform_Kitchen.pdf?alt=media&token=6204ef83-4e8d-4173-ad37-feadc45d8537"
+      "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509682231_Slashform_Kitchen.pdf?alt=media&token=6204ef83-4e8d-4173-ad37-feadc45d8537",
+      "coverImage": "/categories/cat_1.png"
     },
     {
       "title": "Slashform Wardrobe Specification Guide",
       "subtitle": "Italian Precision Living Systems",
       "file": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509713565_Slasform_Wardrobe.pdf?alt=media&token=f94ecf41-5329-4c83-a47c-5f7d5d2675e5",
-      "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509713565_Slasform_Wardrobe.pdf?alt=media&token=f94ecf41-5329-4c83-a47c-5f7d5d2675e5"
+      "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509713565_Slasform_Wardrobe.pdf?alt=media&token=f94ecf41-5329-4c83-a47c-5f7d5d2675e5",
+      "coverImage": "/categories/cat_2.png"
     }
   ],
   "wow": [
