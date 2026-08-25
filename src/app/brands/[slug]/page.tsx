@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useMemo, use } from "react";
 import { getBrandById } from "@/lib/brands";
-import { DEFAULT_BRANDS } from "@/lib/store";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
 import { getPdfThumbnail } from "@/utils/pdfThumbnail";
 
@@ -110,25 +109,22 @@ export default function BrandDetailPage({ params }: Props) {
     const explicitLogo = apiBrand?.logoUrl && !apiBrand.logoUrl.includes("brand_") && !apiBrand.logoUrl.endsWith("_2.png") ? apiBrand.logoUrl : "";
     const resolvedLogo = explicitLogo || LOGO_MAP[slug] || LOGO_MAP[slug?.toLowerCase()] || staticBrand?.logo || "";
 
-    const defaultBrand = DEFAULT_BRANDS.find((b) => b.id === slug || b.id === slug?.toLowerCase());
-
     const base = {
       ...(staticBrand || {}),
-      ...(defaultBrand || {}),
-      id: apiBrand?.id || defaultBrand?.id || staticBrand?.id || slug,
-      name: apiBrand?.name || defaultBrand?.name || staticBrand?.name || slug.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-      code: apiBrand?.shortCode || defaultBrand?.shortCode || staticBrand?.code || "SF",
-      num: apiBrand?.shortCode || defaultBrand?.shortCode || staticBrand?.num || "01",
-      hero: apiBrand?.bannerUrl || defaultBrand?.bannerUrl || staticBrand?.hero || "/brands/brand_1_1.png",
+      id: apiBrand?.id || staticBrand?.id || slug,
+      name: apiBrand?.name || staticBrand?.name || slug.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      code: apiBrand?.shortCode || staticBrand?.code || "SF",
+      num: apiBrand?.shortCode || staticBrand?.num || "01",
+      hero: apiBrand?.bannerUrl || staticBrand?.hero || "/brands/brand_1_1.png",
       logo: resolvedLogo,
-      category: apiBrand?.category || defaultBrand?.category || staticBrand?.category || "Architectural Products",
-      origin: apiBrand?.origin || defaultBrand?.origin || staticBrand?.origin || "International",
-      tagline: apiBrand?.tagline !== undefined ? apiBrand.tagline : (defaultBrand?.tagline || staticBrand?.tagline || ""),
-      description: apiBrand?.description || defaultBrand?.description || staticBrand?.description || "",
-      founded: apiBrand?.founded !== undefined ? apiBrand.founded : (defaultBrand?.founded || staticBrand?.founded || ""),
-      collections: Array.isArray(apiBrand?.collections) && apiBrand.collections.length > 0 ? apiBrand.collections : (defaultBrand?.collections || staticBrand?.collections || ["All"]),
-      pdfCatalogs: apiBrand?.pdfCatalogs || defaultBrand?.pdfCatalogs || (staticBrand as any)?.pdfCatalogs || [],
-      catalogPdfUrl: apiBrand?.catalogPdfUrl || defaultBrand?.catalogPdfUrl || (staticBrand as any)?.catalogPdfUrl || "",
+      category: apiBrand?.category || staticBrand?.category || "Architectural Products",
+      origin: apiBrand?.origin || staticBrand?.origin || "International",
+      tagline: apiBrand?.tagline !== undefined ? apiBrand.tagline : (staticBrand?.tagline || ""),
+      description: apiBrand?.description || staticBrand?.description || "",
+      founded: apiBrand?.founded !== undefined ? apiBrand.founded : (staticBrand?.founded || ""),
+      collections: Array.isArray(apiBrand?.collections) && apiBrand.collections.length > 0 ? apiBrand.collections : (staticBrand?.collections || ["All"]),
+      pdfCatalogs: apiBrand?.pdfCatalogs || (staticBrand as any)?.pdfCatalogs || [],
+      catalogPdfUrl: apiBrand?.catalogPdfUrl || (staticBrand as any)?.catalogPdfUrl || "",
       accentColor: apiBrand?.accentColor || undefined,
     };
 
