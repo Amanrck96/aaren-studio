@@ -537,8 +537,8 @@ export default function BrandDetailPage({ params }: Props) {
               else if (lowerTitle.includes("aquarelle")) pdfUrl = "/catalogs/aquarelle.pdf";
               else if (lowerTitle.includes("bits")) pdfUrl = "/catalogs/bits.pdf";
 
-              // Exact Page 1 Thumbnail resolver
-              const coverThumbUrl = getPdfThumbnail(pdfUrl || rawPdf || cat.title, { title: cat.title });
+              // Exact Page 1 Thumbnail or Custom Cover resolver
+              const coverThumbUrl = cat.coverImage || getPdfThumbnail(pdfUrl || rawPdf || cat.title, { title: cat.title, coverImage: cat.coverImage, brandId: slug });
 
               return (
                 <div
@@ -608,7 +608,7 @@ export default function BrandDetailPage({ params }: Props) {
                         src={coverThumbUrl}
                         alt={`${cat.title} Cover`}
                         onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
+                          (e.currentTarget as HTMLImageElement).style.display = "none";
                         }}
                         style={{
                           width: "100%",
@@ -618,45 +618,44 @@ export default function BrandDetailPage({ params }: Props) {
                           transition: "transform 0.5s ease",
                         }}
                       />
-                    ) : (cat as any).coverImage || activeBrand.hero ? (
-                      <div style={{ position: "relative", width: "100%", height: "100%" }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                    ) : null}
+
+                    {/* Luxury Branded Card when coverThumbUrl is empty or hidden */}
+                    <div
+                      style={{
+                        position: coverThumbUrl ? "absolute" : "relative",
+                        inset: 0,
+                        zIndex: coverThumbUrl ? 1 : 2,
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "linear-gradient(145deg, #181920 0%, #0d0e12 100%)",
+                        borderTop: `3px solid ${activeBrand.accentColor || "#d4af37"}`,
+                        color: "#ffffff",
+                        padding: "2rem",
+                        textAlign: "center",
+                      }}
+                    >
+                      {activeBrand.logo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
-                          src={(cat as any).coverImage || activeBrand.hero}
-                          alt={`${cat.title} Cover`}
-                          style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.85)" }}
+                          src={activeBrand.logo}
+                          alt={activeBrand.name}
+                          style={{ maxHeight: "42px", maxWidth: "160px", objectFit: "contain", marginBottom: "1.2rem", filter: "brightness(0) invert(1)" }}
                         />
-                        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.85) 100%)", display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "1.2rem" }}>
-                          <span style={{ fontSize: "0.72rem", color: "#d4af37", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>{activeBrand.name}</span>
-                          <span style={{ fontSize: "1.05rem", fontWeight: 800, color: "#ffffff", marginTop: "0.2rem" }}>{cat.title}</span>
-                          <span style={{ fontSize: "0.72rem", color: "#cbd5e1", marginTop: "0.3rem" }}>Official Specification PDF</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          background: "linear-gradient(135deg, #1e2235 0%, #0b0c10 100%)",
-                          color: "#ffffff",
-                          padding: "2rem",
-                          textAlign: "center",
-                          position: "relative",
-                        }}
-                      >
-                        {activeBrand.logo && (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={activeBrand.logo} alt={activeBrand.name} style={{ maxHeight: "45px", objectFit: "contain", marginBottom: "1rem", filter: "brightness(0) invert(1)" }} />
-                        )}
-                        <span style={{ fontSize: "0.75rem", color: "#d4af37", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase" }}>{activeBrand.name}</span>
-                        <span style={{ fontSize: "1.1rem", fontWeight: 800, marginTop: "0.3rem", color: "#fff" }}>{cat.title}</span>
-                        <span style={{ fontSize: "0.72rem", color: "#94a3b8", marginTop: "0.5rem" }}>Official Architectural Specification PDF</span>
-                      </div>
-                    )}
+                      ) : (
+                        <span style={{ fontSize: "0.85rem", color: activeBrand.accentColor || "#d4af37", fontWeight: 800, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "0.8rem" }}>
+                          {activeBrand.name}
+                        </span>
+                      )}
+                      <span style={{ fontSize: "1.1rem", fontWeight: 800, color: "#fff", lineHeight: 1.3 }}>{cat.title}</span>
+                      <span style={{ fontSize: "0.72rem", color: "#94a3b8", marginTop: "0.6rem", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                        Architectural Specification PDF
+                      </span>
+                    </div>
                   </div>
 
                   {/* Card Title & Meta Info */}

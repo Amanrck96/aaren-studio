@@ -56,9 +56,28 @@ export async function uploadFileWithCompression(
       body: formData,
     });
 
-    const json = await fallbackRes.json();
-    if (!fallbackRes.ok || !json.success) {
-      throw new Error(json.error || "File upload failed.");
+    if (fallbackRes.status === 413) {
+      return {
+        success: false,
+        error: "File is too large for direct serverless upload (>4.5MB). Please paste a Google Drive share link or direct URL.",
+      };
+    }
+
+    const text = await fallbackRes.text();
+    let json: any = null;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      return {
+        success: false,
+        error: fallbackRes.status === 413
+          ? "File exceeds 4.5MB server upload limit. Please use a Google Drive share link instead."
+          : `Upload server returned an unexpected error (${fallbackRes.status}). For large PDF files, please use a Google Drive link.`,
+      };
+    }
+
+    if (!fallbackRes.ok || !json?.success) {
+      throw new Error(json?.error || "File upload failed.");
     }
 
     return { success: true, url: json.url || json.dataUrl, dataUrl: json.dataUrl || json.url };

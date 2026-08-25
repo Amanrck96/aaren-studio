@@ -36,6 +36,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
   const [uploadingLogo, setUploadingLogo] = useState<boolean>(false);
   const [uploadingBanner, setUploadingBanner] = useState<boolean>(false);
   const [uploadingPdf, setUploadingPdf] = useState<boolean>(false);
+  const [uploadingIndex, setUploadingIndex] = useState<{ idx: number; type: "pdf" | "cover" } | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"general" | "editorial" | "media" | "collections" | "catalogs">("editorial");
 
@@ -208,7 +209,11 @@ export default function AdminIndividualBrandPage({ params }: Props) {
   // PDF Catalog Upload
   const handlePdfUpload = async (file: File, catalogIndex?: number) => {
     if (!file) return;
-    setUploadingPdf(true);
+    if (catalogIndex !== undefined) {
+      setUploadingIndex({ idx: catalogIndex, type: "pdf" });
+    } else {
+      setUploadingPdf(true);
+    }
     try {
       const uploadRes = await uploadFileWithCompression(file, "Catalogues");
       if (uploadRes.success && (uploadRes.url || uploadRes.dataUrl)) {
@@ -222,14 +227,39 @@ export default function AdminIndividualBrandPage({ params }: Props) {
         } else {
           setFormData((prev) => ({ ...prev, catalogPdfUrl: finalUrl }));
         }
-        showToast("PDF catalog uploaded!");
+        showToast("PDF catalog uploaded successfully!");
       } else {
-        alert("PDF Upload error: " + (uploadRes.error || "Could not upload file"));
+        alert("PDF Upload note: " + (uploadRes.error || "Could not upload file. If file is >4.5MB, please paste a Google Drive link."));
       }
     } catch (e: any) {
-      alert("PDF Upload failed: " + e.message);
+      alert("PDF Upload note: " + e.message);
     } finally {
       setUploadingPdf(false);
+      setUploadingIndex(null);
+    }
+  };
+
+  // Cover Image Upload for individual PDF catalog
+  const handleCoverUpload = async (file: File, catalogIndex: number) => {
+    if (!file) return;
+    setUploadingIndex({ idx: catalogIndex, type: "cover" });
+    try {
+      const uploadRes = await uploadFileWithCompression(file, "Catalog_Covers");
+      if (uploadRes.success && (uploadRes.url || uploadRes.dataUrl)) {
+        const finalUrl = uploadRes.url || uploadRes.dataUrl || "";
+        setFormData((prev) => {
+          const list = [...(prev.pdfCatalogs || [])];
+          if (list[catalogIndex]) list[catalogIndex].coverImage = finalUrl;
+          return { ...prev, pdfCatalogs: list };
+        });
+        showToast("Catalog cover thumbnail updated!");
+      } else {
+        alert("Cover upload error: " + (uploadRes.error || "Could not upload image"));
+      }
+    } catch (e: any) {
+      alert("Cover upload failed: " + e.message);
+    } finally {
+      setUploadingIndex(null);
     }
   };
 
@@ -659,16 +689,21 @@ export default function AdminIndividualBrandPage({ params }: Props) {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
                   <div>
                     <h3 className="section-title" style={{ margin: 0 }}>Official PDF Specification Catalogs</h3>
-                    <p className="section-sub">Attach downloadable / viewable digital architectural specification PDFs.</p>
+                    <p className="section-sub">Attach downloadable / viewable digital architectural specification PDFs and custom covers.</p>
                   </div>
                   <button type="button" onClick={addPdfCatalogEntry} className="btn-add-item">
                     <Plus size={14} /> Add PDF Catalog
                   </button>
                 </div>
 
+                {/* Info Helper Box */}
+                <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "12px 16px", borderRadius: "8px", marginBottom: "20px", fontSize: "12px", color: "#166534", lineHeight: 1.5 }}>
+                  <strong>💡 Pro-Tip for Catalogs:</strong> You can upload PDF files directly (under 4.5MB), or paste a <strong>Google Drive share link</strong> for large catalog files (10MB–50MB+). Google Drive links load instantly on-screen and automatically extract page thumbnails! You can also upload custom cover thumbnails below.
+                </div>
+
                 {/* Primary PDF */}
-                <div className="form-group full-width" style={{ marginBottom: "20px" }}>
-                  <label>Primary Main PDF Catalog URL</label>
+                <div className="form-group full-width" style={{ marginBottom: "20px", background: "#f8fafc", padding: "14px", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+                  <label style={{ fontWeight: 700, color: "#1e293b", marginBottom: "6px" }}>Primary Default PDF Catalog URL</label>
                   <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     <input
                       type="text"
@@ -686,7 +721,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
                         if (e.target.files && e.target.files[0]) handlePdfUpload(e.target.files[0]);
                       }}
                     />
-                    <label htmlFor="primaryPdfFile" className="btn-upload">
+                    <label htmlFor="primaryPdfFile" className="btn-upload" style={{ cursor: "pointer" }}>
                       <Upload size={14} />
                       <span>{uploadingPdf ? "Uploading..." : "Upload PDF"}</span>
                     </label>
@@ -694,48 +729,129 @@ export default function AdminIndividualBrandPage({ params }: Props) {
                 </div>
 
                 {/* Extra Multiple Catalogs */}
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {(formData.pdfCatalogs || []).map((cat, idx) => (
-                    <div key={idx} className="pdf-catalog-row">
-                      <div style={{ flex: 1 }}>
-                        <label style={{ fontSize: "11px", fontWeight: 700, color: "#475569" }}>Catalog Title</label>
-                        <input
-                          type="text"
-                          value={cat.title}
-                          onChange={(e) => {
-                            const updated = [...(formData.pdfCatalogs || [])];
-                            updated[idx] = { ...updated[idx], title: e.target.value };
-                            setFormData({ ...formData, pdfCatalogs: updated });
-                          }}
-                          placeholder="e.g. 2026 Architectural Range"
-                          style={{ width: "100%", marginTop: "4px" }}
-                        />
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <label style={{ fontSize: "11px", fontWeight: 700, color: "#475569" }}>PDF File URL</label>
-                        <input
-                          type="text"
-                          value={cat.pdfUrl}
-                          onChange={(e) => {
-                            const updated = [...(formData.pdfCatalogs || [])];
-                            updated[idx] = { ...updated[idx], pdfUrl: e.target.value };
-                            setFormData({ ...formData, pdfCatalogs: updated });
-                          }}
-                          placeholder="https://..."
-                          style={{ width: "100%", marginTop: "4px" }}
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removePdfCatalogEntry(idx)}
-                        className="btn-trash"
-                        title="Remove Catalog"
-                        style={{ marginTop: "18px" }}
-                      >
-                        <X size={16} />
-                      </button>
+                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                  {(formData.pdfCatalogs || []).length === 0 ? (
+                    <div style={{ padding: "24px", textAlign: "center", background: "#f8fafc", borderRadius: "8px", border: "1px dashed #cbd5e1", color: "#64748b", fontSize: "13px" }}>
+                      No multiple catalogs added yet. Click &quot;Add PDF Catalog&quot; above to add specific series catalogs (e.g. Slide NXT, Swing NXT, Kitchens, etc.).
                     </div>
-                  ))}
+                  ) : (
+                    (formData.pdfCatalogs || []).map((cat, idx) => {
+                      const isUploadingThisPdf = uploadingIndex?.idx === idx && uploadingIndex?.type === "pdf";
+                      const isUploadingThisCover = uploadingIndex?.idx === idx && uploadingIndex?.type === "cover";
+
+                      return (
+                        <div key={idx} className="pdf-catalog-card" style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "16px", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                            <span style={{ fontSize: "12px", fontWeight: 700, color: "#8c764b", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                              Catalog #{idx + 1}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => removePdfCatalogEntry(idx)}
+                              className="btn-trash"
+                              title="Remove Catalog"
+                              style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", padding: "4px 8px" }}
+                            >
+                              <X size={14} /> Remove
+                            </button>
+                          </div>
+
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "12px" }}>
+                            {/* Catalog Title */}
+                            <div>
+                              <label style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "block", marginBottom: "4px" }}>
+                                Catalog Title *
+                              </label>
+                              <input
+                                type="text"
+                                value={cat.title}
+                                onChange={(e) => {
+                                  const updated = [...(formData.pdfCatalogs || [])];
+                                  updated[idx] = { ...updated[idx], title: e.target.value };
+                                  setFormData({ ...formData, pdfCatalogs: updated });
+                                }}
+                                placeholder="e.g. Slide NXT Specification Guide"
+                                style={{ width: "100%" }}
+                              />
+                            </div>
+
+                            {/* PDF URL & Upload */}
+                            <div>
+                              <label style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "block", marginBottom: "4px" }}>
+                                PDF File URL or Google Drive Link *
+                              </label>
+                              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                                <input
+                                  type="text"
+                                  value={cat.pdfUrl}
+                                  onChange={(e) => {
+                                    const updated = [...(formData.pdfCatalogs || [])];
+                                    updated[idx] = { ...updated[idx], pdfUrl: e.target.value };
+                                    setFormData({ ...formData, pdfCatalogs: updated });
+                                  }}
+                                  placeholder="https://... PDF URL or Google Drive share link"
+                                  style={{ flex: 1 }}
+                                />
+                                <input
+                                  type="file"
+                                  accept=".pdf"
+                                  id={`pdf_upload_${idx}`}
+                                  style={{ display: "none" }}
+                                  onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) handlePdfUpload(e.target.files[0], idx);
+                                  }}
+                                />
+                                <label htmlFor={`pdf_upload_${idx}`} className="btn-upload" style={{ cursor: "pointer", whiteSpace: "nowrap" }}>
+                                  <Upload size={13} />
+                                  <span>{isUploadingThisPdf ? "Uploading..." : "Upload PDF"}</span>
+                                </label>
+                              </div>
+                            </div>
+
+                            {/* Cover Thumbnail Image */}
+                            <div>
+                              <label style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "block", marginBottom: "4px" }}>
+                                Cover Thumbnail Image (Optional)
+                              </label>
+                              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                                <input
+                                  type="text"
+                                  value={cat.coverImage || ""}
+                                  onChange={(e) => {
+                                    const updated = [...(formData.pdfCatalogs || [])];
+                                    updated[idx] = { ...updated[idx], coverImage: e.target.value };
+                                    setFormData({ ...formData, pdfCatalogs: updated });
+                                  }}
+                                  placeholder="https://... Image URL or upload image"
+                                  style={{ flex: 1 }}
+                                />
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  id={`cover_upload_${idx}`}
+                                  style={{ display: "none" }}
+                                  onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) handleCoverUpload(e.target.files[0], idx);
+                                  }}
+                                />
+                                <label htmlFor={`cover_upload_${idx}`} className="btn-upload" style={{ cursor: "pointer", whiteSpace: "nowrap", background: "#475569" }}>
+                                  <ImageIcon size={13} />
+                                  <span>{isUploadingThisCover ? "Uploading..." : "Upload Cover"}</span>
+                                </label>
+
+                                {cat.coverImage && (
+                                  <div style={{ width: "36px", height: "36px", borderRadius: "4px", overflow: "hidden", border: "1px solid #cbd5e1", flexShrink: 0 }}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={cat.coverImage} alt="Cover Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               </div>
             )}

@@ -43,9 +43,16 @@ export function getPdfThumbnail(
     cloudName?: string;
     crop?: "fill" | "fit" | "limit" | "pad";
     title?: string;
+    coverImage?: string;
+    brandId?: string;
   }
 ): string {
-  if (!publicIdOrUrl) return "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
+  // 0. If explicit cover image is provided, use it directly
+  if (options?.coverImage && options.coverImage.trim()) {
+    return options.coverImage.trim();
+  }
+
+  if (!publicIdOrUrl) return "";
 
   const cloudName =
     options?.cloudName ||
@@ -92,15 +99,15 @@ export function getPdfThumbnail(
     return LOCAL_THUMBNAILS[baseKey];
   }
 
-  // 5. Keyword Fuzzy Match:
-  const combined = `${publicIdOrUrl} ${options?.title || ""}`.toLowerCase();
-  if (combined.includes("newtech") || combined.includes("wood")) return "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
+  // 5. Keyword Match if explicitly tied to brand
+  const combined = `${publicIdOrUrl} ${options?.title || ""} ${options?.brandId || ""}`.toLowerCase();
+  if (combined.includes("newtech") || combined.includes("newtechwood")) return "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
   if (combined.includes("fenix")) return "/catalogs/thumbnails/2024-fenix-brochure-digital_thumb.jpg";
   if (combined.includes("cora")) return "/catalogs/thumbnails/cora-printed-brochure-arrangement-en-th25_thumb.jpg";
   if (combined.includes("decometal")) return "/catalogs/thumbnails/decometal-catalogue-final_thumb.jpg";
   if (combined.includes("formica")) return "/catalogs/thumbnails/formica-global-catalogue-v2_thumb.jpg";
   if (combined.includes("arpa") || combined.includes("vis")) return "/catalogs/thumbnails/arpa-vis-brochure-250122_thumb.jpg";
-  if (combined.includes("materia") || combined.includes("prima") || combined.includes("inkiastro")) return "/catalogs/thumbnails/catalogo-materiaprima-2026-2a_thumb.jpg";
+  if (combined.includes("materia") || combined.includes("prima") || combined.includes("inkiostro")) return "/catalogs/thumbnails/catalogo-materiaprima-2026-2a_thumb.jpg";
   if (combined.includes("travertini")) return "/catalogs/thumbnails/catalogue-elysian-travertini-pdf_thumb.jpg";
   if (combined.includes("elysian")) return "/catalogs/thumbnails/catalogue-elysian-pdf_thumb.jpg";
   if (combined.includes("glocal")) return "/catalogs/thumbnails/catalogue-glocal-pdf_thumb.jpg";
@@ -108,16 +115,16 @@ export function getPdfThumbnail(
   if (combined.includes("izumi")) return "/catalogs/thumbnails/catalogue-izumi-pdf_thumb.jpg";
   if (combined.includes("jewels")) return "/catalogs/thumbnails/catalogue-jewels-2-0-pdf_thumb.jpg";
   if (combined.includes("jurupa")) return "/catalogs/thumbnails/catalogue-jurupa-pdf_thumb.jpg";
-  if (combined.includes("clay") || combined.includes("mirage")) return "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg";
-  if (combined.includes("aquarelle") || combined.includes("slashform")) return "/catalogs/thumbnails/aquarelle_thumb.jpg";
-  if (combined.includes("bits") || combined.includes("waltz")) return "/catalogs/thumbnails/bits_thumb.jpg";
+  if (combined.includes("clay") || (combined.includes("mirage") && !combined.includes("waltz"))) return "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg";
+  if (combined.includes("aquarelle") || (combined.includes("slashform") && !combined.includes("waltz"))) return "/catalogs/thumbnails/aquarelle_thumb.jpg";
+  if (combined.includes("bits")) return "/catalogs/thumbnails/bits_thumb.jpg";
   if (combined.includes("nouvelle") || combined.includes("nouveau")) return "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg";
   if (combined.includes("sabil")) return "/catalogs/thumbnails/catalogo-sabil_thumb.jpg";
   if (combined.includes("terre")) return "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
-  if (combined.includes("vestige")) return "/catalogs/thumbnails/catalogo-vestige_thumb.jpg";
+  if (combined.includes("vestige") && combined.includes("loco")) return "/catalogs/thumbnails/catalogo-vestige_thumb.jpg";
   if (combined.includes("60grados") || combined.includes("60 grados") || combined.includes("60 degree")) return "/catalogs/thumbnails/catalogo60grados_thumb.jpg";
   if (combined.includes("bejmat")) return "/catalogs/thumbnails/catalogobejmat_thumb.jpg";
 
-  return "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
+  return "";
 }
 

@@ -421,11 +421,12 @@ export default function TeamPage() {
 
         .team-header__title {
           color: #81663F;
-          font-size: clamp(3.6rem, 6vw, 6.4rem);
-          font-weight: 800;
-          letter-spacing: -0.03em;
-          margin-bottom: 1.6rem;
-          line-height: 1.05;
+          font-size: clamp(6rem, 15vw, 22rem);
+          font-weight: 700;
+          letter-spacing: -0.05em;
+          line-height: 0.88;
+          text-transform: uppercase;
+          margin-bottom: 2.8rem;
         }
 
         .team-header__desc {

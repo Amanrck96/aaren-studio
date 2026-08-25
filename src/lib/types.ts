@@ -52,7 +52,7 @@ export type BrandItem = {
   shortCode: string;
   sequenceNumber: number;
   catalogPdfUrl?: string;
-  pdfCatalogs?: { id: string; title: string; pdfUrl: string }[];
+  pdfCatalogs?: { id: string; title: string; pdfUrl: string; coverImage?: string }[];
   category?: string;
   origin?: string;
   tagline?: string;
