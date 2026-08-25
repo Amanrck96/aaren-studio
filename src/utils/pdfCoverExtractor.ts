@@ -81,6 +81,18 @@ export async function extractFirstPageWithDetails(
         return { file: null, error: "Empty PDF URL or file input provided", step: "INPUT_RESOLUTION" };
       }
 
+      // Direct base64 data URL handling (zero network / zero CORS)
+      if (trimmedUrl.startsWith("data:")) {
+        currentStep = "INPUT_RESOLUTION";
+        const base64Data = trimmedUrl.split(",")[1];
+        if (base64Data) {
+          const binaryString = atob(base64Data);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
+          arrayBuffer = bytes.buffer;
+        }
+      }
+
       // Check if it's a Google Drive link
       const driveId = getGoogleDriveId(trimmedUrl);
       if (driveId) {

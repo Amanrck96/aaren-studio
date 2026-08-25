@@ -28,7 +28,13 @@ function normalizeFirebaseStorageUrl(url: string): string {
     const rest = parts[1];
     const queryIndex = rest.indexOf("?");
     const pathPart = queryIndex >= 0 ? rest.slice(0, queryIndex) : rest;
-    const queryPart = queryIndex >= 0 ? rest.slice(queryIndex) : "";
+    let queryPart = queryIndex >= 0 ? rest.slice(queryIndex) : "";
+
+    if (!queryPart) {
+      queryPart = "?alt=media";
+    } else if (!queryPart.includes("alt=media")) {
+      queryPart += "&alt=media";
+    }
 
     // Decode first to prevent double-encoding, then re-encode segments with %2F
     const rawSegments = decodeURIComponent(pathPart).split("/");
@@ -36,6 +42,15 @@ function normalizeFirebaseStorageUrl(url: string): string {
     return `${baseUrl}${encodedPath}${queryPart}`;
   } catch {
     return url;
+  }
+}
+
+function sanitizeAndEncodeUrl(urlStr: string): string {
+  try {
+    const urlObj = new URL(urlStr);
+    return urlObj.toString();
+  } catch {
+    return encodeURI(urlStr);
   }
 }
 
@@ -57,13 +72,21 @@ async function handlePdfProxy(rawUrl: string | null) {
 
   let targetUrl = rawUrl.trim();
 
-  // 1. Handle Local Filesystem Paths (e.g. /catalogs/... or /catalogues/...)
-  if (targetUrl.startsWith("/") || (!targetUrl.startsWith("http://") && !targetUrl.startsWith("https://"))) {
-    const cleanPath = targetUrl.replace(/^[/\\]+/, "").replace(/\\/g, "/");
+  // 1. Handle Local Filesystem Paths (e.g. /catalogs/... or /catalogues/... or localhost URLs)
+  const isLocalOrigin =
+    targetUrl.startsWith("/") ||
+    targetUrl.includes("localhost:") ||
+    targetUrl.includes("127.0.0.1:") ||
+    (!targetUrl.startsWith("http://") && !targetUrl.startsWith("https://"));
+
+  if (isLocalOrigin) {
+    let cleanPath = targetUrl.replace(/^https?:\/\/[^/]+/, "").replace(/^[/\\]+/, "").replace(/\\/g, "/");
+    cleanPath = decodeURIComponent(cleanPath);
     const candidates = [
       path.join(process.cwd(), "public", cleanPath),
       path.join(process.cwd(), "public", "catalogs", path.basename(cleanPath)),
       path.join(process.cwd(), "public", "catalogues", path.basename(cleanPath)),
+      path.join(process.cwd(), "public", "uploads", path.basename(cleanPath)),
     ];
 
     const localFile = candidates.find((p) => fs.existsSync(p));
@@ -81,7 +104,7 @@ async function handlePdfProxy(rawUrl: string | null) {
     }
   }
 
-  // 2. Normalize Firebase Storage URL (Ensure %2F in /o/ paths is preserved)
+  // 2. Normalize Firebase Storage URL (Ensure %2F in /o/ paths and alt=media is preserved)
   if (targetUrl.includes("firebasestorage.googleapis.com")) {
     targetUrl = normalizeFirebaseStorageUrl(targetUrl);
   }
@@ -91,19 +114,62 @@ async function handlePdfProxy(rawUrl: string | null) {
     targetUrl = resolveGoogleDriveDownloadUrl(targetUrl);
   }
 
-  // 4. Fetch Remote URL via Node.js Server (Bypasses Browser CORS)
-  console.log(`[PDF Proxy] Fetching target: ${targetUrl}`);
-  const response = await fetch(targetUrl, {
-    headers: {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-      Accept: "application/pdf,*/*",
+  // 4. Safely encode any unencoded spaces or symbols in the URL
+  targetUrl = sanitizeAndEncodeUrl(targetUrl);
+
+  // Outgoing Request Diagnostic Details
+  const isCloudinary = targetUrl.includes("res.cloudinary.com");
+  const isFirebase = targetUrl.includes("firebasestorage.googleapis.com");
+  const isGoogleDrive = targetUrl.includes("drive.google.com") || targetUrl.includes("drive.usercontent.google.com");
+  const cloudinaryType = isCloudinary ? (targetUrl.includes("/raw/") ? "raw" : "image") : "N/A";
+  const hasPageTransform = isCloudinary && targetUrl.includes("pg_1");
+
+  const outgoingHeaders = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    Accept: "application/pdf,*/*",
+  };
+
+  // 5. Fetch Remote URL via Node.js Server (Bypasses Browser CORS)
+  console.log(`[PDF Proxy Outgoing Request]`, {
+    method: "GET",
+    url: targetUrl,
+    headers: outgoingHeaders,
+    diagnostics: {
+      isCloudinary,
+      cloudinaryType,
+      hasPageTransform,
+      isFirebase,
+      isGoogleDrive,
     },
   });
 
+  let response = await fetch(targetUrl, { headers: outgoingHeaders });
+
+  // Cloudinary fallback: If image/upload PDF failed (due to restricted PDF delivery), try raw/upload
+  if (!response.ok && isCloudinary && targetUrl.includes("/image/upload/")) {
+    const rawFallbackUrl = targetUrl.replace("/image/upload/", "/raw/upload/");
+    console.warn(`[PDF Proxy] Cloudinary image fetch failed (${response.status}). Retrying via raw endpoint: ${rawFallbackUrl}`);
+    const fallbackRes = await fetch(rawFallbackUrl, { headers: outgoingHeaders });
+    if (fallbackRes.ok) {
+      response = fallbackRes;
+      targetUrl = rawFallbackUrl;
+    }
+  }
+
   if (!response.ok) {
-    console.error(`[PDF Proxy] Remote fetch failed for ${targetUrl}: HTTP ${response.status} ${response.statusText}`);
+    const errorBody = await response.text().catch(() => "");
+    const cldError = response.headers.get("x-cld-error");
+    console.error(`[PDF Proxy] Remote fetch failed for ${targetUrl}: HTTP ${response.status} ${response.statusText}`, {
+      errorBody: errorBody.slice(0, 500),
+      cloudinaryError: cldError,
+      responseHeaders: Object.fromEntries(response.headers.entries()),
+    });
     return NextResponse.json(
-      { success: false, error: `Failed to fetch remote PDF: HTTP ${response.status} ${response.statusText}` },
+      {
+        success: false,
+        error: `Failed to fetch remote PDF: HTTP ${response.status} ${response.statusText}${cldError ? ` (${cldError})` : errorBody ? `: ${errorBody.slice(0, 200)}` : ""}`,
+        details: errorBody,
+      },
       { status: response.status, headers: CORS_HEADERS }
     );
   }
