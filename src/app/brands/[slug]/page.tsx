@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useMemo, use } from "react";
 import { getBrandById } from "@/lib/brands";
+import { DEFAULT_BRANDS } from "@/lib/store";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
 import { getPdfThumbnail } from "@/utils/pdfThumbnail";
 
@@ -109,43 +110,29 @@ export default function BrandDetailPage({ params }: Props) {
     const explicitLogo = apiBrand?.logoUrl && !apiBrand.logoUrl.includes("brand_") && !apiBrand.logoUrl.endsWith("_2.png") ? apiBrand.logoUrl : "";
     const resolvedLogo = explicitLogo || LOGO_MAP[slug] || LOGO_MAP[slug?.toLowerCase()] || staticBrand?.logo || "";
 
-    const base = staticBrand || {
-      id: slug,
-      name: slug.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-      code: "BR",
-      num: "01",
-      hero: "/brands/brand_1_1.png",
+    const defaultBrand = DEFAULT_BRANDS.find((b) => b.id === slug || b.id === slug?.toLowerCase());
+
+    const base = {
+      ...(staticBrand || {}),
+      ...(defaultBrand || {}),
+      id: apiBrand?.id || defaultBrand?.id || staticBrand?.id || slug,
+      name: apiBrand?.name || defaultBrand?.name || staticBrand?.name || slug.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      code: apiBrand?.shortCode || defaultBrand?.shortCode || staticBrand?.code || "SF",
+      num: apiBrand?.shortCode || defaultBrand?.shortCode || staticBrand?.num || "01",
+      hero: apiBrand?.bannerUrl || defaultBrand?.bannerUrl || staticBrand?.hero || "/brands/brand_1_1.png",
       logo: resolvedLogo,
-      category: "Architectural Products",
-      origin: "International",
-      tagline: "",
-      description: "",
-      founded: "",
-      collections: ["All"],
-      products: [],
-      catalogues: [],
+      category: apiBrand?.category || defaultBrand?.category || staticBrand?.category || "Architectural Products",
+      origin: apiBrand?.origin || defaultBrand?.origin || staticBrand?.origin || "International",
+      tagline: apiBrand?.tagline !== undefined ? apiBrand.tagline : (defaultBrand?.tagline || staticBrand?.tagline || ""),
+      description: apiBrand?.description || defaultBrand?.description || staticBrand?.description || "",
+      founded: apiBrand?.founded !== undefined ? apiBrand.founded : (defaultBrand?.founded || staticBrand?.founded || ""),
+      collections: Array.isArray(apiBrand?.collections) && apiBrand.collections.length > 0 ? apiBrand.collections : (defaultBrand?.collections || staticBrand?.collections || ["All"]),
+      pdfCatalogs: apiBrand?.pdfCatalogs || defaultBrand?.pdfCatalogs || (staticBrand as any)?.pdfCatalogs || [],
+      catalogPdfUrl: apiBrand?.catalogPdfUrl || defaultBrand?.catalogPdfUrl || (staticBrand as any)?.catalogPdfUrl || "",
+      accentColor: apiBrand?.accentColor || undefined,
     };
 
-    if (!apiBrand) return { ...base, logo: resolvedLogo };
-
-    return {
-      ...base,
-      id: apiBrand.id || base.id,
-      name: apiBrand.name || base.name,
-      hero: apiBrand.bannerUrl || base.hero,
-      logo: resolvedLogo,
-      num: apiBrand.shortCode || base.num,
-      code: apiBrand.shortCode || base.code,
-      category: apiBrand.category || base.category,
-      origin: apiBrand.origin || base.origin,
-      tagline: apiBrand.tagline !== undefined ? apiBrand.tagline : base.tagline,
-      description: apiBrand.description || base.description,
-      founded: apiBrand.founded !== undefined ? apiBrand.founded : base.founded,
-      collections: Array.isArray(apiBrand.collections) && apiBrand.collections.length > 0 ? apiBrand.collections : base.collections,
-      pdfCatalogs: apiBrand.pdfCatalogs || (staticBrand as any)?.pdfCatalogs || [],
-      catalogPdfUrl: apiBrand.catalogPdfUrl || (staticBrand as any)?.catalogPdfUrl || "",
-      accentColor: apiBrand.accentColor || undefined,
-    };
+    return base;
   }, [staticBrand, apiBrand, slug]);
 
   const displayCatalogues = useMemo(() => {

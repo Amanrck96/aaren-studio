@@ -1,74 +1,19 @@
 /**
  * Client-Side PDF Page-1 Cover Extractor
- * Automatically renders page 1 of any uploaded PDF file to a crisp JPEG image
- * without needing any backend server or third-party paid API.
+ * Automatically renders page 1 of any uploaded PDF file to a crisp JPEG image.
  */
 
-declare global {
-  interface Window {
-    pdfjsLib?: any;
-  }
-}
-
-/**
- * Load pdf.js dynamically from CDN if not already present on window
- */
-async function loadPdfJs(): Promise<any> {
-  if (typeof window === "undefined") return null;
-  if (window.pdfjsLib) return window.pdfjsLib;
-
-  return new Promise((resolve) => {
-    const existingScript = document.getElementById("pdfjs-cdn-script");
-    if (existingScript) {
-      const check = setInterval(() => {
-        if (window.pdfjsLib) {
-          clearInterval(check);
-          resolve(window.pdfjsLib);
-        }
-      }, 50);
-      setTimeout(() => {
-        clearInterval(check);
-        resolve(window.pdfjsLib || null);
-      }, 5000);
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.id = "pdfjs-cdn-script";
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
-    script.async = true;
-
-    script.onload = () => {
-      if (window.pdfjsLib) {
-        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-        resolve(window.pdfjsLib);
-      } else {
-        resolve(null);
-      }
-    };
-
-    script.onerror = (err) => {
-      console.warn("Failed to load PDF.js from CDN:", err);
-      resolve(null);
-    };
-
-    document.head.appendChild(script);
-  });
-}
-
-/**
- * Extract Page 1 from a PDF File or ArrayBuffer and return as a JPEG File
- */
 export async function extractFirstPageAsImage(
   pdfFileOrBuffer: File | ArrayBuffer,
   fileName?: string
 ): Promise<File | null> {
+  if (typeof window === "undefined") return null;
+
   try {
-    const pdfjs = await loadPdfJs();
-    if (!pdfjs) {
-      console.warn("pdfjsLib is not available");
-      return null;
+    const pdfjsLib = await import("pdfjs-dist");
+    
+    if (pdfjsLib.GlobalWorkerOptions && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version || "3.11.174"}/pdf.worker.min.js`;
     }
 
     let arrayBuffer: ArrayBuffer;
@@ -82,12 +27,18 @@ export async function extractFirstPageAsImage(
       if (fileName) baseName = fileName.replace(/\.[^/.]+$/, "");
     }
 
-    const loadingTask = pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) });
+    const loadingTask = pdfjsLib.getDocument({
+      data: new Uint8Array(arrayBuffer),
+      useWorkerFetch: false,
+      isEvalSupported: false,
+      useSystemFonts: true,
+    });
+
     const pdf = await loadingTask.promise;
     if (!pdf || pdf.numPages === 0) return null;
 
     const page = await pdf.getPage(1);
-    const viewport = page.getViewport({ scale: 2.0 }); // 2x high resolution
+    const viewport = page.getViewport({ scale: 1.5 }); // High resolution crisp cover
 
     const canvas = document.createElement("canvas");
     canvas.width = viewport.width;
@@ -96,7 +47,7 @@ export async function extractFirstPageAsImage(
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
 
-    // Fill white background before rendering
+    // Fill clean white background
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -119,11 +70,11 @@ export async function extractFirstPageAsImage(
           resolve(coverFile);
         },
         "image/jpeg",
-        0.92
+        0.9
       );
     });
   } catch (err) {
-    console.warn("Automatic PDF Page-1 capture warning:", err);
+    console.warn("Automatic PDF Page-1 capture note:", err);
     return null;
   }
 }

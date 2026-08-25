@@ -69,26 +69,32 @@ export const BRAND_EXCEL_CATALOGS: Record<string, { title: string; subtitle?: st
   ],
   "newtechwood": [
     {
-      "title": "NewTechWood Outdoor WPC Decking",
-      "subtitle": "360° Co-Extruded Capped Composite Cladding & Decking",
-      "file": "/catalogs/arpa-vis-brochure_250122.pdf",
-      "url": "/catalogs/arpa-vis-brochure_250122.pdf"
+      "title": "NewTechWood Product Catalog 2025",
+      "subtitle": "Complete Decking, Cladding & Systems Range",
+      "file": "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf",
+      "url": "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf"
     }
   ],
   "waltz": [
     {
       "title": "Waltz Architectural Glass & Screens",
       "subtitle": "Frameless Partitions & Zipline Systems",
-      "file": "/catalogs/catalogo60grados.pdf",
-      "url": "/catalogs/catalogo60grados.pdf"
+      "file": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/documents%2F1786507746536_Waltz_JB_Glass_Catalog.pdf?alt=media&token=f3c834a3-7649-43c3-9828-dd6eb58f7ae2",
+      "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/documents%2F1786507746536_Waltz_JB_Glass_Catalog.pdf?alt=media&token=f3c834a3-7649-43c3-9828-dd6eb58f7ae2"
     }
   ],
   "slashform": [
     {
-      "title": "Slashform Kitchen & Wardrobe Systems",
-      "subtitle": "Italian Precision Architectural Living Systems",
-      "file": "/catalogs/aquarelle.pdf",
-      "url": "/catalogs/aquarelle.pdf"
+      "title": "Slashform Kitchen Specification Guide",
+      "subtitle": "Italian Precision Living Systems",
+      "file": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509682231_Slashform_Kitchen.pdf?alt=media&token=6204ef83-4e8d-4173-ad37-feadc45d8537",
+      "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509682231_Slashform_Kitchen.pdf?alt=media&token=6204ef83-4e8d-4173-ad37-feadc45d8537"
+    },
+    {
+      "title": "Slashform Wardrobe Specification Guide",
+      "subtitle": "Italian Precision Living Systems",
+      "file": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509713565_Slasform_Wardrobe.pdf?alt=media&token=f94ecf41-5329-4c83-a47c-5f7d5d2675e5",
+      "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509713565_Slasform_Wardrobe.pdf?alt=media&token=f94ecf41-5329-4c83-a47c-5f7d5d2675e5"
     }
   ],
   "wow": [
