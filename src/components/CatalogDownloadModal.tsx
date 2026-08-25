@@ -11,8 +11,8 @@ interface Props {
   onSuccess?: () => void;
 }
 
-export function getPdfCoverThumbnail(url?: string, title?: string, publicId?: string): string {
-  return getPdfThumbnail(publicId || url || "", { title });
+export function getPdfCoverThumbnail(url?: string, title?: string, publicId?: string, coverImage?: string): string {
+  return getPdfThumbnail(publicId || url || "", { title, coverImage });
 }
 
 export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Props) {
@@ -72,7 +72,7 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
     }
   }
 
-  const thumbUrl = catalog.thumbnailUrl || getPdfCoverThumbnail(catalog.fileUrl, catalog.title, (catalog as any).pdfPublicId);
+  const thumbUrl = catalog.thumbnailUrl || (catalog as any).coverImage || getPdfCoverThumbnail(catalog.fileUrl, catalog.title, (catalog as any).pdfPublicId, (catalog as any).coverImage);
   const pdfUrl = viewToken && viewSlug
     ? `/api/catalogs/${viewSlug}/stream?token=${encodeURIComponent(viewToken)}`
     : catalog.fileUrl || `/catalogs/${catalog.fileName}`;

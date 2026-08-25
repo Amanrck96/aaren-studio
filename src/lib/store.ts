@@ -35,23 +35,91 @@ export * from "./types";
 const PRIMARY_STORE_PATH = path.join(process.cwd(), "data", "master_store.json");
 const TMP_STORE_PATH = path.join("/tmp", "master_store.json");
 
+interface CacheEntry {
+  data: any;
+  timestamp: number;
+  source: string;
+}
+
 declare global {
+  var __AAREN_CACHE_MAP__: Map<string, CacheEntry> | undefined;
   var __AAREN_MEMORY_STORE__: any;
+}
+
+if (!globalThis.__AAREN_CACHE_MAP__) {
+  globalThis.__AAREN_CACHE_MAP__ = new Map();
+}
+
+const CACHE_TTL_MS = 5_000; // 5 seconds TTL to dedup in-flight bursts while keeping cross-instance reads fresh
+
+export function logStoreRead(key: string, source: string, details?: any) {
+  const ts = new Date().toISOString();
+  const detailStr = typeof details === "number" ? `${details} items` : typeof details === "string" ? details : details ? JSON.stringify(details).slice(0, 80) : "ok";
+  console.log(`[STORE READ] key="${key}" served_from="${source}" timestamp="${ts}" details="${detailStr}"`);
+}
+
+export function getMemoryCached<T>(key: string): T | null {
+  const entry = globalThis.__AAREN_CACHE_MAP__?.get(key);
+  if (entry && Date.now() - entry.timestamp < CACHE_TTL_MS) {
+    const len = Array.isArray(entry.data) ? entry.data.length : entry.data ? 1 : 0;
+    logStoreRead(key, "memory-ttl", len);
+    return entry.data as T;
+  }
+  return null;
+}
+
+export function setMemoryCached(key: string, data: any, source: string) {
+  if (!globalThis.__AAREN_CACHE_MAP__) {
+    globalThis.__AAREN_CACHE_MAP__ = new Map();
+  }
+  globalThis.__AAREN_CACHE_MAP__.set(key, {
+    data,
+    timestamp: Date.now(),
+    source,
+  });
+}
+
+export function invalidateMemoryCache(key?: string) {
+  if (!globalThis.__AAREN_CACHE_MAP__) return;
+  if (key) {
+    globalThis.__AAREN_CACHE_MAP__.delete(key);
+  } else {
+    globalThis.__AAREN_CACHE_MAP__.clear();
+  }
+  globalThis.__AAREN_MEMORY_STORE__ = undefined;
+}
+
+function normalizeFirebaseData(data: any): any {
+  if (!data || typeof data !== "object") return data;
+  if (Array.isArray(data)) return data;
+  // If it's an object with numeric keys (0, 1, 2...), convert to Array
+  const keys = Object.keys(data);
+  if (keys.length > 0 && keys.every((k) => /^\d+$/.test(k))) {
+    return Object.values(data);
+  }
+  return data;
 }
 
 const FIREBASE_RTDB_STORE_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || "https://aarenintpro-1c09f-default-rtdb.firebaseio.com";
 
 async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
+  // Check short TTL cache first
+  const cached = getMemoryCached(key);
+  if (cached !== null) return cached;
+
   try {
-    // 1. Check /store/${key}.json (Primary live admin path with 2s timeout)
+    // 1. Check /store/${key}.json (Primary live admin path with 4500ms timeout)
     const storeRes = await fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
       headers: { "Cache-Control": "no-cache" },
-      signal: AbortSignal.timeout(2000),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 0 },
     });
     if (storeRes.ok) {
-      const data = await storeRes.json();
+      const raw = await storeRes.json();
+      const data = normalizeFirebaseData(raw);
       if (data !== null && data !== undefined) {
+        logStoreRead(key, "firebase-store", Array.isArray(data) ? data.length : 1);
+        setMemoryCached(key, data, "firebase-store");
         return data;
       }
     }
@@ -59,17 +127,20 @@ async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
     // 2. Fallback to /${key}.json
     const rootRes = await fetch(`${FIREBASE_RTDB_STORE_URL}/${key}.json`, {
       headers: { "Cache-Control": "no-cache" },
-      signal: AbortSignal.timeout(2000),
+      signal: AbortSignal.timeout(4500),
       next: { revalidate: 0 },
     });
     if (rootRes.ok) {
-      const data = await rootRes.json();
+      const raw = await rootRes.json();
+      const data = normalizeFirebaseData(raw);
       if (data !== null && data !== undefined) {
+        logStoreRead(key, "firebase-root", Array.isArray(data) ? data.length : 1);
+        setMemoryCached(key, data, "firebase-root");
         return data;
       }
     }
   } catch (err) {
-    // Fail-safe to local store immediately
+    console.warn(`[STORE READ] Firebase fetch timeout/failed for key="${key}":`, (err as any)?.message || err);
   }
   return null;
 }
@@ -159,8 +230,12 @@ export async function listStoreBackups() {
 }
 
 async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
+  // 1. Invalidate and refresh short TTL cache
+  invalidateMemoryCache(key);
+  setMemoryCached(key, data, "admin-write");
+
   try {
-    // 1. Instant Dual-write to Firebase Realtime Database (/store/ and /)
+    // 2. Instant Dual-write to Firebase Realtime Database (/store/ and /)
     await Promise.allSettled([
       fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
         method: "PUT",
@@ -174,7 +249,7 @@ async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
       }),
     ]);
 
-    // 2. Automated timestamped local + cloud backup creation
+    // 3. Automated timestamped local + cloud backup creation
     await createStoreBackup(key, data);
   } catch (err) {
     // Fail-safe
@@ -192,16 +267,11 @@ function getActiveStorePath(): string {
   }
 }
 
-function readJsonStore() {
-  if (globalThis.__AAREN_MEMORY_STORE__) {
-    return globalThis.__AAREN_MEMORY_STORE__;
-  }
-
+export function readJsonStore(): any {
   const targetPath = getActiveStorePath();
   try {
     if (fs.existsSync(targetPath)) {
       const data = JSON.parse(fs.readFileSync(targetPath, "utf-8"));
-      globalThis.__AAREN_MEMORY_STORE__ = data;
       return data;
     }
   } catch (err) {}
@@ -209,12 +279,11 @@ function readJsonStore() {
   try {
     if (fs.existsSync(PRIMARY_STORE_PATH)) {
       const data = JSON.parse(fs.readFileSync(PRIMARY_STORE_PATH, "utf-8"));
-      globalThis.__AAREN_MEMORY_STORE__ = data;
       return data;
     }
   } catch (err) {}
 
-  const initial = {
+  return {
     settings: DEFAULT_SETTINGS,
     categories: DEFAULT_CATEGORIES,
     brands: DEFAULT_BRANDS,
@@ -225,8 +294,6 @@ function readJsonStore() {
     inquiries: [],
     pages: [],
   };
-  globalThis.__AAREN_MEMORY_STORE__ = initial;
-  return initial;
 }
 
 async function syncStoreToGitHub(data: any) {
@@ -803,15 +870,13 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
 
 // CATALOG SETTINGS STORE
 export async function getCatalogSettingsStore(): Promise<CatalogSettingsItem> {
+  const fbData = await fetchFromFirebaseCloudStore("catalogSettings");
+  if (fbData && typeof fbData === "object" && fbData.modalTitle) {
+    return { ...DEFAULT_CATALOG_SETTINGS, ...fbData };
+  }
   const json = readJsonStore();
   if (json.catalogSettings && json.catalogSettings.modalTitle) {
     return { ...DEFAULT_CATALOG_SETTINGS, ...json.catalogSettings };
-  }
-  const fbData = await fetchFromFirebaseCloudStore("catalogSettings");
-  if (fbData && typeof fbData === "object" && fbData.modalTitle) {
-    json.catalogSettings = fbData;
-    globalThis.__AAREN_MEMORY_STORE__ = json;
-    return { ...DEFAULT_CATALOG_SETTINGS, ...fbData };
   }
   return DEFAULT_CATALOG_SETTINGS;
 }

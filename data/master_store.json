@@ -252,27 +252,32 @@
         {
           "id": "cat-1786242973176",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786243001177_SlideNXT.pdf?alt=media&token=81c81e87-7ef9-4954-b572-756bc2e84aed",
-          "title": "Slide NXT"
+          "title": "Slide NXT",
+          "coverImage": "/catalogs/thumbnails/slidenxt_thumb.jpg"
         },
         {
           "id": "cat-1786243025319",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786243040223_SwingNXT.pdf?alt=media&token=0a41887a-5f5a-4419-9cc9-d29e8946b510",
-          "title": "Swing NXT"
+          "title": "Swing NXT",
+          "coverImage": "/catalogs/thumbnails/swingnxt_thumb.jpg"
         },
         {
           "id": "cat-1786243060336",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786243081886_GlideNXT.pdf?alt=media&token=cf8002ca-c616-4b9f-b16c-4376377c06b1",
-          "title": "Glide NXT"
+          "title": "Glide NXT",
+          "coverImage": "/catalogs/thumbnails/glidenxt_thumb.jpg"
         },
         {
           "id": "cat-1786243105307",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786243118121_CloseNXT.pdf?alt=media&token=06d8863b-29e9-45b6-b535-ac0fc35b0fce",
-          "title": "Close NXT"
+          "title": "Close NXT",
+          "coverImage": "/catalogs/thumbnails/closenxt_thumb.jpg"
         },
         {
           "id": "cat-1786243132841",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786243153756_WALLWAYS.pdf?alt=media&token=000957d5-30dd-4fdc-8aa3-f885925968c7",
-          "title": "Wallways"
+          "title": "Wallways",
+          "coverImage": "/catalogs/thumbnails/wallways_thumb.jpg"
         }
       ],
       "sequenceNumber": 2,
@@ -298,7 +303,8 @@
         {
           "id": "cat-1",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509903217_NTW_product_catalog-V20250314_compressed__1_.pdf?alt=media&token=99bed32e-555a-45e9-a837-32e5b9533ab8",
-          "title": "NewtechWood"
+          "title": "NewtechWood",
+          "coverImage": "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg"
         }
       ],
       "sequenceNumber": 3,
@@ -324,17 +330,20 @@
         {
           "id": "cat-1786205228363",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786510081412_Formica-Global-Catalogue-V2.pdf?alt=media&token=94f50c77-e0b0-40ed-b0e5-7e81ead7b659",
-          "title": "Formica Global"
+          "title": "Formica Global",
+          "coverImage": "/catalogs/thumbnails/formica-global-catalogue-v2_thumb.jpg"
         },
         {
           "id": "cat-1786205374817",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786509958348_2024-FENIX-brochure-digital.pdf?alt=media&token=b4b5f022-4165-4308-875b-422c51f0dd97",
-          "title": "Fenix"
+          "title": "Fenix",
+          "coverImage": "/catalogs/thumbnails/2024-fenix-brochure-digital_thumb.jpg"
         },
         {
           "id": "cat-1786510106279",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786510124749_Formica_Group_presents_4x4_brochure_EN.pdf?alt=media&token=954c4649-db3b-4441-9af4-b69616ff3c4d",
-          "title": "Formica Sarsen by MANUEL ESPEJO"
+          "title": "Formica Sarsen by MANUEL ESPEJO",
+          "coverImage": "/catalogs/thumbnails/formica-global-catalogue-v2_thumb.jpg"
         }
       ],
       "sequenceNumber": 4,
@@ -456,7 +465,8 @@
         {
           "id": "cat-1",
           "pdfUrl": "/catalogues/Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf",
-          "title": "Inkiostro Bianco Specification Catalog"
+          "title": "Inkiostro Bianco Specification Catalog",
+          "coverImage": "/catalogs/thumbnails/catalogo-materiaprima-2026-2a_thumb.jpg"
         }
       ],
       "sequenceNumber": 8,
@@ -508,7 +518,8 @@
         {
           "id": "cat-1",
           "pdfUrl": "/catalogues/Mirage/catalogue-elysian-pdf.pdf",
-          "title": "Mirage Specification Catalog"
+          "title": "Mirage Specification Catalog",
+          "coverImage": "/catalogs/thumbnails/catalogue-elysian-pdf_thumb.jpg"
         }
       ],
       "sequenceNumber": 10,
@@ -582,32 +593,38 @@
         {
           "id": "cat-1786517928775",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786517940637_catalogo60Grados.pdf?alt=media&token=b7379a2c-29bd-424a-b11f-ff577e9b9cc7",
-          "title": "60 Degree"
+          "title": "60 Degree",
+          "coverImage": "/catalogs/thumbnails/catalogo60grados_thumb.jpg"
         },
         {
           "id": "cat-1786517947768",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786517961407_catalogoBejmat.pdf?alt=media&token=c1de447f-e917-477b-ae6c-468390d40e32",
-          "title": "Bejmat"
+          "title": "Bejmat",
+          "coverImage": "/catalogs/thumbnails/catalogobejmat_thumb.jpg"
         },
         {
           "id": "cat-1786517970239",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786517985518_Catalogo-Nouvelle-baja.pdf?alt=media&token=e1af4158-9205-428e-9f84-d5fde9061db7",
-          "title": "Nouvelle-baja"
+          "title": "Nouvelle-baja",
+          "coverImage": "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg"
         },
         {
           "id": "cat-1786517993887",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786518007920_Catalogo-Sabil-baja.pdf?alt=media&token=940b85c0-45aa-41c4-b639-4bdebfa61c01",
-          "title": "Sabil-baja"
+          "title": "Sabil-baja",
+          "coverImage": "/catalogs/thumbnails/catalogo-sabil_thumb.jpg"
         },
         {
           "id": "cat-1786518027404",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786518034808_Catalogo-Terre.pdf?alt=media&token=518d62ba-52d6-4ca2-b397-683cb35fb77c",
-          "title": "Terre"
+          "title": "Terre",
+          "coverImage": "/catalogs/thumbnails/catalogo-terre_thumb.jpg"
         },
         {
           "id": "cat-1786518144622",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786518153810_Catalogo-Vestige-baja.pdf?alt=media&token=4451ca23-f9da-4ce7-94b6-c6274c17f7fa",
-          "title": "Vestige-baja"
+          "title": "Vestige-baja",
+          "coverImage": "/catalogs/thumbnails/catalogo-vestige_thumb.jpg"
         },
         {
           "id": "cat-1786518187926",
@@ -632,12 +649,14 @@
         {
           "id": "cat-1786518434116",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786518446873_AQUARELLE.pdf?alt=media&token=06b9304d-6a87-4334-9c55-eb5d23ee489b",
-          "title": "Aquarelle"
+          "title": "Aquarelle",
+          "coverImage": "/catalogs/thumbnails/aquarelle_thumb.jpg"
         },
         {
           "id": "cat-1786518473625",
           "pdfUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786518481589_BITS.pdf?alt=media&token=c381de7e-605a-4470-9ca9-0926316669c1",
-          "title": "Bits"
+          "title": "Bits",
+          "coverImage": "/catalogs/thumbnails/bits_thumb.jpg"
         },
         {
           "id": "cat-1786518525020",

@@ -7,7 +7,7 @@ import Link from "next/link";
 import AdminNav from "@/components/AdminNav";
 import { BrandItem } from "@/lib/types";
 import { uploadFileWithCompression } from "@/lib/uploadHelper";
-import { extractFirstPageAsImage } from "@/utils/pdfCoverExtractor";
+import { extractFirstPageAsImage, extractFirstPageWithDetails } from "@/utils/pdfCoverExtractor";
 import {
   ArrowLeft,
   Save,
@@ -216,24 +216,30 @@ export default function AdminIndividualBrandPage({ params }: Props) {
       setUploadingPdf(true);
     }
     try {
-      // 1. Upload PDF to Firebase Storage (Any Size)
-      const uploadRes = await uploadFileWithCompression(file, "Catalogues");
-      if (uploadRes.success && (uploadRes.url || uploadRes.dataUrl)) {
-        const finalPdfUrl = uploadRes.url || uploadRes.dataUrl || "";
-        
-        // 2. Automatically capture Page 1 of the PDF as a crisp cover thumbnail
-        let autoCoverUrl = "";
+      showToast("⏳ Uploading PDF & extracting Page-1 cover thumbnail...");
+      
+      // 1. Concurrently start Page-1 cover extraction from in-memory File object
+      const coverExtractPromise = (async () => {
         try {
+          console.log(`[Admin Brand Detail] Starting auto cover extraction for "${file.name}"...`);
           const coverFile = await extractFirstPageAsImage(file);
           if (coverFile) {
             const coverRes = await uploadFileWithCompression(coverFile, "Catalog_Covers");
             if (coverRes.success && (coverRes.url || coverRes.dataUrl)) {
-              autoCoverUrl = coverRes.url || coverRes.dataUrl || "";
+              return coverRes.url || coverRes.dataUrl || "";
             }
           }
-        } catch (coverErr) {
-          console.warn("Automatic cover capture note:", coverErr);
+        } catch (cErr) {
+          console.warn("[Admin Brand Detail] Auto cover extraction note:", cErr);
         }
+        return "";
+      })();
+
+      // 2. Upload PDF to Firebase Storage (Any Size)
+      const uploadRes = await uploadFileWithCompression(file, "Catalogues");
+      if (uploadRes.success && (uploadRes.url || uploadRes.dataUrl)) {
+        const finalPdfUrl = uploadRes.url || uploadRes.dataUrl || "";
+        const autoCoverUrl = await coverExtractPromise;
 
         if (catalogIndex !== undefined) {
           setFormData((prev) => {
@@ -256,10 +262,10 @@ export default function AdminIndividualBrandPage({ params }: Props) {
             : "✅ PDF catalog uploaded to Firebase Storage!"
         );
       } else {
-        alert("PDF Upload note: " + (uploadRes.error || "Could not upload file to Firebase."));
+        showToast("⚠️ PDF Upload note: " + (uploadRes.error || "Could not upload file to Firebase."));
       }
     } catch (e: any) {
-      alert("PDF Upload error: " + e.message);
+      showToast("❌ PDF Upload error: " + e.message);
     } finally {
       setUploadingPdf(false);
       setUploadingIndex(null);
@@ -279,12 +285,12 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           if (list[catalogIndex]) list[catalogIndex].coverImage = finalUrl;
           return { ...prev, pdfCatalogs: list };
         });
-        showToast("Catalog cover thumbnail updated!");
+        showToast("✓ Catalog cover thumbnail updated!");
       } else {
-        alert("Cover upload error: " + (uploadRes.error || "Could not upload image"));
+        showToast("⚠️ Cover upload error: " + (uploadRes.error || "Could not upload image"));
       }
     } catch (e: any) {
-      alert("Cover upload failed: " + e.message);
+      showToast("❌ Cover upload failed: " + e.message);
     } finally {
       setUploadingIndex(null);
     }
@@ -294,13 +300,27 @@ export default function AdminIndividualBrandPage({ params }: Props) {
   const handleAutoExtractCover = async (catalogIndex: number) => {
     const cat = formData.pdfCatalogs?.[catalogIndex];
     if (!cat?.pdfUrl) {
-      alert("Please provide or upload a PDF first.");
+      showToast("⚠️ Please provide or upload a PDF first.");
       return;
     }
     setUploadingIndex({ idx: catalogIndex, type: "cover" });
     try {
-      const coverFile = await extractFirstPageAsImage(cat.pdfUrl, cat.title || "catalog");
-      if (!coverFile) throw new Error("Could not render page 1 of the PDF. Please upload a cover image manually.");
+      showToast(`⏳ Extracting Page 1 cover for "${cat.title || "Catalog"}"...`);
+      const details = await extractFirstPageWithDetails(cat.pdfUrl, cat.title || "catalog");
+      let coverFile = details.file;
+
+      if (!coverFile) {
+        console.warn(`[Admin Brand Detail] First attempt failed at [${details.step}]: ${details.error}. Retrying extraction...`);
+        const retryDetails = await extractFirstPageWithDetails(cat.pdfUrl, cat.title || "catalog");
+        coverFile = retryDetails.file;
+
+        if (!coverFile) {
+          console.error("[Admin Brand Detail] Extraction failed after retry:", retryDetails);
+          showToast(`⚠️ Page 1 capture issue (${retryDetails.step || "Error"}: ${retryDetails.error || "Unknown"}). You can upload a cover image manually.`);
+          return;
+        }
+      }
+
       const uploadRes = await uploadFileWithCompression(coverFile, "Catalog_Covers");
       if (uploadRes.success && (uploadRes.url || uploadRes.dataUrl)) {
         const finalUrl = uploadRes.url || uploadRes.dataUrl || "";
@@ -309,15 +329,50 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           if (list[catalogIndex]) list[catalogIndex].coverImage = finalUrl;
           return { ...prev, pdfCatalogs: list };
         });
-        showToast("✅ Page 1 cover thumbnail captured successfully!");
+        showToast("✅ Page 1 cover thumbnail captured & saved successfully!");
       } else {
-        alert("Cover capture error: " + uploadRes.error);
+        showToast("⚠️ Cover storage note: " + uploadRes.error);
       }
     } catch (e: any) {
-      alert("Cover capture note: " + e.message);
+      showToast("❌ Cover capture note: " + e.message);
     } finally {
       setUploadingIndex(null);
     }
+  };
+
+  // Batch extract covers for all catalogs in this brand missing a cover
+  const handleAutoExtractAllCovers = async () => {
+    const list = formData.pdfCatalogs || [];
+    const missing = list.filter((c) => c.pdfUrl && (!c.coverImage || c.coverImage.startsWith("/categories/cat_")));
+    if (missing.length === 0) {
+      showToast("✓ All catalogs already have valid cover thumbnails!");
+      return;
+    }
+
+    showToast(`⏳ Auto-generating covers for ${missing.length} catalog(s)...`);
+    let updatedCount = 0;
+    const updatedList = [...list];
+
+    for (let i = 0; i < updatedList.length; i++) {
+      const cat = updatedList[i];
+      if (cat.pdfUrl && (!cat.coverImage || cat.coverImage.startsWith("/categories/cat_"))) {
+        try {
+          const coverFile = await extractFirstPageAsImage(cat.pdfUrl, cat.title || "catalog");
+          if (coverFile) {
+            const uploadRes = await uploadFileWithCompression(coverFile, "Catalog_Covers");
+            if (uploadRes.success && (uploadRes.url || uploadRes.dataUrl)) {
+              updatedList[i].coverImage = uploadRes.url || uploadRes.dataUrl || "";
+              updatedCount++;
+            }
+          }
+        } catch (err) {
+          console.warn(`[Batch Cover] Error for catalog "${cat.title}":`, err);
+        }
+      }
+    }
+
+    setFormData((prev) => ({ ...prev, pdfCatalogs: updatedList }));
+    showToast(`✅ Generated & attached ${updatedCount} cover thumbnail(s)! Click "Save Brand Page" to persist.`);
   };
 
   // Collection Chip Helpers
@@ -743,19 +798,31 @@ export default function AdminIndividualBrandPage({ params }: Props) {
             {/* TAB 5: PDF CATALOGS */}
             {activeTab === "catalogs" && (
               <div className="section-card">
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "10px" }}>
                   <div>
                     <h3 className="section-title" style={{ margin: 0 }}>Official PDF Specification Catalogs</h3>
                     <p className="section-sub">Attach downloadable / viewable digital architectural specification PDFs and custom covers.</p>
                   </div>
-                  <button type="button" onClick={addPdfCatalogEntry} className="btn-add-item">
-                    <Plus size={14} /> Add PDF Catalog
-                  </button>
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                    <button
+                      type="button"
+                      onClick={handleAutoExtractAllCovers}
+                      className="btn-upload"
+                      style={{ background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", fontWeight: 800, cursor: "pointer" }}
+                      title="Auto-render Page 1 cover thumbnails for all catalogs missing a cover"
+                    >
+                      <Sparkles size={14} />
+                      <span>⚡ Auto-Generate All Missing Covers</span>
+                    </button>
+                    <button type="button" onClick={addPdfCatalogEntry} className="btn-add-item">
+                      <Plus size={14} /> Add PDF Catalog
+                    </button>
+                  </div>
                 </div>
 
                 {/* Info Helper Box */}
                 <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "12px 16px", borderRadius: "8px", marginBottom: "20px", fontSize: "12px", color: "#166534", lineHeight: 1.5 }}>
-                  <strong>💡 Google Firebase Cloud Storage:</strong> Upload specification PDF files of any size directly into Google Firebase Storage. The system will automatically capture Page 1 of the PDF as the official cover thumbnail! You can also paste Google Drive links or upload custom cover photos.
+                  <strong>💡 Automatic Page-1 Cover Extraction:</strong> Whenever you upload a PDF file from your computer or paste a PDF link, the system will automatically extract Page 1 as a crisp cover thumbnail and host it in Firebase Storage! You can also paste Google Drive links or upload custom cover photos.
                 </div>
 
                 {/* Primary PDF */}
@@ -795,13 +862,25 @@ export default function AdminIndividualBrandPage({ params }: Props) {
                     (formData.pdfCatalogs || []).map((cat, idx) => {
                       const isUploadingThisPdf = uploadingIndex?.idx === idx && uploadingIndex?.type === "pdf";
                       const isUploadingThisCover = uploadingIndex?.idx === idx && uploadingIndex?.type === "cover";
+                      const hasCover = cat.coverImage && !cat.coverImage.startsWith("/categories/cat_");
 
                       return (
                         <div key={idx} className="pdf-catalog-card" style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "16px", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                            <span style={{ fontSize: "12px", fontWeight: 700, color: "#8c764b", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                              Catalog #{idx + 1}
-                            </span>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                              <span style={{ fontSize: "12px", fontWeight: 700, color: "#8c764b", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                                Catalog #{idx + 1}
+                              </span>
+                              {hasCover ? (
+                                <span style={{ fontSize: "11px", background: "#dcfce7", color: "#166534", padding: "2px 8px", borderRadius: "4px", fontWeight: 700 }}>
+                                  ✓ Cover Active
+                                </span>
+                              ) : cat.pdfUrl ? (
+                                <span style={{ fontSize: "11px", background: "#fef3c7", color: "#92400e", padding: "2px 8px", borderRadius: "4px", fontWeight: 700 }}>
+                                  ⚠️ Needs Cover (Using Branded Fallback)
+                                </span>
+                              ) : null}
+                            </div>
                             <button
                               type="button"
                               onClick={() => removePdfCatalogEntry(idx)}
@@ -868,9 +947,9 @@ export default function AdminIndividualBrandPage({ params }: Props) {
                             {/* Cover Thumbnail Image */}
                             <div>
                               <label style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "block", marginBottom: "4px" }}>
-                                Cover Thumbnail Image (Optional)
+                                Cover Thumbnail Image (Auto-captured from Page 1, or upload custom)
                               </label>
-                              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                              <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
                                 <input
                                   type="text"
                                   value={cat.coverImage || ""}
@@ -879,8 +958,8 @@ export default function AdminIndividualBrandPage({ params }: Props) {
                                     updated[idx] = { ...updated[idx], coverImage: e.target.value };
                                     setFormData({ ...formData, pdfCatalogs: updated });
                                   }}
-                                  placeholder="https://... Image URL or upload image"
-                                  style={{ flex: 1 }}
+                                  placeholder="https://... Image URL (auto-generated upon PDF upload)"
+                                  style={{ flex: 1, minWidth: "200px" }}
                                 />
                                 <input
                                   type="file"
@@ -893,7 +972,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
                                 />
                                 <label htmlFor={`cover_upload_${idx}`} className="btn-upload" style={{ cursor: "pointer", whiteSpace: "nowrap", background: "#475569" }}>
                                   <ImageIcon size={13} />
-                                  <span>{isUploadingThisCover ? "Uploading..." : "Upload Cover"}</span>
+                                  <span>{isUploadingThisCover ? "Uploading..." : "Upload Custom Cover"}</span>
                                 </label>
 
                                 <button
@@ -909,7 +988,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
                                 </button>
 
                                 {cat.coverImage && (
-                                  <div style={{ width: "36px", height: "36px", borderRadius: "4px", overflow: "hidden", border: "1px solid #cbd5e1", flexShrink: 0 }}>
+                                  <div style={{ width: "36px", height: "46px", borderRadius: "4px", overflow: "hidden", border: "1px solid #cbd5e1", flexShrink: 0, background: "#f1f5f9" }}>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img src={cat.coverImage} alt="Cover Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                   </div>

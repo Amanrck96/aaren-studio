@@ -7,14 +7,15 @@ import { getPdfThumbnail } from "@/utils/pdfThumbnail";
 type Props = {
   catalogPdfUrl: string;
   itemTitle: string; // Product Name or Brand Name
+  coverImage?: string;
   onClose: () => void;
 };
 
-export function getPdfCoverThumbnail(url: string, title?: string): string {
-  return getPdfThumbnail(url, { title });
+export function getPdfCoverThumbnail(url: string, title?: string, coverImage?: string): string {
+  return getPdfThumbnail(url, { title, coverImage });
 }
 
-export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose }: Props) {
+export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverImage, onClose }: Props) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -83,7 +84,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, onClose 
     }
   }
 
-  const coverThumb = getPdfCoverThumbnail(catalogPdfUrl, itemTitle);
+  const coverThumb = coverImage || getPdfCoverThumbnail(catalogPdfUrl, itemTitle, coverImage);
 
   return (
     <div

@@ -1,46 +1,38 @@
-"use client";
+import { getServicesStore } from "@/lib/store";
+import { Sparkles, Layers, Box, Globe, Shield, Megaphone, FileText, Camera, Video, Palette, BrainCircuit } from "lucide-react";
 
-import { useEffect, useState } from "react";
-import { Sparkles, Layers, Box, Globe, Shield, Smartphone, Megaphone, FileText, Camera, Video, Palette, BrainCircuit } from "lucide-react";
+export const dynamic = "force-dynamic";
 
-const allServices = [
-  { title: "Brand Strategy", desc: "Positioning premium brands to lead their digital fields.", icon: Sparkles },
-  { title: "Creative Direction", desc: "Establishing high-end art assets and unique aesthetic visual layouts.", icon: Layers },
-  { title: "Motion Graphics", desc: "Curating high-fidelity fluid motion design sequences.", icon: FilmIcon },
-  { title: "3D Animation", desc: "Premium WebGL modeling and rendering simulations.", icon: Box },
-  { title: "UI UX Design", desc: "Clean modern design languages focusing on interactions.", icon: Palette },
-  { title: "Web Design", desc: "Vibrant visual interfaces built to load instantly.", icon: Globe },
-  { title: "Website Development", desc: "High-performance codebases utilising React and modern frameworks.", icon: Shield },
-  { title: "Digital Marketing", desc: "Strategic deployment and SEO search prioritization.", icon: Megaphone },
-  { title: "Content Production", desc: "Premium copywriting, audio elements and assets.", icon: FileText },
-  { title: "Video Production", desc: "High definition recording, assembly and sound designs.", icon: Video },
-  { title: "Photography", desc: "Stunning physical asset capture and studio imagery.", icon: Camera },
-  { title: "AI Solutions", desc: "Intelligent content generation APIs and integrations.", icon: BrainCircuit },
+const ICONS = [Sparkles, Layers, Box, Globe, Shield, Palette, Megaphone, FileText, Video, Camera, BrainCircuit];
+
+const DEFAULT_SERVICES = [
+  { title: "Brand Strategy", desc: "Positioning premium brands to lead their digital fields." },
+  { title: "Creative Direction", desc: "Establishing high-end art assets and unique aesthetic visual layouts." },
+  { title: "Motion Graphics", desc: "Curating high-fidelity fluid motion design sequences." },
+  { title: "3D Animation", desc: "Premium WebGL modeling and rendering simulations." },
+  { title: "UI UX Design", desc: "Clean modern design languages focusing on interactions." },
+  { title: "Web Design", desc: "Vibrant visual interfaces built to load instantly." },
+  { title: "Website Development", desc: "High-performance codebases utilising React and modern frameworks." },
+  { title: "Digital Marketing", desc: "Strategic deployment and SEO search prioritization." },
+  { title: "Content Production", desc: "Premium copywriting, audio elements and assets." },
+  { title: "Video Production", desc: "High definition recording, assembly and sound designs." },
+  { title: "Photography", desc: "Stunning physical asset capture and studio imagery." },
+  { title: "AI Solutions", desc: "Intelligent content generation APIs and integrations." },
 ];
 
-function FilmIcon(props: any) {
-  return <Video {...props} />;
-}
+export default async function Services() {
+  const rawServices = await getServicesStore();
+  const servicesList = (rawServices && rawServices.length > 0)
+    ? rawServices.map((s: any, idx: number) => ({
+        title: s.title,
+        desc: s.description,
+        icon: ICONS[idx % ICONS.length],
+      }))
+    : DEFAULT_SERVICES.map((s, idx) => ({
+        ...s,
+        icon: ICONS[idx % ICONS.length],
+      }));
 
-export default function Services() {
-  const [servicesList, setServicesList] = useState(allServices);
-
-  useEffect(() => {
-    fetch("/api/services?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setServicesList(
-            json.data.map((s: any, idx: number) => ({
-              title: s.title,
-              desc: s.description,
-              icon: [Sparkles, Layers, Box, Globe, Shield, Palette, Megaphone, FileText, Video, Camera, BrainCircuit][idx % 11],
-            }))
-          );
-        }
-      })
-      .catch((e) => console.error(e));
-  }, []);
   return (
     <div className="bg-[#080808] text-white pt-32 pb-24 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">

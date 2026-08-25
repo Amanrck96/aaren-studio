@@ -1,8 +1,8 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { getBrandsStore } from "@/lib/store";
+
+export const dynamic = "force-dynamic";
 
 const LOGO_MAP: Record<string, string> = {
   "slashform": "/brands/logos/slashform_logo.png",
@@ -23,58 +23,25 @@ const LOGO_MAP: Record<string, string> = {
   "iww": "/brands/logos/iww_logo.png",
 };
 
-const DEFAULT_BRANDS = [
-  { id: "slashform", name: "Slashform", code: "SF", num: "01", hero: "/brands/brand_1_1.png", logo: "/brands/logos/slashform_logo.png", category: "Doors & Windows", origin: "Italy", tagline: "Precision living systems" },
-  { id: "waltz", name: "Waltz by JB Glass", code: "WB", num: "02", hero: "/brands/brand_2_1.png", logo: "/brands/logos/waltz_logo.png", category: "Glide NXT", origin: "India", tagline: "Architectural glass solutions" },
-  { id: "newtech-wood", name: "Newtech Wood", code: "NW", num: "03", hero: "/brands/brand_3_1.png", logo: "/brands/logos/newtechwood_logo.png", category: "Decking", origin: "USA", tagline: "WPC composite excellence" },
-  { id: "formica", name: "Formica", code: "FC", num: "04", hero: "/brands/brand_4_1.png", logo: "/brands/logos/formica_logo.png", category: "Laminates", origin: "USA", tagline: "Iconic surface solutions" },
-  { id: "loco", name: "Loco", code: "LC", num: "05", hero: "/brands/brand_5_1.png", logo: "/brands/logos/loco_logo.png", category: "Furniture", origin: "Italy", tagline: "Bespoke millwork & furniture" },
-  { id: "falper", name: "Falper", code: "FP", num: "06", hero: "/brands/brand_6_1.png", logo: "/brands/logos/falper_logo.png", category: "Wash Basins", origin: "Italy", tagline: "Luxury bath environments" },
-  { id: "fima", name: "Fima Carlo Frattini", code: "FM", num: "07", hero: "/brands/brand_7_1.png", logo: "/brands/logos/fima_logo.png", category: "Bathroom Fittings", origin: "Italy", tagline: "Refined tapware & accessories" },
-  { id: "inkiostro-bianco", name: "Inkiostro Bianco", code: "IB", num: "08", hero: "/brands/brand_8_1.png", logo: "/brands/logos/inkiostro_bianco_logo.png", category: "Wall Covering", origin: "Italy", tagline: "Creative thinking surfaces" },
-  { id: "mafi", name: "Mafi", code: "MF", num: "09", hero: "/brands/brand_9_1.png", logo: "/brands/logos/mafi_logo.png", category: "Wooden Flooring", origin: "Austria", tagline: "Natural wood flooring" },
-  { id: "mirage", name: "Mirage", code: "MG", num: "10", hero: "/brands/brand_10_1.png", logo: "/brands/logos/mirage_logo.png", category: "Surface Tiles", origin: "Italy", tagline: "Porcelain tile mastery" },
-  { id: "freedom-screens", name: "Freedom Screens", code: "FS", num: "11", hero: "/brands/brand_freedom_screens.jpg", logo: "/brands/logos/freedom_screens_logo.jpg", category: "Infinite Zip line", origin: "Australia", tagline: "Retractable screen systems" },
-  { id: "peelply", name: "Peelply", code: "PP", num: "12", hero: "/brands/brand_2_1.png", logo: "/brands/logos/peelply_logo.png", category: "Plywood", origin: "India", tagline: "Engineered panel solutions" },
-  { id: "inclass", name: "Inclass", code: "IC", num: "13", hero: "/brands/brand_3_1.png", logo: "/brands/logos/inclass_logo.png", category: "MillWork", origin: "Spain", tagline: "Seating and millwork" },
-  { id: "wow", name: "WOW", code: "WW", num: "14", hero: "/brands/brand_4_1.png", logo: "/brands/logos/wow_logo.png", category: "Highlighter Tiles", origin: "Spain", tagline: "3D decorative ceramic tiles" },
-  { id: "iww", name: "IWW", code: "IW", num: "15", hero: "/brands/brand_5_1.png", logo: "/brands/logos/iww_logo.png", category: "Surface Tiles", origin: "Italy", tagline: "Stone surface collections" },
-  { id: "living-ceramica", name: "Living Ceramica", code: "LC", num: "16", hero: "/brands/brand_6_1.png", logo: "", category: "Surface Tiles", origin: "Spain", tagline: "Contemporary ceramic surfaces" },
-  { id: "florim", name: "Florim", code: "FL", num: "17", hero: "/brands/brand_7_1.png", logo: "", category: "Surface Tiles", origin: "Italy", tagline: "Porcelain slab mastery" },
-  { id: "gelli", name: "Gelli", code: "GL", num: "18", hero: "/brands/brand_8_1.png", logo: "", category: "Bathroom Accessories", origin: "Italy", tagline: "Italian bathroom accessories" },
-  { id: "jacuzzi", name: "Jacuzzi", code: "JZ", num: "19", hero: "/brands/brand_9_1.png", logo: "", category: "Wellness", origin: "USA", tagline: "World-class wellness systems" },
-  { id: "alex-turco", name: "Alex Turco", code: "AT", num: "20", hero: "/brands/brand_10_1.png", logo: "", category: "Wall Art Panels", origin: "Italy", tagline: "Wall art panels" },
-];
+export default async function BrandsPage() {
+  const brands = await getBrandsStore();
 
-export default function BrandsPage() {
-  const [brandsList, setBrandsList] = useState<any[]>(DEFAULT_BRANDS);
+  const brandsList = (brands || []).map((b: any) => {
+    const explicitLogo = b.logoUrl && !b.logoUrl.includes("brand_") && !b.logoUrl.endsWith("_2.png") ? b.logoUrl : "";
+    const resolvedLogo = explicitLogo || LOGO_MAP[b.id] || LOGO_MAP[b.id?.toLowerCase()] || "";
 
-  useEffect(() => {
-    fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          const mapped = json.data.map((b: any) => {
-            const explicitLogo = b.logoUrl && !b.logoUrl.includes("brand_") && !b.logoUrl.endsWith("_2.png") ? b.logoUrl : "";
-            const resolvedLogo = explicitLogo || LOGO_MAP[b.id] || LOGO_MAP[b.id?.toLowerCase()] || "";
-
-            return {
-              id: b.id,
-              name: b.name,
-              code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
-              num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : (b.shortCode && b.shortCode.split(" ")[1] ? b.shortCode.split(" ")[1] : "01"),
-              hero: b.bannerUrl || b.hero || b.imageUrl || b.image || "/brands/brand_1_1.png",
-              logo: resolvedLogo,
-              category: b.category || b.tagline || b.description || "Architectural Brand",
-              origin: b.origin || "Global",
-              tagline: b.tagline || b.description || "Partner Brand",
-            };
-          });
-          setBrandsList(mapped);
-        }
-      })
-      .catch((e) => console.error("Dynamic brand fetch error:", e));
-  }, []);
+    return {
+      id: b.id,
+      name: b.name,
+      code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
+      num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : (b.shortCode && b.shortCode.split(" ")[1] ? b.shortCode.split(" ")[1] : "01"),
+      hero: b.bannerUrl || b.hero || b.imageUrl || b.image || "/brands/brand_1_1.png",
+      logo: resolvedLogo,
+      category: b.category || b.tagline || b.description || "Architectural Brand",
+      origin: b.origin || "Global",
+      tagline: b.tagline || b.description || "Partner Brand",
+    };
+  });
 
   return (
     <div className="brands-page">
@@ -111,9 +78,6 @@ export default function BrandsPage() {
                   className="brand-card__img"
                   style={{ objectFit: "cover" }}
                   unoptimized
-                  onError={(e: any) => {
-                    e.currentTarget.src = "/brands/brand_1_1.png";
-                  }}
                 />
               </div>
 
@@ -128,9 +92,6 @@ export default function BrandsPage() {
                     className="brand-card__logo"
                     style={{ objectFit: "contain", objectPosition: "left center", maxHeight: "36px" }}
                     unoptimized
-                    onError={(e: any) => {
-                      e.currentTarget.style.display = "none";
-                    }}
                   />
                 </div>
               ) : null}
@@ -250,142 +211,119 @@ export default function BrandsPage() {
           transform: scale(1.04);
         }
 
-        /* Logo overlay */
         .brand-card__logo-wrap {
           position: absolute;
           bottom: 1.6rem;
           left: 1.6rem;
-          background: rgba(255,255,255,0.92);
+          z-index: 2;
+          background: rgba(255, 255, 255, 0.92);
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
-          padding: 0.8rem 1.4rem;
+          padding: 0.6rem 1.2rem;
           border-radius: 4px;
-          border: 1px solid rgba(129, 102, 63, 0.15);
           display: flex;
           align-items: center;
-          justify-content: center;
-          max-width: 15rem;
-          height: 4.8rem;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+          justifyContent: center;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
         }
 
-        /* Caption bar — luxury ticket style */
+        /* Caption */
         .brand-card__caption {
           display: flex;
-          align-items: flex-start;
           justify-content: space-between;
-          gap: 1.6rem;
-          padding: 1.8rem 2.4rem;
-          background: #FAF9F6;
-          border-top: 1px solid rgba(129, 102, 63, 0.15);
-          transition: background 0.25s ease;
-        }
-
-        .brand-card:hover .brand-card__caption {
-          background: #F2EFE8;
+          align-items: flex-start;
+          padding: 1.8rem 2rem 2.2rem;
+          border-top: 0.1rem solid rgba(129, 102, 63, 0.15);
+          background: #E6E2D8;
         }
 
         .brand-card__caption-left {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.3rem;
         }
 
         .brand-card__caption-name {
-          font-size: clamp(1.4rem, 1.8vw, 1.9rem);
-          font-weight: 800;
-          letter-spacing: -0.02em;
-          line-height: 1.1;
+          font-family: inherit;
+          font-size: 1.8rem;
+          font-weight: 700;
+          letter-spacing: -0.01em;
           text-transform: uppercase;
-          color: #81663F;
+          color: #1e1e1e;
         }
 
         .brand-card__caption-cat {
-          font-size: 1.15rem;
-          color: #5E5852;
-          letter-spacing: 0.05em;
+          font-family: inherit;
+          font-size: 1.1rem;
+          letter-spacing: 0.08em;
           text-transform: uppercase;
-          font-weight: 600;
-          line-height: 1.25;
+          color: rgba(0, 0, 0, 0.5);
         }
 
         .brand-card__caption-right {
           display: flex;
-          align-items: center;
-          gap: 1.6rem;
-          flex-shrink: 0;
+          align-items: baseline;
+          gap: 0.4rem;
         }
 
         .brand-card__caption-code {
-          font-size: clamp(2.2rem, 4vw, 4.2rem);
-          font-weight: 800;
-          letter-spacing: -0.04em;
-          line-height: 1;
-          color: #81663F;
-          font-family: var(--font-geist), sans-serif;
+          font-family: inherit;
+          font-size: 1.3rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          color: #1e1e1e;
         }
 
         .brand-card__caption-num {
-          font-size: clamp(2rem, 3.6vw, 3.8rem);
-          font-weight: 800;
-          letter-spacing: -0.04em;
-          line-height: 1;
-          color: rgba(129, 102, 63, 0.35);
-          font-family: var(--font-geist), sans-serif;
+          font-family: inherit;
+          font-size: 1.1rem;
+          letter-spacing: 0.08em;
+          color: rgba(0, 0, 0, 0.4);
         }
 
         /* ── CTA ── */
         .brands-cta {
-          padding: 8rem 2.4rem 10rem;
-          border-top: 0.1rem solid rgba(129, 102, 63, 0.2);
-          background: #FAF9F6;
+          padding: 6rem 1.6rem;
           display: flex;
           flex-direction: column;
-          gap: 2.4rem;
           align-items: center;
           text-align: center;
+          gap: 2.4rem;
+          border-top: 0.1rem solid rgba(129, 102, 63, 0.2);
         }
 
         @media (min-width: 768px) {
           .brands-cta {
-            padding: 8rem 4rem 10rem;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            text-align: left;
+            padding: 8rem 2.4rem;
           }
         }
 
         .brands-cta__text {
-          font-size: clamp(1.6rem, 2.2vw, 2.4rem);
-          font-weight: 700;
-          letter-spacing: -0.02em;
-          color: #81663F;
-          max-width: 54rem;
-          line-height: 1.35;
+          font-family: inherit;
+          font-size: 1.8rem;
+          color: rgba(0, 0, 0, 0.65);
+          max-width: 50rem;
+          line-height: 1.5;
           margin: 0;
         }
 
         .brands-cta__btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.8rem;
-          padding: 1.4rem 2.8rem;
-          background: #81663F;
-          color: #ffffff;
-          border-radius: 9999px;
+          display: inline-block;
+          font-family: inherit;
           font-size: 1.3rem;
-          font-weight: 800;
-          letter-spacing: 0.08em;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #E6E2D8;
+          background: #1e1e1e;
+          padding: 1.4rem 3.2rem;
           text-decoration: none;
-          transition: all 0.25s ease;
-          box-shadow: 0 4px 14px rgba(129, 102, 63, 0.25);
+          transition: background 0.2s ease, transform 0.2s ease;
         }
 
         .brands-cta__btn:hover {
-          background: #6a5332;
+          background: #81663F;
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(129, 102, 63, 0.35);
         }
       `}</style>
     </div>

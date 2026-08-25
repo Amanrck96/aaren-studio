@@ -1,13 +1,7 @@
-/**
- * Cloudinary & Exact Page-1 PDF Thumbnail Utility
- * 
- * Automatically generates or maps the standardized, crisp Page-1 cover image for any PDF.
- * - Cloudinary on-the-fly transformations: pg_1,w_500,h_650,c_fill,q_auto,f_jpg
- * - Exact Page-1 extracted covers for all local catalog PDFs
- * - Google Drive thumbnail support
- */
+const fs = require("fs");
+const path = require("path");
 
-const LOCAL_THUMBNAILS: Record<string, string> = {
+const LOCAL_THUMBNAILS = {
   "newtechwood-product-catalog-2025": "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg",
   "2024-fenix-brochure-digital": "/catalogs/thumbnails/2024-fenix-brochure-digital_thumb.jpg",
   "arpa-vis-brochure-250122": "/catalogs/thumbnails/arpa-vis-brochure-250122_thumb.jpg",
@@ -40,73 +34,19 @@ const LOCAL_THUMBNAILS: Record<string, string> = {
   "slidenxt": "/catalogs/thumbnails/slidenxt_thumb.jpg",
 };
 
-export function getPdfThumbnail(
-  publicIdOrUrl: string,
-  options?: {
-    width?: number;
-    height?: number;
-    cloudName?: string;
-    crop?: "fill" | "fit" | "limit" | "pad";
-    title?: string;
-    coverImage?: string;
-    brandId?: string;
-  }
-): string {
-  // 0. If explicit cover image is provided, use it directly
-  if (options?.coverImage && options.coverImage.trim()) {
-    return options.coverImage.trim();
-  }
-
-  if (!publicIdOrUrl) return "";
-
-  const cloudName =
-    options?.cloudName ||
-    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
-    process.env.CLOUDINARY_CLOUD_NAME ||
-    "aaren-studio";
-
-  const width = options?.width || 500;
-  const height = options?.height || 650;
-  const crop = options?.crop || "fill";
-  const transform = `pg_1,w_${width},h_${height},c_${crop},q_auto,f_jpg`;
-
-  // 1. If it's a full Cloudinary URL:
-  if (publicIdOrUrl.includes("res.cloudinary.com")) {
-    if (publicIdOrUrl.includes("pg_1")) {
-      return publicIdOrUrl;
-    }
-    const urlPattern = /(https:\/\/res\.cloudinary\.com\/[^/]+\/(?:image|raw)\/upload\/)(?:v\d+\/)?(.+?)(\.pdf)?$/i;
-    const match = publicIdOrUrl.match(urlPattern);
-    if (match) {
-      const baseUrl = match[1].replace("/raw/", "/image/");
-      const assetPath = match[2];
-      return `${baseUrl}${transform}/${assetPath}.jpg`;
-    }
-  }
-
-  // 2. If it's a Google Drive preview/file link:
-  const driveMatch = publicIdOrUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || publicIdOrUrl.match(/id=([a-zA-Z0-9_-]+)/);
+function resolveThumb(pdfUrl, title, brandId) {
+  if (!pdfUrl) return "";
+  const driveMatch = pdfUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || pdfUrl.match(/id=([a-zA-Z0-9_-]+)/);
   if (driveMatch && driveMatch[1]) {
     return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800`;
   }
 
-  // 3. If it's a Cloudinary Public ID (not starting with http or /):
-  if (!publicIdOrUrl.startsWith("http://") && !publicIdOrUrl.startsWith("https://") && !publicIdOrUrl.startsWith("/")) {
-    const cleanPublicId = publicIdOrUrl.replace(/\.pdf$/i, "");
-    return `https://res.cloudinary.com/${cloudName}/image/upload/${transform}/${cleanPublicId}.jpg`;
-  }
-
-  // 4. Exact Local PDF File Match:
-  const filename = publicIdOrUrl.split("/").pop() || publicIdOrUrl;
+  const filename = pdfUrl.split("/").pop() || pdfUrl;
   const baseKey = filename.replace(/\.pdf$/i, "").toLowerCase().replace(/[\s_]+/g, "-");
-  
-  if (LOCAL_THUMBNAILS[baseKey]) {
-    return LOCAL_THUMBNAILS[baseKey];
-  }
+  if (LOCAL_THUMBNAILS[baseKey]) return LOCAL_THUMBNAILS[baseKey];
 
-  // 5. Keyword Match if explicitly tied to brand
-  const combined = `${publicIdOrUrl} ${options?.title || ""} ${options?.brandId || ""}`.toLowerCase();
-  if (combined.includes("newtech") || combined.includes("newtechwood")) return "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
+  const combined = `${pdfUrl} ${title || ""} ${brandId || ""}`.toLowerCase();
+  if (combined.includes("newtech")) return "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
   if (combined.includes("fenix")) return "/catalogs/thumbnails/2024-fenix-brochure-digital_thumb.jpg";
   if (combined.includes("cora")) return "/catalogs/thumbnails/cora-printed-brochure-arrangement-en-th25_thumb.jpg";
   if (combined.includes("decometal")) return "/catalogs/thumbnails/decometal-catalogue-final_thumb.jpg";
@@ -137,3 +77,39 @@ export function getPdfThumbnail(
 
   return "";
 }
+
+function runBackfill() {
+  const filePath = path.join(process.cwd(), "data", "master_store.json");
+  if (!fs.existsSync(filePath)) {
+    console.error("master_store.json not found");
+    return;
+  }
+
+  const raw = fs.readFileSync(filePath, "utf8");
+  const data = JSON.parse(raw);
+
+  let updatedCount = 0;
+
+  if (Array.isArray(data.brands)) {
+    data.brands.forEach((brand) => {
+      if (Array.isArray(brand.pdfCatalogs)) {
+        brand.pdfCatalogs.forEach((cat) => {
+          const isMissing = !cat.coverImage || cat.coverImage.startsWith("/categories/cat_");
+          if (isMissing && cat.pdfUrl) {
+            const mapped = resolveThumb(cat.pdfUrl, cat.title, brand.id);
+            if (mapped) {
+              cat.coverImage = mapped;
+              updatedCount++;
+              console.log(`[Backfill] Updated "${brand.name}" -> "${cat.title}": ${mapped}`);
+            }
+          }
+        });
+      }
+    });
+  }
+
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf8");
+  console.log(`✅ [Backfill Complete] Updated ${updatedCount} catalog covers in data/master_store.json`);
+}
+
+runBackfill();

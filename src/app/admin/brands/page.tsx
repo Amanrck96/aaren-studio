@@ -6,7 +6,7 @@ import Link from "next/link";
 import AdminNav from "@/components/AdminNav";
 import { BrandItem, PdfCatalogItem } from "@/lib/types";
 import { uploadFileWithCompression } from "@/lib/uploadHelper";
-import { extractFirstPageAsImage } from "@/utils/pdfCoverExtractor";
+import { extractFirstPageAsImage, extractFirstPageWithDetails } from "@/utils/pdfCoverExtractor";
 
 function parseGoogleDriveUrl(url: string): string {
   if (!url) return "";
@@ -158,25 +158,31 @@ export default function AdminBrandsPage() {
     setUploadingPdf(true);
     try {
       const folder = isCover ? "Catalog_Covers" : "Brand Assets";
-      const result = await uploadFileWithCompression(file, folder);
-      if (result.success && (result.url || result.dataUrl)) {
-        const finalUrl = result.url || result.dataUrl || "";
-
-        // If uploading a PDF catalog, automatically extract page 1 cover image
-        let autoCoverUrl = "";
-        if (!isCover && (fieldName === "catalogPdfUrl" || file.name.endsWith(".pdf"))) {
+      
+      // If uploading a PDF catalog, concurrently start Page 1 cover extraction
+      let coverExtractPromise: Promise<string> = Promise.resolve("");
+      if (!isCover && (fieldName === "catalogPdfUrl" || file.name.endsWith(".pdf") || file.type === "application/pdf")) {
+        coverExtractPromise = (async () => {
           try {
+            console.log(`[Admin Brands List] Auto-extracting Page 1 cover for "${file.name}"...`);
             const coverFile = await extractFirstPageAsImage(file);
             if (coverFile) {
               const coverRes = await uploadFileWithCompression(coverFile, "Catalog_Covers");
               if (coverRes.success && (coverRes.url || coverRes.dataUrl)) {
-                autoCoverUrl = coverRes.url || coverRes.dataUrl || "";
+                return coverRes.url || coverRes.dataUrl || "";
               }
             }
-          } catch (coverErr) {
-            console.warn("Auto cover capture note:", coverErr);
+          } catch (cErr) {
+            console.warn("[Admin Brands List] Auto cover extraction note:", cErr);
           }
-        }
+          return "";
+        })();
+      }
+
+      const result = await uploadFileWithCompression(file, folder);
+      if (result.success && (result.url || result.dataUrl)) {
+        const finalUrl = result.url || result.dataUrl || "";
+        const autoCoverUrl = await coverExtractPromise;
 
         if (typeof catalogIndex === "number") {
           setPdfCatalogs((prev) => {
@@ -205,6 +211,62 @@ export default function AdminBrandsPage() {
       alert("Upload error: " + err.message);
     } finally {
       setUploadingPdf(false);
+    }
+  }
+
+  async function handleAutoExtractCoverModal(cIdx: number) {
+    const cat = pdfCatalogs[cIdx];
+    if (!cat?.pdfUrl) {
+      alert("Please provide or upload a PDF first.");
+      return;
+    }
+    setUploadingPdf(true);
+    try {
+      const details = await extractFirstPageWithDetails(cat.pdfUrl, cat.title || "catalog");
+      let coverFile = details.file;
+      if (!coverFile) {
+        const retryDetails = await extractFirstPageWithDetails(cat.pdfUrl, cat.title || "catalog");
+        coverFile = retryDetails.file;
+      }
+      if (coverFile) {
+        const uploadRes = await uploadFileWithCompression(coverFile, "Catalog_Covers");
+        if (uploadRes.success && (uploadRes.url || uploadRes.dataUrl)) {
+          const finalUrl = uploadRes.url || uploadRes.dataUrl || "";
+          const next = [...pdfCatalogs];
+          next[cIdx].coverImage = finalUrl;
+          setPdfCatalogs(next);
+          alert("✅ Page 1 cover thumbnail captured successfully!");
+        } else {
+          alert("Cover storage error: " + (uploadRes.error || "Upload failed"));
+        }
+      } else {
+        alert(`Could not extract page 1 (${details.step}: ${details.error}). You can upload a cover image manually.`);
+      }
+    } catch (e: any) {
+      alert("Error extracting cover: " + e.message);
+    } finally {
+      setUploadingPdf(false);
+    }
+  }
+
+  async function handleGlobalBackfillCovers() {
+    if (!confirm("This will scan all brands in the system and automatically generate/attach Page 1 cover thumbnails for any catalog that is missing one. Proceed?")) {
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/backfill-covers", { method: "POST" });
+      const json = await res.json();
+      if (json.success) {
+        alert(`✅ Success: ${json.message}`);
+        fetchBrands();
+      } else {
+        alert("Backfill error: " + (json.error || "Unknown error"));
+      }
+    } catch (e: any) {
+      alert("Error during backfill: " + e.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -243,6 +305,13 @@ export default function AdminBrandsPage() {
             <p style={{ color: "#aaa", fontSize: "0.95rem" }}>Add, edit, or remove partner brands, logos, short codes (SF 01), sequence, and PDF catalogs (via Google Drive links or computer upload).</p>
           </div>
           <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap" }}>
+            <button
+              onClick={handleGlobalBackfillCovers}
+              style={{ padding: "0.8rem 1.4rem", background: "linear-gradient(135deg, #10b981 0%, #059669 100%)", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 800 }}
+              title="Automatically extract Page 1 cover thumbnails for all catalogs missing a cover across the entire platform"
+            >
+              ⚡ Auto-Generate All Missing Covers
+            </button>
             <button
               onClick={() => setShowCatalogThemeModal(true)}
               style={{ padding: "0.8rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 800 }}
@@ -611,7 +680,7 @@ export default function AdminBrandsPage() {
 
                         {/* Cover Image Thumbnail / Upload */}
                         <div>
-                          <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+                          <div style={{ display: "flex", gap: "0.4rem", alignItems: "center", flexWrap: "wrap" }}>
                             <input
                               type="text"
                               placeholder="Cover Thumbnail Image URL (Optional)"
@@ -621,7 +690,7 @@ export default function AdminBrandsPage() {
                                 next[cIdx].coverImage = e.target.value;
                                 setPdfCatalogs(next);
                               }}
-                              style={{ flex: 1, padding: "0.5rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                              style={{ flex: 1, minWidth: "160px", padding: "0.5rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
                             />
                             <input
                               type="file"
@@ -638,8 +707,19 @@ export default function AdminBrandsPage() {
                             >
                               🖼️ Cover
                             </label>
+
+                            <button
+                              type="button"
+                              onClick={() => handleAutoExtractCoverModal(cIdx)}
+                              disabled={!cat.pdfUrl}
+                              style={{ padding: "0.5rem 0.7rem", background: "#8c764b", color: "#fff", border: "none", borderRadius: "4px", fontSize: "0.75rem", cursor: "pointer", whiteSpace: "nowrap", fontWeight: 700 }}
+                              title="Automatically capture Page 1 from PDF"
+                            >
+                              ⚡ Auto Page 1
+                            </button>
+
                             {cat.coverImage && (
-                              <div style={{ width: "32px", height: "32px", borderRadius: "4px", overflow: "hidden", border: "1px solid #444", flexShrink: 0 }}>
+                              <div style={{ width: "32px", height: "42px", borderRadius: "4px", overflow: "hidden", border: "1px solid #444", flexShrink: 0, background: "#1a1a20" }}>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src={cat.coverImage} alt="Cover Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                               </div>
