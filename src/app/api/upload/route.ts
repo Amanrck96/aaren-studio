@@ -18,10 +18,14 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
+    let cleanName = file.name.replace(/[^a-zA-Z0-9_.-]/g, "_");
+    if (cleanName.toLowerCase().endsWith(".pdp")) {
+      cleanName = cleanName.slice(0, -4) + ".pdf";
+    }
+
+    let ext = path.extname(cleanName).toLowerCase();
+    const filename = `${Date.now()}-${cleanName}`;
     let publicUrl = "";
-    const sanitizedName = file.name.replace(/[^a-zA-Z0-9_.-]/g, "_");
-    const filename = `${Date.now()}-${sanitizedName}`;
-    const ext = path.extname(file.name).toLowerCase();
 
     // Try writing to public/uploads
     try {
@@ -44,30 +48,45 @@ export async function POST(request: Request) {
 
     const kbSize = (file.size / 1024).toFixed(1) + " KB";
 
-    // For images, if under 4MB, generate a base64 data URL to guarantee permanent display on Vercel serverless
+    // Generate base64 data URL fallback if filesystem write failed or for permanent availability
     let dataUrl = "";
-    if (isImage && buffer.length < 4 * 1024 * 1024) {
-      const mime = file.type || (ext === ".png" ? "image/png" : ext === ".webp" ? "image/webp" : "image/jpeg");
+    if (buffer.length < 25 * 1024 * 1024) {
+      let mime = file.type;
+      if (!mime || mime === "application/octet-stream") {
+        if (ext === ".pdf") mime = "application/pdf";
+        else if (ext === ".png") mime = "image/png";
+        else if (ext === ".jpg" || ext === ".jpeg") mime = "image/jpeg";
+        else if (ext === ".webp") mime = "image/webp";
+        else mime = "application/octet-stream";
+      }
       dataUrl = `data:${mime};base64,${buffer.toString("base64")}`;
       if (!publicUrl) publicUrl = dataUrl;
     }
 
-    const finalUrl = dataUrl || publicUrl;
+    const finalUrl = publicUrl || dataUrl;
+
+    if (!finalUrl) {
+      return NextResponse.json({ success: false, error: "Failed to store uploaded file" }, { status: 500 });
+    }
 
     // Register in Media Store
-    await saveMediaStore({
-      fileName: file.name,
-      fileUrl: finalUrl,
-      fileType,
-      folder,
-      size: kbSize,
-    });
+    try {
+      await saveMediaStore({
+        fileName: cleanName,
+        fileUrl: finalUrl,
+        fileType,
+        folder,
+        size: kbSize,
+      });
+    } catch (storeErr) {
+      console.warn("Media store save note:", storeErr);
+    }
 
     return NextResponse.json({
       success: true,
       url: finalUrl,
       dataUrl: dataUrl || publicUrl,
-      fileName: file.name,
+      fileName: cleanName,
       fileType,
       size: kbSize,
     });

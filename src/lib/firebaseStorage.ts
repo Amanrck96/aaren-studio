@@ -47,14 +47,17 @@ export async function uploadFileToFirebase(
 ): Promise<{ url: string; fullPath: string; fileName: string; size: number }> {
   await ensureFirebaseAuth();
 
-  const fileName = (file as File).name || `file_${Date.now()}`;
-  const rawFolder = customFolder || getFolderForFile(fileName, file.type);
+  let fileName = (file as File).name || `file_${Date.now()}`;
+  if (fileName.toLowerCase().endsWith(".pdp")) {
+    fileName = fileName.slice(0, -4) + ".pdf";
+  }
+  const rawFolder = customFolder || getFolderForFile(fileName, (file as File).type);
   const cleanFolder = rawFolder.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '_');
   const cleanName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
   const fullPath = `${cleanFolder}/${Date.now()}_${cleanName}`;
 
   const storageRef = ref(storage, fullPath);
-  const contentType = file.type || (fileName.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream');
+  const contentType = (file as File).type || (fileName.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream');
 
   return new Promise((resolve, reject) => {
     const uploadTask = uploadBytesResumable(storageRef, file, { contentType });

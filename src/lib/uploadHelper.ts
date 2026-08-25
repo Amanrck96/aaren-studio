@@ -58,8 +58,9 @@ export async function uploadFileWithCompression(
         let json: any = null;
         try {
           json = JSON.parse(text);
-          if (json?.success) {
-            return { success: true, url: json.url || json.dataUrl, dataUrl: json.dataUrl || json.url };
+          if (json?.success && (json.url || json.dataUrl)) {
+            const returnedUrl = json.url || json.dataUrl;
+            return { success: true, url: returnedUrl, dataUrl: returnedUrl };
           }
         } catch {}
       } else {
