@@ -1,4 +1,4 @@
-import { ref, uploadBytes, getDownloadURL, deleteObject, uploadString } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject, uploadString } from "firebase/storage";
 import { signInAnonymously } from "firebase/auth";
 import { storage, auth } from "./firebase";
 
@@ -42,25 +42,50 @@ export function getFolderForFile(fileName: string, mimeType?: string): string {
  */
 export async function uploadFileToFirebase(
   file: File | Blob,
-  customFolder?: string
+  customFolder?: string,
+  onProgress?: (percent: number) => void
 ): Promise<{ url: string; fullPath: string; fileName: string; size: number }> {
   await ensureFirebaseAuth();
 
   const fileName = (file as File).name || `file_${Date.now()}`;
-  const folder = customFolder || getFolderForFile(fileName, file.type);
+  const rawFolder = customFolder || getFolderForFile(fileName, file.type);
+  const cleanFolder = rawFolder.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '_');
   const cleanName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-  const fullPath = `${folder}/${Date.now()}_${cleanName}`;
+  const fullPath = `${cleanFolder}/${Date.now()}_${cleanName}`;
 
   const storageRef = ref(storage, fullPath);
-  const snapshot = await uploadBytes(storageRef, file);
-  const downloadUrl = await getDownloadURL(snapshot.ref);
+  const contentType = file.type || (fileName.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream');
 
-  return {
-    url: downloadUrl,
-    fullPath: snapshot.ref.fullPath,
-    fileName,
-    size: file.size,
-  };
+  return new Promise((resolve, reject) => {
+    const uploadTask = uploadBytesResumable(storageRef, file, { contentType });
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        if (snapshot.totalBytes > 0) {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          if (onProgress) onProgress(Math.round(progress));
+        }
+      },
+      (error) => {
+        console.error('Firebase Storage upload error:', error);
+        reject(error);
+      },
+      async () => {
+        try {
+          const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+          resolve({
+            url: downloadUrl,
+            fullPath: uploadTask.snapshot.ref.fullPath,
+            fileName,
+            size: file.size,
+          });
+        } catch (urlErr) {
+          reject(urlErr);
+        }
+      }
+    );
+  });
 }
 
 /**

@@ -17,6 +17,7 @@ export async function uploadFileWithCompression(
     }
 
     // 1. Direct Google Firebase Storage Upload via Client SDK (Zero Vercel Limits)
+    let directError: any = null;
     try {
       const fbResult = await uploadFileToFirebase(fileToUpload, folder);
       if (fbResult && fbResult.url) {
@@ -36,43 +37,38 @@ export async function uploadFileWithCompression(
         return { success: true, url: fbResult.url, dataUrl: fbResult.url };
       }
     } catch (fbErr: any) {
-      console.warn("Direct Firebase Storage client SDK upload failed, attempting fallback:", fbErr);
+      directError = fbErr;
+      console.warn("Direct Firebase Storage client SDK upload notice:", fbErr);
     }
 
-    // 2. Fallback to /api/upload if Firebase Storage direct SDK was blocked by local network
-    console.warn("Attempting fallback api endpoint...");
-    const formData = new FormData();
-    formData.append("file", fileToUpload);
-    formData.append("folder", folder);
+    // 2. Only attempt /api/upload fallback if the file is small (< 4MB) to prevent Vercel 413
+    if (fileToUpload.size < 4 * 1024 * 1024) {
+      console.warn("Attempting fallback api endpoint for small file...");
+      const formData = new FormData();
+      formData.append("file", fileToUpload);
+      formData.append("folder", folder);
 
-    const fallbackRes = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
+      const fallbackRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-    if (fallbackRes.status === 413) {
-      return {
-        success: false,
-        error: "File upload error. Please verify your network connection and retry.",
-      };
+      if (fallbackRes.ok) {
+        const text = await fallbackRes.text();
+        let json: any = null;
+        try {
+          json = JSON.parse(text);
+          if (json?.success) {
+            return { success: true, url: json.url || json.dataUrl, dataUrl: json.dataUrl || json.url };
+          }
+        } catch {}
+      }
     }
 
-    const text = await fallbackRes.text();
-    let json: any = null;
-    try {
-      json = JSON.parse(text);
-    } catch {
-      return {
-        success: false,
-        error: `Upload server returned an unexpected error (${fallbackRes.status}). Please check your internet connection or use a Google Drive link.`,
-      };
-    }
-
-    if (!fallbackRes.ok || !json?.success) {
-      throw new Error(json?.error || "File upload failed.");
-    }
-
-    return { success: true, url: json.url || json.dataUrl, dataUrl: json.dataUrl || json.url };
+    return {
+      success: false,
+      error: directError?.message || "File upload failed. Please verify your connection and retry.",
+    };
   } catch (err: any) {
     console.error("Upload helper exception:", err);
     return { success: false, error: err.message || "Upload error" };
