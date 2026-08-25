@@ -193,10 +193,6 @@ export default function LoginPage() {
               <span>Don't have an account? </span>
               <Link href="/signup">Create one free →</Link>
             </div>
-            <div className="os-footer" style={{ marginTop: 12, fontSize: 11 }}>
-              Admin? Use{" "}
-              <a href="/admin/login">Admin Console →</a>
-            </div>
           </div>
         </div>
       </div>
