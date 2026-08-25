@@ -108,35 +108,120 @@ const SERVICES = [
 /* ─── Logo letters for staggered reveal ─── */
 const LOGO_LETTERS = ["A", "A", "R", "E", "N"];
 
+const CATEGORY_BRAND_LOGOS: Record<string, string> = {
+  "plywood": "/brands/logos/peelply_logo.png",
+  "peelply": "/brands/logos/peelply_logo.png",
+  "cat-pw": "/brands/logos/peelply_logo.png",
+  "laminate": "/brands/logos/formica_logo.png",
+  "laminates": "/brands/logos/formica_logo.png",
+  "formica": "/brands/logos/formica_logo.png",
+  "cat-lm": "/brands/logos/formica_logo.png",
+  "facade": "/brands/logos/newtechwood_logo.png",
+  "cladding": "/brands/logos/newtechwood_logo.png",
+  "decking": "/brands/logos/newtechwood_logo.png",
+  "newtech": "/brands/logos/newtechwood_logo.png",
+  "newtechwood": "/brands/logos/newtechwood_logo.png",
+  "cat-fc": "/brands/logos/newtechwood_logo.png",
+  "wooden-flooring": "/brands/logos/mafi_logo.png",
+  "flooring": "/brands/logos/mafi_logo.png",
+  "mafi": "/brands/logos/mafi_logo.png",
+  "cat-wf": "/brands/logos/mafi_logo.png",
+  "screens": "/brands/logos/freedom_screens_logo.jpg",
+  "freedom-screens": "/brands/logos/freedom_screens_logo.jpg",
+  "cat-ss": "/brands/logos/freedom_screens_logo.jpg",
+  "door-system": "/brands/logos/waltz_logo.png",
+  "doorsystem": "/brands/logos/waltz_logo.png",
+  "waltz": "/brands/logos/waltz_logo.png",
+  "cat-ds": "/brands/logos/waltz_logo.png",
+  "doors": "/brands/logos/slashform_logo.png",
+  "cat-wd": "/brands/logos/slashform_logo.png",
+  "windows": "/brands/logos/slashform_logo.png",
+  "cat-ww": "/brands/logos/slashform_logo.png",
+  "kitchen": "/brands/logos/slashform_logo.png",
+  "slashform": "/brands/logos/slashform_logo.png",
+  "cat-kk": "/brands/logos/slashform_logo.png",
+  "wardrobe": "/brands/logos/slashform_logo.png",
+  "cat-wrd": "/brands/logos/slashform_logo.png",
+  "furniture": "/brands/logos/loco_logo.png",
+  "loco": "/brands/logos/loco_logo.png",
+  "inclass": "/brands/logos/inclass_logo.png",
+  "cat-ff": "/brands/logos/loco_logo.png",
+  "tiles": "/brands/logos/mirage_logo.png",
+  "mirage": "/brands/logos/mirage_logo.png",
+  "wow": "/brands/logos/wow_logo.png",
+  "cat-tl": "/brands/logos/mirage_logo.png",
+  "bathroom-fittings": "/brands/logos/fima_logo.png",
+  "fima": "/brands/logos/fima_logo.png",
+  "cat-bf": "/brands/logos/fima_logo.png",
+  "sanitary-ware": "/brands/logos/falper_logo.png",
+  "sanitaryware": "/brands/logos/falper_logo.png",
+  "falper": "/brands/logos/falper_logo.png",
+  "cat-sw": "/brands/logos/falper_logo.png",
+  "mirrors": "/brands/logos/waltz_logo.png",
+  "cat-mr": "/brands/logos/waltz_logo.png",
+  "wallpapers": "/brands/logos/inkiostro_bianco_logo.png",
+  "wall-covering": "/brands/logos/inkiostro_bianco_logo.png",
+  "inkiostro": "/brands/logos/inkiostro_bianco_logo.png",
+  "inkiostro-bianco": "/brands/logos/inkiostro_bianco_logo.png",
+  "joinery": "/brands/logos/iww_logo.png",
+  "iww": "/brands/logos/iww_logo.png",
+};
+
+const BRAND_LOGOS: Record<string, string> = {
+  "slashform": "/brands/logos/slashform_logo.png",
+  "waltz": "/brands/logos/waltz_logo.png",
+  "newtech": "/brands/logos/newtechwood_logo.png",
+  "newtech-wood": "/brands/logos/newtechwood_logo.png",
+  "newtechwood": "/brands/logos/newtechwood_logo.png",
+  "formica": "/brands/logos/formica_logo.png",
+  "loco": "/brands/logos/loco_logo.png",
+  "falper": "/brands/logos/falper_logo.png",
+  "fima": "/brands/logos/fima_logo.png",
+  "inkiostro": "/brands/logos/inkiostro_bianco_logo.png",
+  "inkiostro-bianco": "/brands/logos/inkiostro_bianco_logo.png",
+  "mafi": "/brands/logos/mafi_logo.png",
+  "mirage": "/brands/logos/mirage_logo.png",
+  "freedom-screens": "/brands/logos/freedom_screens_logo.jpg",
+  "peelply": "/brands/logos/peelply_logo.png",
+  "inclass": "/brands/logos/inclass_logo.png",
+  "wow": "/brands/logos/wow_logo.png",
+  "iww": "/brands/logos/iww_logo.png",
+};
+
 const HOME_CATEGORIES = [
-  { id: "plywood", code: "PW", num: "01", name: "Plywood", sub: "Structural Panels", img: "/categories/cat_1.png" },
-  { id: "laminate", code: "LM", num: "02", name: "Laminate", sub: "Decorative Surfaces", img: "/categories/cat_2.png" },
-  { id: "facade", code: "FC", num: "03", name: "Facade", sub: "Cladding & Decking", img: "/categories/cat_3.png" },
-  { id: "wooden-flooring", code: "WF", num: "04", name: "Wooden Flooring", sub: "Engineered & Solid", img: "/categories/cat_4.png" },
-  { id: "screens", code: "SS", num: "05", name: "Screens", sub: "Zipline Systems", img: "/categories/cat_5.png" },
-  { id: "door-system", code: "DS", num: "06", name: "Door System", sub: "Aluminum & Slashform", img: "/categories/cat_6.png" },
-  { id: "doors", code: "WD", num: "07", name: "Doors", sub: "Wood & Laminate", img: "/categories/cat_7.png" },
-  { id: "windows", code: "WW", num: "08", name: "Windows", sub: "Timber & Aluminum", img: "/categories/cat_8.png" },
-  { id: "kitchen", code: "KK", num: "09", name: "Kitchen", sub: "Slashform K+W", img: "/categories/cat_9.png" },
-  { id: "wardrobe", code: "WW", num: "10", name: "Wardrobe", sub: "Freedom & Slashform", img: "/categories/cat_10.png" },
-  { id: "furniture", code: "FF", num: "11", name: "Furniture", sub: "Millwork & Bespoke", img: "/categories/cat_11.png" },
-  { id: "tiles", code: "TL", num: "12", name: "Tiles", sub: "Floors, Walls & Facades", img: "/categories/cat_12.png" },
-  { id: "bathroom-fittings", code: "BF", num: "13", name: "Bathroom Fittings", sub: "Fima · Falper · Mildue", img: "/categories/cat_13.png" },
-  { id: "sanitary-ware", code: "SW", num: "14", name: "Sanitary Ware", sub: "IWW · Flaminia", img: "/categories/cat_14.png" },
-  { id: "mirrors", code: "MR", num: "15", name: "Mirrors", sub: "Mira · Waltz", img: "/categories/cat_15.png" },
+  { id: "plywood", code: "PW", num: "01", name: "Plywood", sub: "Structural Panels", img: "/categories/cat_1.png", logo: "/brands/logos/peelply_logo.png" },
+  { id: "laminate", code: "LM", num: "02", name: "Laminate", sub: "Decorative Surfaces", img: "/categories/cat_2.png", logo: "/brands/logos/formica_logo.png" },
+  { id: "facade", code: "FC", num: "03", name: "Facade", sub: "Cladding & Decking", img: "/categories/cat_3.png", logo: "/brands/logos/newtechwood_logo.png" },
+  { id: "wooden-flooring", code: "WF", num: "04", name: "Wooden Flooring", sub: "Engineered & Solid", img: "/categories/cat_4.png", logo: "/brands/logos/mafi_logo.png" },
+  { id: "screens", code: "SS", num: "05", name: "Screens", sub: "Zipline Systems", img: "/categories/cat_5.png", logo: "/brands/logos/freedom_screens_logo.jpg" },
+  { id: "door-system", code: "DS", num: "06", name: "Door System", sub: "Aluminum & Slashform", img: "/categories/cat_6.png", logo: "/brands/logos/waltz_logo.png" },
+  { id: "doors", code: "WD", num: "07", name: "Doors", sub: "Wood & Laminate", img: "/categories/cat_7.png", logo: "/brands/logos/slashform_logo.png" },
+  { id: "windows", code: "WW", num: "08", name: "Windows", sub: "Timber & Aluminum", img: "/categories/cat_8.png", logo: "/brands/logos/slashform_logo.png" },
+  { id: "kitchen", code: "KK", num: "09", name: "Kitchen", sub: "Slashform K+W", img: "/categories/cat_9.png", logo: "/brands/logos/slashform_logo.png" },
+  { id: "wardrobe", code: "WW", num: "10", name: "Wardrobe", sub: "Freedom & Slashform", img: "/categories/cat_10.png", logo: "/brands/logos/slashform_logo.png" },
+  { id: "furniture", code: "FF", num: "11", name: "Furniture", sub: "Millwork & Bespoke", img: "/categories/cat_11.png", logo: "/brands/logos/loco_logo.png" },
+  { id: "tiles", code: "TL", num: "12", name: "Tiles", sub: "Floors, Walls & Facades", img: "/categories/cat_12.png", logo: "/brands/logos/mirage_logo.png" },
+  { id: "bathroom-fittings", code: "BF", num: "13", name: "Bathroom Fittings", sub: "Fima · Falper · Mildue", img: "/categories/cat_13.png", logo: "/brands/logos/fima_logo.png" },
+  { id: "sanitary-ware", code: "SW", num: "14", name: "Sanitary Ware", sub: "IWW · Flaminia", img: "/categories/cat_14.png", logo: "/brands/logos/falper_logo.png" },
+  { id: "mirrors", code: "MR", num: "15", name: "Mirrors", sub: "Mira · Waltz", img: "/categories/cat_15.png", logo: "/brands/logos/waltz_logo.png" },
 ];
 
 const HOME_BRANDS = [
-  { id: "slashform", code: "SF", num: "01", name: "Slashform", sub: "Doors · Windows · Kitchens", img: "/brands/brand_1_1.png" },
-  { id: "waltz", code: "WB", num: "02", name: "Waltz by JB Glass", sub: "Mirrors · Glass Systems", img: "/brands/brand_2_1.png" },
-  { id: "newtech", code: "NW", num: "03", name: "Newtech Wood", sub: "WPC · Facade", img: "/brands/brand_3_1.png" },
-  { id: "formica", code: "FC", num: "04", name: "Formica", sub: "Laminates · Surfaces", img: "/brands/brand_4_1.png" },
-  { id: "loco", code: "LC", num: "05", name: "Loco", sub: "Furniture · Millwork", img: "/brands/brand_5_1.png" },
-  { id: "falper", code: "FP", num: "06", name: "Falper", sub: "Bathroom Fittings", img: "/brands/brand_6_1.png" },
-  { id: "fima", code: "FM", num: "07", name: "Fima Carlo Frattini", sub: "Tapware · Showers", img: "/brands/brand_7_1.png" },
-  { id: "inkiostro", code: "IB", num: "08", name: "Inkiostro Bianco", sub: "Wallcoverings · Decor", img: "/brands/brand_8_1.png" },
-  { id: "mafi", code: "MF", num: "09", name: "Mafi", sub: "Engineered Wood Floors", img: "/brands/brand_9_1.png" },
-  { id: "mirage", code: "MG", num: "10", name: "Mirage", sub: "Porcelain Tiles", img: "/brands/brand_10_1.png" },
+  { id: "slashform", code: "SF", num: "01", name: "Slashform", sub: "Doors · Windows · Kitchens", img: "/brands/brand_1_1.png", logo: "/brands/logos/slashform_logo.png" },
+  { id: "waltz", code: "WB", num: "02", name: "Waltz by JB Glass", sub: "Mirrors · Glass Systems", img: "/brands/brand_2_1.png", logo: "/brands/logos/waltz_logo.png" },
+  { id: "newtech", code: "NW", num: "03", name: "Newtech Wood", sub: "WPC · Facade", img: "/brands/brand_3_1.png", logo: "/brands/logos/newtechwood_logo.png" },
+  { id: "formica", code: "FC", num: "04", name: "Formica", sub: "Laminates · Surfaces", img: "/brands/brand_4_1.png", logo: "/brands/logos/formica_logo.png" },
+  { id: "loco", code: "LC", num: "05", name: "Loco", sub: "Furniture · Millwork", img: "/brands/brand_5_1.png", logo: "/brands/logos/loco_logo.png" },
+  { id: "falper", code: "FP", num: "06", name: "Falper", sub: "Bathroom Fittings", img: "/brands/brand_6_1.png", logo: "/brands/logos/falper_logo.png" },
+  { id: "fima", code: "FM", num: "07", name: "Fima Carlo Frattini", sub: "Tapware · Showers", img: "/brands/brand_7_1.png", logo: "/brands/logos/fima_logo.png" },
+  { id: "inkiostro", code: "IB", num: "08", name: "Inkiostro Bianco", sub: "Wallcoverings · Decor", img: "/brands/brand_8_1.png", logo: "/brands/logos/inkiostro_bianco_logo.png" },
+  { id: "mafi", code: "MF", num: "09", name: "Mafi", sub: "Engineered Wood Floors", img: "/brands/brand_9_1.png", logo: "/brands/logos/mafi_logo.png" },
+  { id: "mirage", code: "MG", num: "10", name: "Mirage", sub: "Porcelain Tiles", img: "/brands/brand_10_1.png", logo: "/brands/logos/mirage_logo.png" },
+  { id: "freedom-screens", code: "FS", num: "11", name: "Freedom Screens", sub: "Retractable Screens", img: "/brands/brand_freedom_screens.jpg", logo: "/brands/logos/freedom_screens_logo.jpg" },
+  { id: "peelply", code: "PP", num: "12", name: "Peelply", sub: "Engineered Plywood", img: "/brands/brand_2_1.png", logo: "/brands/logos/peelply_logo.png" },
+  { id: "inclass", code: "IC", num: "13", name: "Inclass", sub: "Designer Furniture", img: "/brands/brand_3_1.png", logo: "/brands/logos/inclass_logo.png" },
+  { id: "wow", code: "WW", num: "14", name: "WOW", sub: "3D Ceramic Tiles", img: "/brands/brand_4_1.png", logo: "/brands/logos/wow_logo.png" },
+  { id: "iww", code: "IW", num: "15", name: "IWW", sub: "Stone & Joinery", img: "/brands/brand_5_1.png", logo: "/brands/logos/iww_logo.png" },
 ];
 
 /* ── Top brand carousel images (fast slideshow for first 2 brands) ── */
@@ -207,27 +292,42 @@ export default function Home() {
         setSiteSettings(settingsJson.data);
       }
       if (catsJson?.success && Array.isArray(catsJson.data) && catsJson.data.length > 0) {
+        const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
         setCategoriesList(
-          catsJson.data.map((c: any) => ({
-            id: c.id,
-            code: c.shortCode ? c.shortCode.split(" ")[0] : "CAT",
-            num: c.sequenceNumber ? String(c.sequenceNumber).padStart(2, "0") : "01",
-            name: c.name,
-            sub: c.description || "Architectural Surface",
-            img: c.coverImage || "/categories/cat_1.png",
-          }))
+          catsJson.data.map((c: any) => {
+            const rawId = (c.id || "").toLowerCase();
+            const rawName = norm(c.name || "");
+            const logo = CATEGORY_BRAND_LOGOS[rawId] || CATEGORY_BRAND_LOGOS[rawName] || CATEGORY_BRAND_LOGOS[c.shortCode?.toLowerCase()] || "";
+            return {
+              id: c.id,
+              code: c.shortCode ? c.shortCode.split(" ")[0] : "CAT",
+              num: c.sequenceNumber ? String(c.sequenceNumber).padStart(2, "0") : "01",
+              name: c.name,
+              sub: c.description || "Architectural Surface",
+              img: c.coverImage || "/categories/cat_1.png",
+              logo,
+            };
+          })
         );
       }
       if (brandsJson?.success && Array.isArray(brandsJson.data) && brandsJson.data.length > 0) {
+        const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
         setBrandsList(
-          brandsJson.data.map((b: any) => ({
-            id: b.id,
-            code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
-            num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : "01",
-            name: b.name,
-            sub: b.description || "Partner Brand",
-            img: b.bannerUrl || "/brands/brand_1_1.png",
-          }))
+          brandsJson.data.map((b: any) => {
+            const explicitLogo = b.logoUrl && !b.logoUrl.includes("brand_") && !b.logoUrl.endsWith("_2.png") ? b.logoUrl : "";
+            const rawId = (b.id || "").toLowerCase();
+            const rawName = norm(b.name || "");
+            const logo = explicitLogo || BRAND_LOGOS[rawId] || BRAND_LOGOS[rawName] || "";
+            return {
+              id: b.id,
+              code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
+              num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : (b.shortCode && b.shortCode.split(" ")[1] ? b.shortCode.split(" ")[1] : "01"),
+              name: b.name,
+              sub: b.description || b.tagline || "Partner Brand",
+              img: b.bannerUrl || b.imageUrl || "/brands/brand_1_1.png",
+              logo,
+            };
+          })
         );
       }
       if (projectsJson?.success && Array.isArray(projectsJson.data) && projectsJson.data.length > 0) {
@@ -861,6 +961,44 @@ export default function Home() {
                     className="home-ticket-img"
                     style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
                   />
+
+                  {/* Brand Logo Badge for Category — Bottom-Left */}
+                  {cat.logo ? (
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: "1.4rem",
+                        left: "1.4rem",
+                        background: "#ffffff",
+                        padding: "0.6rem 1.4rem",
+                        borderRadius: "0.4rem",
+                        boxShadow: "0 4px 14px rgba(0, 0, 0, 0.15)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 5,
+                        minWidth: "7rem",
+                        minHeight: "3.2rem",
+                      }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={cat.logo}
+                        alt={cat.name}
+                        style={{
+                          maxHeight: "2.4rem",
+                          maxWidth: "9rem",
+                          width: "auto",
+                          height: "auto",
+                          objectFit: "contain",
+                        }}
+                        onError={(e) => {
+                          const target = e.currentTarget as HTMLElement;
+                          if (target.parentElement) target.parentElement.style.display = "none";
+                        }}
+                      />
+                    </div>
+                  ) : null}
                 </div>
 
                 {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
@@ -979,6 +1117,44 @@ export default function Home() {
                     className="home-ticket-img"
                     style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
                   />
+
+                  {/* Brand Logo Badge for Brand — Bottom-Left */}
+                  {brand.logo ? (
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: "1.4rem",
+                        left: "1.4rem",
+                        background: "#ffffff",
+                        padding: "0.6rem 1.4rem",
+                        borderRadius: "0.4rem",
+                        boxShadow: "0 4px 14px rgba(0, 0, 0, 0.15)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 5,
+                        minWidth: "7rem",
+                        minHeight: "3.2rem",
+                      }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={brand.logo}
+                        alt={brand.name}
+                        style={{
+                          maxHeight: "2.4rem",
+                          maxWidth: "9rem",
+                          width: "auto",
+                          height: "auto",
+                          objectFit: "contain",
+                        }}
+                        onError={(e) => {
+                          const target = e.currentTarget as HTMLElement;
+                          if (target.parentElement) target.parentElement.style.display = "none";
+                        }}
+                      />
+                    </div>
+                  ) : null}
                 </div>
 
                 {/* Caption Bar: Brand Name (Left), Short Code & Number side-by-side (Right) */}
