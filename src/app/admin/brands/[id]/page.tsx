@@ -7,6 +7,7 @@ import Link from "next/link";
 import AdminNav from "@/components/AdminNav";
 import { BrandItem } from "@/lib/types";
 import { uploadFileWithCompression } from "@/lib/uploadHelper";
+import { extractFirstPageAsImage } from "@/utils/pdfCoverExtractor";
 import {
   ArrowLeft,
   Save,
@@ -206,7 +207,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
     }
   };
 
-  // PDF Catalog Upload
+  // PDF Catalog Upload with Automatic Page-1 Cover Thumbnail Capture
   const handlePdfUpload = async (file: File, catalogIndex?: number) => {
     if (!file) return;
     if (catalogIndex !== undefined) {
@@ -215,24 +216,50 @@ export default function AdminIndividualBrandPage({ params }: Props) {
       setUploadingPdf(true);
     }
     try {
+      // 1. Upload PDF to Firebase Storage (Any Size)
       const uploadRes = await uploadFileWithCompression(file, "Catalogues");
       if (uploadRes.success && (uploadRes.url || uploadRes.dataUrl)) {
-        const finalUrl = uploadRes.url || uploadRes.dataUrl || "";
+        const finalPdfUrl = uploadRes.url || uploadRes.dataUrl || "";
+        
+        // 2. Automatically capture Page 1 of the PDF as a crisp cover thumbnail
+        let autoCoverUrl = "";
+        try {
+          const coverFile = await extractFirstPageAsImage(file);
+          if (coverFile) {
+            const coverRes = await uploadFileWithCompression(coverFile, "Catalog_Covers");
+            if (coverRes.success && (coverRes.url || coverRes.dataUrl)) {
+              autoCoverUrl = coverRes.url || coverRes.dataUrl || "";
+            }
+          }
+        } catch (coverErr) {
+          console.warn("Automatic cover capture note:", coverErr);
+        }
+
         if (catalogIndex !== undefined) {
           setFormData((prev) => {
             const list = [...(prev.pdfCatalogs || [])];
-            if (list[catalogIndex]) list[catalogIndex].pdfUrl = finalUrl;
+            if (list[catalogIndex]) {
+              list[catalogIndex].pdfUrl = finalPdfUrl;
+              if (autoCoverUrl && !list[catalogIndex].coverImage) {
+                list[catalogIndex].coverImage = autoCoverUrl;
+              }
+            }
             return { ...prev, pdfCatalogs: list };
           });
         } else {
-          setFormData((prev) => ({ ...prev, catalogPdfUrl: finalUrl }));
+          setFormData((prev) => ({ ...prev, catalogPdfUrl: finalPdfUrl }));
         }
-        showToast("PDF catalog uploaded successfully!");
+
+        showToast(
+          autoCoverUrl
+            ? "✅ PDF uploaded & Page-1 cover thumbnail captured automatically!"
+            : "✅ PDF catalog uploaded to Firebase Storage!"
+        );
       } else {
-        alert("PDF Upload note: " + (uploadRes.error || "Could not upload file. If file is >4.5MB, please paste a Google Drive link."));
+        alert("PDF Upload note: " + (uploadRes.error || "Could not upload file to Firebase."));
       }
     } catch (e: any) {
-      alert("PDF Upload note: " + e.message);
+      alert("PDF Upload error: " + e.message);
     } finally {
       setUploadingPdf(false);
       setUploadingIndex(null);
@@ -698,7 +725,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
 
                 {/* Info Helper Box */}
                 <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "12px 16px", borderRadius: "8px", marginBottom: "20px", fontSize: "12px", color: "#166534", lineHeight: 1.5 }}>
-                  <strong>💡 Pro-Tip for Catalogs:</strong> You can upload PDF files directly (under 4.5MB), or paste a <strong>Google Drive share link</strong> for large catalog files (10MB–50MB+). Google Drive links load instantly on-screen and automatically extract page thumbnails! You can also upload custom cover thumbnails below.
+                  <strong>💡 Google Firebase Cloud Storage:</strong> Upload specification PDF files of any size directly into Google Firebase Storage. The system will automatically capture Page 1 of the PDF as the official cover thumbnail! You can also paste Google Drive links or upload custom cover photos.
                 </div>
 
                 {/* Primary PDF */}

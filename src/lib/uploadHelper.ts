@@ -53,7 +53,7 @@ export async function uploadFileWithCompression(
     if (fallbackRes.status === 413) {
       return {
         success: false,
-        error: "File is too large for fallback upload (>4.5MB). Please use Google Firebase Storage or paste a Google Drive link.",
+        error: "File upload error. Please verify your network connection and retry.",
       };
     }
 

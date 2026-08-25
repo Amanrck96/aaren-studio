@@ -1,5 +1,20 @@
 import { ref, uploadBytes, getDownloadURL, deleteObject, uploadString } from "firebase/storage";
-import { storage } from "./firebase";
+import { signInAnonymously } from "firebase/auth";
+import { storage, auth } from "./firebase";
+
+/**
+ * Ensure anonymous auth session is active before storage calls
+ */
+async function ensureFirebaseAuth() {
+  if (typeof window === "undefined") return;
+  if (!auth.currentUser) {
+    try {
+      await signInAnonymously(auth);
+    } catch (e) {
+      console.warn("Firebase anonymous authentication check:", e);
+    }
+  }
+}
 
 /**
  * Automatically determine folder based on file extension & MIME type:
@@ -23,12 +38,14 @@ export function getFolderForFile(fileName: string, mimeType?: string): string {
 }
 
 /**
- * Upload any File or Blob to Firebase Storage
+ * Upload any File or Blob directly to Firebase Storage (Any file size: 5MB, 50MB, 100MB+)
  */
 export async function uploadFileToFirebase(
   file: File | Blob,
   customFolder?: string
 ): Promise<{ url: string; fullPath: string; fileName: string; size: number }> {
+  await ensureFirebaseAuth();
+
   const fileName = (file as File).name || `file_${Date.now()}`;
   const folder = customFolder || getFolderForFile(fileName, file.type);
   const cleanName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');

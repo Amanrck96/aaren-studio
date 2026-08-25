@@ -6,6 +6,7 @@ import Link from "next/link";
 import AdminNav from "@/components/AdminNav";
 import { BrandItem, PdfCatalogItem } from "@/lib/types";
 import { uploadFileWithCompression } from "@/lib/uploadHelper";
+import { extractFirstPageAsImage } from "@/utils/pdfCoverExtractor";
 
 function parseGoogleDriveUrl(url: string): string {
   if (!url) return "";
@@ -160,6 +161,23 @@ export default function AdminBrandsPage() {
       const result = await uploadFileWithCompression(file, folder);
       if (result.success && (result.url || result.dataUrl)) {
         const finalUrl = result.url || result.dataUrl || "";
+
+        // If uploading a PDF catalog, automatically extract page 1 cover image
+        let autoCoverUrl = "";
+        if (!isCover && (fieldName === "catalogPdfUrl" || file.name.endsWith(".pdf"))) {
+          try {
+            const coverFile = await extractFirstPageAsImage(file);
+            if (coverFile) {
+              const coverRes = await uploadFileWithCompression(coverFile, "Catalog_Covers");
+              if (coverRes.success && (coverRes.url || coverRes.dataUrl)) {
+                autoCoverUrl = coverRes.url || coverRes.dataUrl || "";
+              }
+            }
+          } catch (coverErr) {
+            console.warn("Auto cover capture note:", coverErr);
+          }
+        }
+
         if (typeof catalogIndex === "number") {
           setPdfCatalogs((prev) => {
             const next = [...prev];
@@ -168,6 +186,9 @@ export default function AdminBrandsPage() {
                 next[catalogIndex].coverImage = finalUrl;
               } else {
                 next[catalogIndex].pdfUrl = finalUrl;
+                if (autoCoverUrl && !next[catalogIndex].coverImage) {
+                  next[catalogIndex].coverImage = autoCoverUrl;
+                }
               }
             }
             return next;
@@ -178,10 +199,10 @@ export default function AdminBrandsPage() {
           setEditingBrand((prev) => ({ ...prev, [fieldName]: finalUrl }));
         }
       } else {
-        alert("Upload note: " + (result.error || "Could not upload file. If file is >4.5MB, please paste a Google Drive link."));
+        alert("Upload note: " + (result.error || "Could not upload file to Firebase."));
       }
     } catch (err: any) {
-      alert("Upload note: " + err.message);
+      alert("Upload error: " + err.message);
     } finally {
       setUploadingPdf(false);
     }
