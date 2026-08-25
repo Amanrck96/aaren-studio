@@ -135,6 +135,29 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncToast, setSyncToast] = useState<string | null>(null);
+
+  const handleForceSync = async () => {
+    setIsSyncing(true);
+    setSyncToast(null);
+    try {
+      const res = await fetch("/api/firebase-sync", { method: "POST" });
+      const json = await res.json();
+      if (json.success) {
+        setSyncToast("✅ All content synced to Firebase! Admin edits are now permanent.");
+      } else {
+        setSyncToast("❌ Sync failed: " + json.error);
+      }
+    } catch (e: any) {
+      setSyncToast("❌ Sync error: " + e.message);
+    } finally {
+      setIsSyncing(false);
+      setTimeout(() => setSyncToast(null), 6000);
+    }
+  };
+
+
   const handleSaveColors = async () => {
     setSavingColors(true);
     try {
@@ -211,28 +234,59 @@ export default function AdminDashboardPage() {
             </p>
           </div>
 
-          <Link
-            href="/"
-            target="_blank"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "10px 18px",
-              background: "#1E1E1E",
-              color: "#fff",
-              borderRadius: "8px",
-              textDecoration: "none",
-              fontWeight: 700,
-              fontSize: "0.85rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-            }}
-          >
-            <span>View Live Website</span>
-            <ExternalLink size={14} />
-          </Link>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+            {syncToast && (
+              <span style={{ background: syncToast.startsWith("✅") ? "#d1fae5" : "#fee2e2", color: syncToast.startsWith("✅") ? "#065f46" : "#991b1b", padding: "8px 14px", borderRadius: "8px", fontSize: "0.82rem", fontWeight: 700, maxWidth: "320px" }}>
+                {syncToast}
+              </span>
+            )}
+            <button
+              onClick={handleForceSync}
+              disabled={isSyncing}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "10px 18px",
+                background: isSyncing ? "#a0aec0" : "#10b981",
+                color: "#fff",
+                border: "none",
+                borderRadius: "8px",
+                cursor: isSyncing ? "not-allowed" : "pointer",
+                fontWeight: 700,
+                fontSize: "0.85rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                fontFamily: "inherit",
+              }}
+            >
+              <RefreshCw size={14} className={isSyncing ? "spin" : ""} />
+              <span>{isSyncing ? "Syncing..." : "Sync to Firebase"}</span>
+            </button>
+            <Link
+              href="/"
+              target="_blank"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "10px 18px",
+                background: "#1E1E1E",
+                color: "#fff",
+                borderRadius: "8px",
+                textDecoration: "none",
+                fontWeight: 700,
+                fontSize: "0.85rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              <span>View Live Website</span>
+              <ExternalLink size={14} />
+            </Link>
+          </div>
         </div>
+
 
         {/* REAL-TIME METRICS COUNTERS */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))", gap: "1rem", marginBottom: "2.5rem" }}>

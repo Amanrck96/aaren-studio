@@ -724,6 +724,19 @@ export const DEFAULT_ROADMAP: RoadmapStepItem[] = [
 
 // SITE SETTINGS STORE
 export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
+  // 🔑 FIX: Always check Firebase FIRST so admin edits survive Vercel redeploys
+  const fbData = await fetchFromFirebaseCloudStore("settings");
+  if (fbData && typeof fbData === "object" && fbData.heroTitle) {
+    const json = readJsonStore();
+    json.settings = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return {
+      ...fbData,
+      footerLinks: Array.from(new Set([...(fbData.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
+    };
+  }
+
+  // Fallback to local JSON if Firebase unavailable
   const json = readJsonStore();
   if (json.settings && json.settings.heroTitle) {
     return {
@@ -732,7 +745,7 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
     };
   }
 
-  // Fallback to Firebase / Prisma if memory unpopulated
+  // Fallback to Prisma
   try {
     const db = await prisma.siteSettings.findUnique({ where: { id: "default" } });
     if (db) {
@@ -816,12 +829,22 @@ export async function saveCatalogSettingsStore(data: Partial<CatalogSettingsItem
 
 // CATEGORIES STORE
 export async function getCategoriesStore(): Promise<CategoryItem[]> {
+  // 🔑 FIX: Always check Firebase FIRST so admin edits survive Vercel redeploys
+  const fbData = await fetchFromFirebaseCloudStore("categories");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.categories = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+
+  // Fallback to local JSON if Firebase unavailable
   const json = readJsonStore();
   if (json.categories && Array.isArray(json.categories) && json.categories.length > 0) {
     return json.categories;
   }
 
-  // Fallback to Prisma if memory empty
+  // Fallback to Prisma
   try {
     const dbCats = await prisma.category.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (dbCats && dbCats.length > 0) {
@@ -844,12 +867,22 @@ export async function getCategoriesStore(): Promise<CategoryItem[]> {
 
 // BRANDS STORE
 export async function getBrandsStore(): Promise<BrandItem[]> {
+  // 🔑 FIX: Always check Firebase FIRST so admin edits (logos, descriptions, catalogs) survive Vercel redeploys
+  const fbData = await fetchFromFirebaseCloudStore("brands");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.brands = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+
+  // Fallback to local JSON if Firebase unavailable
   const json = readJsonStore();
   if (json.brands && Array.isArray(json.brands) && json.brands.length > 0) {
     return json.brands;
   }
 
-  // Fallback to Prisma if memory empty
+  // Fallback to Prisma
   try {
     const dbBrands = await prisma.brand.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (dbBrands && dbBrands.length > 0) {
@@ -943,12 +976,22 @@ export async function deleteBrandStore(id: string) {
 
 // PRODUCTS STORE
 export async function getAllProductsStore(): Promise<ProductItem[]> {
+  // 🔑 FIX: Always check Firebase FIRST so admin edits survive Vercel redeploys
+  const fbData = await fetchFromFirebaseCloudStore("products");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.products = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+
+  // Fallback to local JSON if Firebase unavailable
   const json = readJsonStore();
   if (json.products && Array.isArray(json.products) && json.products.length > 0) {
     return json.products;
   }
 
-  // Fallback to Prisma if memory empty
+  // Fallback to Prisma
   try {
     const dbProducts = await prisma.product.findMany({ orderBy: { slNo: "asc" } });
     if (dbProducts && dbProducts.length > 0) {
