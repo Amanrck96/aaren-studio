@@ -364,21 +364,23 @@ export default function Home() {
 
   /* ── Category full-width carousel state ── */
   const [catIdx, setCatIdx] = useState(0);
+  const [catPaused, setCatPaused] = useState(false);
   const catTotal = categoriesList.length;
   useEffect(() => {
-    if (catTotal <= 1) return;
-    const t = setInterval(() => setCatIdx((p) => (p + 1) % catTotal), 3200);
+    if (catTotal <= 1 || catPaused) return;
+    const t = setInterval(() => setCatIdx((p) => (p + 1) % catTotal), 6000);
     return () => clearInterval(t);
-  }, [catTotal]);
+  }, [catTotal, catPaused]);
 
   /* ── Brands full-width carousel state ── */
   const [brandIdx, setBrandIdx] = useState(0);
+  const [brandPaused, setBrandPaused] = useState(false);
   const brandTotal = brandsList.length;
   useEffect(() => {
-    if (brandTotal <= 1) return;
-    const t = setInterval(() => setBrandIdx((p) => (p + 1) % brandTotal), 3600);
+    if (brandTotal <= 1 || brandPaused) return;
+    const t = setInterval(() => setBrandIdx((p) => (p + 1) % brandTotal), 6000);
     return () => clearInterval(t);
-  }, [brandTotal]);
+  }, [brandTotal, brandPaused]);
 
   /* ── Intro scroll-driven text refs ── */
   const introSectionRef = useRef<HTMLDivElement>(null);
@@ -926,7 +928,11 @@ export default function Home() {
         </div>
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
-        <div style={{ position: "relative", overflow: "hidden", width: "100%" }}>
+        <div
+          style={{ position: "relative", overflow: "hidden", width: "100%" }}
+          onMouseEnter={() => setCatPaused(true)}
+          onMouseLeave={() => setCatPaused(false)}
+        >
 
           {/* Slide track — shifts by 50% per step (showing 2 cards) */}
           <div
@@ -1082,7 +1088,11 @@ export default function Home() {
         </div>
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
-        <div style={{ position: "relative", overflow: "hidden", width: "100%" }}>
+        <div
+          style={{ position: "relative", overflow: "hidden", width: "100%" }}
+          onMouseEnter={() => setBrandPaused(true)}
+          onMouseLeave={() => setBrandPaused(false)}
+        >
 
           {/* Slide track — shifts by 50% per step (showing 2 cards on desktop) */}
           <div

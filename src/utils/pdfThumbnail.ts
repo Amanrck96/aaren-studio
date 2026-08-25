@@ -116,15 +116,14 @@ export function getPdfThumbnail(
   if (combined.includes("jewels")) return "/catalogs/thumbnails/catalogue-jewels-2-0-pdf_thumb.jpg";
   if (combined.includes("jurupa")) return "/catalogs/thumbnails/catalogue-jurupa-pdf_thumb.jpg";
   if (combined.includes("clay") || (combined.includes("mirage") && !combined.includes("waltz"))) return "/catalogs/thumbnails/catalogue-clay-pdf_thumb.jpg";
-  if (combined.includes("aquarelle") || (combined.includes("slashform") && !combined.includes("waltz"))) return "/catalogs/thumbnails/aquarelle_thumb.jpg";
+  if (combined.includes("aquarelle")) return "/catalogs/thumbnails/aquarelle_thumb.jpg";
   if (combined.includes("bits")) return "/catalogs/thumbnails/bits_thumb.jpg";
+  if (combined.includes("60grados") || combined.includes("60 degrees") || combined.includes("60 degree")) return "/catalogs/thumbnails/catalogo60grados_thumb.jpg";
+  if (combined.includes("bejmat")) return "/catalogs/thumbnails/catalogobejmat_thumb.jpg";
   if (combined.includes("nouvelle") || combined.includes("nouveau")) return "/catalogs/thumbnails/catalogo-nouvelle_thumb.jpg";
   if (combined.includes("sabil")) return "/catalogs/thumbnails/catalogo-sabil_thumb.jpg";
   if (combined.includes("terre")) return "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
-  if (combined.includes("vestige") && combined.includes("loco")) return "/catalogs/thumbnails/catalogo-vestige_thumb.jpg";
-  if (combined.includes("60grados") || combined.includes("60 grados") || combined.includes("60 degree")) return "/catalogs/thumbnails/catalogo60grados_thumb.jpg";
-  if (combined.includes("bejmat")) return "/catalogs/thumbnails/catalogobejmat_thumb.jpg";
+  if (combined.includes("vestige")) return "/catalogs/thumbnails/catalogo-vestige_thumb.jpg";
 
   return "";
 }
-

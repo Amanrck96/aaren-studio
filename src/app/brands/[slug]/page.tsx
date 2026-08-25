@@ -142,6 +142,8 @@ export default function BrandDetailPage({ params }: Props) {
       description: apiBrand.description || base.description,
       founded: apiBrand.founded !== undefined ? apiBrand.founded : base.founded,
       collections: Array.isArray(apiBrand.collections) && apiBrand.collections.length > 0 ? apiBrand.collections : base.collections,
+      pdfCatalogs: apiBrand.pdfCatalogs || (staticBrand as any)?.pdfCatalogs || [],
+      catalogPdfUrl: apiBrand.catalogPdfUrl || (staticBrand as any)?.catalogPdfUrl || "",
       accentColor: apiBrand.accentColor || undefined,
     };
   }, [staticBrand, apiBrand, slug]);
@@ -149,7 +151,36 @@ export default function BrandDetailPage({ params }: Props) {
   const displayCatalogues = useMemo(() => {
     const norm = (activeBrand.id || slug || "").toLowerCase();
     
-    // Default fallback rich catalogues for brands
+    // 1. Dynamic PDF Catalogs from API / Database / Firebase
+    const dynamicCatalogs = (apiBrand?.pdfCatalogs && apiBrand.pdfCatalogs.length > 0 ? apiBrand.pdfCatalogs : null) ||
+      (activeBrand as any)?.pdfCatalogs ||
+      (staticBrand as any)?.pdfCatalogs;
+
+    if (Array.isArray(dynamicCatalogs) && dynamicCatalogs.length > 0) {
+      return dynamicCatalogs.map((c: any) => ({
+        title: c.title || `${activeBrand.name} Specification Catalog`,
+        url: c.pdfUrl || c.url || c.file || "",
+        coverImage: c.coverImage || "",
+        year: "2026",
+        pages: "Full Edition",
+        category: "PDF Catalog",
+        featured: true,
+      }));
+    }
+
+    if (apiBrand?.catalogPdfUrl || (activeBrand as any)?.catalogPdfUrl) {
+      const singleUrl = apiBrand?.catalogPdfUrl || (activeBrand as any)?.catalogPdfUrl;
+      return [{
+        title: `${activeBrand.name} Specification Catalog`,
+        url: singleUrl,
+        year: "2026",
+        pages: "Full Edition",
+        category: "PDF Catalog",
+        featured: true,
+      }];
+    }
+
+    // 2. Default fallback rich catalogues for brands
     let baseList: any[] = [];
     if (norm === "wow") {
       baseList = [
@@ -175,30 +206,9 @@ export default function BrandDetailPage({ params }: Props) {
       ];
     }
 
-    if (apiBrand?.pdfCatalogs && apiBrand.pdfCatalogs.length > 0) {
-      return apiBrand.pdfCatalogs.map((c: any) => ({
-        title: c.title || `${activeBrand.name} Specification Catalog`,
-        url: c.pdfUrl || c.url,
-        coverImage: c.coverImage,
-        year: "2026",
-        pages: "Full Edition",
-        category: "PDF Catalog",
-        featured: true,
-      }));
-    }
-    if (apiBrand?.catalogPdfUrl) {
-      return [{
-        title: `${activeBrand.name} Specification Catalog`,
-        url: apiBrand.catalogPdfUrl,
-        year: "2026",
-        pages: "Full Edition",
-        category: "PDF Catalog",
-        featured: true,
-      }];
-    }
     if (baseList.length > 0) return baseList;
     return activeBrand.catalogues || [];
-  }, [apiBrand, activeBrand, slug]);
+  }, [apiBrand, activeBrand, staticBrand, slug]);
 
   // Combine hardcoded samples with API products
   const allBrandProducts = useMemo(() => {
@@ -546,18 +556,20 @@ export default function BrandDetailPage({ params }: Props) {
 
           <div className="bd-catalogue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "2rem" }}>
             {displayCatalogues.map((cat: any, i: number) => {
-              const rawPdf = (cat as any).url || cat.file || "";
-              let pdfUrl = rawPdf.startsWith("http") ? rawPdf : (rawPdf.startsWith("/") ? rawPdf : `/catalogs/${rawPdf}`);
+              const rawPdf = (cat as any).pdfUrl || (cat as any).url || cat.file || (cat as any).catalogPdfUrl || "";
+              let pdfUrl = rawPdf.startsWith("http") ? rawPdf : (rawPdf.startsWith("/") ? rawPdf : (rawPdf ? `/catalogs/${rawPdf}` : ""));
               
-              const lowerTitle = (cat.title || "").toLowerCase();
-              if (lowerTitle.includes("60 degree") || lowerTitle.includes("60grados")) pdfUrl = "/catalogs/catalogo60grados.pdf";
-              else if (lowerTitle.includes("bejmat")) pdfUrl = "/catalogs/catalogobejmat.pdf";
-              else if (lowerTitle.includes("nouvelle") || lowerTitle.includes("nouveau")) pdfUrl = "/catalogs/catalogo-nouvelle.pdf";
-              else if (lowerTitle.includes("sabil") || lowerTitle.includes("sahli")) pdfUrl = "/catalogs/catalogo-sabil.pdf";
-              else if (lowerTitle.includes("terre")) pdfUrl = "/catalogs/catalogo-terre.pdf";
-              else if (lowerTitle.includes("vestige")) pdfUrl = "/catalogs/catalogo-vestige.pdf";
-              else if (lowerTitle.includes("aquarelle")) pdfUrl = "/catalogs/aquarelle.pdf";
-              else if (lowerTitle.includes("bits")) pdfUrl = "/catalogs/bits.pdf";
+              if (!rawPdf.startsWith("http")) {
+                const lowerTitle = (cat.title || "").toLowerCase();
+                if (lowerTitle.includes("60 degree") || lowerTitle.includes("60grados")) pdfUrl = "/catalogs/catalogo60grados.pdf";
+                else if (lowerTitle.includes("bejmat")) pdfUrl = "/catalogs/catalogobejmat.pdf";
+                else if (lowerTitle.includes("nouvelle") || lowerTitle.includes("nouveau")) pdfUrl = "/catalogs/catalogo-nouvelle.pdf";
+                else if (lowerTitle.includes("sabil") || lowerTitle.includes("sahli")) pdfUrl = "/catalogs/catalogo-sabil.pdf";
+                else if (lowerTitle.includes("terre")) pdfUrl = "/catalogs/catalogo-terre.pdf";
+                else if (lowerTitle.includes("vestige")) pdfUrl = "/catalogs/catalogo-vestige.pdf";
+                else if (lowerTitle.includes("aquarelle")) pdfUrl = "/catalogs/aquarelle.pdf";
+                else if (lowerTitle.includes("bits")) pdfUrl = "/catalogs/bits.pdf";
+              }
 
               // Exact Page 1 Thumbnail or Custom Cover resolver
               const coverThumbUrl = cat.coverImage || getPdfThumbnail(pdfUrl || rawPdf || cat.title, { title: cat.title, coverImage: cat.coverImage, brandId: slug });

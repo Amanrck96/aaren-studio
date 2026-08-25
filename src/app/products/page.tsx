@@ -204,18 +204,44 @@ function ProductsContent() {
           matchesCategory = normCat.includes("bath") || normCat.includes("basin") || normCat.includes("shower") || normBrandLower.includes("falper") || normBrandLower.includes("fima");
         } else if (normCatQuery.includes("mirror")) {
           matchesCategory = normCat.includes("mirror") || normName.includes("mirror") || normBrandLower.includes("waltz");
+        } else if (normCatQuery.includes("ital")) {
+          matchesCategory =
+            normName.includes("ital") ||
+            normCat.includes("ital") ||
+            Boolean(p.origin && p.origin.toLowerCase().includes("ital")) ||
+            Boolean((p as any).origin && (p as any).origin.toLowerCase().includes("ital")) ||
+            normBrandLower.includes("falper") ||
+            normBrandLower.includes("fima") ||
+            normBrandLower.includes("loco") ||
+            normBrandLower.includes("mirage") ||
+            normBrandLower.includes("inkiostro") ||
+            normBrandLower.includes("florim") ||
+            normBrandLower.includes("gelli") ||
+            normBrandLower.includes("jacuzzi") ||
+            normBrandLower.includes("alex turco") ||
+            normBrandLower.includes("slashform") ||
+            Boolean(p.tags && p.tags.some((t) => t.toLowerCase().includes("ital")));
         } else {
-          matchesCategory = normName.includes(normCatQuery);
+          matchesCategory =
+            normName.includes(normCatQuery) ||
+            Boolean(p.description && p.description.toLowerCase().includes(normCatQuery)) ||
+            Boolean(p.origin && p.origin.toLowerCase().includes(normCatQuery)) ||
+            Boolean((p as any).origin && (p as any).origin.toLowerCase().includes(normCatQuery));
         }
       }
 
       // Query filter
+      const q = debouncedQuery.toLowerCase().trim();
       const matchesQuery =
-        !debouncedQuery ||
-        normName.includes(debouncedQuery.toLowerCase()) ||
-        p.brand.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
-        normCat.includes(debouncedQuery.toLowerCase()) ||
-        (p.description && p.description.toLowerCase().includes(debouncedQuery.toLowerCase()));
+        !q ||
+        normName.includes(q) ||
+        p.brand.toLowerCase().includes(q) ||
+        normCat.includes(q) ||
+        Boolean(p.subcategory && p.subcategory.toLowerCase().includes(q)) ||
+        Boolean(p.origin && p.origin.toLowerCase().includes(q)) ||
+        Boolean((p as any).origin && (p as any).origin.toLowerCase().includes(q)) ||
+        Boolean(p.tags && p.tags.some((t) => t.toLowerCase().includes(q))) ||
+        Boolean(p.description && p.description.toLowerCase().includes(q));
 
       return matchesBrand && matchesCategory && matchesQuery;
     });

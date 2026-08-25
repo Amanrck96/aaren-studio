@@ -197,14 +197,19 @@
       "catalogPdfUrl": "/catalogues/Slashform/Slashform_2025.pdf",
       "category": "Kitchen, Wardrobe, Doors & Windows",
       "collections": [
-        "All"
+        "All",
+        "Kitchen",
+        "Wardrobe",
+        "Door Systems",
+        "Doors",
+        "Windows"
       ],
       "description": "Italian precision kitchen and wardrobes.",
       "founded": "2019",
       "id": "slashform",
       "logoUrl": "/brands/logos/slashform_logo.png",
       "name": "Slashform",
-      "origin": "India",
+      "origin": "Italy",
       "pdfCatalogs": [
         {
           "id": "cat-1786509662646",
