@@ -225,7 +225,7 @@ export default function AboutPage() {
         }
 
         .value-card {
-          background: #FAF9F6;
+          background: rgba(255, 255, 255, 0.65);
           border: 0.1rem solid var(--color-border);
           padding: 3.6rem 3rem;
           display: flex;
@@ -396,7 +396,7 @@ export default function AboutPage() {
         }
 
         .roadmap__card {
-          background: #FAF9F6;
+          background: rgba(255, 255, 255, 0.65);
           border: 0.1rem solid var(--color-border);
           padding: 3rem 3.2rem;
           max-width: 46rem;

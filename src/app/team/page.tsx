@@ -234,11 +234,11 @@ export default function TeamPage() {
       {/* ── Page Header ── */}
       <div className="team-header">
         <div className="team-header__inner">
-          <div className="team-header__meta t-tag">
-            MEET THE TEAM
+          <div className="team-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+            MEET THE TEAM — LEADERSHIP & DEPARTMENTS
           </div>
           <h1 className="team-header__title">OUR TEAM</h1>
-          <p className="team-header__desc t-body">
+          <p className="team-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
             Aaren Intpro is built by a family of dedicated professionals across Leadership, Sales, Operations, Installation, Accounts, and Support Staff, united by a common passion for luxury spatial design.
           </p>
         </div>
@@ -392,29 +392,33 @@ export default function TeamPage() {
       {/* ── Scoped Styling Restoring the Older Layout & Proportions ── */}
       <style>{`
         .team-page {
-          background: #FAF9F6;
-          color: #111;
+          background: var(--color-bg, #E6E2D8);
+          color: #1e1e1e;
           min-height: 100vh;
         }
 
         /* ── Header ── */
         .team-header {
-          padding: 12rem 2.4rem 3.5rem;
-          max-width: 1600px;
-          margin: 0 auto;
+          padding: 6rem 2rem 4rem;
+          border-bottom: 0.1rem solid var(--color-border, rgba(129,102,63,0.18));
         }
 
-        @media (max-width: 768px) {
+        @media (min-width: 768px) {
           .team-header {
-            padding: 9rem 1.6rem 2.5rem;
+            padding: 8rem 2.4rem 5rem;
           }
+        }
+
+        .team-header__inner {
+          max-width: 1600px;
+          margin: 0 auto;
         }
 
         .team-header__meta {
           color: #81663F;
           font-weight: 700;
-          letter-spacing: 0.14em;
-          margin-bottom: 1.2rem;
+          letter-spacing: 0.12em;
+          margin-bottom: 1.6rem;
           font-size: 1.3rem;
           text-transform: uppercase;
         }
@@ -438,14 +442,14 @@ export default function TeamPage() {
 
         /* ── Sub Categories / Departments Nav Bar ── */
         .team-category-nav-wrapper {
-          padding: 1.5rem 2.4rem 2rem;
+          padding: 2rem 2.4rem;
           max-width: 1600px;
           margin: 0 auto;
         }
 
         @media (max-width: 768px) {
           .team-category-nav-wrapper {
-            padding: 1rem 1.6rem 1.5rem;
+            padding: 1.5rem 1.6rem;
           }
         }
 
@@ -486,7 +490,7 @@ export default function TeamPage() {
           padding: 0.75rem 1.6rem;
           border-radius: 9999px;
           border: 1px solid rgba(129,102,63,0.25);
-          background: #FAF9F6;
+          background: rgba(255, 255, 255, 0.65);
           color: #222;
           font-size: 1.25rem;
           font-weight: 700;
@@ -500,6 +504,7 @@ export default function TeamPage() {
         .team-cat-btn:hover {
           border-color: #81663F;
           color: #81663F;
+          background: #ffffff;
           transform: translateY(-1px);
         }
 
@@ -751,13 +756,13 @@ export default function TeamPage() {
           justify-content: space-between;
           gap: 1.6rem;
           padding: 1.6rem 2.4rem;
-          background: #FAF9F6;
+          background: rgba(255, 255, 255, 0.85);
           border-top: 1px solid rgba(129,102,63,0.12);
           transition: background 0.25s ease;
         }
 
         .team-card:hover .team-card__caption {
-          background: #F2EFE8;
+          background: #ffffff;
         }
 
         .team-card__caption-left {
@@ -821,7 +826,7 @@ export default function TeamPage() {
         }
 
         .team-modal-content {
-          background-color: #FAF9F6;
+          background-color: #EDE8DF;
           border: 1px solid rgba(129, 102, 63, 0.3);
           border-radius: 8px;
           max-width: 600px;
@@ -961,7 +966,7 @@ export default function TeamPage() {
         /* ── Team Join Section ── */
         .team-join-section {
           padding: 6rem 2.4rem;
-          background: #FAF9F6;
+          background: var(--color-bg, #E6E2D8);
           border-top: 1px solid rgba(129,102,63,0.18);
           text-align: center;
         }

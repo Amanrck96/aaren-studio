@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import AdminNav from "@/components/AdminNav";
 import { TeamMemberItem } from "@/lib/types";
+import { uploadFileWithCompression } from "@/lib/uploadHelper";
 
 export const TEAM_GROUPS = [
   { id: "ALL", label: "ALL MEMBERS" },
@@ -490,16 +491,14 @@ export default function AdminTeamPage() {
                       const file = e.target.files?.[0];
                       if (!file) return;
                       setIsUploading(true);
-                      const formData = new FormData();
-                      formData.append("file", file);
-                      formData.append("folder", "Team");
                       try {
-                        const res = await fetch("/api/upload", { method: "POST", body: formData });
-                        const json = await res.json();
-                        if (json.success) {
-                          setEditing((prev) => prev ? { ...prev, photoUrl: json.dataUrl || json.url } : null);
+                        const result = await uploadFileWithCompression(file, "Team");
+                        if (result.success && (result.url || result.dataUrl)) {
+                          setEditing((prev) => prev ? { ...prev, photoUrl: result.dataUrl || result.url } : null);
                           alert("Photo uploaded successfully!");
-                        } else alert("Upload error: " + json.error);
+                        } else {
+                          alert("Upload error: " + (result.error || "Upload failed"));
+                        }
                       } catch (err: any) {
                         alert("Upload failed: " + err.message);
                       } finally {
