@@ -118,10 +118,18 @@ export async function extractFirstPageWithDetails(
         currentStep = "FETCH_PROXY";
         console.log(`[PDF Cover Extractor] Falling back to server-side PDF proxy for: ${trimmedUrl}`);
         const proxyUrl = `/api/proxy-pdf?url=${encodeURIComponent(trimmedUrl)}`;
-        const proxyRes = await fetch(proxyUrl);
-        if (!proxyRes.ok) {
-          const errText = await proxyRes.text().catch(() => "");
-          throw new Error(`Failed to load PDF via proxy (HTTP ${proxyRes.status}): ${errText || proxyRes.statusText}`);
+        let proxyRes = await fetch(proxyUrl).catch(() => null);
+        if (!proxyRes || !proxyRes.ok) {
+          // Retry via POST body to avoid URL length or encoding issues
+          proxyRes = await fetch(`/api/proxy-pdf`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: trimmedUrl }),
+          }).catch(() => null);
+        }
+        if (!proxyRes || !proxyRes.ok) {
+          const errText = proxyRes ? await proxyRes.text().catch(() => "") : "Network error";
+          throw new Error(`Failed to load PDF via proxy (HTTP ${proxyRes?.status || 500}): ${errText || proxyRes?.statusText || "Error"}`);
         }
         arrayBuffer = await proxyRes.arrayBuffer();
         console.log(`[PDF Cover Extractor] Proxy fetch successful (${(arrayBuffer.byteLength / 1024).toFixed(1)} KB)`);
