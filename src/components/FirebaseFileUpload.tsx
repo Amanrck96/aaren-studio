@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { uploadFileToFirebase } from "@/lib/firebaseStorage";
+import { uploadFileWithCompression } from "@/lib/uploadHelper";
 import { FileText, FileSpreadsheet, Image as ImageIcon, UploadCloud, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
 interface FirebaseFileUploadProps {
@@ -29,14 +29,19 @@ export default function FirebaseFileUpload({
     setError(null);
 
     try {
-      const res = await uploadFileToFirebase(file, folder);
-      setUploadedFile({ url: res.url, fileName: res.fileName });
-      if (onUploadSuccess) {
-        onUploadSuccess(res);
+      const res = await uploadFileWithCompression(file, folder);
+      if (res.success && (res.url || res.dataUrl)) {
+        const finalUrl = res.url || res.dataUrl || "";
+        setUploadedFile({ url: finalUrl, fileName: file.name });
+        if (onUploadSuccess) {
+          onUploadSuccess({ url: finalUrl, fullPath: finalUrl, fileName: file.name });
+        }
+      } else {
+        throw new Error(res.error || "Failed to upload file");
       }
     } catch (err: any) {
       console.error("Firebase Upload Error:", err);
-      setError(err.message || "Failed to upload file to Firebase Storage");
+      setError(err.message || "Failed to upload file to storage");
     } finally {
       setUploading(false);
     }

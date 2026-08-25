@@ -41,9 +41,9 @@ export async function uploadFileWithCompression(
       console.warn("Direct Firebase Storage client SDK upload notice:", fbErr);
     }
 
-    // 2. Only attempt /api/upload fallback if the file is small (< 4MB) to prevent Vercel 413
-    if (fileToUpload.size < 4 * 1024 * 1024) {
-      console.warn("Attempting fallback api endpoint for small file...");
+    // 2. Fallback to Server Upload endpoint (/api/upload) to bypass client-side Firebase Storage Rules/Auth limitations
+    console.warn("Attempting server upload fallback (/api/upload)...");
+    try {
       const formData = new FormData();
       formData.append("file", fileToUpload);
       formData.append("folder", folder);
@@ -62,7 +62,12 @@ export async function uploadFileWithCompression(
             return { success: true, url: json.url || json.dataUrl, dataUrl: json.dataUrl || json.url };
           }
         } catch {}
+      } else {
+        const errText = await fallbackRes.text().catch(() => "");
+        console.warn("Server fallback upload failed:", fallbackRes.status, errText);
       }
+    } catch (apiErr: any) {
+      console.warn("Server fallback upload exception:", apiErr);
     }
 
     return {
