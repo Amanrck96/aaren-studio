@@ -53,9 +53,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={jost.variable} suppressHydrationWarning>
-      <head>
+      <head suppressHydrationWarning>
         <style
           id="aaren-dynamic-theme"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               :root {
