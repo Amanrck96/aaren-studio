@@ -997,6 +997,41 @@ export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: strin
   // 2. Save directly to Firebase
   await syncToFirebaseCloudStore("brands", current);
 
+  // 2b. Sync brand PDF catalogs to global catalog store if present
+  if (Array.isArray(full.pdfCatalogs) && full.pdfCatalogs.length > 0) {
+    try {
+      let allCats = await getCatalogsStore();
+      full.pdfCatalogs.forEach((pc: any) => {
+        if (pc && pc.pdfUrl) {
+          const catId = pc.id || `cat-${id}-${Date.now()}`;
+          const existingIdx = allCats.findIndex((c: any) => c.id === catId || c.pdfUrl === pc.pdfUrl);
+          const catObj: PdfCatalogItem = {
+            id: catId,
+            brand: full.name,
+            category: full.category || "General",
+            description: full.description || "",
+            title: pc.title || `${full.name} Catalog`,
+            fileName: pc.fileName || `${full.name}_Catalog.pdf`,
+            fileUrl: pc.pdfUrl,
+            pdfUrl: pc.pdfUrl,
+            thumbnailUrl: pc.coverImage || pc.thumbnailUrl || full.bannerUrl || "/brands/brand_1_1.jpg",
+            fileSize: pc.fileSize || "PDF Document",
+            pageCount: pc.pageCount || 1,
+            downloadCount: pc.downloadCount || 0,
+            isLocked: false,
+            createdAt: pc.createdAt || new Date().toISOString(),
+          };
+          if (existingIdx >= 0) allCats[existingIdx] = { ...allCats[existingIdx], ...catObj };
+          else allCats.push(catObj);
+        }
+      });
+      await Promise.allSettled([
+        syncToFirebaseCloudStore("pdfCatalogs", allCats),
+        syncToFirebaseCloudStore("catalogs", allCats),
+      ]);
+    } catch (_) {}
+  }
+
   // 3. Local cache
   const json = readJsonStore();
   json.brands = current;
@@ -2280,10 +2315,15 @@ export async function deletePageStore(id: string) {
 // PDF CATALOGS STORE
 export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("pdfCatalogs");
-  if (fbData && Array.isArray(fbData)) return fbData;
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) return fbData;
+  const fbAlt = await fetchFromFirebaseCloudStore("catalogs");
+  if (fbAlt && Array.isArray(fbAlt) && fbAlt.length > 0) return fbAlt;
   const json = readJsonStore();
   if (json.pdfCatalogs && Array.isArray(json.pdfCatalogs) && json.pdfCatalogs.length > 0) {
     return json.pdfCatalogs;
+  }
+  if (json.catalogs && Array.isArray(json.catalogs) && json.catalogs.length > 0) {
+    return json.catalogs;
   }
 
   // Fallback read from data/catalogs.json if available
@@ -2293,6 +2333,7 @@ export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
       const data = JSON.parse(fs.readFileSync(catalogsPath, "utf-8"));
       json.pdfCatalogs = data;
       syncToFirebaseCloudStore("pdfCatalogs", data);
+      syncToFirebaseCloudStore("catalogs", data);
       return data;
     }
   } catch (e) {}
@@ -2301,17 +2342,20 @@ export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
 }
 
 export async function saveCatalogStore(catalog: PdfCatalogItem): Promise<PdfCatalogItem> {
-  let current: PdfCatalogItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("pdfCatalogs");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.pdfCatalogs || []; }
+  let current: PdfCatalogItem[] = await getCatalogsStore();
 
   const idx = current.findIndex((c: any) => c.id === catalog.id);
   if (idx >= 0) current[idx] = catalog;
   else current.push(catalog);
 
-  await syncToFirebaseCloudStore("pdfCatalogs", current);
-  const json = readJsonStore(); json.pdfCatalogs = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  await Promise.allSettled([
+    syncToFirebaseCloudStore("pdfCatalogs", current),
+    syncToFirebaseCloudStore("catalogs", current),
+  ]);
+  const json = readJsonStore();
+  json.pdfCatalogs = current;
+  json.catalogs = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
   return catalog;
 }
 

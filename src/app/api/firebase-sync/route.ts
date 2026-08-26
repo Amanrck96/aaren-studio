@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import {
   getBrandsStore,
   getCategoriesStore,
   getAllProductsStore,
   getAllProjectsStore,
+  getAllCollectionsStore,
   getTeamStore,
   getTeamJoinBannerStore,
   getSiteSettingsStore,
@@ -46,6 +48,7 @@ export async function POST() {
     const [
       brands,
       categories,
+      collections,
       products,
       projects,
       team,
@@ -60,6 +63,7 @@ export async function POST() {
     ] = await Promise.all([
       getBrandsStore(),
       getCategoriesStore(),
+      getAllCollectionsStore(),
       getAllProductsStore(),
       getAllProjectsStore(),
       getTeamStore(),
@@ -77,6 +81,7 @@ export async function POST() {
     await Promise.all([
       pushToFirebase("brands", brands),
       pushToFirebase("categories", categories),
+      pushToFirebase("collections", collections),
       pushToFirebase("products", products),
       pushToFirebase("projects", projects),
       pushToFirebase("team", team),
@@ -85,10 +90,19 @@ export async function POST() {
       pushToFirebase("catalogSettings", catalogSettings),
       pushToFirebase("roadmap", roadmap),
       pushToFirebase("catalogs", catalogs),
+      pushToFirebase("pdfCatalogs", catalogs),
       pushToFirebase("blogs", blogs),
       pushToFirebase("services", services),
       pushToFirebase("testimonials", testimonials),
     ]);
+
+    try {
+      revalidatePath("/", "layout");
+      revalidatePath("/brands");
+      revalidatePath("/brands/[slug]", "page");
+      revalidatePath("/products");
+      revalidatePath("/admin/dashboard");
+    } catch (_) {}
 
     return NextResponse.json({
       success: true,
@@ -96,6 +110,7 @@ export async function POST() {
       synced: {
         brands: brands.length,
         categories: categories.length,
+        collections: collections.length,
         products: products.length,
         projects: projects.length,
         team: team.length,

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCategoriesStore, saveCategoryStore, deleteCategoryStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -23,12 +24,19 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     if (!body.name || !body.coverImage) {
-      return NextResponse.json({ success: false, error: "Name and Cover Image are required" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Name and Cover Image are required" }, { status: 400, headers: NO_CACHE_HEADERS });
     }
     const saved = await saveCategoryStore(body);
-    return NextResponse.json({ success: true, data: saved });
+
+    try {
+      revalidatePath("/");
+      revalidatePath("/categories");
+      revalidatePath("/admin/categories");
+    } catch (_) {}
+
+    return NextResponse.json({ success: true, data: saved }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -36,11 +44,19 @@ export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
+    if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400, headers: NO_CACHE_HEADERS });
 
     await deleteCategoryStore(id);
-    return NextResponse.json({ success: true });
+
+    try {
+      revalidatePath("/");
+      revalidatePath("/categories");
+      revalidatePath("/admin/categories");
+    } catch (_) {}
+
+    return NextResponse.json({ success: true }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
+
