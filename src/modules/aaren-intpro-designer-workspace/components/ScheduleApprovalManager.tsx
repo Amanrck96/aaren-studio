@@ -196,7 +196,7 @@ export default function ScheduleApprovalManager({
             const badge = getStatusBadge(item.status);
             const BadgeIcon = badge.icon;
             const isProcessing = processingId === item.id;
-            const img = item.imageUrl || "/brands/brand_1_1.png";
+            const img = item.imageUrl || "/brands/brand_1_1.jpg";
 
             return (
               <div
@@ -417,7 +417,7 @@ export default function ScheduleApprovalManager({
 
             {/* Spec Image */}
             <div style={{ position: "relative", width: "100%", aspectRatio: "1920 / 1080", borderRadius: "0.8rem", overflow: "hidden", background: "#d8d4c8" }}>
-              <Image src={selectedItemForModal.imageUrl || "/brands/brand_1_1.png"} alt={selectedItemForModal.name} fill style={{ objectFit: "cover" }} unoptimized />
+              <Image src={selectedItemForModal.imageUrl || "/brands/brand_1_1.jpg"} alt={selectedItemForModal.name} fill style={{ objectFit: "cover" }} unoptimized />
             </div>
 
             {/* Spec Details & Dimensions */}

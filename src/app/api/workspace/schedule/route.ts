@@ -191,7 +191,7 @@ export async function POST(req: NextRequest) {
           price: price ? parseFloat(price) : 0,
           specs: specs || "",
           dimensions: dimensions || "",
-          imageUrl: imageUrl || "/brands/brand_1_1.png",
+          imageUrl: imageUrl || "/brands/brand_1_1.jpg",
           status: "PENDING",
         },
         include: {

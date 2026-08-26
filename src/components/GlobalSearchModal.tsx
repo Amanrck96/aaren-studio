@@ -225,7 +225,7 @@ export default function GlobalSearchModal({ isOpen, onClose }: GlobalSearchModal
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                 {results.map((p) => {
-                  const img = p.image || p.imageUrl || "/brands/brand_1_1.png";
+                  const img = p.image || p.imageUrl || "/brands/brand_1_1.jpg";
                   return (
                     <div
                       key={p.id}

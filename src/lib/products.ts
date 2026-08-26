@@ -34,7 +34,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "PW",
     num: "01",
     name: "Plywood",
-    hero: "/categories/cat_1.png",
+    hero: "/categories/cat_1.jpg",
     description:
       "Precision-engineered plywood and blockboard solutions for structural, furniture, and interior applications. Each sheet is selected for consistency of core, face veneer clarity, and long-term dimensional stability.",
     subcategories: ["All", "Plywood", "Blockboard"],
@@ -50,7 +50,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "LM",
     num: "02",
     name: "Laminate",
-    hero: "/categories/cat_2.png",
+    hero: "/categories/cat_2.jpg",
     description:
       "A curated selection of high-pressure laminates, veneers, and decorative surfaces from the world's leading manufacturers. From the nano-tech perfection of FENIX to the organic warmth of ALPI veneer — every finish tells a material story.",
     subcategories: ["All", "Veneers", "Laminates", "Decoratives"],
@@ -72,7 +72,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "FC",
     num: "03",
     name: "Facade",
-    hero: "/categories/cat_3.png",
+    hero: "/categories/cat_3.jpg",
     description:
       "Exterior facade systems that balance architectural ambition with material endurance. WPC composites, thermally modified timber, and engineered cladding profiles designed to perform beautifully through decades of weather.",
     subcategories: ["All", "Timber", "WPC", "Composite"],
@@ -91,7 +91,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "WF",
     num: "04",
     name: "Wooden Flooring",
-    hero: "/categories/cat_4.png",
+    hero: "/categories/cat_4.jpg",
     description:
       "From solid hardwood to engineered planks and stone-polymer cores — our flooring collection spans the full spectrum of wood aesthetics and technical performance. Every floor is selected for its visual authenticity and long-term stability.",
     subcategories: ["All", "Solid", "Engineered", "SPC", "Laminated", "Designer"],
@@ -112,7 +112,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "SS",
     num: "05",
     name: "Screens",
-    hero: "/categories/cat_5.png",
+    hero: "/categories/cat_5.jpg",
     description:
       "Architectural screen solutions that redefine the boundary between inside and outside, private and public. Zipline tensioned fabric systems create dynamic, lightweight enclosures that breathe with the breeze.",
     subcategories: ["All", "Zipline", "Fabric", "Tensile"],
@@ -129,7 +129,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "DS",
     num: "06",
     name: "Door System",
-    hero: "/categories/cat_6.png",
+    hero: "/categories/cat_6.jpg",
     description:
       "Integrated door systems that merge structure with aesthetics. Whether aluminium profiles for commercial scale or Slashform's precision-engineered residential pivots, every system is designed to disappear into the wall.",
     subcategories: ["All", "Aluminium", "Timber"],
@@ -147,7 +147,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "WD",
     num: "07",
     name: "Doors",
-    hero: "/categories/cat_7.png",
+    hero: "/categories/cat_7.jpg",
     description:
       "Entry statements and interior partitions — our door collection spans hand-crafted timber, flush-lacquered panels, and veneered units that complement the broader interior narrative.",
     subcategories: ["All", "Wooden", "Laminated"],
@@ -163,7 +163,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "WW",
     num: "08",
     name: "Windows",
-    hero: "/categories/cat_8.png",
+    hero: "/categories/cat_8.jpg",
     description:
       "Window systems engineered for India's climate — combining thermal efficiency, acoustic performance, and architectural elegance. Timber and aluminium profiles in heritage and contemporary profiles.",
     subcategories: ["All", "Wooden", "Aluminium"],
@@ -179,7 +179,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "KK",
     num: "09",
     name: "Kitchen",
-    hero: "/categories/cat_9.png",
+    hero: "/categories/cat_9.jpg",
     description:
       "Kitchen systems where culinary function meets spatial precision. Slashform's K+W programme brings Italian engineering to Indian homes — with integrated appliance bays, flush-pull handles, and surfaces selected to withstand serious cooking.",
     subcategories: ["All", "K+W", "Island", "Handles"],
@@ -197,7 +197,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "WW",
     num: "10",
     name: "Wardrobe",
-    hero: "/categories/cat_10.png",
+    hero: "/categories/cat_10.jpg",
     description:
       "Walk-in wardrobes and integrated closet systems conceived as extensions of the bedroom architecture. Every component — rail, shelf, mirror, and lighting — is resolved into a unified spatial experience.",
     subcategories: ["All", "Walk-In", "Sliding", "Swing"],
@@ -215,7 +215,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "FF",
     num: "11",
     name: "Furniture",
-    hero: "/categories/cat_11.png",
+    hero: "/categories/cat_11.jpg",
     description:
       "Furniture as architecture — pieces that hold space with the same authority as the walls they inhabit. From Madheke's handcrafted sofas to Taamaa's considered lighting and Loco's bespoke millwork, each piece is a deliberate material statement.",
     subcategories: ["All", "Sofas", "Tables", "Lighting", "Storage", "Millwork"],
@@ -234,7 +234,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "TL",
     num: "12",
     name: "Tiles",
-    hero: "/categories/cat_12.png",
+    hero: "/categories/cat_12.jpg",
     description:
       "Porcelain, ceramic, and natural stone tiles curated for floors, walls, and facades. Mirage's digital print mastery recreates the depth of marble, travertine, and mineral surfaces with the technical precision of Italian porcelain.",
     subcategories: ["All", "Floorings & Walls", "Decorative", "20mm Outdoor", "Terrazzo & Terracotta", "Swimming Pool", "Façade"],
@@ -256,7 +256,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "BF",
     num: "13",
     name: "Bathroom Fittings",
-    hero: "/categories/cat_13.png",
+    hero: "/categories/cat_13.jpg",
     description:
       "A curated collection of bathroom furniture, basins, bathtubs, and accessories from Italy's finest. Falper, FIMA, and MILDUE represent the pinnacle of bath environment design — where function dissolves into ritual.",
     subcategories: ["All", "Vanities", "Bathtubs", "Shower", "Accessories"],
@@ -276,7 +276,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "SW",
     num: "14",
     name: "Sanitary Ware",
-    hero: "/categories/cat_14.png",
+    hero: "/categories/cat_14.jpg",
     description:
       "Sanitary ware elevated to the status of sculptural objects. IWW, Flaminia, and Antonio Lupi approach the basin, WC, and bidet as opportunities for form — each piece resolved with the rigour of contemporary design thinking.",
     subcategories: ["All", "Basins", "WC", "Bidet", "Baths"],
@@ -293,7 +293,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     code: "MR",
     num: "15",
     name: "Mirrors",
-    hero: "/categories/cat_15.png",
+    hero: "/categories/cat_15.jpg",
     description:
       "Mirrors that expand space and define light. From GELLI's precision accessories to Waltz's architectural glass mirrors, each piece is considered as a spatial element — not a mere reflective surface.",
     subcategories: ["All", "Framed", "Frameless", "LED", "Accessories"],

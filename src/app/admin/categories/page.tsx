@@ -100,7 +100,7 @@ export default function AdminCategoriesPage() {
             <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Add, edit, or delete categories displayed on the website.</p>
           </div>
           <button
-            onClick={() => setEditingCat({ name: "", coverImage: "/categories/cat_1.png", description: "", shortCode: "DS 06", sequenceNumber: categories.length + 1 })}
+            onClick={() => setEditingCat({ name: "", coverImage: "/categories/cat_1.jpg", description: "", shortCode: "DS 06", sequenceNumber: categories.length + 1 })}
             style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
           >
             + Add New Category

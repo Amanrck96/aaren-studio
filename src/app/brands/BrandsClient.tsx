@@ -78,7 +78,7 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
                   className="brand-card__img"
                   style={{ objectFit: "cover" }}
                   onError={(e: any) => {
-                    e.currentTarget.src = "/brands/brand_1_1.png";
+                    e.currentTarget.src = "/brands/brand_1_1.jpg";
                   }}
                 />
               </div>

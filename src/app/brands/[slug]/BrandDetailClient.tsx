@@ -118,7 +118,7 @@ export default function BrandDetailClient({
       name: apiBrand?.name || staticBrand?.name || slug.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
       code: apiBrand?.shortCode || staticBrand?.code || "SF",
       num: apiBrand?.shortCode || staticBrand?.num || "01",
-      hero: apiBrand?.bannerUrl || staticBrand?.hero || "/brands/brand_1_1.png",
+      hero: apiBrand?.bannerUrl || staticBrand?.hero || "/brands/brand_1_1.jpg",
       logo: resolvedLogo,
       category: apiBrand?.category || staticBrand?.category || "Architectural Products",
       origin: apiBrand?.origin || staticBrand?.origin || "International",
@@ -288,7 +288,7 @@ export default function BrandDetailClient({
       <div className="bd-hero">
         <div className="bd-hero__img-wrap">
           <Image
-            src={activeBrand.hero || "/brands/brand_1_1.png"}
+            src={activeBrand.hero || "/brands/brand_1_1.jpg"}
             alt={activeBrand.name}
             fill
             priority

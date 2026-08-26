@@ -35,7 +35,7 @@ export default async function BrandsPage() {
       name: b.name,
       code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
       num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : (b.shortCode && b.shortCode.split(" ")[1] ? b.shortCode.split(" ")[1] : "01"),
-      hero: b.bannerUrl || b.hero || b.imageUrl || b.image || "/brands/brand_1_1.png",
+      hero: b.bannerUrl || b.hero || b.imageUrl || b.image || "/brands/brand_1_1.jpg",
       logo: resolvedLogo,
       category: b.category || b.tagline || b.description || "Architectural Brand",
       origin: b.origin || "Global",

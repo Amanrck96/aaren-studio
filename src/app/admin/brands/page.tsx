@@ -342,7 +342,7 @@ export default function AdminBrandsPage() {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
             {brands.map((b) => {
-              const bannerImg = b.bannerUrl || (b as any).hero || (b as any).imageUrl || (b as any).image || (b as any).coverImage || "/brands/brand_1_1.png";
+              const bannerImg = b.bannerUrl || (b as any).hero || (b as any).imageUrl || (b as any).image || (b as any).coverImage || "/brands/brand_1_1.jpg";
               const logoImg = b.logoUrl || (b as any).logo || (b as any).logoImage || "/brands/brand_1_2.png";
               return (
                 <div key={b.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "12px", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
@@ -354,7 +354,7 @@ export default function AdminBrandsPage() {
                       unoptimized
                       style={{ objectFit: "cover" }}
                       onError={(e: any) => {
-                        e.currentTarget.src = "/brands/brand_1_1.png";
+                        e.currentTarget.src = "/brands/brand_1_1.jpg";
                       }}
                     />
                     <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />

@@ -199,7 +199,7 @@ export default function CollectionsAdminPage() {
       category: "Architectural Products",
       subcategory: colObj?.name || quickProdCollection,
       description: `Product in ${colObj?.name || quickProdCollection} collection`,
-      imageUrl: "/brands/brand_1_1.png",
+      imageUrl: "/brands/brand_1_1.jpg",
     };
 
     try {
