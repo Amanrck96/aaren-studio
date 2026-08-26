@@ -1,4 +1,4 @@
-import { getBrandsStore, getAllProductsStore, getAllCollectionsStore } from "@/lib/store";
+import { getBrandsStore, getAllProductsStore, getAllCollectionsStore, getAllFAQsStore } from "@/lib/store";
 import BrandDetailClient from "./BrandDetailClient";
 
 export const dynamic = "force-dynamic";
@@ -11,10 +11,11 @@ export default async function BrandDetailPage({ params }: Props) {
   const cleanSlug = decodeURIComponent(slug).toLowerCase().trim();
 
   // Pre-fetch all necessary dynamic data on the server
-  const [brands, products, collections] = await Promise.all([
+  const [brands, products, collections, allFaqs] = await Promise.all([
     getBrandsStore().catch(() => []),
     getAllProductsStore().catch(() => []),
     getAllCollectionsStore().catch(() => []),
+    getAllFAQsStore().catch(() => []),
   ]);
 
   const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -64,12 +65,31 @@ export default async function BrandDetailPage({ params }: Props) {
     );
   });
 
+  // 4. Resolve matching brandwise FAQs
+  const matchingFaqs = (allFaqs || []).filter((f: any) => {
+    const fBrand = norm(f.brand || "");
+    const fBrandId = norm(f.brandId || "");
+    const fCat = norm(f.category || "");
+    return (
+      fBrand === slugNorm ||
+      fBrandId === slugNorm ||
+      fCat === slugNorm ||
+      fBrand === brandNameNorm ||
+      fBrandId === brandNameNorm ||
+      fCat === brandNameNorm ||
+      (slugNorm.length > 3 && (fBrand.includes(slugNorm) || fCat.includes(slugNorm))) ||
+      (brandNameNorm.length > 3 && (fBrand.includes(brandNameNorm) || fCat.includes(brandNameNorm)))
+    );
+  });
+
   return (
     <BrandDetailClient
       slug={cleanSlug}
       initialBrand={foundBrand}
       initialProducts={matchingProducts}
       initialCollections={matchingCollections}
+      initialFaqs={matchingFaqs}
     />
   );
 }
+

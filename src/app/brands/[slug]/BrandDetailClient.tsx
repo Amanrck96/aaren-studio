@@ -31,6 +31,7 @@ interface BrandDetailClientProps {
   initialBrand: any;
   initialProducts: any[];
   initialCollections: any[];
+  initialFaqs?: any[];
 }
 
 export default function BrandDetailClient({
@@ -38,6 +39,7 @@ export default function BrandDetailClient({
   initialBrand,
   initialProducts,
   initialCollections,
+  initialFaqs,
 }: BrandDetailClientProps) {
   const staticBrand = getBrandById(slug);
 
@@ -47,6 +49,8 @@ export default function BrandDetailClient({
   const [apiProducts, setApiProducts] = useState<any[]>(initialProducts || []);
   const [apiBrand, setApiBrand] = useState<any>(initialBrand || null);
   const [dbCollections, setDbCollections] = useState<any[]>(initialCollections || []);
+  const [brandFaqs] = useState<any[]>(initialFaqs || []);
+  const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
 
@@ -713,6 +717,71 @@ export default function BrandDetailClient({
                       View Catalog ↗
                     </button>
                   </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── Brand Specific FAQs ── */}
+      {brandFaqs && brandFaqs.length > 0 && (
+        <div className="bd-faq-section" style={{ maxWidth: "1280px", margin: "5rem auto 3rem", padding: "0 2rem" }}>
+          <div style={{ marginBottom: "2.4rem", textAlign: "left" }}>
+            <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#81663F", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+              KNOWLEDGE BASE & SPECIFICATIONS
+            </span>
+            <h2 style={{ fontSize: "2.2rem", fontWeight: 800, color: "#0f172a", marginTop: "0.5rem", letterSpacing: "-0.02em" }}>
+              Frequently Asked Questions — {activeBrand.name}
+            </h2>
+            <p style={{ color: "#64748b", fontSize: "1.05rem", marginTop: "0.5rem", maxWidth: "48rem" }}>
+              Official answers regarding {activeBrand.name} architectural materials, product lines, custom finishes, maintenance, and project availability.
+            </p>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            {brandFaqs.map((faq: any, idx: number) => {
+              const isOpen = openFaqIdx === idx;
+              return (
+                <div
+                  key={faq.id || idx}
+                  style={{
+                    border: "1px solid rgba(0,0,0,0.08)",
+                    borderRadius: "10px",
+                    background: "#ffffff",
+                    overflow: "hidden",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
+                    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaqIdx(isOpen ? null : idx)}
+                    style={{
+                      width: "100%",
+                      padding: "1.3rem 1.6rem",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      background: "transparent",
+                      border: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                      gap: "1.2rem",
+                    }}
+                  >
+                    <span style={{ fontSize: "1.08rem", fontWeight: 700, color: "#1e293b", lineHeight: 1.4 }}>
+                      {faq.question}
+                    </span>
+                    <span style={{ fontSize: "1.3rem", fontWeight: 700, color: "#81663F", flexShrink: 0 }}>
+                      {isOpen ? "−" : "+"}
+                    </span>
+                  </button>
+                  {isOpen && (
+                    <div style={{ padding: "0 1.6rem 1.5rem", color: "#475569", fontSize: "0.98rem", lineHeight: 1.7, borderTop: "1px solid rgba(0,0,0,0.04)", paddingTop: "1rem", whiteSpace: "pre-line" }}>
+                      {faq.answer}
+                    </div>
+                  )}
                 </div>
               );
             })}
