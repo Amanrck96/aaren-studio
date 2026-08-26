@@ -55,64 +55,57 @@ export default function BrandDetailClient({
   useEffect(() => {
     setMounted(true);
 
-    fetch(`/api/collections?includeCounts=true&t=${Date.now()}`)
-      .then((res) => res.json())
-      .then((json) => {
-        if (json && json.success && Array.isArray(json.data)) {
-          const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-          const targetBrand = norm(slug);
-          const brandNameNorm = norm(brandNameForQuery);
-          const matching = json.data.filter((c: any) => {
-            const cBrand = norm(c.brandId || "");
-            const cBrandName = norm(c.brandName || "");
-            return (
-              cBrand === targetBrand ||
-              cBrandName === targetBrand ||
-              cBrand === brandNameNorm ||
-              cBrandName === brandNameNorm ||
-              targetBrand.includes(cBrand) ||
-              brandNameNorm.includes(cBrand)
-            );
-          });
-          if (matching.length > 0) {
-            setDbCollections(matching);
+    // Only fallback-fetch if server did not provide initial data
+    if (!initialBrand) {
+      fetch(`/api/brands?id=${encodeURIComponent(slug)}&t=${Date.now()}`)
+        .then((res) => res.json())
+        .then((json) => {
+          if (json && json.success && json.data) {
+            setApiBrand(json.data);
           }
-        }
-      })
-      .catch(() => {});
+        })
+        .catch(() => {});
+    }
 
-    fetch(`/api/products?brand=${encodeURIComponent(brandNameForQuery)}&t=${Date.now()}`)
-      .then((res) => res.json())
-      .then((json) => {
-        if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setApiProducts(json.data);
-        }
-      })
-      .catch((e) => console.error("Brand products API error:", e));
+    if (!initialProducts || initialProducts.length === 0) {
+      fetch(`/api/products?brand=${encodeURIComponent(brandNameForQuery)}&t=${Date.now()}`)
+        .then((res) => res.json())
+        .then((json) => {
+          if (json && json.success && Array.isArray(json.data) && json.data.length > 0) {
+            setApiProducts(json.data);
+          }
+        })
+        .catch((e) => console.error("Brand products API error:", e));
+    }
 
-    fetch(`/api/brands?id=${encodeURIComponent(slug)}&t=${Date.now()}`)
-      .then((res) => res.json())
-      .then((json) => {
-        if (json && json.success && json.data) {
-          setApiBrand(json.data);
-        } else {
-          // Fallback fetch all brands
-          fetch("/api/brands")
-            .then((r) => r.json())
-            .then((allJson) => {
-              if (allJson && allJson.success && Array.isArray(allJson.data)) {
-                const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-                const found = allJson.data.find(
-                  (b: any) => b.id === slug || norm(b.id) === norm(slug) || norm(b.name) === norm(slug)
-                );
-                if (found) setApiBrand(found);
-              }
-            })
-            .catch(() => {});
-        }
-      })
-      .catch(() => {});
-  }, [slug, brandNameForQuery]);
+    if (!initialCollections || initialCollections.length === 0) {
+      fetch(`/api/collections?includeCounts=true&t=${Date.now()}`)
+        .then((res) => res.json())
+        .then((json) => {
+          if (json && json.success && Array.isArray(json.data)) {
+            const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+            const targetBrand = norm(slug);
+            const brandNameNorm = norm(brandNameForQuery);
+            const matching = json.data.filter((c: any) => {
+              const cBrand = norm(c.brandId || "");
+              const cBrandName = norm(c.brandName || "");
+              return (
+                cBrand === targetBrand ||
+                cBrandName === targetBrand ||
+                cBrand === brandNameNorm ||
+                cBrandName === brandNameNorm ||
+                targetBrand.includes(cBrand) ||
+                brandNameNorm.includes(cBrand)
+              );
+            });
+            if (matching.length > 0) {
+              setDbCollections(matching);
+            }
+          }
+        })
+        .catch(() => {});
+    }
+  }, [slug, brandNameForQuery, initialBrand, initialProducts, initialCollections]);
 
   // Merge static Brand fallback with dynamic database state from API / server
   const activeBrand = useMemo(() => {
@@ -299,7 +292,6 @@ export default function BrandDetailClient({
             alt={activeBrand.name}
             fill
             priority
-            unoptimized
             sizes="100vw"
             className="bd-hero__img"
             style={{ objectFit: "cover" }}

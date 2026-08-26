@@ -40,35 +40,7 @@ interface BrandsClientProps {
 }
 
 export default function BrandsClient({ initialBrands }: BrandsClientProps) {
-  const [brandsList, setBrandsList] = useState<MappedBrand[]>(initialBrands || []);
-
-  useEffect(() => {
-    // Keep dynamic store in sync if modified after initial SSR
-    fetch("/api/brands?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          const mapped: MappedBrand[] = json.data.map((b: any) => {
-            const explicitLogo = b.logoUrl && !b.logoUrl.includes("brand_") && !b.logoUrl.endsWith("_2.png") ? b.logoUrl : "";
-            const resolvedLogo = explicitLogo || LOGO_MAP[b.id] || LOGO_MAP[b.id?.toLowerCase()] || "";
-
-            return {
-              id: b.id,
-              name: b.name,
-              code: b.shortCode ? b.shortCode.split(" ")[0] : "BR",
-              num: b.sequenceNumber ? String(b.sequenceNumber).padStart(2, "0") : (b.shortCode && b.shortCode.split(" ")[1] ? b.shortCode.split(" ")[1] : "01"),
-              hero: b.bannerUrl || b.hero || b.imageUrl || b.image || "/brands/brand_1_1.png",
-              logo: resolvedLogo,
-              category: b.category || b.tagline || b.description || "Architectural Brand",
-              origin: b.origin || "Global",
-              tagline: b.tagline || b.description || "Partner Brand",
-            };
-          });
-          setBrandsList(mapped);
-        }
-      })
-      .catch((e) => console.error("Dynamic brand fetch error:", e));
-  }, []);
+  const [brandsList] = useState<MappedBrand[]>(initialBrands || []);
 
   return (
     <div className="brands-page">
@@ -87,7 +59,7 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
 
       {/* ── Brand Grid ── */}
       <div className="brands-grid">
-        {brandsList.map((brand) => (
+        {brandsList.map((brand, index) => (
           <Link
             key={brand.id}
             href={`/brands/${brand.id}`}
@@ -101,10 +73,10 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
                   src={brand.hero}
                   alt={brand.name}
                   fill
+                  priority={index < 4}
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="brand-card__img"
                   style={{ objectFit: "cover" }}
-                  unoptimized
                   onError={(e: any) => {
                     e.currentTarget.src = "/brands/brand_1_1.png";
                   }}
@@ -119,9 +91,9 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
                     alt={`${brand.name} logo`}
                     width={90}
                     height={36}
+                    priority={index < 4}
                     className="brand-card__logo"
                     style={{ objectFit: "contain", objectPosition: "left center", maxHeight: "36px" }}
-                    unoptimized
                     onError={(e: any) => {
                       e.currentTarget.style.display = "none";
                     }}
