@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getBrandsStore, getBrandByIdStore, saveBrandStore, deleteBrandStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -37,9 +38,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Brand Name is required" }, { status: 400 });
     }
     const saved = await saveBrandStore(body);
-    return NextResponse.json({ success: true, data: saved });
+
+    // On-demand revalidation: Purge edge/server cache immediately
+    try {
+      revalidatePath("/brands");
+      revalidatePath("/brands/[slug]", "page");
+      if (saved.id) revalidatePath(`/brands/${saved.id}`);
+      revalidatePath("/admin/brands");
+      revalidatePath("/admin/brands/[id]", "page");
+      revalidatePath("/");
+    } catch (_) {}
+
+    return NextResponse.json({ success: true, data: saved }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -50,9 +62,20 @@ export async function PUT(request: Request) {
       return NextResponse.json({ success: false, error: "Brand ID or Name is required for updates" }, { status: 400 });
     }
     const saved = await saveBrandStore(body);
-    return NextResponse.json({ success: true, data: saved });
+
+    // On-demand revalidation: Purge edge/server cache immediately
+    try {
+      revalidatePath("/brands");
+      revalidatePath("/brands/[slug]", "page");
+      if (saved.id) revalidatePath(`/brands/${saved.id}`);
+      revalidatePath("/admin/brands");
+      revalidatePath("/admin/brands/[id]", "page");
+      revalidatePath("/");
+    } catch (_) {}
+
+    return NextResponse.json({ success: true, data: saved }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -63,8 +86,20 @@ export async function DELETE(request: Request) {
     if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
 
     await deleteBrandStore(id);
-    return NextResponse.json({ success: true });
+
+    // On-demand revalidation: Purge edge/server cache immediately
+    try {
+      revalidatePath("/brands");
+      revalidatePath("/brands/[slug]", "page");
+      revalidatePath(`/brands/${id}`);
+      revalidatePath("/admin/brands");
+      revalidatePath("/admin/brands/[id]", "page");
+      revalidatePath("/");
+    } catch (_) {}
+
+    return NextResponse.json({ success: true }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
+

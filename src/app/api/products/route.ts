@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getAllProductsStore, getProductByIdStore, addProductStore, updateProductStore, deleteProductStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -61,14 +62,26 @@ export async function POST(request: Request) {
     if (!body.name || !body.brand || !body.category) {
       return NextResponse.json(
         { success: false, error: "Name, Brand, and Category are required" },
-        { status: 400 }
+        { status: 400, headers: NO_CACHE_HEADERS }
       );
     }
 
     const created = await addProductStore(body);
-    return NextResponse.json({ success: true, data: created });
+
+    // On-demand revalidation: Purge edge/server cache immediately
+    try {
+      revalidatePath("/products");
+      revalidatePath("/products/[slug]", "page");
+      revalidatePath("/brands");
+      revalidatePath("/brands/[slug]", "page");
+      revalidatePath("/admin/products");
+      revalidatePath("/admin/products/[id]", "page");
+      revalidatePath("/");
+    } catch (_) {}
+
+    return NextResponse.json({ success: true, data: created }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -77,13 +90,27 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const id = body.id;
     if (!id) {
-      return NextResponse.json({ success: false, error: "Product ID is required for updates" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Product ID is required for updates" }, { status: 400, headers: NO_CACHE_HEADERS });
     }
 
     const updated = await updateProductStore(id, body);
-    return NextResponse.json({ success: true, data: updated });
+
+    // On-demand revalidation: Purge edge/server cache immediately
+    try {
+      revalidatePath("/products");
+      revalidatePath(`/products/${id}`);
+      revalidatePath("/products/[slug]", "page");
+      revalidatePath("/brands");
+      revalidatePath("/brands/[slug]", "page");
+      revalidatePath("/admin/products");
+      revalidatePath(`/admin/products/${id}`);
+      revalidatePath("/admin/products/[id]", "page");
+      revalidatePath("/");
+    } catch (_) {}
+
+    return NextResponse.json({ success: true, data: updated }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -91,11 +118,26 @@ export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
+    if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400, headers: NO_CACHE_HEADERS });
 
     await deleteProductStore(id);
-    return NextResponse.json({ success: true });
+
+    // On-demand revalidation: Purge edge/server cache immediately
+    try {
+      revalidatePath("/products");
+      revalidatePath(`/products/${id}`);
+      revalidatePath("/products/[slug]", "page");
+      revalidatePath("/brands");
+      revalidatePath("/brands/[slug]", "page");
+      revalidatePath("/admin/products");
+      revalidatePath(`/admin/products/${id}`);
+      revalidatePath("/admin/products/[id]", "page");
+      revalidatePath("/");
+    } catch (_) {}
+
+    return NextResponse.json({ success: true }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
+

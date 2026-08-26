@@ -2,6 +2,7 @@ import { getBrandsStore } from "@/lib/store";
 import BrandsClient, { MappedBrand } from "./BrandsClient";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const LOGO_MAP: Record<string, string> = {
   "slashform": "/brands/logos/slashform_logo.png",
