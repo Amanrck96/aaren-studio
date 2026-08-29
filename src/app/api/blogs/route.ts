@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getBlogsStore, saveBlogStore, deleteBlogStore, reorderBlogsStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -35,9 +36,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Title and Content are required" }, { status: 400 });
     }
     const saved = await saveBlogStore(body);
-    return NextResponse.json({ success: true, data: saved });
+    try {
+      revalidatePath("/blog");
+      revalidatePath("/blog/[slug]", "page");
+      if (saved.slug) revalidatePath(`/blog/${saved.slug}`);
+      revalidatePath("/admin/blogs");
+      revalidatePath("/");
+    } catch (_) {}
+    return NextResponse.json({ success: true, data: saved }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -45,11 +53,17 @@ export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
+    if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400, headers: NO_CACHE_HEADERS });
 
     await deleteBlogStore(id);
-    return NextResponse.json({ success: true });
+    try {
+      revalidatePath("/blog");
+      revalidatePath("/blog/[slug]", "page");
+      revalidatePath("/admin/blogs");
+      revalidatePath("/");
+    } catch (_) {}
+    return NextResponse.json({ success: true }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }

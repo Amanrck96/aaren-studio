@@ -151,14 +151,14 @@ export default function Header() {
                     <p className="user-email">{user.email}</p>
                   </div>
 
-                  <a
-                    href="/modules/aaren-intpro-designer-workspace.html"
+                  <Link
+                    href="/workspace"
                     onClick={() => setShowProfileMenu(false)}
                     className="dropdown-workspace-link"
                   >
                     <span>🏛️ Designer Workspace</span>
                     <ArrowUpRight size={14} />
-                  </a>
+                  </Link>
 
                   <button
                     onClick={handleLogout}
@@ -260,14 +260,14 @@ export default function Header() {
                   <span className="user-label">Signed in as:</span>
                   <strong className="user-name">{user.displayName || user.email}</strong>
                 </div>
-                <a
-                  href="/modules/aaren-intpro-designer-workspace.html"
+                <Link
+                  href="/workspace"
                   onClick={() => setOpen(false)}
                   className="overlay-workspace-btn"
                 >
                   <span>🏛️ Launch Designer Workspace</span>
                   <ArrowUpRight size={16} />
-                </a>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="overlay-signout-btn"

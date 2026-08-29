@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import {
   getTeamStore,
   saveTeamMemberStore,
@@ -40,26 +41,32 @@ export async function POST(request: Request) {
     const body = await request.json();
     const memberData = body.data || body;
 
+    let saved;
     if (body.type === "reorder") {
       const teamList = body.team || memberData;
-      const saved = await reorderTeamStore(teamList);
-      return NextResponse.json({ success: true, data: saved });
+      saved = await reorderTeamStore(teamList);
     } else if (body.type === "reorder_roadmap") {
       const steps = body.roadmap || memberData;
-      const saved = await reorderRoadmapStore(steps);
-      return NextResponse.json({ success: true, data: saved });
+      saved = await reorderRoadmapStore(steps);
     } else if (body.type === "roadmap") {
-      const saved = await saveRoadmapStepStore(memberData);
-      return NextResponse.json({ success: true, data: saved });
+      saved = await saveRoadmapStepStore(memberData);
     } else if (body.type === "joinBanner") {
-      const saved = await saveTeamJoinBannerStore(memberData);
-      return NextResponse.json({ success: true, data: saved });
+      saved = await saveTeamJoinBannerStore(memberData);
     } else {
-      const saved = await saveTeamMemberStore(memberData);
-      return NextResponse.json({ success: true, data: saved });
+      saved = await saveTeamMemberStore(memberData);
     }
+
+    try {
+      revalidatePath("/team");
+      revalidatePath("/about");
+      revalidatePath("/admin/team");
+      revalidatePath("/admin/about");
+      revalidatePath("/");
+    } catch (_) {}
+
+    return NextResponse.json({ success: true, data: saved }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -69,16 +76,26 @@ export async function DELETE(request: Request) {
     const id = searchParams.get("id");
     const type = searchParams.get("type");
 
-    if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
+    if (!id) return NextResponse.json({ success: false, error: "ID is required" }, { status: 400, headers: NO_CACHE_HEADERS });
 
     if (type === "roadmap") {
       await deleteRoadmapStepStore(id);
-      return NextResponse.json({ success: true, message: `Roadmap step ${id} deleted.` });
+      try {
+        revalidatePath("/about");
+        revalidatePath("/admin/about");
+        revalidatePath("/");
+      } catch (_) {}
+      return NextResponse.json({ success: true, message: `Roadmap step ${id} deleted.` }, { headers: NO_CACHE_HEADERS });
     }
 
     await deleteTeamMemberStore(id);
-    return NextResponse.json({ success: true });
+    try {
+      revalidatePath("/team");
+      revalidatePath("/admin/team");
+      revalidatePath("/");
+    } catch (_) {}
+    return NextResponse.json({ success: true }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }

@@ -30,7 +30,8 @@ export async function POST(request: Request) {
 
     try {
       revalidatePath("/");
-      revalidatePath("/categories");
+      revalidatePath("/products");
+      revalidatePath("/shop");
       revalidatePath("/admin/categories");
     } catch (_) {}
 
@@ -50,7 +51,8 @@ export async function DELETE(request: Request) {
 
     try {
       revalidatePath("/");
-      revalidatePath("/categories");
+      revalidatePath("/products");
+      revalidatePath("/shop");
       revalidatePath("/admin/categories");
     } catch (_) {}
 

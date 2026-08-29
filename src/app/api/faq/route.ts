@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getAllFAQsStore, saveFAQStore, deleteFAQStore, importFAQsBulkStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -47,27 +48,38 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Question and Answer are required." }, { status: 400 });
     }
     const saved = await saveFAQStore(body);
-    return NextResponse.json({ success: true, data: saved });
+    try {
+      revalidatePath("/faq");
+      revalidatePath("/brands/[slug]", "page");
+      revalidatePath("/admin/faq");
+      revalidatePath("/");
+    } catch (_) {}
+    return NextResponse.json({ success: true, data: saved }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
+    let resData;
     if (Array.isArray(body)) {
-      const imported = await importFAQsBulkStore(body);
-      return NextResponse.json({ success: true, count: imported.length, data: imported });
+      resData = await importFAQsBulkStore(body);
+    } else if (body.faqs && Array.isArray(body.faqs)) {
+      resData = await importFAQsBulkStore(body.faqs);
+    } else {
+      resData = await saveFAQStore(body);
     }
-    if (body.faqs && Array.isArray(body.faqs)) {
-      const imported = await importFAQsBulkStore(body.faqs);
-      return NextResponse.json({ success: true, count: imported.length, data: imported });
-    }
-    const saved = await saveFAQStore(body);
-    return NextResponse.json({ success: true, data: saved });
+    try {
+      revalidatePath("/faq");
+      revalidatePath("/brands/[slug]", "page");
+      revalidatePath("/admin/faq");
+      revalidatePath("/");
+    } catch (_) {}
+    return NextResponse.json({ success: true, data: resData }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
 
@@ -76,11 +88,17 @@ export async function DELETE(request: Request) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
     if (!id) {
-      return NextResponse.json({ success: false, error: "ID is required." }, { status: 400 });
+      return NextResponse.json({ success: false, error: "ID is required." }, { status: 400, headers: NO_CACHE_HEADERS });
     }
     await deleteFAQStore(id);
-    return NextResponse.json({ success: true, message: `FAQ ${id} deleted.` });
+    try {
+      revalidatePath("/faq");
+      revalidatePath("/brands/[slug]", "page");
+      revalidatePath("/admin/faq");
+      revalidatePath("/");
+    } catch (_) {}
+    return NextResponse.json({ success: true, message: `FAQ ${id} deleted.` }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
 }
