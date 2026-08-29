@@ -366,3 +366,30 @@ export type FaqItem = {
   brand?: string;
   sequenceNumber?: number;
 };
+
+export interface DownloadPdfItem {
+  id: string;
+  title: string;
+  fileName?: string;
+  fileUrl: string; // Firebase Storage URL or direct PDF URL
+  fileSize?: string;
+  pageCount?: number;
+  coverImage?: string; // 1st page cover thumbnail URL
+  category?: string;
+  tags?: string[];
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface BrandDownloadFolder {
+  id: string; // brand slug/id, e.g. "slashform", "waltz"
+  brandName: string;
+  brandLogo?: string;
+  brandCategory?: string;
+  description?: string;
+  folderColor?: string;
+  sequenceNumber?: number;
+  files: DownloadPdfItem[];
+}
+

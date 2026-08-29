@@ -27,6 +27,7 @@ import {
   Download,
   ShieldCheck,
   RefreshCw,
+  Folder,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -243,6 +244,7 @@ export default function AdminDashboardPage() {
     { title: "🏢 Brand Management & Individual Pages", desc: "Manage partner brands, hero banners, logos, quote taglines, country of origin, founded year, story and PDF catalogs.", href: "/admin/brands", icon: Building },
     { title: "📦 Product Catalog & Master Editors", desc: "Upload Excel product list, manage dimensions, finishes, CAD specs, warranty, and middle gallery photos.", href: "/admin/products", icon: Layers },
     { title: "📄 PDF Catalogs & Brochures", desc: "View all brand specification PDF catalogs, covers, file sizes, and download enquiry counts.", href: "/admin/catalogs", icon: BookOpen },
+    { title: "📁 Brand Downloads Repository", desc: "Manage 20 brand folders, Firebase PDF URLs, open-access Page 1 covers and specifications.", href: "/admin/downloads", icon: Folder },
     { title: "🏷️ Categories & Filter Taxonomies", desc: "Manage categories with cover images, descriptions, short codes (DS 06), sequence numbers and subcategories.", href: "/admin/categories", icon: FolderTree },
     { title: "🏠 Homepage Hero Section", desc: "Header text, tagline, subtext, background MP4 video URL, category tags bar.", href: "/admin/hero", icon: Sparkles },
     { title: "🖼️ Showcase Projects", desc: "Manage homepage showcase projects, project codes (OB 01), main images, sequence numbers.", href: "/admin/projects", icon: LayoutTemplate },

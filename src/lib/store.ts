@@ -25,6 +25,8 @@ import {
   FaqItem,
   CollectionItem,
   CareerItem,
+  DownloadPdfItem,
+  BrandDownloadFolder,
   DEFAULT_SETTINGS,
   DEFAULT_CATALOG_SETTINGS,
 } from "./types";
@@ -2965,6 +2967,155 @@ export async function updateWorkspaceInvoiceStatusStore(invoiceId: string, statu
 
   return updatedInv || { id: invoiceId, status, paidAt: new Date().toISOString() };
 }
+
+// ==========================================
+// 📁 BRAND DOWNLOAD FOLDERS & PDF STORE
+// ==========================================
+
+export async function getDownloadFoldersStore(): Promise<BrandDownloadFolder[]> {
+  const fbData = await fetchFromFirebaseCloudStore("downloadFolders");
+  let folders: BrandDownloadFolder[] = [];
+
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    folders = fbData;
+  } else {
+    const json = readJsonStore();
+    if (json.downloadFolders && Array.isArray(json.downloadFolders) && json.downloadFolders.length > 0) {
+      folders = json.downloadFolders;
+    }
+  }
+
+  // Ensure all 20 brands from the system have a folder
+  const brands = await getBrandsStore();
+  const existingFolderIds = new Set(folders.map((f) => f.id));
+
+  let hasUpdates = false;
+
+  for (const b of brands) {
+    if (!existingFolderIds.has(b.id)) {
+      hasUpdates = true;
+      const initialFiles: DownloadPdfItem[] = [];
+
+      // Add attached PDF catalogs if present
+      if (Array.isArray(b.pdfCatalogs) && b.pdfCatalogs.length > 0) {
+        b.pdfCatalogs.forEach((pc: any, idx: number) => {
+          if (pc && pc.pdfUrl) {
+            initialFiles.push({
+              id: pc.id || `pdf-${b.id}-${idx}`,
+              title: pc.title || `${b.name} Catalog`,
+              fileName: pc.fileName || `${b.name}_Catalog.pdf`,
+              fileUrl: pc.pdfUrl,
+              fileSize: pc.fileSize || "PDF Document",
+              pageCount: pc.pageCount || 1,
+              coverImage: pc.coverImage || pc.thumbnailUrl || b.bannerUrl,
+              category: b.category || "Catalog",
+              createdAt: pc.createdAt || new Date().toISOString(),
+            });
+          }
+        });
+      } else if (b.catalogPdfUrl) {
+        initialFiles.push({
+          id: `pdf-${b.id}-0`,
+          title: `${b.name} Official Catalog`,
+          fileName: `${b.name}_Catalog.pdf`,
+          fileUrl: b.catalogPdfUrl,
+          fileSize: "PDF Document",
+          pageCount: 1,
+          coverImage: b.bannerUrl || "/brands/brand_1_1.jpg",
+          category: b.category || "Catalog",
+          createdAt: new Date().toISOString(),
+        });
+      }
+
+      folders.push({
+        id: b.id,
+        brandName: b.name,
+        brandLogo: b.logoUrl,
+        brandCategory: b.category,
+        description: b.description,
+        sequenceNumber: b.sequenceNumber || 1,
+        files: initialFiles,
+      });
+    }
+  }
+
+  // Sort folders by brand sequence number
+  folders.sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+
+  if (hasUpdates || (!fbData && folders.length > 0)) {
+    await saveDownloadFoldersStore(folders);
+  }
+
+  return folders;
+}
+
+export async function saveDownloadFoldersStore(folders: BrandDownloadFolder[]): Promise<BrandDownloadFolder[]> {
+  await syncToFirebaseCloudStore("downloadFolders", folders);
+  const json = readJsonStore();
+  json.downloadFolders = folders;
+  writeJsonStore(json);
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  return folders;
+}
+
+export async function addPdfToBrandFolderStore(brandId: string, pdf: Partial<DownloadPdfItem>): Promise<DownloadPdfItem> {
+  const folders = await getDownloadFoldersStore();
+  const folder = folders.find((f) => f.id === brandId || f.brandName.toLowerCase() === brandId.toLowerCase());
+
+  const newPdf: DownloadPdfItem = {
+    id: pdf.id || `pdf-${brandId}-${Date.now()}`,
+    title: pdf.title || "Architectural Catalogue",
+    fileName: pdf.fileName || (pdf.fileUrl ? pdf.fileUrl.split("/").pop() : "Catalogue.pdf"),
+    fileUrl: pdf.fileUrl || "",
+    fileSize: pdf.fileSize || "PDF Document",
+    pageCount: pdf.pageCount || 1,
+    coverImage: pdf.coverImage || "",
+    category: pdf.category || (folder ? folder.brandCategory : "Catalog"),
+    tags: pdf.tags || [],
+    description: pdf.description || "",
+    createdAt: pdf.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  if (folder) {
+    if (!Array.isArray(folder.files)) folder.files = [];
+    const idx = folder.files.findIndex((f) => f.id === newPdf.id);
+    if (idx >= 0) folder.files[idx] = newPdf;
+    else folder.files.unshift(newPdf);
+  } else {
+    folders.push({
+      id: brandId,
+      brandName: brandId,
+      files: [newPdf],
+    });
+  }
+
+  await saveDownloadFoldersStore(folders);
+  return newPdf;
+}
+
+export async function deletePdfFromBrandFolderStore(brandId: string, pdfId: string): Promise<boolean> {
+  const folders = await getDownloadFoldersStore();
+  const folder = folders.find((f) => f.id === brandId || f.brandName.toLowerCase() === brandId.toLowerCase());
+
+  if (folder && Array.isArray(folder.files)) {
+    folder.files = folder.files.filter((f) => f.id !== pdfId);
+    await saveDownloadFoldersStore(folders);
+    return true;
+  }
+  return false;
+}
+
+export async function updateBrandFolderStore(folderData: BrandDownloadFolder): Promise<BrandDownloadFolder> {
+  const folders = await getDownloadFoldersStore();
+  const idx = folders.findIndex((f) => f.id === folderData.id);
+  if (idx >= 0) folders[idx] = folderData;
+  else folders.push(folderData);
+
+  await saveDownloadFoldersStore(folders);
+  return folderData;
+}
+
 
 
 

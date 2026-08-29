@@ -34,6 +34,7 @@ export default function AdminNav() {
     { label: "🖼️ Showcase Projects", href: "/admin/projects" },
     { label: "📦 Products", href: "/admin/products" },
     { label: "📄 PDF Catalogs", href: "/admin/catalogs" },
+    { label: "📁 Downloads Repository", href: "/admin/downloads" },
     { label: "❓ FAQ Management", href: "/admin/faq" },
     { label: "💬 Testimonials", href: "/admin/testimonials" },
     { label: "✍️ Blogs", href: "/admin/blogs" },
