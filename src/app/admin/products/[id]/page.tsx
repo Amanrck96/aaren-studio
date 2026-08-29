@@ -1203,8 +1203,8 @@ export default function AdminIndividualProductPage({ params }: Props) {
       {/* STYLES */}
       <style jsx global>{`
         .admin-page-container {
-          background: #FAF8F5;
-          color: #1E1E1E;
+          background: #0b0f19;
+          color: #f8fafc;
           min-height: 100vh;
           font-size: 13px;
         }
@@ -1227,7 +1227,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
           gap: 16px;
           margin-bottom: 28px;
           padding-bottom: 20px;
-          border-bottom: 1px solid rgba(0,0,0,0.08);
+          border-bottom: 1px solid #1e293b;
         }
 
         .back-link {
@@ -1238,11 +1238,11 @@ export default function AdminIndividualProductPage({ params }: Props) {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          color: #8c764b;
+          color: #d4af37;
           margin-bottom: 6px;
           transition: color 0.2s;
         }
-        .back-link:hover { color: #1e1e1e; }
+        .back-link:hover { color: #ffffff; }
 
         .title-row {
           display: flex;
@@ -1252,28 +1252,30 @@ export default function AdminIndividualProductPage({ params }: Props) {
         }
 
         .editor-title {
-          font-size: 24px;
+          font-size: 26px;
           font-weight: 800;
+          color: #ffffff;
           text-transform: uppercase;
           letter-spacing: -0.01em;
           margin: 0;
         }
 
         .id-pill {
-          background: #e2e8f0;
-          color: #475569;
+          background: #1e293b;
+          color: #94a3b8;
           font-size: 11px;
           font-family: monospace;
           padding: 3px 8px;
           border-radius: 6px;
           font-weight: 600;
+          border: 1px solid #334155;
         }
 
         .code-badge {
-          background: #8c764b;
-          color: #fff;
+          background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+          color: #000000;
           font-size: 11px;
-          font-weight: 700;
+          font-weight: 800;
           padding: 3px 8px;
           border-radius: 6px;
         }
@@ -1289,27 +1291,28 @@ export default function AdminIndividualProductPage({ params }: Props) {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #1e1e1e;
-          color: #ffffff;
+          background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+          color: #000000;
           border-radius: 8px;
-          font-weight: 700;
+          font-weight: 800;
           font-size: 12px;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           border: none;
           cursor: pointer;
-          transition: background 0.2s;
+          transition: transform 0.2s;
+          box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
         }
-        .btn-primary:hover { background: #8c764b; }
+        .btn-primary:hover { transform: translateY(-1px); }
 
         .btn-secondary {
           display: inline-flex;
           align-items: center;
           gap: 8px;
           padding: 10px 16px;
-          background: #ffffff;
-          color: #1e1e1e;
-          border: 1px solid #d1d5db;
+          background: #1e293b;
+          color: #f8fafc;
+          border: 1px solid #334155;
           border-radius: 8px;
           font-weight: 700;
           font-size: 12px;
@@ -1318,16 +1321,16 @@ export default function AdminIndividualProductPage({ params }: Props) {
           cursor: pointer;
           transition: all 0.2s;
         }
-        .btn-secondary:hover { background: #f3f4f6; border-color: #9ca3af; }
+        .btn-secondary:hover { background: #334155; }
 
         .btn-danger {
           display: inline-flex;
           align-items: center;
           gap: 6px;
           padding: 10px 14px;
-          background: #fee2e2;
-          color: #dc2626;
-          border: 1px solid #fca5a5;
+          background: rgba(239, 68, 68, 0.15);
+          color: #f87171;
+          border: 1px solid rgba(239, 68, 68, 0.3);
           border-radius: 8px;
           font-weight: 700;
           font-size: 12px;
@@ -1336,7 +1339,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
           cursor: pointer;
           transition: all 0.2s;
         }
-        .btn-danger:hover { background: #dc2626; color: #fff; }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.3); }
 
         .editor-layout {
           display: grid;
@@ -1354,10 +1357,11 @@ export default function AdminIndividualProductPage({ params }: Props) {
           display: flex;
           overflow-x: auto;
           gap: 6px;
-          background: #ffffff;
+          background: #151c2c;
           padding: 6px;
           border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+          border: 1px solid #28334e;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
           margin-bottom: 20px;
         }
 
@@ -1371,27 +1375,30 @@ export default function AdminIndividualProductPage({ params }: Props) {
           background: transparent;
           font-size: 12px;
           font-weight: 700;
-          color: #64748b;
+          color: #94a3b8;
           cursor: pointer;
           white-space: nowrap;
           transition: all 0.2s;
         }
         .tab-item.active {
-          background: #1e1e1e;
-          color: #ffffff;
+          background: #d4af37;
+          color: #000000;
+          font-weight: 800;
         }
 
         .section-card {
-          background: #ffffff;
+          background: #151c2c;
           border-radius: 16px;
           padding: 28px;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-          border: 1px solid rgba(0,0,0,0.05);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+          border: 1px solid #28334e;
+          color: #f8fafc;
         }
 
         .section-title {
           font-size: 18px;
           font-weight: 800;
+          color: #d4af37;
           text-transform: uppercase;
           letter-spacing: -0.01em;
           margin-bottom: 4px;
@@ -1399,7 +1406,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
 
         .section-sub {
           font-size: 12px;
-          color: #64748b;
+          color: #cbd5e1;
           margin-bottom: 24px;
         }
 
@@ -1424,7 +1431,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          color: #475569;
+          color: #f1f5f9;
           margin-bottom: 6px;
         }
 
@@ -1434,11 +1441,11 @@ export default function AdminIndividualProductPage({ params }: Props) {
           width: 100%;
           padding: 10px 12px;
           border-radius: 8px;
-          border: 1px solid #cbd5e1;
-          background: #f8fafc;
+          border: 1px solid #334155;
+          background: #0f172a;
           font-size: 13px;
           font-family: inherit;
-          color: #1e1e1e;
+          color: #ffffff;
           outline: none;
           transition: border-color 0.2s, background 0.2s;
         }
@@ -1446,8 +1453,8 @@ export default function AdminIndividualProductPage({ params }: Props) {
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-          border-color: #8c764b;
-          background: #ffffff;
+          border-color: #d4af37;
+          background: #111827;
         }
 
         .media-block {
@@ -1460,7 +1467,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          color: #1e1e1e;
+          color: #ffffff;
           margin-bottom: 12px;
         }
 
@@ -1474,12 +1481,12 @@ export default function AdminIndividualProductPage({ params }: Props) {
           width: 120px;
           height: 120px;
           border-radius: 10px;
-          border: 2px dashed #cbd5e1;
+          border: 2px dashed #334155;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-          background: #f8fafc;
+          background: #0f172a;
         }
 
         .upload-controls {
@@ -1503,9 +1510,9 @@ export default function AdminIndividualProductPage({ params }: Props) {
 
         .btn-outline-danger {
           padding: 8px 14px;
-          background: transparent;
-          color: #dc2626;
-          border: 1px solid #fca5a5;
+          background: rgba(239, 68, 68, 0.15);
+          color: #f87171;
+          border: 1px solid rgba(239, 68, 68, 0.3);
           border-radius: 6px;
           font-size: 12px;
           font-weight: 600;
@@ -1517,11 +1524,11 @@ export default function AdminIndividualProductPage({ params }: Props) {
           align-items: center;
           gap: 6px;
           padding: 8px 14px;
-          background: #8c764b;
-          color: #ffffff;
+          background: #d4af37;
+          color: #000000;
           border-radius: 6px;
           font-size: 12px;
-          font-weight: 700;
+          font-weight: 800;
           border: none;
           cursor: pointer;
         }
@@ -1535,8 +1542,8 @@ export default function AdminIndividualProductPage({ params }: Props) {
         .gallery-card {
           border-radius: 8px;
           overflow: hidden;
-          border: 1px solid #e2e8f0;
-          background: #f8fafc;
+          border: 1px solid #28334e;
+          background: #0f172a;
         }
 
         .gallery-thumb {
@@ -1549,29 +1556,29 @@ export default function AdminIndividualProductPage({ params }: Props) {
           justify-content: space-between;
           align-items: center;
           padding: 6px 8px;
-          background: #ffffff;
+          background: #151c2c;
         }
 
         .img-num {
           font-size: 10px;
           font-weight: 700;
-          color: #64748b;
+          color: #94a3b8;
         }
 
         .btn-trash {
           background: transparent;
           border: none;
-          color: #dc2626;
+          color: #f87171;
           cursor: pointer;
           padding: 4px;
           border-radius: 4px;
         }
-        .btn-trash:hover { background: #fee2e2; }
+        .btn-trash:hover { background: rgba(239, 68, 68, 0.2); }
 
         .divider {
           margin: 24px 0;
           border: none;
-          border-top: 1px solid #e2e8f0;
+          border-top: 1px solid #1e293b;
         }
 
         .swatches-table {
@@ -1585,9 +1592,9 @@ export default function AdminIndividualProductPage({ params }: Props) {
           align-items: center;
           gap: 12px;
           padding: 10px 14px;
-          background: #f8fafc;
+          background: #0f172a;
           border-radius: 8px;
-          border: 1px solid #e2e8f0;
+          border: 1px solid #334155;
         }
 
         .swatch-color-picker-wrap {
@@ -1599,7 +1606,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
         .color-input {
           width: 36px;
           height: 36px;
-          border: none;
+          border: 1px solid #334155;
           border-radius: 6px;
           cursor: pointer;
           padding: 0;
@@ -1610,7 +1617,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
           font-family: monospace;
           font-size: 12px;
           font-weight: 700;
-          color: #475569;
+          color: #94a3b8;
         }
 
         .chips-wrap {
@@ -1623,8 +1630,9 @@ export default function AdminIndividualProductPage({ params }: Props) {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          background: #f1f5f9;
-          border: 1px solid #cbd5e1;
+          background: #1e293b;
+          border: 1px solid #334155;
+          color: #f8fafc;
           padding: 4px 10px;
           border-radius: 999px;
           font-size: 12px;
@@ -1639,25 +1647,25 @@ export default function AdminIndividualProductPage({ params }: Props) {
           font-size: 12px;
           margin-left: 2px;
         }
-        .chip button:hover { color: #dc2626; }
+        .chip button:hover { color: #f87171; }
 
         .empty-notice {
           padding: 20px;
           text-align: center;
           color: #94a3b8;
           font-size: 13px;
-          background: #f8fafc;
+          background: #0f172a;
           border-radius: 8px;
-          border: 1px dashed #cbd5e1;
+          border: 1px dashed #334155;
         }
 
         /* LIVE PREVIEW COLUMN */
         .preview-card {
-          background: #ffffff;
+          background: #151c2c;
           border-radius: 16px;
           padding: 20px;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-          border: 1px solid rgba(0,0,0,0.05);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+          border: 1px solid #28334e;
           position: sticky;
           top: 24px;
         }
@@ -1670,15 +1678,15 @@ export default function AdminIndividualProductPage({ params }: Props) {
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.1em;
-          color: #8c764b;
+          color: #d4af37;
           margin-bottom: 14px;
         }
 
         .mock-card {
           border-radius: 12px;
           overflow: hidden;
-          border: 1px solid #e2e8f0;
-          background: #FAF8F5;
+          border: 1px solid #28334e;
+          background: #0f172a;
           margin-bottom: 16px;
         }
 
@@ -1694,7 +1702,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
         }
 
         .mock-brand-pill {
-          background: rgba(0,0,0,0.75);
+          background: rgba(0,0,0,0.85);
           color: #ffffff;
           padding: 4px 8px;
           border-radius: 4px;
@@ -1705,12 +1713,12 @@ export default function AdminIndividualProductPage({ params }: Props) {
         }
 
         .mock-code-pill {
-          background: #8c764b;
-          color: #ffffff;
+          background: #d4af37;
+          color: #000000;
           padding: 4px 8px;
           border-radius: 4px;
           font-size: 10px;
-          font-weight: 700;
+          font-weight: 800;
         }
 
         .mock-body {
@@ -1720,7 +1728,7 @@ export default function AdminIndividualProductPage({ params }: Props) {
         .mock-cat {
           font-size: 10px;
           font-weight: 700;
-          color: #8c764b;
+          color: #d4af37;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           margin-bottom: 4px;
@@ -1729,13 +1737,13 @@ export default function AdminIndividualProductPage({ params }: Props) {
         .mock-title {
           font-size: 14px;
           font-weight: 800;
-          color: #1e1e1e;
+          color: #ffffff;
           margin-bottom: 6px;
         }
 
         .mock-desc {
           font-size: 11px;
-          color: #64748b;
+          color: #cbd5e1;
           line-height: 1.4;
           margin-bottom: 10px;
         }
@@ -1751,55 +1759,57 @@ export default function AdminIndividualProductPage({ params }: Props) {
           width: 14px;
           height: 14px;
           border-radius: 50%;
-          border: 1px solid rgba(0,0,0,0.1);
+          border: 1px solid rgba(255,255,255,0.2);
         }
 
         .mock-footer {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          border-top: 1px solid rgba(0,0,0,0.06);
+          border-top: 1px solid #1e293b;
           padding-top: 10px;
         }
 
         .mock-price {
           font-weight: 800;
           font-size: 12px;
-          color: #1e1e1e;
+          color: #ffffff;
         }
 
         .mock-btn {
           font-size: 11px;
-          font-weight: 700;
-          color: #8c764b;
+          font-weight: 800;
+          color: #d4af37;
         }
 
         .meta-summary-box {
-          background: #f8fafc;
+          background: #0f172a;
           border-radius: 8px;
           padding: 12px;
           font-size: 12px;
           display: flex;
           flex-direction: column;
           gap: 6px;
+          border: 1px solid #28334e;
         }
 
         .summary-row {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          color: #64748b;
+          color: #cbd5e1;
         }
-        .summary-row strong { color: #1e1e1e; }
+        .summary-row strong { color: #ffffff; }
 
         .status-badge-preview {
           display: flex;
           align-items: center;
           gap: 8px;
           padding: 10px 12px;
-          background: #f8fafc;
+          background: #0f172a;
           border-radius: 8px;
-          border: 1px solid #cbd5e1;
+          border: 1px solid #334155;
+          color: #f8fafc;
         }
         .status-badge-preview .dot {
           width: 8px;
@@ -1812,15 +1822,15 @@ export default function AdminIndividualProductPage({ params }: Props) {
           position: fixed;
           bottom: 24px;
           right: 24px;
-          background: #1e1e1e;
-          color: #fff;
+          background: #d4af37;
+          color: #000000;
           padding: 12px 20px;
           border-radius: 8px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.4);
           display: flex;
           align-items: center;
           gap: 8px;
-          font-weight: 600;
+          font-weight: 800;
           font-size: 13px;
           opacity: 0;
           transform: translateY(20px);

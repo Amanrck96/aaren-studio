@@ -1224,63 +1224,7 @@ input, select, textarea {
   transform: translateY(-0.25rem);
 }
 
-/* ══════════════════════════════════════════════
-   ADMIN LIGHT THEME SYSTEM
-   White background, Black letters, Brown headings & buttons (#8c764b)
-   ══════════════════════════════════════════════ */
-.admin-main-content {
-  background-color: #ffffff !important;
-  color: #111111 !important;
-}
 
-.admin-main-content h1,
-.admin-main-content h2,
-.admin-main-content .admin-page-title {
-  color: #8c764b !important;
-}
-
-.admin-main-content h3,
-.admin-main-content h4,
-.admin-main-content h5 {
-  color: #1e293b !important;
-}
-
-.admin-main-content button.admin-btn-primary,
-.admin-btn-brown {
-  background-color: #8c764b !important;
-  color: #ffffff !important;
-  border: none !important;
-  box-shadow: 0 4px 14px rgba(140, 118, 75, 0.25) !important;
-}
-
-.admin-main-content button.admin-btn-primary:hover,
-.admin-btn-brown:hover {
-  background-color: #75603a !important;
-}
-
-.admin-main-content input,
-.admin-main-content select,
-.admin-main-content textarea {
-  background-color: #ffffff !important;
-  color: #111111 !important;
-  border: 1px solid #cbd5e1 !important;
-}
-
-.admin-main-content input:focus,
-.admin-main-content select:focus,
-.admin-main-content textarea:focus {
-  border-color: #8c764b !important;
-  outline: none !important;
-  box-shadow: 0 0 0 3px rgba(140, 118, 75, 0.15) !important;
-}
-
-.admin-card,
-.admin-box,
-.admin-panel {
-  background-color: #f9f9fc !important;
-  border: 1px solid #e2e8f0 !important;
-  color: #111111 !important;
-}
 
 /* ── Category & Brand Header Bar Readability & Alignment ── */
 .cat-header-bar {
@@ -1862,18 +1806,55 @@ input, select, textarea {
 }
 
 /* ══════════════════════════════════════════════
-   HIGH-CONTRAST UNIFIED ADMIN THEME SYSTEM
-   Fixes low-contrast midnight themes and dark UI
+   HIGH-CONTRAST LUXURY ADMIN THEME SYSTEM
+   Ultra-crisp visibility across ALL 25 admin pages
    ══════════════════════════════════════════════ */
 .admin-main-content {
+  background-color: #0b0f19 !important;
   color: #f8fafc !important;
+  min-height: 100vh;
+}
+
+.admin-main-content h1,
+.admin-main-content .admin-page-title {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+.admin-main-content h2 {
+  color: #d4af37 !important;
+  font-weight: 800 !important;
+}
+
+.admin-main-content h3,
+.admin-main-content h4,
+.admin-main-content h5,
+.admin-main-content h6 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* Category, Brand & Product card titles inside admin */
+.admin-main-content .admin-card h3,
+.admin-main-content .admin-box h3,
+.admin-main-content [class*="card"] h3,
+.admin-main-content div > h3 {
+  color: #ffffff !important;
+}
+
+.admin-main-content p,
+.admin-main-content .help-text,
+.admin-main-content .subtitle,
+.admin-main-content .desc,
+.admin-main-content div > p {
+  color: #cbd5e1 !important;
 }
 
 .admin-main-content label,
 .admin-main-content .form-label,
 .admin-main-content .label {
-  color: #e2e8f0 !important;
-  font-weight: 600 !important;
+  color: #f1f5f9 !important;
+  font-weight: 700 !important;
   font-size: 0.9rem !important;
   letter-spacing: 0.02em !important;
 }
@@ -1883,17 +1864,19 @@ input, select, textarea {
 .admin-main-content input[type="password"],
 .admin-main-content input[type="number"],
 .admin-main-content input[type="url"],
+.admin-main-content input[type="date"],
+.admin-main-content input[type="search"],
 .admin-main-content textarea,
 .admin-main-content select {
   color: #ffffff !important;
-  background-color: #0b0e14 !important;
+  background-color: #111827 !important;
   border: 1px solid #334155 !important;
-  border-radius: 6px !important;
+  border-radius: 8px !important;
 }
 
 .admin-main-content input::placeholder,
 .admin-main-content textarea::placeholder {
-  color: #64748b !important;
+  color: #94a3b8 !important;
   opacity: 1 !important;
 }
 
@@ -1902,36 +1885,49 @@ input, select, textarea {
 .admin-main-content select:focus {
   border-color: #d4af37 !important;
   outline: none !important;
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25) !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.25) !important;
 }
 
-.admin-main-content p,
-.admin-main-content .help-text,
-.admin-main-content .subtitle {
-  color: #cbd5e1 !important;
+.admin-card,
+.admin-box,
+.admin-panel {
+  background-color: #151c2c !important;
+  border: 1px solid #28334e !important;
+  color: #f8fafc !important;
 }
 
-.admin-main-content h1 {
-  color: #ffffff !important;
-  font-size: 2.2rem !important;
-  font-weight: 800 !important;
-}
-
-.admin-main-content h2 {
-  color: #d4af37 !important;
-  font-size: 1.35rem !important;
-  font-weight: 800 !important;
-}
-
-.admin-main-content h3 {
-  color: #ffffff !important;
-}
-
+/* Tables across admin dashboard, inquiries, etc. */
 .admin-main-content table th {
+  background-color: #192238 !important;
   color: #d4af37 !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
+  border: 1px solid #2d3b5b !important;
+  padding: 12px 16px !important;
 }
 
 .admin-main-content table td {
-  color: #f1f5f9 !important;
+  background-color: #101626 !important;
+  color: #f8fafc !important;
+  border: 1px solid #1f2a44 !important;
+  padding: 12px 16px !important;
+}
+
+.admin-main-content table tr:hover td {
+  background-color: #162036 !important;
+}
+
+/* Admin Primary Buttons */
+.admin-main-content button.admin-btn-primary,
+.admin-btn-gold {
+  background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%) !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3) !important;
+}
+
+.admin-main-content button.admin-btn-primary:hover,
+.admin-btn-gold:hover {
+  background: linear-gradient(135deg, #e5c358 0%, #b89014 100%) !important;
+  transform: translateY(-1px);
 }

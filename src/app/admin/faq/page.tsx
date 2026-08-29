@@ -595,8 +595,8 @@ export default function AdminFaqPage() {
       {/* STYLES */}
       <style jsx global>{`
         .admin-page-container {
-          background: #FAF8F5;
-          color: #1E1E1E;
+          background: #0b0f19;
+          color: #f8fafc;
           min-height: 100vh;
           font-size: 13px;
         }
@@ -619,12 +619,12 @@ export default function AdminFaqPage() {
           gap: 16px;
           margin-bottom: 24px;
           padding-bottom: 20px;
-          border-bottom: 1px solid rgba(0,0,0,0.08);
+          border-bottom: 1px solid #1e293b;
         }
 
         .section-pill {
-          background: #8c764b;
-          color: #ffffff;
+          background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+          color: #000000;
           font-size: 10px;
           font-weight: 800;
           letter-spacing: 0.1em;
@@ -634,24 +634,26 @@ export default function AdminFaqPage() {
         }
 
         .count-pill {
-          background: #e2e8f0;
-          color: #475569;
+          background: #1e293b;
+          color: #94a3b8;
           font-size: 11px;
           font-weight: 700;
           padding: 3px 8px;
           border-radius: 4px;
+          border: 1px solid #334155;
         }
 
         .page-title {
-          font-size: 24px;
+          font-size: 26px;
           font-weight: 800;
+          color: #ffffff;
           text-transform: uppercase;
           letter-spacing: -0.01em;
           margin: 4px 0;
         }
 
         .page-sub {
-          color: #64748b;
+          color: #cbd5e1;
           font-size: 13px;
           margin: 0;
         }
@@ -668,27 +670,28 @@ export default function AdminFaqPage() {
           align-items: center;
           gap: 8px;
           padding: 10px 18px;
-          background: #1e1e1e;
-          color: #ffffff;
+          background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+          color: #000000;
           border-radius: 8px;
-          font-weight: 700;
+          font-weight: 800;
           font-size: 12px;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           border: none;
           cursor: pointer;
-          transition: background 0.2s;
+          transition: transform 0.2s;
+          box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
         }
-        .btn-primary:hover { background: #8c764b; }
+        .btn-primary:hover { transform: translateY(-1px); }
 
         .btn-secondary {
           display: inline-flex;
           align-items: center;
           gap: 6px;
           padding: 10px 14px;
-          background: #ffffff;
-          color: #1e1e1e;
-          border: 1px solid #d1d5db;
+          background: #1e293b;
+          color: #f8fafc;
+          border: 1px solid #334155;
           border-radius: 8px;
           font-weight: 700;
           font-size: 12px;
@@ -698,7 +701,7 @@ export default function AdminFaqPage() {
           text-decoration: none;
           transition: all 0.2s;
         }
-        .btn-secondary:hover { background: #f3f4f6; border-color: #9ca3af; }
+        .btn-secondary:hover { background: #334155; }
 
         .stats-strip {
           display: grid;
@@ -708,18 +711,18 @@ export default function AdminFaqPage() {
         }
 
         .stat-card {
-          background: #ffffff;
+          background: #151c2c;
           padding: 16px 20px;
           border-radius: 12px;
-          border: 1px solid rgba(0,0,0,0.06);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+          border: 1px solid #28334e;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
         }
 
         .stat-num {
           display: block;
           font-size: 24px;
           font-weight: 900;
-          color: #8c764b;
+          color: #d4af37;
           line-height: 1;
           margin-bottom: 4px;
         }
@@ -729,15 +732,15 @@ export default function AdminFaqPage() {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          color: #64748b;
+          color: #94a3b8;
         }
 
         .filters-card {
-          background: #ffffff;
+          background: #151c2c;
           border-radius: 16px;
           padding: 20px;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.03);
-          border: 1px solid rgba(0,0,0,0.06);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+          border: 1px solid #28334e;
           margin-bottom: 24px;
         }
 
@@ -745,8 +748,8 @@ export default function AdminFaqPage() {
           display: flex;
           align-items: center;
           gap: 10px;
-          background: #f8fafc;
-          border: 1px solid #cbd5e1;
+          background: #0f172a;
+          border: 1px solid #334155;
           border-radius: 10px;
           padding: 10px 16px;
           margin-bottom: 16px;
@@ -757,7 +760,7 @@ export default function AdminFaqPage() {
           border: none;
           background: transparent;
           font-size: 13px;
-          color: #1e1e1e;
+          color: #ffffff;
           outline: none;
         }
 
@@ -780,29 +783,30 @@ export default function AdminFaqPage() {
           gap: 6px;
           padding: 6px 12px;
           border-radius: 999px;
-          background: #f1f5f9;
-          border: 1px solid #e2e8f0;
+          background: #0f172a;
+          border: 1px solid #334155;
           font-size: 11px;
           font-weight: 700;
-          color: #475569;
+          color: #cbd5e1;
           cursor: pointer;
           transition: all 0.2s;
         }
-        .cat-chip:hover { border-color: #8c764b; color: #8c764b; }
+        .cat-chip:hover { border-color: #d4af37; color: #d4af37; }
         .cat-chip.active {
-          background: #1e1e1e;
-          color: #ffffff;
-          border-color: #1e1e1e;
+          background: #d4af37;
+          color: #000000;
+          border-color: #d4af37;
         }
 
         .cat-badge {
-          background: rgba(0,0,0,0.1);
+          background: rgba(255,255,255,0.15);
           padding: 1px 6px;
           border-radius: 999px;
           font-size: 10px;
         }
         .cat-chip.active .cat-badge {
-          background: rgba(255,255,255,0.25);
+          background: rgba(0,0,0,0.25);
+          color: #000000;
         }
 
         .faqs-grid {
@@ -816,19 +820,19 @@ export default function AdminFaqPage() {
         }
 
         .faq-admin-card {
-          background: #ffffff;
+          background: #151c2c;
           border-radius: 12px;
           padding: 20px;
-          border: 1px solid rgba(0,0,0,0.06);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+          border: 1px solid #28334e;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
           display: flex;
           flex-direction: column;
           transition: transform 0.2s, box-shadow 0.2s;
         }
         .faq-admin-card:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-          border-color: rgba(140, 118, 75, 0.4);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+          border-color: rgba(212, 175, 55, 0.4);
         }
 
         .card-top {
@@ -841,8 +845,9 @@ export default function AdminFaqPage() {
         .idx-tag {
           font-size: 10px;
           font-weight: 800;
-          color: #8c764b;
-          background: rgba(140, 118, 75, 0.1);
+          color: #d4af37;
+          background: rgba(212, 175, 55, 0.15);
+          border: 1px solid rgba(212, 175, 55, 0.3);
           padding: 2px 6px;
           border-radius: 4px;
         }
@@ -851,17 +856,19 @@ export default function AdminFaqPage() {
           font-size: 10px;
           font-weight: 700;
           text-transform: uppercase;
-          background: #f1f5f9;
-          color: #334155;
+          background: #1e293b;
+          color: #38bdf8;
           padding: 2px 8px;
           border-radius: 4px;
+          border: 1px solid #334155;
         }
 
         .brand-tag {
           font-size: 10px;
-          font-weight: 700;
-          background: #fef3c7;
-          color: #92400e;
+          font-weight: 800;
+          background: rgba(212, 175, 55, 0.15);
+          color: #d4af37;
+          border: 1px solid rgba(212, 175, 55, 0.3);
           padding: 2px 8px;
           border-radius: 4px;
         }
@@ -882,22 +889,22 @@ export default function AdminFaqPage() {
           cursor: pointer;
           transition: all 0.2s;
         }
-        .btn-icon.edit { background: #f1f5f9; color: #475569; }
-        .btn-icon.edit:hover { background: #1e1e1e; color: #fff; }
-        .btn-icon.delete { background: #fee2e2; color: #dc2626; }
-        .btn-icon.delete:hover { background: #dc2626; color: #fff; }
+        .btn-icon.edit { background: #2563eb; color: #ffffff; }
+        .btn-icon.edit:hover { background: #1d4ed8; }
+        .btn-icon.delete { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .btn-icon.delete:hover { background: rgba(239, 68, 68, 0.3); }
 
         .faq-card-question {
           font-size: 15px;
           font-weight: 800;
-          color: #1e1e1e;
+          color: #ffffff;
           margin: 0 0 8px;
           line-height: 1.35;
         }
 
         .faq-card-answer {
           font-size: 12px;
-          color: #475569;
+          color: #cbd5e1;
           line-height: 1.55;
           margin: 0;
           display: -webkit-box;
@@ -909,17 +916,18 @@ export default function AdminFaqPage() {
         .empty-state {
           text-align: center;
           padding: 60px 20px;
-          background: #ffffff;
+          background: #151c2c;
           border-radius: 16px;
-          border: 1px dashed #cbd5e1;
+          border: 1px dashed #334155;
+          color: #94a3b8;
         }
 
         /* MODAL */
         .modal-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(0,0,0,0.7);
-          backdrop-filter: blur(4px);
+          background: rgba(0,0,0,0.85);
+          backdrop-filter: blur(6px);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -928,14 +936,16 @@ export default function AdminFaqPage() {
         }
 
         .modal-content {
-          background: #ffffff;
+          background: #111827;
+          border: 1px solid rgba(212, 175, 55, 0.4);
           border-radius: 16px;
           width: 100%;
-          maxWidth: 600px;
+          max-width: 600px;
           padding: 24px;
-          maxHeight: 90vh;
+          max-height: 90vh;
           overflow-y: auto;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+          color: #ffffff;
         }
 
         .modal-header {
@@ -944,7 +954,7 @@ export default function AdminFaqPage() {
           align-items: flex-start;
           margin-bottom: 20px;
           padding-bottom: 14px;
-          border-bottom: 1px solid #e2e8f0;
+          border-bottom: 1px solid #1e293b;
         }
 
         .close-btn {
@@ -966,7 +976,7 @@ export default function AdminFaqPage() {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          color: #475569;
+          color: #f1f5f9;
           margin-bottom: 6px;
         }
 
@@ -976,19 +986,19 @@ export default function AdminFaqPage() {
           width: 100%;
           padding: 10px 12px;
           border-radius: 8px;
-          border: 1px solid #cbd5e1;
-          background: #f8fafc;
+          border: 1px solid #334155;
+          background: #0b0e14;
           font-size: 13px;
           font-family: inherit;
-          color: #1e1e1e;
+          color: #ffffff;
           outline: none;
         }
 
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-          border-color: #8c764b;
-          background: #ffffff;
+          border-color: #d4af37;
+          background: #111827;
         }
 
         .modal-actions {
@@ -1000,10 +1010,10 @@ export default function AdminFaqPage() {
 
         .btn-cancel {
           padding: 10px 16px;
-          background: #f1f5f9;
-          color: #475569;
+          background: #1e293b;
+          color: #cbd5e1;
           border-radius: 8px;
-          border: none;
+          border: 1px solid #334155;
           font-weight: 700;
           cursor: pointer;
         }
@@ -1013,12 +1023,12 @@ export default function AdminFaqPage() {
           position: fixed;
           bottom: 24px;
           right: 24px;
-          background: #1e1e1e;
-          color: #fff;
+          background: #d4af37;
+          color: #000000;
           padding: 12px 20px;
           border-radius: 8px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-          font-weight: 600;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+          font-weight: 800;
           font-size: 13px;
           opacity: 0;
           transform: translateY(20px);

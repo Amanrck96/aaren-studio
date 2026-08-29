@@ -84,26 +84,26 @@ export default function AdminInquiriesPage() {
   });
 
   return (
-    <div style={{ background: "#ffffff", color: "#111111", minHeight: "100vh", display: "flex" }}>
+    <div style={{ background: "#0b0f19", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#ffffff" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#0b0f19" }}>
         {/* Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem", borderBottom: "1px solid #1e293b", paddingBottom: "1.5rem" }}>
           <div>
-            <span style={{ color: "#8c764b", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>
+            <span style={{ color: "#d4af37", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>
               LIVE LEAD MANAGEMENT & CATALOGUE ENQUIRIES
             </span>
             <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flexWrap: "wrap" }}>
-              <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.4rem 0", color: "#8c764b" }}>
+              <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.4rem 0", color: "#ffffff" }}>
                 Inquiries & Catalogue Requests ({inquiries.length})
               </h1>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", padding: "0.3rem 0.75rem", background: "#dcfce7", color: "#166534", borderRadius: "20px", fontSize: "0.75rem", fontWeight: 700, border: "1px solid #bbf7d0" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", padding: "0.3rem 0.75rem", background: "rgba(34, 197, 94, 0.15)", color: "#4ade80", borderRadius: "20px", fontSize: "0.75rem", fontWeight: 700, border: "1px solid rgba(34, 197, 94, 0.3)" }}>
                 <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 8px #22c55e" }}></span>
                 Real-Time Live Sync Active
               </span>
             </div>
-            <p style={{ color: "#475569", fontSize: "0.95rem" }}>
+            <p style={{ color: "#cbd5e1", fontSize: "0.95rem", margin: "2px 0 0" }}>
               Live exact data of visitors who submitted catalogue enquiries, quote requests, or contact forms. Real-time updated.
             </p>
           </div>
@@ -113,9 +113,9 @@ export default function AdminInquiriesPage() {
               onClick={() => fetchInquiries()}
               style={{
                 padding: "0.75rem 1.2rem",
-                background: "#f1f5f9",
-                color: "#1e293b",
-                border: "1px solid #cbd5e1",
+                background: "#1e293b",
+                color: "#f8fafc",
+                border: "1px solid #334155",
                 borderRadius: "6px",
                 cursor: "pointer",
                 fontWeight: 700,
@@ -143,22 +143,22 @@ export default function AdminInquiriesPage() {
 
         {/* Live Metrics Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.2rem", marginBottom: "2rem" }}>
-          <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", padding: "1.2rem 1.5rem", borderRadius: "10px" }}>
-            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Total Leads Captured</div>
-            <div style={{ fontSize: "2rem", fontWeight: 900, color: "#8c764b", marginTop: "0.2rem" }}>{inquiries.length}</div>
+          <div style={{ background: "#151c2c", border: "1px solid #28334e", padding: "1.2rem 1.5rem", borderRadius: "10px" }}>
+            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase" }}>Total Leads Captured</div>
+            <div style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", marginTop: "0.2rem" }}>{inquiries.length}</div>
           </div>
-          <div style={{ background: "#fefce8", border: "1px solid #fef08a", padding: "1.2rem 1.5rem", borderRadius: "10px" }}>
-            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#a16207", textTransform: "uppercase" }}>📋 Catalogue Enquiries</div>
-            <div style={{ fontSize: "2rem", fontWeight: 900, color: "#ca8a04", marginTop: "0.2rem" }}>{pdfLeadsCount}</div>
+          <div style={{ background: "#151c2c", border: "1px solid #28334e", padding: "1.2rem 1.5rem", borderRadius: "10px" }}>
+            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#d4af37", textTransform: "uppercase" }}>📋 Catalogue Enquiries</div>
+            <div style={{ fontSize: "2rem", fontWeight: 900, color: "#d4af37", marginTop: "0.2rem" }}>{pdfLeadsCount}</div>
           </div>
-          <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", padding: "1.2rem 1.5rem", borderRadius: "10px" }}>
-            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#0369a1", textTransform: "uppercase" }}>💬 Direct Contact Inquiries</div>
-            <div style={{ fontSize: "2rem", fontWeight: 900, color: "#0284c7", marginTop: "0.2rem" }}>{contactLeadsCount}</div>
+          <div style={{ background: "#151c2c", border: "1px solid #28334e", padding: "1.2rem 1.5rem", borderRadius: "10px" }}>
+            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase" }}>💬 Direct Contact Inquiries</div>
+            <div style={{ fontSize: "2rem", fontWeight: 900, color: "#38bdf8", marginTop: "0.2rem" }}>{contactLeadsCount}</div>
           </div>
         </div>
 
         {/* Filter & Search Bar */}
-        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "1.2rem", borderRadius: "8px" }}>
+        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", background: "#151c2c", border: "1px solid #28334e", padding: "1.2rem", borderRadius: "8px" }}>
           <input
             type="text"
             aria-label="Search inquiries"
@@ -168,9 +168,9 @@ export default function AdminInquiriesPage() {
             style={{
               flex: 1,
               padding: "0.75rem 1rem",
-              background: "#ffffff",
-              border: "1px solid #cbd5e1",
-              color: "#111111",
+              background: "#0f172a",
+              border: "1px solid #334155",
+              color: "#ffffff",
               borderRadius: "6px",
               fontSize: "0.95rem",
             }}
@@ -181,9 +181,9 @@ export default function AdminInquiriesPage() {
             onChange={(e) => setFilterType(e.target.value)}
             style={{
               padding: "0.75rem 1rem",
-              background: "#ffffff",
-              border: "1px solid #cbd5e1",
-              color: "#111111",
+              background: "#0f172a",
+              border: "1px solid #334155",
+              color: "#ffffff",
               borderRadius: "6px",
               fontSize: "0.95rem",
               fontWeight: 600,
@@ -197,10 +197,10 @@ export default function AdminInquiriesPage() {
         </div>
 
         {/* Inquiries Table */}
-        <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "10px", overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+        <div style={{ background: "#151c2c", border: "1px solid #28334e", borderRadius: "10px", overflow: "hidden", boxShadow: "0 4px 20px rgba(0,0,0,0.3)" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.9rem" }}>
             <thead>
-              <tr style={{ background: "#f8fafc", color: "#475569", borderBottom: "1px solid #e2e8f0", textTransform: "uppercase", fontSize: "0.75rem", letterSpacing: "0.08em" }}>
+              <tr style={{ background: "#192238", color: "#d4af37", borderBottom: "1px solid #2d3b5b", textTransform: "uppercase", fontSize: "0.75rem", letterSpacing: "0.08em" }}>
                 <th style={{ padding: "1rem 1.2rem" }}>Lead Visitor</th>
                 <th style={{ padding: "1rem 1.2rem" }}>Contact Details</th>
                 <th style={{ padding: "1rem 1.2rem" }}>Lead Type</th>
@@ -213,46 +213,46 @@ export default function AdminInquiriesPage() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={7} style={{ padding: "3rem", textAlign: "center", color: "#64748b" }}>
+                  <td colSpan={7} style={{ padding: "3rem", textAlign: "center", color: "#94a3b8" }}>
                     Loading live lead records...
                   </td>
                 </tr>
               ) : filteredInquiries.length === 0 ? (
                 <tr>
-                  <td colSpan={7} style={{ padding: "3rem", textAlign: "center", color: "#64748b" }}>
+                  <td colSpan={7} style={{ padding: "3rem", textAlign: "center", color: "#94a3b8" }}>
                     No leads found matching current filter.
                   </td>
                 </tr>
               ) : (
                 filteredInquiries.map((inq) => (
-                  <tr key={inq.id} style={{ borderBottom: "1px solid #f1f5f9", transition: "background 0.15s ease" }}>
+                  <tr key={inq.id} style={{ borderBottom: "1px solid #1f2a44", background: "#101626", transition: "background 0.15s ease" }}>
                     <td style={{ padding: "1rem 1.2rem" }}>
-                      <div style={{ fontWeight: 800, color: "#1e293b", fontSize: "0.95rem" }}>{inq.name}</div>
+                      <div style={{ fontWeight: 800, color: "#ffffff", fontSize: "0.95rem" }}>{inq.name}</div>
                       {inq.profession && (
-                        <div style={{ fontSize: "0.78rem", color: "#64748b", fontWeight: 600, marginTop: "2px" }}>
+                        <div style={{ fontSize: "0.78rem", color: "#94a3b8", fontWeight: 600, marginTop: "2px" }}>
                           🏢 {inq.profession}
                         </div>
                       )}
                       {inq.city && (
-                        <div style={{ fontSize: "0.75rem", color: "#8c764b", marginTop: "1px" }}>
+                        <div style={{ fontSize: "0.75rem", color: "#d4af37", marginTop: "1px" }}>
                           📍 {inq.city}
                         </div>
                       )}
                     </td>
                     <td style={{ padding: "1rem 1.2rem" }}>
-                      <div style={{ color: "#8c764b", fontWeight: 700 }}>{inq.email}</div>
-                      <div style={{ color: "#64748b", fontSize: "0.85rem", marginTop: "2px", fontWeight: 600 }}>📞 {inq.phone}</div>
+                      <div style={{ color: "#38bdf8", fontWeight: 700 }}>{inq.email}</div>
+                      <div style={{ color: "#cbd5e1", fontSize: "0.85rem", marginTop: "2px", fontWeight: 600 }}>📞 {inq.phone}</div>
                     </td>
                     <td style={{ padding: "1rem 1.2rem" }}>
                       <span
                         style={{
                           padding: "0.35rem 0.75rem",
-                          borderRadius: "4px",
+                          borderRadius: "6px",
                           fontSize: "0.75rem",
                           fontWeight: 800,
-                          background: inq.type === "Catalog PDF Gate" ? "#fef3c7" : "#e0f2fe",
-                          color: inq.type === "Catalog PDF Gate" ? "#b45309" : "#0369a1",
-                          border: `1px solid ${inq.type === "Catalog PDF Gate" ? "#fde68a" : "#bae6fd"}`,
+                          background: inq.type === "Catalog PDF Gate" ? "rgba(212,175,55,0.2)" : "rgba(56,189,248,0.2)",
+                          color: inq.type === "Catalog PDF Gate" ? "#fde047" : "#38bdf8",
+                          border: `1px solid ${inq.type === "Catalog PDF Gate" ? "rgba(212,175,55,0.4)" : "rgba(56,189,248,0.4)"}`,
                           display: "inline-flex",
                           alignItems: "center",
                           gap: "0.3rem",
@@ -262,20 +262,20 @@ export default function AdminInquiriesPage() {
                       </span>
                     </td>
                     <td style={{ padding: "1rem 1.2rem" }}>
-                      <div style={{ color: "#0f172a", fontWeight: 800, fontSize: "0.9rem" }}>
+                      <div style={{ color: "#ffffff", fontWeight: 800, fontSize: "0.9rem" }}>
                         📄 {inq.productOrBrand || "General Catalog"}
                       </div>
                       {inq.downloadedFileName && (
-                        <div style={{ fontSize: "0.75rem", color: "#64748b", fontFamily: "monospace", marginTop: "2px" }}>
+                        <div style={{ fontSize: "0.75rem", color: "#94a3b8", fontFamily: "monospace", marginTop: "2px" }}>
                           File: {inq.downloadedFileName}
                         </div>
                       )}
                     </td>
-                    <td style={{ padding: "1rem 1.2rem", color: "#475569", maxWidth: "260px" }}>
-                      {inq.subject && <div style={{ color: "#1e293b", fontWeight: 700, fontSize: "0.82rem", marginBottom: "2px" }}>{inq.subject}</div>}
+                    <td style={{ padding: "1rem 1.2rem", color: "#cbd5e1", maxWidth: "260px" }}>
+                      {inq.subject && <div style={{ color: "#f8fafc", fontWeight: 700, fontSize: "0.82rem", marginBottom: "2px" }}>{inq.subject}</div>}
                       <div style={{ fontSize: "0.82rem", lineHeight: 1.4, whiteSpace: "pre-line" }}>{inq.message || "-"}</div>
                     </td>
-                    <td style={{ padding: "1rem 1.2rem", color: "#64748b", fontSize: "0.8rem", whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "1rem 1.2rem", color: "#94a3b8", fontSize: "0.8rem", whiteSpace: "nowrap" }}>
                       {new Date(inq.createdAt).toLocaleString()}
                     </td>
                     <td style={{ padding: "1rem 1.2rem", textAlign: "right" }}>
@@ -284,12 +284,12 @@ export default function AdminInquiriesPage() {
                         disabled={deletingId === inq.id}
                         style={{
                           padding: "0.4rem 0.8rem",
-                          background: "#fee2e2",
-                          color: "#dc2626",
-                          border: "1px solid #fca5a5",
-                          borderRadius: "4px",
+                          background: "rgba(239, 68, 68, 0.15)",
+                          color: "#f87171",
+                          border: "1px solid rgba(239, 68, 68, 0.35)",
+                          borderRadius: "6px",
                           cursor: "pointer",
-                          fontWeight: 600,
+                          fontWeight: 700,
                           fontSize: "0.8rem",
                         }}
                       >

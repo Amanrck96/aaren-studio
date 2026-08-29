@@ -760,11 +760,11 @@ export default function AdminProductsPage() {
         <span>{toastMsg}</span>
       </div>
 
-      {/* ── EXACT STYLES FROM HTML SPEC ── */}
+      {/* ── HIGH-CONTRAST LUXURY DARK THEME STYLES ── */}
       <style jsx global>{`
         .admin-page-container {
-          background: #FAF8F5;
-          color: #1E1E1E;
+          background: #0b0f19;
+          color: #f8fafc;
           min-height: 100vh;
           font-size: 13px;
         }
@@ -786,12 +786,14 @@ export default function AdminProductsPage() {
           justify-content: space-between;
           gap: 16px;
           margin-bottom: 32px;
+          border-bottom: 1px solid #1e293b;
+          padding-bottom: 20px;
         }
 
         .eyebrow {
-          color: #81663f;
+          color: #d4af37;
           font-size: 11px;
-          font-weight: 700;
+          font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.15em;
           display: block;
@@ -799,18 +801,20 @@ export default function AdminProductsPage() {
         }
 
         h1.page-title {
-          font-size: 26px;
+          font-size: 28px;
           font-weight: 800;
+          color: #ffffff;
           text-transform: uppercase;
           letter-spacing: -0.01em;
+          margin: 0;
         }
 
         .btn-add {
           padding: 11px 22px;
           border-radius: 999px;
-          background: #1E1E1E;
-          color: #fff;
-          font-weight: 700;
+          background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+          color: #000000;
+          font-weight: 800;
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.06em;
@@ -819,16 +823,16 @@ export default function AdminProductsPage() {
           gap: 8px;
           border: none;
           cursor: pointer;
-          box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-          transition: background 0.25s ease;
+          box-shadow: 0 6px 16px rgba(212, 175, 55, 0.35);
+          transition: transform 0.2s ease;
         }
 
-        .btn-add:hover { background: #81663f; }
+        .btn-add:hover { transform: translateY(-1px); }
 
         .tabs {
           display: flex;
           gap: 28px;
-          border-bottom: 1px solid rgba(0,0,0,0.1);
+          border-bottom: 1px solid #1e293b;
           margin-bottom: 28px;
         }
 
@@ -838,13 +842,14 @@ export default function AdminProductsPage() {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          color: rgba(0,0,0,0.45);
+          color: #94a3b8;
           border-bottom: 2px solid transparent;
           background: none;
           cursor: pointer;
+          transition: all 0.2s ease;
         }
 
-        .tab.active { color: #81663f; border-color: #81663f; }
+        .tab.active { color: #d4af37; border-color: #d4af37; }
 
         .toolbar {
           display: flex;
@@ -852,11 +857,11 @@ export default function AdminProductsPage() {
           align-items: center;
           justify-content: space-between;
           gap: 16px;
-          background: #fff;
+          background: #151c2c;
           padding: 16px;
           border-radius: 16px;
-          border: 1px solid rgba(0,0,0,0.1);
-          box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+          border: 1px solid #28334e;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
           margin-bottom: 24px;
         }
 
@@ -866,14 +871,15 @@ export default function AdminProductsPage() {
           width: 100%;
           padding: 10px 16px 10px 38px;
           border-radius: 999px;
-          border: 1px solid rgba(0,0,0,0.15);
-          background: #FAF8F5;
+          border: 1px solid #334155;
+          background: #0f172a;
+          color: #ffffff;
           font-size: 12px;
           font-family: inherit;
         }
 
-        .search-wrap input:focus { outline: none; border-color: #81663f; }
-        .search-wrap svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); opacity: 0.4; }
+        .search-wrap input:focus { outline: none; border-color: #d4af37; }
+        .search-wrap svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); opacity: 0.6; stroke: #94a3b8; }
 
         .cat-pills { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 2px; }
 
@@ -883,48 +889,49 @@ export default function AdminProductsPage() {
           font-size: 11px;
           font-weight: 600;
           white-space: nowrap;
-          background: rgba(0,0,0,0.05);
-          color: rgba(0,0,0,0.7);
-          border: none;
+          background: #0f172a;
+          color: #cbd5e1;
+          border: 1px solid #334155;
           cursor: pointer;
+          transition: all 0.2s ease;
         }
 
-        .cat-pill.active { background: #1E1E1E; color: #fff; }
+        .cat-pill.active { background: #d4af37; color: #000000; font-weight: 800; border-color: #d4af37; }
 
         .catalog-table-wrap {
-          background: #fff;
+          background: #151c2c;
           border-radius: 16px;
-          border: 1px solid rgba(0,0,0,0.1);
+          border: 1px solid #28334e;
           overflow: hidden;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        thead { background: #FAF8F5; border-bottom: 1px solid rgba(0,0,0,0.1); }
+        thead { background: #192238; border-bottom: 1px solid #2d3b5b; }
         th {
           padding: 14px 16px;
           font-size: 10px;
-          font-weight: 700;
+          font-weight: 800;
           text-transform: uppercase;
-          letter-spacing: 0.06em;
-          color: rgba(0,0,0,0.45);
+          letter-spacing: 0.08em;
+          color: #d4af37;
         }
-        td { padding: 14px 16px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 12px; }
-        tbody tr:hover { background: rgba(0,0,0,0.015); }
-        .prod-cell { display: flex; align-items: center; gap: 12px; font-weight: 700; }
+        td { padding: 14px 16px; border-top: 1px solid #1f2a44; font-size: 12px; color: #f8fafc; }
+        tbody tr:hover { background: #162036; }
+        .prod-cell { display: flex; align-items: center; gap: 12px; font-weight: 700; color: #ffffff; }
         .prod-thumb {
           width: 40px; height: 40px; border-radius: 8px; flex-shrink: 0;
-          background-size: cover; background-position: center;
+          background-size: cover; background-position: center; border: 1px solid #334155;
         }
-        .brand-cell { color: #81663f; font-weight: 700; }
-        .price-cell { font-weight: 700; }
-        .action-icon { color: rgba(0,0,0,0.5); cursor: pointer; text-decoration: none; font-size: 14px; }
-        .action-icon:hover { color: #1E1E1E; }
+        .brand-cell { color: #38bdf8; font-weight: 700; }
+        .price-cell { font-weight: 700; color: #ffffff; }
+        .action-icon { color: #94a3b8; cursor: pointer; text-decoration: none; font-size: 14px; }
+        .action-icon:hover { color: #ffffff; }
         .btn-action-edit {
           padding: 5px 10px;
           border-radius: 6px;
-          background: #1e1e1e;
-          color: #fff;
+          background: #2563eb;
+          color: #ffffff;
           font-size: 11px;
           font-weight: 700;
           border: none;
@@ -932,95 +939,96 @@ export default function AdminProductsPage() {
           transition: background 0.2s;
           white-space: nowrap;
         }
-        .btn-action-edit:hover { background: #81663f; }
+        .btn-action-edit:hover { background: #1d4ed8; }
         .btn-action-full {
           padding: 5px 10px;
           border-radius: 6px;
-          background: #f1f5f9;
-          color: #1e1e1e;
-          border: 1px solid #cbd5e1;
+          background: #1e293b;
+          color: #f8fafc;
+          border: 1px solid #334155;
           font-size: 11px;
           font-weight: 700;
           text-decoration: none;
           white-space: nowrap;
           transition: all 0.2s;
         }
-        .btn-action-full:hover { background: #e2e8f0; border-color: #94a3b8; }
+        .btn-action-full:hover { background: #334155; border-color: #475569; }
         .btn-modal-full {
           padding: 6px 12px;
           border-radius: 6px;
-          background: #81663f;
-          color: #fff;
+          background: #d4af37;
+          color: #000000;
           font-size: 11px;
-          font-weight: 700;
+          font-weight: 800;
           text-decoration: none;
           transition: background 0.2s;
         }
-        .btn-modal-full:hover { background: #a38354; }
+        .btn-modal-full:hover { background: #e5c358; }
         .cell-shortcode {
           display: inline-block;
           font-size: 10px;
-          font-weight: 700;
-          color: #81663f;
-          background: #fdf8f0;
-          padding: 1px 6px;
+          font-weight: 800;
+          color: #d4af37;
+          background: rgba(212,175,55,0.15);
+          border: 1px solid rgba(212,175,55,0.3);
+          padding: 2px 6px;
           border-radius: 4px;
           margin-top: 2px;
         }
-        .empty-row td { text-align: center; padding: 40px; color: rgba(0,0,0,0.4); font-style: italic; }
+        .empty-row td { text-align: center; padding: 40px; color: #94a3b8; font-style: italic; }
 
         .bulk-panel {
-          background: #fff;
+          background: #151c2c;
           padding: 32px;
           border-radius: 24px;
-          border: 1px solid rgba(0,0,0,0.1);
-          box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+          border: 1px solid #28334e;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
           max-width: 760px;
           margin: 0 auto;
         }
 
         .bulk-head {
           display: flex; align-items: center; justify-content: space-between;
-          padding-bottom: 16px; margin-bottom: 24px; border-bottom: 1px solid rgba(0,0,0,0.1);
+          padding-bottom: 16px; margin-bottom: 24px; border-bottom: 1px solid #1e293b;
           gap: 12px; flex-wrap: wrap;
         }
-        .bulk-head h3 { font-size: 16px; font-weight: 800; text-transform: uppercase; }
-        .bulk-head p { font-size: 11px; color: rgba(0,0,0,0.55); margin-top: 2px; }
+        .bulk-head h3 { font-size: 16px; font-weight: 800; text-transform: uppercase; color: #d4af37; }
+        .bulk-head p { font-size: 11px; color: #cbd5e1; margin-top: 2px; }
 
         .template-btn {
-          padding: 10px 18px; border-radius: 999px; border: 1px solid #81663f; color: #81663f;
+          padding: 10px 18px; border-radius: 999px; border: 1px solid #d4af37; color: #d4af37;
           font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-          background: none; cursor: pointer; display: flex; align-items: center; gap: 8px;
+          background: rgba(212,175,55,0.1); cursor: pointer; display: flex; align-items: center; gap: 8px;
           text-decoration: none;
         }
-        .template-btn:hover { background: #81663f; color: #fff; }
+        .template-btn:hover { background: #d4af37; color: #000; }
 
         .dropzone {
-          border: 2px dashed rgba(0,0,0,0.2);
+          border: 2px dashed #334155;
           border-radius: 20px;
           padding: 44px 20px;
           text-align: center;
-          background: #FAF8F5;
+          background: #0f172a;
           cursor: pointer;
           transition: border-color 0.2s ease;
         }
-        .dropzone:hover { border-color: #81663f; }
-        .dropzone h4 { font-size: 13px; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
-        .dropzone p { font-size: 11px; color: rgba(0,0,0,0.45); margin-top: 4px; }
+        .dropzone:hover { border-color: #d4af37; }
+        .dropzone h4 { font-size: 13px; font-weight: 800; text-transform: uppercase; margin-top: 10px; color: #ffffff; }
+        .dropzone p { font-size: 11px; color: #94a3b8; margin-top: 4px; }
 
         .overlay {
           display: none;
-          position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-          backdrop-filter: blur(4px);
+          position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+          backdrop-filter: blur(6px);
           z-index: 50; align-items: center; justify-content: center; padding: 16px;
           overflow-y: auto;
         }
         .overlay.open { display: flex; }
 
         .modal {
-          background: #121316;
-          border: 1px solid rgba(129,102,63,0.4);
-          color: #fff;
+          background: #111827;
+          border: 1px solid rgba(212,175,55,0.4);
+          color: #ffffff;
           border-radius: 24px;
           padding: 32px;
           width: 100%;
@@ -1028,7 +1036,7 @@ export default function AdminProductsPage() {
           max-height: 90vh;
           overflow-y: auto;
           position: relative;
-          box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+          box-shadow: 0 30px 80px rgba(0,0,0,0.6);
         }
 
         .modal-close {
@@ -1040,32 +1048,33 @@ export default function AdminProductsPage() {
         }
         .modal-close:hover { background: #e5484d; }
 
-        .modal h3 { font-size: 19px; font-weight: 800; text-transform: uppercase; margin-bottom: 24px; }
+        .modal h3 { font-size: 19px; font-weight: 800; text-transform: uppercase; margin-bottom: 24px; color: #d4af37; }
         .field { margin-bottom: 16px; }
-        .field label { display: block; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 6px; }
+        .field label { display: block; font-size: 11px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
         .field input, .field select, .field textarea {
-          width: 100%; padding: 11px 14px; border-radius: 12px;
-          background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-          color: #fff; font-family: inherit; font-size: 12px;
+          width: 100%; padding: 11px 14px; border-radius: 10px;
+          background: #0b0e14; border: 1px solid #334155;
+          color: #ffffff; font-family: inherit; font-size: 12px;
         }
-        .field select { background: #1e2026; }
-        .field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.35); }
-        .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #81663f; }
+        .field select { background: #0b0e14; }
+        .field input::placeholder, .field textarea::placeholder { color: #94a3b8; }
+        .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #d4af37; }
         .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
         .submit-btn {
           width: 100%; margin-top: 8px; padding: 14px; border-radius: 999px;
-          background: #81663f; color: #fff; font-weight: 800; font-size: 12px;
+          background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%); color: #000000; font-weight: 800; font-size: 12px;
           text-transform: uppercase; letter-spacing: 0.05em; border: none; cursor: pointer;
         }
-        .submit-btn:hover { background: #a38354; }
+        .submit-btn:hover { background: linear-gradient(135deg, #e5c358 0%, #b89014 100%); }
 
         .toast {
           position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
-          background: #1E1E1E; color: #fff; padding: 14px 24px; border-radius: 999px;
-          font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none;
+          background: #d4af37; color: #000000; padding: 14px 24px; border-radius: 999px;
+          font-size: 12px; font-weight: 800; opacity: 0; pointer-events: none;
           transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
           display: flex; align-items: center; gap: 8px; z-index: 60;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
       `}</style>

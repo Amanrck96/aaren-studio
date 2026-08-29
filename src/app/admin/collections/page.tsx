@@ -236,20 +236,20 @@ export default function CollectionsAdminPage() {
   }, [brandProducts, previewFilter, collections]);
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#ffffff", color: "#1e293b" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#0b0f19", color: "#f8fafc" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", overflowY: "auto" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", overflowY: "auto", background: "#0b0f19" }}>
         {/* Top Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #1e293b", paddingBottom: "1.2rem" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
               <span style={{ fontSize: "1.8rem" }}>🗃️</span>
-              <h1 style={{ fontSize: "1.8rem", fontWeight: 800, color: "#8c764b", margin: 0 }}>
+              <h1 style={{ fontSize: "2rem", fontWeight: 800, color: "#ffffff", margin: 0 }}>
                 Brand-Scoped Collection Management
               </h1>
             </div>
-            <p style={{ color: "#94a3b8", fontSize: "0.95rem", margin: "0.4rem 0 0" }}>
+            <p style={{ color: "#cbd5e1", fontSize: "0.95rem", margin: "0.4rem 0 0" }}>
               Manage brand-specific collections (categories) with circular icons, automatic storefront filter bar sync, and live product counts.
             </p>
           </div>

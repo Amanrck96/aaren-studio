@@ -229,27 +229,27 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh", display: "flex", fontFamily: "var(--font-jost), 'Jost', sans-serif" }}>
+    <div style={{ background: "#0b0f19", color: "#f8fafc", minHeight: "100vh", display: "flex", fontFamily: "var(--font-jost), 'Jost', sans-serif" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5", maxWidth: "1400px", margin: "0 auto" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#0b0f19", maxWidth: "1400px", margin: "0 auto" }}>
         {/* TOP HEADER */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2.5rem", borderBottom: "1px solid rgba(0,0,0,0.08)", paddingBottom: "1.5rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2.5rem", borderBottom: "1px solid #1e293b", paddingBottom: "1.5rem" }}>
           <div>
-            <span style={{ background: "#81663F", color: "#fff", fontSize: "0.75rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800, padding: "3px 8px", borderRadius: "4px" }}>
+            <span style={{ background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", fontSize: "0.75rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 900, padding: "4px 10px", borderRadius: "6px" }}>
               LUXURY CONTROL CENTER
             </span>
-            <h1 style={{ fontSize: "2.5rem", fontWeight: 900, margin: "0.4rem 0 0.2rem", color: "#81663F" }}>
+            <h1 style={{ fontSize: "2.5rem", fontWeight: 900, margin: "0.5rem 0 0.2rem", color: "#ffffff" }}>
               Aaren Studio Master Admin
             </h1>
-            <p style={{ color: "#565656", fontSize: "0.95rem", margin: 0 }}>
+            <p style={{ color: "#cbd5e1", fontSize: "0.95rem", margin: 0 }}>
               Complete code-free website management. All changes saved here update the live website permanently in real time.
             </p>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
             {syncToast && (
-              <span style={{ background: syncToast.startsWith("✅") ? "#d1fae5" : "#fee2e2", color: syncToast.startsWith("✅") ? "#065f46" : "#991b1b", padding: "8px 14px", borderRadius: "8px", fontSize: "0.82rem", fontWeight: 700, maxWidth: "320px" }}>
+              <span style={{ background: syncToast.startsWith("✅") ? "#064e3b" : "#7f1d1d", color: syncToast.startsWith("✅") ? "#a7f3d0" : "#fecaca", padding: "8px 14px", borderRadius: "8px", fontSize: "0.82rem", fontWeight: 700, maxWidth: "320px" }}>
                 {syncToast}
               </span>
             )}
@@ -261,7 +261,7 @@ export default function AdminDashboardPage() {
                 alignItems: "center",
                 gap: "6px",
                 padding: "10px 18px",
-                background: isSyncing ? "#a0aec0" : "#10b981",
+                background: isSyncing ? "#475569" : "#10b981",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",
@@ -284,11 +284,11 @@ export default function AdminDashboardPage() {
                 alignItems: "center",
                 gap: "6px",
                 padding: "10px 18px",
-                background: "#1E1E1E",
-                color: "#fff",
+                background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)",
+                color: "#000",
                 borderRadius: "8px",
                 textDecoration: "none",
-                fontWeight: 700,
+                fontWeight: 800,
                 fontSize: "0.85rem",
                 textTransform: "uppercase",
                 letterSpacing: "0.05em",
@@ -308,21 +308,21 @@ export default function AdminDashboardPage() {
               key={c.label}
               href={c.href}
               style={{
-                background: "#ffffff",
-                border: "1px solid rgba(0,0,0,0.06)",
+                background: "#151c2c",
+                border: "1px solid #28334e",
                 borderRadius: "12px",
                 padding: "1.4rem 1.6rem",
                 textDecoration: "none",
-                color: "#1E1E1E",
+                color: "#f8fafc",
                 display: "block",
                 transition: "all 0.2s ease-in-out",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
               }}
             >
-              <div style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              <div style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 {c.label}
               </div>
-              <div style={{ fontSize: "2.4rem", fontWeight: 900, color: "#81663F", marginTop: "0.3rem" }}>
+              <div style={{ fontSize: "2.4rem", fontWeight: 900, color: "#d4af37", marginTop: "0.3rem" }}>
                 {c.count}
               </div>
             </Link>
@@ -332,22 +332,22 @@ export default function AdminDashboardPage() {
         {/* GLOBAL COLORS & BRANDING CONTROLLER */}
         <div
           style={{
-            background: "#ffffff",
-            border: "1px solid rgba(129, 102, 63, 0.25)",
+            background: "#151c2c",
+            border: "1px solid #28334e",
             borderRadius: "16px",
             padding: "2rem",
             marginBottom: "3rem",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.03)",
+            boxShadow: "0 6px 24px rgba(0,0,0,0.35)",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem", borderBottom: "1px solid #f1f5f9", paddingBottom: "0.8rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem", borderBottom: "1px solid #1e293b", paddingBottom: "0.8rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Palette size={20} color="#81663F" />
+              <Palette size={20} color="#d4af37" />
               <div>
-                <h2 style={{ fontSize: "1.3rem", fontWeight: 800, margin: 0, color: "#81663F" }}>
+                <h2 style={{ fontSize: "1.3rem", fontWeight: 800, margin: 0, color: "#d4af37" }}>
                   Global Website Colors & Typography Branding
                 </h2>
-                <p style={{ fontSize: "0.85rem", color: "#64748b", margin: "2px 0 0" }}>
+                <p style={{ fontSize: "0.85rem", color: "#cbd5e1", margin: "2px 0 0" }}>
                   Permanently change the website background and heading colors across all public pages.
                 </p>
               </div>
@@ -361,8 +361,8 @@ export default function AdminDashboardPage() {
                 alignItems: "center",
                 gap: "8px",
                 padding: "10px 20px",
-                background: "#81663F",
-                color: "#ffffff",
+                background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)",
+                color: "#000000",
                 border: "none",
                 borderRadius: "8px",
                 fontWeight: 800,
@@ -379,8 +379,8 @@ export default function AdminDashboardPage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem" }}>
             {/* Website Background */}
-            <div style={{ background: "#f8fafc", padding: "1rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", color: "#475569", marginBottom: "0.5rem" }}>
+            <div style={{ background: "#0f172a", padding: "1rem", borderRadius: "10px", border: "1px solid #334155" }}>
+              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", color: "#f1f5f9", marginBottom: "0.5rem" }}>
                 Website Background Color
               </label>
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -391,7 +391,7 @@ export default function AdminDashboardPage() {
                     userInteractedRef.current.websiteBgColor = true;
                     setWebsiteBgColor(e.target.value);
                   }}
-                  style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #cbd5e1", cursor: "pointer", padding: "2px" }}
+                  style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #334155", cursor: "pointer", padding: "2px", background: "transparent" }}
                 />
                 <input
                   type="text"
@@ -400,17 +400,17 @@ export default function AdminDashboardPage() {
                     userInteractedRef.current.websiteBgColor = true;
                     setWebsiteBgColor(e.target.value);
                   }}
-                  style={{ flex: 1, padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#1E1E1E" }}
+                  style={{ flex: 1, padding: "8px 12px", border: "1px solid #334155", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#ffffff", background: "#111827" }}
                 />
               </div>
-              <small style={{ color: "#64748b", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>
-                Active Luxury Default: <b style={{ color: "#81663F" }}>#E6E2D8</b>
+              <small style={{ color: "#94a3b8", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>
+                Active Luxury Default: <b style={{ color: "#d4af37" }}>#E6E2D8</b>
               </small>
             </div>
 
             {/* Main Headings */}
-            <div style={{ background: "#f8fafc", padding: "1rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", color: "#475569", marginBottom: "0.5rem" }}>
+            <div style={{ background: "#0f172a", padding: "1rem", borderRadius: "10px", border: "1px solid #334155" }}>
+              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", color: "#f1f5f9", marginBottom: "0.5rem" }}>
                 Main Headings Color
               </label>
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -421,7 +421,7 @@ export default function AdminDashboardPage() {
                     userInteractedRef.current.headingColor = true;
                     setHeadingColor(e.target.value);
                   }}
-                  style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #cbd5e1", cursor: "pointer", padding: "2px" }}
+                  style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #334155", cursor: "pointer", padding: "2px", background: "transparent" }}
                 />
                 <input
                   type="text"
@@ -430,17 +430,17 @@ export default function AdminDashboardPage() {
                     userInteractedRef.current.headingColor = true;
                     setHeadingColor(e.target.value);
                   }}
-                  style={{ flex: 1, padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#1E1E1E" }}
+                  style={{ flex: 1, padding: "8px 12px", border: "1px solid #334155", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#ffffff", background: "#111827" }}
                 />
               </div>
-              <small style={{ color: "#64748b", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>
-                Active Luxury Default: <b style={{ color: "#81663F" }}>#81663F</b>
+              <small style={{ color: "#94a3b8", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>
+                Active Luxury Default: <b style={{ color: "#d4af37" }}>#81663F</b>
               </small>
             </div>
 
             {/* Body Text */}
-            <div style={{ background: "#f8fafc", padding: "1rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", color: "#475569", marginBottom: "0.5rem" }}>
+            <div style={{ background: "#0f172a", padding: "1rem", borderRadius: "10px", border: "1px solid #334155" }}>
+              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", color: "#f1f5f9", marginBottom: "0.5rem" }}>
                 Body Text Color
               </label>
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -451,7 +451,7 @@ export default function AdminDashboardPage() {
                     userInteractedRef.current.textColor = true;
                     setTextColor(e.target.value);
                   }}
-                  style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #cbd5e1", cursor: "pointer", padding: "2px" }}
+                  style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #334155", cursor: "pointer", padding: "2px", background: "transparent" }}
                 />
                 <input
                   type="text"
@@ -460,17 +460,17 @@ export default function AdminDashboardPage() {
                     userInteractedRef.current.textColor = true;
                     setTextColor(e.target.value);
                   }}
-                  style={{ flex: 1, padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#1E1E1E" }}
+                  style={{ flex: 1, padding: "8px 12px", border: "1px solid #334155", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#ffffff", background: "#111827" }}
                 />
               </div>
-              <small style={{ color: "#64748b", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>
-                Active Dark Default: <b>#1E1E1E</b>
+              <small style={{ color: "#94a3b8", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>
+                Active Dark Default: <b style={{ color: "#f8fafc" }}>#1E1E1E</b>
               </small>
             </div>
 
             {/* Accent Gold */}
-            <div style={{ background: "#f8fafc", padding: "1rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", color: "#475569", marginBottom: "0.5rem" }}>
+            <div style={{ background: "#0f172a", padding: "1rem", borderRadius: "10px", border: "1px solid #334155" }}>
+              <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", color: "#f1f5f9", marginBottom: "0.5rem" }}>
                 Accent Gold / Bronze
               </label>
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -481,7 +481,7 @@ export default function AdminDashboardPage() {
                     userInteractedRef.current.accentColor = true;
                     setAccentColor(e.target.value);
                   }}
-                  style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #cbd5e1", cursor: "pointer", padding: "2px" }}
+                  style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #334155", cursor: "pointer", padding: "2px", background: "transparent" }}
                 />
                 <input
                   type="text"
@@ -490,29 +490,27 @@ export default function AdminDashboardPage() {
                     userInteractedRef.current.accentColor = true;
                     setAccentColor(e.target.value);
                   }}
-                  style={{ flex: 1, padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#1E1E1E" }}
+                  style={{ flex: 1, padding: "8px 12px", border: "1px solid #334155", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#ffffff", background: "#111827" }}
                 />
               </div>
-              <small style={{ color: "#64748b", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>
-                Active Accent: <b style={{ color: "#81663F" }}>#81663F</b>
+              <small style={{ color: "#94a3b8", fontSize: "0.75rem", marginTop: "4px", display: "block" }}>
+                Active Accent: <b style={{ color: "#d4af37" }}>#81663F</b>
               </small>
             </div>
           </div>
 
-          {/* Global Text Casing Setting Control (Issue #3) */}
-          <div style={{ marginTop: "1.5rem", background: "#f8fafc", padding: "1.2rem 1.4rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "0.8rem" }}>
-              <div>
-                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 800, textTransform: "uppercase", color: "#1E1E1E", letterSpacing: "0.04em" }}>
-                  📝 Global Display Text Casing (Display-Layer Only)
-                </label>
-                <p style={{ fontSize: "0.8rem", color: "#64748b", margin: "2px 0 0" }}>
-                  Controls how titles and descriptions render across public and admin pages without altering database content.
-                </p>
+          {/* GLOBAL TYPOGRAPHY TEXT-CASING CONTROLLER */}
+          <div style={{ marginTop: "2rem", borderTop: "1px solid #1e293b", paddingTop: "1.5rem" }}>
+            <div style={{ marginBottom: "1rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ fontSize: "1.1rem" }}>🔤</span>
+                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, margin: 0, color: "#d4af37" }}>
+                  Global Text-Casing Display Engine
+                </h3>
               </div>
-              <span style={{ fontSize: "0.75rem", background: "#f1f5f9", padding: "4px 8px", borderRadius: "4px", color: "#475569", fontWeight: 600 }}>
-                Active Mode: <b style={{ color: "#81663F" }}>{textCase.toUpperCase()}</b>
-              </span>
+              <p style={{ fontSize: "0.85rem", color: "#cbd5e1", margin: "4px 0 0" }}>
+                Controls how titles, category names, subtitles, and buttons are formatted on the live website. Stored database data is 100% safe and untouched.
+              </p>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
@@ -525,22 +523,22 @@ export default function AdminDashboardPage() {
                 style={{
                   padding: "1rem",
                   borderRadius: "8px",
-                  border: textCase === "proper" ? "2px solid #81663F" : "1px solid #cbd5e1",
-                  background: textCase === "proper" ? "#fffcf7" : "#ffffff",
+                  border: textCase === "proper" ? "2px solid #d4af37" : "1px solid #334155",
+                  background: textCase === "proper" ? "#1e293b" : "#0f172a",
                   cursor: "pointer",
                   textAlign: "left",
                   transition: "all 0.2s ease",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
-                  <span style={{ fontWeight: 800, fontSize: "0.9rem", color: textCase === "proper" ? "#81663F" : "#1E1E1E" }}>
+                  <span style={{ fontWeight: 800, fontSize: "0.9rem", color: textCase === "proper" ? "#d4af37" : "#f8fafc" }}>
                     ✨ Proper Case (Recommended)
                   </span>
-                  {textCase === "proper" && <span style={{ color: "#81663F", fontSize: "0.8rem", fontWeight: 800 }}>✓ Active</span>}
+                  {textCase === "proper" && <span style={{ color: "#d4af37", fontSize: "0.8rem", fontWeight: 800 }}>✓ Active</span>}
                 </div>
-                <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.4 }}>
-                  • Card Title: <b>Bathroom Fittings</b><br />
-                  • Subtitle: <i>Falper and FIMA tapware and vanities</i>
+                <div style={{ fontSize: "0.78rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                  • Card Title: <b style={{ color: "#f8fafc" }}>Bathroom Fittings</b><br />
+                  • Subtitle: <i style={{ color: "#cbd5e1" }}>Falper and FIMA tapware and vanities</i>
                 </div>
               </button>
 
@@ -553,22 +551,22 @@ export default function AdminDashboardPage() {
                 style={{
                   padding: "1rem",
                   borderRadius: "8px",
-                  border: textCase === "uppercase" ? "2px solid #81663F" : "1px solid #cbd5e1",
-                  background: textCase === "uppercase" ? "#fffcf7" : "#ffffff",
+                  border: textCase === "uppercase" ? "2px solid #d4af37" : "1px solid #334155",
+                  background: textCase === "uppercase" ? "#1e293b" : "#0f172a",
                   cursor: "pointer",
                   textAlign: "left",
                   transition: "all 0.2s ease",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
-                  <span style={{ fontWeight: 800, fontSize: "0.9rem", color: textCase === "uppercase" ? "#81663F" : "#1E1E1E" }}>
+                  <span style={{ fontWeight: 800, fontSize: "0.9rem", color: textCase === "uppercase" ? "#d4af37" : "#f8fafc" }}>
                     🔠 ALL UPPERCASE
                   </span>
-                  {textCase === "uppercase" && <span style={{ color: "#81663F", fontSize: "0.8rem", fontWeight: 800 }}>✓ Active</span>}
+                  {textCase === "uppercase" && <span style={{ color: "#d4af37", fontSize: "0.8rem", fontWeight: 800 }}>✓ Active</span>}
                 </div>
-                <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.4 }}>
-                  • Card Title: <b>BATHROOM FITTINGS</b><br />
-                  • Subtitle: <i>FALPER AND FIMA TAPWARE AND VANITIES</i>
+                <div style={{ fontSize: "0.78rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                  • Card Title: <b style={{ color: "#f8fafc" }}>BATHROOM FITTINGS</b><br />
+                  • Subtitle: <i style={{ color: "#cbd5e1" }}>FALPER AND FIMA TAPWARE AND VANITIES</i>
                 </div>
               </button>
 
@@ -581,22 +579,22 @@ export default function AdminDashboardPage() {
                 style={{
                   padding: "1rem",
                   borderRadius: "8px",
-                  border: textCase === "lowercase" ? "2px solid #81663F" : "1px solid #cbd5e1",
-                  background: textCase === "lowercase" ? "#fffcf7" : "#ffffff",
+                  border: textCase === "lowercase" ? "2px solid #d4af37" : "1px solid #334155",
+                  background: textCase === "lowercase" ? "#1e293b" : "#0f172a",
                   cursor: "pointer",
                   textAlign: "left",
                   transition: "all 0.2s ease",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
-                  <span style={{ fontWeight: 800, fontSize: "0.9rem", color: textCase === "lowercase" ? "#81663F" : "#1E1E1E" }}>
+                  <span style={{ fontWeight: 800, fontSize: "0.9rem", color: textCase === "lowercase" ? "#d4af37" : "#f8fafc" }}>
                     🔡 all lowercase
                   </span>
-                  {textCase === "lowercase" && <span style={{ color: "#81663F", fontSize: "0.8rem", fontWeight: 800 }}>✓ Active</span>}
+                  {textCase === "lowercase" && <span style={{ color: "#d4af37", fontSize: "0.8rem", fontWeight: 800 }}>✓ Active</span>}
                 </div>
-                <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.4 }}>
-                  • Card Title: <b>bathroom fittings</b><br />
-                  • Subtitle: <i>falper and fima tapware and vanities</i>
+                <div style={{ fontSize: "0.78rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                  • Card Title: <b style={{ color: "#f8fafc" }}>bathroom fittings</b><br />
+                  • Subtitle: <i style={{ color: "#cbd5e1" }}>falper and fima tapware and vanities</i>
                 </div>
               </button>
             </div>
@@ -609,7 +607,7 @@ export default function AdminDashboardPage() {
               padding: "1.5rem",
               borderRadius: "12px",
               background: websiteBgColor,
-              border: "1px solid rgba(0,0,0,0.1)",
+              border: "1px solid rgba(212,175,55,0.3)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -657,30 +655,30 @@ export default function AdminDashboardPage() {
         {/* ── REAL-TIME DATABASE & AUTOMATED BACKUP CENTER ── */}
         <div
           style={{
-            background: "#ffffff",
-            border: "1px solid rgba(16, 185, 129, 0.3)",
+            background: "#151c2c",
+            border: "1px solid #28334e",
             borderRadius: "16px",
             padding: "1.8rem 2rem",
             marginBottom: "3rem",
-            boxShadow: "0 4px 16px rgba(16, 185, 129, 0.05)",
+            boxShadow: "0 6px 24px rgba(0,0,0,0.35)",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "1.2rem", borderBottom: "1px solid #f1f5f9", paddingBottom: "1rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "1.2rem", borderBottom: "1px solid #1e293b", paddingBottom: "1rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              <div style={{ width: "42px", height: "42px", borderRadius: "10px", background: "rgba(16, 185, 129, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Database size={22} color="#059669" />
+              <div style={{ width: "42px", height: "42px", borderRadius: "10px", background: "rgba(16, 185, 129, 0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Database size={22} color="#10b981" />
               </div>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <h2 style={{ fontSize: "1.25rem", fontWeight: 800, margin: 0, color: "#1C1917" }}>
+                  <h2 style={{ fontSize: "1.25rem", fontWeight: 800, margin: 0, color: "#ffffff" }}>
                     Live Cloud Sync & Automated Backups
                   </h2>
-                  <span style={{ background: "#ecfdf5", color: "#059669", border: "1px solid #a7f3d0", fontSize: "0.7rem", fontWeight: 800, padding: "2px 8px", borderRadius: "999px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                  <span style={{ background: "rgba(16, 185, 129, 0.2)", color: "#34d399", border: "1px solid rgba(16, 185, 129, 0.4)", fontSize: "0.7rem", fontWeight: 800, padding: "2px 8px", borderRadius: "999px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
                     <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
                     REALTIME CLOUD CONNECTED
                   </span>
                 </div>
-                <p style={{ fontSize: "0.85rem", color: "#64748b", margin: "2px 0 0" }}>
+                <p style={{ fontSize: "0.85rem", color: "#cbd5e1", margin: "2px 0 0" }}>
                   Every update made in this Admin Panel syncs instantly to Google Firebase Cloud Store and generates an automated timestamped backup.
                 </p>
               </div>
@@ -695,9 +693,9 @@ export default function AdminDashboardPage() {
                   alignItems: "center",
                   gap: "8px",
                   padding: "0.65rem 1.2rem",
-                  background: "#f1f5f9",
-                  color: "#1e293b",
-                  border: "1px solid #cbd5e1",
+                  background: "#1e293b",
+                  color: "#f8fafc",
+                  border: "1px solid #334155",
                   borderRadius: "8px",
                   fontWeight: 700,
                   fontSize: "0.85rem",
@@ -732,35 +730,35 @@ export default function AdminDashboardPage() {
           </div>
 
           {backupToast && (
-            <div style={{ background: "#ecfdf5", border: "1px solid #a7f3d0", color: "#065f46", padding: "10px 14px", borderRadius: "8px", fontSize: "0.85rem", fontWeight: 700, marginBottom: "1rem", display: "flex", alignItems: "center", gap: "8px" }}>
-              <ShieldCheck size={18} color="#059669" />
+            <div style={{ background: "rgba(16, 185, 129, 0.15)", border: "1px solid rgba(16, 185, 129, 0.4)", color: "#34d399", padding: "10px 14px", borderRadius: "8px", fontSize: "0.85rem", fontWeight: 700, marginBottom: "1rem", display: "flex", alignItems: "center", gap: "8px" }}>
+              <ShieldCheck size={18} color="#10b981" />
               {backupToast}
             </div>
           )}
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem" }}>
-            <div style={{ background: "#f8fafc", padding: "1rem 1.2rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-              <span style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Primary Cloud Storage</span>
-              <div style={{ fontSize: "1rem", fontWeight: 800, color: "#1e293b", marginTop: "4px" }}>Google Firebase Realtime DB</div>
-              <small style={{ color: "#059669", fontSize: "0.75rem", fontWeight: 600 }}>Active at /store/*.json</small>
+            <div style={{ background: "#0f172a", padding: "1rem 1.2rem", borderRadius: "10px", border: "1px solid #334155" }}>
+              <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase" }}>Primary Cloud Storage</span>
+              <div style={{ fontSize: "1rem", fontWeight: 800, color: "#f8fafc", marginTop: "4px" }}>Google Firebase Realtime DB</div>
+              <small style={{ color: "#34d399", fontSize: "0.75rem", fontWeight: 600 }}>Active at /store/*.json</small>
             </div>
 
-            <div style={{ background: "#f8fafc", padding: "1rem 1.2rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-              <span style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Auto-Backup Engine</span>
-              <div style={{ fontSize: "1rem", fontWeight: 800, color: "#1e293b", marginTop: "4px" }}>Dual-Disk & Cloud Snapshot</div>
-              <small style={{ color: "#64748b", fontSize: "0.75rem" }}>Auto-saved on every edit</small>
+            <div style={{ background: "#0f172a", padding: "1rem 1.2rem", borderRadius: "10px", border: "1px solid #334155" }}>
+              <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase" }}>Auto-Backup Engine</span>
+              <div style={{ fontSize: "1rem", fontWeight: 800, color: "#f8fafc", marginTop: "4px" }}>Dual-Disk & Cloud Snapshot</div>
+              <small style={{ color: "#94a3b8", fontSize: "0.75rem" }}>Auto-saved on every edit</small>
             </div>
 
-            <div style={{ background: "#f8fafc", padding: "1rem 1.2rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-              <span style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Available Backup Files</span>
-              <div style={{ fontSize: "1rem", fontWeight: 800, color: "#81663F", marginTop: "4px" }}>{backupsCount} Revisions Available</div>
-              <small style={{ color: "#64748b", fontSize: "0.75rem" }}>Stored in data/backups/</small>
+            <div style={{ background: "#0f172a", padding: "1rem 1.2rem", borderRadius: "10px", border: "1px solid #334155" }}>
+              <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase" }}>Available Backup Files</span>
+              <div style={{ fontSize: "1rem", fontWeight: 800, color: "#d4af37", marginTop: "4px" }}>{backupsCount} Revisions Available</div>
+              <small style={{ color: "#94a3b8", fontSize: "0.75rem" }}>Stored in data/backups/</small>
             </div>
           </div>
         </div>
 
         {/* CMS MODULES GRID */}
-        <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "1.5rem", borderBottom: "1px solid rgba(0,0,0,0.08)", paddingBottom: "0.8rem", color: "#81663F" }}>
+        <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "1.5rem", borderBottom: "1px solid #1e293b", paddingBottom: "0.8rem", color: "#d4af37" }}>
           CMS Management Modules
         </h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.4rem" }}>
@@ -771,29 +769,29 @@ export default function AdminDashboardPage() {
                 key={m.href}
                 href={m.href}
                 style={{
-                  background: "#ffffff",
-                  border: "1px solid rgba(0,0,0,0.06)",
+                  background: "#151c2c",
+                  border: "1px solid #28334e",
                   borderRadius: "14px",
                   padding: "1.6rem",
                   textDecoration: "none",
-                  color: "#1E1E1E",
+                  color: "#f8fafc",
                   transition: "all 0.2s ease-in-out",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
                 }}
               >
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "0.6rem" }}>
-                    <div style={{ width: "34px", height: "34px", borderRadius: "8px", background: "rgba(129, 102, 63, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Icon size={18} color="#81663F" />
+                    <div style={{ width: "34px", height: "34px", borderRadius: "8px", background: "rgba(212, 175, 55, 0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Icon size={18} color="#d4af37" />
                     </div>
-                    <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#81663F" }}>{m.title}</div>
+                    <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#ffffff" }}>{m.title}</div>
                   </div>
-                  <p style={{ color: "#565656", fontSize: "0.88rem", lineHeight: 1.5, margin: 0 }}>{m.desc}</p>
+                  <p style={{ color: "#cbd5e1", fontSize: "0.88rem", lineHeight: 1.5, margin: 0 }}>{m.desc}</p>
                 </div>
-                <div style={{ marginTop: "1.4rem", fontSize: "0.85rem", fontWeight: 800, color: "#81663F", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                <div style={{ marginTop: "1.4rem", fontSize: "0.85rem", fontWeight: 800, color: "#d4af37", display: "flex", alignItems: "center", gap: "0.4rem" }}>
                   Manage Section →
                 </div>
               </Link>
@@ -809,12 +807,12 @@ export default function AdminDashboardPage() {
             position: "fixed",
             bottom: "24px",
             right: "24px",
-            background: "#81663F",
-            color: "#fff",
+            background: "#d4af37",
+            color: "#000000",
             padding: "12px 20px",
             borderRadius: "8px",
             fontWeight: 800,
-            boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
             zIndex: 99999,
           }}
         >
