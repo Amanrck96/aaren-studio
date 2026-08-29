@@ -198,7 +198,7 @@ const HOME_CATEGORIES = [
   { id: "doors", code: "WD", num: "07", name: "Doors", sub: "Wood & Laminate", img: "/categories/cat_7.jpg", logo: "/brands/logos/slashform_logo.png" },
   { id: "windows", code: "WW", num: "08", name: "Windows", sub: "Timber & Aluminum", img: "/categories/cat_8.jpg", logo: "/brands/logos/slashform_logo.png" },
   { id: "kitchen", code: "KK", num: "09", name: "Kitchen", sub: "Slashform K+W", img: "/categories/cat_9.jpg", logo: "/brands/logos/slashform_logo.png" },
-  { id: "wardrobe", code: "WW", num: "10", name: "Wardrobe", sub: "Freedom & Slashform", img: "/categories/cat_10.jpg", logo: "/brands/logos/slashform_logo.png" },
+  { id: "wardrobe", code: "WRD", num: "10", name: "Wardrobe", sub: "Freedom & Slashform", img: "/categories/cat_10.jpg", logo: "/brands/logos/slashform_logo.png" },
   { id: "furniture", code: "FF", num: "11", name: "Furniture", sub: "Millwork & Bespoke", img: "/categories/cat_11.jpg", logo: "/brands/logos/loco_logo.png" },
   { id: "tiles", code: "TL", num: "12", name: "Tiles", sub: "Floors, Walls & Facades", img: "/categories/cat_12.jpg", logo: "/brands/logos/mirage_logo.png" },
   { id: "bathroom-fittings", code: "BF", num: "13", name: "Bathroom Fittings", sub: "Fima · Falper · Mildue", img: "/categories/cat_13.jpg", logo: "/brands/logos/fima_logo.png" },
@@ -902,13 +902,13 @@ export default function Home() {
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
         {/* Centered Header bar */}
-        <div className="cat-header-bar" style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
+        <div className="cat-header-bar" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "6.8rem", padding: "3.6rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
           {/* Left pagination & controls */}
           <div style={{ position: "absolute", left: "2.4rem", bottom: "2.4rem", display: "flex", alignItems: "center", gap: "1.6rem" }} className="cat-header-left">
-            <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 600, color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em" }}>
+            <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.3rem", fontWeight: 600, color: "rgba(0,0,0,0.6)", letterSpacing: "0.04em" }}>
               {String(catIdx + 1).padStart(2, "0")} / {String(catTotal).padStart(2, "0")}
             </span>
-            <div className="cat-header-dots" style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+            <div className="cat-header-dots" style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
               {categoriesList.map((_, i) => (
                 <button
                   key={i}
@@ -921,10 +921,10 @@ export default function Home() {
           </div>
 
           {/* Centered Title */}
-          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Browse by Category</span>
+          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Browse by Category</span>
 
           {/* Right link */}
-          <Link href="/products" id="cat-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.25rem", fontWeight: 700 }}>View all</Link>
+          <Link href="/products" id="cat-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.35rem", fontWeight: 700 }}>View all</Link>
         </div>
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
@@ -943,83 +943,89 @@ export default function Home() {
               transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
-            {categoriesList.map((cat) => (
-              <Link
-                key={cat.id}
-                href={getCategoryHref(cat)}
-                id={`home-cat-${cat.id}`}
-                style={{
-                  flex: `0 0 ${100 / catTotal}%`,
-                  display: "flex",
-                  flexDirection: "column",
-                  textDecoration: "none",
-                  color: "inherit",
-                  borderRight: "0.1rem solid rgba(0,0,0,0.12)",
-                }}
-                className="home-ticket-card"
-              >
-                {/* 1920x1080 Image Container */}
-                <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "#d8d4c8" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={cat.img}
-                    alt={cat.name}
-                    className="home-ticket-img"
-                    style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
-                  />
+            {categoriesList.map((cat) => {
+              const isLogoAsset = Boolean(
+                cat.img &&
+                (cat.img.includes("googleusercontent.com") ||
+                 cat.img.includes("logo") ||
+                 cat.img.endsWith(".svg") ||
+                 cat.img.includes("/brands/logos/"))
+              );
 
-                  {/* Brand Logo Badge for Category — Bottom-Left */}
-                  {cat.logo ? (
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "1.4rem",
-                        left: "1.4rem",
-                        background: "#ffffff",
-                        padding: "0.6rem 1.4rem",
-                        borderRadius: "0.4rem",
-                        boxShadow: "0 4px 14px rgba(0, 0, 0, 0.15)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        zIndex: 5,
-                        minWidth: "7rem",
-                        minHeight: "3.2rem",
-                      }}
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
+              return (
+                <Link
+                  key={cat.id}
+                  href={getCategoryHref(cat)}
+                  id={`home-cat-${cat.id}`}
+                  style={{
+                    flex: `0 0 ${100 / catTotal}%`,
+                    display: "flex",
+                    flexDirection: "column",
+                    textDecoration: "none",
+                    color: "inherit",
+                    borderRight: "0.1rem solid rgba(0,0,0,0.12)",
+                  }}
+                  className="home-ticket-card"
+                >
+                  {/* 1920x1080 Image Container */}
+                  <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "linear-gradient(135deg, #ede8df 0%, #ded8cb 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    {isLogoAsset ? (
+                      <>
+                        {/* Background architectural image fallback */}
+                        <div
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            backgroundImage: "url('/categories/cat_1.jpg')",
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            opacity: 0.28,
+                            filter: "grayscale(20%) contrast(90%)",
+                          }}
+                        />
+                        {/* Constrained Category Logo */}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={cat.img}
+                          alt={cat.name}
+                          className="home-ticket-img"
+                          style={{
+                            maxWidth: "52%",
+                            maxHeight: "44%",
+                            width: "auto",
+                            height: "auto",
+                            objectFit: "contain",
+                            zIndex: 2,
+                            filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.12))",
+                            transition: "transform 0.5s ease",
+                          }}
+                        />
+                      </>
+                    ) : (
+                      /* eslint-disable-next-line @next/next/no-img-element */
                       <img
-                        src={cat.logo}
+                        src={cat.img}
                         alt={cat.name}
-                        style={{
-                          maxHeight: "2.4rem",
-                          maxWidth: "9rem",
-                          width: "auto",
-                          height: "auto",
-                          objectFit: "contain",
-                        }}
-                        onError={(e) => {
-                          const target = e.currentTarget as HTMLElement;
-                          if (target.parentElement) target.parentElement.style.display = "none";
-                        }}
+                        className="home-ticket-img"
+                        style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
                       />
-                    </div>
-                  ) : null}
-                </div>
+                    )}
+                  </div>
 
-                {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", transition: "background 0.25s ease" }} className="home-ticket-caption">
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
-                    <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, textTransform: "uppercase", color: "#81663F" }}>{cat.name}</span>
-                    <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.2 }}>{cat.sub}</span>
+                  {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
+                      <span style={{ fontSize: "clamp(1.4rem, 1.8vw, 2.2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>{cat.name}</span>
+                      <span style={{ fontSize: "1.15rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>{cat.sub}</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
+                      <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{cat.code}</span>
+                      <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{cat.num}</span>
+                    </div>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
-                    <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{cat.code}</span>
-                    <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{cat.num}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
 
           {/* LEFT arrow — large, always visible */}
@@ -1062,13 +1068,13 @@ export default function Home() {
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
         {/* Centered Header bar */}
-        <div className="cat-header-bar" style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
+        <div className="cat-header-bar" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "6.8rem", padding: "3.6rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
           {/* Left pagination & controls */}
           <div style={{ position: "absolute", left: "2.4rem", bottom: "2.4rem", display: "flex", alignItems: "center", gap: "1.6rem" }} className="cat-header-left">
-            <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.1rem", fontWeight: 600, color: "rgba(0,0,0,0.4)", letterSpacing: "0.04em" }}>
+            <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.3rem", fontWeight: 600, color: "rgba(0,0,0,0.6)", letterSpacing: "0.04em" }}>
               {String(brandIdx + 1).padStart(2, "0")} / {String(brandTotal).padStart(2, "0")}
             </span>
-            <div className="cat-header-dots" style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+            <div className="cat-header-dots" style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
               {brandsList.map((_, i) => (
                 <button
                   key={i}
@@ -1081,10 +1087,10 @@ export default function Home() {
           </div>
 
           {/* Centered Title */}
-          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Browse by Brands</span>
+          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Browse by Brands</span>
 
           {/* Right link */}
-          <Link href="/brands" id="brand-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.25rem", fontWeight: 700 }}>View all</Link>
+          <Link href="/brands" id="brand-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.35rem", fontWeight: 700 }}>View all</Link>
         </div>
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
@@ -1223,12 +1229,12 @@ export default function Home() {
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
         {/* Centered Header bar */}
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4.8rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
+        <div className="cat-header-bar" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "6.8rem", padding: "3.6rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
           {/* Centered Title */}
-          <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.25rem", fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Selected Projects</span>
+          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Selected Projects</span>
 
           {/* Right link */}
-          <Link href="/work" className="t-tag ul-link" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.25rem", fontWeight: 700 }}>View all</Link>
+          <Link href="/work" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.35rem", fontWeight: 700 }}>View all</Link>
         </div>
 
         {/* 4-across on desktop, 2-across on mobile */}
@@ -1254,8 +1260,8 @@ export default function Home() {
               </div>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.8rem", padding: "1.2rem 0.8rem", background: "#E6E2D8", transition: "background 0.25s ease" }} className="home-ticket-caption">
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                  <span style={{ fontSize: "clamp(1.0rem, 1.1vw, 1.3rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, textTransform: "uppercase", color: "#81663F" }}>{project.client}</span>
-                  <span style={{ fontSize: "1.0rem", color: "#5E5852", letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.2 }}>{project.sub}</span>
+                  <span style={{ fontSize: "clamp(1.1rem, 1.2vw, 1.4rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, color: "#81663F" }}>{project.client}</span>
+                  <span style={{ fontSize: "1.05rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>{project.sub}</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flexShrink: 0 }}>
                   <span style={{ fontSize: "clamp(1.4rem, 2.2vw, 2.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{project.code}</span>
@@ -1292,8 +1298,7 @@ export default function Home() {
               fontSize: "clamp(2.4rem, 3.8vw, 4.6rem)",
               letterSpacing: "-0.03em",
               fontWeight: 700,
-              textTransform: "uppercase",
-              lineHeight: 1.0,
+              lineHeight: 1.15,
               color: "#81663F",
               marginBottom: "6rem",
             }}
@@ -1493,7 +1498,7 @@ function ProjectSlideshow() {
         const shuffled = [...OBEROI_SLIDES].sort(() => 0.5 - Math.random());
         return shuffled.slice(0, 4);
       });
-    }, 4000);
+    }, 6000);
 
     return () => clearInterval(timer);
   }, []);
