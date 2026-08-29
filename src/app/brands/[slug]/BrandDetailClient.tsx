@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useMemo } from "react";
 import { getBrandById } from "@/lib/brands";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
-import { getPdfThumbnail } from "@/utils/pdfThumbnail";
+import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
 import { applyTextCase } from "@/lib/textCase";
 
 const LOGO_MAP: Record<string, string> = {
@@ -29,16 +29,16 @@ const LOGO_MAP: Record<string, string> = {
 
 interface BrandDetailClientProps {
   slug: string;
-  initialBrand: any;
-  initialProducts: any[];
-  initialCollections: any[];
+  initialProducts?: any[];
+  initialBrand?: any;
+  initialCollections?: any[];
   initialFaqs?: any[];
 }
 
 export default function BrandDetailClient({
   slug,
-  initialBrand,
   initialProducts,
+  initialBrand,
   initialCollections,
   initialFaqs,
 }: BrandDetailClientProps) {
@@ -46,7 +46,7 @@ export default function BrandDetailClient({
 
   const [activeCollection, setActiveCollection] = useState("All");
   const [mounted, setMounted] = useState(false);
-  const [selectedPdf, setSelectedPdf] = useState<{ url: string; title: string } | null>(null);
+  const [selectedPdf, setSelectedPdf] = useState<{ url: string; title: string; coverImage?: string } | null>(null);
   const [apiProducts, setApiProducts] = useState<any[]>(initialProducts || []);
   const [apiBrand, setApiBrand] = useState<any>(initialBrand || null);
   const [dbCollections, setDbCollections] = useState<any[]>(initialCollections || []);
@@ -557,29 +557,25 @@ export default function BrandDetailClient({
           <div className="bd-catalogue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "2rem" }}>
             {displayCatalogues.map((cat: any, i: number) => {
               const rawPdf = (cat as any).pdfUrl || (cat as any).url || cat.file || (cat as any).catalogPdfUrl || "";
-              let pdfUrl = rawPdf.startsWith("http") ? rawPdf : (rawPdf.startsWith("/") ? rawPdf : (rawPdf ? `/catalogs/${rawPdf}` : ""));
-              
-              if (!rawPdf.startsWith("http")) {
-                const lowerTitle = (cat.title || "").toLowerCase();
-                if (lowerTitle.includes("60 degree") || lowerTitle.includes("60grados")) pdfUrl = "/catalogs/catalogo60grados.pdf";
-                else if (lowerTitle.includes("bejmat")) pdfUrl = "/catalogs/catalogobejmat.pdf";
-                else if (lowerTitle.includes("nouvelle") || lowerTitle.includes("nouveau")) pdfUrl = "/catalogs/catalogo-nouvelle.pdf";
-                else if (lowerTitle.includes("sabil") || lowerTitle.includes("sahli")) pdfUrl = "/catalogs/catalogo-sabil.pdf";
-                else if (lowerTitle.includes("terre")) pdfUrl = "/catalogs/catalogo-terre.pdf";
-                else if (lowerTitle.includes("vestige")) pdfUrl = "/catalogs/catalogo-vestige.pdf";
-                else if (lowerTitle.includes("aquarelle")) pdfUrl = "/catalogs/aquarelle.pdf";
-                else if (lowerTitle.includes("bits")) pdfUrl = "/catalogs/bits.pdf";
-              }
-
-              // Exact Page 1 Thumbnail or Custom Cover resolver
-              const coverThumbUrl = cat.coverImage || getPdfThumbnail(pdfUrl || rawPdf || cat.title, { title: cat.title, coverImage: cat.coverImage, brandId: slug });
+              const resolved = resolveCatalogDetails({
+                catalogPdfUrl: rawPdf,
+                title: cat.title,
+                brand: activeBrand.name || slug,
+                coverImage: cat.coverImage,
+              });
+              const pdfUrl = resolved.pdfUrl;
+              const coverThumbUrl = cat.coverImage || resolved.coverThumb || getPdfThumbnail(pdfUrl || rawPdf || cat.title, { title: cat.title, coverImage: cat.coverImage, brandId: slug });
 
               return (
                 <div
                   key={i}
                   className="bd-pdf-luxury-card"
                   onClick={() => {
-                    setSelectedPdf({ url: pdfUrl, title: `${activeBrand.name} - ${cat.title}` });
+                    setSelectedPdf({
+                      url: pdfUrl,
+                      title: `${activeBrand.name} - ${cat.title}`,
+                      coverImage: coverThumbUrl,
+                    });
                   }}
                   style={{
                     display: "flex",
@@ -827,6 +823,7 @@ export default function BrandDetailClient({
         <CatalogPdfGateModal
           catalogPdfUrl={selectedPdf.url}
           itemTitle={selectedPdf.title}
+          coverImage={selectedPdf.coverImage}
           onClose={() => setSelectedPdf(null)}
         />
       )}

@@ -273,8 +273,9 @@ export default function MadhekeProductDetailPage() {
       {/* Protected Catalog PDF Gate Modal */}
       {showPdfModal && (
         <CatalogPdfGateModal
-          itemTitle={selectedProduct.name}
+          itemTitle={`${selectedProduct.brand} - ${selectedProduct.name}`}
           catalogPdfUrl="/catalogues/Formica/2024-FENIX-brochure-digital.pdf"
+          coverImage="/catalogs/thumbnails/2024-fenix-brochure-digital_thumb.jpg"
           onClose={() => setShowPdfModal(false)}
         />
       )}

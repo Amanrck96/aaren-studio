@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { PdfCatalogItem } from "@/lib/types";
 import OnScreenPdfViewer from "./OnScreenPdfViewer";
-import { getPdfThumbnail } from "@/utils/pdfThumbnail";
+import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
 
 interface Props {
   catalog: PdfCatalogItem | null;
@@ -72,10 +72,17 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
     }
   }
 
-  const thumbUrl = catalog.thumbnailUrl || (catalog as any).coverImage || getPdfCoverThumbnail(catalog.fileUrl, catalog.title, (catalog as any).pdfPublicId, (catalog as any).coverImage);
+  const resolved = resolveCatalogDetails({
+    catalogPdfUrl: catalog.fileUrl,
+    pdfUrl: catalog.fileUrl,
+    title: catalog.title,
+    brand: catalog.brand,
+    coverImage: catalog.thumbnailUrl || (catalog as any).coverImage,
+  });
+  const thumbUrl = resolved.coverThumb || (catalog as any).coverImage || "";
   const pdfUrl = viewToken && viewSlug
     ? `/api/catalogs/${viewSlug}/stream?token=${encodeURIComponent(viewToken)}`
-    : catalog.fileUrl || `/catalogs/${catalog.fileName}`;
+    : resolved.pdfUrl || catalog.fileUrl || `/catalogs/${catalog.fileName}`;
 
   return (
     <div className="catalog-modal-overlay" onClick={onClose}>
@@ -98,13 +105,20 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
             {/* Left Thumbnail & Info Bar */}
             <div className="catalog-modal-sidebar">
               <div className="catalog-thumb-box">
-                <img
-                  src={thumbUrl}
-                  alt={catalog.title}
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
-                  }}
-                />
+                {thumbUrl ? (
+                  <img
+                    src={thumbUrl}
+                    alt={catalog.title}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#181920", color: "#d4b67d", padding: "0.5rem" }}>
+                    <span style={{ fontSize: "2rem", marginBottom: "0.4rem" }}>📄</span>
+                    <span style={{ fontSize: "0.65rem", fontWeight: 800 }}>{catalog.brand}</span>
+                  </div>
+                )}
                 <div className="catalog-cover-badge">PAGE 1 COVER</div>
               </div>
 

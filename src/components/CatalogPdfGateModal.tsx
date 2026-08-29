@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import OnScreenPdfViewer from "./OnScreenPdfViewer";
-import { getPdfThumbnail } from "@/utils/pdfThumbnail";
+import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
 
 type Props = {
   catalogPdfUrl: string;
@@ -31,6 +31,15 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
     modalTitle: `${itemTitle} — Official Catalogue`,
     modalSubtext: "Please fill in your details below to unlock on-screen digital preview access for all pages of this official architectural specification PDF.",
   });
+
+  const resolved = resolveCatalogDetails({
+    catalogPdfUrl,
+    title: itemTitle,
+    coverImage,
+  });
+
+  const finalPdfUrl = resolved.pdfUrl || catalogPdfUrl;
+  const coverThumb = resolved.coverThumb || coverImage;
 
   useEffect(() => {
     // ENQUIRY FORM ALWAYS APPEARS FIRST
@@ -83,8 +92,6 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
       setSubmitting(false);
     }
   }
-
-  const coverThumb = coverImage || getPdfCoverThumbnail(catalogPdfUrl, itemTitle, coverImage);
 
   return (
     <div
@@ -182,30 +189,36 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
                   position: "relative",
                   boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
                   background: "#181920",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <img
-                  src={coverThumb}
-                  alt={`${itemTitle} Page 1 Cover`}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
-                  }}
-                />
+                {coverThumb ? (
+                  <img
+                    src={coverThumb}
+                    alt={itemTitle}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                ) : null}
                 <div
                   style={{
                     position: "absolute",
                     bottom: "2px",
                     left: "2px",
                     right: "2px",
-                    background: "rgba(0,0,0,0.8)",
+                    background: "rgba(0,0,0,0.85)",
                     color: "#D4B67D",
                     fontSize: "0.55rem",
                     fontWeight: 900,
                     textAlign: "center",
-                    padding: "1px 0",
+                    padding: "2px 0",
                     borderRadius: "2px",
                     textTransform: "uppercase",
+                    letterSpacing: "0.05em",
                   }}
                 >
                   PAGE 1 COVER
@@ -390,7 +403,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
         ) : (
           /* ── STEP 2: ON-SCREEN PREVIEW PLAYER (ALL PAGES CANVAS RENDER, ZERO DOWNLOADS) ── */
           <OnScreenPdfViewer
-            pdfUrl={catalogPdfUrl}
+            pdfUrl={finalPdfUrl}
             title={itemTitle}
             onClose={onClose}
           />

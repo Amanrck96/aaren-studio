@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import CatalogDownloadModal, { getPdfCoverThumbnail } from "@/components/CatalogDownloadModal";
 import { PdfCatalogItem } from "@/lib/types";
-import { getPdfThumbnail } from "@/utils/pdfThumbnail";
+import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
 
 interface CatalogsClientProps {
   initialCatalogs?: PdfCatalogItem[];
@@ -178,7 +178,13 @@ export default function CatalogsClient({ initialCatalogs }: CatalogsClientProps)
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "2rem" }}>
             {filteredCatalogs.map((cat) => {
-              const coverThumb = getPdfThumbnail((cat as any).pdfPublicId || cat.fileUrl || cat.title || "", {
+              const resolved = resolveCatalogDetails({
+                catalogPdfUrl: cat.fileUrl,
+                title: cat.title,
+                brand: cat.brand,
+                coverImage: (cat as any).coverImage || (cat as any).coverThumbUrl,
+              });
+              const coverThumb = resolved.coverThumb || getPdfThumbnail((cat as any).pdfPublicId || cat.fileUrl || cat.title || "", {
                 title: cat.title,
                 coverImage: (cat as any).coverImage || (cat as any).coverThumbUrl,
                 brandId: cat.brand,
@@ -200,14 +206,16 @@ export default function CatalogsClient({ initialCatalogs }: CatalogsClientProps)
                 >
                   {/* PDF First Page Cover Thumbnail Header */}
                   <div style={{ position: "relative", width: "100%", height: "280px", background: "#0f172a", overflow: "hidden" }}>
-                    <img
-                      src={coverThumb}
-                      alt={cat.title}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg";
-                      }}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
-                    />
+                    {coverThumb ? (
+                      <img
+                        src={coverThumb}
+                        alt={cat.title}
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).style.display = "none";
+                        }}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                      />
+                    ) : null}
 
                   {/* Gradient Overlay & Badges */}
                   <div

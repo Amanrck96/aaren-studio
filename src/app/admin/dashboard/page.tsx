@@ -66,10 +66,16 @@ export default function AdminDashboardPage() {
     textCase: false,
   });
 
-  useEffect(() => {
+  const [refreshingStats, setRefreshingStats] = useState<boolean>(false);
+
+  const fetchDashboardStats = async () => {
+    setRefreshingStats(true);
     const safeFetch = async (url: string) => {
       try {
-        const res = await fetch(url);
+        const res = await fetch(url, {
+          cache: "no-store",
+          headers: { "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
+        });
         if (!res.ok) return { count: 0, data: [] };
         return await res.json();
       } catch (err) {
@@ -77,56 +83,78 @@ export default function AdminDashboardPage() {
       }
     };
 
-    Promise.all([
-      safeFetch("/api/projects?t=" + Date.now()),
-      safeFetch("/api/categories?t=" + Date.now()),
-      safeFetch("/api/collections?t=" + Date.now()),
-      safeFetch("/api/brands?t=" + Date.now()),
-      safeFetch("/api/products?t=" + Date.now()),
-      safeFetch("/api/services?t=" + Date.now()),
-      safeFetch("/api/testimonials?t=" + Date.now()),
-      safeFetch("/api/blogs?t=" + Date.now()),
-      safeFetch("/api/media?t=" + Date.now()),
-      safeFetch("/api/inquiries?t=" + Date.now()),
-      safeFetch("/api/catalogs?t=" + Date.now()),
-      safeFetch("/api/faq?t=" + Date.now()),
-      safeFetch("/api/site-settings?t=" + Date.now()),
-    ])
-      .then(([p, c, col, b, pr, s, t, bl, m, inq, cat, fq, st]) => {
-        setStats({
-          projects: p?.count || p?.data?.length || 0,
-          categories: c?.count || c?.data?.length || 0,
-          collections: col?.count || col?.data?.length || 0,
-          brands: b?.count || b?.data?.length || 0,
-          products: pr?.count || pr?.data?.length || 0,
-          services: s?.count || s?.data?.length || 0,
-          testimonials: t?.count || t?.data?.length || 0,
-          blogs: bl?.count || bl?.data?.length || 0,
-          media: m?.count || m?.data?.length || 0,
-          inquiries: inq?.count || inq?.data?.length || 0,
-          catalogs: cat?.count || cat?.data?.length || 0,
-          faqs: fq?.count || fq?.data?.length || 0,
-        });
+    try {
+      const [p, c, col, b, pr, s, t, bl, m, inq, cat, fq, st, bk] = await Promise.all([
+        safeFetch("/api/projects?t=" + Date.now()),
+        safeFetch("/api/categories?t=" + Date.now()),
+        safeFetch("/api/collections?t=" + Date.now()),
+        safeFetch("/api/brands?t=" + Date.now()),
+        safeFetch("/api/products?t=" + Date.now()),
+        safeFetch("/api/services?t=" + Date.now()),
+        safeFetch("/api/testimonials?t=" + Date.now()),
+        safeFetch("/api/blogs?t=" + Date.now()),
+        safeFetch("/api/media?t=" + Date.now()),
+        safeFetch("/api/inquiries?t=" + Date.now()),
+        safeFetch("/api/catalogs?t=" + Date.now()),
+        safeFetch("/api/faq?t=" + Date.now()),
+        safeFetch("/api/site-settings?t=" + Date.now()),
+        safeFetch("/api/admin/backups?t=" + Date.now()),
+      ]);
 
-        if (st && st.success && st.data) {
-          setSiteSettings(st.data);
-          if (!userInteractedRef.current.websiteBgColor && st.data.websiteBgColor) setWebsiteBgColor(st.data.websiteBgColor);
-          if (!userInteractedRef.current.headingColor && st.data.headingColor) setHeadingColor(st.data.headingColor);
-          if (!userInteractedRef.current.textColor && st.data.textColor) setTextColor(st.data.textColor);
-          if (!userInteractedRef.current.accentColor && st.data.accentColor) setAccentColor(st.data.accentColor);
-          if (!userInteractedRef.current.textCase && st.data.textCase) setTextCase(st.data.textCase);
-        }
-      })
-      .catch((e) => console.error("Admin dashboard fetch error:", e));
+      setStats({
+        projects: typeof p?.count === "number" ? p.count : p?.data?.length || 0,
+        categories: typeof c?.count === "number" ? c.count : c?.data?.length || 0,
+        collections: typeof col?.count === "number" ? col.count : col?.data?.length || 0,
+        brands: typeof b?.count === "number" ? b.count : b?.data?.length || 0,
+        products: typeof pr?.count === "number" ? pr.count : pr?.data?.length || 0,
+        services: typeof s?.count === "number" ? s.count : s?.data?.length || 0,
+        testimonials: typeof t?.count === "number" ? t.count : t?.data?.length || 0,
+        blogs: typeof bl?.count === "number" ? bl.count : bl?.data?.length || 0,
+        media: typeof m?.count === "number" ? m.count : m?.data?.length || 0,
+        inquiries: typeof inq?.count === "number" ? inq.count : inq?.data?.length || 0,
+        catalogs: typeof cat?.count === "number" ? cat.count : cat?.data?.length || 0,
+        faqs: typeof fq?.count === "number" ? fq.count : fq?.data?.length || 0,
+      });
 
-    fetch("/api/admin/backups")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && typeof json.count === "number") {
-          setBackupsCount(json.count);
-        }
-      })
-      .catch(() => {});
+      if (bk && bk.success && typeof bk.count === "number") {
+        setBackupsCount(bk.count);
+      }
+
+      if (st && st.success && st.data) {
+        setSiteSettings(st.data);
+        if (!userInteractedRef.current.websiteBgColor && st.data.websiteBgColor) setWebsiteBgColor(st.data.websiteBgColor);
+        if (!userInteractedRef.current.headingColor && st.data.headingColor) setHeadingColor(st.data.headingColor);
+        if (!userInteractedRef.current.textColor && st.data.textColor) setTextColor(st.data.textColor);
+        if (!userInteractedRef.current.accentColor && st.data.accentColor) setAccentColor(st.data.accentColor);
+        if (!userInteractedRef.current.textCase && st.data.textCase) setTextCase(st.data.textCase);
+      }
+    } catch (e) {
+      console.error("Admin dashboard fetch error:", e);
+    } finally {
+      setRefreshingStats(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardStats();
+
+    // Auto-refresh when tab gains focus or becomes visible
+    const handleFocus = () => fetchDashboardStats();
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") fetchDashboardStats();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Periodic live sync every 25 seconds
+    const interval = setInterval(fetchDashboardStats, 25000);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      clearInterval(interval);
+    };
   }, []);
 
   const handleCreateBackup = async () => {
@@ -214,6 +242,7 @@ export default function AdminDashboardPage() {
     { title: "❓ FAQ & Brand Knowledge Base", desc: "Manage 150+ brand FAQs, import/export Excel spreadsheets, edit questions, answers and categories.", href: "/admin/faq", icon: HelpCircle },
     { title: "🏢 Brand Management & Individual Pages", desc: "Manage partner brands, hero banners, logos, quote taglines, country of origin, founded year, story and PDF catalogs.", href: "/admin/brands", icon: Building },
     { title: "📦 Product Catalog & Master Editors", desc: "Upload Excel product list, manage dimensions, finishes, CAD specs, warranty, and middle gallery photos.", href: "/admin/products", icon: Layers },
+    { title: "📄 PDF Catalogs & Brochures", desc: "View all brand specification PDF catalogs, covers, file sizes, and download enquiry counts.", href: "/admin/catalogs", icon: BookOpen },
     { title: "🏷️ Categories & Filter Taxonomies", desc: "Manage categories with cover images, descriptions, short codes (DS 06), sequence numbers and subcategories.", href: "/admin/categories", icon: FolderTree },
     { title: "🏠 Homepage Hero Section", desc: "Header text, tagline, subtext, background MP4 video URL, category tags bar.", href: "/admin/hero", icon: Sparkles },
     { title: "🖼️ Showcase Projects", desc: "Manage homepage showcase projects, project codes (OB 01), main images, sequence numbers.", href: "/admin/projects", icon: LayoutTemplate },
@@ -254,6 +283,30 @@ export default function AdminDashboardPage() {
                 {syncToast}
               </span>
             )}
+            <button
+              onClick={fetchDashboardStats}
+              disabled={refreshingStats}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "10px 16px",
+                background: "#FAF8F5",
+                color: "#81663F",
+                border: "1px solid #D5CEBF",
+                borderRadius: "8px",
+                cursor: refreshingStats ? "wait" : "pointer",
+                fontWeight: 800,
+                fontSize: "0.85rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                fontFamily: "inherit",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
+              }}
+            >
+              <RefreshCw size={14} className={refreshingStats ? "spin" : ""} />
+              <span>{refreshingStats ? "Refreshing..." : "Refresh Live Stats"}</span>
+            </button>
             <button
               onClick={handleForceSync}
               disabled={isSyncing}

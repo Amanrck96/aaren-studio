@@ -19,7 +19,7 @@ import {
 import { ProductItem } from "@/lib/types";
 import { DEFAULT_PRODUCTS } from "@/lib/client_constants";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
-import { getPdfThumbnail } from "@/utils/pdfThumbnail";
+import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
 
 type Props = {
   slug: string;
@@ -34,6 +34,13 @@ export default function ProductDetailClient({ slug, initialProduct, initialAllPr
   const [quickViewProduct, setQuickViewProduct] = useState<ProductItem | null>(null);
   const [loading, setLoading] = useState<boolean>(!initialProduct);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  const prodCatalog = product ? resolveCatalogDetails({
+    catalogPdfUrl: product.catalogPdfUrl,
+    name: product.name,
+    brand: product.brand,
+    coverImage: (product as any).coverImage,
+  }) : { pdfUrl: "", coverThumb: "", title: "" };
 
   // Gallery state
   const [selectedImgIdx, setSelectedImgIdx] = useState<number>(0);
@@ -491,15 +498,21 @@ export default function ProductDetailClient({ slug, initialProduct, initialAllPr
                 boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={getPdfThumbnail(product.catalogPdfUrl || "", { title: product.name })}
-                alt={`${product.name} PDF Cover`}
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
-                }}
-              />
+              {prodCatalog.coverThumb ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={prodCatalog.coverThumb}
+                  alt={product.name}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              ) : (
+                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#181920", color: "#D4B67D", fontSize: "0.6rem", fontWeight: 800 }}>
+                  PDF
+                </div>
+              )}
               <div
                 style={{
                   position: "absolute",
@@ -642,15 +655,22 @@ export default function ProductDetailClient({ slug, initialProduct, initialAllPr
               }}
               onClick={() => setPdfModalOpen(true)}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={getPdfThumbnail(product.catalogPdfUrl || "", { title: product.name })}
-                alt={`${product.name} Official Catalogue Page 1`}
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = "/catalogs/thumbnails/catalogo-terre_thumb.jpg";
-                }}
-              />
+              {prodCatalog.coverThumb ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={prodCatalog.coverThumb}
+                  alt={`${product.brand} - ${product.name} Catalogue`}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              ) : (
+                <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#181920", color: "#D4B67D", padding: "1rem", textAlign: "center" }}>
+                  <span style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>📄</span>
+                  <span style={{ fontSize: "0.75rem", fontWeight: 800 }}>{product.brand}</span>
+                </div>
+              )}
               <div
                 style={{
                   position: "absolute",
@@ -1058,10 +1078,11 @@ export default function ProductDetailClient({ slug, initialProduct, initialAllPr
       )}
 
       {/* ── BROCHURE LEAD GATE & VIEW-ONLY MODAL ── */}
-      {pdfModalOpen && (
+      {pdfModalOpen && product && (
         <CatalogPdfGateModal
-          catalogPdfUrl={product.catalogPdfUrl || "/catalogues/NewTechWood/NewTechWood-Product-Catalog-2025.pdf"}
-          itemTitle={product.name}
+          catalogPdfUrl={prodCatalog.pdfUrl}
+          itemTitle={`${product.brand} - ${product.name}`}
+          coverImage={prodCatalog.coverThumb}
           onClose={() => setPdfModalOpen(false)}
         />
       )}

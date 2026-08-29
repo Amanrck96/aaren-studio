@@ -37,10 +37,10 @@ export async function GET(request: Request) {
         }).length;
         return { ...col, productCount: count };
       });
-      return NextResponse.json({ success: true, data: withCounts }, { headers: NO_CACHE_HEADERS });
+      return NextResponse.json({ success: true, count: withCounts.length, data: withCounts }, { headers: NO_CACHE_HEADERS });
     }
 
-    return NextResponse.json({ success: true, data: collections }, { headers: NO_CACHE_HEADERS });
+    return NextResponse.json({ success: true, count: collections.length, data: collections }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });
   }
