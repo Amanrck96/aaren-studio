@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import AdminNav from "@/components/AdminNav";
 import { SiteSettingsItem } from "@/lib/types";
+import { applyTextCase } from "@/lib/textCase";
 import {
   Palette,
   Save,
@@ -56,6 +57,15 @@ export default function AdminDashboardPage() {
   const [savingColors, setSavingColors] = useState(false);
   const [colorToast, setColorToast] = useState<string | null>(null);
 
+  // Protect local user selections from being overwritten by delayed initial fetch
+  const userInteractedRef = useRef({
+    websiteBgColor: false,
+    headingColor: false,
+    textColor: false,
+    accentColor: false,
+    textCase: false,
+  });
+
   useEffect(() => {
     const safeFetch = async (url: string) => {
       try {
@@ -100,11 +110,11 @@ export default function AdminDashboardPage() {
 
         if (st && st.success && st.data) {
           setSiteSettings(st.data);
-          if (st.data.websiteBgColor) setWebsiteBgColor(st.data.websiteBgColor);
-          if (st.data.headingColor) setHeadingColor(st.data.headingColor);
-          if (st.data.textColor) setTextColor(st.data.textColor);
-          if (st.data.accentColor) setAccentColor(st.data.accentColor);
-          if (st.data.textCase) setTextCase(st.data.textCase);
+          if (!userInteractedRef.current.websiteBgColor && st.data.websiteBgColor) setWebsiteBgColor(st.data.websiteBgColor);
+          if (!userInteractedRef.current.headingColor && st.data.headingColor) setHeadingColor(st.data.headingColor);
+          if (!userInteractedRef.current.textColor && st.data.textColor) setTextColor(st.data.textColor);
+          if (!userInteractedRef.current.accentColor && st.data.accentColor) setAccentColor(st.data.accentColor);
+          if (!userInteractedRef.current.textCase && st.data.textCase) setTextCase(st.data.textCase);
         }
       })
       .catch((e) => console.error("Admin dashboard fetch error:", e));
@@ -377,13 +387,19 @@ export default function AdminDashboardPage() {
                 <input
                   type="color"
                   value={websiteBgColor}
-                  onChange={(e) => setWebsiteBgColor(e.target.value)}
+                  onChange={(e) => {
+                    userInteractedRef.current.websiteBgColor = true;
+                    setWebsiteBgColor(e.target.value);
+                  }}
                   style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #cbd5e1", cursor: "pointer", padding: "2px" }}
                 />
                 <input
                   type="text"
                   value={websiteBgColor}
-                  onChange={(e) => setWebsiteBgColor(e.target.value)}
+                  onChange={(e) => {
+                    userInteractedRef.current.websiteBgColor = true;
+                    setWebsiteBgColor(e.target.value);
+                  }}
                   style={{ flex: 1, padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#1E1E1E" }}
                 />
               </div>
@@ -401,13 +417,19 @@ export default function AdminDashboardPage() {
                 <input
                   type="color"
                   value={headingColor}
-                  onChange={(e) => setHeadingColor(e.target.value)}
+                  onChange={(e) => {
+                    userInteractedRef.current.headingColor = true;
+                    setHeadingColor(e.target.value);
+                  }}
                   style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #cbd5e1", cursor: "pointer", padding: "2px" }}
                 />
                 <input
                   type="text"
                   value={headingColor}
-                  onChange={(e) => setHeadingColor(e.target.value)}
+                  onChange={(e) => {
+                    userInteractedRef.current.headingColor = true;
+                    setHeadingColor(e.target.value);
+                  }}
                   style={{ flex: 1, padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#1E1E1E" }}
                 />
               </div>
@@ -425,13 +447,19 @@ export default function AdminDashboardPage() {
                 <input
                   type="color"
                   value={textColor}
-                  onChange={(e) => setTextColor(e.target.value)}
+                  onChange={(e) => {
+                    userInteractedRef.current.textColor = true;
+                    setTextColor(e.target.value);
+                  }}
                   style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #cbd5e1", cursor: "pointer", padding: "2px" }}
                 />
                 <input
                   type="text"
                   value={textColor}
-                  onChange={(e) => setTextColor(e.target.value)}
+                  onChange={(e) => {
+                    userInteractedRef.current.textColor = true;
+                    setTextColor(e.target.value);
+                  }}
                   style={{ flex: 1, padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#1E1E1E" }}
                 />
               </div>
@@ -449,13 +477,19 @@ export default function AdminDashboardPage() {
                 <input
                   type="color"
                   value={accentColor}
-                  onChange={(e) => setAccentColor(e.target.value)}
+                  onChange={(e) => {
+                    userInteractedRef.current.accentColor = true;
+                    setAccentColor(e.target.value);
+                  }}
                   style={{ width: "40px", height: "40px", borderRadius: "6px", border: "1px solid #cbd5e1", cursor: "pointer", padding: "2px" }}
                 />
                 <input
                   type="text"
                   value={accentColor}
-                  onChange={(e) => setAccentColor(e.target.value)}
+                  onChange={(e) => {
+                    userInteractedRef.current.accentColor = true;
+                    setAccentColor(e.target.value);
+                  }}
                   style={{ flex: 1, padding: "8px 12px", border: "1px solid #cbd5e1", borderRadius: "6px", fontWeight: 700, fontSize: "0.9rem", color: "#1E1E1E" }}
                 />
               </div>
@@ -484,7 +518,10 @@ export default function AdminDashboardPage() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
               <button
                 type="button"
-                onClick={() => setTextCase("proper")}
+                onClick={() => {
+                  userInteractedRef.current.textCase = true;
+                  setTextCase("proper");
+                }}
                 style={{
                   padding: "1rem",
                   borderRadius: "8px",
@@ -509,7 +546,10 @@ export default function AdminDashboardPage() {
 
               <button
                 type="button"
-                onClick={() => setTextCase("uppercase")}
+                onClick={() => {
+                  userInteractedRef.current.textCase = true;
+                  setTextCase("uppercase");
+                }}
                 style={{
                   padding: "1rem",
                   borderRadius: "8px",
@@ -534,7 +574,10 @@ export default function AdminDashboardPage() {
 
               <button
                 type="button"
-                onClick={() => setTextCase("lowercase")}
+                onClick={() => {
+                  userInteractedRef.current.textCase = true;
+                  setTextCase("lowercase");
+                }}
                 style={{
                   padding: "1rem",
                   borderRadius: "8px",
@@ -583,26 +626,16 @@ export default function AdminDashboardPage() {
                 fontWeight: 900,
                 color: headingColor,
                 margin: "2px 0 4px",
-                textTransform: textCase === "uppercase" ? "uppercase" : textCase === "lowercase" ? "lowercase" : "none"
               }}>
-                {textCase === "uppercase"
-                  ? "AAREN CREATIVE STUDIO & MATERIAL HOUSE"
-                  : textCase === "lowercase"
-                  ? "aaren creative studio & material house"
-                  : "Aaren Creative Studio & Material House"}
+                {applyTextCase("AAREN Creative Studio & Material House", textCase, "title")}
               </h3>
               <p style={{
                 color: textColor,
                 fontSize: "0.9rem",
                 margin: 0,
                 maxWidth: "600px",
-                textTransform: textCase === "uppercase" ? "uppercase" : textCase === "lowercase" ? "lowercase" : "none"
               }}>
-                {textCase === "uppercase"
-                  ? "IMMERSIVE SPATIAL ENVIRONMENTS CRAFTED WITH AUTHENTIC EUROPEAN SURFACES, NATURAL WOOD CLADDING, AND BESPOKE JOINERY."
-                  : textCase === "lowercase"
-                  ? "immersive spatial environments crafted with authentic european surfaces, natural wood cladding, and bespoke joinery."
-                  : "Immersive spatial environments crafted with authentic European surfaces, natural wood cladding, and bespoke joinery."}
+                {applyTextCase("Immersive spatial environments crafted with authentic European surfaces, natural wood cladding, and bespoke joinery.", textCase, "sentence")}
               </p>
             </div>
             <button
@@ -614,10 +647,9 @@ export default function AdminDashboardPage() {
                 borderRadius: "999px",
                 fontWeight: 700,
                 fontSize: "0.8rem",
-                textTransform: textCase === "uppercase" ? "uppercase" : textCase === "lowercase" ? "lowercase" : "none",
               }}
             >
-              {textCase === "uppercase" ? "EXPLORE MATERIALS →" : textCase === "lowercase" ? "explore materials →" : "Explore Materials →"}
+              {applyTextCase("Explore Materials →", textCase, "title")}
             </button>
           </div>
         </div>

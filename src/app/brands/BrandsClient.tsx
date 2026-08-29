@@ -174,7 +174,6 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
           font-weight: 700;
           letter-spacing: -0.05em;
           line-height: 0.88;
-          text-transform: uppercase;
           color: #81663F;
           margin-bottom: 2.8rem;
         }
@@ -279,7 +278,6 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
           font-weight: 800;
           letter-spacing: -0.02em;
           line-height: 1.1;
-          text-transform: uppercase;
           color: #81663F;
         }
 
@@ -287,7 +285,6 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
           font-size: 1.15rem;
           color: #5E5852;
           letter-spacing: 0.05em;
-          text-transform: uppercase;
           font-weight: 600;
           line-height: 1.25;
         }

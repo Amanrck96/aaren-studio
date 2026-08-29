@@ -60,17 +60,25 @@ export function toProperTitleCase(input: string): string {
   if (!input || typeof input !== "string") return input || "";
 
   // Split by whitespace while preserving punctuation
-  const words = input.split(/(\s+)/);
+  const tokens = input.split(/(\s+)/);
+  let contentWordCount = 0;
 
-  return words
-    .map((token, index) => {
+  return tokens
+    .map((token) => {
       // If it's just whitespace or separators, leave as is
       if (/^\s+$/.test(token) || token === "·" || token === "&" || token === "+" || token === "/") {
         return token;
       }
 
-      // Check if word contains non-alphanumerics like "K+W", "D+W", "FF&E"
+      // Check if token contains alphanumeric characters
       const cleanWord = token.replace(/^[^\w]+|[^\w]+$/g, "");
+      if (!cleanWord) {
+        return token;
+      }
+
+      const isFirstContentWord = (contentWordCount === 0);
+      contentWordCount++;
+
       const cleanUpper = cleanWord.toUpperCase();
 
       if (PRESERVED_WORDS.has(cleanUpper)) {
@@ -82,9 +90,10 @@ export function toProperTitleCase(input: string): string {
         return token;
       }
 
-      // Minor words check (except if it's the first word)
       const cleanLower = cleanWord.toLowerCase();
-      if (index > 0 && MINOR_WORDS.has(cleanLower)) {
+
+      // Minor words check (stay lowercase unless it is the first content word)
+      if (!isFirstContentWord && MINOR_WORDS.has(cleanLower)) {
         return token.replace(cleanWord, cleanLower);
       }
 
@@ -110,34 +119,38 @@ export function toProperSentenceCase(input: string): string {
     .map((part) => {
       if (/^[.!?]\s+$/.test(part)) return part;
 
-      const words = part.split(/(\s+)/);
-      let isFirstWord = true;
+      const tokens = part.split(/(\s+)/);
+      let isFirstContentWord = true;
 
-      return words
+      return tokens
         .map((token) => {
           if (/^\s+$/.test(token) || token === "·" || token === "&" || token === "+" || token === "/") {
             return token;
           }
 
           const cleanWord = token.replace(/^[^\w]+|[^\w]+$/g, "");
+          if (!cleanWord) {
+            return token;
+          }
+
+          const isCurrentFirst = isFirstContentWord;
+          isFirstContentWord = false;
+
           const cleanUpper = cleanWord.toUpperCase();
 
           // Preserve specific brand acronyms (AAREN, FIMA, IWW, etc.)
           if (PRESERVED_WORDS.has(cleanUpper)) {
-            isFirstWord = false;
             return token.replace(cleanWord, cleanUpper);
           }
 
           // Preserve short codes like "BF 13"
           if (/^[A-Z]{2,4}$/.test(cleanWord) && cleanWord.length <= 4 && token === token.toUpperCase()) {
-            isFirstWord = false;
             return token;
           }
 
           const cleanLower = cleanWord.toLowerCase();
 
-          if (isFirstWord) {
-            isFirstWord = false;
+          if (isCurrentFirst) {
             const capitalized = cleanLower.charAt(0).toUpperCase() + cleanLower.slice(1);
             return token.replace(cleanWord, capitalized);
           }

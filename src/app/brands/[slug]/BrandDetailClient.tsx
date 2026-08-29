@@ -955,7 +955,6 @@ export default function BrandDetailClient({
         .bd-hero__tag {
           font-size: 1.1rem;
           letter-spacing: 0.06em;
-          text-transform: uppercase;
           color: rgba(255,255,255,0.7);
           border: 0.1rem solid rgba(255,255,255,0.25);
           padding: 0.4rem 1rem;
