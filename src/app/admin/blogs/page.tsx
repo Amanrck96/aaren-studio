@@ -165,12 +165,12 @@ function BlogRichTextEditor({
   };
 
   return (
-    <div style={{ border: "1px solid #333", borderRadius: "8px", overflow: "hidden", background: "#141418" }}>
+    <div style={{ border: "1px solid #D5CEBF", borderRadius: "12px", overflow: "hidden", background: "#FAF8F5" }}>
       {/* MAIN WORD-STYLE TEXT TOOLBAR */}
       <div
         style={{
-          background: "#1e1e24",
-          borderBottom: "1px solid #333",
+          background: "#F4EFE6",
+          borderBottom: "1px solid #D5CEBF",
           padding: "0.6rem 0.8rem",
           display: "flex",
           flexWrap: "wrap",
@@ -182,7 +182,7 @@ function BlogRichTextEditor({
         <select
           value={fontFamily}
           onChange={(e) => handleApplyFontFamily(e.target.value)}
-          style={{ padding: "0.35rem 0.6rem", background: "#0a0a0c", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontSize: "0.8rem" }}
+          style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", fontSize: "0.8rem" }}
         >
           <option value="Calibri, sans-serif">Calibri (Body)</option>
           <option value="Inter, sans-serif">Inter</option>
@@ -196,7 +196,7 @@ function BlogRichTextEditor({
         <select
           value={fontSize}
           onChange={(e) => handleApplyFontSize(e.target.value)}
-          style={{ padding: "0.35rem 0.6rem", background: "#0a0a0c", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontSize: "0.8rem" }}
+          style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", fontSize: "0.8rem" }}
         >
           <option value="12px">12px (Small)</option>
           <option value="14px">14px (Standard)</option>
@@ -207,49 +207,49 @@ function BlogRichTextEditor({
           <option value="36px">36px (Extra Large)</option>
         </select>
 
-        <span style={{ color: "#444" }}>|</span>
+        <span style={{ color: "#D5CEBF" }}>|</span>
 
         {/* Text Formatting Buttons */}
-        <button type="button" onClick={() => execCmd("bold")} title="Bold (Ctrl+B)" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontWeight: 900, cursor: "pointer" }}>B</button>
-        <button type="button" onClick={() => execCmd("italic")} title="Italic (Ctrl+I)" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", fontStyle: "italic", cursor: "pointer" }}>I</button>
-        <button type="button" onClick={() => execCmd("underline")} title="Underline (Ctrl+U)" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", textDecoration: "underline", cursor: "pointer" }}>U</button>
-        <button type="button" onClick={() => execCmd("strikeThrough")} title="Strikethrough" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", textDecoration: "line-through", cursor: "pointer" }}>S</button>
+        <button type="button" onClick={() => execCmd("bold")} title="Bold (Ctrl+B)" style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", fontWeight: 900, cursor: "pointer" }}>B</button>
+        <button type="button" onClick={() => execCmd("italic")} title="Italic (Ctrl+I)" style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", fontStyle: "italic", cursor: "pointer" }}>I</button>
+        <button type="button" onClick={() => execCmd("underline")} title="Underline (Ctrl+U)" style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", textDecoration: "underline", cursor: "pointer" }}>U</button>
+        <button type="button" onClick={() => execCmd("strikeThrough")} title="Strikethrough" style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", textDecoration: "line-through", cursor: "pointer" }}>S</button>
 
-        <span style={{ color: "#444" }}>|</span>
+        <span style={{ color: "#D5CEBF" }}>|</span>
 
         {/* Text Color Picker */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.2rem" }} title="Text Color">
-          <span style={{ fontSize: "0.75rem", color: "#aaa", fontWeight: 700 }}>A</span>
+          <span style={{ fontSize: "0.75rem", color: "#1E1E1E", fontWeight: 700 }}>A</span>
           <input type="color" value={textColor} onChange={(e) => handleApplyTextColor(e.target.value)} style={{ width: "24px", height: "24px", padding: 0, border: "none", borderRadius: "4px", background: "none", cursor: "pointer" }} />
         </div>
 
         {/* Highlight Color Picker */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.2rem" }} title="Highlight Text Color">
-          <span style={{ fontSize: "0.75rem", color: "#aaa", fontWeight: 700 }}>🖍️</span>
+          <span style={{ fontSize: "0.75rem", color: "#1E1E1E", fontWeight: 700 }}>🖍️</span>
           <input type="color" value={highlightColor} onChange={(e) => handleApplyHighlightColor(e.target.value)} style={{ width: "24px", height: "24px", padding: 0, border: "none", borderRadius: "4px", background: "none", cursor: "pointer" }} />
         </div>
 
-        <span style={{ color: "#444" }}>|</span>
+        <span style={{ color: "#D5CEBF" }}>|</span>
 
         {/* List Formatting */}
-        <button type="button" onClick={() => execCmd("insertUnorderedList")} title="Bullet List" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem" }}>• Bullet List</button>
-        <button type="button" onClick={() => execCmd("insertOrderedList")} title="Numbered List" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer", fontSize: "0.85rem" }}>1. Numbered List</button>
+        <button type="button" onClick={() => execCmd("insertUnorderedList")} title="Bullet List" style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>• Bullet List</button>
+        <button type="button" onClick={() => execCmd("insertOrderedList")} title="Numbered List" style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>1. Numbered List</button>
 
-        <span style={{ color: "#444" }}>|</span>
+        <span style={{ color: "#D5CEBF" }}>|</span>
 
         {/* Alignments */}
-        <button type="button" onClick={() => execCmd("justifyLeft")} title="Align Left" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}>⫷ Left</button>
-        <button type="button" onClick={() => execCmd("justifyCenter")} title="Align Center" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}>≡ Center</button>
-        <button type="button" onClick={() => execCmd("justifyRight")} title="Align Right" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}>⫸ Right</button>
-        <button type="button" onClick={() => execCmd("justifyFull")} title="Justify" style={{ padding: "0.35rem 0.6rem", background: "#2b2b36", color: "#fff", border: "1px solid #444", borderRadius: "4px", cursor: "pointer" }}>≣ Justify</button>
+        <button type="button" onClick={() => execCmd("justifyLeft")} title="Align Left" style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", cursor: "pointer" }}>⫷ Left</button>
+        <button type="button" onClick={() => execCmd("justifyCenter")} title="Align Center" style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", cursor: "pointer" }}>≡ Center</button>
+        <button type="button" onClick={() => execCmd("justifyRight")} title="Align Right" style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", cursor: "pointer" }}>⫸ Right</button>
+        <button type="button" onClick={() => execCmd("justifyFull")} title="Justify" style={{ padding: "0.35rem 0.6rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", cursor: "pointer" }}>≣ Justify</button>
 
-        <span style={{ color: "#444" }}>|</span>
+        <span style={{ color: "#D5CEBF" }}>|</span>
 
         {/* WORD PICTURE INSERT BUTTON */}
         <button
           type="button"
           onClick={() => setShowInsertImgModal(true)}
-          style={{ padding: "0.35rem 0.8rem", background: "#059669", color: "#fff", border: "none", borderRadius: "4px", fontWeight: 800, cursor: "pointer", fontSize: "0.8rem" }}
+          style={{ padding: "0.35rem 0.8rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer", fontSize: "0.8rem" }}
         >
           🖼️ + Insert Picture
         </button>
@@ -258,7 +258,7 @@ function BlogRichTextEditor({
         <button
           type="button"
           onClick={() => setShowRawHtml(!showRawHtml)}
-          style={{ padding: "0.35rem 0.8rem", background: showRawHtml ? "#d4af37" : "#3b82f6", color: showRawHtml ? "#000" : "#fff", border: "none", borderRadius: "4px", fontWeight: 800, cursor: "pointer", fontSize: "0.8rem" }}
+          style={{ padding: "0.35rem 0.8rem", background: showRawHtml ? "#81663F" : "#F4EFE6", color: showRawHtml ? "#FFFFFF" : "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", fontWeight: 800, cursor: "pointer", fontSize: "0.8rem" }}
         >
           {showRawHtml ? "📝 Visual Editor" : "💻 Edit HTML Code"}
         </button>
@@ -681,31 +681,32 @@ export default function AdminBlogsPage() {
   };
 
   return (
-    <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
+    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #222", paddingBottom: "1rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #DCD5C6", paddingBottom: "1.2rem" }}>
           <div>
-            <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>✍️ Blog Articles & Journal CMS</h1>
-            <p style={{ color: "#aaa", fontSize: "0.9rem" }}>Create, edit, format individual text/images with Word toolbar, rearrange order, and manage blog media.</p>
+            <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>JOURNAL & EDITORIAL</span>
+            <h1 style={{ fontSize: "2.2rem", fontWeight: 900, color: "#1E1E1E", margin: "0.2rem 0" }}>✍️ Blog Articles & Journal CMS</h1>
+            <p style={{ color: "#555555", fontSize: "0.95rem" }}>Create, edit, format individual text/images with Word toolbar, rearrange order, and manage blog media.</p>
           </div>
           <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
             <button
               onClick={() => { setReorderingList([...blogs]); setShowRearrangeModal(true); }}
-              style={{ padding: "0.7rem 1.4rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 900, cursor: "pointer" }}
+              style={{ padding: "0.75rem 1.4rem", background: "#F4EFE6", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.9rem" }}
             >
               🔀 Rearrange Blog Order ({blogs.length})
             </button>
             <button
               onClick={() => setShowTypographyModal(true)}
-              style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", fontWeight: 900, cursor: "pointer" }}
+              style={{ padding: "0.75rem 1.4rem", background: "#81663F", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.9rem", boxShadow: "0 4px 14px rgba(129,102,63,0.2)" }}
             >
               🎨 Global Font & Image Size Settings
             </button>
             <button
               onClick={() => setEditing({ title: "", slug: "", content: "", category: "Surfaces & Architecture", author: "Aaren Studio", status: "Published" })}
-              style={{ padding: "0.7rem 1.4rem", background: "#6366f1", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}
+              style={{ padding: "0.75rem 1.6rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.9rem", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
             >
               + Create New Blog Post
             </button>
@@ -714,24 +715,24 @@ export default function AdminBlogsPage() {
 
         {/* ARTICLE REARRANGE MODAL */}
         {showRearrangeModal && (
-          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
-            <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "650px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
+            <div style={{ background: "#FFFFFF", border: "1px solid #DCD5C6", borderRadius: "16px", width: "100%", maxWidth: "650px", padding: "2rem", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", borderBottom: "1px solid #EAE4D8", paddingBottom: "1rem" }}>
                 <div>
-                  <h2 style={{ fontSize: "1.4rem", fontWeight: 800, margin: 0, color: "#3b82f6" }}>🔀 Rearrange Blog Display Order</h2>
-                  <p style={{ color: "#aaa", fontSize: "0.85rem", margin: "0.2rem 0 0" }}>Move articles up or down to set their exact sequence on the public blog page.</p>
+                  <h2 style={{ fontSize: "1.4rem", fontWeight: 800, margin: 0, color: "#81663F" }}>🔀 Rearrange Blog Display Order</h2>
+                  <p style={{ color: "#555555", fontSize: "0.85rem", margin: "0.2rem 0 0" }}>Move articles up or down to set their exact sequence on the public blog page.</p>
                 </div>
-                <button onClick={() => setShowRearrangeModal(false)} style={{ background: "none", border: "none", color: "#aaa", fontSize: "1.5rem", cursor: "pointer" }}>✕</button>
+                <button onClick={() => setShowRearrangeModal(false)} style={{ background: "none", border: "none", color: "#6A6359", fontSize: "1.5rem", cursor: "pointer" }}>✕</button>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem", marginBottom: "1.5rem" }}>
                 {reorderingList.map((item, idx) => (
-                  <div key={item.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#0a0a0c", padding: "0.9rem 1.2rem", borderRadius: "8px", border: "1px solid #222" }}>
+                  <div key={item.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#FAF8F5", padding: "0.9rem 1.2rem", borderRadius: "10px", border: "1px solid #E2DCD2" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                      <span style={{ fontSize: "0.85rem", fontWeight: 900, color: "#d4af37", background: "#1e1e24", padding: "0.2rem 0.6rem", borderRadius: "4px" }}>#{idx + 1}</span>
+                      <span style={{ fontSize: "0.85rem", fontWeight: 900, color: "#81663F", background: "rgba(129,102,63,0.12)", border: "1px solid rgba(129,102,63,0.25)", padding: "0.2rem 0.6rem", borderRadius: "6px" }}>#{idx + 1}</span>
                       <div>
-                        <h4 style={{ fontSize: "0.95rem", fontWeight: 700, margin: 0, color: "#fff" }}>{item.title}</h4>
-                        <span style={{ fontSize: "0.75rem", color: "#aaa" }}>{item.category}</span>
+                        <h4 style={{ fontSize: "0.95rem", fontWeight: 800, margin: 0, color: "#1E1E1E" }}>{item.title}</h4>
+                        <span style={{ fontSize: "0.75rem", color: "#6A6359" }}>{item.category}</span>
                       </div>
                     </div>
                     <div style={{ display: "flex", gap: "0.4rem" }}>
@@ -743,7 +744,7 @@ export default function AdminBlogsPage() {
                           copy.splice(idx - 1, 0, m);
                           setReorderingList(copy);
                         }}
-                        style={{ padding: "0.4rem 0.8rem", background: idx === 0 ? "#222" : "#2563eb", color: "#fff", border: "none", borderRadius: "4px", cursor: idx === 0 ? "not-allowed" : "pointer", fontSize: "0.8rem", fontWeight: 700 }}
+                        style={{ padding: "0.4rem 0.8rem", background: idx === 0 ? "#EAE4D8" : "#1E1E1E", color: idx === 0 ? "#888" : "#FFFFFF", border: "none", borderRadius: "6px", cursor: idx === 0 ? "not-allowed" : "pointer", fontSize: "0.8rem", fontWeight: 700 }}
                       >
                         ⬆️ Up
                       </button>
@@ -755,7 +756,7 @@ export default function AdminBlogsPage() {
                           copy.splice(idx + 1, 0, m);
                           setReorderingList(copy);
                         }}
-                        style={{ padding: "0.4rem 0.8rem", background: idx === reorderingList.length - 1 ? "#222" : "#2563eb", color: "#fff", border: "none", borderRadius: "4px", cursor: idx === reorderingList.length - 1 ? "not-allowed" : "pointer", fontSize: "0.8rem", fontWeight: 700 }}
+                        style={{ padding: "0.4rem 0.8rem", background: idx === reorderingList.length - 1 ? "#EAE4D8" : "#1E1E1E", color: idx === reorderingList.length - 1 ? "#888" : "#FFFFFF", border: "none", borderRadius: "6px", cursor: idx === reorderingList.length - 1 ? "not-allowed" : "pointer", fontSize: "0.8rem", fontWeight: 700 }}
                       >
                         ⬇️ Down
                       </button>
@@ -765,8 +766,8 @@ export default function AdminBlogsPage() {
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-                <button onClick={() => setShowRearrangeModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>Cancel</button>
-                <button onClick={handleSaveReorder} style={{ padding: "0.7rem 1.5rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 900, cursor: "pointer" }}>💾 Save Rearranged Order</button>
+                <button onClick={() => setShowRearrangeModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#FAF8F5", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontWeight: 700 }}>Cancel</button>
+                <button onClick={handleSaveReorder} style={{ padding: "0.7rem 1.5rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}>💾 Save Rearranged Order</button>
               </div>
             </div>
           </div>
@@ -774,20 +775,20 @@ export default function AdminBlogsPage() {
 
         {/* GLOBAL TYPOGRAPHY SETTINGS MODAL */}
         {showTypographyModal && (
-          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
-            <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "600px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
+            <div style={{ background: "#FFFFFF", border: "1px solid #DCD5C6", borderRadius: "16px", width: "100%", maxWidth: "600px", padding: "2rem", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", borderBottom: "1px solid #EAE4D8", paddingBottom: "1rem" }}>
                 <div>
-                  <h2 style={{ fontSize: "1.4rem", fontWeight: 800, margin: 0, color: "#d4af37" }}>🎨 Global Font & Image Size Manager</h2>
-                  <p style={{ color: "#aaa", fontSize: "0.85rem", margin: "0.2rem 0 0" }}>Adjust default text sizes and image heights across all blog pages live!</p>
+                  <h2 style={{ fontSize: "1.4rem", fontWeight: 800, margin: 0, color: "#81663F" }}>🎨 Global Font & Image Size Manager</h2>
+                  <p style={{ color: "#555555", fontSize: "0.85rem", margin: "0.2rem 0 0" }}>Adjust default text sizes and image heights across all blog pages live!</p>
                 </div>
-                <button onClick={() => setShowTypographyModal(false)} style={{ background: "none", border: "none", color: "#aaa", fontSize: "1.5rem", cursor: "pointer" }}>✕</button>
+                <button onClick={() => setShowTypographyModal(false)} style={{ background: "none", border: "none", color: "#6A6359", fontSize: "1.5rem", cursor: "pointer" }}>✕</button>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", marginBottom: "1.5rem" }}>
                 {/* Article Title Font Size */}
-                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
-                  <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
+                <div style={{ background: "#FAF8F5", padding: "1rem", borderRadius: "10px", border: "1px solid #E2DCD2" }}>
+                  <label style={{ display: "block", fontSize: "0.9rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.5rem" }}>
                     📰 Default Article Title Font Size (Default: 1.75rem / 28px)
                   </label>
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
@@ -804,12 +805,12 @@ export default function AdminBlogsPage() {
                         onClick={() => setFontSettings({ ...fontSettings, articleTitleSize: opt.value })}
                         style={{
                           padding: "0.4rem 0.8rem",
-                          borderRadius: "4px",
-                          border: fontSettings.articleTitleSize === opt.value ? "2px solid #d4af37" : "1px solid #333",
-                          background: fontSettings.articleTitleSize === opt.value ? "#80673f" : "#141418",
-                          color: "#fff",
+                          borderRadius: "6px",
+                          border: fontSettings.articleTitleSize === opt.value ? "2px solid #81663F" : "1px solid #D5CEBF",
+                          background: fontSettings.articleTitleSize === opt.value ? "#81663F" : "#FFFFFF",
+                          color: fontSettings.articleTitleSize === opt.value ? "#FFFFFF" : "#1E1E1E",
                           fontSize: "0.8rem",
-                          fontWeight: 600,
+                          fontWeight: 700,
                           cursor: "pointer",
                         }}
                       >
@@ -821,13 +822,13 @@ export default function AdminBlogsPage() {
                     type="text"
                     value={fontSettings.articleTitleSize}
                     onChange={(e) => setFontSettings({ ...fontSettings, articleTitleSize: e.target.value })}
-                    style={{ width: "100%", padding: "0.5rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                    style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "6px", fontSize: "0.85rem" }}
                   />
                 </div>
 
                 {/* Article Content Body Text Size */}
-                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
-                  <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
+                <div style={{ background: "#FAF8F5", padding: "1rem", borderRadius: "10px", border: "1px solid #E2DCD2" }}>
+                  <label style={{ display: "block", fontSize: "0.9rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.5rem" }}>
                     📖 Default Article Body Paragraph Text Size (Default: 0.9rem / 14.4px)
                   </label>
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
@@ -844,12 +845,12 @@ export default function AdminBlogsPage() {
                         onClick={() => setFontSettings({ ...fontSettings, articleBodySize: opt.value })}
                         style={{
                           padding: "0.4rem 0.8rem",
-                          borderRadius: "4px",
-                          border: fontSettings.articleBodySize === opt.value ? "2px solid #d4af37" : "1px solid #333",
-                          background: fontSettings.articleBodySize === opt.value ? "#80673f" : "#141418",
-                          color: "#fff",
+                          borderRadius: "6px",
+                          border: fontSettings.articleBodySize === opt.value ? "2px solid #81663F" : "1px solid #D5CEBF",
+                          background: fontSettings.articleBodySize === opt.value ? "#81663F" : "#FFFFFF",
+                          color: fontSettings.articleBodySize === opt.value ? "#FFFFFF" : "#1E1E1E",
                           fontSize: "0.8rem",
-                          fontWeight: 600,
+                          fontWeight: 700,
                           cursor: "pointer",
                         }}
                       >
@@ -861,13 +862,13 @@ export default function AdminBlogsPage() {
                     type="text"
                     value={fontSettings.articleBodySize}
                     onChange={(e) => setFontSettings({ ...fontSettings, articleBodySize: e.target.value })}
-                    style={{ width: "100%", padding: "0.5rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                    style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "6px", fontSize: "0.85rem" }}
                   />
                 </div>
 
                 {/* Article Cover Image Height */}
-                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
-                  <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
+                <div style={{ background: "#FAF8F5", padding: "1rem", borderRadius: "10px", border: "1px solid #E2DCD2" }}>
+                  <label style={{ display: "block", fontSize: "0.9rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.5rem" }}>
                     🖼️ Default Article Cover Banner Image Height (Default: 320px)
                   </label>
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
@@ -883,12 +884,12 @@ export default function AdminBlogsPage() {
                         onClick={() => setFontSettings({ ...fontSettings, articleImageHeight: opt.value })}
                         style={{
                           padding: "0.4rem 0.8rem",
-                          borderRadius: "4px",
-                          border: fontSettings.articleImageHeight === opt.value ? "2px solid #d4af37" : "1px solid #333",
-                          background: fontSettings.articleImageHeight === opt.value ? "#80673f" : "#141418",
-                          color: "#fff",
+                          borderRadius: "6px",
+                          border: fontSettings.articleImageHeight === opt.value ? "2px solid #81663F" : "1px solid #D5CEBF",
+                          background: fontSettings.articleImageHeight === opt.value ? "#81663F" : "#FFFFFF",
+                          color: fontSettings.articleImageHeight === opt.value ? "#FFFFFF" : "#1E1E1E",
                           fontSize: "0.8rem",
-                          fontWeight: 600,
+                          fontWeight: 700,
                           cursor: "pointer",
                         }}
                       >
@@ -901,13 +902,13 @@ export default function AdminBlogsPage() {
                     placeholder="e.g. 320px or 250px"
                     value={fontSettings.articleImageHeight || "320px"}
                     onChange={(e) => setFontSettings({ ...fontSettings, articleImageHeight: e.target.value })}
-                    style={{ width: "100%", padding: "0.5rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                    style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "6px", fontSize: "0.85rem" }}
                   />
                 </div>
 
                 {/* Blog Card Image Height */}
-                <div style={{ background: "#0a0a0c", padding: "1rem", borderRadius: "8px", border: "1px solid #222" }}>
-                  <label style={{ display: "block", fontSize: "0.9rem", color: "#fff", fontWeight: 700, marginBottom: "0.5rem" }}>
+                <div style={{ background: "#FAF8F5", padding: "1rem", borderRadius: "10px", border: "1px solid #E2DCD2" }}>
+                  <label style={{ display: "block", fontSize: "0.9rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.5rem" }}>
                     🃏 Blog Grid Cards Image Height (Default: 200px)
                   </label>
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
@@ -922,12 +923,12 @@ export default function AdminBlogsPage() {
                         onClick={() => setFontSettings({ ...fontSettings, cardImageHeight: opt.value })}
                         style={{
                           padding: "0.4rem 0.8rem",
-                          borderRadius: "4px",
-                          border: fontSettings.cardImageHeight === opt.value ? "2px solid #d4af37" : "1px solid #333",
-                          background: fontSettings.cardImageHeight === opt.value ? "#80673f" : "#141418",
-                          color: "#fff",
+                          borderRadius: "6px",
+                          border: fontSettings.cardImageHeight === opt.value ? "2px solid #81663F" : "1px solid #D5CEBF",
+                          background: fontSettings.cardImageHeight === opt.value ? "#81663F" : "#FFFFFF",
+                          color: fontSettings.cardImageHeight === opt.value ? "#FFFFFF" : "#1E1E1E",
                           fontSize: "0.8rem",
-                          fontWeight: 600,
+                          fontWeight: 700,
                           cursor: "pointer",
                         }}
                       >
@@ -940,34 +941,34 @@ export default function AdminBlogsPage() {
                     placeholder="e.g. 200px or 180px"
                     value={fontSettings.cardImageHeight || "200px"}
                     onChange={(e) => setFontSettings({ ...fontSettings, cardImageHeight: e.target.value })}
-                    style={{ width: "100%", padding: "0.5rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px", fontSize: "0.85rem" }}
+                    style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "6px", fontSize: "0.85rem" }}
                   />
                 </div>
 
                 {/* LIVE PREVIEW BOX */}
-                <div style={{ background: "#ffffff", padding: "1.2rem", borderRadius: "8px", color: "#111" }}>
-                  <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#80673f", textTransform: "uppercase" }}>Live Text & Image Preview</span>
-                  <h3 style={{ fontSize: fontSettings.articleTitleSize, fontWeight: 800, color: "#80673f", margin: "0.4rem 0 0.6rem", lineHeight: 1.25 }}>
+                <div style={{ background: "#FAF8F5", padding: "1.2rem", borderRadius: "10px", border: "1px solid #E2DCD2", color: "#1E1E1E" }}>
+                  <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase" }}>Live Text & Image Preview</span>
+                  <h3 style={{ fontSize: fontSettings.articleTitleSize, fontWeight: 800, color: "#1E1E1E", margin: "0.4rem 0 0.6rem", lineHeight: 1.25 }}>
                     NewTechWood Decking: Creating Beautiful Outdoor Living Spaces
                   </h3>
                   <div style={{ height: fontSettings.articleImageHeight || "180px", background: "#eee", borderRadius: "6px", overflow: "hidden", marginBottom: "0.8rem", position: "relative" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
-                  <p style={{ fontSize: fontSettings.articleBodySize, lineHeight: 1.6, color: "#444", margin: 0 }}>
+                  <p style={{ fontSize: fontSettings.articleBodySize, lineHeight: 1.6, color: "#555555", margin: 0 }}>
                     NewTechWood represents the pinnacle of composite wood technology for luxury outdoor living spaces. Engineered with an advanced Ultrashield co-extrusion technology.
                   </p>
                 </div>
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-                <button type="button" onClick={() => setShowTypographyModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+                <button type="button" onClick={() => setShowTypographyModal(false)} style={{ padding: "0.7rem 1.2rem", background: "#FAF8F5", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontWeight: 700 }}>
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleSaveFontSettings}
-                  style={{ padding: "0.7rem 1.5rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", fontWeight: 900, cursor: "pointer" }}
+                  style={{ padding: "0.7rem 1.5rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
                 >
                   💾 Save & Apply System-Wide
                 </button>
@@ -978,113 +979,113 @@ export default function AdminBlogsPage() {
 
         {/* CREATE / EDIT BLOG FORM WITH WORD-STYLE RICH TEXT & WORD PICTURE FORMATTING TOOLBAR */}
         {editing && (
-          <form onSubmit={handleSave} style={{ background: "#141418", padding: "2rem", borderRadius: "10px", border: "1px solid #333", marginBottom: "2rem" }}>
-            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#6366f1", marginBottom: "1.2rem" }}>
+          <form onSubmit={handleSave} style={{ background: "#FFFFFF", padding: "2rem", borderRadius: "16px", border: "1px solid #E2DCD2", marginBottom: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#81663F", marginBottom: "1.2rem" }}>
               {editing.id ? "✏️ Edit Blog Article Text, Image Size & Content" : "✨ Create New Blog Article"}
             </h2>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Article Title *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Article Title *</label>
                 <input
                   type="text"
                   required
                   value={editing.title || ""}
                   onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>URL Slug (e.g. newtechwood-decking-creating-beautiful-outdoor-living-spaces)</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>URL Slug (e.g. newtechwood-decking-creating-beautiful-outdoor-living-spaces)</label>
                 <input
                   type="text"
                   placeholder="auto-generated-from-title"
                   value={editing.slug || ""}
                   onChange={(e) => setEditing({ ...editing, slug: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Category</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Category</label>
                 <input
                   type="text"
                   value={editing.category || "Surfaces & Architecture"}
                   onChange={(e) => setEditing({ ...editing, category: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Author</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Author</label>
                 <input
                   type="text"
                   value={editing.author || "Aaren Studio"}
                   onChange={(e) => setEditing({ ...editing, author: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Publish Date</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Publish Date</label>
                 <input
                   type="text"
                   placeholder="e.g. August 8, 2026"
                   value={editing.publishDate || ""}
                   onChange={(e) => setEditing({ ...editing, publishDate: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
             </div>
 
             {/* PER-ARTICLE CUSTOM TEXT & IMAGE SIZE OVERRIDES */}
-            <div style={{ background: "#0a0a0c", border: "1px solid #282834", borderRadius: "8px", padding: "1.2rem", marginBottom: "1.2rem" }}>
-              <h4 style={{ fontSize: "0.95rem", fontWeight: 800, color: "#d4af37", margin: "0 0 0.8rem" }}>
+            <div style={{ background: "#FAF8F5", border: "1px solid #E2DCD2", borderRadius: "10px", padding: "1.2rem", marginBottom: "1.2rem" }}>
+              <h4 style={{ fontSize: "0.95rem", fontWeight: 800, color: "#81663F", margin: "0 0 0.8rem" }}>
                 🎨 Custom Font & Image Size Overrides for THIS Article Only (Optional)
               </h4>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Title Font Size Override</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.3rem" }}>Title Font Size Override</label>
                   <input
                     type="text"
                     placeholder="e.g. 1.6rem or default"
                     value={editing.titleSize || ""}
                     onChange={(e) => setEditing({ ...editing, titleSize: e.target.value })}
-                    style={{ width: "100%", padding: "0.6rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                    style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "6px", fontSize: "0.85rem" }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Body Text Size Override</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.3rem" }}>Body Text Size Override</label>
                   <input
                     type="text"
                     placeholder="e.g. 0.85rem or default"
                     value={editing.bodySize || ""}
                     onChange={(e) => setEditing({ ...editing, bodySize: e.target.value })}
-                    style={{ width: "100%", padding: "0.6rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                    style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "6px", fontSize: "0.85rem" }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", color: "#aaa", marginBottom: "0.3rem" }}>Cover Image Height Override</label>
+                  <label style={{ display: "block", fontSize: "0.8rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.3rem" }}>Cover Image Height Override</label>
                   <input
                     type="text"
                     placeholder="e.g. 260px or default"
                     value={editing.imageHeight || ""}
                     onChange={(e) => setEditing({ ...editing, imageHeight: e.target.value })}
-                    style={{ width: "100%", padding: "0.6rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.85rem" }}
+                    style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "6px", fontSize: "0.85rem" }}
                   />
                 </div>
               </div>
             </div>
 
             <div style={{ marginBottom: "1.2rem" }}>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>Featured Cover Image URL</label>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Featured Cover Image URL</label>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <input
                   type="text"
                   value={editing.featuredImage || ""}
                   onChange={(e) => setEditing({ ...editing, featuredImage: e.target.value })}
-                  style={{ flex: 1, padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  style={{ flex: 1, padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
                 <input
                   type="file"
@@ -1098,14 +1099,15 @@ export default function AdminBlogsPage() {
                 <label
                   htmlFor="blogCoverUpload"
                   style={{
-                    padding: "0.7rem 1rem",
-                    background: "#2563eb",
+                    padding: "0.75rem 1.4rem",
+                    background: "#1E1E1E",
                     color: "#fff",
-                    borderRadius: "6px",
-                    fontSize: "0.8rem",
-                    fontWeight: 600,
+                    borderRadius: "8px",
+                    fontSize: "0.85rem",
+                    fontWeight: 800,
                     cursor: "pointer",
                     whiteSpace: "nowrap",
+                    boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
                   }}
                 >
                   {uploading ? "⏳ Uploading..." : "💻 Upload Cover Image"}
@@ -1115,7 +1117,7 @@ export default function AdminBlogsPage() {
 
             {/* WORD-STYLE RICH TEXT EDITOR & PICTURE FORMATTING TOOLBAR */}
             <div style={{ marginBottom: "1.5rem" }}>
-              <label style={{ display: "block", fontSize: "0.9rem", color: "#d4af37", fontWeight: 800, marginBottom: "0.4rem" }}>
+              <label style={{ display: "block", fontSize: "0.9rem", color: "#81663F", fontWeight: 800, marginBottom: "0.4rem" }}>
                 📝 Article Text & Word Picture Formatting Toolbar *
               </label>
               <BlogRichTextEditor
@@ -1125,10 +1127,10 @@ export default function AdminBlogsPage() {
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" style={{ padding: "0.75rem 1.8rem", background: "linear-gradient(135deg, #6366f1 0%, #4338ca 100%)", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}>
+              <button type="submit" style={{ padding: "0.75rem 1.8rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}>
                 💾 Save & Publish Article
               </button>
-              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.75rem 1.5rem", background: "#333", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.75rem 1.5rem", background: "#FAF8F5", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontWeight: 700 }}>
                 Cancel
               </button>
             </div>
@@ -1138,27 +1140,27 @@ export default function AdminBlogsPage() {
         {/* BLOG CARDS GRID WITH QUICK REARRANGE BUTTONS */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
           {blogs.map((b, index) => (
-            <div key={b.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "1.8rem", boxShadow: "0 10px 25px rgba(0,0,0,0.4)", position: "relative" }}>
+            <div key={b.id} style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "1.8rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", position: "relative" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.8rem" }}>
-                <span style={{ fontSize: "0.78rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.25rem 0.7rem", borderRadius: "4px", fontWeight: 900 }}>{b.category || "General"}</span>
-                <span style={{ fontSize: "0.75rem", color: "#d4af37", fontWeight: 800 }}>Sequence #{index + 1}</span>
+                <span style={{ fontSize: "0.78rem", background: "rgba(129, 102, 63, 0.12)", color: "#81663F", border: "1px solid rgba(129, 102, 63, 0.25)", padding: "0.25rem 0.7rem", borderRadius: "6px", fontWeight: 800 }}>{b.category || "General"}</span>
+                <span style={{ fontSize: "0.75rem", color: "#81663F", fontWeight: 800 }}>Sequence #{index + 1}</span>
               </div>
               {b.featuredImage && (
                 <div style={{ width: "100%", height: "140px", marginBottom: "0.8rem", borderRadius: "8px", overflow: "hidden" }}>
                   <img src={b.featuredImage} alt={b.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               )}
-              <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0.4rem 0 0.5rem" }}>{b.title}</h3>
-              <div style={{ color: "#cbd5e1", fontSize: "0.88rem", margin: "0.5rem 0 1.4rem", lineHeight: 1.6, maxHeight: "70px", overflow: "hidden" }}>
+              <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1E1E1E", margin: "0.4rem 0 0.5rem" }}>{b.title}</h3>
+              <div style={{ color: "#555555", fontSize: "0.88rem", margin: "0.5rem 0 1.4rem", lineHeight: 1.6, maxHeight: "70px", overflow: "hidden" }}>
                 {b.content ? b.content.replace(/<[^>]*>/g, "") : ""}
               </div>
               
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #252836", paddingTop: "1rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #EAE4D8", paddingTop: "1rem" }}>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button onClick={() => setEditing(b)} style={{ padding: "0.45rem 1rem", background: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.82rem", fontWeight: 700 }}>
+                  <button onClick={() => setEditing(b)} style={{ padding: "0.45rem 1rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.82rem", fontWeight: 700 }}>
                     ✏️ Edit & Format
                   </button>
-                  <button onClick={() => handleDelete(b.id)} style={{ padding: "0.45rem 1rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "6px", cursor: "pointer", fontSize: "0.82rem", fontWeight: 700 }}>
+                  <button onClick={() => handleDelete(b.id)} style={{ padding: "0.45rem 1rem", background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5", borderRadius: "6px", cursor: "pointer", fontSize: "0.82rem", fontWeight: 700 }}>
                     🗑️ Delete
                   </button>
                 </div>
@@ -1166,14 +1168,14 @@ export default function AdminBlogsPage() {
                   <button
                     disabled={index === 0}
                     onClick={() => handleMoveArticle(index, "up")}
-                    style={{ padding: "0.35rem 0.6rem", background: index === 0 ? "#1a1a24" : "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", cursor: index === 0 ? "not-allowed" : "pointer", fontSize: "0.78rem", fontWeight: 700 }}
+                    style={{ padding: "0.35rem 0.6rem", background: index === 0 ? "#FAF8F5" : "#F4EFE6", color: index === 0 ? "#aaa" : "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "4px", cursor: index === 0 ? "not-allowed" : "pointer", fontSize: "0.78rem", fontWeight: 700 }}
                   >
                     ⬆️ Up
                   </button>
                   <button
                     disabled={index === blogs.length - 1}
                     onClick={() => handleMoveArticle(index, "down")}
-                    style={{ padding: "0.35rem 0.6rem", background: index === blogs.length - 1 ? "#1a1a24" : "#3b82f6", color: "#fff", border: "none", borderRadius: "4px", cursor: index === blogs.length - 1 ? "not-allowed" : "pointer", fontSize: "0.78rem", fontWeight: 700 }}
+                    style={{ padding: "0.35rem 0.6rem", background: index === blogs.length - 1 ? "#FAF8F5" : "#F4EFE6", color: index === blogs.length - 1 ? "#aaa" : "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "4px", cursor: index === blogs.length - 1 ? "not-allowed" : "pointer", fontSize: "0.78rem", fontWeight: 700 }}
                   >
                     ⬇️ Down
                   </button>

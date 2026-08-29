@@ -236,20 +236,20 @@ export default function CollectionsAdminPage() {
   }, [brandProducts, previewFilter, collections]);
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#0b0f19", color: "#f8fafc" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#FAF8F5", color: "#1E1E1E" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", overflowY: "auto", background: "#0b0f19" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", overflowY: "auto", background: "#FAF8F5" }}>
         {/* Top Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #1e293b", paddingBottom: "1.2rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #DCD5C6", paddingBottom: "1.2rem" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
               <span style={{ fontSize: "1.8rem" }}>🗃️</span>
-              <h1 style={{ fontSize: "2rem", fontWeight: 800, color: "#ffffff", margin: 0 }}>
+              <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#1E1E1E", margin: 0 }}>
                 Brand-Scoped Collection Management
               </h1>
             </div>
-            <p style={{ color: "#cbd5e1", fontSize: "0.95rem", margin: "0.4rem 0 0" }}>
+            <p style={{ color: "#555555", fontSize: "0.95rem", margin: "0.4rem 0 0" }}>
               Manage brand-specific collections (categories) with circular icons, automatic storefront filter bar sync, and live product counts.
             </p>
           </div>
@@ -260,13 +260,13 @@ export default function CollectionsAdminPage() {
               display: "flex",
               alignItems: "center",
               gap: "0.5rem",
-              background: "#1e293b",
-              color: "#cbd5e1",
-              border: "1px solid #334155",
+              background: "#F4EFE6",
+              color: "#1E1E1E",
+              border: "1px solid #D5CEBF",
               padding: "0.6rem 1.2rem",
               borderRadius: "8px",
               cursor: "pointer",
-              fontWeight: 600,
+              fontWeight: 700,
             }}
           >
             <RefreshCw size={14} /> Refresh Data
@@ -281,10 +281,10 @@ export default function CollectionsAdminPage() {
               borderRadius: "8px",
               marginBottom: "1.5rem",
               fontSize: "0.95rem",
-              fontWeight: 600,
-              background: message.type === "success" ? "rgba(34, 197, 94, 0.15)" : "rgba(239, 68, 68, 0.15)",
-              border: `1px solid ${message.type === "success" ? "#22c55e" : "#ef4444"}`,
-              color: message.type === "success" ? "#4ade80" : "#f87171",
+              fontWeight: 700,
+              background: message.type === "success" ? "rgba(16, 185, 129, 0.15)" : "rgba(239, 68, 68, 0.15)",
+              border: `1px solid ${message.type === "success" ? "#10b981" : "#ef4444"}`,
+              color: message.type === "success" ? "#065f46" : "#b91c1c",
               display: "flex",
               alignItems: "center",
               gap: "0.6rem",
@@ -297,9 +297,9 @@ export default function CollectionsAdminPage() {
         {/* Brand Selector Filter Bar */}
         <div
           style={{
-            background: "#161b26",
-            border: "1px solid #232d3f",
-            borderRadius: "12px",
+            background: "#FFFFFF",
+            border: "1px solid #E2DCD2",
+            borderRadius: "14px",
             padding: "1.2rem 1.5rem",
             marginBottom: "2rem",
             display: "flex",
@@ -307,19 +307,20 @@ export default function CollectionsAdminPage() {
             alignItems: "center",
             gap: "1.2rem",
             justifyContent: "space-between",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <span style={{ fontSize: "0.9rem", fontWeight: 700, color: "#81663F", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            <span style={{ fontSize: "0.9rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase", letterSpacing: "0.08em" }}>
               Active Brand:
             </span>
             <select
               value={selectedBrand}
               onChange={(e) => handleBrandChange(e.target.value)}
               style={{
-                background: "#0d1117",
-                border: "1px solid #3b82f6",
-                color: "#ffffff",
+                background: "#FAF8F5",
+                border: "1px solid #D5CEBF",
+                color: "#1E1E1E",
                 padding: "0.6rem 1.2rem",
                 borderRadius: "8px",
                 fontSize: "1rem",
@@ -337,13 +338,13 @@ export default function CollectionsAdminPage() {
             </select>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem", fontSize: "0.85rem", color: "#94a3b8" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", fontSize: "0.85rem", color: "#6A6359" }}>
             <span>
-              Collections for <strong>{activeBrandName}</strong>: <strong style={{ color: "#38bdf8" }}>{filteredCollections.length}</strong>
+              Collections for <strong>{activeBrandName}</strong>: <strong style={{ color: "#81663F" }}>{filteredCollections.length}</strong>
             </span>
             <span>•</span>
             <span>
-              Total Products: <strong style={{ color: "#38bdf8" }}>{brandProducts.length}</strong>
+              Total Products: <strong style={{ color: "#81663F" }}>{brandProducts.length}</strong>
             </span>
           </div>
         </div>
@@ -354,9 +355,9 @@ export default function CollectionsAdminPage() {
           {/* LEFT PANEL: ADMIN CRUD */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {/* Add / Edit Form Card */}
-            <div style={{ background: "#161b26", border: "1px solid #232d3f", borderRadius: "14px", padding: "1.5rem" }}>
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "1.5rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem" }}>
-                <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff", margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#81663F", margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   {editingId ? "✏️ Edit Collection" : "➕ Add New Collection"}
                 </h2>
                 {editingId && (
@@ -368,7 +369,7 @@ export default function CollectionsAdminPage() {
                       setIconUrl("");
                       setIconPreview("");
                     }}
-                    style={{ background: "none", border: "none", color: "#94a3b8", fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline" }}
+                    style={{ background: "none", border: "none", color: "#6A6359", fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline" }}
                   >
                     Cancel Edit
                   </button>
@@ -377,7 +378,7 @@ export default function CollectionsAdminPage() {
 
               <form onSubmit={handleSaveCollection} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#94a3b8", marginBottom: "0.4rem" }}>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#1E1E1E", marginBottom: "0.4rem" }}>
                     Collection Name *
                   </label>
                   <input
@@ -389,10 +390,10 @@ export default function CollectionsAdminPage() {
                     style={{
                       width: "100%",
                       padding: "0.75rem 1rem",
-                      background: "#0d1117",
-                      border: "1px solid #334155",
+                      background: "#FAF8F5",
+                      border: "1px solid #D5CEBF",
                       borderRadius: "8px",
-                      color: "#fff",
+                      color: "#1E1E1E",
                       fontSize: "0.95rem",
                       boxSizing: "border-box",
                     }}
@@ -400,7 +401,7 @@ export default function CollectionsAdminPage() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#94a3b8", marginBottom: "0.4rem" }}>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#1E1E1E", marginBottom: "0.4rem" }}>
                     Target Brand *
                   </label>
                   <select
@@ -409,10 +410,10 @@ export default function CollectionsAdminPage() {
                     style={{
                       width: "100%",
                       padding: "0.75rem 1rem",
-                      background: "#0d1117",
-                      border: "1px solid #334155",
+                      background: "#FAF8F5",
+                      border: "1px solid #D5CEBF",
                       borderRadius: "8px",
-                      color: "#fff",
+                      color: "#1E1E1E",
                       fontSize: "0.95rem",
                       boxSizing: "border-box",
                     }}
@@ -426,7 +427,7 @@ export default function CollectionsAdminPage() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#94a3b8", marginBottom: "0.4rem" }}>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#1E1E1E", marginBottom: "0.4rem" }}>
                     Description / Subtitle (Optional)
                   </label>
                   <input
@@ -437,10 +438,10 @@ export default function CollectionsAdminPage() {
                     style={{
                       width: "100%",
                       padding: "0.75rem 1rem",
-                      background: "#0d1117",
-                      border: "1px solid #334155",
+                      background: "#FAF8F5",
+                      border: "1px solid #D5CEBF",
                       borderRadius: "8px",
-                      color: "#fff",
+                      color: "#1E1E1E",
                       fontSize: "0.95rem",
                       boxSizing: "border-box",
                     }}
@@ -449,7 +450,7 @@ export default function CollectionsAdminPage() {
 
                 {/* Circular Icon Image Upload */}
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#94a3b8", marginBottom: "0.4rem" }}>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#1E1E1E", marginBottom: "0.4rem" }}>
                     Circular Icon Image
                   </label>
                   <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -458,7 +459,7 @@ export default function CollectionsAdminPage() {
                         width: "50px",
                         height: "50px",
                         borderRadius: "50%",
-                        background: "#1e293b",
+                        background: "#FAF8F5",
                         border: "2px solid #81663F",
                         display: "flex",
                         alignItems: "center",
@@ -483,7 +484,7 @@ export default function CollectionsAdminPage() {
                         onChange={handleImageFileChange}
                         style={{
                           fontSize: "0.8rem",
-                          color: "#94a3b8",
+                          color: "#6A6359",
                           width: "100%",
                         }}
                       />
@@ -499,10 +500,10 @@ export default function CollectionsAdminPage() {
                           marginTop: "0.4rem",
                           width: "100%",
                           padding: "0.4rem 0.6rem",
-                          background: "#0d1117",
-                          border: "1px solid #334155",
+                          background: "#FAF8F5",
+                          border: "1px solid #D5CEBF",
                           borderRadius: "6px",
-                          color: "#fff",
+                          color: "#1E1E1E",
                           fontSize: "0.8rem",
                           boxSizing: "border-box",
                         }}
@@ -517,14 +518,14 @@ export default function CollectionsAdminPage() {
                   style={{
                     marginTop: "0.5rem",
                     padding: "0.85rem",
-                    background: "#81663F",
-                    color: "#fff",
+                    background: "#1E1E1E",
+                    color: "#FFFFFF",
                     border: "none",
                     borderRadius: "8px",
                     fontSize: "0.95rem",
-                    fontWeight: 700,
+                    fontWeight: 800,
                     cursor: saving ? "not-allowed" : "pointer",
-                    transition: "background 0.2s",
+                    boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
                   }}
                 >
                   {saving ? "Saving to Cloud..." : editingId ? "Update Collection ✓" : "Add Collection +"}
@@ -533,13 +534,13 @@ export default function CollectionsAdminPage() {
             </div>
 
             {/* Collection List for Brand */}
-            <div style={{ background: "#161b26", border: "1px solid #232d3f", borderRadius: "14px", padding: "1.5rem" }}>
-              <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 1rem" }}>
+            <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "1.5rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+              <h2 style={{ fontSize: "1rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 1rem" }}>
                 {activeBrandName} Collections ({filteredCollections.length})
               </h2>
 
               {filteredCollections.length === 0 ? (
-                <p style={{ color: "#64748b", fontSize: "0.85rem", textAlign: "center", padding: "1.5rem 0" }}>
+                <p style={{ color: "#6A6359", fontSize: "0.85rem", textAlign: "center", padding: "1.5rem 0" }}>
                   No collections defined yet for this brand. Create one above!
                 </p>
               ) : (
@@ -554,8 +555,8 @@ export default function CollectionsAdminPage() {
                           alignItems: "center",
                           justifyContent: "space-between",
                           padding: "0.8rem 1rem",
-                          background: "#0d1117",
-                          border: "1px solid #232d3f",
+                          background: "#FAF8F5",
+                          border: "1px solid #E2DCD2",
                           borderRadius: "10px",
                         }}
                       >
@@ -565,7 +566,7 @@ export default function CollectionsAdminPage() {
                               width: "36px",
                               height: "36px",
                               borderRadius: "50%",
-                              background: "#1e293b",
+                              background: "#FFFFFF",
                               border: "1px solid #81663F",
                               display: "flex",
                               alignItems: "center",
@@ -583,9 +584,9 @@ export default function CollectionsAdminPage() {
                             )}
                           </div>
                           <div>
-                            <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#fff" }}>{col.name}</div>
-                            <div style={{ fontSize: "0.75rem", color: "#64748b" }}>
-                              {count} {count === 1 ? "product" : "products"} • <span style={{ color: "#81663F" }}>{col.brandName || col.brandId}</span>
+                            <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#1E1E1E" }}>{col.name}</div>
+                            <div style={{ fontSize: "0.75rem", color: "#6A6359" }}>
+                              {count} {count === 1 ? "product" : "products"} • <span style={{ color: "#81663F", fontWeight: 700 }}>{col.brandName || col.brandId}</span>
                             </div>
                           </div>
                         </div>
@@ -594,14 +595,14 @@ export default function CollectionsAdminPage() {
                           <button
                             onClick={() => handleEdit(col)}
                             title="Edit Collection"
-                            style={{ background: "#1e293b", color: "#38bdf8", border: "none", padding: "0.4rem 0.6rem", borderRadius: "6px", cursor: "pointer" }}
+                            style={{ background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", padding: "0.4rem 0.6rem", borderRadius: "6px", cursor: "pointer" }}
                           >
                             <Edit2 size={13} />
                           </button>
                           <button
                             onClick={() => handleDelete(col.id, col.name)}
                             title="Delete Collection"
-                            style={{ background: "#1e293b", color: "#f87171", border: "none", padding: "0.4rem 0.6rem", borderRadius: "6px", cursor: "pointer" }}
+                            style={{ background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5", padding: "0.4rem 0.6rem", borderRadius: "6px", cursor: "pointer" }}
                           >
                             <Trash2 size={13} />
                           </button>
@@ -614,8 +615,8 @@ export default function CollectionsAdminPage() {
             </div>
 
             {/* Quick Product-to-Collection Assignment (Demo Counts) */}
-            <div style={{ background: "#161b26", border: "1px dashed #334155", borderRadius: "14px", padding: "1.5rem" }}>
-              <h2 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#cbd5e1", margin: "0 0 0.8rem" }}>
+            <div style={{ background: "#FFFFFF", border: "1px dashed #D5CEBF", borderRadius: "16px", padding: "1.5rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+              <h2 style={{ fontSize: "0.95rem", fontWeight: 800, color: "#1E1E1E", margin: "0 0 0.8rem" }}>
                 ⚡ Quick Product Assignment
               </h2>
               <form onSubmit={handleQuickAddProduct} style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
@@ -628,10 +629,10 @@ export default function CollectionsAdminPage() {
                   style={{
                     width: "100%",
                     padding: "0.6rem 0.8rem",
-                    background: "#0d1117",
-                    border: "1px solid #334155",
+                    background: "#FAF8F5",
+                    border: "1px solid #D5CEBF",
                     borderRadius: "6px",
-                    color: "#fff",
+                    color: "#1E1E1E",
                     fontSize: "0.85rem",
                     boxSizing: "border-box",
                   }}
@@ -643,10 +644,10 @@ export default function CollectionsAdminPage() {
                   style={{
                     width: "100%",
                     padding: "0.6rem 0.8rem",
-                    background: "#0d1117",
-                    border: "1px solid #334155",
+                    background: "#FAF8F5",
+                    border: "1px solid #D5CEBF",
                     borderRadius: "6px",
-                    color: "#fff",
+                    color: "#1E1E1E",
                     fontSize: "0.85rem",
                     boxSizing: "border-box",
                   }}

@@ -150,19 +150,19 @@ export default function AdminMediaPage() {
   });
 
   return (
-    <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
+    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem", borderBottom: "1px solid #DCD5C6", paddingBottom: "1.2rem" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
-              <h1 style={{ fontSize: "2rem", fontWeight: 800 }}>📁 Central Media Library</h1>
-              <span style={{ padding: "0.25rem 0.65rem", background: "#eab30822", color: "#eab308", border: "1px solid #eab30844", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700 }}>
+              <h1 style={{ fontSize: "2.2rem", fontWeight: 900, color: "#1E1E1E", margin: 0 }}>📁 Central Media Library</h1>
+              <span style={{ padding: "0.25rem 0.65rem", background: "rgba(129, 102, 63, 0.12)", color: "#81663F", border: "1px solid rgba(129, 102, 63, 0.25)", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 800 }}>
                 {media.length} Assets Live
               </span>
             </div>
-            <p style={{ color: "#aaa", fontSize: "0.9rem", marginTop: "0.4rem" }}>
+            <p style={{ color: "#555555", fontSize: "0.95rem", marginTop: "0.4rem" }}>
               Central repository of all PDF brochures, MP4 videos, images, brand catalogs & site documents.
             </p>
           </div>
@@ -178,20 +178,21 @@ export default function AdminMediaPage() {
             <label
               htmlFor="centralMediaUpload"
               style={{
-                padding: "0.7rem 1.4rem",
-                background: "#2563eb",
+                padding: "0.75rem 1.4rem",
+                background: "#1E1E1E",
                 color: "#ffffff",
-                borderRadius: "6px",
-                fontWeight: 700,
+                borderRadius: "8px",
+                fontWeight: 800,
                 cursor: "pointer",
                 fontSize: "0.9rem",
+                boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
               }}
             >
               {uploading ? "Uploading..." : "💻 Upload File From Computer"}
             </label>
             <button
               onClick={() => setEditing({ fileName: "", fileUrl: "", fileType: "PDF", folder: "Catalogs" })}
-              style={{ padding: "0.7rem 1.4rem", background: "#eab308", color: "#000", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer", fontSize: "0.9rem" }}
+              style={{ padding: "0.75rem 1.4rem", background: "#81663F", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.9rem", boxShadow: "0 4px 14px rgba(129,102,63,0.2)" }}
             >
               + Add URL Asset
             </button>
@@ -205,7 +206,7 @@ export default function AdminMediaPage() {
             placeholder="Search documents, PDFs, videos, or brand catalogs by name or folder..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ flex: 1, padding: "0.75rem 1rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.9rem" }}
+            style={{ flex: 1, padding: "0.75rem 1rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}
           />
 
           <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -215,13 +216,14 @@ export default function AdminMediaPage() {
                 onClick={() => setSelectedType(type)}
                 style={{
                   padding: "0.75rem 1.2rem",
-                  background: selectedType === type ? "#eab308" : "#141418",
-                  color: selectedType === type ? "#000" : "#aaa",
-                  border: `1px solid ${selectedType === type ? "#eab308" : "#333"}`,
-                  borderRadius: "6px",
-                  fontWeight: 700,
+                  background: selectedType === type ? "#81663F" : "#FFFFFF",
+                  color: selectedType === type ? "#FFFFFF" : "#1E1E1E",
+                  border: `1px solid ${selectedType === type ? "#81663F" : "#D5CEBF"}`,
+                  borderRadius: "8px",
+                  fontWeight: 800,
                   cursor: "pointer",
                   fontSize: "0.85rem",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
                 }}
               >
                 {type === "All" ? "All Assets" : type === "PDF" ? "📄 PDF Catalogues" : type === "Video" ? "🎥 Videos" : "🖼️ Images"}
@@ -231,37 +233,37 @@ export default function AdminMediaPage() {
         </div>
 
         {editing && (
-          <form onSubmit={handleSave} style={{ background: "#141418", padding: "2rem", borderRadius: "10px", border: "1px solid #333", marginBottom: "2rem" }}>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "1.2rem" }}>Add Media Asset</h2>
+          <form onSubmit={handleSave} style={{ background: "#FFFFFF", padding: "2rem", borderRadius: "16px", border: "1px solid #E2DCD2", marginBottom: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#81663F", marginBottom: "1.2rem" }}>Add Media Asset</h2>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>File Name *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>File Name *</label>
                 <input
                   type="text"
                   required
                   value={editing.fileName || ""}
                   onChange={(e) => setEditing({ ...editing, fileName: e.target.value })}
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.3rem" }}>File URL / Path *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>File URL / Path *</label>
                 <input
                   type="text"
                   required
                   value={editing.fileUrl || ""}
                   onChange={(e) => setEditing({ ...editing, fileUrl: e.target.value })}
                   placeholder="/catalogues/Slashform/Slashform_2025.pdf"
-                  style={{ width: "100%", padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" style={{ padding: "0.7rem 1.5rem", background: "#eab308", color: "#000", border: "none", borderRadius: "6px", fontWeight: 700, cursor: "pointer" }}>
+              <button type="submit" style={{ padding: "0.75rem 1.6rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}>
                 Save Asset
               </button>
-              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.7rem 1.5rem", background: "#333", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.75rem 1.6rem", background: "#FAF8F5", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontWeight: 700 }}>
                 Cancel
               </button>
             </div>
@@ -269,29 +271,29 @@ export default function AdminMediaPage() {
         )}
 
         {loading ? (
-          <div style={{ padding: "4rem", textAlign: "center", color: "#888" }}>Loading central media assets...</div>
+          <div style={{ padding: "4rem", textAlign: "center", color: "#6A6359" }}>Loading central media assets...</div>
         ) : filteredMedia.length === 0 ? (
-          <div style={{ padding: "4rem", textAlign: "center", color: "#888", background: "#141418", borderRadius: "8px", border: "1px solid #222" }}>
+          <div style={{ padding: "4rem", textAlign: "center", color: "#6A6359", background: "#FFFFFF", borderRadius: "14px", border: "1px solid #E2DCD2" }}>
             No media assets found matching current search.
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
             {filteredMedia.map((m) => (
-              <div key={m.id} style={{ background: "#141418", border: "1px solid #222", borderRadius: "10px", padding: "1.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <div key={m.id} style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "1.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.6rem" }}>
-                    <span style={{ fontSize: "0.75rem", background: m.fileType === "PDF" ? "#3b82f6" : m.fileType === "Video" ? "#ec4899" : "#eab308", color: "#fff", padding: "0.25rem 0.65rem", borderRadius: "4px", fontWeight: 800 }}>
+                    <span style={{ fontSize: "0.75rem", background: "rgba(129, 102, 63, 0.12)", color: "#81663F", border: "1px solid rgba(129, 102, 63, 0.25)", padding: "0.25rem 0.65rem", borderRadius: "6px", fontWeight: 800 }}>
                       {m.fileType}
                     </span>
-                    <span style={{ fontSize: "0.75rem", color: "#888", background: "#222", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>
+                    <span style={{ fontSize: "0.75rem", color: "#6A6359", background: "#FAF8F5", border: "1px solid #D5CEBF", padding: "0.2rem 0.5rem", borderRadius: "6px", fontWeight: 600 }}>
                       {m.folder}
                     </span>
                   </div>
-                  <h3 style={{ fontSize: "1.05rem", fontWeight: 700, margin: "0.4rem 0", color: "#fff", lineHeight: 1.4 }}>{m.fileName}</h3>
-                  <p style={{ color: "#888", fontSize: "0.8rem", wordBreak: "break-all", marginBottom: "1rem", lineHeight: 1.3 }}>{m.fileUrl}</p>
+                  <h3 style={{ fontSize: "1.05rem", fontWeight: 800, margin: "0.4rem 0", color: "#1E1E1E", lineHeight: 1.4 }}>{m.fileName}</h3>
+                  <p style={{ color: "#81663F", fontSize: "0.8rem", wordBreak: "break-all", marginBottom: "1rem", lineHeight: 1.3, fontWeight: 600 }}>{m.fileUrl}</p>
                 </div>
-                <div style={{ display: "flex", gap: "0.8rem", borderTop: "1px solid #222", paddingTop: "0.8rem" }}>
-                  <a href={m.fileUrl} target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "0.4rem 0.8rem", background: "#222", color: "#fff", border: "1px solid #333", borderRadius: "4px", textDecoration: "none", fontSize: "0.8rem", fontWeight: 600, textAlign: "center" }}>
+                <div style={{ display: "flex", gap: "0.8rem", borderTop: "1px solid #EAE4D8", paddingTop: "0.8rem" }}>
+                  <a href={m.fileUrl} target="_blank" rel="noopener noreferrer" style={{ flex: 1, padding: "0.5rem 0.8rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "6px", textDecoration: "none", fontSize: "0.8rem", fontWeight: 700, textAlign: "center" }}>
                     🔗 Open Asset ↗
                   </a>
                   <button
@@ -299,11 +301,11 @@ export default function AdminMediaPage() {
                       navigator.clipboard.writeText(m.fileUrl);
                       alert("Copied URL to clipboard!");
                     }}
-                    style={{ padding: "0.4rem 0.8rem", background: "#1e293b", color: "#94a3b8", border: "1px solid #334155", borderRadius: "4px", cursor: "pointer", fontSize: "0.8rem" }}
+                    style={{ padding: "0.5rem 0.8rem", background: "#F4EFE6", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", cursor: "pointer", fontSize: "0.8rem", fontWeight: 700 }}
                   >
                     📋 Copy
                   </button>
-                  <button onClick={() => handleDelete(m.id)} style={{ padding: "0.4rem 0.8rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "0.8rem" }}>
+                  <button onClick={() => handleDelete(m.id)} style={{ padding: "0.5rem 0.8rem", background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5", borderRadius: "6px", cursor: "pointer", fontSize: "0.8rem", fontWeight: 700 }}>
                     🗑️
                   </button>
                 </div>

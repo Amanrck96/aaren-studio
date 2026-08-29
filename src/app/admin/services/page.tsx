@@ -64,65 +64,65 @@ export default function AdminServicesPage() {
   };
 
   return (
-    <div style={{ background: "#0b0c10", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
+    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.12)", paddingBottom: "1rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #DCD5C6", paddingBottom: "1.2rem" }}>
           <div>
-            <span style={{ color: "#d4af37", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>SERVICES MANAGEMENT</span>
-            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.2rem 0", color: "#ffffff" }}>🛠️ Services CMS</h1>
-            <p style={{ color: "#cbd5e1", fontSize: "0.95rem" }}>Manage services offered by Aaren Studio.</p>
+            <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>SERVICES MANAGEMENT</span>
+            <h1 style={{ fontSize: "2.2rem", fontWeight: 900, margin: "0.2rem 0", color: "#1E1E1E" }}>🛠️ Services CMS</h1>
+            <p style={{ color: "#555555", fontSize: "0.95rem" }}>Manage services offered by Aaren Studio.</p>
           </div>
           <button
             onClick={() => setEditing({ title: "", description: "", icon: "✨", sequenceNumber: services.length + 1 })}
-            style={{ padding: "0.75rem 1.5rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.95rem" }}
+            style={{ padding: "0.75rem 1.6rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.95rem", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
           >
             + Add New Service
           </button>
         </div>
 
         {editing && (
-          <form onSubmit={handleSave} style={{ background: "#151922", padding: "2.2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.35)", marginBottom: "2rem" }}>
-            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "1.2rem", color: "#d4af37" }}>{editing.id ? "Edit Service" : "Add New Service"}</h2>
+          <form onSubmit={handleSave} style={{ background: "#FFFFFF", padding: "2.2rem", borderRadius: "16px", border: "1px solid #E2DCD2", marginBottom: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "1.2rem", color: "#81663F" }}>{editing.id ? "Edit Service" : "Add New Service"}</h2>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.9rem", color: "#e2e8f0", fontWeight: 600, marginBottom: "0.4rem" }}>Service Title *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Service Title *</label>
                 <input
                   type="text"
                   required
                   value={editing.title || ""}
                   onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-                  style={{ width: "100%", padding: "0.8rem", background: "#0b0e14", border: "1px solid #334155", color: "#ffffff", borderRadius: "6px", fontSize: "0.95rem" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: "0.9rem", color: "#e2e8f0", fontWeight: 600, marginBottom: "0.4rem" }}>Icon (Emoji / Code)</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Icon (Emoji / Code)</label>
                 <input
                   type="text"
                   value={editing.icon || "✨"}
                   onChange={(e) => setEditing({ ...editing, icon: e.target.value })}
-                  style={{ width: "100%", padding: "0.8rem", background: "#0b0e14", border: "1px solid #334155", color: "#ffffff", borderRadius: "6px", fontSize: "0.95rem" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem" }}
                 />
               </div>
             </div>
 
             <div style={{ marginTop: "1.2rem" }}>
-              <label style={{ display: "block", fontSize: "0.9rem", color: "#e2e8f0", fontWeight: 600, marginBottom: "0.4rem" }}>Description *</label>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Description *</label>
               <textarea
                 rows={3}
                 required
                 value={editing.description || ""}
                 onChange={(e) => setEditing({ ...editing, description: e.target.value })}
-                style={{ width: "100%", padding: "0.8rem", background: "#0b0e14", border: "1px solid #334155", color: "#ffffff", borderRadius: "6px", fontSize: "0.95rem" }}
+                style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem" }}
               />
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.8rem" }}>
-              <button type="submit" disabled={isSaving} style={{ padding: "0.8rem 1.8rem", background: "#d4af37", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: isSaving ? "not-allowed" : "pointer", fontSize: "0.95rem" }}>
+              <button type="submit" disabled={isSaving} style={{ padding: "0.8rem 1.8rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: isSaving ? "not-allowed" : "pointer", fontSize: "0.95rem", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}>
                 {isSaving ? "Saving..." : "Save Service"}
               </button>
-              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.8rem 1.8rem", background: "#1e2433", color: "#ffffff", border: "1px solid #334155", borderRadius: "6px", cursor: "pointer", fontSize: "0.95rem" }}>
+              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.8rem 1.8rem", background: "#FAF8F5", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontSize: "0.95rem", fontWeight: 700 }}>
                 Cancel
               </button>
             </div>
@@ -131,15 +131,15 @@ export default function AdminServicesPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
           {services.map((s) => (
-            <div key={s.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "1.8rem", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
+            <div key={s.id} style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "1.8rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
               <div style={{ fontSize: "2.4rem", marginBottom: "0.8rem" }}>{s.icon || "✨"}</div>
-              <h3 style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", margin: "0.4rem 0" }}>{s.title}</h3>
-              <p style={{ color: "#cbd5e1", fontSize: "0.92rem", margin: "0.6rem 0 1.5rem", lineHeight: 1.6 }}>{s.description}</p>
+              <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1E1E1E", margin: "0.4rem 0" }}>{s.title}</h3>
+              <p style={{ color: "#555555", fontSize: "0.92rem", margin: "0.6rem 0 1.5rem", lineHeight: 1.6 }}>{s.description}</p>
               <div style={{ display: "flex", gap: "0.8rem" }}>
-                <button onClick={() => setEditing(s)} style={{ padding: "0.5rem 1.2rem", background: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
+                <button onClick={() => setEditing(s)} style={{ padding: "0.5rem 1.2rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
                   ✏️ Edit
                 </button>
-                <button onClick={() => handleDelete(s.id)} style={{ padding: "0.5rem 1.2rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "1px solid rgba(239,68,68,0.4)", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
+                <button onClick={() => handleDelete(s.id)} style={{ padding: "0.5rem 1.2rem", background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5", borderRadius: "8px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 700 }}>
                   🗑️ Delete
                 </button>
               </div>

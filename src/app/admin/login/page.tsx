@@ -41,42 +41,42 @@ export default function AdminLogin() {
   };
 
   return (
-    <div style={{ background: "#0b0f19", color: "#f8fafc", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
-      <div style={{ width: "100%", maxWidth: "440px", background: "#151c2c", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "16px", padding: "2.5rem", boxShadow: "0 20px 50px rgba(0,0,0,0.6)" }}>
+    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
+      <div style={{ width: "100%", maxWidth: "440px", background: "#FFFFFF", border: "1px solid #DCD5C6", borderRadius: "16px", padding: "2.5rem", boxShadow: "0 20px 60px rgba(0,0,0,0.08)" }}>
         <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-          <span style={{ color: "#d4af37", fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>AAREN STUDIO</span>
-          <h1 style={{ fontSize: "2rem", fontWeight: 800, margin: "0.4rem 0", color: "#ffffff" }}>Master Admin Login</h1>
-          <p style={{ color: "#cbd5e1", fontSize: "0.85rem" }}>Enter official credentials to access the control panel.</p>
+          <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>AAREN STUDIO</span>
+          <h1 style={{ fontSize: "2rem", fontWeight: 900, margin: "0.4rem 0", color: "#1E1E1E" }}>Master Admin Login</h1>
+          <p style={{ color: "#555555", fontSize: "0.9rem" }}>Enter official credentials to access the control panel.</p>
         </div>
 
         {error && (
-          <div style={{ background: "rgba(239, 68, 68, 0.15)", border: "1px solid rgba(239, 68, 68, 0.4)", color: "#f87171", padding: "0.8rem", borderRadius: "8px", fontSize: "0.85rem", textAlign: "center", marginBottom: "1.5rem" }}>
+          <div style={{ background: "#FEE2E2", border: "1px solid #FCA5A5", color: "#DC2626", padding: "0.8rem", borderRadius: "8px", fontSize: "0.85rem", textAlign: "center", marginBottom: "1.5rem", fontWeight: 700 }}>
             {error}
           </div>
         )}
 
         <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
           <div>
-            <label style={{ display: "block", fontSize: "0.8rem", color: "#f1f5f9", marginBottom: "0.4rem", fontWeight: 700 }}>Admin Email ID</label>
+            <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Admin Email ID</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="info@aarenintpro.com"
-              style={{ width: "100%", padding: "0.8rem", background: "#0f172a", border: "1px solid #334155", color: "#ffffff", borderRadius: "8px", fontSize: "0.95rem", outline: "none" }}
+              style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem", outline: "none" }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "0.8rem", color: "#f1f5f9", marginBottom: "0.4rem", fontWeight: 700 }}>Password</label>
+            <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Password</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••••"
-              style={{ width: "100%", padding: "0.8rem", background: "#0f172a", border: "1px solid #334155", color: "#ffffff", borderRadius: "8px", fontSize: "0.95rem", outline: "none" }}
+              style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem", outline: "none" }}
             />
           </div>
 
@@ -86,21 +86,21 @@ export default function AdminLogin() {
             style={{
               marginTop: "0.5rem",
               padding: "0.9rem",
-              background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)",
-              color: "#000000",
+              background: "#1E1E1E",
+              color: "#FFFFFF",
               border: "none",
               borderRadius: "8px",
               fontWeight: 800,
               fontSize: "0.95rem",
               cursor: loading ? "wait" : "pointer",
-              boxShadow: "0 6px 20px rgba(212, 175, 55, 0.35)",
+              boxShadow: "0 6px 20px rgba(0, 0, 0, 0.12)",
             }}
           >
             {loading ? "Authenticating..." : "🔒 Log In to Admin Panel"}
           </button>
         </form>
 
-        <div style={{ marginTop: "2rem", borderTop: "1px solid #1e293b", paddingTop: "1rem", textAlign: "center", fontSize: "0.75rem", color: "#94a3b8" }}>
+        <div style={{ marginTop: "2rem", borderTop: "1px solid #EAE4D8", paddingTop: "1rem", textAlign: "center", fontSize: "0.8rem", color: "#6A6359", fontWeight: 600 }}>
           Protected Administrative Portal — Aaren Studio © 2026
         </div>
       </div>

@@ -1806,23 +1806,31 @@ input, select, textarea {
 }
 
 /* ══════════════════════════════════════════════
-   HIGH-CONTRAST LUXURY ADMIN THEME SYSTEM
-   Ultra-crisp visibility across ALL 25 admin pages
+   AAREN STUDIO — UNIFIED ADMIN THEME SYSTEM
+   Exact match to Main Website Color Combination:
+   - Background: Warm Sand / Linen (#FAF8F5 / #E6E2D8)
+   - Typography: Crisp Charcoal (#1E1E1E)
+   - Brand / Headings / Highlights: Warm Bronze Gold (#81663F / #8C764B)
+   - Surfaces / Cards / Tables: Pure White (#FFFFFF) with #DCD5C6 borders
    ══════════════════════════════════════════════ */
-.admin-main-content {
-  background-color: #0b0f19 !important;
-  color: #f8fafc !important;
+.admin-main-content,
+.admin-page-container {
+  background-color: #FAF8F5 !important;
+  color: #1E1E1E !important;
+  font-family: var(--font-jost), 'Jost', sans-serif !important;
   min-height: 100vh;
 }
 
 .admin-main-content h1,
+.admin-main-content .page-title,
 .admin-main-content .admin-page-title {
-  color: #ffffff !important;
+  color: #1E1E1E !important;
   font-weight: 800 !important;
 }
 
-.admin-main-content h2 {
-  color: #d4af37 !important;
+.admin-main-content h2,
+.admin-main-content .section-title {
+  color: #81663F !important;
   font-weight: 800 !important;
 }
 
@@ -1830,7 +1838,7 @@ input, select, textarea {
 .admin-main-content h4,
 .admin-main-content h5,
 .admin-main-content h6 {
-  color: #ffffff !important;
+  color: #1E1E1E !important;
   font-weight: 700 !important;
 }
 
@@ -1839,23 +1847,25 @@ input, select, textarea {
 .admin-main-content .admin-box h3,
 .admin-main-content [class*="card"] h3,
 .admin-main-content div > h3 {
-  color: #ffffff !important;
+  color: #1E1E1E !important;
 }
 
 .admin-main-content p,
-.admin-main-content .help-text,
 .admin-main-content .subtitle,
+.admin-main-content .page-sub,
 .admin-main-content .desc,
+.admin-main-content .help-text,
 .admin-main-content div > p {
-  color: #cbd5e1 !important;
+  color: #555555 !important;
+  font-weight: 400 !important;
 }
 
 .admin-main-content label,
 .admin-main-content .form-label,
 .admin-main-content .label {
-  color: #f1f5f9 !important;
+  color: #1E1E1E !important;
   font-weight: 700 !important;
-  font-size: 0.9rem !important;
+  font-size: 0.85rem !important;
   letter-spacing: 0.02em !important;
 }
 
@@ -1868,66 +1878,100 @@ input, select, textarea {
 .admin-main-content input[type="search"],
 .admin-main-content textarea,
 .admin-main-content select {
-  color: #ffffff !important;
-  background-color: #111827 !important;
-  border: 1px solid #334155 !important;
+  color: #1E1E1E !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #D5CEBF !important;
   border-radius: 8px !important;
+  padding: 10px 14px !important;
+  font-size: 13px !important;
 }
 
 .admin-main-content input::placeholder,
 .admin-main-content textarea::placeholder {
-  color: #94a3b8 !important;
+  color: #8C8275 !important;
   opacity: 1 !important;
 }
 
 .admin-main-content input:focus,
 .admin-main-content textarea:focus,
 .admin-main-content select:focus {
-  border-color: #d4af37 !important;
+  border-color: #81663F !important;
   outline: none !important;
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.25) !important;
+  box-shadow: 0 0 0 3px rgba(129, 102, 63, 0.18) !important;
 }
 
 .admin-card,
 .admin-box,
-.admin-panel {
-  background-color: #151c2c !important;
-  border: 1px solid #28334e !important;
-  color: #f8fafc !important;
+.admin-panel,
+.section-card {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2DCD2 !important;
+  color: #1E1E1E !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+  border-radius: 14px !important;
 }
 
-/* Tables across admin dashboard, inquiries, etc. */
+/* Tables across admin dashboard, products, inquiries, etc. */
+.admin-main-content table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  background-color: #FFFFFF !important;
+}
+
 .admin-main-content table th {
-  background-color: #192238 !important;
-  color: #d4af37 !important;
+  background-color: #F2EDE2 !important;
+  color: #81663F !important;
   font-weight: 800 !important;
-  border: 1px solid #2d3b5b !important;
-  padding: 12px 16px !important;
+  border-bottom: 1px solid #DCD5C6 !important;
+  padding: 14px 16px !important;
+  text-transform: uppercase !important;
+  font-size: 11px !important;
+  letter-spacing: 0.06em !important;
 }
 
 .admin-main-content table td {
-  background-color: #101626 !important;
-  color: #f8fafc !important;
-  border: 1px solid #1f2a44 !important;
-  padding: 12px 16px !important;
+  background-color: #FFFFFF !important;
+  color: #1E1E1E !important;
+  border-bottom: 1px solid #EAE4D8 !important;
+  padding: 14px 16px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
 }
 
 .admin-main-content table tr:hover td {
-  background-color: #162036 !important;
+  background-color: #FAF8F5 !important;
+}
+
+.admin-main-content .brand-cell {
+  color: #81663F !important;
+  font-weight: 700 !important;
+}
+
+.admin-main-content .price-cell {
+  color: #1E1E1E !important;
+  font-weight: 700 !important;
+}
+
+.admin-main-content .cell-shortcode {
+  background-color: rgba(129, 102, 63, 0.12) !important;
+  color: #81663F !important;
+  border: 1px solid rgba(129, 102, 63, 0.25) !important;
+  font-weight: 700 !important;
 }
 
 /* Admin Primary Buttons */
 .admin-main-content button.admin-btn-primary,
 .admin-btn-gold {
-  background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%) !important;
-  color: #000000 !important;
+  background: linear-gradient(135deg, #81663F 0%, #684F2E 100%) !important;
+  color: #FFFFFF !important;
   font-weight: 800 !important;
   border: none !important;
-  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3) !important;
+  box-shadow: 0 4px 14px rgba(129, 102, 63, 0.25) !important;
 }
 
 .admin-main-content button.admin-btn-primary:hover,
 .admin-btn-gold:hover {
-  background: linear-gradient(135deg, #e5c358 0%, #b89014 100%) !important;
+  background: linear-gradient(135deg, #96774B 0%, #7A5C37 100%) !important;
   transform: translateY(-1px);
 }
+

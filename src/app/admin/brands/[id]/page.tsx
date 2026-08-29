@@ -1105,8 +1105,8 @@ export default function AdminIndividualBrandPage({ params }: Props) {
       {/* STYLES */}
       <style jsx global>{`
         .admin-page-container {
-          background: #0b0f19;
-          color: #f8fafc;
+          background: #FAF8F5;
+          color: #1E1E1E;
           min-height: 100vh;
           font-size: 13px;
         }
@@ -1129,7 +1129,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           gap: 16px;
           margin-bottom: 28px;
           padding-bottom: 20px;
-          border-bottom: 1px solid #1e293b;
+          border-bottom: 1px solid #DCD5C6;
         }
 
         .back-link {
@@ -1140,11 +1140,12 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          color: #d4af37;
+          color: #81663F;
           margin-bottom: 6px;
+          text-decoration: none;
           transition: color 0.2s;
         }
-        .back-link:hover { color: #ffffff; }
+        .back-link:hover { color: #1E1E1E; }
 
         .title-row {
           display: flex;
@@ -1156,26 +1157,26 @@ export default function AdminIndividualBrandPage({ params }: Props) {
         .editor-title {
           font-size: 26px;
           font-weight: 800;
-          color: #ffffff;
+          color: #1E1E1E;
           text-transform: uppercase;
           letter-spacing: -0.01em;
           margin: 0;
         }
 
         .id-pill {
-          background: #1e293b;
-          color: #94a3b8;
+          background: #FAF8F5;
+          color: #6A6359;
           font-size: 11px;
           font-family: monospace;
           padding: 3px 8px;
           border-radius: 6px;
           font-weight: 600;
-          border: 1px solid #334155;
+          border: 1px solid #D5CEBF;
         }
 
         .code-badge {
-          background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
-          color: #000000;
+          background: #1E1E1E;
+          color: #FFFFFF;
           font-size: 11px;
           font-weight: 800;
           padding: 3px 8px;
@@ -1183,13 +1184,13 @@ export default function AdminIndividualBrandPage({ params }: Props) {
         }
 
         .category-badge {
-          background: #1e293b;
-          color: #38bdf8;
+          background: #FAF8F5;
+          color: #81663F;
           font-size: 11px;
           font-weight: 700;
           padding: 3px 8px;
           border-radius: 6px;
-          border: 1px solid #334155;
+          border: 1px solid #D5CEBF;
         }
 
         .action-buttons {
@@ -1203,8 +1204,8 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
-          color: #000000;
+          background: #1E1E1E;
+          color: #FFFFFF;
           border-radius: 8px;
           font-weight: 800;
           font-size: 12px;
@@ -1212,37 +1213,38 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           letter-spacing: 0.05em;
           border: none;
           cursor: pointer;
-          transition: transform 0.2s;
-          box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
+          transition: background 0.2s, transform 0.2s;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
         }
-        .btn-primary:hover { transform: translateY(-1px); }
+        .btn-primary:hover { background: #81663F; transform: translateY(-1px); }
 
         .btn-secondary {
           display: inline-flex;
           align-items: center;
           gap: 8px;
           padding: 10px 16px;
-          background: #1e293b;
-          color: #f8fafc;
-          border: 1px solid #334155;
+          background: #FFFFFF;
+          color: #1E1E1E;
+          border: 1px solid #D5CEBF;
           border-radius: 8px;
           font-weight: 700;
           font-size: 12px;
           text-transform: uppercase;
           letter-spacing: 0.05em;
+          text-decoration: none;
           cursor: pointer;
           transition: all 0.2s;
         }
-        .btn-secondary:hover { background: #334155; }
+        .btn-secondary:hover { background: #FAF8F5; border-color: #81663F; }
 
         .btn-danger {
           display: inline-flex;
           align-items: center;
           gap: 6px;
           padding: 10px 14px;
-          background: rgba(239, 68, 68, 0.15);
-          color: #f87171;
-          border: 1px solid rgba(239, 68, 68, 0.3);
+          background: #FEE2E2;
+          color: #DC2626;
+          border: 1px solid #FCA5A5;
           border-radius: 8px;
           font-weight: 700;
           font-size: 12px;
@@ -1251,7 +1253,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           cursor: pointer;
           transition: all 0.2s;
         }
-        .btn-danger:hover { background: rgba(239, 68, 68, 0.3); }
+        .btn-danger:hover { background: #FCA5A5; }
 
         .editor-layout {
           display: grid;
@@ -1269,11 +1271,11 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           display: flex;
           overflow-x: auto;
           gap: 6px;
-          background: #151c2c;
+          background: #FFFFFF;
           padding: 6px;
           border-radius: 12px;
-          border: 1px solid #28334e;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+          border: 1px solid #E2DCD2;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.03);
           margin-bottom: 20px;
         }
 
@@ -1287,30 +1289,30 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           background: transparent;
           font-size: 12px;
           font-weight: 700;
-          color: #94a3b8;
+          color: #6A6359;
           cursor: pointer;
           white-space: nowrap;
           transition: all 0.2s;
         }
         .tab-item.active {
-          background: #d4af37;
-          color: #000000;
+          background: #1E1E1E;
+          color: #FFFFFF;
           font-weight: 800;
         }
 
         .section-card {
-          background: #151c2c;
+          background: #FFFFFF;
           border-radius: 16px;
           padding: 28px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-          border: 1px solid #28334e;
-          color: #f8fafc;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+          border: 1px solid #E2DCD2;
+          color: #1E1E1E;
         }
 
         .section-title {
           font-size: 18px;
           font-weight: 800;
-          color: #d4af37;
+          color: #81663F;
           text-transform: uppercase;
           letter-spacing: -0.01em;
           margin-bottom: 4px;
@@ -1318,7 +1320,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
 
         .section-sub {
           font-size: 12px;
-          color: #cbd5e1;
+          color: #6A6359;
           margin-bottom: 24px;
         }
 
@@ -1343,7 +1345,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          color: #f1f5f9;
+          color: #1E1E1E;
           margin-bottom: 6px;
         }
 
@@ -1353,11 +1355,11 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           width: 100%;
           padding: 10px 12px;
           border-radius: 8px;
-          border: 1px solid #334155;
-          background: #0f172a;
+          border: 1px solid #D5CEBF;
+          background: #FAF8F5;
           font-size: 13px;
           font-family: inherit;
-          color: #ffffff;
+          color: #1E1E1E;
           outline: none;
           transition: border-color 0.2s, background 0.2s;
         }
@@ -1365,8 +1367,9 @@ export default function AdminIndividualBrandPage({ params }: Props) {
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-          border-color: #d4af37;
-          background: #111827;
+          border-color: #81663F;
+          background: #FFFFFF;
+          box-shadow: 0 0 0 3px rgba(129,102,63,0.15);
         }
 
         .media-block {
@@ -1379,7 +1382,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          color: #ffffff;
+          color: #1E1E1E;
           margin-bottom: 10px;
         }
 
@@ -1387,18 +1390,18 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           width: 100%;
           height: 160px;
           border-radius: 10px;
-          border: 1px solid #334155;
+          border: 1px solid #D5CEBF;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #0f172a;
+          background: #FAF8F5;
         }
 
         .logo-preview-box {
           width: 120px;
           height: 70px;
-          background: #0f172a;
-          border: 1px solid #334155;
+          background: #FAF8F5;
+          border: 1px solid #D5CEBF;
           border-radius: 8px;
           display: flex;
           align-items: center;
@@ -1411,8 +1414,8 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           align-items: center;
           gap: 6px;
           padding: 8px 14px;
-          background: #2563eb;
-          color: #ffffff;
+          background: #1E1E1E;
+          color: #FFFFFF;
           border-radius: 6px;
           font-size: 12px;
           font-weight: 700;
@@ -1420,15 +1423,15 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           white-space: nowrap;
           transition: background 0.2s;
         }
-        .btn-upload:hover { background: #1d4ed8; }
+        .btn-upload:hover { background: #81663F; }
 
         .btn-add-item {
           display: inline-flex;
           align-items: center;
           gap: 6px;
           padding: 8px 14px;
-          background: #d4af37;
-          color: #000000;
+          background: #81663F;
+          color: #FFFFFF;
           border-radius: 6px;
           font-size: 12px;
           font-weight: 800;
@@ -1436,6 +1439,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           cursor: pointer;
           white-space: nowrap;
         }
+        .btn-add-item:hover { background: #96774B; }
 
         .chips-wrap {
           display: flex;
@@ -1447,9 +1451,9 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          background: #1e293b;
-          border: 1px solid #334155;
-          color: #f8fafc;
+          background: #F4EFE6;
+          border: 1px solid #D5CEBF;
+          color: #1E1E1E;
           padding: 6px 12px;
           border-radius: 999px;
           font-size: 12px;
@@ -1460,45 +1464,46 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           border: none;
           background: none;
           cursor: pointer;
-          color: #94a3b8;
+          color: #6A6359;
           font-size: 12px;
           margin-left: 2px;
         }
-        .chip button:hover { color: #f87171; }
+        .chip button:hover { color: #DC2626; }
 
         .pdf-catalog-row {
           display: flex;
           gap: 12px;
           align-items: center;
           padding: 12px;
-          background: #0f172a;
-          border: 1px solid #334155;
+          background: #FAF8F5;
+          border: 1px solid #D5CEBF;
           border-radius: 8px;
+          color: #1E1E1E;
         }
 
         .btn-trash {
           background: transparent;
           border: none;
-          color: #f87171;
+          color: #DC2626;
           cursor: pointer;
           padding: 4px;
           border-radius: 4px;
         }
-        .btn-trash:hover { background: rgba(239, 68, 68, 0.2); }
+        .btn-trash:hover { background: #FEE2E2; }
 
         .divider {
           margin: 24px 0;
           border: none;
-          border-top: 1px solid #1e293b;
+          border-top: 1px solid #EAE4D8;
         }
 
         /* PREVIEW COLUMN */
         .preview-card {
-          background: #151c2c;
+          background: #FFFFFF;
           border-radius: 16px;
           padding: 20px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-          border: 1px solid #28334e;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+          border: 1px solid #E2DCD2;
           position: sticky;
           top: 24px;
         }
@@ -1511,15 +1516,15 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.1em;
-          color: #d4af37;
+          color: #81663F;
           margin-bottom: 14px;
         }
 
         .mock-brand-hero {
           border-radius: 12px;
           overflow: hidden;
-          border: 1px solid #28334e;
-          background: #0f172a;
+          border: 1px solid #DCD5C6;
+          background: #FAF8F5;
           margin-bottom: 16px;
         }
 
@@ -1536,7 +1541,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
         .mock-hero-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%);
+          background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
         }
 
         .mock-hero-text {
@@ -1548,7 +1553,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
         .mock-shortcode {
           font-size: 10px;
           font-weight: 800;
-          color: #d4af37;
+          color: #81663F;
           text-transform: uppercase;
         }
 
@@ -1568,7 +1573,7 @@ export default function AdminIndividualBrandPage({ params }: Props) {
         }
 
         .mock-hero-badges span {
-          background: rgba(255,255,255,0.15);
+          background: rgba(255,255,255,0.2);
           backdrop-filter: blur(4px);
           font-size: 9px;
           font-weight: 700;
@@ -1580,14 +1585,14 @@ export default function AdminIndividualBrandPage({ params }: Props) {
 
         .mock-info-bar {
           padding: 12px 14px;
-          border-bottom: 1px solid #1e293b;
-          background: #151c2c;
+          border-bottom: 1px solid #EAE4D8;
+          background: #FFFFFF;
         }
 
         .mock-tagline {
           font-size: 12px;
           font-style: italic;
-          color: #ffffff;
+          color: #1E1E1E;
           font-weight: 600;
           margin-bottom: 8px;
         }
@@ -1602,13 +1607,13 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           font-size: 9px;
           font-weight: 700;
           text-transform: uppercase;
-          color: #94a3b8;
+          color: #6A6359;
         }
 
         .mock-stats-row .val {
           font-size: 11px;
           font-weight: 800;
-          color: #ffffff;
+          color: #1E1E1E;
         }
 
         .mock-about-section {
@@ -1621,13 +1626,13 @@ export default function AdminIndividualBrandPage({ params }: Props) {
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.1em;
-          color: #d4af37;
+          color: #81663F;
           margin-bottom: 4px;
         }
 
         .mock-about-text {
           font-size: 11px;
-          color: #cbd5e1;
+          color: #555555;
           line-height: 1.4;
           padding-right: 12px;
         }
@@ -1642,34 +1647,34 @@ export default function AdminIndividualBrandPage({ params }: Props) {
         }
 
         .meta-summary-box {
-          background: #0f172a;
+          background: #FAF8F5;
           border-radius: 8px;
           padding: 12px;
           font-size: 12px;
           display: flex;
           flex-direction: column;
           gap: 6px;
-          border: 1px solid #28334e;
+          border: 1px solid #DCD5C6;
         }
 
         .summary-row {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          color: #cbd5e1;
+          color: #555555;
         }
-        .summary-row strong { color: #ffffff; }
+        .summary-row strong { color: #1E1E1E; }
 
         /* Floating Toast */
         .toast {
           position: fixed;
           bottom: 24px;
           right: 24px;
-          background: #d4af37;
-          color: #000000;
+          background: #1E1E1E;
+          color: #FFFFFF;
           padding: 12px 20px;
           border-radius: 8px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.2);
           display: flex;
           align-items: center;
           gap: 8px;

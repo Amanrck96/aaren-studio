@@ -207,39 +207,39 @@ export default function AdminTeamPage() {
   const teamCount = team.filter((m) => (m.category || "Sales").toLowerCase() !== "leadership").length;
 
   return (
-    <div style={{ background: "#0b0c10", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
+    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
         {/* Top bar */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "1.2rem", flexWrap: "wrap", gap: "1rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #DCD5C6", paddingBottom: "1.2rem", flexWrap: "wrap", gap: "1rem" }}>
           <div>
-            <span style={{ color: "#d4af37", fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>ORGANIZATIONAL DIRECTORY</span>
-            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.2rem 0", color: "#fff" }}>Our Team CMS</h1>
-            <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>
+            <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>ORGANIZATIONAL DIRECTORY</span>
+            <h1 style={{ fontSize: "2.2rem", fontWeight: 900, margin: "0.2rem 0", color: "#1E1E1E" }}>Our Team CMS</h1>
+            <p style={{ color: "#555555", fontSize: "0.95rem" }}>
               Manage and organize by <strong>1. Leadership</strong> and <strong>2. Team</strong> (Sales, Operations, Installation, Support Staff).
             </p>
           </div>
-          {errorMsg && <div style={{ width: "100%", padding: "1rem", background: "rgba(239, 68, 68, 0.2)", color: "#f87171", borderRadius: "8px", border: "1px solid rgba(239, 68, 68, 0.4)" }}>{errorMsg}</div>}
+          {errorMsg && <div style={{ width: "100%", padding: "1rem", background: "#FEE2E2", color: "#DC2626", borderRadius: "8px", border: "1px solid #FCA5A5", fontWeight: 700 }}>{errorMsg}</div>}
           <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap" }}>
             <button
               onClick={() => {
                 setRearrangeList([...team].sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99)));
                 setShowRearrangeModal(true);
               }}
-              style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: "#fff", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
+              style={{ padding: "0.75rem 1.4rem", background: "#F4EFE6", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.9rem" }}
             >
               🔀 Rearrange Order
             </button>
             <button
               onClick={() => setShowBannerForm(!showBannerForm)}
-              style={{ padding: "0.7rem 1.4rem", background: "#1e2230", color: "#d4af37", border: "1px solid rgba(212,175,55,0.4)", borderRadius: "8px", fontWeight: 700, cursor: "pointer" }}
+              style={{ padding: "0.75rem 1.4rem", background: "#FFFFFF", color: "#81663F", border: "1px solid #D5CEBF", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.9rem", boxShadow: "0 4px 14px rgba(0,0,0,0.04)" }}
             >
               ⚙️ Join Banner Settings
             </button>
             <button
               onClick={() => setEditing({ name: "", designation: "Sales Consultant", category: "Sales", memberCode: "TM " + String(team.length + 1).padStart(2, "0"), photoUrl: "", bio: "", sequenceNumber: team.length + 1 })}
-              style={{ padding: "0.7rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer" }}
+              style={{ padding: "0.75rem 1.6rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.9rem", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
             >
               + Add Team Member
             </button>
@@ -248,28 +248,28 @@ export default function AdminTeamPage() {
 
         {/* Join Banner Settings Drawer/Form */}
         {showBannerForm && (
-          <form onSubmit={handleSaveBanner} style={{ background: "#12141c", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.3)", marginBottom: "2rem" }}>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "0.4rem", color: "#d4af37" }}>Join Creative Team Banner Settings</h2>
-            <p style={{ fontSize: "0.85rem", color: "#94a3b8", marginBottom: "1.5rem" }}>Customize the title text, font size, and contact details shown at the bottom of the Team page.</p>
+          <form onSubmit={handleSaveBanner} style={{ background: "#FFFFFF", padding: "2rem", borderRadius: "16px", border: "1px solid #E2DCD2", marginBottom: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "0.4rem", color: "#81663F" }}>Join Creative Team Banner Settings</h2>
+            <p style={{ fontSize: "0.85rem", color: "#555555", marginBottom: "1.5rem" }}>Customize the title text, font size, and contact details shown at the bottom of the Team page.</p>
 
             <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Banner Heading Text *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Banner Heading Text *</label>
                 <input
                   type="text"
                   required
                   value={joinBanner.title}
                   onChange={(e) => setJoinBanner({ ...joinBanner, title: e.target.value })}
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Heading Font Size *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Heading Font Size *</label>
                 <select
                   value={joinBanner.fontSize || "medium"}
                   onChange={(e) => setJoinBanner({ ...joinBanner, fontSize: e.target.value as any })}
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 >
                   <option value="small">Small (Compact)</option>
                   <option value="medium">Medium (Normal / Balanced - Recommended)</option>
@@ -280,41 +280,41 @@ export default function AdminTeamPage() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Working Hours</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Working Hours</label>
                 <input
                   type="text"
                   value={joinBanner.hoursText}
                   onChange={(e) => setJoinBanner({ ...joinBanner, hoursText: e.target.value })}
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Phone Number</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Phone Number</label>
                 <input
                   type="text"
                   value={joinBanner.phone}
                   onChange={(e) => setJoinBanner({ ...joinBanner, phone: e.target.value })}
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Email Address</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Email Address</label>
                 <input
                   type="text"
                   value={joinBanner.email}
                   onChange={(e) => setJoinBanner({ ...joinBanner, email: e.target.value })}
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
             </div>
 
             <div style={{ marginBottom: "1.5rem" }}>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Physical Address</label>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Physical Address</label>
               <input
                 type="text"
                 value={joinBanner.address}
                 onChange={(e) => setJoinBanner({ ...joinBanner, address: e.target.value })}
-                style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
               />
             </div>
 
@@ -322,14 +322,14 @@ export default function AdminTeamPage() {
               <button
                 type="submit"
                 disabled={savingBanner}
-                style={{ padding: "0.75rem 1.6rem", background: "#d4af37", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}
+                style={{ padding: "0.75rem 1.6rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
               >
                 {savingBanner ? "Saving..." : "Save Banner Settings"}
               </button>
               <button
                 type="button"
                 onClick={() => setShowBannerForm(false)}
-                style={{ padding: "0.75rem 1.6rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}
+                style={{ padding: "0.75rem 1.6rem", background: "#FAF8F5", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontWeight: 700 }}
               >
                 Cancel
               </button>
@@ -339,7 +339,7 @@ export default function AdminTeamPage() {
 
         {/* PRIMARY GROUP FILTER TABS (1. Leadership vs 2. Team) */}
         <div style={{ display: "flex", gap: "0.8rem", marginBottom: "1.2rem", alignItems: "center", flexWrap: "wrap" }}>
-          <span style={{ color: "#d4af37", fontSize: "0.85rem", fontWeight: 800, marginRight: "0.3rem" }}>ORGANIZATION TIER:</span>
+          <span style={{ color: "#81663F", fontSize: "0.85rem", fontWeight: 800, marginRight: "0.3rem" }}>ORGANIZATION TIER:</span>
           {TEAM_GROUPS.map((grp) => {
             const isActive = selectedGroupFilter === grp.id;
             const count = grp.id === "ALL" ? team.length : (grp.id === "Leadership" ? leadershipCount : teamCount);
@@ -351,14 +351,15 @@ export default function AdminTeamPage() {
                   setSelectedDeptFilter("ALL");
                 }}
                 style={{
-                  padding: "0.55rem 1.2rem",
+                  padding: "0.6rem 1.3rem",
                   borderRadius: "8px",
                   fontSize: "0.88rem",
                   fontWeight: 800,
                   cursor: "pointer",
-                  border: "1px solid " + (isActive ? "#d4af37" : "rgba(255,255,255,0.15)"),
-                  background: isActive ? "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)" : "#12141c",
-                  color: isActive ? "#000" : "#cbd5e1",
+                  border: "1px solid " + (isActive ? "#81663F" : "#D5CEBF"),
+                  background: isActive ? "#81663F" : "#FFFFFF",
+                  color: isActive ? "#FFFFFF" : "#1E1E1E",
+                  boxShadow: "0 4px 14px rgba(0,0,0,0.04)",
                   transition: "all 0.2s ease"
                 }}
               >
@@ -370,8 +371,8 @@ export default function AdminTeamPage() {
 
         {/* SUB DEPARTMENT FILTER BAR (A. Sales, B. Operations, C. Installation, D. Support Staff) */}
         {(selectedGroupFilter === "Team" || selectedGroupFilter === "ALL") && (
-          <div style={{ display: "flex", gap: "0.6rem", marginBottom: "1.8rem", alignItems: "center", flexWrap: "wrap", padding: "0.8rem 1.2rem", background: "rgba(255,255,255,0.03)", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <span style={{ color: "#94a3b8", fontSize: "0.82rem", fontWeight: 700, marginRight: "0.4rem" }}>TEAM DEPARTMENTS:</span>
+          <div style={{ display: "flex", gap: "0.6rem", marginBottom: "1.8rem", alignItems: "center", flexWrap: "wrap", padding: "0.8rem 1.2rem", background: "#FFFFFF", borderRadius: "12px", border: "1px solid #E2DCD2", boxShadow: "0 4px 14px rgba(0,0,0,0.04)" }}>
+            <span style={{ color: "#6A6359", fontSize: "0.82rem", fontWeight: 700, marginRight: "0.4rem" }}>TEAM DEPARTMENTS:</span>
             {TEAM_DEPARTMENTS.map((dept) => {
               const isActive = selectedDeptFilter === dept.id;
               const count = dept.id === "ALL" ? teamCount : team.filter((m) => (m.category || "").toLowerCase() === dept.match).length;
@@ -380,14 +381,14 @@ export default function AdminTeamPage() {
                   key={dept.id}
                   onClick={() => setSelectedDeptFilter(dept.id)}
                   style={{
-                    padding: "0.4rem 0.9rem",
+                    padding: "0.45rem 1rem",
                     borderRadius: "6px",
                     fontSize: "0.82rem",
                     fontWeight: 700,
                     cursor: "pointer",
-                    border: "1px solid " + (isActive ? "#3b82f6" : "rgba(255,255,255,0.1)"),
-                    background: isActive ? "#3b82f6" : "#0b0c10",
-                    color: isActive ? "#fff" : "#94a3b8",
+                    border: "1px solid " + (isActive ? "#1E1E1E" : "#D5CEBF"),
+                    background: isActive ? "#1E1E1E" : "#FAF8F5",
+                    color: isActive ? "#FFFFFF" : "#1E1E1E",
                     transition: "all 0.2s ease"
                   }}
                 >
@@ -400,30 +401,30 @@ export default function AdminTeamPage() {
 
         {/* ADD / EDIT MODAL / FORM */}
         {editing && (
-          <form onSubmit={handleSave} style={{ background: "#12141c", padding: "2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.3)", marginBottom: "2rem", boxShadow: "0 10px 30px rgba(0,0,0,0.5)" }}>
-            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "1.2rem", color: "#d4af37" }}>
+          <form onSubmit={handleSave} style={{ background: "#FFFFFF", padding: "2rem", borderRadius: "16px", border: "1px solid #E2DCD2", marginBottom: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "1.2rem", color: "#81663F" }}>
               {editing.id ? "Edit Team Member" : "+ Add New Team Member"}
             </h2>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Full Name *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Full Name *</label>
                 <input
                   type="text"
                   required
                   value={editing.name || ""}
                   onChange={(e) => setEditing({ ...editing, name: e.target.value })}
                   placeholder="e.g. Madhusudhan MP"
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Organization Tier &amp; Category *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Organization Tier &amp; Category *</label>
                 <select
                   value={editing.category || "Sales"}
                   onChange={(e) => setEditing({ ...editing, category: e.target.value })}
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px", fontWeight: 700 }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontWeight: 700 }}
                 >
                   <optgroup label="1. LEADERSHIP">
                     <option value="Leadership">1. Leadership</option>
@@ -438,64 +439,64 @@ export default function AdminTeamPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Designation / Title *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Designation / Title *</label>
                 <input
                   type="text"
                   required
                   value={editing.designation || ""}
                   onChange={(e) => setEditing({ ...editing, designation: e.target.value })}
                   placeholder="e.g. Sales Specialist / Lead Installer"
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Member Code (e.g. MM 01, KS 04)</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Unique Member Code</label>
                 <input
                   type="text"
                   value={editing.memberCode || ""}
                   onChange={(e) => setEditing({ ...editing, memberCode: e.target.value })}
-                  placeholder="e.g. MM 01"
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  placeholder="TM 01"
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#d4af37", fontWeight: 700, marginBottom: "0.3rem" }}>Sequence # (Display Order)</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Sequence Number</label>
                 <input
                   type="number"
-                  value={editing.sequenceNumber ?? 1}
-                  onChange={(e) => setEditing({ ...editing, sequenceNumber: parseInt(e.target.value) || 1 })}
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #d4af37", color: "#fff", borderRadius: "6px", fontWeight: 700 }}
+                  value={editing.sequenceNumber || ""}
+                  onChange={(e) => setEditing({ ...editing, sequenceNumber: Number(e.target.value) })}
+                  placeholder="1"
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
             </div>
 
             <div style={{ marginTop: "1rem" }}>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Member Photo (Upload file or paste image URL)</label>
-              <div style={{ display: "flex", gap: "0.8rem", alignItems: "center" }}>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Photo URL (Direct Link or Upload)</label>
+              <div style={{ display: "flex", gap: "0.8rem" }}>
                 <input
                   type="text"
-                  placeholder="https://... or choose file on right ->"
                   value={editing.photoUrl || ""}
                   onChange={(e) => setEditing({ ...editing, photoUrl: e.target.value })}
-                  style={{ flex: 1, padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  placeholder="https://..."
+                  style={{ flex: 1, padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
-                <label style={{ padding: "0.75rem 1.2rem", background: "#d4af37", color: "#000", borderRadius: "6px", cursor: "pointer", fontWeight: 800, whiteSpace: "nowrap", fontSize: "0.85rem" }}>
-                  {isUploading ? "Uploading..." : "📁 Choose File"}
+                <label style={{ padding: "0.75rem 1.4rem", background: isUploading ? "#aaa" : "#1E1E1E", color: "#fff", borderRadius: "8px", cursor: isUploading ? "wait" : "pointer", fontSize: "0.85rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.4rem", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}>
+                  {isUploading ? "Uploading..." : "Upload Photo"}
                   <input
                     type="file"
                     accept="image/*"
                     style={{ display: "none" }}
+                    disabled={isUploading}
                     onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
+                      if (!e.target.files?.[0]) return;
                       setIsUploading(true);
                       try {
-                        const result = await uploadFileWithCompression(file, "Team");
-                        if (result.success && (result.url || result.dataUrl)) {
-                          setEditing((prev) => prev ? { ...prev, photoUrl: result.dataUrl || result.url } : null);
-                          alert("Photo uploaded successfully!");
+                        const result = await uploadFileWithCompression(e.target.files[0], "team");
+                        if (result.success && result.url) {
+                          setEditing((prev) => (prev ? { ...prev, photoUrl: result.url } : null));
                         } else {
                           alert("Upload error: " + (result.error || "Upload failed"));
                         }
@@ -512,43 +513,43 @@ export default function AdminTeamPage() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Phone Number</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Phone Number</label>
                 <input
                   type="text"
                   value={editing.phone || ""}
                   onChange={(e) => setEditing({ ...editing, phone: e.target.value })}
                   placeholder="+91 88844 64444"
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>LinkedIn URL</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>LinkedIn URL</label>
                 <input
                   type="text"
                   value={editing.linkedin || ""}
                   onChange={(e) => setEditing({ ...editing, linkedin: e.target.value })}
                   placeholder="https://linkedin.com/in/..."
-                  style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
             </div>
 
             <div style={{ marginTop: "1rem" }}>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#94a3b8", marginBottom: "0.3rem" }}>Biography / Role Description</label>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Biography / Role Description</label>
               <textarea
                 rows={3}
                 value={editing.bio || ""}
                 onChange={(e) => setEditing({ ...editing, bio: e.target.value })}
                 placeholder="Describe role, experience, achievements, and responsibilities..."
-                style={{ width: "100%", padding: "0.75rem", background: "#0b0c10", border: "1px solid #1e2230", color: "#fff", borderRadius: "6px" }}
+                style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
               />
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" style={{ padding: "0.75rem 1.6rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer" }}>
+              <button type="submit" style={{ padding: "0.75rem 1.6rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}>
                 Save Member
               </button>
-              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.75rem 1.6rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+              <button type="button" onClick={() => setEditing(null)} style={{ padding: "0.75rem 1.6rem", background: "#FAF8F5", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontWeight: 700 }}>
                 Cancel
               </button>
             </div>
@@ -558,65 +559,65 @@ export default function AdminTeamPage() {
         {/* Member Cards Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
           {filteredTeam.length === 0 ? (
-            <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "4rem 2rem", background: "#12141c", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", color: "#94a3b8" }}>
+            <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "4rem 2rem", background: "#FFFFFF", borderRadius: "16px", border: "1px solid #E2DCD2", color: "#6A6359" }}>
               No team members found in the current selection.
             </div>
           ) : (
             filteredTeam.map((m) => {
               const isLeadership = (m.category || "Sales").toLowerCase() === "leadership";
               return (
-                <div key={m.id || m.name} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: isLeadership ? "2px solid rgba(212,175,55,0.5)" : "1px solid rgba(255,255,255,0.1)", borderRadius: "14px", padding: "1.6rem", display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
+                <div key={m.id || m.name} style={{ background: "#FFFFFF", border: isLeadership ? "2px solid #81663F" : "1px solid #E2DCD2", borderRadius: "16px", padding: "1.6rem", display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
                   <div>
                     <div style={{ display: "flex", gap: "1.2rem", alignItems: "center", marginBottom: "1rem" }}>
                       {m.photoUrl ? (
                         <img
                           src={m.photoUrl}
                           alt={m.name}
-                          style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: isLeadership ? "2px solid #d4af37" : "2px solid #3b82f6" }}
+                          style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: isLeadership ? "2px solid #81663F" : "2px solid #1E1E1E" }}
                         />
                       ) : (
-                        <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: isLeadership ? "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)" : "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: isLeadership ? "#000" : "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: "1.3rem" }}>
+                        <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: isLeadership ? "#81663F" : "#1E1E1E", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: "1.3rem" }}>
                           {m.name ? m.name.split(" ").map((n: string) => n[0]).join("").substring(0, 2).toUpperCase() : "TM"}
                         </div>
                       )}
                       <div>
                         <div style={{ display: "flex", gap: "0.4rem", alignItems: "center", flexWrap: "wrap", marginBottom: "0.3rem" }}>
-                          <span style={{ fontSize: "0.75rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 900 }}>
+                          <span style={{ fontSize: "0.75rem", background: "rgba(129, 102, 63, 0.12)", color: "#81663F", border: "1px solid rgba(129, 102, 63, 0.25)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800 }}>
                             {m.memberCode || "TM"}
                           </span>
-                          <span style={{ fontSize: "0.75rem", background: isLeadership ? "rgba(212,175,55,0.2)" : "rgba(59, 130, 246, 0.2)", color: isLeadership ? "#d4af37" : "#60a5fa", border: isLeadership ? "1px solid rgba(212,175,55,0.4)" : "1px solid rgba(59,130,246,0.4)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800 }}>
+                          <span style={{ fontSize: "0.75rem", background: isLeadership ? "rgba(129,102,63,0.12)" : "#FAF8F5", color: isLeadership ? "#81663F" : "#1E1E1E", border: isLeadership ? "1px solid rgba(129,102,63,0.25)" : "1px solid #D5CEBF", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800 }}>
                             {isLeadership ? "1. LEADERSHIP" : `2. TEAM · ${m.category?.toUpperCase() || "SALES"}`}
                           </span>
-                          <span style={{ fontSize: "0.75rem", background: "rgba(255, 255, 255, 0.1)", color: "#cbd5e1", padding: "0.2rem 0.5rem", borderRadius: "4px", fontWeight: 700 }}>
+                          <span style={{ fontSize: "0.75rem", background: "#FAF8F5", color: "#6A6359", border: "1px solid #D5CEBF", padding: "0.2rem 0.5rem", borderRadius: "4px", fontWeight: 700 }}>
                             Pos #{m.sequenceNumber || 1}
                           </span>
                         </div>
-                        <h3 style={{ fontSize: "1.25rem", fontWeight: 900, color: "#ffffff", margin: "0.3rem 0" }}>{m.name}</h3>
-                        <div style={{ color: "#d4af37", fontSize: "0.88rem", fontWeight: 700 }}>{m.designation}</div>
+                        <h3 style={{ fontSize: "1.25rem", fontWeight: 900, color: "#1E1E1E", margin: "0.3rem 0" }}>{m.name}</h3>
+                        <div style={{ color: "#81663F", fontSize: "0.88rem", fontWeight: 700 }}>{m.designation}</div>
                       </div>
                     </div>
-                    <p style={{ color: "#cbd5e1", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1.2rem", fontWeight: 400 }}>{m.bio}</p>
+                    <p style={{ color: "#555555", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1.2rem", fontWeight: 400 }}>{m.bio}</p>
                   </div>
 
-                  <div style={{ display: "flex", gap: "0.5rem", paddingTop: "0.8rem", borderTop: "1px solid rgba(255,255,255,0.06)", flexWrap: "wrap", alignItems: "center" }}>
+                  <div style={{ display: "flex", gap: "0.5rem", paddingTop: "0.8rem", borderTop: "1px solid #EAE4D8", flexWrap: "wrap", alignItems: "center" }}>
                     <button
                       onClick={() => handleMoveMember(m.id, "up")}
                       title="Move Up in Display Order"
-                      style={{ padding: "0.45rem 0.8rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
+                      style={{ padding: "0.45rem 0.8rem", background: "#F4EFE6", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
                     >
                       ⬆️ Up
                     </button>
                     <button
                       onClick={() => handleMoveMember(m.id, "down")}
                       title="Move Down in Display Order"
-                      style={{ padding: "0.45rem 0.8rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
+                      style={{ padding: "0.45rem 0.8rem", background: "#F4EFE6", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
                     >
                       ⬇️ Down
                     </button>
-                    <button onClick={() => setEditing(m)} style={{ padding: "0.45rem 1rem", background: "#1e2230", color: "#fff", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
+                    <button onClick={() => setEditing(m)} style={{ padding: "0.45rem 1rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}>
                       Edit
                     </button>
-                    <button onClick={() => handleDelete(m.id)} style={{ padding: "0.45rem 1rem", background: "rgba(239, 68, 68, 0.15)", color: "#f87171", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>
+                    <button onClick={() => handleDelete(m.id)} style={{ padding: "0.45rem 1rem", background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5", borderRadius: "6px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}>
                       Delete
                     </button>
                   </div>
@@ -628,14 +629,14 @@ export default function AdminTeamPage() {
 
         {/* REARRANGE TEAM ORDER MODAL */}
         {showRearrangeModal && (
-          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "2rem" }}>
-            <div style={{ background: "#12141c", border: "1px solid rgba(59, 130, 246, 0.4)", borderRadius: "14px", width: "100%", maxWidth: "800px", maxHeight: "90vh", overflowY: "auto", padding: "2rem", color: "#fff", boxShadow: "0 20px 50px rgba(0,0,0,0.9)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1rem" }}>
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "2rem" }}>
+            <div style={{ background: "#FFFFFF", border: "1px solid #DCD5C6", borderRadius: "16px", width: "100%", maxWidth: "800px", maxHeight: "90vh", overflowY: "auto", padding: "2rem", color: "#1E1E1E", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", borderBottom: "1px solid #EAE4D8", paddingBottom: "1rem" }}>
                 <div>
-                  <h2 style={{ margin: 0, fontSize: "1.4rem", fontWeight: 800, color: "#60a5fa" }}>🔀 Rearrange Team Display Order</h2>
-                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.85rem", color: "#94a3b8" }}>Set numerical positions to organize the exact visual flow on the live website.</p>
+                  <h2 style={{ margin: 0, fontSize: "1.4rem", fontWeight: 800, color: "#81663F" }}>🔀 Rearrange Team Display Order</h2>
+                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.85rem", color: "#555555" }}>Set numerical positions to organize the exact visual flow on the live website.</p>
                 </div>
-                <button onClick={() => setShowRearrangeModal(false)} style={{ background: "none", border: "none", color: "#aaa", fontSize: "1.4rem", cursor: "pointer" }}>✕</button>
+                <button onClick={() => setShowRearrangeModal(false)} style={{ background: "none", border: "none", color: "#6A6359", fontSize: "1.4rem", cursor: "pointer" }}>✕</button>
               </div>
 
               {/* Category selector within modal */}
@@ -648,9 +649,9 @@ export default function AdminTeamPage() {
                     fontSize: "0.8rem",
                     fontWeight: 700,
                     cursor: "pointer",
-                    border: "1px solid " + (rearrangeCategory === "ALL" ? "#3b82f6" : "rgba(255,255,255,0.1)"),
-                    background: rearrangeCategory === "ALL" ? "#3b82f6" : "#0b0c10",
-                    color: "#fff",
+                    border: "1px solid " + (rearrangeCategory === "ALL" ? "#81663F" : "#D5CEBF"),
+                    background: rearrangeCategory === "ALL" ? "#81663F" : "#FAF8F5",
+                    color: rearrangeCategory === "ALL" ? "#FFFFFF" : "#1E1E1E",
                   }}
                 >
                   ALL CATEGORIES
@@ -665,9 +666,9 @@ export default function AdminTeamPage() {
                       fontSize: "0.8rem",
                       fontWeight: 700,
                       cursor: "pointer",
-                      border: "1px solid " + (rearrangeCategory === cat ? "#3b82f6" : "rgba(255,255,255,0.1)"),
-                      background: rearrangeCategory === cat ? "#3b82f6" : "#0b0c10",
-                      color: "#fff",
+                      border: "1px solid " + (rearrangeCategory === cat ? "#81663F" : "#D5CEBF"),
+                      background: rearrangeCategory === cat ? "#81663F" : "#FAF8F5",
+                      color: rearrangeCategory === cat ? "#FFFFFF" : "#1E1E1E",
                     }}
                   >
                     {cat}
@@ -687,29 +688,29 @@ export default function AdminTeamPage() {
                         alignItems: "center",
                         justifyContent: "space-between",
                         padding: "0.8rem 1rem",
-                        background: "#0b0c10",
-                        border: "1px solid #1e2230",
-                        borderRadius: "8px",
+                        background: "#FAF8F5",
+                        border: "1px solid #E2DCD2",
+                        borderRadius: "10px",
                         gap: "1rem"
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: "1rem", flex: 1 }}>
-                        <span style={{ fontWeight: 800, color: "#d4af37", width: "30px", fontSize: "0.95rem" }}>#{idx + 1}</span>
+                        <span style={{ fontWeight: 800, color: "#81663F", width: "30px", fontSize: "0.95rem" }}>#{idx + 1}</span>
                         {m.photoUrl ? (
                           <img src={m.photoUrl} alt="" style={{ width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover" }} />
                         ) : (
-                          <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#1e2230", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.8rem", fontWeight: 800, color: "#d4af37" }}>
+                          <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#FAF8F5", border: "1px solid #D5CEBF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.8rem", fontWeight: 800, color: "#81663F" }}>
                             {m.name.substring(0, 2).toUpperCase()}
                           </div>
                         )}
                         <div>
-                          <div style={{ fontWeight: 700, fontSize: "0.95rem" }}>{m.name}</div>
-                          <div style={{ fontSize: "0.78rem", color: "#94a3b8" }}>{m.designation} · <span style={{ color: "#60a5fa" }}>{m.category}</span></div>
+                          <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#1E1E1E" }}>{m.name}</div>
+                          <div style={{ fontSize: "0.78rem", color: "#555555" }}>{m.designation} · <span style={{ color: "#81663F" }}>{m.category}</span></div>
                         </div>
                       </div>
 
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                        <label style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Pos:</label>
+                        <label style={{ fontSize: "0.75rem", color: "#1E1E1E", fontWeight: 600 }}>Pos:</label>
                         <input
                           type="number"
                           value={m.sequenceNumber || (idx + 1)}
@@ -719,7 +720,7 @@ export default function AdminTeamPage() {
                               prev.map((item) => (item.id === m.id ? { ...item, sequenceNumber: val } : item))
                             );
                           }}
-                          style={{ width: "60px", padding: "0.4rem", background: "#12141c", border: "1px solid #3b82f6", color: "#fff", borderRadius: "4px", fontWeight: 800, textAlign: "center" }}
+                          style={{ width: "60px", padding: "0.4rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "6px", fontWeight: 800, textAlign: "center" }}
                         />
                       </div>
                     </div>
@@ -729,7 +730,7 @@ export default function AdminTeamPage() {
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
                 <button
                   onClick={() => setShowRearrangeModal(false)}
-                  style={{ padding: "0.75rem 1.4rem", background: "#1e2230", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}
+                  style={{ padding: "0.75rem 1.4rem", background: "#FAF8F5", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontWeight: 700 }}
                 >
                   Cancel
                 </button>
@@ -755,7 +756,7 @@ export default function AdminTeamPage() {
                       setIsSavingOrder(false);
                     }
                   }}
-                  style={{ padding: "0.75rem 1.6rem", background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", color: "#fff", border: "none", borderRadius: "6px", fontWeight: 800, cursor: isSavingOrder ? "not-allowed" : "pointer" }}
+                  style={{ padding: "0.75rem 1.6rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: isSavingOrder ? "not-allowed" : "pointer", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
                 >
                   {isSavingOrder ? "Saving..." : "Save New Order"}
                 </button>

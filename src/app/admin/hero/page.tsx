@@ -91,66 +91,66 @@ export default function AdminHeroPage() {
 
   if (loading || !settings) {
     return (
-      <div style={{ background: "#0a0a0c", color: "#fff", minHeight: "100vh" }}>
+      <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh" }}>
         <AdminNav />
-        <div style={{ padding: "4rem", textAlign: "center", color: "#888" }}>Loading Hero settings...</div>
+        <div style={{ padding: "4rem", textAlign: "center", color: "#6A6359" }}>Loading Hero settings...</div>
       </div>
     );
   }
 
   return (
-    <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
+    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
-        <div style={{ marginBottom: "2rem" }}>
-          <span style={{ color: "#3b82f6", fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>HOMEPAGE CONTROLS</span>
-          <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.3rem 0" }}>Hero Section Editor</h1>
-          <p style={{ color: "#aaa", fontSize: "0.95rem" }}>Update main header title, tagline, background MP4 video URL, and hero category tags.</p>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
+        <div style={{ marginBottom: "2rem", borderBottom: "1px solid #DCD5C6", paddingBottom: "1.2rem" }}>
+          <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>HOMEPAGE CONTROLS</span>
+          <h1 style={{ fontSize: "2.2rem", fontWeight: 900, margin: "0.3rem 0", color: "#1E1E1E" }}>Hero Section Editor</h1>
+          <p style={{ color: "#555555", fontSize: "0.95rem" }}>Update main header title, tagline, background MP4 video URL, and hero category tags.</p>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ background: "#141418", border: "1px solid #222", borderRadius: "12px", padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        <form onSubmit={handleSubmit} style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
           <div>
-            <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>Main Header Title *</label>
+            <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Main Header Title *</label>
             <input
               type="text"
               required
               value={settings.heroTitle}
               onChange={(e) => setSettings({ ...settings, heroTitle: e.target.value })}
-              style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "1rem" }}
+              style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "1rem" }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>Hero Tagline *</label>
+            <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Hero Tagline *</label>
             <input
               type="text"
               required
               value={settings.heroTagline}
               onChange={(e) => setSettings({ ...settings, heroTagline: e.target.value })}
-              style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "1rem" }}
+              style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "1rem" }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>Hero Subtext Description</label>
+            <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Hero Subtext Description</label>
             <textarea
               rows={3}
               value={settings.heroSubtext}
               onChange={(e) => setSettings({ ...settings, heroSubtext: e.target.value })}
-              style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.95rem" }}
+              style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem" }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>Background MP4 Video URL *</label>
+            <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Background MP4 Video URL *</label>
             <div style={{ display: "flex", gap: "0.5rem" }}>
               <input
                 type="text"
                 required
                 value={settings.heroVideoUrl}
                 onChange={(e) => setSettings({ ...settings, heroVideoUrl: e.target.value })}
-                style={{ flex: 1, padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.95rem" }}
+                style={{ flex: 1, padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem" }}
               />
               <input
                 type="file"
@@ -164,37 +164,38 @@ export default function AdminHeroPage() {
               <label
                 htmlFor="heroVideoUpload"
                 style={{
-                  padding: "0.8rem 1.2rem",
-                  background: isUploading ? "#9ca3af" : "#2563eb",
+                  padding: "0.8rem 1.4rem",
+                  background: isUploading ? "#9ca3af" : "#1E1E1E",
                   color: "#fff",
-                  borderRadius: "6px",
+                  borderRadius: "8px",
                   fontSize: "0.85rem",
-                  fontWeight: 700,
+                  fontWeight: 800,
                   cursor: isUploading ? "wait" : "pointer",
                   whiteSpace: "nowrap",
+                  boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
                 }}
               >
                 {isUploading ? "Uploading..." : "💻 Upload Video From Computer"}
               </label>
             </div>
-            <p style={{ fontSize: "0.8rem", color: "#777", marginTop: "0.4rem" }}>Direct link to MP4 video file or select any MP4 video directly from your computer.</p>
+            <p style={{ fontSize: "0.8rem", color: "#6A6359", marginTop: "0.4rem" }}>Direct link to MP4 video file or select any MP4 video directly from your computer.</p>
           </div>
 
           {/* Categories Bar Control */}
           <div>
-            <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.6rem", fontWeight: 600 }}>Categories Bar Tags (Displayed under Hero)</label>
+            <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.6rem", fontWeight: 700 }}>Categories Bar Tags (Displayed under Hero)</label>
             <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
               <input
                 type="text"
                 placeholder="Add category tag (e.g. Laminate)"
                 value={categoryInput}
                 onChange={(e) => setCategoryInput(e.target.value)}
-                style={{ flex: 1, padding: "0.7rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.9rem" }}
+                style={{ flex: 1, padding: "0.7rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.9rem" }}
               />
               <button
                 type="button"
                 onClick={addCategoryTag}
-                style={{ padding: "0.7rem 1.2rem", background: "#222", color: "#fff", border: "1px solid #444", borderRadius: "6px", cursor: "pointer", fontWeight: 600 }}
+                style={{ padding: "0.7rem 1.2rem", background: "#F4EFE6", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontWeight: 700 }}
               >
                 + Add Tag
               </button>
@@ -205,12 +206,13 @@ export default function AdminHeroPage() {
                 <span
                   key={tag}
                   style={{
-                    background: "#222",
-                    border: "1px solid #333",
-                    color: "#eee",
+                    background: "rgba(129, 102, 63, 0.12)",
+                    border: "1px solid rgba(129, 102, 63, 0.25)",
+                    color: "#81663F",
                     padding: "0.4rem 0.8rem",
                     borderRadius: "20px",
                     fontSize: "0.85rem",
+                    fontWeight: 700,
                     display: "flex",
                     alignItems: "center",
                     gap: "0.5rem",
@@ -220,7 +222,7 @@ export default function AdminHeroPage() {
                   <button
                     type="button"
                     onClick={() => removeCategoryTag(tag)}
-                    style={{ background: "none", border: "none", color: "#f87171", cursor: "pointer", fontSize: "0.9rem", padding: 0 }}
+                    style={{ background: "none", border: "none", color: "#DC2626", cursor: "pointer", fontSize: "0.9rem", padding: 0 }}
                   >
                     ✕
                   </button>
@@ -235,20 +237,21 @@ export default function AdminHeroPage() {
             style={{
               marginTop: "1rem",
               padding: "1rem",
-              background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)",
+              background: "#1E1E1E",
               color: "#fff",
               border: "none",
               borderRadius: "8px",
-              fontWeight: 700,
+              fontWeight: 800,
               fontSize: "1rem",
               cursor: saving ? "wait" : "pointer",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
             }}
           >
             {saving ? "Saving Changes..." : "💾 Save & Sync Live Homepage"}
           </button>
 
           {message && (
-            <div style={{ padding: "0.9rem", borderRadius: "6px", background: message.startsWith("Error") ? "rgba(239, 68, 68, 0.2)" : "rgba(34, 197, 94, 0.2)", color: message.startsWith("Error") ? "#f87171" : "#4ade80", fontSize: "0.9rem" }}>
+            <div style={{ padding: "0.9rem", borderRadius: "8px", background: message.startsWith("Error") ? "#FEE2E2" : "#D1FAE5", color: message.startsWith("Error") ? "#B91C1C" : "#065F46", fontSize: "0.9rem", fontWeight: 700, border: "1px solid #DCD5C6" }}>
               {message}
             </div>
           )}

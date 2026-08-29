@@ -294,33 +294,33 @@ export default function AdminBrandsPage() {
   }
 
   return (
-    <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
+    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem", borderBottom: "1px solid #DCD5C6", paddingBottom: "1.5rem" }}>
           <div>
-            <span style={{ color: "#8b5cf6", fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>BRAND CONTROLS</span>
-            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.3rem 0" }}>Brand Section Manager</h1>
-            <p style={{ color: "#aaa", fontSize: "0.95rem" }}>Add, edit, or remove partner brands, logos, short codes (SF 01), sequence, and PDF catalogs (via Google Drive links or computer upload).</p>
+            <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>BRAND CONTROLS</span>
+            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.3rem 0", color: "#1E1E1E" }}>Brand Section Manager</h1>
+            <p style={{ color: "#555555", fontSize: "0.95rem" }}>Add, edit, or remove partner brands, logos, short codes (SF 01), sequence, and PDF catalogs (via Google Drive links or computer upload).</p>
           </div>
           <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap" }}>
             <button
               onClick={handleGlobalBackfillCovers}
-              style={{ padding: "0.8rem 1.4rem", background: "linear-gradient(135deg, #10b981 0%, #059669 100%)", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 800 }}
+              style={{ padding: "0.8rem 1.4rem", background: "#10b981", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 800 }}
               title="Automatically extract Page 1 cover thumbnails for all catalogs missing a cover across the entire platform"
             >
               ⚡ Auto-Generate All Missing Covers
             </button>
             <button
               onClick={() => setShowCatalogThemeModal(true)}
-              style={{ padding: "0.8rem 1.4rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 800 }}
+              style={{ padding: "0.8rem 1.4rem", background: "#81663F", color: "#ffffff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 800 }}
             >
               🎨 Catalog Theme & Modal Settings
             </button>
             <button
               onClick={() => setShowBulkPdfModal(true)}
-              style={{ padding: "0.8rem 1.4rem", background: "#3b82f6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 700 }}
+              style={{ padding: "0.8rem 1.4rem", background: "#F4EFE6", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontWeight: 700 }}
             >
               📁 Bulk PDF Catalogs Manager
             </button>
@@ -329,7 +329,7 @@ export default function AdminBrandsPage() {
                 setEditingBrand({ name: "", logoUrl: "", bannerUrl: "", description: "", shortCode: "BR 01", sequenceNumber: brands.length + 1, catalogPdfUrl: "" });
                 setShowModal(true);
               }}
-              style={{ padding: "0.8rem 1.4rem", background: "#8b5cf6", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontWeight: 700 }}
+              style={{ padding: "0.8rem 1.4rem", background: "#1E1E1E", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 800, boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
             >
               + Add New Brand
             </button>
@@ -345,8 +345,8 @@ export default function AdminBrandsPage() {
               const bannerImg = b.bannerUrl || (b as any).hero || (b as any).imageUrl || (b as any).image || (b as any).coverImage || "/brands/brand_1_1.jpg";
               const logoImg = b.logoUrl || (b as any).logo || (b as any).logoImage || "/brands/brand_1_2.png";
               return (
-                <div key={b.id} style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "12px", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
-                  <Link href={`/admin/brands/${b.id}`} style={{ textDecoration: "none", position: "relative", width: "100%", aspectRatio: "1980 / 1020", minHeight: "150px", background: "#1a1a20", display: "block", overflow: "hidden" }}>
+                <div key={b.id} style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+                  <Link href={`/admin/brands/${b.id}`} style={{ textDecoration: "none", position: "relative", width: "100%", aspectRatio: "1980 / 1020", minHeight: "150px", background: "#FAF8F5", display: "block", overflow: "hidden" }}>
                     <Image
                       src={bannerImg}
                       alt={b.name}
@@ -357,8 +357,8 @@ export default function AdminBrandsPage() {
                         e.currentTarget.src = "/brands/brand_1_1.jpg";
                       }}
                     />
-                    <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />
-                    <div style={{ position: "absolute", bottom: "10px", left: "15px", background: "rgba(255,255,255,0.92)", padding: "0.4rem 0.8rem", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", minWidth: "60px", minHeight: "26px" }}>
+                    <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)" }} />
+                    <div style={{ position: "absolute", bottom: "10px", left: "15px", background: "rgba(255,255,255,0.95)", padding: "0.4rem 0.8rem", borderRadius: "6px", display: "flex", alignItems: "center", justifyContent: "center", minWidth: "60px", minHeight: "26px" }}>
                       <Image
                         src={logoImg}
                         alt={b.name}
@@ -371,7 +371,7 @@ export default function AdminBrandsPage() {
                         }}
                       />
                     </div>
-                    <span style={{ position: "absolute", top: "10px", right: "10px", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", padding: "0.3rem 0.7rem", borderRadius: "4px", fontSize: "0.8rem", fontWeight: 900 }}>
+                    <span style={{ position: "absolute", top: "10px", right: "10px", background: "#1E1E1E", color: "#FFFFFF", padding: "0.3rem 0.7rem", borderRadius: "6px", fontSize: "0.8rem", fontWeight: 800 }}>
                       {b.shortCode || "BR"}
                     </span>
                   </Link>
@@ -379,51 +379,51 @@ export default function AdminBrandsPage() {
                   <div>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
                       <Link href={`/admin/brands/${b.id}`} style={{ textDecoration: "none" }}>
-                        <h3 style={{ fontSize: "1.25rem", fontWeight: 900, color: "#ffffff", margin: 0, letterSpacing: "0.02em" }}>{b.name}</h3>
+                        <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#1E1E1E", margin: 0, letterSpacing: "0.02em" }}>{b.name}</h3>
                       </Link>
-                      {b.category && <span style={{ fontSize: "0.75rem", background: "rgba(255,255,255,0.1)", color: "#cbd5e1", padding: "2px 8px", borderRadius: "4px" }}>{b.category}</span>}
+                      {b.category && <span style={{ fontSize: "0.75rem", background: "rgba(129,102,63,0.12)", color: "#81663F", border: "1px solid rgba(129,102,63,0.25)", padding: "2px 8px", borderRadius: "4px", fontWeight: 700 }}>{b.category}</span>}
                     </div>
-                    {b.tagline && <div style={{ fontSize: "0.82rem", fontStyle: "italic", color: "#d4af37", marginBottom: "0.5rem" }}>&ldquo;{b.tagline}&rdquo;</div>}
-                    <p style={{ color: "#cbd5e1", fontSize: "0.85rem", lineHeight: 1.5, margin: "0 0 0.8rem", fontWeight: 400, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{b.description}</p>
-                    <div style={{ display: "flex", gap: "10px", fontSize: "0.75rem", color: "#94a3b8", marginBottom: "0.8rem" }}>
+                    {b.tagline && <div style={{ fontSize: "0.82rem", fontStyle: "italic", color: "#81663F", marginBottom: "0.5rem" }}>&ldquo;{b.tagline}&rdquo;</div>}
+                    <p style={{ color: "#555555", fontSize: "0.85rem", lineHeight: 1.5, margin: "0 0 0.8rem", fontWeight: 400, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{b.description}</p>
+                    <div style={{ display: "flex", gap: "10px", fontSize: "0.75rem", color: "#6A6359", marginBottom: "0.8rem" }}>
                       {b.origin && <span>🌍 {b.origin}</span>}
                       {b.founded && <span>📅 Est. {b.founded}</span>}
                     </div>
                     {b.catalogPdfUrl ? (
-                      <div style={{ fontSize: "0.78rem", color: "#60a5fa", marginBottom: "0.8rem", wordBreak: "break-all" }}>
-                        📄 <a href={b.catalogPdfUrl} target="_blank" rel="noopener noreferrer" style={{ color: "#60a5fa", textDecoration: "underline" }}>Catalog PDF Active</a>
+                      <div style={{ fontSize: "0.78rem", color: "#81663F", marginBottom: "0.8rem", wordBreak: "break-all" }}>
+                        📄 <a href={b.catalogPdfUrl} target="_blank" rel="noopener noreferrer" style={{ color: "#81663F", textDecoration: "underline", fontWeight: 700 }}>Catalog PDF Active ↗</a>
                       </div>
                     ) : (
-                      <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginBottom: "0.8rem" }}>⚠️ No PDF catalog linked</div>
+                      <div style={{ fontSize: "0.78rem", color: "#8A8279", marginBottom: "0.8rem" }}>⚠️ No PDF catalog linked</div>
                     )}
                   </div>
-                  <div style={{ display: "flex", gap: "0.5rem", borderTop: "1px solid #222", paddingTop: "0.8rem", flexWrap: "wrap" }}>
+                  <div style={{ display: "flex", gap: "0.5rem", borderTop: "1px solid #EAE4D8", paddingTop: "0.8rem", flexWrap: "wrap" }}>
                     <button
                       onClick={() => {
                         setEditingBrand(b);
                         setPdfCatalogs(b.pdfCatalogs || (b.catalogPdfUrl ? [{ id: "cat-1", title: `${b.name} Specification Catalog`, pdfUrl: b.catalogPdfUrl }] : []));
                         setShowModal(true);
                       }}
-                      style={{ flex: 1, padding: "0.5rem", background: "#222", color: "#fff", border: "1px solid #333", borderRadius: "4px", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}
+                      style={{ flex: 1, padding: "0.5rem", background: "#F4EFE6", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", cursor: "pointer", fontSize: "0.8rem", fontWeight: 700 }}
                     >
                       ✏️ Quick Edit
                     </button>
                     <Link
                       href={`/admin/brands/${b.id}`}
-                      style={{ padding: "0.5rem 0.7rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", borderRadius: "4px", textDecoration: "none", fontSize: "0.8rem", fontWeight: 800, display: "inline-flex", alignItems: "center" }}
+                      style={{ padding: "0.5rem 0.7rem", background: "#1E1E1E", color: "#FFFFFF", borderRadius: "6px", textDecoration: "none", fontSize: "0.8rem", fontWeight: 800, display: "inline-flex", alignItems: "center" }}
                     >
                       ⚙️ Full Page ↗
                     </Link>
                     <Link
                       href={`/brands/${b.id}`}
                       target="_blank"
-                      style={{ padding: "0.5rem 0.7rem", background: "#334155", color: "#fff", borderRadius: "4px", textDecoration: "none", fontSize: "0.8rem", fontWeight: 600, display: "inline-flex", alignItems: "center" }}
+                      style={{ padding: "0.5rem 0.7rem", background: "#FAF8F5", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "6px", textDecoration: "none", fontSize: "0.8rem", fontWeight: 700, display: "inline-flex", alignItems: "center" }}
                     >
                       👁 Live ↗
                     </Link>
                     <button
                       onClick={() => handleDelete(b.id)}
-                      style={{ padding: "0.5rem 0.7rem", background: "rgba(239,68,68,0.2)", color: "#f87171", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}
+                      style={{ padding: "0.5rem 0.7rem", background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5", borderRadius: "6px", cursor: "pointer", fontSize: "0.8rem", fontWeight: 700 }}
                     >
                       🗑️
                     </button>
@@ -437,14 +437,14 @@ export default function AdminBrandsPage() {
 
         {/* Add / Edit Brand Modal */}
         {showModal && (
-          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
-            <div style={{ background: "#141418", border: "1px solid #333", borderRadius: "12px", width: "100%", maxWidth: "600px", padding: "2rem", maxHeight: "90vh", overflowY: "auto" }}>
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
+            <div style={{ background: "#FFFFFF", border: "1px solid #DCD5C6", borderRadius: "16px", width: "100%", maxWidth: "600px", padding: "2rem", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-                <h2 style={{ fontSize: "1.5rem", margin: 0 }}>{editingBrand.id ? "Edit Brand" : "Add New Brand"}</h2>
+                <h2 style={{ fontSize: "1.5rem", margin: 0, color: "#81663F", fontWeight: 800 }}>{editingBrand.id ? "Edit Brand" : "Add New Brand"}</h2>
                 {editingBrand.id && (
                   <Link
                     href={`/admin/brands/${editingBrand.id}`}
-                    style={{ fontSize: "0.8rem", color: "#d4af37", textDecoration: "underline", fontWeight: 700 }}
+                    style={{ fontSize: "0.8rem", color: "#81663F", textDecoration: "underline", fontWeight: 700 }}
                   >
                     Open Master Brand Editor Page ⚙️ ↗
                   </Link>

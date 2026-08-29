@@ -89,90 +89,57 @@ export default function AdminCategoriesPage() {
   const activeThemeObj = CARD_THEMES.find((t) => t.id === cardTheme) || CARD_THEMES[0];
 
   return (
-    <div style={{ background: "#0b0c10", color: "#f8fafc", minHeight: "100vh", display: "flex" }}>
+    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh", display: "flex" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.12)", paddingBottom: "1rem" }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #DCD5C6", paddingBottom: "1rem" }}>
           <div>
-            <span style={{ color: "#d4af37", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>CATEGORY MANAGEMENT</span>
-            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.2rem 0", color: "#ffffff" }}>Browse by Category CMS</h1>
-            <p style={{ color: "#cbd5e1", fontSize: "0.95rem" }}>Add, edit, or delete categories displayed on the website.</p>
+            <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>CATEGORY MANAGEMENT</span>
+            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.2rem 0", color: "#1E1E1E" }}>Browse by Category CMS</h1>
+            <p style={{ color: "#555555", fontSize: "0.95rem" }}>Add, edit, or delete categories displayed on the website.</p>
           </div>
           <button
             onClick={() => setEditingCat({ name: "", coverImage: "/categories/cat_1.jpg", description: "", shortCode: "DS 06", sequenceNumber: categories.length + 1 })}
-            style={{ padding: "0.75rem 1.5rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.95rem" }}
+            style={{ padding: "0.75rem 1.5rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.95rem", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
           >
             + Add New Category
           </button>
         </div>
 
-        {/* Card Background Theme Controls */}
-        <div style={{ background: "#151922", padding: "1.2rem 1.6rem", borderRadius: "10px", border: "1px solid rgba(212,175,55,0.25)", marginBottom: "1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
-            <span style={{ fontSize: "1.2rem" }}>🎨</span>
-            <div>
-              <span style={{ color: "#d4af37", fontSize: "0.9rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>Card Background Theme Option:</span>
-              <p style={{ color: "#cbd5e1", fontSize: "0.85rem", margin: 0 }}>Choose background style & contrast for category boxes.</p>
-            </div>
-          </div>
-
-          <div style={{ display: "flex", gap: "0.6rem" }}>
-            {CARD_THEMES.map((theme) => (
-              <button
-                key={theme.id}
-                onClick={() => setCardTheme(theme.id)}
-                style={{
-                  padding: "0.5rem 1rem",
-                  borderRadius: "6px",
-                  fontSize: "0.85rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  border: "1px solid " + (cardTheme === theme.id ? "#d4af37" : "rgba(255,255,255,0.25)"),
-                  background: cardTheme === theme.id ? "#d4af37" : "#1e2433",
-                  color: cardTheme === theme.id ? "#000" : "#ffffff",
-                  transition: "all 0.2s ease",
-                }}
-              >
-                {theme.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {editingCat && (
-          <form onSubmit={handleSave} style={{ background: "#151922", padding: "2.2rem", borderRadius: "12px", border: "1px solid rgba(212,175,55,0.35)", marginBottom: "2rem" }}>
-            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "1.2rem", color: "#d4af37" }}>{editingCat.id ? "Edit Category" : "Add Category"}</h2>
+          <form onSubmit={handleSave} style={{ background: "#FFFFFF", padding: "2.2rem", borderRadius: "16px", border: "1px solid #E2DCD2", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", marginBottom: "2rem" }}>
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "1.2rem", color: "#81663F" }}>{editingCat.id ? "Edit Category" : "Add Category"}</h2>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.9rem", color: "#e2e8f0", fontWeight: 600, marginBottom: "0.4rem" }}>Category Name *</label>
+                <label style={{ display: "block", fontSize: "0.9rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Category Name *</label>
                 <input
                   type="text"
                   required
                   value={editingCat.name || ""}
                   onChange={(e) => setEditingCat({ ...editingCat, name: e.target.value })}
-                  style={{ width: "100%", padding: "0.8rem", background: "#0b0e14", border: "1px solid #334155", color: "#ffffff", borderRadius: "6px", fontSize: "0.95rem" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: "0.9rem", color: "#e2e8f0", fontWeight: 600, marginBottom: "0.4rem" }}>Short Code (e.g. DS 06)</label>
+                <label style={{ display: "block", fontSize: "0.9rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Short Code (e.g. DS 06)</label>
                 <input
                   type="text"
                   value={editingCat.shortCode || ""}
                   onChange={(e) => setEditingCat({ ...editingCat, shortCode: e.target.value })}
-                  style={{ width: "100%", padding: "0.8rem", background: "#0b0e14", border: "1px solid #334155", color: "#ffffff", borderRadius: "6px", fontSize: "0.95rem" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem" }}
                 />
               </div>
             </div>
 
             <div style={{ marginTop: "1.2rem" }}>
-              <label style={{ display: "block", fontSize: "0.9rem", color: "#e2e8f0", fontWeight: 600, marginBottom: "0.4rem" }}>Cover Image URL</label>
+              <label style={{ display: "block", fontSize: "0.9rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Cover Image URL</label>
               <div style={{ display: "flex", gap: "0.6rem" }}>
                 <input
                   type="text"
                   value={editingCat.coverImage || ""}
                   onChange={(e) => setEditingCat({ ...editingCat, coverImage: e.target.value })}
-                  style={{ flex: 1, padding: "0.8rem", background: "#0b0e14", border: "1px solid #334155", color: "#ffffff", borderRadius: "6px", fontSize: "0.95rem" }}
+                  style={{ flex: 1, padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem" }}
                 />
                 <input
                   type="file"
@@ -187,9 +154,9 @@ export default function AdminCategoriesPage() {
                   htmlFor="catCoverUpload"
                   style={{
                     padding: "0.8rem 1.4rem",
-                    background: "#2563eb",
-                    color: "#ffffff",
-                    borderRadius: "6px",
+                    background: "#1E1E1E",
+                    color: "#FFFFFF",
+                    borderRadius: "8px",
                     fontSize: "0.9rem",
                     fontWeight: 700,
                     cursor: "pointer",
@@ -202,20 +169,20 @@ export default function AdminCategoriesPage() {
             </div>
 
             <div style={{ marginTop: "1.2rem" }}>
-              <label style={{ display: "block", fontSize: "0.9rem", color: "#e2e8f0", fontWeight: 600, marginBottom: "0.4rem" }}>Description</label>
+              <label style={{ display: "block", fontSize: "0.9rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Description</label>
               <textarea
                 rows={3}
                 value={editingCat.description || ""}
                 onChange={(e) => setEditingCat({ ...editingCat, description: e.target.value })}
-                style={{ width: "100%", padding: "0.8rem", background: "#0b0e14", border: "1px solid #334155", color: "#ffffff", borderRadius: "6px", fontSize: "0.95rem" }}
+                style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem" }}
               />
             </div>
 
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.8rem" }}>
-              <button type="submit" disabled={isSaving} style={{ padding: "0.8rem 1.8rem", background: "#d4af37", color: "#000", border: "none", borderRadius: "6px", fontWeight: 800, cursor: "pointer", fontSize: "0.95rem" }}>
+              <button type="submit" disabled={isSaving} style={{ padding: "0.8rem 1.8rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.95rem" }}>
                 {isSaving ? "Saving..." : "Save Category"}
               </button>
-              <button type="button" onClick={() => setEditingCat(null)} style={{ padding: "0.8rem 1.8rem", background: "#1e2433", color: "#ffffff", border: "1px solid #334155", borderRadius: "6px", cursor: "pointer", fontSize: "0.95rem" }}>
+              <button type="button" onClick={() => setEditingCat(null)} style={{ padding: "0.8rem 1.8rem", background: "#FFFFFF", color: "#1E1E1E", border: "1px solid #D5CEBF", borderRadius: "8px", cursor: "pointer", fontSize: "0.95rem" }}>
                 Cancel
               </button>
             </div>
@@ -227,11 +194,11 @@ export default function AdminCategoriesPage() {
             <div
               key={cat.id}
               style={{
-                background: activeThemeObj.bg,
-                border: "1px solid " + activeThemeObj.border,
-                borderRadius: "14px",
+                background: "#FFFFFF",
+                border: "1px solid #E2DCD2",
+                borderRadius: "16px",
                 padding: "1.8rem",
-                boxShadow: "0 10px 25px rgba(0,0,0,0.4)",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
                 transition: "all 0.3s ease",
               }}
             >
@@ -239,23 +206,23 @@ export default function AdminCategoriesPage() {
                 <span
                   style={{
                     fontSize: "0.8rem",
-                    background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)",
-                    color: "#000",
+                    background: "rgba(129,102,63,0.12)",
+                    color: "#81663F",
+                    border: "1px solid rgba(129,102,63,0.25)",
                     padding: "0.3rem 0.8rem",
                     borderRadius: "6px",
-                    fontWeight: 900,
+                    fontWeight: 800,
                     letterSpacing: "0.05em",
-                    boxShadow: "0 2px 8px rgba(212,175,55,0.3)",
                   }}
                 >
                   {cat.shortCode || "CAT"}
                 </span>
-                <span style={{ color: "#d4af37", fontSize: "0.85rem", fontWeight: 700 }}>Order: #{cat.sequenceNumber}</span>
+                <span style={{ color: "#81663F", fontSize: "0.85rem", fontWeight: 700 }}>Order: #{cat.sequenceNumber}</span>
               </div>
-              <h3 style={{ fontSize: "1.4rem", fontWeight: 900, color: "#ffffff", letterSpacing: "0.03em", margin: "0.5rem 0", textTransform: "uppercase" }}>
+              <h3 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1E1E1E", letterSpacing: "0.02em", margin: "0.5rem 0", textTransform: "uppercase" }}>
                 {cat.name}
               </h3>
-              <p style={{ color: "#f1f5f9", fontSize: "0.95rem", margin: "0.6rem 0 1.5rem", lineHeight: 1.6, fontWeight: 500 }}>
+              <p style={{ color: "#555555", fontSize: "0.95rem", margin: "0.6rem 0 1.5rem", lineHeight: 1.6, fontWeight: 400 }}>
                 {cat.description || "Architectural interior product category."}
               </p>
               <div style={{ display: "flex", gap: "0.8rem" }}>
@@ -263,14 +230,13 @@ export default function AdminCategoriesPage() {
                   onClick={() => setEditingCat(cat)}
                   style={{
                     padding: "0.5rem 1.2rem",
-                    background: "#2563eb",
-                    color: "#ffffff",
+                    background: "#1E1E1E",
+                    color: "#FFFFFF",
                     border: "none",
                     borderRadius: "6px",
                     cursor: "pointer",
                     fontSize: "0.88rem",
                     fontWeight: 700,
-                    boxShadow: "0 2px 6px rgba(37,99,235,0.4)",
                   }}
                 >
                   ✏️ Edit
@@ -279,9 +245,9 @@ export default function AdminCategoriesPage() {
                   onClick={() => handleDelete(cat.id)}
                   style={{
                     padding: "0.5rem 1.2rem",
-                    background: "rgba(239, 68, 68, 0.2)",
-                    color: "#f87171",
-                    border: "1px solid rgba(239, 68, 68, 0.4)",
+                    background: "#FEE2E2",
+                    color: "#DC2626",
+                    border: "1px solid #FCA5A5",
                     borderRadius: "6px",
                     cursor: "pointer",
                     fontSize: "0.88rem",

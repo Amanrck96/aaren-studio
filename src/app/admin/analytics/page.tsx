@@ -87,28 +87,28 @@ export default function ExecutiveAnalyticsPage() {
   }, []);
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#08111F" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#FAF8F5" }}>
       <AdminNav />
 
-      <main className="admin-main-content aaren-os-root" style={{ flex: 1, padding: "2.5rem 3rem", background: "#08111F" }}>
+      <main className="admin-main-content aaren-os-root" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
       <style jsx global>{`
         :root {
-          --navy: #08111F;
-          --navy-2: #0D1929;
-          --surface: #101C30;
-          --surface-2: #152238;
-          --border: rgba(255, 255, 255, 0.08);
-          --border-strong: rgba(255, 255, 255, 0.14);
-          --white: #F8FAFC;
-          --slate: #93A2B8;
-          --slate-dim: #5E6E85;
+          --navy: #FAF8F5;
+          --navy-2: #F4EFE6;
+          --surface: #FFFFFF;
+          --surface-2: #FAF8F5;
+          --border: #E2DCD2;
+          --border-strong: #D5CEBF;
+          --white: #1E1E1E;
+          --slate: #555555;
+          --slate-dim: #777777;
           --gold: #81663F;
           --purple: #7C3AED;
-          --blue: #2563EB;
-          --radius-lg: 20px;
-          --radius-md: 16px;
-          --radius-sm: 10px;
-          --shadow-glass: 0 8px 40px rgba(0, 0, 0, 0.45);
+          --blue: #1E1E1E;
+          --radius-lg: 16px;
+          --radius-md: 14px;
+          --radius-sm: 8px;
+          --shadow-glass: 0 4px 20px rgba(0, 0, 0, 0.04);
         }
 
         .aaren-os-root {
@@ -116,14 +116,12 @@ export default function ExecutiveAnalyticsPage() {
           color: var(--white);
           font-family: 'Inter', sans-serif;
           min-height: 100vh;
-          padding-top: 40px;
-          padding-bottom: 60px;
         }
 
         .container {
           max-width: 1320px;
           margin: 0 auto;
-          padding: 0 24px;
+          padding: 0;
         }
 
         .os-header {
@@ -139,7 +137,7 @@ export default function ExecutiveAnalyticsPage() {
 
         .os-title-group h1 {
           font-size: 30px;
-          font-weight: 800;
+          font-weight: 900;
           letter-spacing: -0.02em;
           color: var(--white);
           margin: 0 0 6px;
@@ -166,8 +164,8 @@ export default function ExecutiveAnalyticsPage() {
           color: var(--slate);
           padding: 6px 14px;
           font-size: 12px;
-          font-weight: 600;
-          border-radius: 4px;
+          font-weight: 700;
+          border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s;
         }
@@ -193,11 +191,12 @@ export default function ExecutiveAnalyticsPage() {
           border: 1px solid var(--border);
           border-radius: var(--radius-md);
           padding: 20px;
+          box-shadow: var(--shadow-glass);
         }
 
         .kpi-label {
           font-size: 11.5px;
-          font-weight: 700;
+          font-weight: 800;
           color: var(--slate);
           text-transform: uppercase;
           letter-spacing: 0.05em;
@@ -216,8 +215,8 @@ export default function ExecutiveAnalyticsPage() {
 
         .kpi-trend {
           font-size: 11.5px;
-          font-weight: 600;
-          color: #10B981;
+          font-weight: 700;
+          color: #15803D;
           display: flex;
           align-items: center;
           gap: 4px;
@@ -229,6 +228,7 @@ export default function ExecutiveAnalyticsPage() {
           border-radius: var(--radius-md);
           padding: 24px;
           margin-bottom: 28px;
+          box-shadow: var(--shadow-glass);
         }
 
         .panel-head {
@@ -244,7 +244,7 @@ export default function ExecutiveAnalyticsPage() {
 
         .panel-head h3 {
           font-size: 16px;
-          font-weight: 700;
+          font-weight: 800;
           color: var(--white);
           margin: 0;
           display: flex;
@@ -260,13 +260,13 @@ export default function ExecutiveAnalyticsPage() {
 
         .brand-table th {
           font-size: 11px;
-          font-weight: 700;
+          font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 0.06em;
-          color: var(--slate);
+          color: #1E1E1E;
           padding: 12px 14px;
           border-bottom: 1px solid var(--border);
-          background: var(--surface-2);
+          background: var(--navy-2);
         }
 
         .brand-table td {
@@ -279,22 +279,22 @@ export default function ExecutiveAnalyticsPage() {
         .brand-table tr:last-child td { border-bottom: none; }
 
         .btn-launch-os {
-          background: #81663F;
+          background: #1E1E1E;
           color: #fff;
           border: none;
           padding: 10px 18px;
           border-radius: var(--radius-sm);
           font-size: 12.5px;
-          font-weight: 700;
+          font-weight: 800;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 8px;
           text-decoration: none;
-          box-shadow: 0 4px 14px rgba(129, 102, 63, 0.35);
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
         }
 
-        .btn-launch-os:hover { background: #96774a; }
+        .btn-launch-os:hover { background: #333333; }
       `}</style>
 
       <div className="container">

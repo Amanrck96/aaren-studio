@@ -219,86 +219,86 @@ export default function AdminAboutPage() {
   }
 
   return (
-    <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
+    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh" }}>
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", maxWidth: "1400px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "2rem" }}>
-          <span style={{ color: "#14b8a6", fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", maxWidth: "1400px", margin: "0 auto", background: "#FAF8F5" }}>
+        <div style={{ marginBottom: "2rem", borderBottom: "1px solid #DCD5C6", paddingBottom: "1.2rem" }}>
+          <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>
             CONTENT MANAGEMENT
           </span>
-          <h1 style={{ fontSize: "2.2rem", fontWeight: 800, margin: "0.3rem 0" }}>About Us & Roadmap Manager</h1>
-          <p style={{ color: "#aaa", fontSize: "0.95rem" }}>
+          <h1 style={{ fontSize: "2.2rem", fontWeight: 900, margin: "0.3rem 0", color: "#1E1E1E" }}>About Us & Roadmap Manager</h1>
+          <p style={{ color: "#555555", fontSize: "0.95rem" }}>
             Edit Mission, Vision, Values, and manage vertical roadmap timeline steps (01, 02, 03...).
           </p>
         </div>
 
         {/* Mission, Vision, Values Form */}
-        <div style={{ background: "#141418", border: "1px solid #222", borderRadius: "12px", padding: "2rem", marginBottom: "2rem" }}>
-          <h2 style={{ fontSize: "1.4rem", marginBottom: "1.5rem", borderBottom: "1px solid #222", paddingBottom: "0.8rem" }}>
+        <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "2rem", marginBottom: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+          <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#81663F", marginBottom: "1.5rem", borderBottom: "1px solid #EAE4D8", paddingBottom: "0.8rem" }}>
             About Page Text & Mission, Vision, Values
           </h2>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>
                   Page Header Title *
                 </label>
                 <input
                   type="text"
                   value={aboutTitle}
                   onChange={(e) => setAboutTitle(e.target.value)}
-                  style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>
                   Page Subtitle Description *
                 </label>
                 <input
                   type="text"
                   value={aboutSubtitle}
                   onChange={(e) => setAboutSubtitle(e.target.value)}
-                  style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>
                 Our Mission *
               </label>
               <textarea
                 rows={2}
                 value={mission}
                 onChange={(e) => setMission(e.target.value)}
-                style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>
                 Our Vision *
               </label>
               <textarea
                 rows={2}
                 value={vision}
                 onChange={(e) => setVision(e.target.value)}
-                style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "0.4rem", fontWeight: 600 }}>
+              <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>
                 Our Core Values *
               </label>
               <textarea
                 rows={2}
                 value={values}
                 onChange={(e) => setValues(e.target.value)}
-                style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
               />
             </div>
 
@@ -306,14 +306,15 @@ export default function AdminAboutPage() {
               onClick={handleSaveAboutTexts}
               disabled={saving}
               style={{
-                padding: "0.8rem 1.4rem",
-                background: "#14b8a6",
-                color: "#fff",
+                padding: "0.8rem 1.6rem",
+                background: "#1E1E1E",
+                color: "#FFFFFF",
                 border: "none",
-                borderRadius: "6px",
+                borderRadius: "8px",
                 cursor: saving ? "wait" : "pointer",
-                fontWeight: 700,
+                fontWeight: 800,
                 width: "fit-content",
+                boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
               }}
             >
               {saving ? "Saving Changes..." : "💾 Save About Us Text Settings"}
@@ -322,10 +323,10 @@ export default function AdminAboutPage() {
         </div>
 
         {/* Vertical Roadmap Manager */}
-        <div id="roadmap-form-section" style={{ background: "#141418", border: "1px solid #222", borderRadius: "12px", padding: "2rem" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #222", paddingBottom: "0.8rem", marginBottom: "1.5rem" }}>
-            <h2 style={{ fontSize: "1.4rem", margin: 0 }}>Vertical Roadmap Timeline (01, 02, 03...)</h2>
-            <span style={{ fontSize: "0.85rem", color: "#14b8a6", fontWeight: 700 }}>
+        <div id="roadmap-form-section" style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #EAE4D8", paddingBottom: "0.8rem", marginBottom: "1.5rem" }}>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#81663F", margin: 0 }}>Vertical Roadmap Timeline (01, 02, 03...)</h2>
+            <span style={{ fontSize: "0.85rem", color: "#81663F", fontWeight: 800 }}>
               {roadmap.length} Timeline Nodes
             </span>
           </div>
@@ -334,9 +335,9 @@ export default function AdminAboutPage() {
           <form
             onSubmit={handleSubmitStep}
             style={{
-              background: editingStepId ? "#132320" : "#0a0a0c",
-              border: editingStepId ? "1px solid #14b8a6" : "1px dashed #333",
-              borderRadius: "8px",
+              background: editingStepId ? "#FAF8F5" : "#FAF8F5",
+              border: editingStepId ? "2px solid #81663F" : "1px dashed #D5CEBF",
+              borderRadius: "12px",
               padding: "1.5rem",
               marginBottom: "2rem",
               display: "flex",
@@ -346,7 +347,7 @@ export default function AdminAboutPage() {
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div style={{ fontSize: "1.05rem", fontWeight: 800, color: editingStepId ? "#2dd4bf" : "#14b8a6" }}>
+              <div style={{ fontSize: "1.05rem", fontWeight: 800, color: "#81663F" }}>
                 {editingStepId ? `✏️ Editing Roadmap Node: Step ${stepForm.stepNumber}` : "+ Add New Roadmap Node"}
               </div>
               {editingStepId && (
@@ -354,13 +355,14 @@ export default function AdminAboutPage() {
                   type="button"
                   onClick={handleCancelEdit}
                   style={{
-                    background: "rgba(255,255,255,0.1)",
+                    background: "#EAE4D8",
                     border: "none",
-                    color: "#cbd5e1",
+                    color: "#1E1E1E",
                     padding: "4px 10px",
-                    borderRadius: "4px",
+                    borderRadius: "6px",
                     cursor: "pointer",
                     fontSize: "0.8rem",
+                    fontWeight: 700,
                     display: "flex",
                     alignItems: "center",
                     gap: "4px",
@@ -373,7 +375,7 @@ export default function AdminAboutPage() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 2fr", gap: "1rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.8rem", color: "#888", marginBottom: "0.3rem", fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: "0.8rem", color: "#1E1E1E", marginBottom: "0.3rem", fontWeight: 700 }}>
                   Node Code (e.g. 01, 02) *
                 </label>
                 <input
@@ -381,12 +383,12 @@ export default function AdminAboutPage() {
                   required
                   value={stepForm.stepNumber}
                   onChange={(e) => setStepForm({ ...stepForm, stepNumber: e.target.value })}
-                  style={{ width: "100%", padding: "0.6rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px" }}
+                  style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.8rem", color: "#888", marginBottom: "0.3rem", fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: "0.8rem", color: "#1E1E1E", marginBottom: "0.3rem", fontWeight: 700 }}>
                   Year / Date *
                 </label>
                 <input
@@ -395,12 +397,12 @@ export default function AdminAboutPage() {
                   placeholder="e.g. 2013, 2019, 2024"
                   value={stepForm.year}
                   onChange={(e) => setStepForm({ ...stepForm, year: e.target.value })}
-                  style={{ width: "100%", padding: "0.6rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px" }}
+                  style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.8rem", color: "#888", marginBottom: "0.3rem", fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: "0.8rem", color: "#1E1E1E", marginBottom: "0.3rem", fontWeight: 700 }}>
                   Step Title *
                 </label>
                 <input
@@ -409,13 +411,13 @@ export default function AdminAboutPage() {
                   placeholder="e.g. FOUNDATION & ITALIAN PARTNERSHIPS"
                   value={stepForm.title}
                   onChange={(e) => setStepForm({ ...stepForm, title: e.target.value })}
-                  style={{ width: "100%", padding: "0.6rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px" }}
+                  style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: "0.8rem", color: "#888", marginBottom: "0.3rem", fontWeight: 600 }}>
+              <label style={{ display: "block", fontSize: "0.8rem", color: "#1E1E1E", marginBottom: "0.3rem", fontWeight: 700 }}>
                 Step Description *
               </label>
               <textarea
@@ -424,7 +426,7 @@ export default function AdminAboutPage() {
                 placeholder="Detailed milestones, showroom expansions, partnership launches..."
                 value={stepForm.description}
                 onChange={(e) => setStepForm({ ...stepForm, description: e.target.value })}
-                style={{ width: "100%", padding: "0.6rem", background: "#141418", border: "1px solid #333", color: "#fff", borderRadius: "4px" }}
+                style={{ width: "100%", padding: "0.6rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
               />
             </div>
 
@@ -435,15 +437,16 @@ export default function AdminAboutPage() {
                 style={{
                   width: "fit-content",
                   padding: "0.7rem 1.6rem",
-                  background: "#14b8a6",
-                  color: "#fff",
+                  background: "#1E1E1E",
+                  color: "#FFFFFF",
                   border: "none",
-                  borderRadius: "6px",
+                  borderRadius: "8px",
                   cursor: "pointer",
-                  fontWeight: 700,
+                  fontWeight: 800,
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "6px",
+                  boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
                 }}
               >
                 <Save size={15} />
@@ -456,12 +459,12 @@ export default function AdminAboutPage() {
                   onClick={handleCancelEdit}
                   style={{
                     padding: "0.7rem 1.2rem",
-                    background: "#27272a",
-                    color: "#cbd5e1",
-                    border: "none",
-                    borderRadius: "6px",
+                    background: "#FFFFFF",
+                    color: "#1E1E1E",
+                    border: "1px solid #D5CEBF",
+                    borderRadius: "8px",
                     cursor: "pointer",
-                    fontWeight: 600,
+                    fontWeight: 700,
                   }}
                 >
                   Cancel
@@ -472,7 +475,7 @@ export default function AdminAboutPage() {
 
           {/* Current Steps Timeline List with EDIT / DELETE / REORDER */}
           {loading ? (
-            <div style={{ color: "#888", textAlign: "center", padding: "2rem" }}>Loading roadmap nodes...</div>
+            <div style={{ color: "#6A6359", textAlign: "center", padding: "2rem" }}>Loading roadmap nodes...</div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               {roadmap.map((step, idx) => {
@@ -481,9 +484,9 @@ export default function AdminAboutPage() {
                   <div
                     key={step.id || idx}
                     style={{
-                      background: isCurrentEditing ? "rgba(20, 184, 166, 0.1)" : "#0a0a0c",
-                      border: isCurrentEditing ? "1px solid #14b8a6" : "1px solid #222",
-                      borderRadius: "10px",
+                      background: isCurrentEditing ? "rgba(129, 102, 63, 0.08)" : "#FAF8F5",
+                      border: isCurrentEditing ? "1px solid #81663F" : "1px solid #E2DCD2",
+                      borderRadius: "14px",
                       padding: "1.2rem 1.5rem",
                       display: "flex",
                       gap: "1.5rem",
@@ -497,7 +500,7 @@ export default function AdminAboutPage() {
                         width: "60px",
                         height: "60px",
                         borderRadius: "50%",
-                        background: "#14b8a6",
+                        background: "#81663F",
                         color: "#fff",
                         display: "flex",
                         alignItems: "center",
@@ -513,19 +516,19 @@ export default function AdminAboutPage() {
                     {/* Step Details */}
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        <span style={{ fontSize: "0.85rem", color: "#14b8a6", fontWeight: 800, letterSpacing: "0.05em" }}>
+                        <span style={{ fontSize: "0.85rem", color: "#81663F", fontWeight: 800, letterSpacing: "0.05em" }}>
                           {step.year}
                         </span>
                         {isCurrentEditing && (
-                          <span style={{ background: "#14b8a6", color: "#000", fontSize: "10px", fontWeight: 800, padding: "2px 6px", borderRadius: "4px" }}>
+                          <span style={{ background: "rgba(129,102,63,0.15)", color: "#81663F", fontSize: "10px", fontWeight: 800, padding: "2px 6px", borderRadius: "4px" }}>
                             CURRENTLY EDITING
                           </span>
                         )}
                       </div>
-                      <div style={{ fontSize: "1.15rem", fontWeight: 800, color: "#fff", margin: "2px 0 4px" }}>
+                      <div style={{ fontSize: "1.15rem", fontWeight: 800, color: "#1E1E1E", margin: "2px 0 4px" }}>
                         {step.title}
                       </div>
-                      <div style={{ fontSize: "0.9rem", color: "#aaa", lineHeight: 1.5 }}>
+                      <div style={{ fontSize: "0.9rem", color: "#555555", lineHeight: 1.5 }}>
                         {step.description}
                       </div>
                     </div>
@@ -540,9 +543,9 @@ export default function AdminAboutPage() {
                           width: "32px",
                           height: "32px",
                           borderRadius: "6px",
-                          border: "1px solid #333",
-                          background: "#141418",
-                          color: idx === 0 ? "#444" : "#fff",
+                          border: "1px solid #D5CEBF",
+                          background: "#FFFFFF",
+                          color: idx === 0 ? "#ccc" : "#1E1E1E",
                           cursor: idx === 0 ? "not-allowed" : "pointer",
                           display: "flex",
                           alignItems: "center",
@@ -560,9 +563,9 @@ export default function AdminAboutPage() {
                           width: "32px",
                           height: "32px",
                           borderRadius: "6px",
-                          border: "1px solid #333",
-                          background: "#141418",
-                          color: idx === roadmap.length - 1 ? "#444" : "#fff",
+                          border: "1px solid #D5CEBF",
+                          background: "#FFFFFF",
+                          color: idx === roadmap.length - 1 ? "#ccc" : "#1E1E1E",
                           cursor: idx === roadmap.length - 1 ? "not-allowed" : "pointer",
                           display: "flex",
                           alignItems: "center",
@@ -578,8 +581,8 @@ export default function AdminAboutPage() {
                           padding: "0.5rem 0.9rem",
                           borderRadius: "6px",
                           border: "none",
-                          background: "#1e293b",
-                          color: "#38bdf8",
+                          background: "#1E1E1E",
+                          color: "#FFFFFF",
                           fontWeight: 700,
                           fontSize: "0.8rem",
                           cursor: "pointer",
@@ -597,9 +600,9 @@ export default function AdminAboutPage() {
                         style={{
                           padding: "0.5rem 0.9rem",
                           borderRadius: "6px",
-                          border: "none",
-                          background: "rgba(239, 68, 68, 0.15)",
-                          color: "#f87171",
+                          border: "1px solid #FCA5A5",
+                          background: "#FEE2E2",
+                          color: "#DC2626",
                           fontWeight: 700,
                           fontSize: "0.8rem",
                           cursor: "pointer",
@@ -627,12 +630,12 @@ export default function AdminAboutPage() {
             position: "fixed",
             bottom: "24px",
             right: "24px",
-            background: "#14b8a6",
-            color: "#000",
+            background: "#1E1E1E",
+            color: "#FFFFFF",
             padding: "12px 20px",
             borderRadius: "8px",
             fontWeight: 800,
-            boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
             zIndex: 99999,
           }}
         >

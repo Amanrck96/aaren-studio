@@ -156,184 +156,185 @@ export default function AdminProjectsPage() {
   }
 
   return (
-    <div style={{ background: "#0a0a0c", color: "#f0f0f2", minHeight: "100vh" }}>
+    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh" }}>
       <AdminNav />
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem" }}>
-      {/* Navigation Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #222", paddingBottom: "1.5rem" }}>
-        <div>
-          <div style={{ fontSize: "0.85rem", color: "#888", letterSpacing: "0.1em", textTransform: "uppercase" }}>AAREN STUDIO ADMIN</div>
-          <h1 style={{ fontSize: "2.4rem", fontWeight: 700, margin: "0.2rem 0" }}>Project Builder & PDF Generator</h1>
-          <p style={{ color: "#aaa", fontSize: "0.95rem" }}>Create architectural projects, select products, and export branded PDF catalogs.</p>
+      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
+        {/* Navigation Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", borderBottom: "1px solid #DCD5C6", paddingBottom: "1.5rem" }}>
+          <div>
+            <div style={{ fontSize: "0.85rem", color: "#81663F", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 800 }}>AAREN STUDIO ADMIN</div>
+            <h1 style={{ fontSize: "2.4rem", fontWeight: 900, color: "#1E1E1E", margin: "0.2rem 0" }}>Project Builder & PDF Generator</h1>
+            <p style={{ color: "#555555", fontSize: "0.95rem" }}>Create architectural projects, select products, and export branded PDF catalogs.</p>
+          </div>
+          <Link href="/admin/products" style={{ padding: "0.8rem 1.4rem", background: "#F4EFE6", color: "#1E1E1E", textDecoration: "none", borderRadius: "8px", fontSize: "0.9rem", fontWeight: 700, border: "1px solid #D5CEBF" }}>
+            ← Back to Products Upload
+          </Link>
         </div>
-        <Link href="/admin/products" style={{ padding: "0.8rem 1.4rem", background: "#222", color: "#fff", textDecoration: "none", borderRadius: "6px", fontSize: "0.9rem", fontWeight: 600 }}>
-          ← Back to Products Upload
-        </Link>
-      </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem" }}>
-        {/* LEFT COLUMN: Project Creation Form */}
-        <div style={{ background: "#141418", border: "1px solid #222", borderRadius: "12px", padding: "2rem" }}>
-          <h2 style={{ fontSize: "1.4rem", marginBottom: "1.5rem", borderBottom: "1px solid #222", paddingBottom: "0.8rem" }}>Create New Project</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem" }}>
+          {/* LEFT COLUMN: Project Creation Form */}
+          <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#81663F", marginBottom: "1.5rem", borderBottom: "1px solid #EAE4D8", paddingBottom: "0.8rem" }}>Create New Project</h2>
 
-          <form onSubmit={handleCreateProjectAndPDF} style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
-            <div>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#888", marginBottom: "0.4rem" }}>Project Title *</label>
-              <input
-                type="text"
-                required
-                placeholder="e.g. Prestige Golfshire Villa Living Room"
-                value={projectForm.title}
-                onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
-                style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px", fontSize: "0.95rem" }}
-              />
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <form onSubmit={handleCreateProjectAndPDF} style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#888", marginBottom: "0.4rem" }}>Client Name *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Project Title *</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Mr. Rajesh Kumar"
-                  value={projectForm.client}
-                  onChange={(e) => setProjectForm({ ...projectForm, client: e.target.value })}
-                  style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
+                  placeholder="e.g. Prestige Golfshire Villa Living Room"
+                  value={projectForm.title}
+                  onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontSize: "0.95rem" }}
                 />
               </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#888", marginBottom: "0.4rem" }}>Category *</label>
-                <select
-                  value={projectForm.category}
-                  onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })}
-                  style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-                >
-                  <option value="Residential Villa">Residential Villa</option>
-                  <option value="Luxury Penthouse">Luxury Penthouse</option>
-                  <option value="Commercial Office">Commercial Office</option>
-                  <option value="Hospitality & Retail">Hospitality & Retail</option>
-                </select>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Client Name *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Mr. Rajesh Kumar"
+                    value={projectForm.client}
+                    onChange={(e) => setProjectForm({ ...projectForm, client: e.target.value })}
+                    style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Category *</label>
+                  <select
+                    value={projectForm.category}
+                    onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })}
+                    style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
+                  >
+                    <option value="Residential Villa">Residential Villa</option>
+                    <option value="Luxury Penthouse">Luxury Penthouse</option>
+                    <option value="Commercial Office">Commercial Office</option>
+                    <option value="Hospitality & Retail">Hospitality & Retail</option>
+                  </select>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#888", marginBottom: "0.4rem" }}>Project Overview / Notes</label>
-              <textarea
-                rows={3}
-                placeholder="Key specifications, material requirements, and architectural theme..."
-                value={projectForm.description}
-                onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
-                style={{ width: "100%", padding: "0.8rem", background: "#0a0a0c", border: "1px solid #333", color: "#fff", borderRadius: "6px" }}
-              />
-            </div>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Project Overview / Notes</label>
+                <textarea
+                  rows={3}
+                  placeholder="Key specifications, material requirements, and architectural theme..."
+                  value={projectForm.description}
+                  onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
+                />
+              </div>
 
-            {/* Product Selection List */}
-            <div>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "#888", marginBottom: "0.5rem" }}>
-                Select Products for Project ({Object.keys(selectedProductMap).length} selected)
-              </label>
-              <div style={{ maxHeight: "280px", overflowY: "auto", border: "1px solid #222", borderRadius: "6px", background: "#0a0a0c" }}>
-                {products.map((p) => {
-                  const isSelected = !!selectedProductMap[p.id];
-                  return (
-                    <div
-                      key={p.id}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "0.75rem 1rem",
-                        borderBottom: "1px solid #1a1a20",
-                        background: isSelected ? "rgba(59, 130, 246, 0.1)" : "transparent",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", cursor: "pointer" }} onClick={() => toggleProductSelection(p.id)}>
-                        <input type="checkbox" checked={isSelected} readOnly />
-                        <div>
-                          <div style={{ fontWeight: 600, fontSize: "0.9rem", color: isSelected ? "#60a5fa" : "#fff" }}>{p.name}</div>
-                          <div style={{ fontSize: "0.78rem", color: "#777" }}>
-                            {p.brand} | {p.category} {p.finish ? `(${p.finish})` : ""}
+              {/* Product Selection List */}
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.5rem", fontWeight: 700 }}>
+                  Select Products for Project ({Object.keys(selectedProductMap).length} selected)
+                </label>
+                <div style={{ maxHeight: "280px", overflowY: "auto", border: "1px solid #D5CEBF", borderRadius: "8px", background: "#FAF8F5" }}>
+                  {products.map((p) => {
+                    const isSelected = !!selectedProductMap[p.id];
+                    return (
+                      <div
+                        key={p.id}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "0.75rem 1rem",
+                          borderBottom: "1px solid #EAE4D8",
+                          background: isSelected ? "rgba(129, 102, 63, 0.12)" : "transparent",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", cursor: "pointer" }} onClick={() => toggleProductSelection(p.id)}>
+                          <input type="checkbox" checked={isSelected} readOnly />
+                          <div>
+                            <div style={{ fontWeight: 700, fontSize: "0.9rem", color: isSelected ? "#81663F" : "#1E1E1E" }}>{p.name}</div>
+                            <div style={{ fontSize: "0.78rem", color: "#6A6359" }}>
+                              {p.brand} | {p.category} {p.finish ? `(${p.finish})` : ""}
+                            </div>
                           </div>
                         </div>
+
+                        {isSelected && (
+                          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                            <span style={{ fontSize: "0.75rem", color: "#1E1E1E", fontWeight: 600 }}>Qty:</span>
+                            <input
+                              type="number"
+                              min={1}
+                              value={selectedProductMap[p.id].quantity}
+                              onChange={(e) => updateQuantity(p.id, parseInt(e.target.value, 10) || 1)}
+                              style={{ width: "50px", padding: "0.3rem", background: "#FFFFFF", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "6px", textAlign: "center" }}
+                            />
+                          </div>
+                        )}
                       </div>
-
-                      {isSelected && (
-                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                          <span style={{ fontSize: "0.75rem", color: "#aaa" }}>Qty:</span>
-                          <input
-                            type="number"
-                            min={1}
-                            value={selectedProductMap[p.id].quantity}
-                            onChange={(e) => updateQuantity(p.id, parseInt(e.target.value, 10) || 1)}
-                            style={{ width: "50px", padding: "0.3rem", background: "#1a1a20", border: "1px solid #333", color: "#fff", borderRadius: "4px", textAlign: "center" }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
-            <button
-              type="submit"
-              disabled={submitting}
-              style={{
-                marginTop: "1rem",
-                padding: "1rem",
-                background: "linear-gradient(135deg, #22c55e 0%, #15803d 100%)",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                fontWeight: 700,
-                fontSize: "1rem",
-                cursor: submitting ? "wait" : "pointer",
-              }}
-            >
-              {submitting ? "Generating PDF & Saving..." : "✨ Create Project & Download PDF"}
-            </button>
+              <button
+                type="submit"
+                disabled={submitting}
+                style={{
+                  marginTop: "1rem",
+                  padding: "1rem",
+                  background: "#1E1E1E",
+                  color: "#FFFFFF",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontWeight: 800,
+                  fontSize: "1rem",
+                  cursor: submitting ? "wait" : "pointer",
+                  boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
+                }}
+              >
+                {submitting ? "Generating PDF & Saving..." : "✨ Create Project & Download PDF"}
+              </button>
 
-            {message && (
-              <div style={{ padding: "0.8rem", borderRadius: "6px", background: message.startsWith("Error") ? "rgba(239, 68, 68, 0.2)" : "rgba(34, 197, 94, 0.2)", color: message.startsWith("Error") ? "#f87171" : "#4ade80", fontSize: "0.9rem" }}>
-                {message}
+              {message && (
+                <div style={{ padding: "0.8rem", borderRadius: "8px", background: message.startsWith("Failed") || message.startsWith("Error") ? "#FEE2E2" : "#D1FAE5", color: message.startsWith("Failed") || message.startsWith("Error") ? "#B91C1C" : "#065F46", fontSize: "0.9rem", fontWeight: 700, border: "1px solid #DCD5C6" }}>
+                  {message}
+                </div>
+              )}
+            </form>
+          </div>
+
+          {/* RIGHT COLUMN: Existing Projects List & PDF Downloads */}
+          <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#81663F", marginBottom: "1.5rem", borderBottom: "1px solid #EAE4D8", paddingBottom: "0.8rem" }}>Existing Projects & PDF Downloads</h2>
+
+            {loading ? (
+              <div style={{ color: "#6A6359", textAlign: "center", padding: "2rem" }}>Loading projects...</div>
+            ) : projects.length === 0 ? (
+              <div style={{ color: "#6A6359", textAlign: "center", padding: "2rem" }}>No projects created yet. Create one above to test PDF generation.</div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                {projects.map((proj) => (
+                  <div key={proj.id} style={{ background: "#FAF8F5", border: "1px solid #E2DCD2", borderRadius: "12px", padding: "1.4rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <div style={{ fontWeight: 800, fontSize: "1.1rem", color: "#1E1E1E" }}>{proj.title}</div>
+                      <div style={{ fontSize: "0.88rem", color: "#555555", marginTop: "0.3rem" }}>
+                        Client: <strong style={{ color: "#81663F" }}>{proj.client}</strong> | Category: <span style={{ color: "#1E1E1E" }}>{proj.category}</span> | Products: {proj.selectedProducts?.length || 0}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => downloadExistingProjectPDF(proj)}
+                      style={{ padding: "0.6rem 1.2rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.4rem", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
+                    >
+                      📄 Export PDF
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
-          </form>
+          </div>
         </div>
-
-        {/* RIGHT COLUMN: Existing Projects List & PDF Downloads */}
-        <div style={{ background: "linear-gradient(145deg, #1e2235 0%, #12141f 100%)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: "14px", padding: "2rem", boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
-          <h2 style={{ fontSize: "1.4rem", fontWeight: 900, color: "#d4af37", marginBottom: "1.5rem", borderBottom: "1px solid rgba(212,175,55,0.2)", paddingBottom: "0.8rem" }}>Existing Projects & PDF Downloads</h2>
-
-          {loading ? (
-            <div style={{ color: "#94a3b8", textAlign: "center", padding: "2rem" }}>Loading projects...</div>
-          ) : projects.length === 0 ? (
-            <div style={{ color: "#94a3b8", textAlign: "center", padding: "2rem" }}>No projects created yet. Create one above to test PDF generation.</div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              {projects.map((proj) => (
-                <div key={proj.id} style={{ background: "#0b0c10", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", padding: "1.4rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div>
-                    <div style={{ fontWeight: 900, fontSize: "1.2rem", color: "#ffffff" }}>{proj.title}</div>
-                    <div style={{ fontSize: "0.88rem", color: "#cbd5e1", marginTop: "0.3rem" }}>
-                      Client: <strong style={{ color: "#d4af37" }}>{proj.client}</strong> | Category: <span style={{ color: "#60a5fa" }}>{proj.category}</span> | Products: {proj.selectedProducts?.length || 0}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => downloadExistingProjectPDF(proj)}
-                    style={{ padding: "0.6rem 1.2rem", background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)", color: "#000", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 900, display: "flex", alignItems: "center", gap: "0.4rem" }}
-                  >
-                    📄 Export PDF
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </main>
-  </div>
-);
+      </main>
+    </div>
+  );
 }
 

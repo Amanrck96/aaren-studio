@@ -36,28 +36,28 @@ export default function AdminConsolePage() {
   };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#08111F" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#FAF8F5" }}>
       <AdminNav />
 
-      <main className="admin-main-content aaren-os-root" style={{ flex: 1, padding: "2.5rem 3rem", background: "#08111F" }}>
+      <main className="admin-main-content aaren-os-root" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
       <style jsx global>{`
         :root {
-          --navy: #08111F;
-          --navy-2: #0D1929;
-          --surface: #101C30;
-          --surface-2: #152238;
-          --border: rgba(255, 255, 255, 0.08);
-          --border-strong: rgba(255, 255, 255, 0.14);
-          --white: #F8FAFC;
-          --slate: #93A2B8;
-          --slate-dim: #5E6E85;
-          --purple: #7C3AED;
-          --purple-soft: rgba(124, 58, 237, 0.14);
-          --blue: #2563EB;
-          --radius-lg: 20px;
-          --radius-md: 16px;
-          --radius-sm: 10px;
-          --shadow-glass: 0 8px 40px rgba(0, 0, 0, 0.45);
+          --navy: #FAF8F5;
+          --navy-2: #F4EFE6;
+          --surface: #FFFFFF;
+          --surface-2: #FAF8F5;
+          --border: #E2DCD2;
+          --border-strong: #D5CEBF;
+          --white: #1E1E1E;
+          --slate: #555555;
+          --slate-dim: #777777;
+          --purple: #81663F;
+          --purple-soft: rgba(129, 102, 63, 0.12);
+          --blue: #1E1E1E;
+          --radius-lg: 16px;
+          --radius-md: 14px;
+          --radius-sm: 8px;
+          --shadow-glass: 0 4px 20px rgba(0, 0, 0, 0.04);
         }
 
         .aaren-os-root {
@@ -65,14 +65,12 @@ export default function AdminConsolePage() {
           color: var(--white);
           font-family: 'Inter', sans-serif;
           min-height: 100vh;
-          padding-top: 90px;
-          padding-bottom: 60px;
         }
 
         .container {
           max-width: 1320px;
           margin: 0 auto;
-          padding: 0 24px;
+          padding: 0;
         }
 
         .os-header {
@@ -82,11 +80,13 @@ export default function AdminConsolePage() {
           margin-bottom: 32px;
           padding-bottom: 24px;
           border-bottom: 1px solid var(--border);
+          flex-wrap: wrap;
+          gap: 16px;
         }
 
         .os-title-group h1 {
           font-size: 32px;
-          font-weight: 800;
+          font-weight: 900;
           letter-spacing: -0.02em;
           color: var(--white);
           margin: 0 0 6px;
@@ -113,16 +113,16 @@ export default function AdminConsolePage() {
           color: var(--slate);
           padding: 8px 18px;
           font-size: 13px;
-          font-weight: 600;
+          font-weight: 700;
           border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s;
         }
 
         .tab-btn.active {
-          background: var(--purple);
+          background: #81663F;
           color: #fff;
-          box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+          box-shadow: 0 4px 12px rgba(129, 102, 63, 0.2);
         }
 
         .stats-grid {
@@ -141,11 +141,12 @@ export default function AdminConsolePage() {
           border: 1px solid var(--border);
           border-radius: var(--radius-md);
           padding: 20px;
+          box-shadow: var(--shadow-glass);
         }
 
         .stat-card .label {
           font-size: 12px;
-          font-weight: 600;
+          font-weight: 800;
           color: var(--slate);
           text-transform: uppercase;
           letter-spacing: 0.05em;
@@ -157,13 +158,14 @@ export default function AdminConsolePage() {
 
         .stat-card .val {
           font-size: 28px;
-          font-weight: 800;
+          font-weight: 900;
           color: var(--white);
         }
 
         .stat-card .sub {
           font-size: 12px;
-          color: #10B981;
+          font-weight: 700;
+          color: #15803D;
           margin-top: 6px;
           display: flex;
           align-items: center;
@@ -176,6 +178,7 @@ export default function AdminConsolePage() {
           border-radius: var(--radius-md);
           padding: 24px;
           margin-bottom: 24px;
+          box-shadow: var(--shadow-glass);
         }
 
         .panel-header {
@@ -189,7 +192,7 @@ export default function AdminConsolePage() {
 
         .panel-title {
           font-size: 16px;
-          font-weight: 700;
+          font-weight: 800;
           color: var(--white);
           margin: 0;
           display: flex;
@@ -209,7 +212,7 @@ export default function AdminConsolePage() {
 
         .flag-info h5 {
           font-size: 14px;
-          font-weight: 700;
+          font-weight: 800;
           color: var(--white);
           margin: 0 0 4px;
         }
@@ -224,12 +227,12 @@ export default function AdminConsolePage() {
           background: transparent;
           border: none;
           cursor: pointer;
-          color: var(--slate-dim);
+          color: #D5CEBF;
           transition: color 0.2s;
         }
 
         .toggle-btn.active {
-          color: var(--purple);
+          color: #81663F;
         }
       `}</style>
 

@@ -59,15 +59,15 @@ export default function AdminNav() {
             top: "16px",
             left: "16px",
             zIndex: 9999,
-            background: "linear-gradient(135deg, #d4af37 0%, #aa820a 100%)",
-            color: "#000000",
+            background: "linear-gradient(135deg, #81663F 0%, #684F2E 100%)",
+            color: "#ffffff",
             border: "none",
             borderRadius: "10px",
             padding: "0.8rem 1.4rem",
-            fontWeight: 900,
+            fontWeight: 800,
             fontSize: "1.05rem",
             cursor: "pointer",
-            boxShadow: "0 6px 20px rgba(212, 175, 55, 0.4)",
+            boxShadow: "0 6px 20px rgba(129, 102, 63, 0.35)",
             display: "flex",
             alignItems: "center",
             gap: "0.6rem",
@@ -78,7 +78,7 @@ export default function AdminNav() {
         </button>
       )}
 
-      {/* Sidebar Container — Luxury Midnight Background */}
+      {/* Sidebar Container — Main Website Warm Sand / Linen Background */}
       <aside
         style={{
           width: "300px",
@@ -86,13 +86,13 @@ export default function AdminNav() {
           position: "fixed",
           top: 0,
           left: 0,
-          background: "#0d111d",
-          borderRight: "1px solid #1e293b",
+          background: "#FAF8F5",
+          borderRight: "1px solid #DCD5C6",
           display: "flex",
           flexDirection: "column",
           padding: "1.2rem 1rem",
           zIndex: 1000,
-          boxShadow: "4px 0 30px rgba(0,0,0,0.5)",
+          boxShadow: "4px 0 25px rgba(0,0,0,0.06)",
           transform: isOpen ? "translateX(0)" : "translateX(-300px)",
           transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         }}
@@ -100,16 +100,16 @@ export default function AdminNav() {
         {/* Brand Header */}
         <div style={{ flexShrink: 0, marginBottom: "1rem", padding: "0 0.4rem" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: "1.35rem", fontWeight: 900, color: "#d4af37", letterSpacing: "0.12em" }}>
+            <span style={{ fontSize: "1.35rem", fontWeight: 900, color: "#81663F", letterSpacing: "0.12em" }}>
               AAREN CMS
             </span>
             <button
               onClick={toggleSidebar}
               title="Hide Sidebar Menu"
               style={{
-                background: "#1e293b",
-                color: "#e2e8f0",
-                border: "1px solid #334155",
+                background: "#EAE4D8",
+                color: "#1E1E1E",
+                border: "1px solid #D5CEBF",
                 borderRadius: "8px",
                 padding: "0.3rem 0.7rem",
                 cursor: "pointer",
@@ -120,7 +120,7 @@ export default function AdminNav() {
               ✕ Hide
             </button>
           </div>
-          <div style={{ color: "#94a3b8", fontSize: "0.85rem", marginTop: "0.2rem", fontWeight: 600 }}>Luxury Control Center</div>
+          <div style={{ color: "#6A6359", fontSize: "0.85rem", marginTop: "0.2rem", fontWeight: 600 }}>Luxury Control Center</div>
         </div>
 
         {/* Scrollable Nav List filling entire height */}
@@ -134,7 +134,7 @@ export default function AdminNav() {
             overflowY: "auto",
             paddingRight: "0.4rem",
             scrollbarWidth: "thin",
-            scrollbarColor: "#d4af37 #1e293b",
+            scrollbarColor: "#81663F #EAE4D8",
           }}
         >
           {navItems.map((item) => {
@@ -151,9 +151,9 @@ export default function AdminNav() {
                   fontSize: "0.95rem",
                   fontWeight: isActive ? 800 : 600,
                   textDecoration: "none",
-                  color: isActive ? "#ffffff" : "#cbd5e1",
-                  background: isActive ? "linear-gradient(90deg, rgba(212, 175, 55, 0.22) 0%, rgba(212, 175, 55, 0.05) 100%)" : "transparent",
-                  borderLeft: isActive ? "4px solid #d4af37" : "4px solid transparent",
+                  color: isActive ? "#81663F" : "#3D3730",
+                  background: isActive ? "linear-gradient(90deg, rgba(129, 102, 63, 0.15) 0%, rgba(129, 102, 63, 0.04) 100%)" : "transparent",
+                  borderLeft: isActive ? "4px solid #81663F" : "4px solid transparent",
                   transition: "all 0.15s ease-in-out",
                 }}
               >
@@ -164,15 +164,15 @@ export default function AdminNav() {
         </nav>
 
         {/* Footer / User Controls */}
-        <div style={{ flexShrink: 0, borderTop: "1px solid #1e293b", paddingTop: "0.8rem", marginTop: "0.8rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+        <div style={{ flexShrink: 0, borderTop: "1px solid #DCD5C6", paddingTop: "0.8rem", marginTop: "0.8rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
           <Link
             href="/"
             target="_blank"
             style={{
               fontSize: "0.95rem",
-              color: "#d4af37",
+              color: "#81663F",
               textDecoration: "none",
-              fontWeight: 700,
+              fontWeight: 800,
               display: "flex",
               alignItems: "center",
               gap: "0.4rem",
@@ -191,9 +191,9 @@ export default function AdminNav() {
             style={{
               width: "100%",
               padding: "0.65rem",
-              background: "rgba(239, 68, 68, 0.15)",
-              color: "#f87171",
-              border: "1px solid rgba(239, 68, 68, 0.3)",
+              background: "#FEE2E2",
+              color: "#DC2626",
+              border: "1px solid #FCA5A5",
               borderRadius: "8px",
               cursor: "pointer",
               fontSize: "0.95rem",
@@ -206,17 +206,17 @@ export default function AdminNav() {
         </div>
       </aside>
 
-      {/* Scoped CSS for Midnight Admin Sidebar */}
+      {/* Scoped CSS for Admin Sidebar */}
       <style jsx>{`
         .admin-sidebar-nav::-webkit-scrollbar {
           width: 6px;
         }
         .admin-sidebar-nav::-webkit-scrollbar-track {
-          background: #1e293b;
+          background: #EAE4D8;
           border-radius: 4px;
         }
         .admin-sidebar-nav::-webkit-scrollbar-thumb {
-          background: #d4af37;
+          background: #81663F;
           border-radius: 4px;
         }
         :global(main.admin-main-content) {
@@ -224,8 +224,8 @@ export default function AdminNav() {
           transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
           min-height: 100vh;
           box-sizing: border-box;
-          background-color: #0b0f19 !important;
-          color: #f8fafc !important;
+          background-color: #FAF8F5 !important;
+          color: #1E1E1E !important;
         }
       `}</style>
     </>
