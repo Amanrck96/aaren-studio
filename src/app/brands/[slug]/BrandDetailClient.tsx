@@ -6,6 +6,7 @@ import { useState, useEffect, useMemo } from "react";
 import { getBrandById } from "@/lib/brands";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
 import { getPdfThumbnail } from "@/utils/pdfThumbnail";
+import { applyTextCase } from "@/lib/textCase";
 
 const LOGO_MAP: Record<string, string> = {
   "slashform": "/brands/logos/slashform_logo.png",
@@ -52,12 +53,22 @@ export default function BrandDetailClient({
   const [brandFaqs] = useState<any[]>(initialFaqs || []);
   const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [textCase, setTextCase] = useState<"proper" | "uppercase" | "lowercase">("proper");
   const pageSize = 20;
 
   const brandNameForQuery = apiBrand?.name || staticBrand?.name || slug.replace(/[-_]/g, " ");
 
   useEffect(() => {
     setMounted(true);
+
+    fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" })
+      .then((r) => r.json())
+      .then((j) => {
+        if (j?.success && j?.data?.textCase) {
+          setTextCase(j.data.textCase);
+        }
+      })
+      .catch(() => {});
 
     // Only fallback-fetch if server did not provide initial data
     if (!initialBrand) {
@@ -329,11 +340,11 @@ export default function BrandDetailClient({
             )}
           </div>
 
-          <h1 className="bd-hero__title">{activeBrand.name}</h1>
+          <h1 className="bd-hero__title">{applyTextCase(activeBrand.name, textCase, "title")}</h1>
 
           <div className="bd-hero__tags">
-            {activeBrand.category && <span className="bd-hero__tag">{activeBrand.category}</span>}
-            {activeBrand.origin && <span className="bd-hero__tag">{activeBrand.origin}</span>}
+            {activeBrand.category && <span className="bd-hero__tag">{applyTextCase(activeBrand.category, textCase, "title")}</span>}
+            {activeBrand.origin && <span className="bd-hero__tag">{applyTextCase(activeBrand.origin, textCase, "title")}</span>}
             {activeBrand.founded && <span className="bd-hero__tag">Est. {activeBrand.founded}</span>}
           </div>
         </div>
@@ -343,7 +354,7 @@ export default function BrandDetailClient({
       <div className="bd-info-bar">
         <div className="bd-info-bar__left">
           {activeBrand.tagline ? (
-            <p className="bd-info-bar__tagline">&ldquo;{activeBrand.tagline}&rdquo;</p>
+            <p className="bd-info-bar__tagline">&ldquo;{applyTextCase(activeBrand.tagline, textCase, "sentence")}&rdquo;</p>
           ) : (
             <p className="bd-info-bar__tagline" style={{ opacity: 0.5, fontStyle: "normal" }}>Architectural Partner Brand</p>
           )}
@@ -352,13 +363,13 @@ export default function BrandDetailClient({
           {activeBrand.category && (
             <div className="bd-info-stat">
               <span className="bd-info-stat__label">Category</span>
-              <span className="bd-info-stat__value">{activeBrand.category}</span>
+              <span className="bd-info-stat__value">{applyTextCase(activeBrand.category, textCase, "title")}</span>
             </div>
           )}
           {activeBrand.origin && (
             <div className="bd-info-stat">
               <span className="bd-info-stat__label">Origin</span>
-              <span className="bd-info-stat__value">{activeBrand.origin}</span>
+              <span className="bd-info-stat__value">{applyTextCase(activeBrand.origin, textCase, "title")}</span>
             </div>
           )}
           {activeBrand.founded && (
@@ -381,7 +392,7 @@ export default function BrandDetailClient({
             <div className="bd-description__label t-tag" style={{ color: "rgba(0,0,0,0.35)" }}>
               About the brand
             </div>
-            <p className="bd-description__text">{activeBrand.description}</p>
+            <p className="bd-description__text">{applyTextCase(activeBrand.description, textCase, "sentence")}</p>
           </div>
           <div className="bd-description__accent-line" style={{ background: accent }} />
         </div>
@@ -931,7 +942,6 @@ export default function BrandDetailClient({
           font-weight: 700;
           letter-spacing: -0.05em;
           line-height: 0.88;
-          text-transform: uppercase;
           color: #fff;
           margin-bottom: 2.4rem;
         }

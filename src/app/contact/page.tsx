@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { DEFAULT_SETTINGS, SiteSettingsItem } from "@/lib/types";
+import { applyTextCase } from "@/lib/textCase";
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
@@ -139,7 +140,7 @@ export default function Contact() {
 
         {/* Right Side: Form */}
         <div className="contact-form-wrapper">
-          <h2 className="form-title">PROJECT DEBRIEF</h2>
+          <h2 className="form-title">{applyTextCase("Project Debrief", settings.textCase, "title")}</h2>
           
           {sent ? (
             <div className="success-message">
@@ -396,7 +397,6 @@ export default function Contact() {
           font-size: clamp(2.4rem, 4vw, 3.6rem);
           font-weight: 700;
           letter-spacing: -0.03em;
-          text-transform: uppercase;
           color: #81663F !important;
         }
 
@@ -413,9 +413,8 @@ export default function Contact() {
         }
 
         .form-label {
-          font-size: 1.1rem;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
+          font-size: 1.2rem;
+          letter-spacing: 0.02em;
           font-weight: 700;
           color: #5E5852;
         }

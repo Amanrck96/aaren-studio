@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { SiteSettingsItem, DEFAULT_SETTINGS } from "@/lib/types";
+import { applyTextCase } from "@/lib/textCase";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -921,7 +922,9 @@ export default function Home() {
           </div>
 
           {/* Centered Title */}
-          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Browse by Category</span>
+          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "0.12em", color: "#81663F", textAlign: "center" }}>
+            {applyTextCase("Browse by Category", siteSettings?.textCase, "title")}
+          </span>
 
           {/* Right link */}
           <Link href="/products" id="cat-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.35rem", fontWeight: 700 }}>View all</Link>
@@ -1015,8 +1018,12 @@ export default function Home() {
                   {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", transition: "background 0.25s ease" }} className="home-ticket-caption">
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
-                      <span style={{ fontSize: "clamp(1.4rem, 1.8vw, 2.2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>{cat.name}</span>
-                      <span style={{ fontSize: "1.15rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>{cat.sub}</span>
+                      <span style={{ fontSize: "clamp(1.4rem, 1.8vw, 2.2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>
+                        {applyTextCase(cat.name, siteSettings?.textCase, "title")}
+                      </span>
+                      <span style={{ fontSize: "1.15rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>
+                        {applyTextCase(cat.sub, siteSettings?.textCase, "sentence")}
+                      </span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
                       <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{cat.code}</span>
@@ -1087,7 +1094,9 @@ export default function Home() {
           </div>
 
           {/* Centered Title */}
-          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Browse by Brands</span>
+          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "0.12em", color: "#81663F", textAlign: "center" }}>
+            {applyTextCase("Browse by Brands", siteSettings?.textCase, "title")}
+          </span>
 
           {/* Right link */}
           <Link href="/brands" id="brand-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.35rem", fontWeight: 700 }}>View all</Link>
@@ -1176,8 +1185,12 @@ export default function Home() {
                 {/* Caption Bar: Brand Name (Left), Short Code & Number side-by-side (Right) */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", transition: "background 0.25s ease" }} className="home-ticket-caption">
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
-                    <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, textTransform: "uppercase", color: "#81663F" }}>{brand.name}</span>
-                    <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.2 }}>{brand.sub}</span>
+                    <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>
+                      {applyTextCase(brand.name, siteSettings?.textCase, "title")}
+                    </span>
+                    <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>
+                      {applyTextCase(brand.sub, siteSettings?.textCase, "sentence")}
+                    </span>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
                     <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{brand.code}</span>
@@ -1231,7 +1244,9 @@ export default function Home() {
         {/* Centered Header bar */}
         <div className="cat-header-bar" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "6.8rem", padding: "3.6rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
           {/* Centered Title */}
-          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#81663F", textAlign: "center" }}>Selected Projects</span>
+          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "0.12em", color: "#81663F", textAlign: "center" }}>
+            {applyTextCase("Selected Projects", siteSettings?.textCase, "title")}
+          </span>
 
           {/* Right link */}
           <Link href="/work" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.35rem", fontWeight: 700 }}>View all</Link>
@@ -1260,8 +1275,12 @@ export default function Home() {
               </div>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.8rem", padding: "1.2rem 0.8rem", background: "#E6E2D8", transition: "background 0.25s ease" }} className="home-ticket-caption">
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                  <span style={{ fontSize: "clamp(1.1rem, 1.2vw, 1.4rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, color: "#81663F" }}>{project.client}</span>
-                  <span style={{ fontSize: "1.05rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>{project.sub}</span>
+                  <span style={{ fontSize: "clamp(1.1rem, 1.2vw, 1.4rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, color: "#81663F" }}>
+                    {applyTextCase(project.client, siteSettings?.textCase, "title")}
+                  </span>
+                  <span style={{ fontSize: "1.05rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>
+                    {applyTextCase(project.sub, siteSettings?.textCase, "sentence")}
+                  </span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flexShrink: 0 }}>
                   <span style={{ fontSize: "clamp(1.4rem, 2.2vw, 2.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{project.code}</span>
@@ -1303,8 +1322,7 @@ export default function Home() {
               marginBottom: "6rem",
             }}
           >
-            Keep up with the latest, for all things AAREN.
-            Drop your email below, and let&apos;s stay connected.
+            {applyTextCase("Keep up with the latest, for all things AAREN. Drop your email below, and let's stay connected.", siteSettings?.textCase, "sentence")}
           </p>
 
           {/* Email form with blinking cursor */}

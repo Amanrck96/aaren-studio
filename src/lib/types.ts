@@ -21,6 +21,7 @@ export type SiteSettingsItem = {
   aboutMission?: string;
   aboutVision?: string;
   aboutValues?: string;
+  textCase?: "proper" | "uppercase" | "lowercase";
 };
 
 export type CategoryItem = {
@@ -318,6 +319,7 @@ export const DEFAULT_SETTINGS: SiteSettingsItem = {
   headingColor: "#81663F",
   textColor: "#1E1E1E",
   accentColor: "#81663F",
+  textCase: "proper",
   footerLinks: ["All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"],
   socialLinks: [
     "https://www.instagram.com/aaren_intpro",

@@ -52,6 +52,7 @@ export default function AdminDashboardPage() {
   const [headingColor, setHeadingColor] = useState("#81663F");
   const [textColor, setTextColor] = useState("#1E1E1E");
   const [accentColor, setAccentColor] = useState("#81663F");
+  const [textCase, setTextCase] = useState<"proper" | "uppercase" | "lowercase">("proper");
   const [savingColors, setSavingColors] = useState(false);
   const [colorToast, setColorToast] = useState<string | null>(null);
 
@@ -103,6 +104,7 @@ export default function AdminDashboardPage() {
           if (st.data.headingColor) setHeadingColor(st.data.headingColor);
           if (st.data.textColor) setTextColor(st.data.textColor);
           if (st.data.accentColor) setAccentColor(st.data.accentColor);
+          if (st.data.textCase) setTextCase(st.data.textCase);
         }
       })
       .catch((e) => console.error("Admin dashboard fetch error:", e));
@@ -169,11 +171,12 @@ export default function AdminDashboardPage() {
           headingColor,
           textColor,
           accentColor,
+          textCase,
         }),
       });
       const data = await res.json();
       if (data.success) {
-        setColorToast("✨ Website Branding Colors Saved Permanently!");
+        setColorToast("✨ Website Branding & Typography Settings Saved Permanently!");
         setTimeout(() => setColorToast(null), 4000);
       }
     } catch (e: any) {
@@ -462,6 +465,100 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
+          {/* Global Text Casing Setting Control (Issue #3) */}
+          <div style={{ marginTop: "1.5rem", background: "#f8fafc", padding: "1.2rem 1.4rem", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "0.8rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 800, textTransform: "uppercase", color: "#1E1E1E", letterSpacing: "0.04em" }}>
+                  📝 Global Display Text Casing (Display-Layer Only)
+                </label>
+                <p style={{ fontSize: "0.8rem", color: "#64748b", margin: "2px 0 0" }}>
+                  Controls how titles and descriptions render across public and admin pages without altering database content.
+                </p>
+              </div>
+              <span style={{ fontSize: "0.75rem", background: "#f1f5f9", padding: "4px 8px", borderRadius: "4px", color: "#475569", fontWeight: 600 }}>
+                Active Mode: <b style={{ color: "#81663F" }}>{textCase.toUpperCase()}</b>
+              </span>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1rem" }}>
+              <button
+                type="button"
+                onClick={() => setTextCase("proper")}
+                style={{
+                  padding: "1rem",
+                  borderRadius: "8px",
+                  border: textCase === "proper" ? "2px solid #81663F" : "1px solid #cbd5e1",
+                  background: textCase === "proper" ? "#fffcf7" : "#ffffff",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+                  <span style={{ fontWeight: 800, fontSize: "0.9rem", color: textCase === "proper" ? "#81663F" : "#1E1E1E" }}>
+                    ✨ Proper Case (Recommended)
+                  </span>
+                  {textCase === "proper" && <span style={{ color: "#81663F", fontSize: "0.8rem", fontWeight: 800 }}>✓ Active</span>}
+                </div>
+                <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.4 }}>
+                  • Card Title: <b>Bathroom Fittings</b><br />
+                  • Subtitle: <i>Falper and FIMA tapware and vanities</i>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setTextCase("uppercase")}
+                style={{
+                  padding: "1rem",
+                  borderRadius: "8px",
+                  border: textCase === "uppercase" ? "2px solid #81663F" : "1px solid #cbd5e1",
+                  background: textCase === "uppercase" ? "#fffcf7" : "#ffffff",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+                  <span style={{ fontWeight: 800, fontSize: "0.9rem", color: textCase === "uppercase" ? "#81663F" : "#1E1E1E" }}>
+                    🔠 ALL UPPERCASE
+                  </span>
+                  {textCase === "uppercase" && <span style={{ color: "#81663F", fontSize: "0.8rem", fontWeight: 800 }}>✓ Active</span>}
+                </div>
+                <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.4 }}>
+                  • Card Title: <b>BATHROOM FITTINGS</b><br />
+                  • Subtitle: <i>FALPER AND FIMA TAPWARE AND VANITIES</i>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setTextCase("lowercase")}
+                style={{
+                  padding: "1rem",
+                  borderRadius: "8px",
+                  border: textCase === "lowercase" ? "2px solid #81663F" : "1px solid #cbd5e1",
+                  background: textCase === "lowercase" ? "#fffcf7" : "#ffffff",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+                  <span style={{ fontWeight: 800, fontSize: "0.9rem", color: textCase === "lowercase" ? "#81663F" : "#1E1E1E" }}>
+                    🔡 all lowercase
+                  </span>
+                  {textCase === "lowercase" && <span style={{ color: "#81663F", fontSize: "0.8rem", fontWeight: 800 }}>✓ Active</span>}
+                </div>
+                <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.4 }}>
+                  • Card Title: <b>bathroom fittings</b><br />
+                  • Subtitle: <i>falper and fima tapware and vanities</i>
+                </div>
+              </button>
+            </div>
+          </div>
+
           {/* Live Preview Strip */}
           <div
             style={{
@@ -479,13 +576,33 @@ export default function AdminDashboardPage() {
           >
             <div>
               <span style={{ fontSize: "0.75rem", fontWeight: 800, color: accentColor, textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                LIVE PREVIEW
+                LIVE PREVIEW ({textCase.toUpperCase()} MODE)
               </span>
-              <h3 style={{ fontSize: "1.6rem", fontWeight: 900, color: headingColor, margin: "2px 0 4px" }}>
-                AAREN CREATIVE STUDIO & MATERIAL HOUSE
+              <h3 style={{
+                fontSize: "1.6rem",
+                fontWeight: 900,
+                color: headingColor,
+                margin: "2px 0 4px",
+                textTransform: textCase === "uppercase" ? "uppercase" : textCase === "lowercase" ? "lowercase" : "none"
+              }}>
+                {textCase === "uppercase"
+                  ? "AAREN CREATIVE STUDIO & MATERIAL HOUSE"
+                  : textCase === "lowercase"
+                  ? "aaren creative studio & material house"
+                  : "Aaren Creative Studio & Material House"}
               </h3>
-              <p style={{ color: textColor, fontSize: "0.9rem", margin: 0, maxWidth: "600px" }}>
-                Immersive spatial environments crafted with authentic European surfaces, natural wood cladding, and bespoke joinery.
+              <p style={{
+                color: textColor,
+                fontSize: "0.9rem",
+                margin: 0,
+                maxWidth: "600px",
+                textTransform: textCase === "uppercase" ? "uppercase" : textCase === "lowercase" ? "lowercase" : "none"
+              }}>
+                {textCase === "uppercase"
+                  ? "IMMERSIVE SPATIAL ENVIRONMENTS CRAFTED WITH AUTHENTIC EUROPEAN SURFACES, NATURAL WOOD CLADDING, AND BESPOKE JOINERY."
+                  : textCase === "lowercase"
+                  ? "immersive spatial environments crafted with authentic european surfaces, natural wood cladding, and bespoke joinery."
+                  : "Immersive spatial environments crafted with authentic European surfaces, natural wood cladding, and bespoke joinery."}
               </p>
             </div>
             <button
@@ -497,10 +614,10 @@ export default function AdminDashboardPage() {
                 borderRadius: "999px",
                 fontWeight: 700,
                 fontSize: "0.8rem",
-                textTransform: "uppercase",
+                textTransform: textCase === "uppercase" ? "uppercase" : textCase === "lowercase" ? "lowercase" : "none",
               }}
             >
-              Explore Materials →
+              {textCase === "uppercase" ? "EXPLORE MATERIALS →" : textCase === "lowercase" ? "explore materials →" : "Explore Materials →"}
             </button>
           </div>
         </div>

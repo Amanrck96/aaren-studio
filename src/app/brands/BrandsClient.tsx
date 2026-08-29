@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { applyTextCase } from "@/lib/textCase";
 
 const LOGO_MAP: Record<string, string> = {
   "slashform": "/brands/logos/slashform_logo.png",
@@ -41,6 +42,18 @@ interface BrandsClientProps {
 
 export default function BrandsClient({ initialBrands }: BrandsClientProps) {
   const [brandsList] = useState<MappedBrand[]>(initialBrands || []);
+  const [textCase, setTextCase] = useState<"proper" | "uppercase" | "lowercase">("proper");
+
+  useEffect(() => {
+    fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" })
+      .then((r) => r.json())
+      .then((j) => {
+        if (j?.success && j?.data?.textCase) {
+          setTextCase(j.data.textCase);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="brands-page">
@@ -50,7 +63,7 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
           <div className="brands-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
             EXCLUSIVE PARTNERS — {brandsList.length} BRANDS
           </div>
-          <h1 className="brands-header__title">BRANDS</h1>
+          <h1 className="brands-header__title">{applyTextCase("Brands", textCase, "title")}</h1>
           <p className="brands-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "56rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
             A curated selection of the world&apos;s finest material and design brands — each chosen for their craft, innovation, and alignment with the Aaren philosophy.
           </p>
@@ -105,8 +118,12 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
             {/* Bottom caption bar — luxury ticket style */}
             <div className="brand-card__caption">
               <div className="brand-card__caption-left">
-                <span className="brand-card__caption-name">{brand.name}</span>
-                <span className="brand-card__caption-cat">{brand.category}</span>
+                <span className="brand-card__caption-name">
+                  {applyTextCase(brand.name, textCase, "title")}
+                </span>
+                <span className="brand-card__caption-cat">
+                  {applyTextCase(brand.category, textCase, "sentence")}
+                </span>
               </div>
               <div className="brand-card__caption-right">
                 <span className="brand-card__caption-code">{brand.code}</span>
