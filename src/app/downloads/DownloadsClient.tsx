@@ -18,6 +18,7 @@ import {
   Eye,
   RefreshCw,
   FolderOpen,
+  Copy,
 } from "lucide-react";
 import { BrandDownloadFolder, DownloadPdfItem } from "@/lib/types";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
@@ -758,6 +759,8 @@ export default function DownloadsClient() {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
+                        flexWrap: "wrap",
+                        gap: "6px",
                       }}
                     >
                       <span
@@ -774,10 +777,33 @@ export default function DownloadsClient() {
                         {count} {count === 1 ? "PDF File" : "PDF Files"}
                       </span>
 
-                      <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "#81663F", display: "inline-flex", alignItems: "center", gap: "2px" }}>
-                        <span>Open Folder</span>
-                        <ChevronRight size={14} />
-                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <Link
+                          href={`/downloads/brands/${folder.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            fontSize: "0.78rem",
+                            fontWeight: 800,
+                            color: "#81663F",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "2px",
+                            textDecoration: "none",
+                            padding: "4px 8px",
+                            borderRadius: "4px",
+                            background: "#FAF8F5",
+                            border: "1px solid #E2DCD2",
+                          }}
+                        >
+                          <span>Direct Link</span>
+                          <ExternalLink size={11} />
+                        </Link>
+
+                        <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "#81663F", display: "inline-flex", alignItems: "center", gap: "2px" }}>
+                          <span>Open</span>
+                          <ChevronRight size={14} />
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );

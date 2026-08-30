@@ -20,12 +20,19 @@ const NO_CACHE_HEADERS = {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const brandId = searchParams.get("brandId");
+    const brandQuery = (searchParams.get("brandId") || searchParams.get("slug") || "").toLowerCase().trim();
 
     const folders = await getDownloadFoldersStore();
 
-    if (brandId) {
-      const folder = folders.find((f) => f.id === brandId || f.brandName.toLowerCase() === brandId.toLowerCase());
+    if (brandQuery) {
+      const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+      const folder = folders.find(
+        (f) =>
+          f.id.toLowerCase() === brandQuery ||
+          f.brandName.toLowerCase() === brandQuery ||
+          norm(f.id) === norm(brandQuery) ||
+          norm(f.brandName) === norm(brandQuery)
+      );
       if (!folder) {
         return NextResponse.json({ success: false, error: "Brand folder not found" }, { status: 404, headers: NO_CACHE_HEADERS });
       }

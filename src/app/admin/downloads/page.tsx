@@ -473,25 +473,96 @@ function AdminDownloadsContent() {
                     </div>
                   </div>
 
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                    <Link
+                      href={`/downloads/brands/${selectedFolder.id}`}
+                      target="_blank"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        padding: "0.65rem 1.2rem",
+                        background: "#FAF8F5",
+                        color: "#81663F",
+                        border: "1px solid #D5CEBF",
+                        borderRadius: "8px",
+                        textDecoration: "none",
+                        fontWeight: 800,
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      <span>View Live Brand Downloads</span>
+                      <ExternalLink size={13} />
+                    </Link>
+
+                    <button
+                      onClick={() => handleOpenAddModal(selectedFolder.id)}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        padding: "0.65rem 1.3rem",
+                        background: "#1E1E1E",
+                        color: "#FFFFFF",
+                        borderRadius: "8px",
+                        border: "none",
+                        fontWeight: 800,
+                        fontSize: "0.85rem",
+                        cursor: "pointer",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                      }}
+                    >
+                      <Plus size={14} />
+                      <span>Upload / Add PDF to {selectedFolder.brandName}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Direct Shareable Link Strip */}
+                <div
+                  style={{
+                    background: "#FAF8F5",
+                    borderRadius: "8px",
+                    border: "1px solid #E2DCD2",
+                    padding: "0.8rem 1.2rem",
+                    marginBottom: "1.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flexWrap: "wrap",
+                    gap: "0.8rem",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.85rem" }}>
+                    <span style={{ fontWeight: 800, color: "#81663F" }}>Direct Shareable Brand Link:</span>
+                    <code style={{ background: "#FFFFFF", padding: "3px 8px", borderRadius: "4px", border: "1px solid #D5CEBF", color: "#1E1E1E", fontWeight: 700 }}>
+                      /downloads/brands/{selectedFolder.id}
+                    </code>
+                  </div>
+
                   <button
-                    onClick={() => handleOpenAddModal(selectedFolder.id)}
+                    onClick={() => {
+                      const url = `${window.location.origin}/downloads/brands/${selectedFolder.id}`;
+                      navigator.clipboard.writeText(url);
+                      setToast(`✅ Copied: ${url}`);
+                      setTimeout(() => setToast(null), 3000);
+                    }}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
-                      gap: "6px",
-                      padding: "0.65rem 1.3rem",
-                      background: "#1E1E1E",
-                      color: "#FFFFFF",
-                      borderRadius: "8px",
-                      border: "none",
-                      fontWeight: 800,
-                      fontSize: "0.85rem",
+                      gap: "4px",
+                      background: "#FFFFFF",
+                      border: "1px solid #D5CEBF",
+                      borderRadius: "6px",
+                      padding: "5px 10px",
+                      fontSize: "0.78rem",
+                      fontWeight: 700,
+                      color: "#81663F",
                       cursor: "pointer",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                     }}
                   >
-                    <Plus size={14} />
-                    <span>Upload / Add PDF to {selectedFolder.brandName}</span>
+                    <Check size={12} />
+                    <span>Copy Share URL</span>
                   </button>
                 </div>
 
