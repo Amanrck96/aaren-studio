@@ -779,8 +779,9 @@ export default function DownloadsClient() {
 
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                         <Link
-                          href={`/downloads/brands/${folder.id}`}
+                          href={`/downloads/${encodeURIComponent(folder.brandName)}/${count}%20PDFs`}
                           onClick={(e) => e.stopPropagation()}
+                          title={`Direct Link: /downloads/${folder.brandName}/${count} PDFs`}
                           style={{
                             fontSize: "0.78rem",
                             fontWeight: 800,

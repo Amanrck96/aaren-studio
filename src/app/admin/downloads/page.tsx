@@ -533,37 +533,47 @@ function AdminDownloadsContent() {
                     gap: "0.8rem",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.85rem" }}>
-                    <span style={{ fontWeight: 800, color: "#81663F" }}>Direct Shareable Brand Link:</span>
-                    <code style={{ background: "#FFFFFF", padding: "3px 8px", borderRadius: "4px", border: "1px solid #D5CEBF", color: "#1E1E1E", fontWeight: 700 }}>
-                      /downloads/brands/{selectedFolder.id}
-                    </code>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.85rem", flexWrap: "wrap" }}>
+                      <span style={{ fontWeight: 800, color: "#81663F" }}>Full Link:</span>
+                      <code style={{ background: "#FFFFFF", padding: "3px 8px", borderRadius: "4px", border: "1px solid #D5CEBF", color: "#1E1E1E", fontWeight: 700 }}>
+                        /downloads/{selectedFolder.brandName}/{selectedFolder.files?.length || 0} PDFs
+                      </code>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.82rem", color: "#6A6359", flexWrap: "wrap" }}>
+                      <span>Short Link:</span>
+                      <code style={{ background: "#FFFFFF", padding: "2px 6px", borderRadius: "4px", border: "1px solid #D5CEBF", color: "#81663F" }}>
+                        /downloads/brands/{selectedFolder.id}
+                      </code>
+                    </div>
                   </div>
 
-                  <button
-                    onClick={() => {
-                      const url = `${window.location.origin}/downloads/brands/${selectedFolder.id}`;
-                      navigator.clipboard.writeText(url);
-                      setToast(`✅ Copied: ${url}`);
-                      setTimeout(() => setToast(null), 3000);
-                    }}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      background: "#FFFFFF",
-                      border: "1px solid #D5CEBF",
-                      borderRadius: "6px",
-                      padding: "5px 10px",
-                      fontSize: "0.78rem",
-                      fontWeight: 700,
-                      color: "#81663F",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Check size={12} />
-                    <span>Copy Share URL</span>
-                  </button>
+                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <button
+                      onClick={() => {
+                        const url = `${window.location.origin}/downloads/${encodeURIComponent(selectedFolder.brandName)}/${selectedFolder.files?.length || 0}%20PDFs`;
+                        navigator.clipboard.writeText(url);
+                        setToast(`✅ Copied Full Link: ${url}`);
+                        setTimeout(() => setToast(null), 3000);
+                      }}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        background: "#FFFFFF",
+                        border: "1px solid #D5CEBF",
+                        borderRadius: "6px",
+                        padding: "6px 12px",
+                        fontSize: "0.78rem",
+                        fontWeight: 800,
+                        color: "#81663F",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Check size={12} />
+                      <span>Copy Full Link</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* PDF Files List in this Folder */}

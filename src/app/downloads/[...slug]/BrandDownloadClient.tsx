@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Folder,
@@ -22,10 +22,39 @@ import { BrandDownloadFolder, DownloadPdfItem } from "@/lib/types";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
 
 interface Props {
-  slug: string;
+  slug: string | string[];
+}
+
+function parseSegments(rawSlug: string | string[]) {
+  const parts = (Array.isArray(rawSlug) ? rawSlug : [rawSlug])
+    .map((s) => {
+      try {
+        return decodeURIComponent(s).trim();
+      } catch {
+        return s.trim();
+      }
+    })
+    .filter(Boolean);
+
+  let brandQuery = "";
+  let subQuery = "";
+
+  if (parts.length === 0) {
+    brandQuery = "";
+  } else if (parts[0].toLowerCase() === "brands" && parts[1]) {
+    brandQuery = parts[1];
+    subQuery = parts.slice(2).join(" / ");
+  } else {
+    brandQuery = parts[0];
+    subQuery = parts.slice(1).join(" / ");
+  }
+
+  return { parts, brandQuery, subQuery };
 }
 
 export default function BrandDownloadClient({ slug }: Props) {
+  const { brandQuery, subQuery } = useMemo(() => parseSegments(slug), [slug]);
+
   const [folder, setFolder] = useState<BrandDownloadFolder | null>(null);
   const [allFolders, setAllFolders] = useState<BrandDownloadFolder[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,7 +66,7 @@ export default function BrandDownloadClient({ slug }: Props) {
     setLoading(true);
     try {
       const [resBrand, resAll] = await Promise.all([
-        fetch(`/api/downloads?slug=${encodeURIComponent(slug)}&t=${Date.now()}`, {
+        fetch(`/api/downloads?slug=${encodeURIComponent(brandQuery)}&t=${Date.now()}`, {
           cache: "no-store",
           headers: { "Cache-Control": "no-cache", "Pragma": "no-cache" },
         }),
@@ -63,9 +92,10 @@ export default function BrandDownloadClient({ slug }: Props) {
             const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
             const matched = jsonAll.data.find(
               (f: BrandDownloadFolder) =>
-                f.id.toLowerCase() === slug.toLowerCase() ||
-                norm(f.id) === norm(slug) ||
-                norm(f.brandName) === norm(slug)
+                f.id.toLowerCase() === brandQuery.toLowerCase() ||
+                f.brandName.toLowerCase() === brandQuery.toLowerCase() ||
+                norm(f.id) === norm(brandQuery) ||
+                norm(f.brandName) === norm(brandQuery)
             );
             if (matched) setFolder(matched);
           }
@@ -80,9 +110,11 @@ export default function BrandDownloadClient({ slug }: Props) {
 
   useEffect(() => {
     fetchData();
-  }, [slug]);
+  }, [brandQuery]);
 
-  const currentUrl = typeof window !== "undefined" ? window.location.href : `https://aarenstudio.vercel.app/downloads/brands/${slug}`;
+  const currentUrl = typeof window !== "undefined"
+    ? window.location.href
+    : `https://aarenstudio.vercel.app/downloads/${encodeURIComponent(folder?.brandName || brandQuery)}/${folder?.files?.length || 0}%20PDFs`;
 
   const handleCopyPageUrl = () => {
     navigator.clipboard.writeText(currentUrl);
@@ -211,7 +243,7 @@ export default function BrandDownloadClient({ slug }: Props) {
       >
         <div style={{ maxWidth: "1320px", margin: "0 auto" }}>
           {/* Breadcrumb Bar */}
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.85rem", fontWeight: 700, marginBottom: "1.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.85rem", fontWeight: 700, marginBottom: "1.5rem", flexWrap: "wrap" }}>
             <Link
               href="/downloads"
               style={{
@@ -227,8 +259,16 @@ export default function BrandDownloadClient({ slug }: Props) {
             </Link>
             <ChevronRight size={13} color="#A0988C" />
             <span style={{ color: "#1E1E1E", fontWeight: 800 }}>
-              {folder ? folder.brandName : slug.toUpperCase()}
+              {folder ? folder.brandName : brandQuery.toUpperCase()}
             </span>
+            {subQuery && (
+              <>
+                <ChevronRight size={13} color="#A0988C" />
+                <span style={{ color: "#81663F", fontWeight: 800, background: "rgba(129, 102, 63, 0.12)", padding: "2px 8px", borderRadius: "4px" }}>
+                  {subQuery}
+                </span>
+              </>
+            )}
           </div>
 
           {loading ? (
@@ -283,7 +323,7 @@ export default function BrandDownloadClient({ slug }: Props) {
 
               {/* Action Buttons & Shareable Link */}
               <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "flex-end" }}>
-                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
                   <button
                     onClick={handleCopyPageUrl}
                     style={{
@@ -327,14 +367,16 @@ export default function BrandDownloadClient({ slug }: Props) {
                   </Link>
                 </div>
 
-                <div style={{ fontSize: "0.75rem", color: "#8A8275", background: "#FFFFFF", padding: "4px 10px", borderRadius: "6px", border: "1px solid #E2DCD2" }}>
-                  Direct URL: <code style={{ color: "#81663F", fontWeight: 700 }}>/downloads/brands/{folder.id}</code>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                  <div style={{ fontSize: "0.75rem", color: "#8A8275", background: "#FFFFFF", padding: "4px 10px", borderRadius: "6px", border: "1px solid #E2DCD2" }}>
+                    URL: <code style={{ color: "#81663F", fontWeight: 700 }}>/downloads/{folder.brandName}/{folder.files?.length || 0} PDFs</code>
+                  </div>
                 </div>
               </div>
             </div>
           ) : (
             <div style={{ padding: "2rem 0", color: "#b91c1c" }}>
-              <h3>Brand folder "{slug}" was not found.</h3>
+              <h3>Brand folder "{brandQuery}" was not found.</h3>
               <Link href="/downloads" style={{ color: "#81663F", fontWeight: 700, textDecoration: "underline" }}>
                 ← View all 20 brand folders
               </Link>
@@ -567,7 +609,7 @@ export default function BrandDownloadClient({ slug }: Props) {
                   {otherFolders.map((of) => (
                     <Link
                       key={of.id}
-                      href={`/downloads/brands/${of.id}`}
+                      href={`/downloads/${encodeURIComponent(of.brandName)}/${of.files?.length || 0}%20PDFs`}
                       style={{
                         background: "#FFFFFF",
                         border: "1px solid #E2DCD2",
