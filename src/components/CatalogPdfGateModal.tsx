@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import OnScreenPdfViewer from "./OnScreenPdfViewer";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
+import { getLoggedInUser, logSilentPdfView } from "@/utils/authUser";
 
 type Props = {
   catalogPdfUrl: string;
@@ -42,7 +43,37 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
   const coverThumb = resolved.coverThumb || coverImage;
 
   useEffect(() => {
-    // ENQUIRY FORM ALWAYS APPEARS FIRST
+    // 1. Check if user is logged in
+    const authUser = getLoggedInUser();
+    if (authUser.isLoggedIn) {
+      // LOGGED IN USER: Skip form, silently capture lead with all user details, unlock viewer immediately
+      logSilentPdfView({
+        pdfName: itemTitle,
+        pdfUrl: finalPdfUrl,
+        productTitle: itemTitle,
+        user: authUser,
+      });
+      setUnlocked(true);
+    } else {
+      // LOGGED OUT USER: Check if saved session exists to pre-fill form
+      try {
+        const savedSession = localStorage.getItem("aaren_user_session");
+        if (savedSession) {
+          const p = JSON.parse(savedSession);
+          if (p.name || p.email) {
+            setFormData((prev) => ({
+              ...prev,
+              name: p.name || prev.name,
+              email: p.email || prev.email,
+              phone: p.phone || prev.phone,
+              profession: p.profession || prev.profession,
+            }));
+          }
+        }
+      } catch {}
+    }
+
+    // 2. Fetch custom modal title/badge settings
     fetch("/api/catalog-settings")
       .then((res) => res.json())
       .then((json) => {
@@ -57,7 +88,7 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
         }
       })
       .catch(() => {});
-  }, [itemTitle]);
+  }, [itemTitle, finalPdfUrl]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -81,8 +112,22 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
           type: "Catalog Enquiry",
           productOrBrand: itemTitle,
           subject: `Catalog Enquiry for ${itemTitle}`,
+          source: "form",
         }),
       });
+
+      // Save user session for seamless subsequent views
+      try {
+        localStorage.setItem(
+          "aaren_user_session",
+          JSON.stringify({
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim(),
+            profession: formData.profession,
+          })
+        );
+      } catch {}
 
       setUnlocked(true);
     } catch (e) {

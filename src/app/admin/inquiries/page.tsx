@@ -68,11 +68,28 @@ export default function AdminInquiriesPage() {
     window.open("/api/inquiries?format=csv", "_blank");
   }
 
-  const pdfLeadsCount = inquiries.filter((i) => i.type === "Catalog PDF Gate").length;
-  const contactLeadsCount = inquiries.filter((i) => i.type !== "Catalog PDF Gate").length;
+  const loggedInLeadsCount = inquiries.filter(
+    (i) => i.source === "auto-logged-in" || i.isLoggedIn || i.type?.includes("Logged In")
+  ).length;
+  const formCatalogLeadsCount = inquiries.filter(
+    (i) => i.type?.includes("Catalog") && i.source !== "auto-logged-in" && !i.isLoggedIn && !i.type?.includes("Logged In")
+  ).length;
+  const contactLeadsCount = inquiries.filter((i) => !i.type?.includes("Catalog")).length;
 
   const filteredInquiries = inquiries.filter((inq) => {
-    const matchesType = filterType === "All" || inq.type === filterType;
+    const isLoggedInLead = inq.source === "auto-logged-in" || inq.isLoggedIn || inq.type?.includes("Logged In");
+    let matchesType = true;
+
+    if (filterType === "Logged In") {
+      matchesType = isLoggedInLead;
+    } else if (filterType === "Catalog Enquiry") {
+      matchesType = inq.type?.includes("Catalog") && !isLoggedInLead;
+    } else if (filterType === "Contact Form") {
+      matchesType = inq.type === "Contact Form";
+    } else if (filterType !== "All") {
+      matchesType = inq.type === filterType;
+    }
+
     const matchesQuery =
       !searchQuery ||
       (inq.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -104,7 +121,7 @@ export default function AdminInquiriesPage() {
               </span>
             </div>
             <p style={{ color: "#555555", fontSize: "0.95rem", margin: "2px 0 0" }}>
-              Live exact data of visitors who submitted catalogue enquiries, quote requests, or contact forms. Real-time updated.
+              Live exact data of visitors who submitted catalogue enquiries or logged-in users who accessed architectural PDF specifications.
             </p>
           </div>
 
@@ -142,23 +159,27 @@ export default function AdminInquiriesPage() {
         </div>
 
         {/* Live Metrics Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.2rem", marginBottom: "2rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.2rem", marginBottom: "2rem" }}>
           <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", padding: "1.2rem 1.5rem", borderRadius: "14px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
-            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#6A6359", textTransform: "uppercase" }}>Total Leads Captured</div>
+            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#6A6359", textTransform: "uppercase" }}>Total Leads</div>
             <div style={{ fontSize: "2rem", fontWeight: 900, color: "#1E1E1E", marginTop: "0.2rem" }}>{inquiries.length}</div>
           </div>
-          <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", padding: "1.2rem 1.5rem", borderRadius: "14px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
-            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#81663F", textTransform: "uppercase" }}>📋 Catalogue Enquiries</div>
-            <div style={{ fontSize: "2rem", fontWeight: 900, color: "#81663F", marginTop: "0.2rem" }}>{pdfLeadsCount}</div>
+          <div style={{ background: "#FFFFFF", border: "1px solid #A7F3D0", padding: "1.2rem 1.5rem", borderRadius: "14px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#065f46", textTransform: "uppercase" }}>🟢 Logged-In User Views</div>
+            <div style={{ fontSize: "2rem", fontWeight: 900, color: "#059669", marginTop: "0.2rem" }}>{loggedInLeadsCount}</div>
           </div>
           <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", padding: "1.2rem 1.5rem", borderRadius: "14px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
-            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#2563eb", textTransform: "uppercase" }}>💬 Direct Contact Inquiries</div>
+            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#81663F", textTransform: "uppercase" }}>📋 Form Submissions</div>
+            <div style={{ fontSize: "2rem", fontWeight: 900, color: "#81663F", marginTop: "0.2rem" }}>{formCatalogLeadsCount}</div>
+          </div>
+          <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", padding: "1.2rem 1.5rem", borderRadius: "14px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#2563eb", textTransform: "uppercase" }}>💬 Direct Contact</div>
             <div style={{ fontSize: "2rem", fontWeight: 900, color: "#2563eb", marginTop: "0.2rem" }}>{contactLeadsCount}</div>
           </div>
         </div>
 
         {/* Filter & Search Bar */}
-        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", background: "#FFFFFF", border: "1px solid #E2DCD2", padding: "1.2rem", borderRadius: "14px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", background: "#FFFFFF", border: "1px solid #E2DCD2", padding: "1.2rem", borderRadius: "14px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", flexWrap: "wrap" }}>
           <input
             type="text"
             aria-label="Search inquiries"
@@ -166,7 +187,7 @@ export default function AdminInquiriesPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
-              flex: 1,
+              flex: "1 1 300px",
               padding: "0.75rem 1rem",
               background: "#FAF8F5",
               border: "1px solid #D5CEBF",
@@ -189,9 +210,10 @@ export default function AdminInquiriesPage() {
               fontWeight: 700,
             }}
           >
-            <option value="All">All Lead Sources</option>
-            <option value="Catalog Enquiry">📋 Catalogue Enquiries</option>
-            <option value="Contact Form">💬 Contact Form</option>
+            <option value="All">All Lead Sources ({inquiries.length})</option>
+            <option value="Logged In">🟢 👤 Logged In User Views ({loggedInLeadsCount})</option>
+            <option value="Catalog Enquiry">📋 Form Catalogue Enquiries ({formCatalogLeadsCount})</option>
+            <option value="Contact Form">💬 Direct Contact Form ({contactLeadsCount})</option>
             <option value="Project Debrief">📐 Project Debrief</option>
           </select>
         </div>
@@ -203,10 +225,10 @@ export default function AdminInquiriesPage() {
               <tr style={{ background: "#F4EFE6", color: "#81663F", borderBottom: "1px solid #DCD5C6", textTransform: "uppercase", fontSize: "0.75rem", letterSpacing: "0.08em" }}>
                 <th style={{ padding: "1rem 1.2rem" }}>Lead Visitor</th>
                 <th style={{ padding: "1rem 1.2rem" }}>Contact Details</th>
-                <th style={{ padding: "1rem 1.2rem" }}>Lead Type</th>
+                <th style={{ padding: "1rem 1.2rem" }}>Lead Type / Status</th>
                 <th style={{ padding: "1rem 1.2rem" }}>Requested Catalogue / Product</th>
-                <th style={{ padding: "1rem 1.2rem" }}>Message / Role</th>
-                <th style={{ padding: "1rem 1.2rem" }}>Submitted At</th>
+                <th style={{ padding: "1rem 1.2rem" }}>Message / Note</th>
+                <th style={{ padding: "1rem 1.2rem" }}>Captured At</th>
                 <th style={{ padding: "1rem 1.2rem", textAlign: "right" }}>Action</th>
               </tr>
             </thead>
@@ -224,60 +246,96 @@ export default function AdminInquiriesPage() {
                   </td>
                 </tr>
               ) : (
-                filteredInquiries.map((inq) => (
-                  <tr key={inq.id} style={{ borderBottom: "1px solid #EAE4D8", background: "#FFFFFF", transition: "background 0.15s ease" }}>
-                    <td style={{ padding: "1rem 1.2rem" }}>
-                      <div style={{ fontWeight: 800, color: "#1E1E1E", fontSize: "0.95rem" }}>{inq.name}</div>
-                      {inq.profession && (
-                        <div style={{ fontSize: "0.78rem", color: "#6A6359", fontWeight: 600, marginTop: "2px" }}>
-                          🏢 {inq.profession}
+                filteredInquiries.map((inq) => {
+                  const isLoggedIn = inq.source === "auto-logged-in" || inq.isLoggedIn || inq.type?.includes("Logged In");
+
+                  return (
+                    <tr
+                      key={inq.id}
+                      style={{
+                        borderBottom: "1px solid #EAE4D8",
+                        background: isLoggedIn ? "rgba(16, 185, 129, 0.02)" : "#FFFFFF",
+                        transition: "background 0.15s ease",
+                      }}
+                    >
+                      <td style={{ padding: "1rem 1.2rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                          <div style={{ fontWeight: 800, color: "#1E1E1E", fontSize: "0.95rem" }}>{inq.name}</div>
+                          {isLoggedIn && (
+                            <span style={{ fontSize: "0.68rem", fontWeight: 800, background: "#d1fae5", color: "#065f46", padding: "1px 6px", borderRadius: "4px", border: "1px solid #a7f3d0" }}>
+                              Logged In
+                            </span>
+                          )}
                         </div>
-                      )}
-                      {inq.city && (
-                        <div style={{ fontSize: "0.75rem", color: "#81663F", marginTop: "1px", fontWeight: 700 }}>
-                          📍 {inq.city}
+                        {inq.profession && (
+                          <div style={{ fontSize: "0.78rem", color: "#6A6359", fontWeight: 600, marginTop: "2px" }}>
+                            🏢 {inq.profession}
+                          </div>
+                        )}
+                        {inq.city && (
+                          <div style={{ fontSize: "0.75rem", color: "#81663F", marginTop: "1px", fontWeight: 700 }}>
+                            📍 {inq.city}
+                          </div>
+                        )}
+                      </td>
+                      <td style={{ padding: "1rem 1.2rem" }}>
+                        <div style={{ color: "#81663F", fontWeight: 700 }}>{inq.email}</div>
+                        <div style={{ color: "#555555", fontSize: "0.85rem", marginTop: "2px", fontWeight: 600 }}>📞 {inq.phone}</div>
+                      </td>
+                      <td style={{ padding: "1rem 1.2rem" }}>
+                        {isLoggedIn ? (
+                          <span
+                            style={{
+                              padding: "0.35rem 0.75rem",
+                              borderRadius: "6px",
+                              fontSize: "0.75rem",
+                              fontWeight: 800,
+                              background: "#d1fae5",
+                              color: "#065f46",
+                              border: "1px solid #a7f3d0",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "0.3rem",
+                            }}
+                          >
+                            🟢 👤 User Logged In
+                          </span>
+                        ) : (
+                          <span
+                            style={{
+                              padding: "0.35rem 0.75rem",
+                              borderRadius: "6px",
+                              fontSize: "0.75rem",
+                              fontWeight: 800,
+                              background: inq.type === "Catalog PDF Gate" || inq.type?.includes("Catalog") ? "rgba(129,102,63,0.12)" : "rgba(37,99,235,0.1)",
+                              color: inq.type === "Catalog PDF Gate" || inq.type?.includes("Catalog") ? "#81663F" : "#2563eb",
+                              border: `1px solid ${inq.type === "Catalog PDF Gate" || inq.type?.includes("Catalog") ? "rgba(129,102,63,0.25)" : "rgba(37,99,235,0.25)"}`,
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "0.3rem",
+                            }}
+                          >
+                            {inq.type?.includes("Catalog") ? "📋 Catalogue Enquiry" : inq.type}
+                          </span>
+                        )}
+                      </td>
+                      <td style={{ padding: "1rem 1.2rem" }}>
+                        <div style={{ color: "#1E1E1E", fontWeight: 800, fontSize: "0.9rem" }}>
+                          📄 {inq.productOrBrand || "General Catalog"}
                         </div>
-                      )}
-                    </td>
-                    <td style={{ padding: "1rem 1.2rem" }}>
-                      <div style={{ color: "#81663F", fontWeight: 700 }}>{inq.email}</div>
-                      <div style={{ color: "#555555", fontSize: "0.85rem", marginTop: "2px", fontWeight: 600 }}>📞 {inq.phone}</div>
-                    </td>
-                    <td style={{ padding: "1rem 1.2rem" }}>
-                      <span
-                        style={{
-                          padding: "0.35rem 0.75rem",
-                          borderRadius: "6px",
-                          fontSize: "0.75rem",
-                          fontWeight: 800,
-                          background: inq.type === "Catalog PDF Gate" ? "rgba(129,102,63,0.12)" : "rgba(37,99,235,0.1)",
-                          color: inq.type === "Catalog PDF Gate" ? "#81663F" : "#2563eb",
-                          border: `1px solid ${inq.type === "Catalog PDF Gate" ? "rgba(129,102,63,0.25)" : "rgba(37,99,235,0.25)"}`,
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "0.3rem",
-                        }}
-                      >
-                        {inq.type?.includes("Catalog") ? "📋 Catalogue Enquiry" : inq.type}
-                      </span>
-                    </td>
-                    <td style={{ padding: "1rem 1.2rem" }}>
-                      <div style={{ color: "#1E1E1E", fontWeight: 800, fontSize: "0.9rem" }}>
-                        📄 {inq.productOrBrand || "General Catalog"}
-                      </div>
-                      {inq.downloadedFileName && (
-                        <div style={{ fontSize: "0.75rem", color: "#6A6359", fontFamily: "monospace", marginTop: "2px" }}>
-                          File: {inq.downloadedFileName}
-                        </div>
-                      )}
-                    </td>
-                    <td style={{ padding: "1rem 1.2rem", color: "#555555", maxWidth: "260px" }}>
-                      {inq.subject && <div style={{ color: "#1E1E1E", fontWeight: 700, fontSize: "0.82rem", marginBottom: "2px" }}>{inq.subject}</div>}
-                      <div style={{ fontSize: "0.82rem", lineHeight: 1.4, whiteSpace: "pre-line" }}>{inq.message || "-"}</div>
-                    </td>
-                    <td style={{ padding: "1rem 1.2rem", color: "#6A6359", fontSize: "0.8rem", whiteSpace: "nowrap" }}>
-                      {new Date(inq.createdAt).toLocaleString()}
-                    </td>
+                        {inq.downloadedFileName && (
+                          <div style={{ fontSize: "0.75rem", color: "#6A6359", fontFamily: "monospace", marginTop: "2px" }}>
+                            File: {inq.downloadedFileName}
+                          </div>
+                        )}
+                      </td>
+                      <td style={{ padding: "1rem 1.2rem", color: "#555555", maxWidth: "260px" }}>
+                        {inq.subject && <div style={{ color: "#1E1E1E", fontWeight: 700, fontSize: "0.82rem", marginBottom: "2px" }}>{inq.subject}</div>}
+                        <div style={{ fontSize: "0.82rem", lineHeight: 1.4, whiteSpace: "pre-line" }}>{inq.message || "-"}</div>
+                      </td>
+                      <td style={{ padding: "1rem 1.2rem", color: "#6A6359", fontSize: "0.8rem", whiteSpace: "nowrap" }}>
+                        {new Date(inq.createdAt).toLocaleString()}
+                      </td>
                     <td style={{ padding: "1rem 1.2rem", textAlign: "right" }}>
                       <button
                         onClick={() => handleDeleteInquiry(inq.id)}
@@ -297,12 +355,13 @@ export default function AdminInquiriesPage() {
                       </button>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </main>
-    </div>
-  );
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+);
 }

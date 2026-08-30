@@ -301,6 +301,21 @@ export type InquiryItem = {
   catalogId?: string;
   profession?: string;
   city?: string;
+  source?: "form" | "auto-logged-in" | string;
+  isLoggedIn?: boolean;
+  userRole?: string;
+  createdAt: string;
+};
+
+export type PdfViewLogItem = {
+  id: string;
+  leadId?: string;
+  userEmail?: string;
+  userName?: string;
+  userPhone?: string;
+  pdfName: string;
+  pdfUrl?: string;
+  source: "form" | "auto-logged-in" | string;
   createdAt: string;
 };
 

@@ -1782,6 +1782,11 @@ export async function logInquiryStore(data: {
   subject?: string;
   message?: string;
   productOrBrand?: string;
+  profession?: string;
+  city?: string;
+  source?: string;
+  isLoggedIn?: boolean;
+  userRole?: string;
 }): Promise<InquiryItem> {
   const id = `inq-${Date.now()}`;
   const full: InquiryItem = {
@@ -1789,10 +1794,15 @@ export async function logInquiryStore(data: {
     name: data.name,
     email: data.email,
     phone: data.phone,
-    type: data.type || "Contact Form",
+    type: data.type || (data.source === "auto-logged-in" ? "Catalog PDF View (Logged In)" : "Contact Form"),
     subject: data.subject,
     message: data.message,
     productOrBrand: data.productOrBrand,
+    profession: data.profession,
+    city: data.city,
+    source: data.source || "form",
+    isLoggedIn: data.isLoggedIn !== undefined ? data.isLoggedIn : (data.source === "auto-logged-in"),
+    userRole: data.userRole,
     createdAt: new Date().toISOString(),
   };
 
@@ -1827,10 +1837,11 @@ export async function logInquiryStore(data: {
         name: data.name,
         email: data.email,
         phone: data.phone,
-        type: data.type || "Contact Form",
+        type: full.type,
         subject: data.subject,
         message: data.message,
         productOrBrand: data.productOrBrand,
+        source: full.source,
       },
     });
   } catch (e) {
@@ -1850,6 +1861,60 @@ export async function logInquiryStore(data: {
   } catch (e) {}
 
   return full;
+}
+
+export async function logPdfViewStore(data: {
+  pdfName: string;
+  pdfUrl?: string;
+  userName?: string;
+  userEmail?: string;
+  userPhone?: string;
+  leadId?: string;
+  source?: string;
+}) {
+  const id = `pdfview-${Date.now()}`;
+  const record = {
+    id,
+    pdfName: data.pdfName,
+    pdfUrl: data.pdfUrl || "",
+    userName: data.userName || "Logged-In User",
+    userEmail: data.userEmail || "",
+    userPhone: data.userPhone || "",
+    leadId: data.leadId,
+    source: data.source || "auto-logged-in",
+    createdAt: new Date().toISOString(),
+  };
+
+  // Sync to Firebase RTDB
+  try {
+    await fetch(`${FIREBASE_RTDB_URL}/pdfViewLogs/${id}.json`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(record),
+    });
+  } catch (e) {
+    console.error("Firebase pdf view log error:", e);
+  }
+
+  // Sync to Prisma DB
+  try {
+    await prisma.pdfView.create({
+      data: {
+        id,
+        pdfName: data.pdfName,
+        pdfUrl: data.pdfUrl,
+        userName: data.userName,
+        userEmail: data.userEmail,
+        userPhone: data.userPhone,
+        leadId: data.leadId,
+        source: data.source || "auto-logged-in",
+      },
+    });
+  } catch (e) {
+    console.error("Prisma pdfView insert error:", e);
+  }
+
+  return record;
 }
 
 export async function deleteInquiryStore(id: string): Promise<boolean> {

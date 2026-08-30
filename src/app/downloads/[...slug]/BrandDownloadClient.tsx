@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { BrandDownloadFolder, DownloadPdfItem } from "@/lib/types";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
+import { logSilentPdfView } from "@/utils/authUser";
 
 interface Props {
   slug: string | string[];
@@ -507,6 +508,13 @@ export default function BrandDownloadClient({ slug }: Props) {
                       href={pdf.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() =>
+                        logSilentPdfView({
+                          pdfName: pdf.title,
+                          pdfUrl: pdf.fileUrl,
+                          brandName: folder.brandName,
+                        })
+                      }
                       style={{ textDecoration: "none", color: "inherit", display: "block" }}
                     >
                       {renderPdfCover(pdf, folder.brandName)}
@@ -569,6 +577,13 @@ export default function BrandDownloadClient({ slug }: Props) {
                         href={pdf.fileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() =>
+                          logSilentPdfView({
+                            pdfName: pdf.title,
+                            pdfUrl: pdf.fileUrl,
+                            brandName: folder.brandName,
+                          })
+                        }
                         style={{
                           background: "#1E1E1E",
                           color: "#FFFFFF",

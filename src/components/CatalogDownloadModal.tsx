@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PdfCatalogItem } from "@/lib/types";
 import OnScreenPdfViewer from "./OnScreenPdfViewer";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
+import { getLoggedInUser, logSilentPdfView } from "@/utils/authUser";
 
 interface Props {
   catalog: PdfCatalogItem | null;
@@ -26,6 +27,33 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
   const [unlocked, setUnlocked] = useState(false);
   const [viewToken, setViewToken] = useState("");
   const [viewSlug, setViewSlug] = useState("");
+
+  useEffect(() => {
+    if (!catalog) return;
+    const authUser = getLoggedInUser();
+    if (authUser.isLoggedIn) {
+      // Logged in user: silent lead capture & instant unlock
+      logSilentPdfView({
+        pdfName: catalog.title || catalog.fileName || "Catalogue",
+        pdfUrl: catalog.fileUrl,
+        brandName: catalog.brand,
+        user: authUser,
+      });
+      setUnlocked(true);
+      if (onSuccess) onSuccess();
+    } else {
+      try {
+        const saved = localStorage.getItem("aaren_user_session");
+        if (saved) {
+          const p = JSON.parse(saved);
+          if (p.name) setName(p.name);
+          if (p.email) setEmail(p.email);
+          if (p.phone) setPhone(p.phone);
+          if (p.profession) setProfession(p.profession);
+        }
+      } catch {}
+    }
+  }, [catalog, onSuccess]);
 
   if (!catalog) return null;
 

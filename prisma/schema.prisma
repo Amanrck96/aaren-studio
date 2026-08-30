@@ -177,15 +177,30 @@ model RoadmapStep {
 }
 
 model Inquiry {
-  id             String   @id @default(cuid())
+  id             String    @id @default(cuid())
   name           String
   email          String
   phone          String
-  type           String   @default("Contact Form") // "Contact Form" or "Catalog PDF Gate"
+  type           String    @default("Contact Form") // "Contact Form", "Catalog PDF Gate", "Catalog PDF View (Logged In)"
   subject        String?
   message        String?
   productOrBrand String?
-  createdAt      DateTime @default(now())
+  source         String?   @default("form") // "form" | "auto-logged-in"
+  createdAt      DateTime  @default(now())
+  pdfViews       PdfView[]
+}
+
+model PdfView {
+  id         String   @id @default(cuid())
+  userEmail  String?
+  userName   String?
+  userPhone  String?
+  leadId     String?
+  lead       Inquiry? @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  pdfName    String
+  pdfUrl     String?
+  source     String   @default("auto-logged-in") // "form" | "auto-logged-in"
+  createdAt  DateTime @default(now())
 }
 
 model Service {

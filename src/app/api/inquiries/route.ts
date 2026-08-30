@@ -31,11 +31,24 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    if (!body.name || !body.email || !body.phone) {
+    const isAutoLoggedIn = body.source === "auto-logged-in";
+
+    const name = (body.name || (isAutoLoggedIn ? "Logged-In User" : "")).trim();
+    const email = (body.email || (isAutoLoggedIn ? "client@aarenstudio.com" : "")).trim();
+    const phone = (body.phone || (isAutoLoggedIn ? "+91 (Logged In Profile)" : "")).trim();
+
+    if (!name || !email || (!phone && !isAutoLoggedIn)) {
       return NextResponse.json({ success: false, error: "Name, Email, and Phone are required" }, { status: 400 });
     }
 
-    const inquiry = await logInquiryStore(body);
+    const inquiry = await logInquiryStore({
+      ...body,
+      name,
+      email,
+      phone,
+      type: body.type || (isAutoLoggedIn ? "Catalog PDF View (Logged In)" : "Catalog Enquiry"),
+      source: body.source || "form",
+    });
 
     // Await instant email notification to info@aarenintpro.com via Gmail SMTP
     try {

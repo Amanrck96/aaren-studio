@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { BrandDownloadFolder, DownloadPdfItem } from "@/lib/types";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
+import { logSilentPdfView } from "@/utils/authUser";
 
 export default function DownloadsClient() {
   const [folders, setFolders] = useState<BrandDownloadFolder[]>([]);
@@ -587,6 +588,13 @@ export default function DownloadsClient() {
                       href={pdf.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() =>
+                        logSilentPdfView({
+                          pdfName: pdf.title,
+                          pdfUrl: pdf.fileUrl,
+                          brandName: selectedFolder.brandName,
+                        })
+                      }
                       style={{ textDecoration: "none", color: "inherit", display: "block" }}
                     >
                       {renderPdfCover(pdf, selectedFolder.brandName)}
@@ -650,6 +658,13 @@ export default function DownloadsClient() {
                         href={pdf.fileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() =>
+                          logSilentPdfView({
+                            pdfName: pdf.title,
+                            pdfUrl: pdf.fileUrl,
+                            brandName: selectedFolder.brandName,
+                          })
+                        }
                         style={{
                           background: "#1E1E1E",
                           color: "#FFFFFF",
@@ -842,6 +857,13 @@ export default function DownloadsClient() {
                     href={pdf.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      logSilentPdfView({
+                        pdfName: pdf.title,
+                        pdfUrl: pdf.fileUrl,
+                        brandName: pdf.brandName,
+                      })
+                    }
                     style={{ textDecoration: "none", color: "inherit", display: "block" }}
                   >
                     {renderPdfCover(pdf, pdf.brandName)}
@@ -895,6 +917,13 @@ export default function DownloadsClient() {
                       href={pdf.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() =>
+                        logSilentPdfView({
+                          pdfName: pdf.title,
+                          pdfUrl: pdf.fileUrl,
+                          brandName: pdf.brandName,
+                        })
+                      }
                       style={{
                         background: "#1E1E1E",
                         color: "#FFFFFF",
