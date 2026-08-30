@@ -241,26 +241,6 @@ export default function DownloadsClient() {
                 <RefreshCw size={14} className={loading ? "spin" : ""} />
                 <span>Refresh Repository</span>
               </button>
-
-              <Link
-                href="/admin/downloads"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  padding: "0.65rem 1.3rem",
-                  background: "#1E1E1E",
-                  color: "#FFFFFF",
-                  borderRadius: "8px",
-                  textDecoration: "none",
-                  fontWeight: 800,
-                  fontSize: "0.85rem",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
-                }}
-              >
-                <span>Admin CMS Portal</span>
-                <ChevronRight size={14} />
-              </Link>
             </div>
           </div>
 
@@ -505,25 +485,6 @@ export default function DownloadsClient() {
                   <ArrowLeft size={14} />
                   <span>Back to 20 Folders</span>
                 </button>
-
-                <Link
-                  href={`/admin/downloads?brandId=${selectedFolder.id}`}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    padding: "0.6rem 1.2rem",
-                    background: "#81663F",
-                    color: "#FFFFFF",
-                    borderRadius: "8px",
-                    textDecoration: "none",
-                    fontWeight: 800,
-                    fontSize: "0.85rem",
-                  }}
-                >
-                  <span>Upload PDF to this Folder</span>
-                  <ChevronRight size={14} />
-                </Link>
               </div>
             </div>
 
@@ -545,26 +506,8 @@ export default function DownloadsClient() {
                   No PDF documents in this brand folder yet
                 </h3>
                 <p style={{ color: "#5E5852", fontSize: "0.88rem", marginTop: "4px" }}>
-                  Use the Admin Portal to upload or link Firebase PDF URLs to this folder.
+                  PDF catalogues and technical specifications for this brand will be available shortly.
                 </p>
-                <Link
-                  href={`/admin/downloads?brandId=${selectedFolder.id}`}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    padding: "0.65rem 1.4rem",
-                    background: "#81663F",
-                    color: "#FFFFFF",
-                    borderRadius: "8px",
-                    textDecoration: "none",
-                    fontWeight: 800,
-                    fontSize: "0.85rem",
-                    marginTop: "1rem",
-                  }}
-                >
-                  + Add First PDF in Admin
-                </Link>
               </div>
             ) : (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
@@ -704,9 +647,9 @@ export default function DownloadsClient() {
               {filteredFolders.map((folder, index) => {
                 const count = Array.isArray(folder.files) ? folder.files.length : 0;
                 return (
-                  <div
+                  <Link
                     key={folder.id}
-                    onClick={() => setSelectedFolderId(folder.id)}
+                    href={`/downloads/All%2020%20Brand%20Folders/${encodeURIComponent(folder.brandName)}/${count}%20PDFs`}
                     style={{
                       background: "#FFFFFF",
                       border: "1px solid #E2DCD2",
@@ -719,6 +662,8 @@ export default function DownloadsClient() {
                       flexDirection: "column",
                       justifyContent: "space-between",
                       position: "relative",
+                      textDecoration: "none",
+                      color: "inherit",
                     }}
                   >
                     <div>
@@ -793,10 +738,7 @@ export default function DownloadsClient() {
                       </span>
 
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <Link
-                          href={`/downloads/${encodeURIComponent(folder.brandName)}/${count}%20PDFs`}
-                          onClick={(e) => e.stopPropagation()}
-                          title={`Direct Link: /downloads/${folder.brandName}/${count} PDFs`}
+                        <span
                           style={{
                             fontSize: "0.78rem",
                             fontWeight: 800,
@@ -804,24 +746,18 @@ export default function DownloadsClient() {
                             display: "inline-flex",
                             alignItems: "center",
                             gap: "2px",
-                            textDecoration: "none",
                             padding: "4px 8px",
                             borderRadius: "4px",
                             background: "#FAF8F5",
                             border: "1px solid #E2DCD2",
                           }}
                         >
-                          <span>Direct Link</span>
-                          <ExternalLink size={11} />
-                        </Link>
-
-                        <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "#81663F", display: "inline-flex", alignItems: "center", gap: "2px" }}>
-                          <span>Open</span>
+                          <span>Open Folder</span>
                           <ChevronRight size={14} />
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>

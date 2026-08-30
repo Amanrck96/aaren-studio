@@ -475,7 +475,7 @@ function AdminDownloadsContent() {
 
                   <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
                     <Link
-                      href={`/downloads/brands/${selectedFolder.id}`}
+                      href={`/downloads/All%2020%20Brand%20Folders/${encodeURIComponent(selectedFolder.brandName)}/${selectedFolder.files?.length || 0}%20PDFs`}
                       target="_blank"
                       style={{
                         display: "inline-flex",
@@ -537,7 +537,7 @@ function AdminDownloadsContent() {
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.85rem", flexWrap: "wrap" }}>
                       <span style={{ fontWeight: 800, color: "#81663F" }}>Full Link:</span>
                       <code style={{ background: "#FFFFFF", padding: "3px 8px", borderRadius: "4px", border: "1px solid #D5CEBF", color: "#1E1E1E", fontWeight: 700 }}>
-                        /downloads/{selectedFolder.brandName}/{selectedFolder.files?.length || 0} PDFs
+                        /downloads/All 20 Brand Folders/{selectedFolder.brandName}/{selectedFolder.files?.length || 0} PDFs
                       </code>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.82rem", color: "#6A6359", flexWrap: "wrap" }}>
@@ -551,7 +551,7 @@ function AdminDownloadsContent() {
                   <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     <button
                       onClick={() => {
-                        const url = `${window.location.origin}/downloads/${encodeURIComponent(selectedFolder.brandName)}/${selectedFolder.files?.length || 0}%20PDFs`;
+                        const url = `${window.location.origin}/downloads/All%2020%20Brand%20Folders/${encodeURIComponent(selectedFolder.brandName)}/${selectedFolder.files?.length || 0}%20PDFs`;
                         navigator.clipboard.writeText(url);
                         setToast(`✅ Copied Full Link: ${url}`);
                         setTimeout(() => setToast(null), 3000);

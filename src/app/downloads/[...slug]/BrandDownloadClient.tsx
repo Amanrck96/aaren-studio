@@ -42,8 +42,13 @@ function parseSegments(rawSlug: string | string[]) {
 
   if (parts.length === 0) {
     brandQuery = "";
-  } else if (parts[0].toLowerCase() === "brands" && parts[1]) {
-    brandQuery = parts[1];
+  } else if (
+    parts[0].toLowerCase() === "brands" ||
+    parts[0].toLowerCase() === "all 20 brand folders" ||
+    parts[0].toLowerCase() === "all brand folders" ||
+    parts[0].toLowerCase().includes("brand folder")
+  ) {
+    brandQuery = parts[1] || "";
     subQuery = parts.slice(2).join(" / ");
   } else {
     brandQuery = parts[0];
@@ -115,7 +120,7 @@ export default function BrandDownloadClient({ slug }: Props) {
 
   const currentUrl = typeof window !== "undefined"
     ? window.location.href
-    : `https://aarenstudio.vercel.app/downloads/${encodeURIComponent(folder?.brandName || brandQuery)}/${folder?.files?.length || 0}%20PDFs`;
+    : `https://aarenstudio.vercel.app/downloads/All%2020%20Brand%20Folders/${encodeURIComponent(folder?.brandName || brandQuery)}/${folder?.files?.length || 0}%20PDFs`;
 
   const handleCopyPageUrl = () => {
     navigator.clipboard.writeText(currentUrl);
@@ -346,31 +351,11 @@ export default function BrandDownloadClient({ slug }: Props) {
                     {pageUrlCopied ? <Check size={14} /> : <Copy size={14} />}
                     <span>{pageUrlCopied ? "Brand Link Copied!" : "Copy Brand Share Link"}</span>
                   </button>
-
-                  <Link
-                    href={`/admin/downloads?brandId=${folder.id}`}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      padding: "0.65rem 1.3rem",
-                      background: "#81663F",
-                      color: "#FFFFFF",
-                      borderRadius: "8px",
-                      textDecoration: "none",
-                      fontWeight: 800,
-                      fontSize: "0.85rem",
-                      boxShadow: "0 4px 12px rgba(129,102,63,0.25)",
-                    }}
-                  >
-                    <span>Manage in Admin</span>
-                    <ChevronRight size={14} />
-                  </Link>
                 </div>
 
                 <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
                   <div style={{ fontSize: "0.75rem", color: "#8A8275", background: "#FFFFFF", padding: "4px 10px", borderRadius: "6px", border: "1px solid #E2DCD2" }}>
-                    URL: <code style={{ color: "#81663F", fontWeight: 700 }}>/downloads/{folder.brandName}/{folder.files?.length || 0} PDFs</code>
+                    URL: <code style={{ color: "#81663F", fontWeight: 700 }}>/downloads/All 20 Brand Folders/{folder.brandName}/{folder.files?.length || 0} PDFs</code>
                   </div>
                 </div>
               </div>
@@ -465,26 +450,8 @@ export default function BrandDownloadClient({ slug }: Props) {
                   {search ? "No documents match your search" : "No PDF catalogues in this brand folder yet"}
                 </h3>
                 <p style={{ color: "#5E5852", fontSize: "0.88rem", marginTop: "4px" }}>
-                  {search ? "Try searching for a different keyword or view all documents." : "Use the Admin Portal to upload or link Firebase PDF URLs to this brand folder."}
+                  {search ? "Try searching for a different keyword or view all documents." : "PDF catalogues and technical specifications for this brand will be available shortly."}
                 </p>
-                <Link
-                  href={`/admin/downloads?brandId=${folder.id}`}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    padding: "0.65rem 1.4rem",
-                    background: "#81663F",
-                    color: "#FFFFFF",
-                    borderRadius: "8px",
-                    textDecoration: "none",
-                    fontWeight: 800,
-                    fontSize: "0.85rem",
-                    marginTop: "1rem",
-                  }}
-                >
-                  + Add PDF in Admin
-                </Link>
               </div>
             ) : (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: "1.6rem" }}>
@@ -624,7 +591,7 @@ export default function BrandDownloadClient({ slug }: Props) {
                   {otherFolders.map((of) => (
                     <Link
                       key={of.id}
-                      href={`/downloads/${encodeURIComponent(of.brandName)}/${of.files?.length || 0}%20PDFs`}
+                      href={`/downloads/All%2020%20Brand%20Folders/${encodeURIComponent(of.brandName)}/${of.files?.length || 0}%20PDFs`}
                       style={{
                         background: "#FFFFFF",
                         border: "1px solid #E2DCD2",

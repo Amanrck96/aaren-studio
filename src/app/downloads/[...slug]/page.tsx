@@ -22,8 +22,13 @@ function parseSegments(rawSlug: string | string[]) {
 
   if (parts.length === 0) {
     brandQuery = "";
-  } else if (parts[0].toLowerCase() === "brands" && parts[1]) {
-    brandQuery = parts[1];
+  } else if (
+    parts[0].toLowerCase() === "brands" ||
+    parts[0].toLowerCase() === "all 20 brand folders" ||
+    parts[0].toLowerCase() === "all brand folders" ||
+    parts[0].toLowerCase().includes("brand folder")
+  ) {
+    brandQuery = parts[1] || "";
     subQuery = parts.slice(2).join(" / ");
   } else {
     brandQuery = parts[0];
