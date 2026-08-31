@@ -16,7 +16,7 @@ export default function AdminProjectsPage() {
   const [projectForm, setProjectForm] = useState({
     title: "",
     client: "",
-    category: "Residential Architecture",
+    category: "Single Residential",
     description: "",
   });
 
@@ -203,16 +203,23 @@ export default function AdminProjectsPage() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Category *</label>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>Project Type / Category *</label>
                   <select
                     value={projectForm.category}
                     onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })}
                     style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                   >
-                    <option value="Residential Villa">Residential Villa</option>
-                    <option value="Luxury Penthouse">Luxury Penthouse</option>
-                    <option value="Commercial Office">Commercial Office</option>
-                    <option value="Hospitality & Retail">Hospitality & Retail</option>
+                    <option value="Single Residential">Single Residential</option>
+                    <option value="Multi Residential">Multi Residential</option>
+                    <option value="Property Staging">Property Staging</option>
+                    <option value="Commercial">Commercial</option>
+                    <option value="Hospitality">Hospitality</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Institutional">Institutional</option>
+                    <option value="Government">Government</option>
+                    <option value="Set And Creative Design">Set And Creative Design</option>
+                    <option value="Community Spaces">Community Spaces</option>
                   </select>
                 </div>
               </div>

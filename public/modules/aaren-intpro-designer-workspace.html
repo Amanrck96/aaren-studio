@@ -1258,8 +1258,19 @@ input,select,textarea{font-family:inherit;}
       <div class="field"><label>Project Name *</label><input type="text" id="npName" required placeholder="e.g. Altius Penthouse"></div>
       <div class="field"><label>Client Name *</label><input type="text" id="npClient" required placeholder="e.g. Vikram Singhania"></div>
       <div class="field"><label>Project Type</label>
-        <select id="npType">
-          <option>Residential · Penthouse</option><option>Residential · Villa</option><option>Commercial · Office</option><option>Hospitality</option>
+        <select id="npType" required>
+          <option value="" disabled selected>Select</option>
+          <option value="Single Residential">Single Residential</option>
+          <option value="Multi Residential">Multi Residential</option>
+          <option value="Property Staging">Property Staging</option>
+          <option value="Commercial">Commercial</option>
+          <option value="Hospitality">Hospitality</option>
+          <option value="Retail">Retail</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Institutional">Institutional</option>
+          <option value="Government">Government</option>
+          <option value="Set And Creative Design">Set And Creative Design</option>
+          <option value="Community Spaces">Community Spaces</option>
         </select>
       </div>
       <div class="field"><label>Total Budget (₹)</label><input type="text" id="npBudget" required placeholder="e.g. ₹1.5 Cr"></div>

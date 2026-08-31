@@ -932,7 +932,7 @@ export default function Home() {
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
         <div
-          style={{ position: "relative", overflow: "hidden", width: "100%" }}
+          style={{ position: "relative", overflow: "hidden", width: "100%", padding: "2.4rem", boxSizing: "border-box" }}
           onMouseEnter={() => setCatPaused(true)}
           onMouseLeave={() => setCatPaused(false)}
         >
@@ -1104,7 +1104,7 @@ export default function Home() {
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
         <div
-          style={{ position: "relative", overflow: "hidden", width: "100%" }}
+          style={{ position: "relative", overflow: "hidden", width: "100%", padding: "2.4rem", boxSizing: "border-box" }}
           onMouseEnter={() => setBrandPaused(true)}
           onMouseLeave={() => setBrandPaused(false)}
         >
@@ -1253,7 +1253,7 @@ export default function Home() {
         </div>
 
         {/* 4-across on desktop, 2-across on mobile */}
-        <div className="home-projects-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", width: "100%" }}>
+        <div className="home-projects-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", width: "100%", padding: "2.4rem", boxSizing: "border-box" }}>
           {projectsList.slice(0, 4).map((project, i) => (
             <Link
               key={project.slug}
