@@ -328,7 +328,7 @@ export const DEFAULT_SETTINGS: SiteSettingsItem = {
   contactEmail: "info@aarenintpro.com",
   contactPhone: "8884464444",
   contactAddress: "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026",
-  googleMapUrl: "https://maps.google.com/?q=Mysore+Road+Bangalore",
+  googleMapUrl: "https://maps.google.com/?q=AAREN+INTPRO,+%23342/8,+NTY+Layout,+Mysore+Road,+Bangalore+-+560026",
   webhookUrl: "",
   websiteBgColor: "#E6E2D8",
   headingColor: "#81663F",

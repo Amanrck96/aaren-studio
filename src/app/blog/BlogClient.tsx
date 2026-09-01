@@ -128,13 +128,18 @@ export default function BlogClient({ initialPosts, initialFontSettings }: BlogCl
 
   return (
     <div className="blog-page">
-      <div className="blog-container">
-        {/* Header */}
-        <header className="blog-header mb-8">
-          <span className="blog-tag">JOURNAL & INSIGHTS</span>
-          <h1 className="blog-title">THE JOURNAL</h1>
+      {/* ── Page Header ── */}
+      <div className="blog-header">
+        <div className="blog-header__inner">
+          <div className="blog-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+            JOURNAL &amp; ARCHITECTURAL INSIGHTS
+          </div>
+          <h1 className="blog-header__title">BLOG</h1>
+          <p className="blog-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
+            Curated dispatches on luxury surfaces, spatial craft, technological innovations, and bespoke material curation.
+          </p>
 
-          <div className="blog-controls">
+          <div className="blog-controls" style={{ marginTop: "3.2rem" }}>
             <div className="search-box">
               <input
                 type="text"
@@ -149,9 +154,23 @@ export default function BlogClient({ initialPosts, initialFontSettings }: BlogCl
                 </button>
               )}
             </div>
-          </div>
-        </header>
 
+            <div className="category-pills">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`cat-pill ${selectedCategory === cat ? "active" : ""}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="blog-container">
         {/* Featured Post Hero */}
         {featuredPost && (
           <section className="featured-post-section">
@@ -198,13 +217,14 @@ export default function BlogClient({ initialPosts, initialFontSettings }: BlogCl
               {filteredPosts.map((post) => (
                 <article key={post.slug} className="post-card">
                   <Link href={`/blog/${post.slug}`} className="post-card__link">
-                    <div style={{ height: fontSettings.cardImageHeight || "200px" }} className="post-card__fig">
+                    <div className="post-card__fig">
                       <Image
                         src={post.image}
                         alt={post.title}
                         fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                        className="post-card__img"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="post-img"
+                        style={{ height: fontSettings.cardImageHeight || "200px" }}
                       />
                     </div>
                     <div className="post-card__body">
@@ -230,7 +250,7 @@ export default function BlogClient({ initialPosts, initialFontSettings }: BlogCl
         {/* Newsletter Section */}
         <section className="newsletter-section">
           <div className="newsletter-card">
-            <h2>SUBSCRIBE TO AAREN DISPATCH</h2>
+            <h2>SUBSCRIBE TO AAREN</h2>
             <p>Receive monthly curations on architectural materials, spatial trends, and new studio releases directly in your inbox.</p>
             <form onSubmit={(e) => e.preventDefault()} className="newsletter-form">
               <input type="email" placeholder="Enter your email address..." required className="newsletter-input" />
@@ -242,52 +262,66 @@ export default function BlogClient({ initialPosts, initialFontSettings }: BlogCl
 
       <style>{`
         .blog-page {
-          background-color: #ffffff;
-          color: #111111;
+          background: #E6E2D8;
+          color: #1e1e1e;
           min-height: 100vh;
-          padding-top: 10rem;
+          padding-top: 8rem;
           padding-bottom: 8rem;
           font-family: var(--font-jost), 'Jost', sans-serif;
         }
 
-        .blog-container {
-          max-width: 1320px;
-          margin: 0 auto;
-          padding: 0 2.4rem;
-        }
-
         .blog-header {
-          padding-bottom: 4rem;
-          border-bottom: 1px solid rgba(0,0,0,0.1);
-          margin-bottom: 5rem;
+          padding: 6rem 2rem 4rem;
+          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
-        .blog-tag {
-          font-size: 0.85rem;
+        @media (min-width: 768px) {
+          .blog-header {
+            padding: 8rem 4rem 4rem;
+          }
+        }
+
+        .blog-header__inner {
+          max-width: 1600px;
+          margin: 0 auto;
+        }
+
+        .blog-header__meta {
+          color: #81663F;
           font-weight: 700;
-          letter-spacing: 0.15em;
-          color: #80673f;
-          display: block;
-          margin-bottom: 1rem;
-        }
-
-        .blog-title {
-          font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-          font-weight: 800;
-          letter-spacing: -0.03em;
-          line-height: 1.05;
-          color: #80673f;
+          letter-spacing: 0.12em;
+          margin-bottom: 1.6rem;
+          font-size: 1.3rem;
           text-transform: uppercase;
-          margin-bottom: 1.5rem;
         }
 
-        .blog-desc {
-          font-size: clamp(1rem, 1.4vw, 1.25rem);
+        .blog-header__title {
+          font-size: clamp(6rem, 15vw, 22rem);
+          font-weight: 700;
+          letter-spacing: -0.05em;
+          line-height: 0.88;
+          text-transform: uppercase;
+          color: #81663F;
+          margin-bottom: 2.8rem;
+        }
+
+        .blog-header__desc {
+          font-size: 1.6rem;
           line-height: 1.6;
-          color: rgba(0,0,0,0.7);
-          max-width: 54rem;
-          margin-bottom: 3rem;
-          font-weight: 400;
+          max-width: 58rem;
+          color: rgba(0,0,0,0.65);
+        }
+
+        .blog-container {
+          max-width: 1600px;
+          margin: 0 auto;
+          padding: 4rem 4rem 0;
+        }
+
+        @media (max-width: 768px) {
+          .blog-container {
+            padding: 3rem 2rem 0;
+          }
         }
 
         .blog-controls {

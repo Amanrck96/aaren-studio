@@ -63,8 +63,8 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
           <div className="brands-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
             EXCLUSIVE PARTNERS — {brandsList.length} BRANDS
           </div>
-          <h1 className="brands-header__title">{applyTextCase("Brands", textCase, "title")}</h1>
-          <p className="brands-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "56rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
+          <h1 className="brands-header__title">BRANDS</h1>
+          <p className="brands-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
             A curated selection of the world&apos;s finest material and design brands — each chosen for their craft, innovation, and alignment with the Aaren philosophy.
           </p>
         </div>
@@ -154,13 +154,13 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
         }
 
         .brands-header {
-          padding: 6rem 1.6rem 4rem;
+          padding: 6rem 2rem 4rem;
           border-bottom: 0.1rem solid rgba(129, 102, 63, 0.2);
         }
 
         @media (min-width: 768px) {
           .brands-header {
-            padding: 8rem 2.4rem 5rem;
+            padding: 8rem 4rem 4rem;
           }
         }
 
@@ -174,6 +174,7 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
           font-weight: 700;
           letter-spacing: -0.05em;
           line-height: 0.88;
+          text-transform: uppercase;
           color: #81663F;
           margin-bottom: 2.8rem;
         }

@@ -147,6 +147,50 @@ export default function BrandDownloadClient({ slug }: Props) {
 
   const otherFolders = allFolders.filter((f) => f.id !== folder?.id).slice(0, 6);
 
+  const renderPdfCoverList = (pdf: DownloadPdfItem, brandName: string) => {
+    const resolved = resolveCatalogDetails({
+      catalogPdfUrl: pdf.fileUrl,
+      title: pdf.title,
+      brand: brandName,
+      coverImage: pdf.coverImage,
+    });
+    const coverThumb = resolved.coverThumb || pdf.coverImage || getPdfThumbnail(pdf.fileUrl, { title: pdf.title, brandId: brandName });
+
+    return (
+      <div
+        style={{
+          width: "90px",
+          height: "115px",
+          background: "#181920",
+          borderRadius: "8px",
+          overflow: "hidden",
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          border: "1px solid #E2DCD2",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+        }}
+      >
+        {coverThumb ? (
+          <img
+            src={coverThumb}
+            alt={pdf.title}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
+          />
+        ) : (
+          <div style={{ textAlign: "center", color: "#81663F" }}>
+            <FileText size={32} strokeWidth={1.2} />
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderPdfCover = (pdf: DownloadPdfItem, brandName: string) => {
     const resolved = resolveCatalogDetails({
       catalogPdfUrl: pdf.fileUrl,
@@ -231,7 +275,7 @@ export default function BrandDownloadClient({ slug }: Props) {
             boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
           }}
         >
-          Open in New Tab ↗
+          Open Access ↗
         </div>
       </div>
     );
@@ -454,7 +498,7 @@ export default function BrandDownloadClient({ slug }: Props) {
                 </p>
               </div>
             ) : (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: "1.6rem" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
                 {filteredFiles.map((pdf) => (
                   <div
                     key={pdf.id}
@@ -462,81 +506,95 @@ export default function BrandDownloadClient({ slug }: Props) {
                       background: "#FFFFFF",
                       borderRadius: "12px",
                       border: "1px solid #E2DCD2",
-                      overflow: "hidden",
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
+                      padding: "1.2rem 1.6rem",
+                      boxShadow: "0 2px 10px rgba(0,0,0,0.03)",
                       display: "flex",
-                      flexDirection: "column",
+                      alignItems: "center",
                       justifyContent: "space-between",
-                      transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                      gap: "1.5rem",
+                      flexWrap: "wrap",
+                      transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
                     }}
                   >
-                    {/* PDF Target Link */}
-                    <a
-                      href={pdf.fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() =>
-                        logSilentPdfView({
-                          pdfName: pdf.title,
-                          pdfUrl: pdf.fileUrl,
-                          brandName: folder.brandName,
-                        })
-                      }
-                      style={{ textDecoration: "none", color: "inherit", display: "block" }}
-                    >
-                      {renderPdfCover(pdf, folder.brandName)}
+                    {/* Left: Thumbnail & Info */}
+                    <div style={{ display: "flex", alignItems: "center", gap: "1.4rem", flex: "1 1 400px" }}>
+                      <a
+                        href={pdf.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() =>
+                          logSilentPdfView({
+                            pdfName: pdf.title,
+                            pdfUrl: pdf.fileUrl,
+                            brandName: folder.brandName,
+                          })
+                        }
+                        style={{ display: "block", flexShrink: 0, textDecoration: "none" }}
+                      >
+                        {renderPdfCoverList(pdf, folder.brandName)}
+                      </a>
 
-                      <div style={{ padding: "1.3rem" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "0.4rem" }}>
-                          <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                          <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "#81663F", background: "rgba(129, 102, 63, 0.1)", padding: "2px 8px", borderRadius: "4px", textTransform: "uppercase" }}>
                             {pdf.category || "Specification"}
                           </span>
                           {pdf.fileSize && (
-                            <span style={{ fontSize: "0.72rem", color: "#8A8275" }}>
+                            <span style={{ fontSize: "0.75rem", color: "#8A8275", fontWeight: 600 }}>
                               • {pdf.fileSize}
                             </span>
                           )}
+                          <span style={{ fontSize: "0.72rem", color: "#10b981", background: "rgba(16, 185, 129, 0.08)", padding: "2px 6px", borderRadius: "4px", fontWeight: 700 }}>
+                            PDF Document
+                          </span>
                         </div>
-                        <h4 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#1E1E1E", margin: 0, lineHeight: 1.35 }}>
-                          {pdf.title}
-                        </h4>
+
+                        <a
+                          href={pdf.fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() =>
+                            logSilentPdfView({
+                              pdfName: pdf.title,
+                              pdfUrl: pdf.fileUrl,
+                              brandName: folder.brandName,
+                            })
+                          }
+                          style={{ textDecoration: "none", color: "inherit" }}
+                        >
+                          <h4 style={{ fontSize: "1.2rem", fontWeight: 800, color: "#1E1E1E", margin: "2px 0 0", lineHeight: 1.35 }}>
+                            {pdf.title}
+                          </h4>
+                        </a>
+
                         {pdf.description && (
-                          <p style={{ color: "#5E5852", fontSize: "0.82rem", margin: "6px 0 0", lineHeight: 1.4 }}>
+                          <p style={{ color: "#5E5852", fontSize: "0.88rem", margin: "2px 0 0", lineHeight: 1.45, maxWidth: "650px" }}>
                             {pdf.description}
                           </p>
                         )}
                       </div>
-                    </a>
+                    </div>
 
-                    {/* Action Bar */}
-                    <div
-                      style={{
-                        padding: "0.8rem 1.2rem",
-                        borderTop: "1px solid #F0ECE4",
-                        background: "#FAF8F5",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "8px",
-                      }}
-                    >
+                    {/* Right: Actions */}
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
                       <button
                         onClick={() => handleCopyLink(pdf.fileUrl, pdf.id)}
                         style={{
-                          background: "#FFFFFF",
+                          background: "#FAF8F5",
                           border: "1px solid #D5CEBF",
-                          borderRadius: "6px",
-                          padding: "6px 10px",
-                          fontSize: "0.78rem",
+                          borderRadius: "8px",
+                          padding: "8px 14px",
+                          fontSize: "0.82rem",
                           fontWeight: 700,
                           color: copiedId === pdf.id ? "#059669" : "#5E5852",
                           cursor: "pointer",
                           display: "inline-flex",
                           alignItems: "center",
-                          gap: "4px",
+                          gap: "6px",
+                          transition: "all 0.15s ease",
                         }}
                       >
-                        {copiedId === pdf.id ? <Check size={13} /> : <Share2 size={13} />}
+                        {copiedId === pdf.id ? <Check size={14} /> : <Share2 size={14} />}
                         <span>{copiedId === pdf.id ? "Link Copied" : "Share"}</span>
                       </button>
 
@@ -552,21 +610,21 @@ export default function BrandDownloadClient({ slug }: Props) {
                           })
                         }
                         style={{
-                          background: "#1E1E1E",
+                          background: "#81663F",
                           color: "#FFFFFF",
-                          borderRadius: "6px",
-                          padding: "6px 14px",
-                          fontSize: "0.78rem",
+                          borderRadius: "8px",
+                          padding: "8px 18px",
+                          fontSize: "0.85rem",
                           fontWeight: 800,
                           textDecoration: "none",
                           display: "inline-flex",
                           alignItems: "center",
-                          gap: "4px",
-                          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                          gap: "6px",
+                          boxShadow: "0 2px 8px rgba(129,102,63,0.25)",
                         }}
                       >
                         <span>Open PDF</span>
-                        <ExternalLink size={12} />
+                        <ExternalLink size={13} />
                       </a>
                     </div>
                   </div>

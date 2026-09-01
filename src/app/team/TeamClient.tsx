@@ -214,8 +214,7 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
     <div
       key={member.id || member.name + idx}
       className="team-card"
-      onClick={() => setSelectedMember(member)}
-      style={{ cursor: "pointer" }}
+      style={{ cursor: "default" }}
     >
       <div className="team-card__fig-wrapper">
         <div className="team-card__fig">

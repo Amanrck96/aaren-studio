@@ -804,7 +804,7 @@ export default function BrandDetailClient({
               Let&apos;s work together
             </p>
             <p className="bd-cta__text">
-              Interested in {activeBrand.name} for your project? We&apos;ll discuss specifications, samples, and lead times.
+              {`Interested in ${activeBrand.name} for your project? We'll discuss specifications, samples, and lead times.`}
             </p>
           </div>
           <div className="bd-cta__actions">

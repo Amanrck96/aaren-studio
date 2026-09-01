@@ -58,11 +58,11 @@ export default function Contact() {
       {/* ── Page Header ── */}
       <div className="contact-header">
         <div className="contact-header__inner">
-          <div className="contact-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "2.4rem" }}>
-            GET IN TOUCH — 24/7 Response
+          <div className="contact-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+            GET IN TOUCH
           </div>
-          <h1 className="contact-header__title" style={{ color: "#81663F" }}>Contact Us</h1>
-          <p className="contact-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "52rem" }}>
+          <h1 className="contact-header__title" style={{ color: "#81663F" }}>CONTACT US</h1>
+          <p className="contact-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem" }}>
             Ready to construct something unreal? Fill out the project form, or reach out to our primary creative office directly.
           </p>
         </div>
@@ -112,7 +112,7 @@ export default function Contact() {
               src={
                 settings.googleMapUrl?.includes("output=embed")
                   ? settings.googleMapUrl
-                  : `https://maps.google.com/maps?q=${encodeURIComponent(settings.contactAddress || "AAREN INTPRO Bangalore")}&t=&z=16&ie=UTF8&iwloc=&output=embed`
+                  : `https://maps.google.com/maps?q=${encodeURIComponent(settings.contactAddress || "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026")}&t=&z=16&ie=UTF8&iwloc=&output=embed`
               }
               width="100%"
               height="100%"
@@ -127,7 +127,7 @@ export default function Contact() {
                 <div style={{ fontSize: "0.85rem", fontWeight: 700, marginTop: "2px" }}>{settings.contactAddress || "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026"}</div>
               </div>
               <a
-                href={settings.googleMapUrl || `https://maps.google.com/?q=${encodeURIComponent(settings.contactAddress || "AAREN INTPRO Bangalore")}`}
+                href={settings.googleMapUrl?.includes("maps.google.com") && !settings.googleMapUrl?.includes("output=embed") ? settings.googleMapUrl : `https://maps.google.com/?q=${encodeURIComponent(settings.contactAddress || "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ padding: "0.4rem 0.86rem", background: "#8c764b", color: "#ffffff", borderRadius: "4px", fontSize: "0.75rem", fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" }}
@@ -140,7 +140,7 @@ export default function Contact() {
 
         {/* Right Side: Form */}
         <div className="contact-form-wrapper">
-          <h2 className="form-title">{applyTextCase("Project Debrief", settings.textCase, "title")}</h2>
+          <h2 className="form-title">PROJECT DEBRIEF</h2>
           
           {sent ? (
             <div className="success-message">
@@ -201,24 +201,33 @@ export default function Contact() {
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   className="form-input"
-                  placeholder="Project inquiry / Partnerships"
+                  placeholder="Project Inquiry / Consultation"
                 />
               </div>
 
               <div className="form-group">
-                <label className="form-label">Details</label>
+                <label className="form-label">Message</label>
                 <textarea
-                  rows={4}
                   required
+                  rows={4}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="form-input form-textarea"
-                  placeholder="Describe your design parameters..."
+                  placeholder="Tell us about your project requirements..."
                 />
               </div>
 
-              <button type="submit" className="form-submit-btn" disabled={loading}>
-                {loading ? "Sending..." : "Send Message"} <Send size={14} style={{ marginLeft: "0.8rem" }} />
+              <button
+                type="submit"
+                disabled={loading}
+                className="form-submit-btn"
+              >
+                {loading ? "TRANSMITTING..." : (
+                  <>
+                    <span>SUBMIT BRIEF</span>
+                    <Send size={14} />
+                  </>
+                )}
               </button>
             </form>
           )}
@@ -226,6 +235,7 @@ export default function Contact() {
       </div>
 
       <style>{`
+        /* ── Contact Page Styles ── */
         .contact-page {
           background: #E6E2D8;
           color: #1e1e1e;
@@ -234,14 +244,28 @@ export default function Contact() {
         }
 
         .contact-header {
-          padding: 6rem 0.8rem 4rem;
+          padding: 6rem 2rem 4rem;
           border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
         @media (min-width: 768px) {
           .contact-header {
-            padding: 8rem 1.2rem 4rem;
+            padding: 8rem 4rem 4rem;
           }
+        }
+
+        .contact-header__inner {
+          max-width: 1600px;
+          margin: 0 auto;
+        }
+
+        .contact-header__meta {
+          color: #81663F;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          margin-bottom: 1.6rem;
+          font-size: 1.3rem;
+          text-transform: uppercase;
         }
 
         .contact-header__title {
@@ -251,14 +275,14 @@ export default function Contact() {
           line-height: 0.88;
           text-transform: uppercase;
           color: #81663F;
-          margin-bottom: 3.2rem;
+          margin-bottom: 2.8rem;
         }
 
         .contact-header__desc {
-          font-size: 1.5rem;
-          line-height: 1.5;
-          letter-spacing: -0.01em;
-          color: rgba(0,0,0,0.7);
+          font-size: 1.6rem;
+          line-height: 1.6;
+          max-width: 58rem;
+          color: rgba(0,0,0,0.65);
         }
 
         /* ── Container Layout ── */
@@ -266,6 +290,8 @@ export default function Contact() {
           display: flex;
           flex-direction: column;
           border-bottom: 0.1rem solid rgba(129,102,63,0.18);
+          max-width: 1600px;
+          margin: 0 auto;
         }
 
         @media (min-width: 992px) {
@@ -290,17 +316,25 @@ export default function Contact() {
         }
 
         .info-block {
-          padding: 4rem 2.4rem;
+          padding: 4rem 4rem;
           display: flex;
           flex-direction: column;
           gap: 2.4rem;
           border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
         }
 
+        @media (max-width: 768px) {
+          .info-block {
+            padding: 3rem 2rem;
+          }
+        }
+
         .info-block__title {
           color: #81663F;
+          font-size: 1.3rem;
           font-weight: 700;
           letter-spacing: 0.12em;
+          text-transform: uppercase;
         }
 
         .info-item {
@@ -319,16 +353,17 @@ export default function Contact() {
           align-items: center;
           justify-content: center;
           color: #81663F;
+          flex-shrink: 0;
         }
 
         .info-item__content {
           display: flex;
           flex-direction: column;
-          gap: 0.2rem;
+          gap: 0.3rem;
         }
 
         .info-item__label {
-          font-size: 1.1rem;
+          font-size: 1.2rem;
           text-transform: uppercase;
           color: #5E5852;
           letter-spacing: 0.05em;
@@ -336,52 +371,11 @@ export default function Contact() {
         }
 
         .info-item__value {
-          font-size: 1.4rem;
+          font-size: 1.5rem;
           font-weight: 700;
           color: #81663F;
           text-decoration: none;
-        }
-
-        /* Map Mock */
-        .mock-map {
-          height: 28rem;
-          position: relative;
-          background: #1C1917;
-          overflow: hidden;
-          display: flex;
-          align-items: flex-end;
-          padding: 2.4rem;
-        }
-
-        .mock-map__grid {
-          position: absolute;
-          inset: 0;
-          opacity: 0.15;
-          background-image: radial-gradient(circle, #81663F 0.1rem, transparent 0.1rem);
-          background-size: 1.6rem 1.6rem;
-        }
-
-        .mock-map__overlay {
-          position: relative;
-          z-index: 10;
-          display: flex;
-          flex-direction: column;
-          gap: 0.4rem;
-        }
-
-        .mock-map__tag {
-          font-size: 1.1rem;
-          color: #81663F;
-          opacity: 0.9;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-        }
-
-        .mock-map__address {
-          font-size: 1.4rem;
-          font-weight: 700;
-          color: #fff;
-          text-transform: uppercase;
+          line-height: 1.4;
         }
 
         /* ── Form Side ── */
