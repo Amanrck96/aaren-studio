@@ -256,13 +256,13 @@ export default function AllProjectsClient({ initialProjects }: Props) {
         }
 
         .projects-header {
-          padding: 6rem 2.4rem 3rem;
+          padding: 6rem 2rem 4rem;
           border-bottom: 0.1rem solid rgba(129, 102, 63, 0.2);
         }
 
         @media (min-width: 768px) {
           .projects-header {
-            padding: 8rem 3.2rem 4rem;
+            padding: 8rem 4rem 4rem;
           }
         }
 
@@ -272,12 +272,12 @@ export default function AllProjectsClient({ initialProjects }: Props) {
         }
 
         .projects-title {
-          font-size: clamp(5rem, 12vw, 18rem);
+          font-size: clamp(6rem, 15vw, 22rem);
           font-weight: 700;
           letter-spacing: -0.05em;
           line-height: 0.88;
           text-transform: uppercase;
-          margin-bottom: 2rem;
+          margin-bottom: 2.8rem;
         }
 
         .projects-toolbar {

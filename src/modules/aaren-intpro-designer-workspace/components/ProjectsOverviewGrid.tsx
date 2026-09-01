@@ -37,7 +37,7 @@ export default function ProjectsOverviewGrid({
 }: ProjectsOverviewGridProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("Residential Architecture");
+  const [category, setCategory] = useState("Single Residential");
   const [description, setDescription] = useState("");
   const [budget, setBudget] = useState("");
   const [creating, setCreating] = useState(false);
@@ -593,7 +593,7 @@ export default function ProjectsOverviewGrid({
 
               <div>
                 <label style={{ display: "block", fontSize: "1.15rem", fontWeight: 700, color: "#1C1917", marginBottom: "0.4rem" }}>
-                  Space Category
+                  Project Type / Category
                 </label>
                 <select
                   value={category}
@@ -608,10 +608,17 @@ export default function ProjectsOverviewGrid({
                     boxSizing: "border-box",
                   }}
                 >
-                  <option value="Residential Architecture">Residential Architecture & Villa</option>
-                  <option value="Hospitality Architecture">Hospitality & Penthouse</option>
-                  <option value="Commercial Architecture">Commercial Workspace & Corporate</option>
-                  <option value="Retail & Showroom">Retail & Luxury Showroom</option>
+                  <option value="Single Residential">Single Residential</option>
+                  <option value="Multi Residential">Multi Residential</option>
+                  <option value="Property Staging">Property Staging</option>
+                  <option value="Commercial">Commercial</option>
+                  <option value="Hospitality">Hospitality</option>
+                  <option value="Retail">Retail</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Institutional">Institutional</option>
+                  <option value="Government">Government</option>
+                  <option value="Set And Creative Design">Set And Creative Design</option>
+                  <option value="Community Spaces">Community Spaces</option>
                 </select>
               </div>
 

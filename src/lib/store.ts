@@ -2298,7 +2298,17 @@ export async function getTaxonomiesStore(): Promise<TaxonomyItem[]> {
   return json.taxonomies || [
     { id: "tax-1", type: "Category", name: "Surfaces", code: "SRF", sequenceNumber: 1 },
     { id: "tax-2", type: "Technology", name: "FENIX Nano-Tech", code: "FNT", sequenceNumber: 1 },
-    { id: "tax-3", type: "ProjectType", name: "Penthouse Residence", code: "PR", sequenceNumber: 1 },
+    { id: "tax-3", type: "ProjectType", name: "Single Residential", code: "SR", sequenceNumber: 1 },
+    { id: "tax-4", type: "ProjectType", name: "Multi Residential", code: "MR", sequenceNumber: 2 },
+    { id: "tax-5", type: "ProjectType", name: "Property Staging", code: "PS", sequenceNumber: 3 },
+    { id: "tax-6", type: "ProjectType", name: "Commercial", code: "COM", sequenceNumber: 4 },
+    { id: "tax-7", type: "ProjectType", name: "Hospitality", code: "HOS", sequenceNumber: 5 },
+    { id: "tax-8", type: "ProjectType", name: "Retail", code: "RET", sequenceNumber: 6 },
+    { id: "tax-9", type: "ProjectType", name: "Healthcare", code: "HC", sequenceNumber: 7 },
+    { id: "tax-10", type: "ProjectType", name: "Institutional", code: "INS", sequenceNumber: 8 },
+    { id: "tax-11", type: "ProjectType", name: "Government", code: "GOV", sequenceNumber: 9 },
+    { id: "tax-12", type: "ProjectType", name: "Set And Creative Design", code: "SCD", sequenceNumber: 10 },
+    { id: "tax-13", type: "ProjectType", name: "Community Spaces", code: "CS", sequenceNumber: 11 },
   ];
 }
 

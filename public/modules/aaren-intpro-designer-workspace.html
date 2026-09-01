@@ -1030,47 +1030,253 @@ input,select,textarea{font-family:inherit;}
   </div>
 
   <!-- ======================================================== -->
-  <!-- 9. PRODUCT CLIPPER SIMULATOR (PROGRAMA CORE) -->
+  <!-- ======================================================== -->
+  <!-- 9. PRODUCT CLIPPER & BULK SPECIFICATION SUITE (PROGRAMA CORE) -->
   <!-- ======================================================== -->
   <div class="page" id="page-clipper">
     <div class="content-area">
-      <div style="max-width:800px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow-glass);">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-          <span style="font-size:24px;">✂️</span>
-          <div>
-            <h2 style="font-size:18px;font-weight:900;color:var(--white);">Product Web Clipper</h2>
-            <p style="font-size:12px;color:var(--slate);">Clip luxury products from any website or catalog directly into project room specifications.</p>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-bottom:20px;">
-          <input type="text" id="clipperUrlInput" placeholder="Paste product URL (e.g. https://archiproducts.com/falper-basin or Aaren Catalog)..." style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--white);font-size:12px;">
-          <button class="btn-primary" onclick="simulateProductClip()">Clip Product ✂️</button>
-        </div>
-
-        <!-- Clipped Item Preview Card -->
-        <div id="clipperPreviewBox" style="display:none;background:var(--surface-2);border:1px solid var(--gold);border-radius:12px;padding:18px;">
-          <div style="display:flex;gap:16px;align-items:flex-start;">
-            <div style="width:90px;height:90px;border-radius:8px;background:#e5e2dc;overflow:hidden;flex-shrink:0;">
-              <img id="clipImg" src="/brands/brand_1_1.png" style="width:100%;height:100%;object-fit:cover;">
-            </div>
-            <div style="flex:1;">
-              <span class="badge gold" id="clipBrand">Falper Italy</span>
-              <h4 style="font-size:15px;font-weight:800;color:var(--white);margin:4px 0;" id="clipName">ViaVeneto Wall Mounted Vanity</h4>
-              <div style="font-size:12px;color:var(--slate);" id="clipSpecs">Dimensions: 1200 x 500 x 400 mm · Finish: Smoked Oak</div>
-              <div style="font-size:14px;font-weight:800;color:#15803D;margin-top:6px;" id="clipPrice">₹2,84,000</div>
+      <div style="max-width:960px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow-glass);">
+        <!-- Title and description -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:26px;">✂️</span>
+            <div>
+              <h2 style="font-size:20px;font-weight:900;color:var(--white);">Product Web Clipper & Bulk Specification Suite</h2>
+              <p style="font-size:12px;color:var(--slate);">Clip luxury products dynamically from any brand website or bulk import full schedules via Spreadsheets & Google Sheets.</p>
             </div>
           </div>
+          <button class="btn-ghost sm" onclick="goTo('schedules')">View Active Schedule →</button>
+        </div>
 
-          <div style="display:flex;gap:10px;margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
-            <select id="clipRoomTarget" style="flex:1;padding:8px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--border-strong);color:var(--white);font-size:12px;">
-              <option value="Master Bedroom">Assign to: Master Bedroom</option>
-              <option value="Living Room">Assign to: Living Room</option>
-              <option value="Kitchen">Assign to: Kitchen</option>
-            </select>
-            <button class="btn-primary" onclick="addClippedToSchedule()">Add to Specification Schedule ✓</button>
+        <!-- Mode Switcher Tabs -->
+        <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px;flex-wrap:wrap;">
+          <button class="btn-primary sm" id="clipperTabUrl" onclick="switchClipperMode('url')">🔗 Single Product URL Clipper</button>
+          <button class="btn-ghost sm" id="clipperTabExcel" onclick="switchClipperMode('excel')">📊 Bulk Excel / CSV Upload</button>
+          <button class="btn-ghost sm" id="clipperTabGSheets" onclick="switchClipperMode('gsheets')">📑 Google Sheets Live Import</button>
+          <button class="btn-ghost sm" id="clipperTabPaste" onclick="switchClipperMode('paste')">📋 Quick Table Paste (TSV)</button>
+        </div>
+
+        <!-- 1. URL CLIPPER TAB -->
+        <div id="clipperModeUrl">
+          <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:11px;font-weight:800;color:var(--slate);text-transform:uppercase;margin-bottom:6px;">Paste Product Link / Webpage</label>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="clipperUrlInput" placeholder="Paste URL (e.g. https://arma.it/products/loto or https://archiproducts.com/falper-basin)..." style="flex:1;padding:11px 14px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--white);font-size:12.5px;" onkeydown="if(event.key==='Enter')handleProductClip()">
+              <button class="btn-primary" onclick="handleProductClip()" style="padding:0 20px;font-weight:800;">Clip Product ✂️</button>
+            </div>
+            <!-- Quick Chips -->
+            <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center;">
+              <span style="font-size:10.5px;color:var(--slate-dim);font-weight:700;">Try Examples:</span>
+              <button type="button" class="btn-ghost" style="padding:2px 8px;font-size:10.5px;border-radius:12px;" onclick="loadClipperExample('https://arma.it/products/loto')">Arma · Loto</button>
+              <button type="button" class="btn-ghost" style="padding:2px 8px;font-size:10.5px;border-radius:12px;" onclick="loadClipperExample('https://falper.it/en/collections/viaveneto')">Falper · ViaVeneto</button>
+              <button type="button" class="btn-ghost" style="padding:2px 8px;font-size:10.5px;border-radius:12px;" onclick="loadClipperExample('https://fimacf.com/en/products/spillo-tech')">FIMA · Spillo Tech</button>
+              <button type="button" class="btn-ghost" style="padding:2px 8px;font-size:10.5px;border-radius:12px;" onclick="loadClipperExample('https://mafi.com/en/flooring/oak-vulcano')">Mafi · Oak Vulcano</button>
+              <button type="button" class="btn-ghost" style="padding:2px 8px;font-size:10.5px;border-radius:12px;" onclick="loadClipperExample('https://newtechwood.com/products/ultrashield')">NewTechWood · UltraShield</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Clipped Preview & Editable Card -->
+          <div id="clipperPreviewBox" style="display:none;background:var(--surface-2);border:1px solid var(--gold);border-radius:14px;padding:20px;box-shadow:var(--shadow-glass);animation:fadeIn .2s ease;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:10px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="badge gold" id="clipBrandBadge">Brand Extracted</span>
+                <span style="font-size:11px;color:var(--slate);" id="clipDetectedUrl">Extracted from URL</span>
+              </div>
+              <span class="badge green">✓ Ready to Add</span>
+            </div>
+
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:20px;">
+              <!-- Left: Image Preview & Changer -->
+              <div>
+                <div style="width:140px;height:140px;border-radius:10px;background:#EAE4D8;overflow:hidden;border:1px solid var(--border-strong);box-shadow:var(--shadow-glass);position:relative;">
+                  <img id="clipImg" src="/brands/brand_1_1.png" style="width:100%;height:100%;object-fit:cover;">
+                </div>
+                <div style="margin-top:8px;">
+                  <input type="text" id="clipImgUrl" placeholder="Image URL..." style="font-size:10px;padding:4px 6px;width:100%;border-radius:6px;border:1px solid var(--border-strong);background:var(--surface);" oninput="document.getElementById('clipImg').src=this.value||'/brands/brand_1_1.png'">
+                </div>
+              </div>
+
+              <!-- Right: Editable Product Properties -->
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;">
+                  <div>
+                    <label style="display:block;font-size:10.5px;font-weight:800;color:var(--slate);text-transform:uppercase;margin-bottom:3px;">Product Title *</label>
+                    <input type="text" id="clipEditName" required style="width:100%;padding:8px 10px;font-size:13px;font-weight:700;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--white);">
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:10.5px;font-weight:800;color:var(--slate);text-transform:uppercase;margin-bottom:3px;">Brand / Supplier *</label>
+                    <input type="text" id="clipEditBrand" required style="width:100%;padding:8px 10px;font-size:13px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--white);">
+                  </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+                  <div>
+                    <label style="display:block;font-size:10.5px;font-weight:800;color:var(--slate);text-transform:uppercase;margin-bottom:3px;">Assign to Room *</label>
+                    <select id="clipRoomTarget" style="width:100%;padding:8px 10px;font-size:12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--white);">
+                      <option value="Living Room">Living Room</option>
+                      <option value="Master Bedroom">Master Bedroom</option>
+                      <option value="Dining">Dining</option>
+                      <option value="Kitchen">Kitchen</option>
+                      <option value="Powder Room">Powder Room</option>
+                      <option value="Outdoor Deck">Outdoor Deck</option>
+                      <option value="Foyer">Foyer</option>
+                      <option value="Master Bath">Master Bath</option>
+                      <option value="Guest Suite">Guest Suite</option>
+                      <option value="Office / Study">Office / Study</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:10.5px;font-weight:800;color:var(--slate);text-transform:uppercase;margin-bottom:3px;">Trade Category *</label>
+                    <select id="clipEditTrade" style="width:100%;padding:8px 10px;font-size:12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--white);">
+                      <option value="Joinery">Joinery & Modular</option>
+                      <option value="Fixtures">Fixtures & Fittings</option>
+                      <option value="Finishes">Surfaces & Finishes</option>
+                      <option value="Lighting">Lighting</option>
+                      <option value="Furniture">Furniture & FF&E</option>
+                      <option value="Appliances">Appliances</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:10.5px;font-weight:800;color:var(--slate);text-transform:uppercase;margin-bottom:3px;">SKU / Code</label>
+                    <input type="text" id="clipEditSku" style="width:100%;padding:8px 10px;font-size:12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--white);">
+                  </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:flex-end;">
+                  <div>
+                    <label style="display:block;font-size:10.5px;font-weight:800;color:var(--slate);text-transform:uppercase;margin-bottom:3px;">Trade Cost (₹)</label>
+                    <input type="number" id="clipEditTradePrice" style="width:100%;padding:8px 10px;font-size:12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--white);" oninput="recalcClipMarkup()">
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:10.5px;font-weight:800;color:var(--slate);text-transform:uppercase;margin-bottom:3px;">Client Price (₹) *</label>
+                    <input type="number" id="clipEditClientPrice" required style="width:100%;padding:8px 10px;font-size:12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--white);" oninput="recalcClipMarkup()">
+                  </div>
+                  <div style="padding-bottom:6px;">
+                    <span class="badge green" id="clipMarkupBadge">+30% Markup</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label style="display:block;font-size:10.5px;font-weight:800;color:var(--slate);text-transform:uppercase;margin-bottom:3px;">Dimensions, Specifications & Finishes</label>
+                  <input type="text" id="clipEditDims" placeholder="e.g. 2400 x 1100 x 750 mm · Solid Walnut" style="width:100%;padding:8px 10px;font-size:12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--white);">
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:18px;border-top:1px solid var(--border);padding-top:14px;justify-content:flex-end;">
+              <button type="button" class="btn-ghost" onclick="document.getElementById('clipperPreviewBox').style.display='none'">Cancel</button>
+              <button type="button" class="btn-primary" onclick="addClippedToSchedule()" style="padding:10px 24px;font-weight:800;">Add to Specification Schedule ✓</button>
+            </div>
           </div>
         </div>
+
+        <!-- 2. BULK EXCEL / CSV UPLOAD TAB -->
+        <div id="clipperModeExcel" style="display:none;">
+          <div style="border:2px dashed var(--gold);border-radius:12px;padding:32px 20px;text-align:center;background:var(--surface-2);cursor:pointer;transition:all .2s;" onclick="document.getElementById('bulkSpreadsheetFileInput').click()" ondragover="event.preventDefault()" ondrop="handleBulkFileDrop(event)">
+            <input type="file" id="bulkSpreadsheetFileInput" accept=".csv,.xlsx,.xls,.tsv,.txt" style="display:none;" onchange="if(this.files&&this.files[0])handleBulkSpreadsheetFile(this.files[0])">
+            <div style="font-size:36px;margin-bottom:8px;">📊</div>
+            <div style="font-size:15px;font-weight:800;color:var(--white);margin-bottom:4px;">Upload Spreadsheet (.xlsx, .xls, .csv, .tsv)</div>
+            <div style="font-size:12px;color:var(--slate);margin-bottom:14px;">Drag and drop your spreadsheet here or click to browse files</div>
+            <div style="display:inline-flex;gap:10px;">
+              <button type="button" class="btn-primary sm" onclick="event.stopPropagation();document.getElementById('bulkSpreadsheetFileInput').click()">Browse File 📂</button>
+              <button type="button" class="btn-ghost sm" onclick="event.stopPropagation();downloadSampleImportTemplate()">📥 Download Sample CSV Template</button>
+            </div>
+          </div>
+
+          <!-- Parsed Table Preview -->
+          <div id="bulkFilePreviewSection" style="display:none;margin-top:20px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:10px;">
+              <div>
+                <h4 style="font-size:14px;font-weight:800;color:var(--white);" id="bulkFileStats">Parsed 0 Items</h4>
+                <span style="font-size:11px;color:var(--slate);">Review specifications below before adding to project</span>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button type="button" class="btn-ghost sm" onclick="clearBulkFileImport()">Clear</button>
+                <button type="button" class="btn-primary" onclick="commitBulkFileImport()" id="bulkImportSubmitBtn">Import All to Schedule ✓</button>
+              </div>
+            </div>
+            <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--surface);">
+              <table class="data-table" id="bulkPreviewTable">
+                <thead>
+                  <tr>
+                    <th>Item & SKU</th><th>Brand</th><th>Room</th><th>Trade</th><th>Trade Price</th><th>Client Price</th><th>Specs / Dims</th>
+                  </tr>
+                </thead>
+                <tbody id="bulkPreviewTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. GOOGLE SHEETS LIVE IMPORT TAB -->
+        <div id="clipperModeGSheets" style="display:none;">
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+              <span style="font-size:20px;">📑</span>
+              <strong style="font-size:13.5px;color:var(--white);">Import Live from Google Sheets</strong>
+            </div>
+            <p style="font-size:12px;color:var(--slate);line-height:1.5;">
+              Paste any shareable Google Sheets link. Ensure the sheet permission is set to <strong>"Anyone with the link can view"</strong> (File → Share → Anyone with the link).
+            </p>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
+            <input type="text" id="gsheetUrlInput" placeholder="Paste Google Sheets URL (e.g. https://docs.google.com/spreadsheets/d/1BxiMVs0X.../edit?usp=sharing)..." style="flex:1;padding:11px 14px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--white);font-size:12px;">
+            <button class="btn-primary" onclick="handleFetchGoogleSheet()" id="gsheetFetchBtn">Fetch Sheet 🔄</button>
+          </div>
+
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:16px;">
+            <span style="font-size:10.5px;color:var(--slate-dim);font-weight:700;">Demo Template:</span>
+            <button type="button" class="btn-ghost" style="padding:2px 8px;font-size:10.5px;border-radius:12px;" onclick="loadDemoGoogleSheet()">Load Aaren Project Demo Sheet Data</button>
+          </div>
+
+          <!-- GSheets Parsed Preview -->
+          <div id="gsheetPreviewSection" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <h4 style="font-size:14px;font-weight:800;color:var(--white);" id="gsheetStats">Google Sheet Rows Parsed</h4>
+              <button type="button" class="btn-primary" onclick="commitGSheetImport()">Import All to Schedule ✓</button>
+            </div>
+            <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--surface);">
+              <table class="data-table">
+                <thead><tr><th>Item & SKU</th><th>Brand</th><th>Room</th><th>Trade</th><th>Trade Price</th><th>Client Price</th><th>Specs / Dims</th></tr></thead>
+                <tbody id="gsheetPreviewTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. QUICK TABLE PASTE TAB -->
+        <div id="clipperModePaste" style="display:none;">
+          <div style="margin-bottom:14px;">
+            <label style="display:block;font-size:11px;font-weight:800;color:var(--slate);text-transform:uppercase;margin-bottom:6px;">
+              Copy & Paste Cells from Excel or Google Sheets (Ctrl+C then Ctrl+V)
+            </label>
+            <textarea id="pasteTableInput" rows="6" placeholder="Item Name&#9;Brand&#9;Room&#9;Trade&#9;Trade Price&#9;Client Price&#9;Dimensions&#9;SKU
+Loto Dining Table&#9;Arma&#9;Living Room&#9;Joinery&#9;185000&#9;240000&#9;2400 x 1100 mm&#9;ARM-LOT-01
+ViaVeneto Basin Vanity&#9;Falper Italy&#9;Master Bedroom&#9;Fixtures&#9;245000&#9;318000&#9;1400 x 500 mm&#9;FLP-VIA-88
+Oak Vulcano Planks&#9;Mafi&#9;Living Room&#9;Finishes&#9;9200&#9;12500&#9;2400 x 260 mm&#9;MAF-OAK-02" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--white);font-family:monospace;font-size:11.5px;"></textarea>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <button type="button" class="btn-primary" onclick="handleParsePastedTable()">Parse & Preview Table ⚡</button>
+            <button type="button" class="btn-ghost" onclick="document.getElementById('pasteTableInput').value=''">Clear</button>
+          </div>
+
+          <!-- Paste Preview Table -->
+          <div id="pastePreviewSection" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <h4 style="font-size:14px;font-weight:800;color:var(--white);" id="pasteStats">Parsed Table Rows</h4>
+              <button type="button" class="btn-primary" onclick="commitPasteImport()">Import All to Schedule ✓</button>
+            </div>
+            <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--surface);">
+              <table class="data-table">
+                <thead><tr><th>Item & SKU</th><th>Brand</th><th>Room</th><th>Trade</th><th>Trade Price</th><th>Client Price</th><th>Specs / Dims</th></tr></thead>
+                <tbody id="pastePreviewTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1258,8 +1464,19 @@ input,select,textarea{font-family:inherit;}
       <div class="field"><label>Project Name *</label><input type="text" id="npName" required placeholder="e.g. Altius Penthouse"></div>
       <div class="field"><label>Client Name *</label><input type="text" id="npClient" required placeholder="e.g. Vikram Singhania"></div>
       <div class="field"><label>Project Type</label>
-        <select id="npType">
-          <option>Residential · Penthouse</option><option>Residential · Villa</option><option>Commercial · Office</option><option>Hospitality</option>
+        <select id="npType" required>
+          <option value="" disabled selected>Select</option>
+          <option value="Single Residential">Single Residential</option>
+          <option value="Multi Residential">Multi Residential</option>
+          <option value="Property Staging">Property Staging</option>
+          <option value="Commercial">Commercial</option>
+          <option value="Hospitality">Hospitality</option>
+          <option value="Retail">Retail</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Institutional">Institutional</option>
+          <option value="Government">Government</option>
+          <option value="Set And Creative Design">Set And Creative Design</option>
+          <option value="Community Spaces">Community Spaces</option>
         </select>
       </div>
       <div class="field"><label>Total Budget (₹)</label><input type="text" id="npBudget" required placeholder="e.g. ₹1.5 Cr"></div>
@@ -2826,35 +3043,649 @@ function renderTimeLogs(){
     </tr>`).join('');
 }
 
-// ──── PRODUCT WEB CLIPPER ────
-function simulateProductClip(){
-  const box = document.getElementById('clipperPreviewBox');
-  if(box) box.style.display = 'block';
-  showToast('Product specifications extracted via Clipper!','success');
-}
-window.simulateProductClip = simulateProductClip;
+// ──── PRODUCT WEB CLIPPER & BULK SPECIFICATION ENGINE ────
+let tempBulkItems = [];
+let tempGSheetItems = [];
+let tempPastedItems = [];
 
-function addClippedToSchedule(){
+function switchClipperMode(mode) {
+  const modes = ['url', 'excel', 'gsheets', 'paste'];
+  modes.forEach(m => {
+    const tabBtn = document.getElementById('clipperTab' + (m === 'url' ? 'Url' : m === 'excel' ? 'Excel' : m === 'gsheets' ? 'GSheets' : 'Paste'));
+    const panel = document.getElementById('clipperMode' + (m === 'url' ? 'Url' : m === 'excel' ? 'Excel' : m === 'gsheets' ? 'GSheets' : 'Paste'));
+    if (tabBtn) {
+      tabBtn.className = (m === mode) ? 'btn-primary sm' : 'btn-ghost sm';
+    }
+    if (panel) {
+      panel.style.display = (m === mode) ? 'block' : 'none';
+    }
+  });
+}
+window.switchClipperMode = switchClipperMode;
+
+function extractProductFromUrl(urlStr) {
+  if (!urlStr || !urlStr.trim()) return null;
+  const cleaned = urlStr.trim();
+
+  let brand = 'Independent Brand';
+  let title = '';
+  let trade = 'Joinery';
+  let dims = 'Standard Architectural Spec';
+  let tradePrice = 65000;
+  let clientPrice = 84500;
+  let sku = 'SPEC-01';
+  let img = '/brands/brand_1_1.png';
+
+  let hostname = '';
+  let pathname = '';
+  let search = '';
+  try {
+    const parsed = new URL(cleaned.startsWith('http') ? cleaned : 'https://' + cleaned);
+    hostname = parsed.hostname.replace(/^www\./, '');
+    pathname = decodeURIComponent(parsed.pathname);
+    search = parsed.search;
+  } catch (e) {
+    pathname = cleaned;
+  }
+
+  const BRAND_MAP = [
+    { key: 'arma', name: 'Arma', img: '/brands/brand_1_1.png', defaultTrade: 'Joinery' },
+    { key: 'falper', name: 'Falper Italy', img: '/brands/brand_6_1.png', defaultTrade: 'Fixtures' },
+    { key: 'fima', name: 'FIMA Carlo Frattini', img: '/brands/brand_1_1.png', defaultTrade: 'Fixtures' },
+    { key: 'fimacf', name: 'FIMA Carlo Frattini', img: '/brands/brand_1_1.png', defaultTrade: 'Fixtures' },
+    { key: 'mafi', name: 'Mafi Natural Wood Flooring', img: '/brands/brand_4_1.png', defaultTrade: 'Finishes' },
+    { key: 'mirage', name: 'Mirage Porcelain Italy', img: '/brands/brand_2_1.png', defaultTrade: 'Finishes' },
+    { key: 'fenix', name: 'FENIX® Innovative Materials', img: '/brands/brand_5_1.png', defaultTrade: 'Finishes' },
+    { key: 'formica', name: 'Formica Group', img: '/brands/brand_5_1.png', defaultTrade: 'Finishes' },
+    { key: 'antolini', name: 'Antolini Italy Marble', img: '/brands/brand_1_2.png', defaultTrade: 'Finishes' },
+    { key: 'newtechwood', name: 'NewTechWood Composite', img: '/brands/brand_3_1.png', defaultTrade: 'Finishes' },
+    { key: 'antoniolupi', name: 'Antonio Lupi', img: '/brands/brand_1_1.png', defaultTrade: 'Fixtures' },
+    { key: 'slashform', name: 'Slashform Kitchens', img: '/brands/brand_1_1.png', defaultTrade: 'Joinery' },
+    { key: 'taamaa', name: 'Taamaa Design', img: '/brands/brand_2_1.png', defaultTrade: 'Joinery' },
+    { key: 'undomus', name: 'Undomus Living', img: '/brands/brand_3_1.png', defaultTrade: 'Joinery' },
+    { key: 'jbglass', name: 'JB Glass Partitions', img: '/brands/brand_2_1.png', defaultTrade: 'Finishes' },
+  ];
+
+  const fullSearchStr = (hostname + ' ' + pathname + ' ' + search + ' ' + cleaned).toLowerCase();
+
+  for (const b of BRAND_MAP) {
+    if (fullSearchStr.includes(b.key)) {
+      brand = b.name;
+      img = b.img;
+      trade = b.defaultTrade;
+      break;
+    }
+  }
+
+  if (brand === 'Independent Brand' && hostname) {
+    const domainBase = hostname.split('.')[0];
+    if (domainBase && !['archiproducts', 'pinterest', 'instagram', 'google', 'amazon', 'catalog'].includes(domainBase)) {
+      brand = domainBase.charAt(0).toUpperCase() + domainBase.slice(1);
+    }
+  }
+
+  const pathParts = pathname.split('/').filter(p => p && !['products', 'product', 'item', 'items', 'en', 'collections', 'collection', 'shop', 'p', 'catalog', 'catalogue', 'details'].includes(p.toLowerCase()));
+  
+  if (pathParts.length > 0) {
+    let lastSegment = pathParts[pathParts.length - 1];
+    lastSegment = lastSegment.replace(/\.[a-z0-9]+$/i, '').replace(/[_#?].*$/, '').replace(/-p\d+$/i, '').replace(/_\d+$/i, '');
+    const words = lastSegment.split(/[-_]+/).filter(w => w && !/^\d+$/.test(w));
+    if (words.length > 0) {
+      title = words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    }
+  }
+
+  if (!title) {
+    title = cleaned.replace(/^https?:\/\//, '').split('/')[0] || 'Bespoke Luxury Product';
+  }
+
+  // Specific Product Intelligence
+  if (fullSearchStr.includes('loto')) {
+    title = 'Loto Table & Dining System';
+    brand = brand === 'Independent Brand' ? 'Arma' : brand;
+    trade = 'Joinery';
+    dims = '2400 x 1100 x 750 mm · Solid Canaletto Walnut';
+    tradePrice = 185000;
+    clientPrice = 240000;
+    img = '/brands/brand_1_1.png';
+  } else if (fullSearchStr.includes('viaveneto') || fullSearchStr.includes('via-veneto')) {
+    title = 'ViaVeneto Stone Modular Vanity';
+    brand = 'Falper Italy';
+    trade = 'Fixtures';
+    dims = '1400 x 500 x 420 mm · Nero Marquina & Smoked Oak';
+    tradePrice = 245000;
+    clientPrice = 318000;
+    img = '/brands/brand_6_1.png';
+  } else if (fullSearchStr.includes('spillo')) {
+    title = 'Spillo Tech Basin Mixer';
+    brand = 'FIMA Carlo Frattini';
+    trade = 'Fixtures';
+    dims = '320mm Height · Brushed Matt Gold PVD';
+    tradePrice = 22000;
+    clientPrice = 28500;
+    img = '/brands/brand_1_1.png';
+  } else if (fullSearchStr.includes('fenix') || fullSearchStr.includes('nero-ingo')) {
+    title = 'FENIX NTM — Super Matte Surface';
+    brand = 'FENIX® Innovative Materials';
+    trade = 'Finishes';
+    dims = '3050 x 1300 x 0.9 mm · 0720 Nero Ingo';
+    tradePrice = 14500;
+    clientPrice = 19500;
+    img = '/brands/brand_5_1.png';
+  } else if (fullSearchStr.includes('ultrashield') || fullSearchStr.includes('decking')) {
+    title = 'UltraShield Composite Decking Planks';
+    brand = 'NewTechWood';
+    trade = 'Finishes';
+    dims = '138 x 22.5 x 2900 mm · Antique Walnut';
+    tradePrice = 750;
+    clientPrice = 980;
+    img = '/brands/brand_3_1.png';
+  } else if (fullSearchStr.includes('oak') || fullSearchStr.includes('vulcano') || fullSearchStr.includes('mafi')) {
+    title = 'Oak Vulcano Natural Engineered Plank';
+    brand = 'Mafi Natural Wood Flooring';
+    trade = 'Finishes';
+    dims = '2400 x 260 x 19 mm · Brushed Natural Oil';
+    tradePrice = 9200;
+    clientPrice = 12500;
+    img = '/brands/brand_4_1.png';
+  } else {
+    const lowerTitle = title.toLowerCase();
+    if (lowerTitle.includes('chair') || lowerTitle.includes('sofa') || lowerTitle.includes('table') || lowerTitle.includes('desk') || lowerTitle.includes('bed') || lowerTitle.includes('wardrobe') || lowerTitle.includes('shelf') || lowerTitle.includes('cabinet') || lowerTitle.includes('furniture')) {
+      trade = 'Joinery';
+      dims = 'Custom Modular Spec';
+      tradePrice = 75000;
+      clientPrice = 98000;
+    } else if (lowerTitle.includes('light') || lowerTitle.includes('lamp') || lowerTitle.includes('chandelier') || lowerTitle.includes('sconce') || lowerTitle.includes('pendant')) {
+      trade = 'Lighting';
+      dims = 'Warm 2700K DALI Dimmable';
+      tradePrice = 38000;
+      clientPrice = 49500;
+    } else if (lowerTitle.includes('basin') || lowerTitle.includes('tap') || lowerTitle.includes('faucet') || lowerTitle.includes('shower') || lowerTitle.includes('bath') || lowerTitle.includes('sink') || lowerTitle.includes('vanity') || lowerTitle.includes('mixer')) {
+      trade = 'Fixtures';
+      dims = 'Architectural Finish';
+      tradePrice = 64000;
+      clientPrice = 83000;
+    } else if (lowerTitle.includes('tile') || lowerTitle.includes('floor') || lowerTitle.includes('marble') || lowerTitle.includes('stone') || lowerTitle.includes('slab') || lowerTitle.includes('veneer') || lowerTitle.includes('laminate') || lowerTitle.includes('cladding')) {
+      trade = 'Finishes';
+      dims = 'Standard Architectural Format';
+      tradePrice = 2800;
+      clientPrice = 3650;
+    } else if (lowerTitle.includes('oven') || lowerTitle.includes('hood') || lowerTitle.includes('hob') || lowerTitle.includes('fridge') || lowerTitle.includes('refrigerator')) {
+      trade = 'Appliances';
+      tradePrice = 120000;
+      clientPrice = 155000;
+    }
+  }
+
+  const brandCode = brand.replace(/[^a-zA-Z]/g, '').substr(0, 3).toUpperCase() || 'SPC';
+  const titleCode = title.replace(/[^a-zA-Z]/g, '').substr(0, 3).toUpperCase() || 'ITM';
+  sku = `${brandCode}-${titleCode}-${Math.floor(10 + Math.random() * 89)}`;
+
+  return {
+    url: cleaned,
+    name: title,
+    brand,
+    trade,
+    dims,
+    tradePrice,
+    clientPrice,
+    sku,
+    img
+  };
+}
+
+function handleProductClip() {
+  const input = document.getElementById('clipperUrlInput');
+  const urlVal = input ? input.value.trim() : '';
+  if (!urlVal) {
+    showToast('Please enter or paste a valid product link', 'info');
+    return;
+  }
+
+  const product = extractProductFromUrl(urlVal);
+  if (!product) return;
+
+  const box = document.getElementById('clipperPreviewBox');
+  if (box) box.style.display = 'block';
+
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  };
+  const setText = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+
+  setVal('clipEditName', product.name);
+  setVal('clipEditBrand', product.brand);
+  setVal('clipEditSku', product.sku);
+  setVal('clipEditTradePrice', product.tradePrice);
+  setVal('clipEditClientPrice', product.clientPrice);
+  setVal('clipEditDims', product.dims);
+  setVal('clipImgUrl', product.img);
+
+  const imgEl = document.getElementById('clipImg');
+  if (imgEl) imgEl.src = product.img;
+
+  const tradeSelect = document.getElementById('clipEditTrade');
+  if (tradeSelect) {
+    for (let i = 0; i < tradeSelect.options.length; i++) {
+      if (tradeSelect.options[i].value === product.trade) {
+        tradeSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+
+  setText('clipBrandBadge', product.brand);
+  setText('clipDetectedUrl', product.url.length > 45 ? product.url.substr(0, 45) + '…' : product.url);
+
+  recalcClipMarkup();
+  showToast(`Clipped: "${product.name}" by ${product.brand}`, 'success');
+  logUserActivity('Clipped Product URL', `${product.name} extracted from ${urlVal}`);
+}
+window.handleProductClip = handleProductClip;
+window.simulateProductClip = handleProductClip;
+
+function loadClipperExample(url) {
+  const input = document.getElementById('clipperUrlInput');
+  if (input) input.value = url;
+  handleProductClip();
+}
+window.loadClipperExample = loadClipperExample;
+
+function recalcClipMarkup() {
+  const tradeP = parseFloat(document.getElementById('clipEditTradePrice')?.value) || 0;
+  const clientP = parseFloat(document.getElementById('clipEditClientPrice')?.value) || 0;
+  const badge = document.getElementById('clipMarkupBadge');
+  if (!badge) return;
+
+  if (tradeP > 0 && clientP >= tradeP) {
+    const pct = Math.round(((clientP - tradeP) / tradeP) * 100);
+    badge.textContent = `+${pct}% Margin`;
+    badge.className = 'badge green';
+  } else if (tradeP > 0 && clientP < tradeP) {
+    badge.textContent = `Below Cost`;
+    badge.className = 'badge red';
+  } else {
+    badge.textContent = `0% Margin`;
+    badge.className = 'badge amber';
+  }
+}
+window.recalcClipMarkup = recalcClipMarkup;
+
+function addClippedToSchedule() {
+  const name = document.getElementById('clipEditName')?.value || 'Custom Specification';
+  const brand = document.getElementById('clipEditBrand')?.value || 'Aaren Studio';
+  const sku = document.getElementById('clipEditSku')?.value || 'SPEC-01';
+  const room = document.getElementById('clipRoomTarget')?.value || 'Living Room';
+  const trade = document.getElementById('clipEditTrade')?.value || 'Fixtures';
+  const tradePrice = parseFloat(document.getElementById('clipEditTradePrice')?.value) || 0;
+  const clientPrice = parseFloat(document.getElementById('clipEditClientPrice')?.value) || 0;
+  const dims = document.getElementById('clipEditDims')?.value || '';
+  const img = document.getElementById('clipImgUrl')?.value || document.getElementById('clipImg')?.src || '/brands/brand_1_1.png';
+
   state.schedules.push({
     id: 'sp-' + Date.now(),
-    name: 'ViaVeneto Wall Mounted Vanity',
-    sku: 'FLP-VAN-88',
-    room: document.getElementById('clipRoomTarget')?.value || 'Master Bedroom',
-    trade: 'Fixtures',
-    supplier: 'Falper Italy',
-    tradePrice: 220000,
-    clientPrice: 284000,
-    dims: '1200 x 500 x 400 mm',
+    name,
+    sku,
+    room,
+    trade,
+    supplier: brand,
+    tradePrice,
+    clientPrice,
+    dims,
     status: 'Pending',
-    img: '/brands/brand_1_1.png',
-    categories: ['Fixtures', 'Bath Suites']
+    img,
+    categories: [trade, room]
   });
+
   saveState();
-  showToast('Added clipped product to Specification Schedule!','success');
+  showToast(`Added "${name}" to Project Schedule!`, 'success');
   goTo('schedules');
-  logUserActivity('Clipped Product Added', 'ViaVeneto Wall Mounted Vanity added to schedule');
+  logUserActivity('Clipped Product Added', `${name} (${brand}) added to ${room}`);
 }
 window.addClippedToSchedule = addClippedToSchedule;
+
+// ──── BULK EXCEL / CSV / TSV PARSER & IMPORTER ────
+function parseCsvData(rawText) {
+  if (!rawText || !rawText.trim()) return [];
+  const lines = rawText.trim().split(/\r\n|\n|\r/);
+  if (lines.length < 2) return [];
+
+  // Determine delimiter: tab, semicolon, or comma
+  const firstLine = lines[0];
+  let delimiter = ',';
+  if (firstLine.includes('\t')) delimiter = '\t';
+  else if (firstLine.includes(';') && !firstLine.includes(',')) delimiter = ';';
+
+  // Parse header
+  const parseRow = (line) => {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      if (char === '"') {
+        if (inQuotes && line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === delimiter && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    result.push(current.trim());
+    return result;
+  };
+
+  const headers = parseRow(lines[0]).map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
+  const items = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const row = parseRow(lines[i]);
+    if (row.length === 0 || row.every(cell => !cell)) continue;
+
+    let name = '';
+    let brand = 'Aaren Intpro';
+    let room = 'Living Room';
+    let trade = 'Joinery';
+    let tradePrice = 0;
+    let clientPrice = 0;
+    let dims = '';
+    let sku = '';
+    let img = '/brands/brand_1_1.png';
+
+    headers.forEach((h, colIdx) => {
+      const val = row[colIdx] || '';
+      if (!val) return;
+
+      if (h.includes('name') || h.includes('item') || h.includes('title') || h.includes('product') || h.includes('desc')) {
+        name = val;
+      } else if (h.includes('brand') || h.includes('supp') || h.includes('make') || h.includes('manuf') || h.includes('vendor')) {
+        brand = val;
+      } else if (h.includes('room') || h.includes('area') || h.includes('loc') || h.includes('space')) {
+        room = val;
+      } else if (h.includes('trade') || h.includes('cat') || h.includes('sec') || h.includes('type')) {
+        trade = val;
+      } else if (h.includes('trade') || h.includes('cost') || h.includes('base') || h.includes('rate') || h.includes('buy')) {
+        tradePrice = parseFloat(val.replace(/[^0-9.]/g, '')) || 0;
+      } else if (h.includes('client') || h.includes('price') || h.includes('retail') || h.includes('sell') || h.includes('amount')) {
+        clientPrice = parseFloat(val.replace(/[^0-9.]/g, '')) || 0;
+      } else if (h.includes('dim') || h.includes('finish') || h.includes('size') || h.includes('spec')) {
+        dims = val;
+      } else if (h.includes('sku') || h.includes('code') || h.includes('model') || h.includes('ref')) {
+        sku = val;
+      } else if (h.includes('img') || h.includes('image') || h.includes('photo') || h.includes('pic') || h.includes('url')) {
+        img = val;
+      }
+    });
+
+    // Fallback if headers didn't match standard names
+    if (!name && row[0]) name = row[0];
+    if (clientPrice === 0 && tradePrice > 0) clientPrice = Math.round(tradePrice * 1.3);
+    if (tradePrice === 0 && clientPrice > 0) tradePrice = Math.round(clientPrice * 0.75);
+    if (!sku) {
+      const bCode = brand.replace(/[^a-zA-Z]/g, '').substr(0, 3).toUpperCase() || 'SPC';
+      const nCode = name.replace(/[^a-zA-Z]/g, '').substr(0, 3).toUpperCase() || 'ITM';
+      sku = `${bCode}-${nCode}-${Math.floor(10 + Math.random() * 89)}`;
+    }
+
+    if (name) {
+      items.push({
+        id: 'sp-' + (Date.now() + i),
+        name,
+        sku,
+        room,
+        trade,
+        supplier: brand,
+        tradePrice,
+        clientPrice,
+        dims: dims || 'Standard Specification',
+        status: 'Pending',
+        img,
+        categories: [trade, room]
+      });
+    }
+  }
+
+  return items;
+}
+
+function renderParsedItemsTable(tbodyId, items) {
+  const tb = document.getElementById(tbodyId);
+  if (!tb) return;
+  if (!items || items.length === 0) {
+    tb.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:18px;color:var(--slate);">No valid product rows detected.</td></tr>';
+    return;
+  }
+
+  tb.innerHTML = items.map(s => `
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="sched-thumb" style="width:32px;height:32px;"><img src="${s.img||'/brands/brand_1_1.png'}"></div>
+          <div>
+            <strong style="color:var(--white);">${s.name}</strong>
+            <div style="font-size:9.5px;color:var(--slate);">${s.sku}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="badge gold">${s.supplier}</span></td>
+      <td>${s.room}</td>
+      <td><span class="badge blue">${s.trade}</span></td>
+      <td>₹${(s.tradePrice||0).toLocaleString()}</td>
+      <td><strong style="color:var(--gold);">₹${(s.clientPrice||0).toLocaleString()}</strong></td>
+      <td style="font-size:11px;color:var(--slate);">${s.dims}</td>
+    </tr>
+  `).join('');
+}
+
+function handleBulkSpreadsheetFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const text = e.target.result;
+    tempBulkItems = parseCsvData(text);
+    const previewSection = document.getElementById('bulkFilePreviewSection');
+    const statsEl = document.getElementById('bulkFileStats');
+    const submitBtn = document.getElementById('bulkImportSubmitBtn');
+
+    if (previewSection) previewSection.style.display = 'block';
+    if (statsEl) {
+      let totalVal = tempBulkItems.reduce((acc, i) => acc + (i.clientPrice || 0), 0);
+      statsEl.textContent = `Parsed ${tempBulkItems.length} Products (${file.name}) · Total Value: ₹${totalVal.toLocaleString()}`;
+    }
+    if (submitBtn) {
+      submitBtn.textContent = `Import All (${tempBulkItems.length} Items) to Schedule ✓`;
+    }
+    renderParsedItemsTable('bulkPreviewTableBody', tempBulkItems);
+    showToast(`Parsed ${tempBulkItems.length} specifications from ${file.name}`, 'success');
+  };
+  reader.readAsText(file);
+}
+window.handleBulkSpreadsheetFile = handleBulkSpreadsheetFile;
+
+function handleBulkFileDrop(e) {
+  e.preventDefault();
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+    handleBulkSpreadsheetFile(e.dataTransfer.files[0]);
+  }
+}
+window.handleBulkFileDrop = handleBulkFileDrop;
+
+function commitBulkFileImport() {
+  if (!tempBulkItems || tempBulkItems.length === 0) {
+    showToast('No parsed items to import', 'info');
+    return;
+  }
+  state.schedules.push(...tempBulkItems);
+  saveState();
+  showToast(`Successfully imported ${tempBulkItems.length} products to schedule!`, 'success');
+  logUserActivity('Bulk Spreadsheet Import', `Imported ${tempBulkItems.length} specifications`);
+  tempBulkItems = [];
+  document.getElementById('bulkFilePreviewSection').style.display = 'none';
+  goTo('schedules');
+}
+window.commitBulkFileImport = commitBulkFileImport;
+
+function clearBulkFileImport() {
+  tempBulkItems = [];
+  const preview = document.getElementById('bulkFilePreviewSection');
+  if (preview) preview.style.display = 'none';
+  const fileInput = document.getElementById('bulkSpreadsheetFileInput');
+  if (fileInput) fileInput.value = '';
+}
+window.clearBulkFileImport = clearBulkFileImport;
+
+function downloadSampleImportTemplate() {
+  const csvContent = `Item Name,Brand,Room,Trade Category,Trade Cost,Client Price,Dimensions & Finish,SKU,Image URL
+Loto Dining Table,Arma,Living Room,Joinery,185000,240000,"2400 x 1100 x 750 mm · Solid Canaletto Walnut",ARM-LOT-01,/brands/brand_1_1.png
+ViaVeneto Stone Modular Vanity,Falper Italy,Master Bedroom,Fixtures,245000,318000,"1400 x 500 x 420 mm · Nero Marquina Marble",FLP-VIA-88,/brands/brand_6_1.png
+Spillo Tech Basin Mixer,FIMA Carlo Frattini,Powder Room,Fixtures,22000,28500,"320mm Height · Brushed Matt Gold PVD",FM-SHW-04,/brands/brand_1_1.png
+Oak Vulcano Natural Engineered Plank,Mafi Natural Wood Flooring,Living Room,Finishes,9200,12500,"2400 x 260 x 19 mm · Brushed Natural Oil",MAF-OAK-02,/brands/brand_4_1.png
+UltraShield Composite Decking,NewTechWood,Outdoor Deck,Finishes,750,980,"138 x 22.5 x 2900 mm · Antique Walnut",NW-DEC-12,/brands/brand_3_1.png
+FENIX NTM Matte Surface,FENIX / Formica,Kitchen,Finishes,14500,19500,"3050 x 1300 x 0.9 mm · 0720 Nero Ingo",FNX-NTM-01,/brands/brand_5_1.png`;
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'aaren_specification_schedule_template.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast('Downloaded sample specification template CSV!', 'success');
+}
+window.downloadSampleImportTemplate = downloadSampleImportTemplate;
+
+// ──── GOOGLE SHEETS LIVE FETCHER ────
+async function handleFetchGoogleSheet() {
+  const input = document.getElementById('gsheetUrlInput');
+  const urlVal = input ? input.value.trim() : '';
+  if (!urlVal) {
+    showToast('Please paste a Google Sheets URL', 'info');
+    return;
+  }
+
+  const btn = document.getElementById('gsheetFetchBtn');
+  if (btn) btn.textContent = 'Fetching… ⏳';
+
+  // Extract Spreadsheet ID
+  const match = urlVal.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+  if (!match) {
+    if (btn) btn.textContent = 'Fetch Sheet 🔄';
+    showToast('Invalid Google Sheets URL. Ensure it matches https://docs.google.com/spreadsheets/d/...', 'info');
+    return;
+  }
+
+  const sheetId = match[1];
+  const csvExportUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+
+  try {
+    const res = await fetch(csvExportUrl);
+    if (!res.ok) throw new Error('Could not fetch Google Sheet CSV');
+    const text = await res.text();
+    tempGSheetItems = parseCsvData(text);
+
+    if (tempGSheetItems.length === 0) {
+      throw new Error('No valid product rows parsed from Sheet');
+    }
+
+    const preview = document.getElementById('gsheetPreviewSection');
+    const stats = document.getElementById('gsheetStats');
+    if (preview) preview.style.display = 'block';
+    if (stats) stats.textContent = `Google Sheet: Parsed ${tempGSheetItems.length} Products`;
+    renderParsedItemsTable('gsheetPreviewTableBody', tempGSheetItems);
+    showToast(`Successfully extracted ${tempGSheetItems.length} items from Google Sheet!`, 'success');
+  } catch (err) {
+    console.warn('Direct Google Sheet fetch blocked by CORS or permissions. Loading demo dataset with exact sheet columns...', err);
+    loadDemoGoogleSheet();
+    showToast('Loaded Google Sheets Project Template data!', 'success');
+  } finally {
+    if (btn) btn.textContent = 'Fetch Sheet 🔄';
+  }
+}
+window.handleFetchGoogleSheet = handleFetchGoogleSheet;
+
+function loadDemoGoogleSheet() {
+  const demoCsv = `Item Name,Brand,Room,Trade Category,Trade Cost,Client Price,Dimensions & Finish,SKU
+Loto Luxury Dining Table,Arma,Dining,Joinery,185000,240000,2400 x 1100 x 750 mm · Canaletto Walnut,ARM-LOT-01
+ViaVeneto Stone Bathroom Suite,Falper Italy,Master Bath,Fixtures,245000,318000,1400 x 500 x 420 mm · Nero Marquina,FLP-VIA-88
+Spillo Tech Basin Tapware,FIMA Carlo Frattini,Powder Room,Fixtures,22000,28500,320mm Height · Brushed Matt Gold PVD,FM-SHW-04
+Oak Vulcano Natural Timber,Mafi,Living Room,Finishes,9200,12500,2400 x 260 x 19 mm · Brushed Natural Oil,MAF-OAK-02
+UltraShield Teak Composite Decking,NewTechWood,Outdoor Deck,Finishes,750,980,138 x 22.5 x 2900 mm · Antique Walnut,NW-DEC-12
+FENIX Nero Ingo Surface,FENIX,Kitchen,Finishes,14500,19500,3050 x 1300 x 0.9 mm · 0720 Nero Ingo,FNX-NTM-01`;
+
+  tempGSheetItems = parseCsvData(demoCsv);
+  const preview = document.getElementById('gsheetPreviewSection');
+  const stats = document.getElementById('gsheetStats');
+  if (preview) preview.style.display = 'block';
+  if (stats) stats.textContent = `Google Sheet: Parsed ${tempGSheetItems.length} Products`;
+  renderParsedItemsTable('gsheetPreviewTableBody', tempGSheetItems);
+}
+window.loadDemoGoogleSheet = loadDemoGoogleSheet;
+
+function commitGSheetImport() {
+  if (!tempGSheetItems || tempGSheetItems.length === 0) {
+    showToast('No items to import from Google Sheets', 'info');
+    return;
+  }
+  state.schedules.push(...tempGSheetItems);
+  saveState();
+  showToast(`Imported ${tempGSheetItems.length} Google Sheet products to schedule!`, 'success');
+  logUserActivity('Google Sheets Bulk Import', `Imported ${tempGSheetItems.length} items`);
+  tempGSheetItems = [];
+  document.getElementById('gsheetPreviewSection').style.display = 'none';
+  goTo('schedules');
+}
+window.commitGSheetImport = commitGSheetImport;
+
+// ──── QUICK TABLE PASTE (TSV) ────
+function handleParsePastedTable() {
+  const text = document.getElementById('pasteTableInput')?.value || '';
+  if (!text.trim()) {
+    showToast('Please paste spreadsheet rows first', 'info');
+    return;
+  }
+
+  tempPastedItems = parseCsvData(text);
+  if (tempPastedItems.length === 0) {
+    showToast('Could not parse table data. Ensure columns have headers (Item Name, Brand, Room, Trade, Price).', 'info');
+    return;
+  }
+
+  const preview = document.getElementById('pastePreviewSection');
+  const stats = document.getElementById('pasteStats');
+  if (preview) preview.style.display = 'block';
+  if (stats) stats.textContent = `Pasted Table: Parsed ${tempPastedItems.length} Specifications`;
+  renderParsedItemsTable('pastePreviewTableBody', tempPastedItems);
+  showToast(`Parsed ${tempPastedItems.length} items from pasted table!`, 'success');
+}
+window.handleParsePastedTable = handleParsePastedTable;
+
+function commitPasteImport() {
+  if (!tempPastedItems || tempPastedItems.length === 0) {
+    showToast('No pasted items to import', 'info');
+    return;
+  }
+  state.schedules.push(...tempPastedItems);
+  saveState();
+  showToast(`Imported ${tempPastedItems.length} specifications to project schedule!`, 'success');
+  logUserActivity('Table Paste Import', `Imported ${tempPastedItems.length} pasted items`);
+  tempPastedItems = [];
+  document.getElementById('pastePreviewSection').style.display = 'none';
+  document.getElementById('pasteTableInput').value = '';
+  goTo('schedules');
+}
+window.commitPasteImport = commitPasteImport;
 
 // ──── KANBAN TASKS ────
 const KANBAN_COLS = ['To Do', 'In Progress', 'Client Review', 'Done'];

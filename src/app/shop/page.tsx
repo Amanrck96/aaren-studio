@@ -51,11 +51,11 @@ export default function ShopPage() {
       {/* ── Page Header ── */}
       <div className="shop-header">
         <div className="shop-header__inner">
-          <div className="shop-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "2rem" }}>
+          <div className="shop-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
             ARCHITECTURAL SPECIFICATION &amp; SOURCING — {SHOP_ITEMS.length} SAMPLE SPECIMENS
           </div>
-          <h1 className="shop-header__title">SHOP &amp; SPECS.</h1>
-          <p className="shop-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "56rem", fontSize: "1.5rem", lineHeight: 1.6 }}>
+          <h1 className="shop-header__title">SHOP</h1>
+          <p className="shop-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
             Direct access to material specifications, sample sets, fixtures, and custom components curated for luxury architectural projects across India.
           </p>
           <div style={{ marginTop: "2.4rem" }}>
@@ -291,24 +291,29 @@ export default function ShopPage() {
         }
 
         .shop-header {
-          padding: 6rem 1.6rem 4rem;
+          padding: 6rem 2rem 4rem;
           border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
         @media (min-width: 768px) {
           .shop-header {
-            padding: 8rem 2.8rem 4rem;
+            padding: 8rem 4rem 4rem;
           }
         }
 
+        .shop-header__inner {
+          max-width: 1600px;
+          margin: 0 auto;
+        }
+
         .shop-header__title {
-          font-size: clamp(3.5rem, 9vw, 9rem);
-          font-weight: 800;
-          letter-spacing: -0.04em;
-          line-height: 0.92;
+          font-size: clamp(6rem, 15vw, 22rem);
+          font-weight: 700;
+          letter-spacing: -0.05em;
+          line-height: 0.88;
           text-transform: uppercase;
           color: #81663F;
-          margin-bottom: 2rem;
+          margin-bottom: 2.8rem;
         }
 
         /* ── Shop Grid ── */

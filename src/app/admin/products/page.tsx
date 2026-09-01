@@ -502,15 +502,15 @@ export default function AdminProductsPage() {
                 <input
                   type="file"
                   ref={bulkFileInputRef}
-                  accept=".xlsx, .xls"
+                  accept=".xlsx, .xls, .csv"
                   style={{ display: "none" }}
                   onChange={(e) => {
                     if (e.target.files && e.target.files[0]) handleExcelSelect(e.target.files[0]);
                   }}
                 />
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#81663f" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                <h4>{bulkFile ? bulkFile.name : "Click to select or drop Excel file here"}</h4>
-                <p>{bulkFile ? `${(bulkFile.size / 1024).toFixed(1)} KB` : "Supports standard .xlsx catalog templates"}</p>
+                <h4>{bulkFile ? bulkFile.name : "Click to select or drop Excel / CSV file here"}</h4>
+                <p>{bulkFile ? `${(bulkFile.size / 1024).toFixed(1)} KB` : "Supports standard .xlsx and .csv catalog templates"}</p>
               </div>
 
               {uploadStatusMsg && (
