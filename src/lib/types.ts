@@ -328,7 +328,7 @@ export const DEFAULT_SETTINGS: SiteSettingsItem = {
   contactEmail: "info@aarenintpro.com",
   contactPhone: "8884464444",
   contactAddress: "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026",
-  googleMapUrl: "https://maps.google.com/?q=Mysore+Road+Bangalore",
+  googleMapUrl: "https://www.google.com/maps/place/AAREN+INTPRO/@12.9550672,77.5447602,3a,75y,90t/data=!3m8!1e2!3m6!1sCIABIhD2EhoinjIZh3Syp3OicPPw!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAHRPTWl_AU36ZyrQTK7EcxMbajbN0jfOCRK_ADmORimg0uI-JDz7HQRi529z6gDxsUCxVggHHdxC1EuDrEZFW34I3Kh9wo3GDipgUxr9OAZCjk1FYJ_wegO3rXtXxVtBE62Huz8f93bmkNgGEHxN%3Dw152-h86-k-no!7i1920!8i1080!4m13!1m2!2m1!1saaren+studio!3m9!1s0x3bae3e0dde119581:0x66f104a2c0fa658b!8m2!3d12.9552407!4d77.5446118!10e5!14m1!1BCgIgAQ!15sCgxhYXJlbiBzdHVkaW9aDiIMYWFyZW4gc3R1ZGlvkgEWaG9tZV9pbXByb3ZlbWVudF9zdG9yZeABAA!16s%2Fg%2F11c1qrvx5l?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D",
   webhookUrl: "",
   websiteBgColor: "#E6E2D8",
   headingColor: "#81663F",

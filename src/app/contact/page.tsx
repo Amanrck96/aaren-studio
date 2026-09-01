@@ -5,6 +5,8 @@ import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { DEFAULT_SETTINGS, SiteSettingsItem } from "@/lib/types";
 import { applyTextCase } from "@/lib/textCase";
 
+const AAREN_GOOGLE_MAPS_URL = "https://www.google.com/maps/place/AAREN+INTPRO/@12.9550672,77.5447602,3a,75y,90t/data=!3m8!1e2!3m6!1sCIABIhD2EhoinjIZh3Syp3OicPPw!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAHRPTWl_AU36ZyrQTK7EcxMbajbN0jfOCRK_ADmORimg0uI-JDz7HQRi529z6gDxsUCxVggHHdxC1EuDrEZFW34I3Kh9wo3GDipgUxr9OAZCjk1FYJ_wegO3rXtXxVtBE62Huz8f93bmkNgGEHxN%3Dw152-h86-k-no!7i1920!8i1080!4m13!1m2!2m1!1saaren+studio!3m9!1s0x3bae3e0dde119581:0x66f104a2c0fa658b!8m2!3d12.9552407!4d77.5446118!10e5!14m1!1BCgIgAQ!15sCgxhYXJlbiBzdHVkaW9aDiIMYWFyZW4gc3R1ZGlvkgEWaG9tZV9pbXByb3ZlbWVudF9zdG9yZeABAA!16s%2Fg%2F11c1qrvx5l?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D";
+
 export default function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
@@ -98,9 +100,15 @@ export default function Contact() {
               <div className="info-item__icon"><MapPin size={16} /></div>
               <div className="info-item__content">
                 <span className="info-item__label">Creative Office & Showroom</span>
-                <span className="info-item__value">
-                  {settings.contactAddress || "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026"}
-                </span>
+                <a
+                  href={settings.googleMapUrl && settings.googleMapUrl.includes("google.com/maps") && !settings.googleMapUrl.includes("output=embed") ? settings.googleMapUrl : AAREN_GOOGLE_MAPS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="info-item__value"
+                  style={{ textDecoration: "none" }}
+                >
+                  {settings.contactAddress || "#342/8, NTY Layout, Mysore Road, Bangalore - 560026"}
+                </a>
               </div>
             </div>
           </div>
@@ -112,7 +120,7 @@ export default function Contact() {
               src={
                 settings.googleMapUrl?.includes("output=embed")
                   ? settings.googleMapUrl
-                  : `https://maps.google.com/maps?q=${encodeURIComponent(settings.contactAddress || "AAREN INTPRO Bangalore")}&t=&z=16&ie=UTF8&iwloc=&output=embed`
+                  : `https://maps.google.com/maps?q=12.9552407,77.5446118+(AAREN+INTPRO)&t=&z=17&ie=UTF8&iwloc=&output=embed`
               }
               width="100%"
               height="100%"
@@ -121,18 +129,20 @@ export default function Contact() {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
-            <div style={{ position: "absolute", bottom: "12px", left: "12px", right: "12px", background: "rgba(17, 17, 17, 0.92)", backdropFilter: "blur(8px)", padding: "0.8rem 1.2rem", borderRadius: "6px", color: "#ffffff", display: "flex", justifyContent: "space-between", alignItems: "center", pointerEvents: "auto", flexWrap: "wrap", gap: "0.5rem" }}>
+            <div style={{ position: "absolute", bottom: "12px", left: "12px", right: "12px", background: "rgba(17, 17, 17, 0.94)", backdropFilter: "blur(8px)", padding: "0.9rem 1.2rem", borderRadius: "6px", color: "#ffffff", display: "flex", justifyContent: "space-between", alignItems: "center", pointerEvents: "auto", flexWrap: "wrap", gap: "0.6rem" }}>
               <div>
-                <div style={{ fontSize: "0.7rem", color: "#c8a96e", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 700 }}>SHOWROOM & MATERIAL LAB</div>
-                <div style={{ fontSize: "0.85rem", fontWeight: 700, marginTop: "2px" }}>{settings.contactAddress || "AAREN INTPRO, #342/8, NTY Layout, Mysore Road, Bangalore - 560026"}</div>
+                <div style={{ fontSize: "0.7rem", color: "#c8a96e", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700 }}>SHOWROOM & MATERIAL LAB</div>
+                <div style={{ fontSize: "0.86rem", fontWeight: 700, marginTop: "2px" }}>#342/8, NTY Layout, Mysore Road, Bangalore - 560026</div>
+                <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", marginTop: "1px" }}>342/8, Mysore Rd, New Guddadahalli, Bengaluru - 560026</div>
               </div>
               <a
-                href={settings.googleMapUrl || `https://maps.google.com/?q=${encodeURIComponent(settings.contactAddress || "AAREN INTPRO Bangalore")}`}
+                href={settings.googleMapUrl && settings.googleMapUrl.includes("google.com/maps") && !settings.googleMapUrl.includes("output=embed") ? settings.googleMapUrl : AAREN_GOOGLE_MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ padding: "0.4rem 0.86rem", background: "#8c764b", color: "#ffffff", borderRadius: "4px", fontSize: "0.75rem", fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" }}
+                style={{ padding: "0.5rem 1rem", background: "#8c764b", color: "#ffffff", borderRadius: "4px", fontSize: "0.78rem", fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: "4px" }}
               >
-                📍 Open Directions ↗
+                <span>📍 Open Directions</span>
+                <span>↗</span>
               </a>
             </div>
           </div>
