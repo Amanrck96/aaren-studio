@@ -391,10 +391,10 @@ export default function Contact() {
         /* ── Form Side ── */
         .contact-form-wrapper {
           flex: 1;
-          padding: 4rem 2.4rem;
+          padding: 2.4rem;
           display: flex;
           flex-direction: column;
-          gap: 3.2rem;
+          gap: 2rem;
         }
 
         .form-title {

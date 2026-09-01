@@ -359,12 +359,11 @@ export default function FaqClient({ initialFaqs }: FaqClientProps) {
 
   return (
     <div className="faq-page">
-      <div className="faq-container">
-        {/* Header */}
-        <header className="faq-header">
-          <div className="faq-meta-bar">
-            <span className="faq-tag">AAREN INTPRO KNOWLEDGE BASE</span>
-            <span className="faq-count">[{faqList.length} FREQUENTLY ASKED QUESTIONS]</span>
+      {/* ── Page Header — full-bleed, matches About Us / Our Team / Contact Us ── */}
+      <div className="faq-header">
+        <div className="faq-header__inner">
+          <div className="faq-header__meta">
+            AAREN INTPRO KNOWLEDGE BASE
           </div>
           <h1 className="faq-title">FREQUENTLY ASKED QUESTIONS</h1>
           <p className="faq-desc">
@@ -402,8 +401,11 @@ export default function FaqClient({ initialFaqs }: FaqClientProps) {
               );
             })}
           </div>
-        </header>
+        </div>
+      </div>
 
+      {/* ── FAQ Content — narrower container for readability ── */}
+      <div className="faq-container">
         {/* Accordion List */}
         <main className="faq-list">
           {filteredFaqs.length === 0 ? (
@@ -463,49 +465,66 @@ export default function FaqClient({ initialFaqs }: FaqClientProps) {
           background-color: #E6E2D8;
           color: #1e1e1e;
           min-height: 100vh;
-          padding-top: 10rem;
+          padding-top: 8rem;
           padding-bottom: 8rem;
           font-family: var(--font-jost), 'Jost', sans-serif;
         }
 
-        .faq-container {
-          max-width: 1080px;
-          margin: 0 auto;
-          padding: 0 2.4rem;
-        }
-
+        /* ── Full-bleed page header — matches About Us / Our Team / Contact Us ── */
         .faq-header {
-          padding-bottom: 4rem;
-          border-bottom: 1px solid rgba(129,102,63,0.18);
-          margin-bottom: 4rem;
+          padding: 6rem 2rem 4rem;
+          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
         }
 
-        .faq-meta-bar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-size: 1.1rem;
+        @media (min-width: 768px) {
+          .faq-header {
+            padding: 8rem 4rem 4rem;
+          }
+        }
+
+        .faq-header__inner {
+          max-width: 1600px;
+          margin: 0 auto;
+        }
+
+        .faq-header__meta {
+          font-size: 1.3rem;
           font-weight: 700;
           letter-spacing: 0.12em;
+          text-transform: uppercase;
           color: #81663F;
           margin-bottom: 1.6rem;
         }
 
+        /* ── H1 — same as About Us, Our Team, Contact Us ── */
         .faq-title {
-          font-size: clamp(3.2rem, 7vw, 7rem);
-          font-weight: 800;
-          letter-spacing: -0.04em;
-          line-height: 0.95;
+          font-size: clamp(6rem, 15vw, 22rem);
+          font-weight: 700;
+          letter-spacing: -0.05em;
+          line-height: 0.88;
           color: #81663F;
           text-transform: uppercase;
-          margin-bottom: 2rem;
+          margin-bottom: 2.8rem;
+        }
+
+        /* ── Content container — narrower for readability ── */
+        .faq-container {
+          max-width: 1080px;
+          margin: 0 auto;
+          padding: 4rem 2.4rem;
+        }
+
+        @media (min-width: 768px) {
+          .faq-container {
+            padding: 4rem 4rem;
+          }
         }
 
         .faq-desc {
-          font-size: clamp(1.4rem, 2vw, 1.8rem);
+          font-size: 1.6rem;
           line-height: 1.6;
-          color: rgba(0,0,0,0.7);
-          max-width: 760px;
+          color: rgba(0,0,0,0.65);
+          max-width: 58rem;
           margin-bottom: 3.2rem;
           font-weight: 400;
         }

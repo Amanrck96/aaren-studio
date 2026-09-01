@@ -19,8 +19,22 @@ export default function LoginPage() {
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((user) => {
       if (user) {
+        // Persist auth state so getLoggedInUser() works site-wide (e.g. catalog gate)
+        try {
+          localStorage.setItem("aaren_firebase_authed", "true");
+          localStorage.setItem("aaren_firebase_user", JSON.stringify({
+            email: user.email || "",
+            displayName: user.displayName || user.email?.split("@")[0] || "Studio Member",
+            uid: user.uid,
+          }));
+        } catch (_) {}
         window.location.href = "/modules/aaren-intpro-designer-workspace.html";
       } else {
+        // Clear Firebase auth flag on sign-out
+        try {
+          localStorage.removeItem("aaren_firebase_authed");
+          localStorage.removeItem("aaren_firebase_user");
+        } catch (_) {}
         setCheckingAuth(false);
       }
     });

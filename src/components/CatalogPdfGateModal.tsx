@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import OnScreenPdfViewer from "./OnScreenPdfViewer";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
-import { getLoggedInUser, logSilentPdfView } from "@/utils/authUser";
+import { getLoggedInUser, getFormPrefillData, logSilentPdfView } from "@/utils/authUser";
 
 type Props = {
   catalogPdfUrl: string;
@@ -55,22 +55,17 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
       });
       setUnlocked(true);
     } else {
-      // LOGGED OUT USER: Check if saved session exists to pre-fill form
-      try {
-        const savedSession = localStorage.getItem("aaren_user_session");
-        if (savedSession) {
-          const p = JSON.parse(savedSession);
-          if (p.name || p.email) {
-            setFormData((prev) => ({
-              ...prev,
-              name: p.name || prev.name,
-              email: p.email || prev.email,
-              phone: p.phone || prev.phone,
-              profession: p.profession || prev.profession,
-            }));
-          }
-        }
-      } catch {}
+      // LOGGED OUT USER: Pre-fill form from any previous session data
+      const prefill = getFormPrefillData();
+      if (prefill.name || prefill.email) {
+        setFormData((prev) => ({
+          ...prev,
+          name:       prefill.name       || prev.name,
+          email:      prefill.email      || prev.email,
+          phone:      prefill.phone      || prev.phone,
+          profession: prefill.profession || prev.profession,
+        }));
+      }
     }
 
     // 2. Fetch custom modal title/badge settings
