@@ -120,7 +120,7 @@ export default function Contact() {
               src={
                 settings.googleMapUrl?.includes("output=embed")
                   ? settings.googleMapUrl
-                  : `https://maps.google.com/maps?q=12.9552407,77.5446118+(AAREN+INTPRO)&t=&z=17&ie=UTF8&iwloc=&output=embed`
+                  : `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d971.1234567!2d77.5446118!3d12.9552407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae3e0dde119581%3A0x66f104a2c0fa658b!2sAAREEN%20INTPRO!5e0!3m2!1sen!2sin!4v1725000000000!5m2!1sen!2sin`
               }
               width="100%"
               height="100%"
