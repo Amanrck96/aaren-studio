@@ -58,13 +58,13 @@ export default function Contact() {
   return (
     <div className="contact-page">
       {/* ── Page Header ── */}
-      <div className="contact-header">
-        <div className="contact-header__inner">
-          <div className="contact-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+      <div className="contact-header page-header">
+        <div className="contact-header__inner page-header__inner">
+          <div className="contact-header__meta page-meta">
             GET IN TOUCH
           </div>
-          <h1 className="contact-header__title" style={{ color: "#81663F" }}>CONTACT US</h1>
-          <p className="contact-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem" }}>
+          <h1 className="contact-header__title page-title">CONTACT US</h1>
+          <p className="contact-header__desc page-desc">
             Ready to construct something unreal? Fill out the project form, or reach out to our primary creative office directly.
           </p>
         </div>
@@ -74,13 +74,13 @@ export default function Contact() {
         {/* Left Side: Contact Information & Mock Map */}
         <div className="contact-info">
           <div className="info-block">
-            <h4 className="info-block__title t-tag">PRIMARY DIRECTORY</h4>
+            <h4 className="info-block__title page-meta" style={{ marginBottom: 0 }}>PRIMARY DIRECTORY</h4>
             
             <div className="info-item">
               <div className="info-item__icon"><Mail size={16} /></div>
               <div className="info-item__content">
-                <span className="info-item__label">Email Address</span>
-                <a href={`mailto:${settings.contactEmail || "info@aarenintpro.com"}`} className="info-item__value">
+                <span className="info-item__label label-text">Email Address</span>
+                <a href={`mailto:${settings.contactEmail || "info@aarenintpro.com"}`} className="info-item__value value-text">
                   {settings.contactEmail || "info@aarenintpro.com"}
                 </a>
               </div>
@@ -89,8 +89,8 @@ export default function Contact() {
             <div className="info-item">
               <div className="info-item__icon"><Phone size={16} /></div>
               <div className="info-item__content">
-                <span className="info-item__label">Phone Number</span>
-                <a href={`tel:${settings.contactPhone || "8884464444"}`} className="info-item__value">
+                <span className="info-item__label label-text">Phone Number</span>
+                <a href={`tel:${settings.contactPhone || "8884464444"}`} className="info-item__value value-text">
                   {settings.contactPhone || "8884464444"}
                 </a>
               </div>
@@ -99,12 +99,12 @@ export default function Contact() {
             <div className="info-item">
               <div className="info-item__icon"><MapPin size={16} /></div>
               <div className="info-item__content">
-                <span className="info-item__label">Creative Office & Showroom</span>
+                <span className="info-item__label label-text">Creative Office &amp; Showroom</span>
                 <a
                   href={settings.googleMapUrl && settings.googleMapUrl.includes("google.com/maps") && !settings.googleMapUrl.includes("output=embed") ? settings.googleMapUrl : AAREN_GOOGLE_MAPS_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="info-item__value"
+                  className="info-item__value value-text"
                   style={{ textDecoration: "none" }}
                 >
                   {settings.contactAddress || "#342/8, NTY Layout, Mysore Road, Bangalore - 560026"}
@@ -114,43 +114,45 @@ export default function Contact() {
           </div>
 
           {/* Live Google Map Embedded Block */}
-          <div className="google-map-container" style={{ position: "relative", height: "28rem", width: "100%", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(0,0,0,0.12)", boxShadow: "0 10px 30px rgba(0,0,0,0.06)" }}>
-            <iframe
-              title="AAREN INTPRO Google Map Location"
-              src={
-                settings.googleMapUrl?.includes("output=embed")
-                  ? settings.googleMapUrl
-                  : `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d971.1234567!2d77.5446118!3d12.9552407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae3e0dde119581%3A0x66f104a2c0fa658b!2sAAREEN%20INTPRO!5e0!3m2!1sen!2sin!4v1725000000000!5m2!1sen!2sin`
-              }
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen={true}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-            <div style={{ position: "absolute", bottom: "12px", left: "12px", right: "12px", background: "rgba(17, 17, 17, 0.94)", backdropFilter: "blur(8px)", padding: "0.9rem 1.2rem", borderRadius: "6px", color: "#ffffff", display: "flex", justifyContent: "space-between", alignItems: "center", pointerEvents: "auto", flexWrap: "wrap", gap: "0.6rem" }}>
-              <div>
-                <div style={{ fontSize: "0.7rem", color: "#c8a96e", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700 }}>SHOWROOM & MATERIAL LAB</div>
-                <div style={{ fontSize: "0.86rem", fontWeight: 700, marginTop: "2px" }}>#342/8, NTY Layout, Mysore Road, Bangalore - 560026</div>
-                <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", marginTop: "1px" }}>342/8, Mysore Rd, New Guddadahalli, Bengaluru - 560026</div>
+          <div className="google-map-wrapper">
+            <div className="google-map-container" style={{ position: "relative", height: "26rem", width: "100%", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(0,0,0,0.12)", boxShadow: "0 10px 30px rgba(0,0,0,0.06)" }}>
+              <iframe
+                title="AAREN INTPRO Google Map Location"
+                src={
+                  settings.googleMapUrl?.includes("output=embed")
+                    ? settings.googleMapUrl
+                    : `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d971.1234567!2d77.5446118!3d12.9552407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae3e0dde119581%3A0x66f104a2c0fa658b!2sAAREEN%20INTPRO!5e0!3m2!1sen!2sin!4v1725000000000!5m2!1sen!2sin`
+                }
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+              <div style={{ position: "absolute", bottom: "12px", left: "12px", right: "12px", background: "rgba(17, 17, 17, 0.94)", backdropFilter: "blur(8px)", padding: "0.9rem 1.2rem", borderRadius: "6px", color: "#ffffff", display: "flex", justifyContent: "space-between", alignItems: "center", pointerEvents: "auto", flexWrap: "wrap", gap: "0.6rem" }}>
+                <div>
+                  <div style={{ fontSize: "0.7rem", color: "#c8a96e", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700 }}>SHOWROOM &amp; MATERIAL LAB</div>
+                  <div style={{ fontSize: "0.86rem", fontWeight: 700, marginTop: "2px" }}>#342/8, NTY Layout, Mysore Road, Bangalore - 560026</div>
+                  <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", marginTop: "1px" }}>342/8, Mysore Rd, New Guddadahalli, Bengaluru - 560026</div>
+                </div>
+                <a
+                  href={settings.googleMapUrl && settings.googleMapUrl.includes("google.com/maps") && !settings.googleMapUrl.includes("output=embed") ? settings.googleMapUrl : AAREN_GOOGLE_MAPS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ padding: "0.5rem 1rem", background: "#8c764b", color: "#ffffff", borderRadius: "4px", fontSize: "0.78rem", fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                >
+                  <span>📍 Open Directions</span>
+                  <span>↗</span>
+                </a>
               </div>
-              <a
-                href={settings.googleMapUrl && settings.googleMapUrl.includes("google.com/maps") && !settings.googleMapUrl.includes("output=embed") ? settings.googleMapUrl : AAREN_GOOGLE_MAPS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ padding: "0.5rem 1rem", background: "#8c764b", color: "#ffffff", borderRadius: "4px", fontSize: "0.78rem", fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: "4px" }}
-              >
-                <span>📍 Open Directions</span>
-                <span>↗</span>
-              </a>
             </div>
           </div>
         </div>
 
         {/* Right Side: Form */}
         <div className="contact-form-wrapper">
-          <h2 className="form-title">PROJECT DEBRIEF</h2>
+          <h2 className="form-title section-title" style={{ margin: 0 }}>PROJECT DEBRIEF</h2>
           
           {sent ? (
             <div className="success-message">
@@ -326,16 +328,25 @@ export default function Contact() {
         }
 
         .info-block {
-          padding: 4rem 4rem;
+          padding: 4rem 4rem 2.4rem;
           display: flex;
           flex-direction: column;
           gap: 2.4rem;
-          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
         }
 
         @media (max-width: 768px) {
           .info-block {
-            padding: 3rem 2rem;
+            padding: 3rem 2rem 2rem;
+          }
+        }
+
+        .google-map-wrapper {
+          padding: 0 4rem 4rem;
+        }
+
+        @media (max-width: 768px) {
+          .google-map-wrapper {
+            padding: 0 2rem 3rem;
           }
         }
 
@@ -391,17 +402,25 @@ export default function Contact() {
         /* ── Form Side ── */
         .contact-form-wrapper {
           flex: 1;
-          padding: 2.4rem;
+          padding: 4rem 4rem;
           display: flex;
           flex-direction: column;
-          gap: 2rem;
+          gap: 2.4rem;
+        }
+
+        @media (max-width: 768px) {
+          .contact-form-wrapper {
+            padding: 3rem 2rem;
+          }
         }
 
         .form-title {
           font-size: clamp(2.4rem, 4vw, 3.6rem);
           font-weight: 700;
           letter-spacing: -0.03em;
+          text-transform: uppercase;
           color: #81663F !important;
+          margin: 0;
         }
 
         .contact-form {

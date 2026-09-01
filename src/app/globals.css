@@ -179,59 +179,74 @@ h5 {
 }
 
 /* ── Page H1 — hero title (About Us, Our Team, FAQ, Contact Us, etc.) ── */
-.page-title {
-  font-size: clamp(6rem, 15vw, 22rem);
-  font-weight: 700;
-  letter-spacing: -0.05em;
-  line-height: 0.88;
-  text-transform: uppercase;
-  color: #81663F;
-  margin-bottom: 2.8rem;
+.page-title,
+.h1-page-title {
+  font-size: clamp(6rem, 15vw, 22rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.05em !important;
+  line-height: 0.88 !important;
+  text-transform: uppercase !important;
+  color: #81663F !important;
+  margin-bottom: 2.8rem !important;
 }
 
 /* ── Section subheading (Project Debrief, Our Mission, etc.) ── */
-.section-title {
-  font-size: clamp(2.4rem, 4vw, 3.6rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  color: #81663F;
-  text-transform: uppercase;
+.section-title,
+.h2-section {
+  font-size: clamp(2.4rem, 4vw, 3.6rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.1 !important;
+  color: #81663F !important;
+  text-transform: uppercase !important;
 }
 
 /* ── Eyebrow / tag line above the H1 ── */
 .page-meta {
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #81663F;
-  margin-bottom: 1.6rem;
+  font-size: 1.3rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: #81663F !important;
+  margin-bottom: 1.6rem !important;
 }
 
 /* ── Body / description text below heading ── */
-.page-desc {
-  font-size: 1.6rem;
-  line-height: 1.6;
-  color: rgba(0, 0, 0, 0.65);
+.page-desc,
+.body-text {
+  font-size: 1.6rem !important;
+  line-height: 1.6 !important;
+  color: rgba(0, 0, 0, 0.65) !important;
   max-width: 58rem;
 }
 
 /* ── Form / directory label ── */
 .label-text {
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #5E5852;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  color: #5E5852 !important;
 }
 
 /* ── Value / link text in directory ── */
 .value-text {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #81663F;
-  line-height: 1.4;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #81663F !important;
+  line-height: 1.4 !important;
+}
+
+/* ── Shared Page Content Container Wrapper ── */
+.page-content-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 4rem 4rem;
+}
+@media (max-width: 768px) {
+  .page-content-container {
+    padding: 3rem 2rem;
+  }
 }
 
 

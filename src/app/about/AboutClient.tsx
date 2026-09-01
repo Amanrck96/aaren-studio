@@ -59,13 +59,13 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
   return (
     <div className="about-page font-['Jost',sans-serif]">
       {/* ── Page Header ── */}
-      <div className="about-header">
-        <div className="about-header__inner">
-          <div className="about-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>THE HOUSE — Est. 1990</div>
-          <h1 className="about-header__title" style={{ color: "#81663F" }}>
-            {siteSettings?.aboutTitle || "About Us"}
+      <div className="about-header page-header">
+        <div className="about-header__inner page-header__inner">
+          <div className="about-header__meta page-meta">THE HOUSE — EST. 1990</div>
+          <h1 className="about-header__title page-title">
+            {siteSettings?.aboutTitle || "ABOUT US"}
           </h1>
-          <p className="about-header__desc">
+          <p className="about-header__desc page-desc">
             {siteSettings?.aboutSubtitle || "Aaren Intpro is Bengaluru's premier material house and luxury lifestyle curator, dedicated to providing world-class interior products under one roof."}
           </p>
         </div>
@@ -79,7 +79,7 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
               <span className="value-card__num">01</span>
               <span className="value-card__rule"></span>
             </div>
-            <h3 className="value-card__title">Our Mission</h3>
+            <h3 className="value-card__title">OUR MISSION</h3>
             <p className="value-card__text">
               {siteSettings?.aboutMission || "To provide premium, elite, and high-quality lifestyle products under one roof for the global Indian customer."}
             </p>
@@ -90,7 +90,7 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
               <span className="value-card__num">02</span>
               <span className="value-card__rule"></span>
             </div>
-            <h3 className="value-card__title">Our Vision</h3>
+            <h3 className="value-card__title">OUR VISION</h3>
             <p className="value-card__text">
               {siteSettings?.aboutVision || "To remain the primary one-stop destination for architects, interior designers, builders, and homeowners seeking world-class materials."}
             </p>
@@ -101,7 +101,7 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
               <span className="value-card__num">03</span>
               <span className="value-card__rule"></span>
             </div>
-            <h3 className="value-card__title">Our Values</h3>
+            <h3 className="value-card__title">OUR VALUES</h3>
             <p className="value-card__text">
               {siteSettings?.aboutValues || "Uniting as a family, prioritizing robust value systems, and providing curated designs focusing on unique client experiences."}
             </p>
@@ -185,6 +185,11 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
           .about-header { padding: 8rem 4rem 4rem; }
         }
 
+        .about-header__inner {
+          max-width: 1600px;
+          margin: 0 auto;
+        }
+
         .about-header__title {
           font-size: clamp(6rem, 15vw, 22rem);
           font-weight: 700;
@@ -192,20 +197,24 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
           line-height: 0.88;
           text-transform: uppercase;
           color: #81663F;
-          margin-bottom: 3.2rem;
+          margin-bottom: 2.8rem;
         }
 
         .about-header__desc {
-          font-size: 1.5rem;
-          line-height: 1.5;
+          font-size: 1.6rem;
+          line-height: 1.6;
           letter-spacing: -0.01em;
-          max-width: 52rem;
-          color: rgba(0,0,0,0.5);
+          max-width: 58rem;
+          color: rgba(0,0,0,0.65);
         }
 
         .about-header__meta {
-          color: rgba(0,0,0,0.4);
-          margin-bottom: 2.4rem;
+          color: #81663F;
+          font-size: 1.3rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          margin-bottom: 1.6rem;
         }
 
         /* ── Values: staggered premium cards ── */
@@ -222,7 +231,7 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
           display: grid;
           grid-template-columns: 1fr;
           gap: 2.4rem;
-          max-width: 132rem;
+          max-width: 1600px;
           margin: 0 auto;
         }
 

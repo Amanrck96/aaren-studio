@@ -260,13 +260,13 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
   return (
     <div className="team-page">
       {/* ── Page Header ── */}
-      <div className="team-header">
-        <div className="team-header__inner">
-          <div className="team-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
-            MEET THE TEAM — LEADERSHIP & DEPARTMENTS
+      <div className="team-header page-header">
+        <div className="team-header__inner page-header__inner">
+          <div className="team-header__meta page-meta">
+            MEET THE TEAM — LEADERSHIP &amp; DEPARTMENTS
           </div>
-          <h1 className="team-header__title">OUR TEAM</h1>
-          <p className="team-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
+          <h1 className="team-header__title page-title">OUR TEAM</h1>
+          <p className="team-header__desc page-desc">
             Aaren Intpro is built by a family of dedicated professionals across Leadership, Sales, Operations, Installation, Accounts, and Support Staff, united by a common passion for luxury spatial design.
           </p>
         </div>
@@ -418,14 +418,14 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
 
         /* ── Sub Categories / Departments Nav Bar ── */
         .team-category-nav-wrapper {
-          padding: 2rem 2.4rem;
+          padding: 2rem 4rem;
           max-width: 1600px;
           margin: 0 auto;
         }
 
         @media (max-width: 768px) {
           .team-category-nav-wrapper {
-            padding: 1.5rem 1.6rem;
+            padding: 1.5rem 2rem;
           }
         }
 
@@ -450,9 +450,10 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
         }
 
         .team-category-label {
-          font-size: 1.15rem;
-          font-weight: 800;
-          letter-spacing: 0.12em;
+          font-size: 1.2rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
           color: #81663F;
           margin-right: 0.8rem;
           white-space: nowrap;
@@ -526,12 +527,12 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
           align-items: center;
           gap: 1.8rem;
           margin-bottom: 2.5rem;
-          padding: 0 2.4rem;
+          padding: 0 4rem;
         }
 
         @media (max-width: 768px) {
           .team-department-header {
-            padding: 0 1.6rem;
+            padding: 0 2rem;
             margin-bottom: 1.8rem;
           }
         }
@@ -569,13 +570,13 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
           display: grid;
           grid-template-columns: 1fr;
           gap: 4rem 2.4rem;
-          padding: 1.5rem 2.4rem 6rem;
+          padding: 1.5rem 2rem 6rem;
         }
 
         @media (min-width: 768px) {
           .team-grid {
             grid-template-columns: repeat(2, 1fr);
-            padding: 2rem 2.4rem 6rem;
+            padding: 2rem 4rem 6rem;
             gap: 5rem 3.2rem;
           }
         }

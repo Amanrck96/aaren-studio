@@ -52,30 +52,21 @@ export default function CatalogsClient({ initialCatalogs }: CatalogsClientProps)
   });
 
   return (
-    <div style={{ background: "#E6E2D8", color: "#1e1e1e", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      {/* Hero Banner Section */}
-      <section
-        style={{
-          background: "#E6E2D8",
-          color: "#1C1917",
-          padding: "7.5rem 1.5rem 3rem",
-          textAlign: "center",
-          position: "relative",
-          borderBottom: "1px solid #D8D0BE",
-        }}
-      >
-        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-          <span style={{ color: "#81663F", fontSize: "0.85rem", letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 800 }}>
+    <div style={{ background: "#E6E2D8", color: "#1e1e1e", minHeight: "100vh", display: "flex", flexDirection: "column", paddingTop: "8rem" }}>
+      {/* ── Page Header ── */}
+      <div className="page-header">
+        <div className="page-header__inner">
+          <div className="page-meta">
             ARCHITECTURAL SPECIFICATION &amp; MATERIAL LAB
-          </span>
-          <h1 style={{ color: "#81663F", fontSize: "2.8rem", fontWeight: 900, margin: "0.6rem 0 1rem", letterSpacing: "-0.02em" }}>
-            AAREN Architectural PDF Catalogs
+          </div>
+          <h1 className="page-title">
+            CATALOGUES
           </h1>
-          <p style={{ color: "#5E5852", fontSize: "1.15rem", lineHeight: 1.6, maxWidth: "700px", margin: "0 auto", fontWeight: 400 }}>
+          <p className="page-desc">
             Explore official product brochures, high-res finish collections, and technical joinery specification guides from top European &amp; Italian surface brands.
           </p>
         </div>
-      </section>
+      </div>
 
       {/* Filter & Search Toolbar */}
       <section style={{ maxWidth: "1280px", margin: "-1.8rem auto 2.5rem", padding: "0 1.5rem", width: "100%", zIndex: 10 }}>

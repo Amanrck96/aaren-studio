@@ -94,29 +94,14 @@ export default function WorkPage() {
       </div>
 
       {/* Page Header */}
-      <div
-        style={{
-          padding: "60px 28px 0",
-          borderBottom: "1px solid rgba(129, 102, 63, 0.2)",
-        }}
-      >
-        <div style={{ fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.12em", color: "#81663F", marginBottom: "1.2rem", textTransform: "uppercase" }}>
-          PORTFOLIO ARCHIVE
-        </div>
-        <h1
-          style={{
-            fontFamily: "var(--font-jost), 'Jost', sans-serif",
-            fontSize: "clamp(6rem, 15vw, 22rem)",
-            fontWeight: 700,
-            letterSpacing: "-0.05em",
-            lineHeight: 0.88,
-            color: "#81663F",
-            marginBottom: "2.8rem",
-            textTransform: "uppercase",
-          }}
-        >
-          Work
-        </h1>
+      <div className="page-header" style={{ borderBottom: "1px solid rgba(129, 102, 63, 0.2)" }}>
+        <div className="page-header__inner">
+          <div className="page-meta">
+            PORTFOLIO ARCHIVE
+          </div>
+          <h1 className="page-title">
+            WORK
+          </h1>
 
         {/* Filter tabs */}
         <div style={{ display: "flex", gap: "0", marginBottom: "0", overflowX: "auto" }}>
@@ -146,6 +131,7 @@ export default function WorkPage() {
           ))}
         </div>
       </div>
+    </div>
 
       {/* Project List */}
       <div>

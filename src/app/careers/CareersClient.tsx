@@ -58,18 +58,26 @@ export default function CareersClient({ initialPositions }: CareersClientProps) 
 
   return (
     <div style={{ background: "#E6E2D8", color: "#1C1917", minHeight: "100vh", paddingTop: "8rem", paddingBottom: "6rem" }}>
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 2rem" }}>
-        <h4 style={{ color: "#81663F", textTransform: "uppercase", letterSpacing: "0.15em", fontWeight: 800, fontSize: "0.85rem", marginBottom: "1rem" }}>
-          JOIN US — ARCHITECTURAL TALENT
-        </h4>
-        <h1 style={{ color: "#81663F", fontSize: "clamp(3rem, 7vw, 6rem)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.03em", marginBottom: "4rem" }}>
-          CAREERS.
-        </h1>
+      {/* ── Page Header ── */}
+      <div className="page-header">
+        <div className="page-header__inner">
+          <div className="page-meta">
+            JOIN US — ARCHITECTURAL TALENT
+          </div>
+          <h1 className="page-title">
+            CAREERS
+          </h1>
+          <p className="page-desc">
+            Explore open opportunities across motion design, creative development, architectural specification, and spatial design at Aaren Intpro.
+          </p>
+        </div>
+      </div>
 
+      <div className="page-content-container">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "3rem" }}>
           {/* Job listings */}
           <div>
-            <h2 style={{ color: "#81663F", fontSize: "1.8rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "-0.02em", marginBottom: "2rem" }}>
+            <h2 className="section-title" style={{ marginBottom: "2rem" }}>
               OPEN POSITIONS
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>

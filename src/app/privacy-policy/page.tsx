@@ -18,16 +18,18 @@ export default function PrivacyPolicyPage() {
 
   return (
     <div className="privacy-page">
-      <div className="privacy-container">
-        {/* Header */}
-        <header className="privacy-header">
-          <span className="privacy-tag">LEGAL & GOVERNANCE</span>
-          <h1 className="privacy-title">PRIVACY POLICY</h1>
-          <p className="privacy-meta">
+      {/* ── Page Header — full-bleed, matches site-wide standard ── */}
+      <div className="privacy-header page-header">
+        <div className="privacy-header__inner page-header__inner">
+          <div className="privacy-tag page-meta">LEGAL &amp; GOVERNANCE</div>
+          <h1 className="privacy-title page-title">PRIVACY POLICY</h1>
+          <p className="privacy-meta page-desc">
             Effective Date: January 1, 2026 · Last Updated: July 26, 2026
           </p>
-        </header>
+        </div>
+      </div>
 
+      <div className="privacy-container">
         {/* Content Section */}
         <main className="privacy-body">
           <div className="privacy-section">
@@ -131,46 +133,64 @@ export default function PrivacyPolicyPage() {
           background: #E6E2D8;
           color: #1e1e1e;
           min-height: 100vh;
-          padding-top: 10rem;
+          padding-top: 8rem;
           padding-bottom: 8rem;
           font-family: var(--font-jost), 'Jost', sans-serif;
         }
 
-        .privacy-container {
-          max-width: 860px;
-          margin: 0 auto;
-          padding: 0 2.4rem;
+        .privacy-header {
+          padding: 6rem 2rem 4rem;
+          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
-        .privacy-header {
-          padding-bottom: 4rem;
-          border-bottom: 1px solid rgba(129,102,63,0.18);
-          margin-bottom: 4rem;
+        @media (min-width: 768px) {
+          .privacy-header {
+            padding: 8rem 4rem 4rem;
+          }
+        }
+
+        .privacy-header__inner {
+          max-width: 1600px;
+          margin: 0 auto;
         }
 
         .privacy-tag {
-          font-size: 1.1rem;
+          font-size: 1.3rem;
           font-weight: 700;
           letter-spacing: 0.12em;
           color: #81663F;
           display: block;
           margin-bottom: 1.6rem;
+          text-transform: uppercase;
         }
 
         .privacy-title {
-          font-size: clamp(3.6rem, 7vw, 8rem);
-          font-weight: 800;
-          letter-spacing: -0.04em;
-          line-height: 0.95;
+          font-size: clamp(6rem, 15vw, 22rem);
+          font-weight: 700;
+          letter-spacing: -0.05em;
+          line-height: 0.88;
           color: #81663F;
           text-transform: uppercase;
-          margin-bottom: 2rem;
+          margin-bottom: 2.8rem;
         }
 
         .privacy-meta {
-          font-size: 1.3rem;
-          color: rgba(0,0,0,0.5);
-          font-weight: 500;
+          font-size: 1.6rem;
+          line-height: 1.6;
+          color: rgba(0,0,0,0.65);
+          max-width: 58rem;
+        }
+
+        .privacy-container {
+          max-width: 1080px;
+          margin: 0 auto;
+          padding: 4rem 4rem;
+        }
+
+        @media (max-width: 768px) {
+          .privacy-container {
+            padding: 3rem 2rem;
+          }
         }
 
         .privacy-body {

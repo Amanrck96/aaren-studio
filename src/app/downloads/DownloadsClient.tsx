@@ -197,23 +197,23 @@ export default function DownloadsClient() {
     <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh", fontFamily: "var(--font-jost), 'Jost', sans-serif" }}>
       {/* Top Banner Header */}
       <header
+        className="page-header"
         style={{
           borderBottom: "1px solid #E2DCD2",
-          background: "linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%)",
-          padding: "2.5rem 2rem 2rem",
+          background: "#E6E2D8",
+          paddingTop: "8rem",
         }}
       >
-        <div style={{ maxWidth: "1320px", margin: "0 auto" }}>
+        <div className="page-header__inner">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1.5rem" }}>
             <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(129, 102, 63, 0.12)", color: "#81663F", padding: "4px 12px", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.8rem" }}>
-                <Sparkles size={13} />
-                <span>Architectural Assets Repository</span>
+              <div className="page-meta">
+                ARCHITECTURAL ASSETS REPOSITORY
               </div>
-              <h1 style={{ fontSize: "2.4rem", fontWeight: 900, color: "#1E1E1E", margin: 0, letterSpacing: "-0.02em" }}>
-                Brand Specifications &amp; PDF Downloads
+              <h1 className="page-title">
+                DOWNLOADS
               </h1>
-              <p style={{ color: "#5E5852", fontSize: "0.95rem", marginTop: "0.4rem", maxWidth: "700px", lineHeight: 1.5 }}>
+              <p className="page-desc">
                 Open-access digital architectural catalogues, technical finish manuals, and CAD specifications across our 20 European luxury surface partner brands.
               </p>
             </div>
