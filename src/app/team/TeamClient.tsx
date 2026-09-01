@@ -152,7 +152,6 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
   });
 
   const [activeMainView, setActiveMainView] = useState<"LEADERSHIP" | "TEAM">("LEADERSHIP");
-  const [selectedMember, setSelectedMember] = useState<any | null>(null);
   const [joinBanner, setJoinBanner] = useState(() => {
     return initialJoinBanner || {
       title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
@@ -332,68 +331,6 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
         )}
       </div>
 
-      {/* ── Modal Pop-up for Member Details ── */}
-      {selectedMember && (
-        <div
-          className="team-modal-backdrop"
-          onClick={() => setSelectedMember(null)}
-        >
-          <div
-            className="team-modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedMember(null)}
-              className="team-modal-close"
-              aria-label="Close modal"
-            >
-              ✕
-            </button>
-
-            <div className="team-modal-photo-wrapper">
-              {selectedMember.image ? (
-                <img
-                  src={selectedMember.image}
-                  alt={selectedMember.name}
-                  className="team-modal-photo"
-                />
-              ) : (
-                <div className="team-modal-placeholder">
-                  <span>{selectedMember.code}</span>
-                  <span style={{ fontSize: "2rem", opacity: 0.5 }}>{selectedMember.num}</span>
-                </div>
-              )}
-            </div>
-
-            <div className="team-modal-body">
-              <div className="team-modal-header-row">
-                <div>
-                  <h3 className="team-modal-name">{selectedMember.name}</h3>
-                  <p className="team-modal-role">{selectedMember.role}</p>
-                </div>
-                <div className="team-modal-codes">
-                  <span className="team-modal-code-main">{selectedMember.code}</span>
-                  <span className="team-modal-code-sub">{selectedMember.num}</span>
-                </div>
-              </div>
-
-              {selectedMember.bio && (
-                <p className="team-modal-bio">{selectedMember.bio}</p>
-              )}
-
-              {selectedMember.phone && (
-                <div className="team-modal-contact-row">
-                  <span className="team-modal-contact-label">Contact:</span>
-                  <a href={`tel:${selectedMember.phone}`} className="team-modal-contact-link">
-                    📞 {selectedMember.phone}
-                  </a>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* ── Team Join Section ── */}
       <section className="team-join-section">
         <h2 className={`team-join-title size-${joinBanner.fontSize || "medium"}`}>
@@ -444,7 +381,7 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
 
         @media (min-width: 768px) {
           .team-header {
-            padding: 8rem 2.4rem 5rem;
+            padding: 8rem 4rem 4rem;
           }
         }
 

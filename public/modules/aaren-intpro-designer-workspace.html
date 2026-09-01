@@ -3071,8 +3071,8 @@ function extractProductFromUrl(urlStr) {
   let title = '';
   let trade = 'Joinery';
   let dims = 'Standard Architectural Spec';
-  let tradePrice = 65000;
-  let clientPrice = 84500;
+  let tradePrice = 0;
+  let clientPrice = 0;
   let sku = 'SPEC-01';
   let img = '/brands/brand_1_1.png';
 
@@ -3245,6 +3245,14 @@ function handleProductClip() {
   const product = extractProductFromUrl(urlVal);
   if (!product) return;
 
+  // ── ALWAYS clear all fields first to avoid stale data from previous clip ──
+  ['clipEditName','clipEditBrand','clipEditSku','clipEditTradePrice','clipEditClientPrice','clipEditDims','clipImgUrl'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const imgEl = document.getElementById('clipImg');
+  if (imgEl) imgEl.src = '/brands/brand_1_1.png';
+
   const box = document.getElementById('clipperPreviewBox');
   if (box) box.style.display = 'block';
 
@@ -3260,13 +3268,12 @@ function handleProductClip() {
   setVal('clipEditName', product.name);
   setVal('clipEditBrand', product.brand);
   setVal('clipEditSku', product.sku);
-  setVal('clipEditTradePrice', product.tradePrice);
-  setVal('clipEditClientPrice', product.clientPrice);
-  setVal('clipEditDims', product.dims);
-  setVal('clipImgUrl', product.img);
+  setVal('clipEditTradePrice', product.tradePrice > 0 ? product.tradePrice : '');
+  setVal('clipEditClientPrice', product.clientPrice > 0 ? product.clientPrice : '');
+  setVal('clipEditDims', product.dims !== 'Standard Architectural Spec' ? product.dims : '');
+  setVal('clipImgUrl', '');
 
-  const imgEl = document.getElementById('clipImg');
-  if (imgEl) imgEl.src = product.img;
+  if (imgEl) imgEl.src = product.img || '/brands/brand_1_1.png';
 
   const tradeSelect = document.getElementById('clipEditTrade');
   if (tradeSelect) {
@@ -3278,11 +3285,26 @@ function handleProductClip() {
     }
   }
 
-  setText('clipBrandBadge', product.brand);
+  setText('clipBrandBadge', product.brand !== 'Independent Brand' ? product.brand : '⚠ Unknown Brand — Verify');
   setText('clipDetectedUrl', product.url.length > 45 ? product.url.substr(0, 45) + '…' : product.url);
 
+  // Status badge: known vs unknown brand
+  const statusBadge = document.querySelector('#clipperPreviewBox .badge.green');
+  if (statusBadge) {
+    if (product.brand === 'Independent Brand' || !product.tradePrice) {
+      statusBadge.textContent = '✏ Please verify & fill details';
+      statusBadge.className = 'badge amber';
+    } else {
+      statusBadge.textContent = '✓ Ready to Add';
+      statusBadge.className = 'badge green';
+    }
+  }
+
   recalcClipMarkup();
-  showToast(`Clipped: "${product.name}" by ${product.brand}`, 'success');
+  const msg = product.brand !== 'Independent Brand'
+    ? `Clipped: "${product.name}" by ${product.brand} — verify details before adding.`
+    : `URL parsed: "${product.name}" — brand not recognised. Please fill in product details manually.`;
+  showToast(msg, product.brand !== 'Independent Brand' ? 'success' : 'info');
   logUserActivity('Clipped Product URL', `${product.name} extracted from ${urlVal}`);
 }
 window.handleProductClip = handleProductClip;
