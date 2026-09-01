@@ -124,6 +124,28 @@ export default function ClientNav({
             </div>
           )}
 
+          <a
+            href="/modules/aaren-intpro-designer-workspace.html#clipper"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              background: "#FAF9F6",
+              border: "1px solid rgba(129, 102, 63, 0.25)",
+              color: "#81663F",
+              padding: "0.7rem 1.4rem",
+              borderRadius: "0.6rem",
+              fontSize: "1.15rem",
+              fontWeight: 700,
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.6rem",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <span>✂️ Clipper Suite ↗</span>
+          </a>
+
           <button
             onClick={onLogout}
             style={{

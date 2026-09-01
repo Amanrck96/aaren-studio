@@ -4213,6 +4213,21 @@ if (!window.__aarenUser) {
   localStorage.setItem('aaren_guest_uid', guestId);
   window.loadUserWorkspace({ uid: guestId, name: "Studio Member", email: "designer@aarenstudio.com", initials: "SM", isGuest: true });
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  const hash = (window.location.hash || '').replace('#', '');
+  const params = new URLSearchParams(window.location.search);
+  const tab = params.get('tab') || hash;
+  if (tab && typeof window.goTo === 'function') {
+    setTimeout(() => window.goTo(tab), 150);
+  }
+});
+window.addEventListener('hashchange', () => {
+  const hash = (window.location.hash || '').replace('#', '');
+  if (hash && typeof window.goTo === 'function') {
+    window.goTo(hash);
+  }
+});
 </script>
 </body>
 </html>

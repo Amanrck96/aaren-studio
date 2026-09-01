@@ -39,6 +39,7 @@ export default function AdminNav() {
     { label: "💬 Testimonials", href: "/admin/testimonials" },
     { label: "✍️ Blogs", href: "/admin/blogs" },
     { label: "⏱️ Designer Time & Activity Audit", href: "/admin/analytics" },
+    { label: "✂️ Product Clipper & Bulk Suite", href: "/modules/aaren-intpro-designer-workspace.html#clipper" },
     { label: "🚀 Launch Designer OS (Programa)", href: "/workspace" },
     { label: "📁 Media Library", href: "/admin/media" },
     { label: "🗂️ Dropdowns", href: "/admin/dropdowns" },

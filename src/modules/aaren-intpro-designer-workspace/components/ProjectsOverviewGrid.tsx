@@ -297,27 +297,53 @@ export default function ProjectsOverviewGrid({
           </p>
         </div>
 
-        <button
-          onClick={() => setIsModalOpen(true)}
-          style={{
-            background: "#81663F",
-            color: "#FFFFFF",
-            border: "none",
-            borderRadius: "0.8rem",
-            padding: "1.2rem 2.2rem",
-            fontSize: "1.3rem",
-            fontWeight: 700,
-            cursor: "pointer",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.8rem",
-            boxShadow: "0 4px 14px rgba(129, 102, 63, 0.25)",
-            transition: "all 0.2s ease",
-          }}
-        >
-          <Plus size={18} />
-          <span>+ Create New Project</span>
-        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+          <a
+            href="/modules/aaren-intpro-designer-workspace.html#clipper"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              background: "#FAF9F6",
+              color: "#81663F",
+              border: "1px solid rgba(129, 102, 63, 0.35)",
+              borderRadius: "0.8rem",
+              padding: "1.2rem 2rem",
+              fontSize: "1.3rem",
+              fontWeight: 700,
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.8rem",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <span>✂️ Product Clipper &amp; Bulk Import</span>
+            <span style={{ fontSize: "1.1rem", opacity: 0.7 }}>↗</span>
+          </a>
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              background: "#81663F",
+              color: "#FFFFFF",
+              border: "none",
+              borderRadius: "0.8rem",
+              padding: "1.2rem 2.2rem",
+              fontSize: "1.3rem",
+              fontWeight: 700,
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.8rem",
+              boxShadow: "0 4px 14px rgba(129, 102, 63, 0.25)",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <Plus size={18} />
+            <span>+ Create New Project</span>
+          </button>
+        </div>
       </div>
 
       {/* Projects Grid or New User Empty State */}
