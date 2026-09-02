@@ -663,24 +663,34 @@ export default function Home() {
         }}
       >
         {/* Background MP4 Video */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          key={siteSettings?.heroVideoUrl || "/hero_bg.mp4"}
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: 0.35,
-            pointerEvents: "none",
-            zIndex: 0,
-          }}
-          src={siteSettings?.heroVideoUrl || "/hero_bg.mp4"}
-        />
+        {(() => {
+          // Cache-bust the video URL so the browser always loads the latest video
+          // when admin updates it in Firebase Storage (avoid stale cache serving old video)
+          const rawVideoUrl = siteSettings?.heroVideoUrl || "/hero_bg.mp4";
+          const videoSrc = rawVideoUrl.startsWith("http")
+            ? `${rawVideoUrl}${rawVideoUrl.includes("?") ? "&" : "?"}cb=${encodeURIComponent(rawVideoUrl).length}`
+            : rawVideoUrl;
+          return (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              key={rawVideoUrl}
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                opacity: 0.35,
+                pointerEvents: "none",
+                zIndex: 0,
+              }}
+              src={videoSrc}
+            />
+          );
+        })()}
 
         {/* ── Large AAREN wordmark — letter-by-letter reveal ── */}
         <div

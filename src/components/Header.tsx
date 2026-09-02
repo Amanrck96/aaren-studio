@@ -350,7 +350,7 @@ export default function Header() {
         .aaren-header__desktop-nav {
           display: none;
           align-items: center;
-          gap: 0.6rem;
+          gap: 0.5rem;
           margin-left: auto;
         }
 
@@ -370,21 +370,22 @@ export default function Header() {
           background: rgba(255, 255, 255, 0.08);
           border: 1px solid rgba(255, 255, 255, 0.12);
           color: #f1f5f9;
-          font-size: 1.15rem;
+          font-size: 1.1rem;
           font-weight: 600;
           letter-spacing: 0.04em;
           text-transform: uppercase;
           text-decoration: none;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
           white-space: nowrap;
+          vertical-align: middle;
+          line-height: 1;
         }
 
         .aaren-header__nav-btn:hover {
           background: rgba(255, 255, 255, 0.18);
           border-color: rgba(255, 255, 255, 0.25);
           color: #ffffff;
-          transform: translateY(-1px);
         }
 
         .aaren-header__nav-btn.active {

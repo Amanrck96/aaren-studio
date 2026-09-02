@@ -35,6 +35,7 @@ export const metadata: Metadata = {
 import { getSiteSettingsStore } from "@/lib/store";
 
 import CustomCursor from "@/components/CustomCursor";
+import FirebaseAuthSync from "@/components/FirebaseAuthSync";
 
 export default async function RootLayout({
   children,
@@ -79,6 +80,7 @@ export default async function RootLayout({
       </head>
       <body className={jost.className} suppressHydrationWarning>
         <SmoothScroll>
+          <FirebaseAuthSync />
           <CustomCursor />
           <Header />
           <main>{children}</main>
