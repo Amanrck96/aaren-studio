@@ -256,18 +256,11 @@ export default function Contact() {
         }
 
         .contact-header {
-          padding-top: 6rem;
-          padding-bottom: 3.5rem;
+          padding-top: 8rem;
+          padding-bottom: 4rem;
           padding-left: 0;
           padding-right: 0;
           border-bottom: 0.1rem solid rgba(129,102,63,0.18);
-        }
-
-        @media (min-width: 768px) {
-          .contact-header {
-            padding-top: 8rem;
-            padding-bottom: 4rem;
-          }
         }
 
         .contact-header__meta {

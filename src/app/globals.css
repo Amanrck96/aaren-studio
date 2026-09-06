@@ -161,67 +161,145 @@ h5 {
    padding, and typography. Never hardcode per-page heading sizes.
    ────────────────────────────────────────────────────────────────────────── */
 
-/* Page-level header wrapper (full-bleed, handles nav offset) */
-.page-header {
-  width: 100%;
-  padding-top: 6rem;
-  padding-bottom: 3.5rem;
-  padding-left: 0;
-  padding-right: 0;
-  border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
-  box-sizing: border-box;
-}
-@media (min-width: 768px) {
-  .page-header {
-    padding-top: 8rem;
-    padding-bottom: 4rem;
-  }
+/* Page-level wrapper for all 7 primary pages (8rem padding-top offset for fixed navbar) */
+.team-page,
+.about-page,
+.contact-page,
+.shop-page,
+.brands-page,
+.products-container,
+.faq-page {
+  background: #E6E2D8 !important;
+  color: #1e1e1e !important;
+  min-height: 100vh !important;
+  padding-top: 8rem !important;
+  margin-top: 0 !important;
+  box-sizing: border-box !important;
 }
 
-/* Unified Layout Containers — centres and applies identical left/right margins site-wide */
+/* Page-level header wrapper across all 7 pages (8rem padding-top => 16rem total baseline) */
+.page-header,
+.team-header,
+.about-header,
+.contact-header,
+.shop-header,
+.brands-header,
+.products-page-header,
+.faq-header {
+  width: 100% !important;
+  padding-top: 8rem !important;
+  padding-bottom: 4rem !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18) !important;
+  box-sizing: border-box !important;
+}
+
+/* Unified Layout Containers — 1600px max-width & identical gutters site-wide */
 .page-container,
 .page-header__inner,
+.team-header__inner,
+.about-header__inner,
+.contact-header__inner,
+.shop-header__inner,
+.brands-header__inner,
+.products-header__inner,
+.faq-header__inner,
 .page-content-container,
-.page-grid-container {
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 4rem;
-  padding-right: 4rem;
-  width: 100%;
-  box-sizing: border-box;
+.page-grid-container,
+.team-category-nav-wrapper,
+.about-values__inner,
+.shop-grid,
+.brands-grid,
+.products-layout,
+.faq-container {
+  max-width: 1600px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 4rem !important;
+  padding-right: 4rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 @media (max-width: 1024px) {
   .page-container,
   .page-header__inner,
+  .team-header__inner,
+  .about-header__inner,
+  .contact-header__inner,
+  .shop-header__inner,
+  .brands-header__inner,
+  .products-header__inner,
+  .faq-header__inner,
   .page-content-container,
-  .page-grid-container {
-    padding-left: 3rem;
-    padding-right: 3rem;
+  .page-grid-container,
+  .team-category-nav-wrapper,
+  .about-values__inner,
+  .shop-grid,
+  .brands-grid,
+  .products-layout,
+  .faq-container {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
   }
 }
 
 @media (max-width: 768px) {
   .page-container,
   .page-header__inner,
+  .team-header__inner,
+  .about-header__inner,
+  .contact-header__inner,
+  .shop-header__inner,
+  .brands-header__inner,
+  .products-header__inner,
+  .faq-header__inner,
   .page-content-container,
-  .page-grid-container {
-    padding-left: 2rem;
-    padding-right: 2rem;
+  .page-grid-container,
+  .team-category-nav-wrapper,
+  .about-values__inner,
+  .shop-grid,
+  .brands-grid,
+  .products-layout,
+  .faq-container {
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
   }
 }
 
-/* ── Page H1 — hero title (About Us, Our Team, FAQ, Contact Us, etc.) ── */
+/* Contact & Team Outer Grid Containers (max-width 1600px, gutters handled by children) */
+.contact-container,
+.team-grid-container {
+  max-width: 1600px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* ── Page H1 — hero title (OUR TEAM, ABOUT US, CONTACT US, SHOP, BRANDS, PRODUCTS, FAQ) ── */
 .page-title,
-.h1-page-title {
+.h1-page-title,
+.team-header__title,
+.about-header__title,
+.contact-header__title,
+.shop-header__title,
+.brands-header__title,
+.faq-title {
   font-size: clamp(6rem, 15vw, 22rem) !important;
   font-weight: 700 !important;
   letter-spacing: -0.05em !important;
   line-height: 0.88 !important;
   text-transform: uppercase !important;
   color: #81663F !important;
+  margin-top: 0 !important;
   margin-bottom: 2.8rem !important;
+  display: block !important;
 }
 
 /* ── Section subheading (Project Debrief, Our Mission, etc.) ── */
@@ -246,13 +324,17 @@ h5 {
 .projects-header__meta,
 .blog-header__meta,
 .contact-header__meta,
+.eyebrow,
 .privacy-tag {
   font-size: 1.3rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.12em !important;
   text-transform: uppercase !important;
   color: #81663F !important;
+  margin-top: 0 !important;
   margin-bottom: 1.6rem !important;
+  line-height: 1.2 !important;
+  display: block !important;
 }
 
 /* ── Body / description text below heading ── */
@@ -268,7 +350,9 @@ h5 {
   font-size: 1.6rem !important;
   line-height: 1.6 !important;
   color: rgba(0, 0, 0, 0.65) !important;
-  max-width: 58rem;
+  max-width: 58rem !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 /* ── Form / directory label ── */
@@ -2129,18 +2213,11 @@ input, select, textarea {
 }
 
 .brands-header {
-  padding-top: 6rem;
-  padding-bottom: 3.5rem;
+  padding-top: 8rem;
+  padding-bottom: 4rem;
   padding-left: 0;
   padding-right: 0;
   border-bottom: 0.1rem solid rgba(129, 102, 63, 0.2);
-}
-
-@media (min-width: 768px) {
-  .brands-header {
-    padding-top: 8rem;
-    padding-bottom: 4rem;
-  }
 }
 
 .brands-grid {

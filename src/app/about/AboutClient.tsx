@@ -179,18 +179,11 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
 
         /* ── Header ── */
         .about-header {
-          padding-top: 6rem;
-          padding-bottom: 3.5rem;
+          padding-top: 8rem;
+          padding-bottom: 4rem;
           padding-left: 0;
           padding-right: 0;
           border-bottom: 0.1rem solid var(--color-border);
-        }
-
-        @media (min-width: 768px) {
-          .about-header {
-            padding-top: 8rem;
-            padding-bottom: 4rem;
-          }
         }
 
         /* ── Values: staggered premium cards ── */

@@ -363,9 +363,9 @@ export default function FaqClient({ initialFaqs }: FaqClientProps) {
       <div className="faq-header page-header">
         <div className="faq-header__inner page-header__inner">
           <div className="faq-header__meta page-meta">
-            AAREN INTPRO KNOWLEDGE BASE
+            FREQUENTLY ASKED QUESTIONS — KNOWLEDGE BASE
           </div>
-          <h1 className="faq-title page-title">FREQUENTLY ASKED QUESTIONS</h1>
+          <h1 className="faq-title page-title">FAQ</h1>
           <p className="faq-desc page-desc">
             Explore official answers regarding Aaren Intpro showroom, luxury surfaces, modular kitchens, wardrobes, architectural hardware, and project collaborations.
           </p>
@@ -472,18 +472,11 @@ export default function FaqClient({ initialFaqs }: FaqClientProps) {
 
         /* ── Full-bleed page header — matches About Us / Our Team / Contact Us ── */
         .faq-header {
-          padding-top: 6rem;
-          padding-bottom: 3.5rem;
+          padding-top: 8rem;
+          padding-bottom: 4rem;
           padding-left: 0;
           padding-right: 0;
           border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
-        }
-
-        @media (min-width: 768px) {
-          .faq-header {
-            padding-top: 8rem;
-            padding-bottom: 4rem;
-          }
         }
 
         .faq-desc {

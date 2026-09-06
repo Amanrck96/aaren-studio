@@ -364,7 +364,7 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
     <div className="products-container">
       {/* ── PAGE HEADER ── */}
       <div className="products-page-header page-header">
-        <div className="page-header__inner">
+        <div className="products-header__inner page-header__inner">
           <div className="eyebrow page-meta">AAREN STUDIO — MATERIAL LAB</div>
           <h1 className="title page-title">PRODUCTS</h1>
           <p className="subtitle page-desc">
@@ -682,19 +682,12 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
         }
 
         .products-page-header {
-          padding-top: 6rem;
-          padding-bottom: 3.5rem;
+          padding-top: 8rem;
+          padding-bottom: 4rem;
           padding-left: 0;
           padding-right: 0;
           border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
           background: #E6E2D8;
-        }
-
-        @media (min-width: 768px) {
-          .products-page-header {
-            padding-top: 8rem;
-            padding-bottom: 4rem;
-          }
         }
 
         .products-layout {
