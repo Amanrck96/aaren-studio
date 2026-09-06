@@ -742,7 +742,6 @@ input, select, textarea {
 .site-footer {
   background: #E6E2D8;
   color: #1e1e1e;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   padding: 0 0.8rem;
@@ -759,7 +758,6 @@ input, select, textarea {
 .footer-wordmark {
   width: 100%;
   overflow: hidden;
-  flex: 1;
   display: flex;
   align-items: flex-end;
   color: #81663F;
