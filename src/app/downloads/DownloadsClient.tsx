@@ -22,7 +22,8 @@ import {
 } from "lucide-react";
 import { BrandDownloadFolder, DownloadPdfItem } from "@/lib/types";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
-import { logSilentPdfView } from "@/utils/authUser";
+import { logSilentPdfView, isUserLoggedIn } from "@/utils/authUser";
+import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
 
 export default function DownloadsClient() {
   const [folders, setFolders] = useState<BrandDownloadFolder[]>([]);
@@ -31,6 +32,32 @@ export default function DownloadsClient() {
   const [search, setSearch] = useState<string>("");
   const [viewMode, setViewMode] = useState<"folders" | "all">("folders");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [gatedPdf, setGatedPdf] = useState<{ url: string; title: string; coverImage?: string } | null>(null);
+
+  const handlePdfClick = (
+    e: React.MouseEvent,
+    pdfUrl: string,
+    title: string,
+    brandName: string,
+    coverImage?: string
+  ) => {
+    if (isUserLoggedIn()) {
+      // User is logged in: direct view without enquiry form!
+      logSilentPdfView({
+        pdfName: title,
+        pdfUrl: pdfUrl,
+        brandName: brandName,
+      });
+      return;
+    }
+    // User without account / not logged in: must fill enquiry form!
+    e.preventDefault();
+    setGatedPdf({
+      url: pdfUrl,
+      title: `${brandName} - ${title}`,
+      coverImage: coverImage,
+    });
+  };
 
   const fetchFolders = async () => {
     setLoading(true);
@@ -531,12 +558,14 @@ export default function DownloadsClient() {
                       href={pdf.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() =>
-                        logSilentPdfView({
-                          pdfName: pdf.title,
-                          pdfUrl: pdf.fileUrl,
-                          brandName: selectedFolder.brandName,
-                        })
+                      onClick={(e) =>
+                        handlePdfClick(
+                          e,
+                          pdf.fileUrl,
+                          pdf.title,
+                          selectedFolder.brandName,
+                          pdf.coverImage
+                        )
                       }
                       style={{ textDecoration: "none", color: "inherit", display: "block" }}
                     >
@@ -601,12 +630,14 @@ export default function DownloadsClient() {
                         href={pdf.fileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={() =>
-                          logSilentPdfView({
-                            pdfName: pdf.title,
-                            pdfUrl: pdf.fileUrl,
-                            brandName: selectedFolder.brandName,
-                          })
+                        onClick={(e) =>
+                          handlePdfClick(
+                            e,
+                            pdf.fileUrl,
+                            pdf.title,
+                            selectedFolder.brandName,
+                            pdf.coverImage
+                          )
                         }
                         style={{
                           background: "#1E1E1E",
@@ -793,12 +824,14 @@ export default function DownloadsClient() {
                     href={pdf.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() =>
-                      logSilentPdfView({
-                        pdfName: pdf.title,
-                        pdfUrl: pdf.fileUrl,
-                        brandName: pdf.brandName,
-                      })
+                    onClick={(e) =>
+                      handlePdfClick(
+                        e,
+                        pdf.fileUrl,
+                        pdf.title,
+                        pdf.brandName || "Brand",
+                        pdf.coverImage
+                      )
                     }
                     style={{ textDecoration: "none", color: "inherit", display: "block" }}
                   >
@@ -853,12 +886,14 @@ export default function DownloadsClient() {
                       href={pdf.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() =>
-                        logSilentPdfView({
-                          pdfName: pdf.title,
-                          pdfUrl: pdf.fileUrl,
-                          brandName: pdf.brandName,
-                        })
+                      onClick={(e) =>
+                        handlePdfClick(
+                          e,
+                          pdf.fileUrl,
+                          pdf.title,
+                          pdf.brandName || "Brand",
+                          pdf.coverImage
+                        )
                       }
                       style={{
                         background: "#1E1E1E",
@@ -883,6 +918,16 @@ export default function DownloadsClient() {
           </div>
         )}
       </main>
+
+      {/* Lead Gating Modal for Non-Logged-In Users */}
+      {gatedPdf && (
+        <CatalogPdfGateModal
+          catalogPdfUrl={gatedPdf.url}
+          itemTitle={gatedPdf.title}
+          coverImage={gatedPdf.coverImage}
+          onClose={() => setGatedPdf(null)}
+        />
+      )}
     </div>
   );
 }

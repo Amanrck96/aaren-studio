@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { PdfCatalogItem } from "@/lib/types";
 import OnScreenPdfViewer from "./OnScreenPdfViewer";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
-import { getLoggedInUser, logSilentPdfView } from "@/utils/authUser";
+import { getLoggedInUser, logSilentPdfView, isUserLoggedIn } from "@/utils/authUser";
+import { auth } from "@/lib/firebase";
 
 interface Props {
   catalog: PdfCatalogItem | null;
@@ -24,7 +25,11 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
   const [profession, setProfession] = useState("Architect / Interior Designer");
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
-  const [unlocked, setUnlocked] = useState(false);
+  // Synchronous check: If user already has an account & is signed in, unlock immediately without showing enquiry form
+  const [unlocked, setUnlocked] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return isUserLoggedIn();
+  });
   const [viewToken, setViewToken] = useState("");
   const [viewSlug, setViewSlug] = useState("");
 
@@ -52,6 +57,22 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
           if (p.profession) setProfession(p.profession);
         }
       } catch {}
+
+      // Also listen to Firebase auth state in case login finishes after mount
+      const unsub = auth.onAuthStateChanged((user) => {
+        if (user) {
+          const updatedUser = getLoggedInUser();
+          logSilentPdfView({
+            pdfName: catalog.title || catalog.fileName || "Catalogue",
+            pdfUrl: catalog.fileUrl,
+            brandName: catalog.brand,
+            user: updatedUser,
+          });
+          setUnlocked(true);
+          if (onSuccess) onSuccess();
+        }
+      });
+      return () => unsub();
     }
   }, [catalog, onSuccess]);
 
@@ -171,6 +192,45 @@ export default function CatalogDownloadModal({ catalog, onClose, onSuccess }: Pr
                 </span>
                 <h2 className="catalog-form-title">{catalog.title}</h2>
                 <p className="catalog-form-desc">{catalog.description}</p>
+              </div>
+
+              {/* Quick Sign-In Option for Existing Account Holders */}
+              <div
+                style={{
+                  background: "#FAF4EB",
+                  border: "1px solid #E2D5C3",
+                  borderRadius: "10px",
+                  padding: "0.75rem 1rem",
+                  marginBottom: "1rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "10px",
+                  fontSize: "0.82rem",
+                  color: "#5E5852",
+                }}
+              >
+                <div>
+                  <span style={{ fontWeight: 800, color: "#81663F" }}>Already have an account?</span>{" "}
+                  Sign in to view instantly without filling any form.
+                </div>
+                <a
+                  href={`/login?redirect=${encodeURIComponent(typeof window !== "undefined" ? window.location.pathname : "")}`}
+                  style={{
+                    background: "#81663F",
+                    color: "#FFFFFF",
+                    padding: "6px 14px",
+                    borderRadius: "6px",
+                    fontSize: "0.78rem",
+                    fontWeight: 800,
+                    textDecoration: "none",
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
+                    boxShadow: "0 2px 6px rgba(129,102,63,0.25)",
+                  }}
+                >
+                  Sign In →
+                </a>
               </div>
 
               <form onSubmit={handleSubmit} className="catalog-enquiry-form">

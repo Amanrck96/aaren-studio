@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import OnScreenPdfViewer from "./OnScreenPdfViewer";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
-import { getLoggedInUser, getFormPrefillData, logSilentPdfView } from "@/utils/authUser";
+import { getLoggedInUser, getFormPrefillData, logSilentPdfView, isUserLoggedIn } from "@/utils/authUser";
+import { auth } from "@/lib/firebase";
 
 type Props = {
   catalogPdfUrl: string;
@@ -25,7 +26,11 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
     message: "",
   });
   const [submitting, setSubmitting] = useState(false);
-  const [unlocked, setUnlocked] = useState(false);
+  // Synchronous check: If user already has an account & is signed in, unlock immediately without showing enquiry form
+  const [unlocked, setUnlocked] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return isUserLoggedIn();
+  });
   const [settings, setSettings] = useState({
     badgeText: "OFFICIAL ARCHITECTURAL CATALOGUE",
     buttonText: "Unlock Full Catalogue On-Screen Preview 📖",
@@ -66,6 +71,21 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
           profession: prefill.profession || prev.profession,
         }));
       }
+
+      // Also listen to Firebase auth state in case login finishes after mount
+      const unsub = auth.onAuthStateChanged((user) => {
+        if (user) {
+          const updatedUser = getLoggedInUser();
+          logSilentPdfView({
+            pdfName: itemTitle,
+            pdfUrl: finalPdfUrl,
+            productTitle: itemTitle,
+            user: updatedUser,
+          });
+          setUnlocked(true);
+        }
+      });
+      return () => unsub();
     }
 
     // 2. Fetch custom modal title/badge settings
@@ -294,6 +314,45 @@ export default function CatalogPdfGateModal({ catalogPdfUrl, itemTitle, coverIma
                   Fill details below to unlock on-screen full catalogue preview.
                 </p>
               </div>
+            </div>
+
+            {/* Quick Sign-In Option for Existing Account Holders */}
+            <div
+              style={{
+                background: "#FAF4EB",
+                border: "1px solid #E2D5C3",
+                borderRadius: "10px",
+                padding: "0.75rem 1rem",
+                marginBottom: "1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "10px",
+                fontSize: "0.82rem",
+                color: "#5E5852",
+              }}
+            >
+              <div>
+                <span style={{ fontWeight: 800, color: "#81663F" }}>Already have an account?</span>{" "}
+                Sign in to view instantly without filling any form.
+              </div>
+              <a
+                href={`/login?redirect=${encodeURIComponent(typeof window !== "undefined" ? window.location.pathname : "")}`}
+                style={{
+                  background: "#81663F",
+                  color: "#FFFFFF",
+                  padding: "6px 14px",
+                  borderRadius: "6px",
+                  fontSize: "0.78rem",
+                  fontWeight: 800,
+                  textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                  boxShadow: "0 2px 6px rgba(129,102,63,0.25)",
+                }}
+              >
+                Sign In →
+              </a>
             </div>
 
             {/* Form */}

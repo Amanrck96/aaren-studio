@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useParams } from "next/navigation";
+import { getLoggedInUser } from "@/utils/authUser";
 
 declare global {
   interface Window {
@@ -74,8 +75,8 @@ function CatalogViewer() {
 
   // Load PDF.js from CDN and initialize Document stream
   useEffect(() => {
-    if (!slug || !token) {
-      setError("Unauthorized: Access token is missing. Please submit the catalog enquiry form first.");
+    if (!slug) {
+      setError("Invalid catalogue URL.");
       setLoading(false);
       return;
     }
@@ -86,6 +87,44 @@ function CatalogViewer() {
       try {
         setLoading(true);
         setError(null);
+
+        let activeToken = token;
+
+        // If no token, check if user is already signed in
+        if (!activeToken) {
+          const authUser = getLoggedInUser();
+          if (authUser.isLoggedIn) {
+            try {
+              const enqRes = await fetch("/api/enquiry", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  name: authUser.name || "Studio Member",
+                  email: authUser.email || "client@aarenstudio.com",
+                  phone: authUser.phone || "+91 98800 00000",
+                  slug: slug,
+                  profession: authUser.role || "Architect",
+                  company: authUser.company || "",
+                }),
+              });
+              const enqData = await enqRes.json();
+              if (enqData.success && enqData.token) {
+                activeToken = enqData.token;
+                if (authUser.name) setViewerName(authUser.name);
+                if (authUser.email) setViewerEmail(authUser.email);
+              }
+            } catch (authMintErr) {
+              console.warn("Silent auth token minting error:", authMintErr);
+            }
+          }
+        }
+
+        if (!activeToken) {
+          if (!isMounted) return;
+          setError("Catalogue Access Restricted: Please sign in to view directly, or submit the catalogue enquiry form.");
+          setLoading(false);
+          return;
+        }
 
         // Load PDF.js from CDN if not already on window
         if (!window.pdfjsLib) {
@@ -106,7 +145,7 @@ function CatalogViewer() {
           });
         }
 
-        const streamUrl = `/api/catalogs/${slug}/stream?token=${encodeURIComponent(token)}`;
+        const streamUrl = `/api/catalogs/${slug}/stream?token=${encodeURIComponent(activeToken)}`;
 
         const loadingTask = window.pdfjsLib.getDocument({
           url: streamUrl,
@@ -125,7 +164,7 @@ function CatalogViewer() {
         if (isMounted) {
           setError(
             err.message?.includes("401") || err.message?.includes("403")
-              ? "Access expired or unauthorized. Please request access again."
+              ? "Access expired or unauthorized. Please sign in or request access again."
               : err.message || "Failed to load protected PDF document."
           );
           setLoading(false);
@@ -543,21 +582,39 @@ function CatalogViewer() {
             <p style={{ color: "#94A3B8", fontSize: "0.9rem", lineHeight: 1.5, margin: "0 0 1.5rem 0" }}>
               {error}
             </p>
-            <Link
-              href="/catalogs"
-              style={{
-                display: "inline-block",
-                padding: "0.75rem 1.4rem",
-                background: "linear-gradient(135deg, #D4B67D 0%, #B38E46 100%)",
-                color: "#000000",
-                borderRadius: "8px",
-                fontWeight: 800,
-                textDecoration: "none",
-                fontSize: "0.9rem",
-              }}
-            >
-              Request Access on Catalogs Portal →
-            </Link>
+            <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>
+              <Link
+                href={`/login?redirect=${encodeURIComponent(typeof window !== "undefined" ? window.location.pathname : "")}`}
+                style={{
+                  display: "inline-block",
+                  padding: "0.75rem 1.4rem",
+                  background: "linear-gradient(135deg, #D4B67D 0%, #B38E46 100%)",
+                  color: "#000000",
+                  borderRadius: "8px",
+                  fontWeight: 800,
+                  textDecoration: "none",
+                  fontSize: "0.9rem",
+                }}
+              >
+                Sign In to View Instantly →
+              </Link>
+              <Link
+                href="/catalogs"
+                style={{
+                  display: "inline-block",
+                  padding: "0.75rem 1.4rem",
+                  background: "rgba(255, 255, 255, 0.08)",
+                  border: "1px solid rgba(212, 182, 125, 0.3)",
+                  color: "#FFFFFF",
+                  borderRadius: "8px",
+                  fontWeight: 700,
+                  textDecoration: "none",
+                  fontSize: "0.9rem",
+                }}
+              >
+                Fill Enquiry on Catalogs Portal
+              </Link>
+            </div>
           </div>
         )}
 

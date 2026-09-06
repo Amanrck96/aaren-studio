@@ -20,7 +20,8 @@ import {
 } from "lucide-react";
 import { BrandDownloadFolder, DownloadPdfItem } from "@/lib/types";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
-import { logSilentPdfView } from "@/utils/authUser";
+import { logSilentPdfView, isUserLoggedIn } from "@/utils/authUser";
+import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
 
 interface Props {
   slug: string | string[];
@@ -67,6 +68,32 @@ export default function BrandDownloadClient({ slug }: Props) {
   const [search, setSearch] = useState<string>("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [pageUrlCopied, setPageUrlCopied] = useState<boolean>(false);
+  const [gatedPdf, setGatedPdf] = useState<{ url: string; title: string; coverImage?: string } | null>(null);
+
+  const handlePdfClick = (
+    e: React.MouseEvent,
+    pdfUrl: string,
+    title: string,
+    brandName: string,
+    coverImage?: string
+  ) => {
+    if (isUserLoggedIn()) {
+      // Logged in user: direct access without enquiry form
+      logSilentPdfView({
+        pdfName: title,
+        pdfUrl: pdfUrl,
+        brandName: brandName,
+      });
+      return;
+    }
+    // User without account: must fill enquiry form or sign in
+    e.preventDefault();
+    setGatedPdf({
+      url: pdfUrl,
+      title: `${brandName} - ${title}`,
+      coverImage: coverImage,
+    });
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -522,12 +549,14 @@ export default function BrandDownloadClient({ slug }: Props) {
                         href={pdf.fileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={() =>
-                          logSilentPdfView({
-                            pdfName: pdf.title,
-                            pdfUrl: pdf.fileUrl,
-                            brandName: folder.brandName,
-                          })
+                        onClick={(e) =>
+                          handlePdfClick(
+                            e,
+                            pdf.fileUrl,
+                            pdf.title,
+                            folder.brandName,
+                            pdf.coverImage
+                          )
                         }
                         style={{ display: "block", flexShrink: 0, textDecoration: "none" }}
                       >
@@ -553,12 +582,14 @@ export default function BrandDownloadClient({ slug }: Props) {
                           href={pdf.fileUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={() =>
-                            logSilentPdfView({
-                              pdfName: pdf.title,
-                              pdfUrl: pdf.fileUrl,
-                              brandName: folder.brandName,
-                            })
+                          onClick={(e) =>
+                            handlePdfClick(
+                              e,
+                              pdf.fileUrl,
+                              pdf.title,
+                              folder.brandName,
+                              pdf.coverImage
+                            )
                           }
                           style={{ textDecoration: "none", color: "inherit" }}
                         >
@@ -602,12 +633,14 @@ export default function BrandDownloadClient({ slug }: Props) {
                         href={pdf.fileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={() =>
-                          logSilentPdfView({
-                            pdfName: pdf.title,
-                            pdfUrl: pdf.fileUrl,
-                            brandName: folder.brandName,
-                          })
+                        onClick={(e) =>
+                          handlePdfClick(
+                            e,
+                            pdf.fileUrl,
+                            pdf.title,
+                            folder.brandName,
+                            pdf.coverImage
+                          )
                         }
                         style={{
                           background: "#81663F",
@@ -686,6 +719,16 @@ export default function BrandDownloadClient({ slug }: Props) {
           </>
         )}
       </main>
+
+      {/* Lead Gating Modal for Non-Logged-In Users */}
+      {gatedPdf && (
+        <CatalogPdfGateModal
+          catalogPdfUrl={gatedPdf.url}
+          itemTitle={gatedPdf.title}
+          coverImage={gatedPdf.coverImage}
+          onClose={() => setGatedPdf(null)}
+        />
+      )}
     </div>
   );
 }

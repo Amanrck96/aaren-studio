@@ -44,8 +44,10 @@ export function getLoggedInUser(): AuthUserInfo {
 
     // ── 2. Admin / Editor Auth ──────────────────────────────────────────────
     const isAdmin =
-      localStorage.getItem("aaren_admin_auth")       === "true" ||
-      localStorage.getItem("aaren_admin_logged_in")  === "true";
+      localStorage.getItem("aaren_admin_auth") === "true" ||
+      localStorage.getItem("aaren_admin_logged_in") === "true" ||
+      localStorage.getItem("aaren_admin_session") === "authenticated" ||
+      (typeof document !== "undefined" && document.cookie.includes("aaren_admin_session=authenticated"));
 
     if (isAdmin) {
       const adminEmail = localStorage.getItem("aaren_admin_email") || "admin@aarenstudio.com";
@@ -59,9 +61,26 @@ export function getLoggedInUser(): AuthUserInfo {
       };
     }
 
-    // ── 3. Firebase Designer / Staff Login ──────────────────────────────────
-    //   Set by the login page (src/app/(os)/login/page.tsx) after Firebase
-    //   onAuthStateChanged succeeds. Cleared on logout.
+    // ── 3. Workspace / Designer Token Auth ──────────────────────────────────
+    const aarenAuthUser = localStorage.getItem("aaren_auth_user");
+    const aarenToken    = localStorage.getItem("aaren_token");
+    if (aarenAuthUser || aarenToken) {
+      try {
+        const parsed = aarenAuthUser ? JSON.parse(aarenAuthUser) : {};
+        return {
+          isLoggedIn: true,
+          name:    parsed.name || parsed.displayName || "Workspace Member",
+          email:   parsed.email || "",
+          phone:   parsed.phone || "",
+          company: parsed.company || "",
+          role:    parsed.role || "Designer",
+        };
+      } catch (_) {
+        return { isLoggedIn: true, name: "Workspace Member", role: "Designer" };
+      }
+    }
+
+    // ── 4. Firebase Designer / User Login ──────────────────────────────────
     const firebaseAuthed = localStorage.getItem("aaren_firebase_authed") === "true";
     if (firebaseAuthed) {
       const firebaseUserStr = localStorage.getItem("aaren_firebase_user");
@@ -71,20 +90,57 @@ export function getLoggedInUser(): AuthUserInfo {
         name:  firebaseUser.displayName || firebaseUser.name || "Studio Member",
         email: firebaseUser.email       || "",
         phone: firebaseUser.phone       || "",
-        role:  "Designer",
+        role:  "Member",
       };
     }
 
-    // ── NOTE: aaren_user_session is intentionally NOT treated as authenticated.
-    //   It stores form-fill data (name/email entered in the PDF gate form) to
-    //   pre-fill future forms — it does NOT mean the user has logged in.
-    //   See CatalogPdfGateModal.tsx for pre-fill logic.
+    // Check Firebase SDK persistent key in localStorage (firebase:authUser:...)
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith("firebase:authUser:")) {
+        const val = localStorage.getItem(k);
+        if (val) {
+          try {
+            const fbUser = JSON.parse(val);
+            if (fbUser && (fbUser.email || fbUser.uid)) {
+              return {
+                isLoggedIn: true,
+                name:  fbUser.displayName || fbUser.email?.split("@")[0] || "Studio Member",
+                email: fbUser.email || "",
+                phone: fbUser.phoneNumber || "",
+                role:  "Member",
+              };
+            }
+          } catch (_) {}
+        }
+      }
+    }
+
+    // ── 5. NextAuth Session Cookie ──────────────────────────────────────────
+    if (
+      typeof document !== "undefined" &&
+      (document.cookie.includes("next-auth.session-token") ||
+        document.cookie.includes("__Secure-next-auth.session-token"))
+    ) {
+      return {
+        isLoggedIn: true,
+        name: "Client Account",
+        role: "Client",
+      };
+    }
 
   } catch (e) {
     console.warn("Auth user lookup error:", e);
   }
 
   return { isLoggedIn: false };
+}
+
+/**
+ * Clean boolean helper to check if current visitor is authenticated.
+ */
+export function isUserLoggedIn(): boolean {
+  return getLoggedInUser().isLoggedIn;
 }
 
 /**
