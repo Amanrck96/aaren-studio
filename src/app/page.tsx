@@ -942,7 +942,7 @@ export default function Home() {
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
         <div
-          style={{ position: "relative", overflow: "hidden", width: "100%", padding: "2.4rem", boxSizing: "border-box" }}
+          style={{ position: "relative", overflow: "hidden", width: "100%", padding: "2.4rem 1.2rem", boxSizing: "border-box" }}
           onMouseEnter={() => setCatPaused(true)}
           onMouseLeave={() => setCatPaused(false)}
         >
@@ -966,81 +966,93 @@ export default function Home() {
               );
 
               return (
-                <Link
+                <div
                   key={cat.id}
-                  href={getCategoryHref(cat)}
-                  id={`home-cat-${cat.id}`}
                   style={{
                     flex: `0 0 ${100 / catTotal}%`,
-                    display: "flex",
-                    flexDirection: "column",
-                    textDecoration: "none",
-                    color: "inherit",
-                    borderRight: "0.1rem solid rgba(0,0,0,0.12)",
+                    padding: "0 1.2rem",
+                    boxSizing: "border-box",
                   }}
-                  className="home-ticket-card"
                 >
-                  {/* 1920x1080 Image Container */}
-                  <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "linear-gradient(135deg, #ede8df 0%, #ded8cb 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    {isLogoAsset ? (
-                      <>
-                        {/* Background architectural image fallback */}
-                        <div
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            backgroundImage: "url('/categories/cat_1.jpg')",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            opacity: 0.28,
-                            filter: "grayscale(20%) contrast(90%)",
-                          }}
-                        />
-                        {/* Constrained Category Logo */}
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <Link
+                    href={getCategoryHref(cat)}
+                    id={`home-cat-${cat.id}`}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      textDecoration: "none",
+                      color: "inherit",
+                      border: "0.1rem solid rgba(129, 102, 63, 0.2)",
+                      borderRadius: "0.4rem",
+                      overflow: "hidden",
+                      background: "#FAF9F6",
+                      boxShadow: "0 4px 18px rgba(0,0,0,0.04)",
+                      height: "100%",
+                    }}
+                    className="home-ticket-card"
+                  >
+                    {/* 1920x1080 Image Container */}
+                    <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "linear-gradient(135deg, #ede8df 0%, #ded8cb 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      {isLogoAsset ? (
+                        <>
+                          {/* Background architectural image fallback */}
+                          <div
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              backgroundImage: "url('/categories/cat_1.jpg')",
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                              opacity: 0.28,
+                              filter: "grayscale(20%) contrast(90%)",
+                            }}
+                          />
+                          {/* Constrained Category Logo */}
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={cat.img}
+                            alt={cat.name}
+                            className="home-ticket-img"
+                            style={{
+                              maxWidth: "52%",
+                              maxHeight: "44%",
+                              width: "auto",
+                              height: "auto",
+                              objectFit: "contain",
+                              zIndex: 2,
+                              filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.12))",
+                              transition: "transform 0.5s ease",
+                            }}
+                          />
+                        </>
+                      ) : (
+                        /* eslint-disable-next-line @next/next/no-img-element */
                         <img
                           src={cat.img}
                           alt={cat.name}
                           className="home-ticket-img"
-                          style={{
-                            maxWidth: "52%",
-                            maxHeight: "44%",
-                            width: "auto",
-                            height: "auto",
-                            objectFit: "contain",
-                            zIndex: 2,
-                            filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.12))",
-                            transition: "transform 0.5s ease",
-                          }}
+                          style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
                         />
-                      </>
-                    ) : (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        src={cat.img}
-                        alt={cat.name}
-                        className="home-ticket-img"
-                        style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
-                      />
-                    )}
-                  </div>
+                      )}
+                    </div>
 
-                  {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", transition: "background 0.25s ease" }} className="home-ticket-caption">
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
-                      <span style={{ fontSize: "clamp(1.4rem, 1.8vw, 2.2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>
-                        {applyTextCase(cat.name, siteSettings?.textCase, "title")}
-                      </span>
-                      <span style={{ fontSize: "1.15rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>
-                        {applyTextCase(cat.sub, siteSettings?.textCase, "sentence")}
-                      </span>
+                    {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", borderTop: "0.1rem solid rgba(129, 102, 63, 0.12)", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
+                        <span style={{ fontSize: "clamp(1.4rem, 1.8vw, 2.2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>
+                          {applyTextCase(cat.name, siteSettings?.textCase, "title")}
+                        </span>
+                        <span style={{ fontSize: "1.15rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>
+                          {applyTextCase(cat.sub, siteSettings?.textCase, "sentence")}
+                        </span>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
+                        <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{cat.code}</span>
+                        <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{cat.num}</span>
+                      </div>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
-                      <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{cat.code}</span>
-                      <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{cat.num}</span>
-                    </div>
-                  </div>
-                </Link>
+                  </Link>
+                </div>
               );
             })}
           </div>
@@ -1114,7 +1126,7 @@ export default function Home() {
 
         {/* 2-card carousel — overflow hidden, slides via CSS transform */}
         <div
-          style={{ position: "relative", overflow: "hidden", width: "100%", padding: "2.4rem", boxSizing: "border-box" }}
+          style={{ position: "relative", overflow: "hidden", width: "100%", padding: "2.4rem 1.2rem", boxSizing: "border-box" }}
           onMouseEnter={() => setBrandPaused(true)}
           onMouseLeave={() => setBrandPaused(false)}
         >
@@ -1129,85 +1141,97 @@ export default function Home() {
             }}
           >
             {brandsList.map((brand) => (
-              <Link
+              <div
                 key={brand.id}
-                href={getBrandHref(brand)}
-                id={`home-brand-${brand.id}`}
                 style={{
                   flex: `0 0 ${100 / brandTotal}%`,
-                  display: "flex",
-                  flexDirection: "column",
-                  textDecoration: "none",
-                  color: "inherit",
-                  borderRight: "0.1rem solid rgba(0,0,0,0.12)",
+                  padding: "0 1.2rem",
+                  boxSizing: "border-box",
                 }}
-                className="home-ticket-card"
               >
-                {/* 1920x1080 Image Container */}
-                <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "#d8d4c8" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={brand.img}
-                    alt={brand.name}
-                    className="home-ticket-img"
-                    style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
-                  />
+                <Link
+                  href={getBrandHref(brand)}
+                  id={`home-brand-${brand.id}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    textDecoration: "none",
+                    color: "inherit",
+                    border: "0.1rem solid rgba(129, 102, 63, 0.2)",
+                    borderRadius: "0.4rem",
+                    overflow: "hidden",
+                    background: "#FAF9F6",
+                    boxShadow: "0 4px 18px rgba(0,0,0,0.04)",
+                    height: "100%",
+                  }}
+                  className="home-ticket-card"
+                >
+                  {/* 1920x1080 Image Container */}
+                  <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "#d8d4c8" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={brand.img}
+                      alt={brand.name}
+                      className="home-ticket-img"
+                      style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
+                    />
 
-                  {/* Brand Logo Badge for Brand — Bottom-Left */}
-                  {brand.logo ? (
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "1.4rem",
-                        left: "1.4rem",
-                        background: "#ffffff",
-                        padding: "0.6rem 1.4rem",
-                        borderRadius: "0.4rem",
-                        boxShadow: "0 4px 14px rgba(0, 0, 0, 0.15)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        zIndex: 5,
-                        minWidth: "7rem",
-                        minHeight: "3.2rem",
-                      }}
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={brand.logo}
-                        alt={brand.name}
+                    {/* Brand Logo Badge for Brand — Bottom-Left */}
+                    {brand.logo ? (
+                      <div
                         style={{
-                          maxHeight: "2.4rem",
-                          maxWidth: "9rem",
-                          width: "auto",
-                          height: "auto",
-                          objectFit: "contain",
+                          position: "absolute",
+                          bottom: "1.4rem",
+                          left: "1.4rem",
+                          background: "#ffffff",
+                          padding: "0.6rem 1.4rem",
+                          borderRadius: "0.4rem",
+                          boxShadow: "0 4px 14px rgba(0, 0, 0, 0.15)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          zIndex: 5,
+                          minWidth: "7rem",
+                          minHeight: "3.2rem",
                         }}
-                        onError={(e) => {
-                          const target = e.currentTarget as HTMLElement;
-                          if (target.parentElement) target.parentElement.style.display = "none";
-                        }}
-                      />
-                    </div>
-                  ) : null}
-                </div>
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={brand.logo}
+                          alt={brand.name}
+                          style={{
+                            maxHeight: "2.4rem",
+                            maxWidth: "9rem",
+                            width: "auto",
+                            height: "auto",
+                            objectFit: "contain",
+                          }}
+                          onError={(e) => {
+                            const target = e.currentTarget as HTMLElement;
+                            if (target.parentElement) target.parentElement.style.display = "none";
+                          }}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
 
-                {/* Caption Bar: Brand Name (Left), Short Code & Number side-by-side (Right) */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", transition: "background 0.25s ease" }} className="home-ticket-caption">
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
-                    <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>
-                      {applyTextCase(brand.name, siteSettings?.textCase, "title")}
-                    </span>
-                    <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>
-                      {applyTextCase(brand.sub, siteSettings?.textCase, "sentence")}
-                    </span>
+                  {/* Caption Bar: Brand Name (Left), Short Code & Number side-by-side (Right) */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", borderTop: "0.1rem solid rgba(129, 102, 63, 0.12)", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
+                      <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>
+                        {applyTextCase(brand.name, siteSettings?.textCase, "title")}
+                      </span>
+                      <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>
+                        {applyTextCase(brand.sub, siteSettings?.textCase, "sentence")}
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
+                      <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{brand.code}</span>
+                      <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{brand.num}</span>
+                    </div>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
-                    <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{brand.code}</span>
-                    <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{brand.num}</span>
-                  </div>
-                </div>
-              </Link>
+                </Link>
+              </div>
             ))}
           </div>
 
