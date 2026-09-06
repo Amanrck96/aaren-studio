@@ -22,7 +22,7 @@
     "@types/three": "^0.185.1",
     "cloudinary": "^2.10.0",
     "clsx": "^2.1.1",
-    "firebase": "^12.17.0",
+    "firebase": "^12.18.0",
     "framer-motion": "^12.42.2",
     "genkit": "^1.41.0",
     "gsap": "^3.15.0",
