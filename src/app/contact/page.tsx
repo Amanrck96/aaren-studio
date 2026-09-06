@@ -256,19 +256,18 @@ export default function Contact() {
         }
 
         .contact-header {
-          padding: 6rem 2rem 4rem;
+          padding-top: 6rem;
+          padding-bottom: 3.5rem;
+          padding-left: 0;
+          padding-right: 0;
           border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
         @media (min-width: 768px) {
           .contact-header {
-            padding: 8rem 4rem 4rem;
+            padding-top: 8rem;
+            padding-bottom: 4rem;
           }
-        }
-
-        .contact-header__inner {
-          max-width: 1600px;
-          margin: 0 auto;
         }
 
         .contact-header__meta {
@@ -334,6 +333,12 @@ export default function Contact() {
           gap: 2.4rem;
         }
 
+        @media (max-width: 1024px) {
+          .info-block {
+            padding: 3.5rem 3rem 2rem;
+          }
+        }
+
         @media (max-width: 768px) {
           .info-block {
             padding: 3rem 2rem 2rem;
@@ -342,6 +347,12 @@ export default function Contact() {
 
         .google-map-wrapper {
           padding: 0 4rem 4rem;
+        }
+
+        @media (max-width: 1024px) {
+          .google-map-wrapper {
+            padding: 0 3rem 3.5rem;
+          }
         }
 
         @media (max-width: 768px) {
@@ -406,6 +417,12 @@ export default function Contact() {
           display: flex;
           flex-direction: column;
           gap: 2.4rem;
+        }
+
+        @media (max-width: 1024px) {
+          .contact-form-wrapper {
+            padding: 3.5rem 3rem;
+          }
         }
 
         @media (max-width: 768px) {

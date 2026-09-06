@@ -682,29 +682,51 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
         }
 
         .products-page-header {
-          padding: 6rem 2rem 4rem;
+          padding-top: 6rem;
+          padding-bottom: 3.5rem;
+          padding-left: 0;
+          padding-right: 0;
           border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
           background: #E6E2D8;
         }
 
         @media (min-width: 768px) {
           .products-page-header {
-            padding: 8rem 4rem 4rem;
+            padding-top: 8rem;
+            padding-bottom: 4rem;
           }
         }
 
         .products-layout {
           display: grid;
-          grid-template-columns: 200px 1fr;
+          grid-template-columns: 220px 1fr;
           min-height: 80vh;
           max-width: 1600px;
           margin: 0 auto;
+          padding-left: 4rem;
+          padding-right: 4rem;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+          .products-layout {
+            padding-left: 3rem;
+            padding-right: 3rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .products-layout {
+            grid-template-columns: 1fr;
+            padding-left: 2rem;
+            padding-right: 2rem;
+          }
         }
 
         /* ── SIDEBAR ── */
         .products-sidebar {
-          width: 200px;
-          padding: 24px 16px;
+          width: 220px;
+          padding: 24px 20px 24px 0;
           border-right: 0.5px solid var(--border);
           background: #ffffff;
           position: sticky;
@@ -853,8 +875,14 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
 
         /* ── MAIN AREA ── */
         .products-main {
-          padding: 24px 32px;
+          padding: 24px 0 24px 32px;
           background: var(--surface-0);
+        }
+
+        @media (max-width: 768px) {
+          .products-main {
+            padding: 20px 0;
+          }
         }
 
         .top-bar {
@@ -1140,7 +1168,10 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            padding: 12px 16px;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 12px 2rem;
+            box-sizing: border-box;
             border-bottom: 0.5px solid var(--border);
             background: #ffffff;
             position: sticky;

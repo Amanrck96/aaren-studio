@@ -112,7 +112,9 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
       {/* ── Company Timeline — connected roadmap ── */}
       <div className="about-timeline-section">
         <div className="timeline-header">
-          <span className="t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", fontSize: "1.3rem" }}>Company Timeline</span>
+          <div className="timeline-header__inner page-header__inner">
+            <span className="t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", fontSize: "1.3rem" }}>Company Timeline</span>
+          </div>
         </div>
 
         <div className="roadmap">
@@ -177,54 +179,24 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
 
         /* ── Header ── */
         .about-header {
-          padding: 6rem 2rem 4rem;
+          padding-top: 6rem;
+          padding-bottom: 3.5rem;
+          padding-left: 0;
+          padding-right: 0;
           border-bottom: 0.1rem solid var(--color-border);
         }
 
         @media (min-width: 768px) {
-          .about-header { padding: 8rem 4rem 4rem; }
-        }
-
-        .about-header__inner {
-          max-width: 1600px;
-          margin: 0 auto;
-        }
-
-        .about-header__title {
-          font-size: clamp(6rem, 15vw, 22rem);
-          font-weight: 700;
-          letter-spacing: -0.05em;
-          line-height: 0.88;
-          text-transform: uppercase;
-          color: #81663F;
-          margin-bottom: 2.8rem;
-        }
-
-        .about-header__desc {
-          font-size: 1.6rem;
-          line-height: 1.6;
-          letter-spacing: -0.01em;
-          max-width: 58rem;
-          color: rgba(0,0,0,0.65);
-        }
-
-        .about-header__meta {
-          color: #81663F;
-          font-size: 1.3rem;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          margin-bottom: 1.6rem;
+          .about-header {
+            padding-top: 8rem;
+            padding-bottom: 4rem;
+          }
         }
 
         /* ── Values: staggered premium cards ── */
         .about-values {
           border-bottom: 0.1rem solid var(--color-border);
-          padding: 5rem 2rem 7rem;
-        }
-
-        @media (min-width: 768px) {
-          .about-values { padding: 7rem 4rem 9rem; }
+          padding: 6rem 0 8rem;
         }
 
         .about-values__inner {
@@ -233,6 +205,23 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
           gap: 2.4rem;
           max-width: 1600px;
           margin: 0 auto;
+          padding-left: 4rem;
+          padding-right: 4rem;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+          .about-values__inner {
+            padding-left: 3rem;
+            padding-right: 3rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .about-values__inner {
+            padding-left: 2rem;
+            padding-right: 2rem;
+          }
         }
 
         @media (min-width: 768px) {
@@ -308,12 +297,11 @@ export default function AboutClient({ initialRoadmap, initialSiteSettings }: Abo
         }
 
         .timeline-header {
-          padding: 2.4rem 2rem;
+          padding-top: 2.4rem;
+          padding-bottom: 2.4rem;
+          padding-left: 0;
+          padding-right: 0;
           border-bottom: 0.1rem solid var(--color-border);
-        }
-
-        @media (min-width: 768px) {
-          .timeline-header { padding: 2.4rem 4rem; }
         }
 
         .roadmap {

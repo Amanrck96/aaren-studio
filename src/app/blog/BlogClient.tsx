@@ -271,51 +271,31 @@ export default function BlogClient({ initialPosts, initialFontSettings }: BlogCl
         }
 
         .blog-header {
-          padding: 6rem 2rem 4rem;
+          padding-top: 6rem;
+          padding-bottom: 3.5rem;
+          padding-left: 0;
+          padding-right: 0;
           border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
         @media (min-width: 768px) {
           .blog-header {
-            padding: 8rem 4rem 4rem;
+            padding-top: 8rem;
+            padding-bottom: 4rem;
           }
-        }
-
-        .blog-header__inner {
-          max-width: 1600px;
-          margin: 0 auto;
-        }
-
-        .blog-header__meta {
-          color: #81663F;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          margin-bottom: 1.6rem;
-          font-size: 1.3rem;
-          text-transform: uppercase;
-        }
-
-        .blog-header__title {
-          font-size: clamp(6rem, 15vw, 22rem);
-          font-weight: 700;
-          letter-spacing: -0.05em;
-          line-height: 0.88;
-          text-transform: uppercase;
-          color: #81663F;
-          margin-bottom: 2.8rem;
-        }
-
-        .blog-header__desc {
-          font-size: 1.6rem;
-          line-height: 1.6;
-          max-width: 58rem;
-          color: rgba(0,0,0,0.65);
         }
 
         .blog-container {
           max-width: 1600px;
           margin: 0 auto;
           padding: 4rem 4rem 0;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+          .blog-container {
+            padding: 4rem 3rem 0;
+          }
         }
 
         @media (max-width: 768px) {

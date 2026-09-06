@@ -256,19 +256,18 @@ export default function AllProjectsClient({ initialProjects }: Props) {
         }
 
         .projects-header {
-          padding: 6rem 2rem 4rem;
+          padding-top: 6rem;
+          padding-bottom: 3.5rem;
+          padding-left: 0;
+          padding-right: 0;
           border-bottom: 0.1rem solid rgba(129, 102, 63, 0.2);
         }
 
         @media (min-width: 768px) {
           .projects-header {
-            padding: 8rem 4rem 4rem;
+            padding-top: 8rem;
+            padding-bottom: 4rem;
           }
-        }
-
-        .projects-header__inner {
-          max-width: 1600px;
-          margin: 0 auto;
         }
 
         .projects-title {
@@ -401,14 +400,21 @@ export default function AllProjectsClient({ initialProjects }: Props) {
 
         /* ── Grid View ── */
         .projects-content {
-          padding: 4rem 2.4rem 6rem;
+          padding: 4rem 4rem 6rem;
           max-width: 1600px;
           margin: 0 auto;
+          box-sizing: border-box;
         }
 
-        @media (min-width: 768px) {
+        @media (max-width: 1024px) {
           .projects-content {
-            padding: 5rem 3.2rem 8rem;
+            padding: 4rem 3rem 6rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .projects-content {
+            padding: 3rem 2rem 5rem;
           }
         }
 

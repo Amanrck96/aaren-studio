@@ -154,29 +154,18 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
         }
 
         .brands-header {
-          padding: 6rem 2rem 4rem;
+          padding-top: 6rem;
+          padding-bottom: 3.5rem;
+          padding-left: 0;
+          padding-right: 0;
           border-bottom: 0.1rem solid rgba(129, 102, 63, 0.2);
         }
 
         @media (min-width: 768px) {
           .brands-header {
-            padding: 8rem 4rem 4rem;
+            padding-top: 8rem;
+            padding-bottom: 4rem;
           }
-        }
-
-        .brands-header__inner {
-          max-width: 1600px;
-          margin: 0 auto;
-        }
-
-        .brands-header__title {
-          font-size: clamp(6rem, 15vw, 22rem);
-          font-weight: 700;
-          letter-spacing: -0.05em;
-          line-height: 0.88;
-          text-transform: uppercase;
-          color: #81663F;
-          margin-bottom: 2.8rem;
         }
 
         /* ── Grid ── */
@@ -186,6 +175,23 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
           width: 100%;
           max-width: 1600px;
           margin: 0 auto;
+          padding-left: 4rem;
+          padding-right: 4rem;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+          .brands-grid {
+            padding-left: 3rem;
+            padding-right: 3rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .brands-grid {
+            padding-left: 2rem;
+            padding-right: 2rem;
+          }
         }
 
         /* ── Brand Card ── */

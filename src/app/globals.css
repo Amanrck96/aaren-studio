@@ -163,24 +163,59 @@ h5 {
 
 /* Page-level header wrapper (full-bleed, handles nav offset) */
 .page-header {
-  padding: 6rem 2rem 4rem;
+  width: 100%;
+  padding-top: 6rem;
+  padding-bottom: 3.5rem;
+  padding-left: 0;
+  padding-right: 0;
   border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
+  box-sizing: border-box;
 }
 @media (min-width: 768px) {
   .page-header {
-    padding: 8rem 4rem 4rem;
+    padding-top: 8rem;
+    padding-bottom: 4rem;
   }
 }
 
-/* Inner container — centres and max-widths the content */
-.page-header__inner {
+/* Unified Layout Containers — centres and applies identical left/right margins site-wide */
+.page-container,
+.page-header__inner,
+.page-content-container,
+.page-grid-container {
   max-width: 1600px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 4rem;
+  padding-right: 4rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .page-container,
+  .page-header__inner,
+  .page-content-container,
+  .page-grid-container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container,
+  .page-header__inner,
+  .page-content-container,
+  .page-grid-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 /* ── Page H1 — hero title (About Us, Our Team, FAQ, Contact Us, etc.) ── */
 .page-title,
-.h1-page-title {
+.h1-page-title,
+.bd-hero__title {
   font-size: clamp(6rem, 15vw, 22rem) !important;
   font-weight: 700 !important;
   letter-spacing: -0.05em !important;
@@ -192,7 +227,8 @@ h5 {
 
 /* ── Section subheading (Project Debrief, Our Mission, etc.) ── */
 .section-title,
-.h2-section {
+.h2-section,
+.form-title {
   font-size: clamp(2.4rem, 4vw, 3.6rem) !important;
   font-weight: 700 !important;
   letter-spacing: -0.03em !important;
@@ -202,7 +238,15 @@ h5 {
 }
 
 /* ── Eyebrow / tag line above the H1 ── */
-.page-meta {
+.page-meta,
+.brands-header__meta,
+.about-header__meta,
+.team-header__meta,
+.faq-header__meta,
+.projects-header__meta,
+.blog-header__meta,
+.contact-header__meta,
+.privacy-tag {
   font-size: 1.3rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.12em !important;
@@ -213,7 +257,14 @@ h5 {
 
 /* ── Body / description text below heading ── */
 .page-desc,
-.body-text {
+.body-text,
+.brands-header__desc,
+.about-header__desc,
+.team-header__desc,
+.faq-desc,
+.projects-desc,
+.blog-desc,
+.contact-header__desc {
   font-size: 1.6rem !important;
   line-height: 1.6 !important;
   color: rgba(0, 0, 0, 0.65) !important;
@@ -239,13 +290,13 @@ h5 {
 
 /* ── Shared Page Content Container Wrapper ── */
 .page-content-container {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 4rem 4rem;
+  padding-top: 4rem;
+  padding-bottom: 6rem;
 }
 @media (max-width: 768px) {
   .page-content-container {
-    padding: 3rem 2rem;
+    padding-top: 3rem;
+    padding-bottom: 4rem;
   }
 }
 

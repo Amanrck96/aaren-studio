@@ -472,51 +472,17 @@ export default function FaqClient({ initialFaqs }: FaqClientProps) {
 
         /* ── Full-bleed page header — matches About Us / Our Team / Contact Us ── */
         .faq-header {
-          padding: 6rem 2rem 4rem;
+          padding-top: 6rem;
+          padding-bottom: 3.5rem;
+          padding-left: 0;
+          padding-right: 0;
           border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
         }
 
         @media (min-width: 768px) {
           .faq-header {
-            padding: 8rem 4rem 4rem;
-          }
-        }
-
-        .faq-header__inner {
-          max-width: 1600px;
-          margin: 0 auto;
-        }
-
-        .faq-header__meta {
-          font-size: 1.3rem;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: #81663F;
-          margin-bottom: 1.6rem;
-        }
-
-        /* ── H1 — same as About Us, Our Team, Contact Us ── */
-        .faq-title {
-          font-size: clamp(6rem, 15vw, 22rem);
-          font-weight: 700;
-          letter-spacing: -0.05em;
-          line-height: 0.88;
-          color: #81663F;
-          text-transform: uppercase;
-          margin-bottom: 2.8rem;
-        }
-
-        /* ── Content container ── */
-        .faq-container {
-          max-width: 1600px;
-          margin: 0 auto;
-          padding: 4rem 4rem;
-        }
-
-        @media (max-width: 768px) {
-          .faq-container {
-            padding: 3rem 2rem;
+            padding-top: 8rem;
+            padding-bottom: 4rem;
           }
         }
 

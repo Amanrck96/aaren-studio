@@ -69,7 +69,7 @@ export default function CatalogsClient({ initialCatalogs }: CatalogsClientProps)
       </div>
 
       {/* Filter & Search Toolbar */}
-      <section style={{ maxWidth: "1280px", margin: "-1.8rem auto 2.5rem", padding: "0 1.5rem", width: "100%", zIndex: 10 }}>
+      <section className="page-container" style={{ marginTop: "-1.8rem", marginBottom: "2.5rem", zIndex: 10 }}>
         <div
           style={{
             background: "#EDE8DF",
@@ -154,7 +154,7 @@ export default function CatalogsClient({ initialCatalogs }: CatalogsClientProps)
       </section>
 
       {/* Main Catalogs Grid */}
-      <main style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1.5rem 4rem", flex: 1, width: "100%" }}>
+      <main className="page-container" style={{ paddingBottom: "5rem", flex: 1 }}>
         {loading ? (
           <div style={{ textAlign: "center", padding: "4rem 0", color: "#64748b" }}>
             <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>⏳</div>

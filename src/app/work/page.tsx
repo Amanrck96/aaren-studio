@@ -137,7 +137,7 @@ export default function WorkPage() {
     </div>
 
       {/* Project List */}
-      <div>
+      <div className="page-container" style={{ paddingBottom: "6rem" }}>
         {filtered.map((project, idx) => (
           <Link
             key={project.slug}

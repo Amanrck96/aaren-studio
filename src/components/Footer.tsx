@@ -23,8 +23,9 @@ export default function Footer() {
 
   return (
     <footer className="site-footer" style={{ background: "#E6E2D8", borderTop: "1px solid #D8D0BE" }}>
-      {/* ── Top row: nav + contact ── */}
-      <div className="footer-top-row">
+      <div className="page-container">
+        {/* ── Top row: nav + contact ── */}
+        <div className="footer-top-row">
         {/* Left — 2-column navigation links */}
         <nav>
           {(() => {
@@ -196,6 +197,7 @@ export default function Footer() {
             Created by Midas Touch Enterprises
           </span>
         </div>
+      </div>
       </div>
 
       <style jsx>{`

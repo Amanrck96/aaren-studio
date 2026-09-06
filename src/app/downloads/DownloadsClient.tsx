@@ -314,7 +314,7 @@ export default function DownloadsClient() {
       </header>
 
       {/* Main Content Area */}
-      <main style={{ maxWidth: "1320px", margin: "0 auto", padding: "2.5rem 2rem 4rem" }}>
+      <main className="page-container" style={{ paddingTop: "2.5rem", paddingBottom: "5rem" }}>
         {/* Navigation & Search Controls */}
         <div
           style={{

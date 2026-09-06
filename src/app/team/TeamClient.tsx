@@ -373,15 +373,19 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
           min-height: 100vh;
         }
 
-        /* ── Header ── */
+        /* ── Page Header ── */
         .team-header {
-          padding: 6rem 2rem 4rem;
-          border-bottom: 0.1rem solid var(--color-border, rgba(129,102,63,0.18));
+          padding-top: 6rem;
+          padding-bottom: 3.5rem;
+          padding-left: 0;
+          padding-right: 0;
+          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
         }
 
         @media (min-width: 768px) {
           .team-header {
-            padding: 8rem 4rem 4rem;
+            padding-top: 8rem;
+            padding-bottom: 4rem;
           }
         }
 
@@ -421,6 +425,13 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
           padding: 2rem 4rem;
           max-width: 1600px;
           margin: 0 auto;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+          .team-category-nav-wrapper {
+            padding: 2rem 3rem;
+          }
         }
 
         @media (max-width: 768px) {
@@ -530,6 +541,12 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
           padding: 0 4rem;
         }
 
+        @media (max-width: 1024px) {
+          .team-department-header {
+            padding: 0 3rem;
+          }
+        }
+
         @media (max-width: 768px) {
           .team-department-header {
             padding: 0 2rem;
@@ -576,8 +593,14 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
         @media (min-width: 768px) {
           .team-grid {
             grid-template-columns: repeat(2, 1fr);
-            padding: 2rem 4rem 6rem;
+            padding: 2rem 3rem 6rem;
             gap: 5rem 3.2rem;
+          }
+        }
+
+        @media (min-width: 1025px) {
+          .team-grid {
+            padding: 2rem 4rem 6rem;
           }
         }
 
