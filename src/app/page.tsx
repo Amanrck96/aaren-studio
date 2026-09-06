@@ -109,65 +109,6 @@ const SERVICES = [
 /* ─── Logo letters for staggered reveal ─── */
 const LOGO_LETTERS = ["A", "A", "R", "E", "N"];
 
-const CATEGORY_BRAND_LOGOS: Record<string, string> = {
-  "plywood": "/brands/logos/peelply_logo.png",
-  "peelply": "/brands/logos/peelply_logo.png",
-  "cat-pw": "/brands/logos/peelply_logo.png",
-  "laminate": "/brands/logos/formica_logo.png",
-  "laminates": "/brands/logos/formica_logo.png",
-  "formica": "/brands/logos/formica_logo.png",
-  "cat-lm": "/brands/logos/formica_logo.png",
-  "facade": "/brands/logos/newtechwood_logo.png",
-  "cladding": "/brands/logos/newtechwood_logo.png",
-  "decking": "/brands/logos/newtechwood_logo.png",
-  "newtech": "/brands/logos/newtechwood_logo.png",
-  "newtechwood": "/brands/logos/newtechwood_logo.png",
-  "cat-fc": "/brands/logos/newtechwood_logo.png",
-  "wooden-flooring": "/brands/logos/mafi_logo.png",
-  "flooring": "/brands/logos/mafi_logo.png",
-  "mafi": "/brands/logos/mafi_logo.png",
-  "cat-wf": "/brands/logos/mafi_logo.png",
-  "screens": "/brands/logos/freedom_screens_logo.jpg",
-  "freedom-screens": "/brands/logos/freedom_screens_logo.jpg",
-  "cat-ss": "/brands/logos/freedom_screens_logo.jpg",
-  "door-system": "/brands/logos/waltz_logo.png",
-  "doorsystem": "/brands/logos/waltz_logo.png",
-  "waltz": "/brands/logos/waltz_logo.png",
-  "cat-ds": "/brands/logos/waltz_logo.png",
-  "doors": "/brands/logos/slashform_logo.png",
-  "cat-wd": "/brands/logos/slashform_logo.png",
-  "windows": "/brands/logos/slashform_logo.png",
-  "cat-ww": "/brands/logos/slashform_logo.png",
-  "kitchen": "/brands/logos/slashform_logo.png",
-  "slashform": "/brands/logos/slashform_logo.png",
-  "cat-kk": "/brands/logos/slashform_logo.png",
-  "wardrobe": "/brands/logos/slashform_logo.png",
-  "cat-wrd": "/brands/logos/slashform_logo.png",
-  "furniture": "/brands/logos/loco_logo.png",
-  "loco": "/brands/logos/loco_logo.png",
-  "inclass": "/brands/logos/inclass_logo.png",
-  "cat-ff": "/brands/logos/loco_logo.png",
-  "tiles": "/brands/logos/mirage_logo.png",
-  "mirage": "/brands/logos/mirage_logo.png",
-  "wow": "/brands/logos/wow_logo.png",
-  "cat-tl": "/brands/logos/mirage_logo.png",
-  "bathroom-fittings": "/brands/logos/fima_logo.png",
-  "fima": "/brands/logos/fima_logo.png",
-  "cat-bf": "/brands/logos/fima_logo.png",
-  "sanitary-ware": "/brands/logos/falper_logo.png",
-  "sanitaryware": "/brands/logos/falper_logo.png",
-  "falper": "/brands/logos/falper_logo.png",
-  "cat-sw": "/brands/logos/falper_logo.png",
-  "mirrors": "/brands/logos/waltz_logo.png",
-  "cat-mr": "/brands/logos/waltz_logo.png",
-  "wallpapers": "/brands/logos/inkiostro_bianco_logo.png",
-  "wall-covering": "/brands/logos/inkiostro_bianco_logo.png",
-  "inkiostro": "/brands/logos/inkiostro_bianco_logo.png",
-  "inkiostro-bianco": "/brands/logos/inkiostro_bianco_logo.png",
-  "joinery": "/brands/logos/iww_logo.png",
-  "iww": "/brands/logos/iww_logo.png",
-};
-
 const BRAND_LOGOS: Record<string, string> = {
   "slashform": "/brands/logos/slashform_logo.png",
   "waltz": "/brands/logos/waltz_logo.png",
@@ -188,24 +129,6 @@ const BRAND_LOGOS: Record<string, string> = {
   "wow": "/brands/logos/wow_logo.png",
   "iww": "/brands/logos/iww_logo.png",
 };
-
-const HOME_CATEGORIES = [
-  { id: "plywood", code: "PW", num: "01", name: "Plywood", sub: "Structural Panels", img: "/categories/cat_1.jpg", logo: "/brands/logos/peelply_logo.png" },
-  { id: "laminate", code: "LM", num: "02", name: "Laminate", sub: "Decorative Surfaces", img: "/categories/cat_2.jpg", logo: "/brands/logos/formica_logo.png" },
-  { id: "facade", code: "FC", num: "03", name: "Facade", sub: "Cladding & Decking", img: "/categories/cat_3.jpg", logo: "/brands/logos/newtechwood_logo.png" },
-  { id: "wooden-flooring", code: "WF", num: "04", name: "Wooden Flooring", sub: "Engineered & Solid", img: "/categories/cat_4.jpg", logo: "/brands/logos/mafi_logo.png" },
-  { id: "screens", code: "SS", num: "05", name: "Screens", sub: "Zipline Systems", img: "/categories/cat_5.jpg", logo: "/brands/logos/freedom_screens_logo.jpg" },
-  { id: "door-system", code: "DS", num: "06", name: "Door System", sub: "Aluminum & Slashform", img: "/categories/cat_6.jpg", logo: "/brands/logos/waltz_logo.png" },
-  { id: "doors", code: "WD", num: "07", name: "Doors", sub: "Wood & Laminate", img: "/categories/cat_7.jpg", logo: "/brands/logos/slashform_logo.png" },
-  { id: "windows", code: "WW", num: "08", name: "Windows", sub: "Timber & Aluminum", img: "/categories/cat_8.jpg", logo: "/brands/logos/slashform_logo.png" },
-  { id: "kitchen", code: "KK", num: "09", name: "Kitchen", sub: "Slashform K+W", img: "/categories/cat_9.jpg", logo: "/brands/logos/slashform_logo.png" },
-  { id: "wardrobe", code: "WRD", num: "10", name: "Wardrobe", sub: "Freedom & Slashform", img: "/categories/cat_10.jpg", logo: "/brands/logos/slashform_logo.png" },
-  { id: "furniture", code: "FF", num: "11", name: "Furniture", sub: "Millwork & Bespoke", img: "/categories/cat_11.jpg", logo: "/brands/logos/loco_logo.png" },
-  { id: "tiles", code: "TL", num: "12", name: "Tiles", sub: "Floors, Walls & Facades", img: "/categories/cat_12.jpg", logo: "/brands/logos/mirage_logo.png" },
-  { id: "bathroom-fittings", code: "BF", num: "13", name: "Bathroom Fittings", sub: "Fima · Falper · Mildue", img: "/categories/cat_13.jpg", logo: "/brands/logos/fima_logo.png" },
-  { id: "sanitary-ware", code: "SW", num: "14", name: "Sanitary Ware", sub: "IWW · Flaminia", img: "/categories/cat_14.jpg", logo: "/brands/logos/falper_logo.png" },
-  { id: "mirrors", code: "MR", num: "15", name: "Mirrors", sub: "Mira · Waltz", img: "/categories/cat_15.jpg", logo: "/brands/logos/waltz_logo.png" },
-];
 
 const HOME_BRANDS = [
   { id: "slashform", code: "SF", num: "01", name: "Slashform", sub: "Doors · Windows · Kitchens", img: "/brands/brand_1_1.jpg", logo: "/brands/logos/slashform_logo.png" },
@@ -278,38 +201,17 @@ function useInView(threshold = 0.15) {
 
 export default function Home() {
   const [siteSettings, setSiteSettings] = useState<SiteSettingsItem>(DEFAULT_SETTINGS);
-  const [categoriesList, setCategoriesList] = useState(HOME_CATEGORIES);
   const [brandsList, setBrandsList] = useState(HOME_BRANDS);
   const [projectsList, setProjectsList] = useState(PROJECTS);
 
   useEffect(() => {
     Promise.all([
       fetch("/api/site-settings").then((r) => r.json()).catch(() => null),
-      fetch("/api/categories").then((r) => r.json()).catch(() => null),
       fetch("/api/brands").then((r) => r.json()).catch(() => null),
       fetch("/api/projects").then((r) => r.json()).catch(() => null),
-    ]).then(([settingsJson, catsJson, brandsJson, projectsJson]) => {
+    ]).then(([settingsJson, brandsJson, projectsJson]) => {
       if (settingsJson?.success && settingsJson?.data) {
         setSiteSettings(settingsJson.data);
-      }
-      if (catsJson?.success && Array.isArray(catsJson.data) && catsJson.data.length > 0) {
-        const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-        setCategoriesList(
-          catsJson.data.map((c: any) => {
-            const rawId = (c.id || "").toLowerCase();
-            const rawName = norm(c.name || "");
-            const logo = CATEGORY_BRAND_LOGOS[rawId] || CATEGORY_BRAND_LOGOS[rawName] || CATEGORY_BRAND_LOGOS[c.shortCode?.toLowerCase()] || "";
-            return {
-              id: c.id,
-              code: c.shortCode ? c.shortCode.split(" ")[0] : "CAT",
-              num: c.sequenceNumber ? String(c.sequenceNumber).padStart(2, "0") : "01",
-              name: c.name,
-              sub: c.description || "Architectural Surface",
-              img: c.coverImage || "/categories/cat_1.jpg",
-              logo,
-            };
-          })
-        );
       }
       if (brandsJson?.success && Array.isArray(brandsJson.data) && brandsJson.data.length > 0) {
         const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -363,15 +265,6 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
 
-  /* ── Category full-width carousel state ── */
-  const [catIdx, setCatIdx] = useState(0);
-  const [catPaused, setCatPaused] = useState(false);
-  const catTotal = categoriesList.length;
-  useEffect(() => {
-    if (catTotal <= 1 || catPaused) return;
-    const t = setInterval(() => setCatIdx((p) => (p + 1) % catTotal), 6000);
-    return () => clearInterval(t);
-  }, [catTotal, catPaused]);
 
   /* ── Brands full-width carousel state ── */
   const [brandIdx, setBrandIdx] = useState(0);
@@ -551,9 +444,6 @@ export default function Home() {
     return () => ctx.revert();
   }, []);
 
-  const getCategoryHref = (cat: { id?: string; name: string }) => {
-    return `/products?category=${encodeURIComponent(cat.name)}`;
-  };
 
   const getBrandHref = (brand: { id?: string; name?: string; slug?: string }) => {
     const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -907,177 +797,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          BROWSE BY CATEGORY — 2-card carousel (1920x1080)
-          ══════════════════════════════════════ */}
-      <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
-        {/* Centered Header bar */}
-        <div className="cat-header-bar" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "6.8rem", padding: "3.6rem 2.4rem 2.4rem 2.4rem", borderBottom: "0.1rem solid rgba(0,0,0,0.12)", position: "relative" }}>
-          {/* Left pagination & controls */}
-          <div style={{ position: "absolute", left: "2.4rem", bottom: "2.4rem", display: "flex", alignItems: "center", gap: "1.6rem" }} className="cat-header-left">
-            <span style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.3rem", fontWeight: 600, color: "rgba(0,0,0,0.6)", letterSpacing: "0.04em" }}>
-              {String(catIdx + 1).padStart(2, "0")} / {String(catTotal).padStart(2, "0")}
-            </span>
-            <div className="cat-header-dots" style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-              {categoriesList.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCatIdx(i)}
-                  aria-label={`Category ${i + 1}`}
-                  style={{ width: catIdx === i ? "2.4rem" : "0.5rem", height: "0.5rem", borderRadius: "0.25rem", background: catIdx === i ? "#81663F" : "rgba(0,0,0,0.18)", border: "none", cursor: "pointer", padding: 0, transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)" }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Centered Title */}
-          <span className="cat-header-title" style={{ fontFamily: "var(--font-jost), sans-serif", fontSize: "1.6rem", fontWeight: 700, letterSpacing: "0.12em", color: "#81663F", textAlign: "center" }}>
-            {applyTextCase("Browse by Category", siteSettings?.textCase, "title")}
-          </span>
-
-          {/* Right link */}
-          <Link href="/products" id="cat-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.35rem", fontWeight: 700 }}>View all</Link>
-        </div>
-
-        {/* 2-card carousel — overflow hidden, slides via CSS transform */}
-        <div
-          style={{ position: "relative", overflow: "hidden", width: "100%", padding: "2.4rem", boxSizing: "border-box" }}
-          onMouseEnter={() => setCatPaused(true)}
-          onMouseLeave={() => setCatPaused(false)}
-        >
-
-          {/* Slide track — shifts by 50% per step (showing 2 cards) */}
-          <div
-            style={{
-              display: "flex",
-              width: `${catTotal * 50}%`,
-              transform: `translateX(-${(catIdx * 100) / catTotal}%)`,
-              transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
-            }}
-          >
-            {categoriesList.map((cat) => {
-              const isLogoAsset = Boolean(
-                cat.img &&
-                (cat.img.includes("googleusercontent.com") ||
-                 cat.img.includes("logo") ||
-                 cat.img.endsWith(".svg") ||
-                 cat.img.includes("/brands/logos/"))
-              );
-
-              return (
-                <Link
-                  key={cat.id}
-                  href={getCategoryHref(cat)}
-                  id={`home-cat-${cat.id}`}
-                  style={{
-                    flex: `0 0 ${100 / catTotal}%`,
-                    display: "flex",
-                    flexDirection: "column",
-                    textDecoration: "none",
-                    color: "inherit",
-                    borderRight: "0.1rem solid rgba(0,0,0,0.12)",
-                  }}
-                  className="home-ticket-card"
-                >
-                  {/* 1920x1080 Image Container */}
-                  <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "linear-gradient(135deg, #ede8df 0%, #ded8cb 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    {isLogoAsset ? (
-                      <>
-                        {/* Background architectural image fallback */}
-                        <div
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            backgroundImage: "url('/categories/cat_1.jpg')",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            opacity: 0.28,
-                            filter: "grayscale(20%) contrast(90%)",
-                          }}
-                        />
-                        {/* Constrained Category Logo */}
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={cat.img}
-                          alt={cat.name}
-                          className="home-ticket-img"
-                          style={{
-                            maxWidth: "52%",
-                            maxHeight: "44%",
-                            width: "auto",
-                            height: "auto",
-                            objectFit: "contain",
-                            zIndex: 2,
-                            filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.12))",
-                            transition: "transform 0.5s ease",
-                          }}
-                        />
-                      </>
-                    ) : (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        src={cat.img}
-                        alt={cat.name}
-                        className="home-ticket-img"
-                        style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)" }}
-                      />
-                    )}
-                  </div>
-
-                  {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", transition: "background 0.25s ease" }} className="home-ticket-caption">
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
-                      <span style={{ fontSize: "clamp(1.4rem, 1.8vw, 2.2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>
-                        {applyTextCase(cat.name, siteSettings?.textCase, "title")}
-                      </span>
-                      <span style={{ fontSize: "1.15rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>
-                        {applyTextCase(cat.sub, siteSettings?.textCase, "sentence")}
-                      </span>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
-                      <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{cat.code}</span>
-                      <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{cat.num}</span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* LEFT arrow — large, always visible */}
-          <button
-            onClick={() => setCatIdx((p) => (p - 1 + catTotal) % catTotal)}
-            aria-label="Previous category"
-            style={{
-              position: "absolute", left: "1.6rem", top: "50%", transform: "translateY(-50%)",
-              zIndex: 10, width: "5rem", height: "5rem", borderRadius: "50%",
-              background: "rgba(255,255,255,0.92)", border: "0.1rem solid #D8D0BE",
-              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "2rem", color: "#81663F", boxShadow: "0 0.4rem 2rem rgba(0,0,0,0.15)",
-              transition: "transform 0.2s ease, box-shadow 0.2s ease",
-              backdropFilter: "blur(8px)",
-            }}
-            className="cat-nav-btn"
-          >←</button>
-
-          {/* RIGHT arrow — large, always visible */}
-          <button
-            onClick={() => setCatIdx((p) => (p + 1) % catTotal)}
-            aria-label="Next category"
-            style={{
-              position: "absolute", right: "1.6rem", top: "50%", transform: "translateY(-50%)",
-              zIndex: 10, width: "5rem", height: "5rem", borderRadius: "50%",
-              background: "rgba(255,255,255,0.92)", border: "0.1rem solid #D8D0BE",
-              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "2rem", color: "#81663F", boxShadow: "0 0.4rem 2rem rgba(0,0,0,0.15)",
-              transition: "transform 0.2s ease, box-shadow 0.2s ease",
-              backdropFilter: "blur(8px)",
-            }}
-            className="cat-nav-btn"
-          >→</button>
-        </div>
-      </section>
 
       {/* ══════════════════════════════════════
           BROWSE BY BRANDS — 2-card full carousel showing ALL ~20 brands (1920x1080)

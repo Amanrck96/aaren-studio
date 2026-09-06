@@ -2156,22 +2156,6 @@
       "name": "Cladding",
       "sequenceNumber": 16,
       "shortCode": "CL 16"
-    },
-    {
-      "coverImage": "https://lh3.googleusercontent.com/d/1kptnKOOfmGQbUN8GDKz5AWVmykkhjA7e",
-      "description": "Architectural BlockBoard products collection",
-      "id": "blockboard",
-      "name": "BlockBoard",
-      "sequenceNumber": 17,
-      "shortCode": "BL 17"
-    },
-    {
-      "coverImage": "https://lh3.googleusercontent.com/d/1HPYx9tN7X2I7gse38xGekSS52UcbipuP",
-      "description": "Architectural Decoratives products collection",
-      "id": "decoratives",
-      "name": "Decoratives",
-      "sequenceNumber": 18,
-      "shortCode": "DE 18"
     }
   ],
   "collections": [
