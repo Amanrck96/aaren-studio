@@ -152,7 +152,7 @@ export default function Header() {
                   </div>
 
                   <Link
-                    href="/workspace"
+                    href="/login"
                     onClick={() => setShowProfileMenu(false)}
                     className="dropdown-workspace-link"
                   >
@@ -261,7 +261,7 @@ export default function Header() {
                   <strong className="user-name">{user.displayName || user.email}</strong>
                 </div>
                 <Link
-                  href="/workspace"
+                  href="/login"
                   onClick={() => setOpen(false)}
                   className="overlay-workspace-btn"
                 >

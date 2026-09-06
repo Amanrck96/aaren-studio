@@ -313,7 +313,7 @@ export default function ExecutiveAnalyticsPage() {
               <button onClick={() => setTimeRange("1y")} className={`tab-btn ${timeRange === "1y" ? "active" : ""}`}>1Y</button>
             </div>
 
-            <Link href="/workspace" target="_blank" className="btn-launch-os">
+            <Link href="/login" target="_blank" className="btn-launch-os">
               <span>🚀 Launch Designer Workspace</span>
               <ExternalLink size={14} />
             </Link>

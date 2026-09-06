@@ -242,12 +242,17 @@ export default function ClientLoginCard({ onLoginSuccess }: ClientLoginCardProps
         </form>
 
         <div style={{ borderTop: "1px solid rgba(129, 102, 63, 0.15)", paddingTop: "1.4rem", textAlign: "center" }}>
-          <p style={{ fontSize: "1.15rem", color: "#5E5852", margin: 0 }}>
+          <p style={{ fontSize: "1.15rem", color: "#5E5852", margin: "0 0 1rem" }}>
             Need access to your project? Contact your Aaren Studio project lead at{" "}
             <a href="mailto:workspace@aarenstudio.com" style={{ color: "#81663F", fontWeight: 700, textDecoration: "none" }}>
               workspace@aarenstudio.com
             </a>
           </p>
+          <div>
+            <a href="/login" style={{ fontSize: "1.2rem", color: "#81663F", fontWeight: 700, textDecoration: "none" }}>
+              Architect or Interior Designer? Sign in to Creative Suite →
+            </a>
+          </div>
         </div>
       </div>
     </div>
