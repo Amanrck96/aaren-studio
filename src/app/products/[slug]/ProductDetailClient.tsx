@@ -1116,8 +1116,6 @@ export default function ProductDetailClient({ slug, initialProduct, initialAllPr
           display: grid;
           grid-template-columns: 58% 42%;
           min-height: calc(100vh - 80px);
-          max-width: 1600px;
-          margin: 0 auto;
           border-bottom: 0.5px solid var(--border);
         }
 
@@ -1406,22 +1404,9 @@ export default function ProductDetailClient({ slug, initialProduct, initialAllPr
 
         /* ── SECTION CONTAINERS (EDITORIAL ABOUT PAGE STYLE) ── */
         .section-container {
-          max-width: 1600px;
+          max-width: 1200px;
           margin: 60px auto 0;
-          padding: 0 4rem;
-          box-sizing: border-box;
-        }
-
-        @media (max-width: 1024px) {
-          .section-container {
-            padding: 0 3rem;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .section-container {
-            padding: 0 2rem;
-          }
+          padding: 0 24px;
         }
 
         .section-title {

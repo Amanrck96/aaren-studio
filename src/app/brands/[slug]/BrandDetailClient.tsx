@@ -876,15 +876,12 @@ export default function BrandDetailClient({
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
-          padding: 3.2rem 2rem;
-          max-width: 1600px;
-          margin: 0 auto;
-          box-sizing: border-box;
+          padding: 3.2rem 0.8rem;
         }
 
         @media (min-width: 768px) {
           .bd-hero__content {
-            padding: 4rem 4rem;
+            padding: 4rem 1.2rem;
           }
         }
 
@@ -965,12 +962,9 @@ export default function BrandDetailClient({
           display: flex;
           flex-direction: column;
           gap: 2.4rem;
-          padding: 3.2rem 2rem;
+          padding: 3.2rem 0.8rem;
           background: #E6E2D8;
           border-bottom: 0.1rem solid rgba(129,102,63,0.2);
-          max-width: 1600px;
-          margin: 0 auto;
-          box-sizing: border-box;
         }
 
         @media (min-width: 768px) {
@@ -978,7 +972,7 @@ export default function BrandDetailClient({
             flex-direction: row;
             align-items: center;
             justify-content: space-between;
-            padding: 2.4rem 4rem;
+            padding: 2.4rem 1.2rem;
           }
         }
 
@@ -1020,18 +1014,15 @@ export default function BrandDetailClient({
         /* ── Description ── */
         .bd-description {
           position: relative;
-          padding: 6rem 2rem;
+          padding: 6rem 0.8rem;
           background: #E6E2D8;
           border-bottom: 0.1rem solid rgba(129,102,63,0.2);
           overflow: hidden;
-          max-width: 1600px;
-          margin: 0 auto;
-          box-sizing: border-box;
         }
 
         @media (min-width: 768px) {
           .bd-description {
-            padding: 6rem 4rem;
+            padding: 6rem 1.2rem;
             display: grid;
             grid-template-columns: 1fr 2fr auto;
             gap: 4rem;
@@ -1075,15 +1066,12 @@ export default function BrandDetailClient({
         }
 
         .bd-products__header {
-          padding: 4rem 2rem 0;
-          max-width: 1600px;
-          margin: 0 auto;
-          box-sizing: border-box;
+          padding: 4rem 0.8rem 0;
         }
 
         @media (min-width: 768px) {
           .bd-products__header {
-            padding: 4rem 4rem 0;
+            padding: 4rem 1.2rem 0;
           }
         }
 
@@ -1102,19 +1090,15 @@ export default function BrandDetailClient({
           display: flex;
           align-items: center;
           gap: 2.4rem;
-          padding: 0 2rem 3.2rem;
+          padding: 0 0.8rem 3.2rem;
           border-bottom: 0.1rem solid rgba(129,102,63,0.15);
           margin-bottom: 3.2rem;
           overflow-x: auto;
-          max-width: 1600px;
-          margin-left: auto;
-          margin-right: auto;
-          box-sizing: border-box;
         }
 
         @media (min-width: 768px) {
           .bd-category-circles-bar {
-            padding: 0 4rem 3.2rem;
+            padding: 0 1.2rem 3.2rem;
             gap: 3.6rem;
           }
         }
@@ -1184,10 +1168,7 @@ export default function BrandDetailClient({
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 0;
-          max-width: 1600px;
-          margin: 0 auto;
-          padding: 0 2rem;
-          box-sizing: border-box;
+          padding: 0 0.8rem;
         }
 
         @media (min-width: 640px) {
@@ -1196,16 +1177,10 @@ export default function BrandDetailClient({
           }
         }
 
-        @media (min-width: 768px) {
-          .bd-product-grid {
-            padding: 0 4rem;
-          }
-        }
-
         @media (min-width: 1024px) {
           .bd-product-grid {
             grid-template-columns: repeat(4, 1fr);
-            padding: 0 4rem;
+            padding: 0 1.2rem;
           }
         }
 
@@ -1308,17 +1283,14 @@ export default function BrandDetailClient({
 
         /* ── Catalogues ── */
         .bd-catalogues {
-          padding: 6rem 2rem;
+          padding: 6rem 0.8rem;
           background: #E6E2D8;
           border-bottom: 0.1rem solid rgba(129,102,63,0.2);
-          max-width: 1600px;
-          margin: 0 auto;
-          box-sizing: border-box;
         }
 
         @media (min-width: 768px) {
           .bd-catalogues {
-            padding: 6rem 4rem;
+            padding: 6rem 1.2rem;
           }
         }
 
@@ -1362,23 +1334,19 @@ export default function BrandDetailClient({
 
         /* ── CTA ── */
         .bd-cta {
-          padding: 8rem 0 10rem;
+          padding: 8rem 0.8rem 10rem;
+        }
+
+        @media (min-width: 768px) {
+          .bd-cta {
+            padding: 8rem 1.2rem 10rem;
+          }
         }
 
         .bd-cta__inner {
           display: flex;
           flex-direction: column;
           gap: 3.2rem;
-          max-width: 1600px;
-          margin: 0 auto;
-          padding: 0 4rem;
-          box-sizing: border-box;
-        }
-
-        @media (max-width: 768px) {
-          .bd-cta__inner {
-            padding: 0 2rem;
-          }
         }
 
         @media (min-width: 768px) {

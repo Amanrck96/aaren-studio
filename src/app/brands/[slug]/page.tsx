@@ -30,7 +30,8 @@ export default async function BrandDetailPage({ params }: Props) {
       bIdNorm === slugNorm ||
       bNameNorm === slugNorm ||
       (slugNorm.length > 3 && bNameNorm.includes(slugNorm)) ||
-      (slugNorm.length > 3 && slugNorm.includes(bNameNorm))
+      (slugNorm.length > 3 && slugNorm.includes(bNameNorm)) ||
+      ((slugNorm === "gelli" || slugNorm === "geelli") && (bIdNorm === "gelli" || bIdNorm === "geelli"))
     );
   }) || null;
 
@@ -78,7 +79,8 @@ export default async function BrandDetailPage({ params }: Props) {
       fBrandId === brandNameNorm ||
       fCat === brandNameNorm ||
       (slugNorm.length > 3 && (fBrand.includes(slugNorm) || fCat.includes(slugNorm))) ||
-      (brandNameNorm.length > 3 && (fBrand.includes(brandNameNorm) || fCat.includes(brandNameNorm)))
+      (brandNameNorm.length > 3 && (fBrand.includes(brandNameNorm) || fCat.includes(brandNameNorm))) ||
+      ((slugNorm === "gelli" || slugNorm === "geelli") && (fBrandId === "geelli" || fBrandId === "gelli" || fBrand === "geelli" || fBrand === "gelli" || fCat === "geelli" || fCat === "gelli"))
     );
   });
 

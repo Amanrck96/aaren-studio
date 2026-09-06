@@ -86,7 +86,13 @@ export default function AdminFaqPage() {
     "Loco",
     "Bullfrog Spas",
     "Formica",
+    "Inkiostro Bianco",
     "Mirage",
+    "Living Ceramica",
+    "Florim",
+    "Geelli",
+    "Jacuzzi",
+    "Alex Turco",
   ];
 
   const allCategories = useMemo(() => {
