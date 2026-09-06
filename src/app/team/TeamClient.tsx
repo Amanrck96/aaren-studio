@@ -371,6 +371,7 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
           background: var(--color-bg, #E6E2D8);
           color: #1e1e1e;
           min-height: 100vh;
+          padding-top: 8rem;
         }
 
         /* ── Page Header ── */
@@ -392,6 +393,23 @@ export default function TeamClient({ initialTeam, initialJoinBanner }: TeamClien
         .team-header__inner {
           max-width: 1600px;
           margin: 0 auto;
+          padding-left: 4rem;
+          padding-right: 4rem;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+          .team-header__inner {
+            padding-left: 3rem;
+            padding-right: 3rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .team-header__inner {
+            padding-left: 2rem;
+            padding-right: 2rem;
+          }
         }
 
         .team-header__meta {

@@ -677,7 +677,7 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
           background: var(--surface-0);
           color: var(--text-primary);
           min-height: 100vh;
-          padding-top: 5rem;
+          padding-top: 8rem;
           font-family: var(--font-jost), 'Jost', system-ui, sans-serif;
         }
 

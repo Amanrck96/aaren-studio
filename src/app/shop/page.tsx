@@ -49,13 +49,13 @@ export default function ShopPage() {
   return (
     <div className="shop-page">
       {/* ── Page Header ── */}
-      <div className="shop-header">
-        <div className="shop-header__inner">
-          <div className="shop-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+      <div className="shop-header page-header">
+        <div className="shop-header__inner page-header__inner">
+          <div className="shop-header__meta page-meta">
             ARCHITECTURAL SPECIFICATION &amp; SOURCING — {SHOP_ITEMS.length} SAMPLE SPECIMENS
           </div>
-          <h1 className="shop-header__title">SHOP</h1>
-          <p className="shop-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
+          <h1 className="shop-header__title page-title">SHOP</h1>
+          <p className="shop-header__desc page-desc">
             Direct access to material specifications, sample sets, fixtures, and custom components curated for luxury architectural projects across India.
           </p>
           <div style={{ marginTop: "2.4rem" }}>
@@ -291,19 +291,40 @@ export default function ShopPage() {
         }
 
         .shop-header {
-          padding: 6rem 2rem 4rem;
+          padding-top: 6rem;
+          padding-bottom: 3.5rem;
+          padding-left: 0;
+          padding-right: 0;
           border-bottom: 0.1rem solid rgba(129,102,63,0.18);
         }
 
         @media (min-width: 768px) {
           .shop-header {
-            padding: 8rem 4rem 4rem;
+            padding-top: 8rem;
+            padding-bottom: 4rem;
           }
         }
 
         .shop-header__inner {
           max-width: 1600px;
           margin: 0 auto;
+          padding-left: 4rem;
+          padding-right: 4rem;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+          .shop-header__inner {
+            padding-left: 3rem;
+            padding-right: 3rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .shop-header__inner {
+            padding-left: 2rem;
+            padding-right: 2rem;
+          }
         }
 
         .shop-header__title {
@@ -321,6 +342,25 @@ export default function ShopPage() {
           display: flex;
           flex-wrap: wrap;
           width: 100%;
+          max-width: 1600px;
+          margin: 0 auto;
+          padding-left: 4rem;
+          padding-right: 4rem;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+          .shop-grid {
+            padding-left: 3rem;
+            padding-right: 3rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .shop-grid {
+            padding-left: 2rem;
+            padding-right: 2rem;
+          }
         }
 
         /* ── Shop Card ── */
