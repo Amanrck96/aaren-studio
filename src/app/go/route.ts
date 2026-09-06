@@ -15,6 +15,15 @@ export const runtime = "edge";
 export function GET(req: NextRequest) {
   const { searchParams, origin } = req.nextUrl;
   const to = searchParams.get("to");
+  const pdf = searchParams.get("pdf");
+
+  if (pdf) {
+    if (pdf.startsWith("http://") || pdf.startsWith("https://")) {
+      return NextResponse.redirect(new URL(pdf), { status: 301 });
+    }
+    const cleanPath = pdf.startsWith("/") ? pdf : `/${pdf}`;
+    return NextResponse.redirect(new URL(cleanPath, origin), { status: 301 });
+  }
 
   // Whitelist of allowed destinations
   const ALLOWED_PATHS: Record<string, string> = {

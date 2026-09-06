@@ -5,8 +5,9 @@ import Link from "next/link";
 import AdminNav from "@/components/AdminNav";
 import { PdfCatalogItem } from "@/lib/types";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
-import { ExternalLink, RefreshCw, Search, Eye } from "lucide-react";
+import { ExternalLink, RefreshCw, Search, Eye, QrCode, Copy, Check, Download, X } from "lucide-react";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
+import QRCode from "qrcode";
 
 export default function AdminCatalogsPage() {
   const [catalogs, setCatalogs] = useState<PdfCatalogItem[]>([]);
@@ -14,6 +15,46 @@ export default function AdminCatalogsPage() {
   const [search, setSearch] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [previewPdf, setPreviewPdf] = useState<{ url: string; title: string; coverImage?: string } | null>(null);
+
+  const [qrModal, setQrModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    brand: string;
+    url: string;
+    qrDataUrl: string;
+  } | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [customQrUrl, setCustomQrUrl] = useState("");
+
+  const generateQrForUrl = async (rawUrl: string, title: string, brand: string = "AAREN") => {
+    if (!rawUrl) return;
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://aarenstudio.vercel.app";
+    const fullUrl = rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
+      ? rawUrl
+      : `${origin}${rawUrl.startsWith("/") ? "" : "/"}${rawUrl}`;
+
+    try {
+      const dataUrl = await QRCode.toDataURL(fullUrl, {
+        width: 600,
+        margin: 2,
+        color: {
+          dark: "#1E1E1E",
+          light: "#FFFFFF",
+        },
+      });
+      setQrModal({
+        isOpen: true,
+        title,
+        brand,
+        url: fullUrl,
+        qrDataUrl: dataUrl,
+      });
+      setCopied(false);
+    } catch (err: any) {
+      console.error("Failed to generate QR code:", err);
+      alert("Failed to generate QR code: " + err.message);
+    }
+  };
 
   const fetchCatalogs = async () => {
     setLoading(true);
@@ -106,6 +147,70 @@ export default function AdminCatalogsPage() {
             >
               Manage in Brands CMS →
             </Link>
+          </div>
+        </div>
+
+        {/* Instant QR Code Generator Tool */}
+        <div
+          style={{
+            background: "#FFFFFF",
+            padding: "1.4rem 1.8rem",
+            borderRadius: "14px",
+            border: "1px solid #E2DCD2",
+            marginBottom: "1.5rem",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.03)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "0.4rem" }}>
+            <span style={{ fontSize: "1.2rem" }}>📱</span>
+            <span style={{ fontWeight: 800, fontSize: "0.95rem", color: "#1E1E1E" }}>
+              Instant Direct QR Code Generator (Zero Warning Screens / No QRCodeChimp Needed)
+            </span>
+          </div>
+          <p style={{ color: "#6A6359", fontSize: "0.82rem", margin: "0 0 0.8rem" }}>
+            Paste any catalog link, PDF link, or webpage to generate a clean, official QR code that opens immediately without third-party redirection notices.
+          </p>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <input
+              type="text"
+              placeholder="Paste PDF link or URL (e.g. /catalogs/CloseNXT.pdf or https://...)"
+              value={customQrUrl}
+              onChange={(e) => setCustomQrUrl(e.target.value)}
+              style={{
+                flex: "1 1 300px",
+                padding: "0.7rem 1rem",
+                borderRadius: "8px",
+                border: "1px solid #D5CEBF",
+                fontSize: "0.88rem",
+                background: "#FAF8F5",
+                outline: "none",
+              }}
+            />
+            <button
+              onClick={() => {
+                if (!customQrUrl.trim()) {
+                  alert("Please enter or paste a URL first!");
+                  return;
+                }
+                generateQrForUrl(customQrUrl.trim(), "Custom Document QR", "AAREN INTPRO");
+              }}
+              style={{
+                padding: "0.7rem 1.4rem",
+                background: "#1E1E1E",
+                color: "#FFFFFF",
+                borderRadius: "8px",
+                fontWeight: 700,
+                fontSize: "0.85rem",
+                border: "none",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              <QrCode size={14} />
+              <span>Generate Direct QR Code</span>
+            </button>
           </div>
         </div>
 
@@ -321,6 +426,27 @@ export default function AdminCatalogsPage() {
                             >
                               <ExternalLink size={13} /> Open PDF
                             </a>
+                            <button
+                              onClick={() => {
+                                const directUrl = resolved.pdfUrl || cat.fileUrl || cat.pdfUrl || "";
+                                generateQrForUrl(directUrl, cat.title, cat.brand || "Catalog");
+                              }}
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                padding: "6px 12px",
+                                background: "#81663F",
+                                border: "1px solid #81663F",
+                                borderRadius: "6px",
+                                color: "#FFFFFF",
+                                fontWeight: 700,
+                                fontSize: "0.78rem",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <QrCode size={13} /> QR Code
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -341,6 +467,149 @@ export default function AdminCatalogsPage() {
           coverImage={previewPdf.coverImage}
           onClose={() => setPreviewPdf(null)}
         />
+      )}
+
+      {/* Direct QR Code Generator Modal */}
+      {qrModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99999,
+            background: "rgba(0,0,0,0.65)",
+            backdropFilter: "blur(6px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1.5rem",
+          }}
+          onClick={() => setQrModal(null)}
+        >
+          <div
+            style={{
+              background: "#FFFFFF",
+              borderRadius: "16px",
+              padding: "2rem 2.4rem",
+              maxWidth: "480px",
+              width: "100%",
+              boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
+              border: "1px solid #D5CEBF",
+              textAlign: "center",
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setQrModal(null)}
+              style={{
+                position: "absolute",
+                top: "1rem",
+                right: "1rem",
+                background: "#FAF8F5",
+                border: "1px solid #D5CEBF",
+                borderRadius: "50%",
+                width: "32px",
+                height: "32px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                color: "#1E1E1E",
+              }}
+            >
+              <X size={16} />
+            </button>
+
+            <span style={{ fontSize: "0.8rem", fontWeight: 800, color: "#81663F", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              {qrModal.brand}
+            </span>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#1E1E1E", margin: "0.4rem 0 1.2rem", lineHeight: 1.3 }}>
+              {qrModal.title}
+            </h3>
+
+            {/* QR Code Container */}
+            <div
+              style={{
+                background: "#FFFFFF",
+                padding: "1rem",
+                borderRadius: "12px",
+                border: "1px solid #E2DCD2",
+                display: "inline-block",
+                boxShadow: "0 4px 14px rgba(0,0,0,0.06)",
+              }}
+            >
+              <img
+                src={qrModal.qrDataUrl}
+                alt="QR Code"
+                style={{ width: "240px", height: "240px", display: "block" }}
+              />
+            </div>
+
+            <div style={{ marginTop: "1rem", background: "#FAF8F5", padding: "0.75rem 1rem", borderRadius: "8px", border: "1px solid #E2DCD2", textAlign: "left" }}>
+              <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#81663F", textTransform: "uppercase", marginBottom: "4px" }}>
+                Direct Link (Opens Instantly with ZERO Warnings):
+              </div>
+              <div style={{ fontSize: "0.78rem", color: "#1E1E1E", wordBreak: "break-all", fontFamily: "monospace" }}>
+                {qrModal.url}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: "flex", gap: "10px", marginTop: "1.2rem" }}>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(qrModal.url);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                style={{
+                  flex: 1,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "6px",
+                  padding: "0.75rem",
+                  background: copied ? "#15803d" : "#FAF8F5",
+                  border: "1px solid #D5CEBF",
+                  color: copied ? "#FFFFFF" : "#1E1E1E",
+                  borderRadius: "8px",
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  cursor: "pointer",
+                }}
+              >
+                {copied ? <Check size={14} /> : <Copy size={14} />}
+                <span>{copied ? "Copied!" : "Copy Direct URL"}</span>
+              </button>
+
+              <a
+                href={qrModal.qrDataUrl}
+                download={`${qrModal.title.replace(/[^a-zA-Z0-9_-]/g, "_")}_QR.png`}
+                style={{
+                  flex: 1,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "6px",
+                  padding: "0.75rem",
+                  background: "#1E1E1E",
+                  color: "#FFFFFF",
+                  borderRadius: "8px",
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  textDecoration: "none",
+                }}
+              >
+                <Download size={14} />
+                <span>Download PNG</span>
+              </a>
+            </div>
+
+            <p style={{ fontSize: "0.74rem", color: "#6A6359", marginTop: "1rem", lineHeight: 1.4 }}>
+              💡 <strong>Instant direct scan:</strong> Works on all Android &amp; iPhone cameras with <strong>zero third-party redirect warning pages</strong> (unlike QRCodeChimp free links).
+            </p>
+          </div>
+        </div>
       )}
     </div>
   );
