@@ -34,25 +34,44 @@ export default async function Services() {
       }));
 
   return (
-    <div className="bg-[#080808] text-white pt-32 pb-24 px-6 md:px-12">
-      <div className="max-w-7xl mx-auto">
-        <h4 className="text-accent tracking-wider font-bold text-xs mb-4">CAPABILITIES</h4>
-        <h1 className="text-5xl md:text-8xl font-black tracking-tight mb-16">
-          Our Services<span className="text-accent">.</span>
-        </h1>
+    <div style={{ background: "#E6E2D8", color: "#1e1e1e", minHeight: "100vh", paddingTop: "8rem", paddingBottom: "6rem" }}>
+      {/* ── Page Header ── */}
+      <div className="page-header">
+        <div className="page-header__inner">
+          <div className="page-meta">
+            CAPABILITIES &amp; EXPERTISE
+          </div>
+          <h1 className="page-title">
+            OUR SERVICES
+          </h1>
+          <p className="page-desc">
+            Architectural material curation, spatial consulting, bespoke joinery, and turnkey specification services for luxury spaces.
+          </p>
+        </div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="page-content-container">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2.4rem" }}>
           {servicesList.map((service, idx) => {
             const IconComp = service.icon;
             return (
-              <div key={idx} className="border border-neutral-900 bg-neutral-950 p-10 flex flex-col justify-between hover:border-accent/40 transition-colors group">
+              <div
+                key={idx}
+                style={{
+                  background: "#FAF9F6",
+                  border: "1px solid rgba(129, 102, 63, 0.18)",
+                  borderRadius: "8px",
+                  padding: "3.2rem 2.8rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  transition: "border-color 0.25s ease, transform 0.25s ease",
+                }}
+              >
                 <div>
-                  <IconComp className="text-neutral-500 group-hover:text-accent transition-colors mb-8" size={36} />
-                  <h3 className="text-2xl font-bold tracking-tight mb-4">{service.title}</h3>
-                  <p className="text-neutral-400 text-sm leading-relaxed">{service.desc}</p>
-                </div>
-                <div className="mt-8 text-xs font-bold uppercase tracking-widest text-accent opacity-0 group-hover:opacity-100 transition-opacity">
-                  Learn More →
+                  <IconComp style={{ color: "#81663F", marginBottom: "2rem" }} size={32} />
+                  <h3 className="section-title" style={{ fontSize: "2rem", marginBottom: "1.2rem" }}>{service.title}</h3>
+                  <p className="page-desc" style={{ fontSize: "1.4rem", lineHeight: 1.6, color: "rgba(0,0,0,0.68)" }}>{service.desc}</p>
                 </div>
               </div>
             );

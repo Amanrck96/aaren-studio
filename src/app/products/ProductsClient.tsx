@@ -363,12 +363,14 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
   return (
     <div className="products-container">
       {/* ── PAGE HEADER ── */}
-      <div className="products-page-header">
-        <div className="eyebrow">AAREN Studio</div>
-        <h1 className="title">Products</h1>
-        <p className="subtitle">
-          All materials, surfaces and systems — {products.length}+ products across {brandsList.length || 16} brands
-        </p>
+      <div className="products-page-header page-header">
+        <div className="page-header__inner">
+          <div className="eyebrow page-meta">AAREN STUDIO — MATERIAL LAB</div>
+          <h1 className="title page-title">PRODUCTS</h1>
+          <p className="subtitle page-desc">
+            All materials, surfaces and systems — {products.length}+ products across {brandsList.length || 16} brands
+          </p>
+        </div>
       </div>
 
       {/* ── MOBILE FILTER BACKDROP & TOGGLE ── */}
@@ -680,59 +682,23 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
         }
 
         .products-page-header {
-          padding: 48px 32px 24px;
-          border-bottom: 0.5px solid var(--border);
-          background: #FAF9F6;
+          padding: 6rem 2rem 4rem;
+          border-bottom: 0.1rem solid rgba(129, 102, 63, 0.18);
+          background: #E6E2D8;
         }
 
-        .products-page-header .eyebrow {
-          font-size: 11px;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: #81663F;
-          font-weight: 800;
-          margin-bottom: 8px;
-        }
-
-        .products-page-header .title {
-          font-size: 30px;
-          font-family: var(--font-jost), 'Jost', sans-serif;
-          font-weight: 800;
-          letter-spacing: -0.02em;
-          text-transform: uppercase;
-          color: #81663F;
-        }
-
-        .products-page-header .subtitle {
-          font-size: 13px;
-          color: var(--text-secondary);
-          margin-top: 6px;
-        }
-
-        .mobile-filter-bar {
-          display: none;
-          padding: 12px 16px;
-          border-bottom: 0.5px solid var(--border);
-          background: #ffffff;
-        }
-
-        .mobile-filter-btn {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 12px;
-          font-weight: 600;
-          padding: 8px 14px;
-          border: 0.5px solid var(--border);
-          border-radius: var(--radius);
-          background: var(--surface-2);
-          cursor: pointer;
+        @media (min-width: 768px) {
+          .products-page-header {
+            padding: 8rem 4rem 4rem;
+          }
         }
 
         .products-layout {
           display: grid;
           grid-template-columns: 200px 1fr;
           min-height: 80vh;
+          max-width: 1600px;
+          margin: 0 auto;
         }
 
         /* ── SIDEBAR ── */

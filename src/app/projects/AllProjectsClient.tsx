@@ -75,14 +75,14 @@ export default function AllProjectsClient({ initialProjects }: Props) {
       )}
 
       {/* ── Page Header ── */}
-      <section className="projects-header">
-        <div className="projects-header__inner">
-          <div className="projects-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <section className="projects-header page-header">
+        <div className="projects-header__inner page-header__inner">
+          <div className="projects-header__meta page-meta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span>CURATED PORTFOLIO</span>
             <span className="projects-count">[{filteredProjects.length} PROJECTS]</span>
           </div>
-          <h1 className="projects-title" style={{ color: "#81663F" }}>ALL PROJECTS</h1>
-          <p className="projects-desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
+          <h1 className="projects-title page-title">ALL PROJECTS</h1>
+          <p className="projects-desc page-desc">
             Explore spatial experiences, bespoke interior architectures, and luxury material installations crafted for prestigious clients across India & globally.
           </p>
 

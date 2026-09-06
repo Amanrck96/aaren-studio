@@ -359,14 +359,14 @@ export default function FaqClient({ initialFaqs }: FaqClientProps) {
 
   return (
     <div className="faq-page">
-      {/* ── Page Header — full-bleed, matches About Us / Our Team / Contact Us ── */}
-      <div className="faq-header">
-        <div className="faq-header__inner">
-          <div className="faq-header__meta">
+      {/* ── Page Header — full-bleed, matches site-wide standard ── */}
+      <div className="faq-header page-header">
+        <div className="faq-header__inner page-header__inner">
+          <div className="faq-header__meta page-meta">
             AAREN INTPRO KNOWLEDGE BASE
           </div>
-          <h1 className="faq-title">FREQUENTLY ASKED QUESTIONS</h1>
-          <p className="faq-desc">
+          <h1 className="faq-title page-title">FREQUENTLY ASKED QUESTIONS</h1>
+          <p className="faq-desc page-desc">
             Explore official answers regarding Aaren Intpro showroom, luxury surfaces, modular kitchens, wardrobes, architectural hardware, and project collaborations.
           </p>
 
@@ -404,8 +404,8 @@ export default function FaqClient({ initialFaqs }: FaqClientProps) {
         </div>
       </div>
 
-      {/* ── FAQ Content — narrower container for readability ── */}
-      <div className="faq-container">
+      {/* ── FAQ Content ── */}
+      <div className="faq-container page-content-container">
         {/* Accordion List */}
         <main className="faq-list">
           {filteredFaqs.length === 0 ? (
@@ -507,16 +507,16 @@ export default function FaqClient({ initialFaqs }: FaqClientProps) {
           margin-bottom: 2.8rem;
         }
 
-        /* ── Content container — narrower for readability ── */
+        /* ── Content container ── */
         .faq-container {
-          max-width: 1080px;
+          max-width: 1600px;
           margin: 0 auto;
-          padding: 4rem 2.4rem;
+          padding: 4rem 4rem;
         }
 
-        @media (min-width: 768px) {
+        @media (max-width: 768px) {
           .faq-container {
-            padding: 4rem 4rem;
+            padding: 3rem 2rem;
           }
         }
 

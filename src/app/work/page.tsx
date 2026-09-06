@@ -102,6 +102,9 @@ export default function WorkPage() {
           <h1 className="page-title">
             WORK
           </h1>
+          <p className="page-desc" style={{ marginBottom: "2.4rem" }}>
+            Selected architectural installations, luxury hospitality interiors, and bespoke residential works.
+          </p>
 
         {/* Filter tabs */}
         <div style={{ display: "flex", gap: "0", marginBottom: "0", overflowX: "auto" }}>

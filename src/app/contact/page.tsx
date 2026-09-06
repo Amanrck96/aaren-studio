@@ -38,7 +38,7 @@ export default function Contact() {
           phone: formData.phone || "Not provided",
           subject: formData.subject,
           message: formData.message,
-          type: "Project Debrief",
+          type: "Project Inquiry",
         }),
       });
 
@@ -152,7 +152,7 @@ export default function Contact() {
 
         {/* Right Side: Form */}
         <div className="contact-form-wrapper">
-          <h2 className="form-title section-title" style={{ margin: 0 }}>PROJECT DEBRIEF</h2>
+          <h2 className="form-title section-title" style={{ margin: 0 }}>PROJECT INQUIRY</h2>
           
           {sent ? (
             <div className="success-message">
@@ -236,7 +236,7 @@ export default function Contact() {
               >
                 {loading ? "TRANSMITTING..." : (
                   <>
-                    <span>SUBMIT BRIEF</span>
+                    <span>SUBMIT</span>
                     <Send size={14} />
                   </>
                 )}

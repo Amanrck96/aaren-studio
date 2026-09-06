@@ -1798,5 +1798,645 @@
     "brand": "Bullfrog Spas",
     "brandId": "bullfrog-spas",
     "sequenceNumber": 200
+  },
+  {
+    "id": "faq-1788329217-001",
+    "category": "Surfaces & Materials",
+    "brand": "Formica",
+    "question": "1. What products does Formica offer for interior surfaces?",
+    "answer": "Formica offers a broad range of decorative surface products, including standard and compact HPL laminates, kitchen worktops, splashbacks, doors, washroom solutions, ColorCore® and speciality decorative surfaces. These products can be used across residential, commercial, hospitality, retail and other interior applications.",
+    "sequenceNumber": 1
+  },
+  {
+    "id": "faq-1788329217-002",
+    "category": "Surfaces & Materials",
+    "brand": "Formica",
+    "question": "2. What is Formica HPL laminate?",
+    "answer": "Formica HPL, or High Pressure Laminate, is a durable decorative surfacing material available in a wide range of colours, woodgrains, patterns and textures. It is designed for applications where durability, design flexibility and ease of maintenance are important.",
+    "sequenceNumber": 2
+  },
+  {
+    "id": "faq-1788329217-003",
+    "category": "Surfaces & Materials",
+    "brand": "Formica",
+    "question": "3. Where can Formica laminate sheets be used?",
+    "answer": "Formica laminate sheets can be used for furniture, cabinetry, interior doors, wall panelling, shopfitting, washroom environments, kitchen surfaces and other interior applications.",
+    "sequenceNumber": 3
+  },
+  {
+    "id": "faq-1788329217-004",
+    "category": "Surfaces & Materials",
+    "brand": "Formica",
+    "question": "4. What is Formica Compact Grade Laminate?",
+    "answer": "Formica Compact Grade Laminate is a thicker, homogeneous laminate available from approximately 2 mm to 20 mm. It offers high mechanical strength, dimensional stability, moisture resistance and impact resistance, making it suitable for applications such as furniture, table tops and seating.",
+    "sequenceNumber": 4
+  },
+  {
+    "id": "faq-1788329217-005",
+    "category": "Surfaces & Materials",
+    "brand": "Formica",
+    "question": "5. Does Formica offer kitchen worktops and splashbacks?",
+    "answer": "Yes. Formica's home-products range includes laminate kitchen worktops, splashbacks and upstands. Its Originals Worktop Collection includes stone-inspired, wood-inspired, metallic and other decorative designs, combining visual variety with durability and easy maintenance.",
+    "sequenceNumber": 5
+  },
+  {
+    "id": "faq-1788329217-006",
+    "category": "Surfaces & Materials",
+    "brand": "Formica",
+    "question": "6. What is Formica ColorCore®?",
+    "answer": "ColorCore® is a laminate product with a colour-matched core and surface, helping eliminate the contrasting dark line that can appear on conventional laminate edges. It is particularly useful where exposed edges are an important part of the design.",
+    "sequenceNumber": 6
+  },
+  {
+    "id": "faq-1788329217-007",
+    "category": "Surfaces & Materials",
+    "brand": "Formica",
+    "question": "7. What is Formica ColorCore® Compact?",
+    "answer": "ColorCore® Compact is a self-supporting compact material with a colour-matched core running through the material. It combines decorative surface design with structural strength and can be used where a clean, homogeneous edge is desired.",
+    "sequenceNumber": 7
+  },
+  {
+    "id": "faq-1788329217-008",
+    "category": "Surfaces & Materials",
+    "brand": "Formica",
+    "question": "8. Does Formica offer specialised products for doors and washrooms?",
+    "answer": "Yes. The Formica Doors Collection provides decorative HPL options for interior doors, while the Formica Washroom Collection includes compact-grade and standard HPL solutions designed for commercial washroom and changing-room environments.",
+    "sequenceNumber": 8
+  },
+  {
+    "id": "faq-1788329217-009",
+    "category": "Surfaces & Materials",
+    "brand": "Formica",
+    "question": "9. Does Formica offer decorative metal surfaces?",
+    "answer": "Yes. Through the Homapal Metals Collection, Formica Group offers decorative metal surfaces in a broad range of designs, ranging from classic and contemporary appearances to hand-designed and industrial-inspired finishes.",
+    "sequenceNumber": 9
+  },
+  {
+    "id": "faq-1788329217-010",
+    "category": "Surfaces & Materials",
+    "brand": "Formica",
+    "question": "10. How do I choose the right Formica product for my project?",
+    "answer": "The right Formica product depends on the application. Standard HPL is suitable for many furniture and interior surfaces, compact laminate can be considered where greater thickness and structural performance are required, while worktops, doors, washroom products and speciality surfaces are designed for their respective applications. Colour, texture, finish, thickness, usage and installation method should also be considered.",
+    "sequenceNumber": 10
+  },
+  {
+    "id": "faq-1788329217-011",
+    "category": "Surfaces & Materials",
+    "brand": "Inkiostro Bianco",
+    "question": "1. What products does Inkiostro Bianco offer?",
+    "answer": "Inkiostro Bianco offers designer wallpaper and wallcoverings, technical fiberglass wallpaper, wooden wall coverings, parquet, rugs, backlit textile surfaces and selected decorated bathroom products. Its range is designed to transform walls, floors, furniture and other architectural surfaces into decorative elements.",
+    "sequenceNumber": 11
+  },
+  {
+    "id": "faq-1788329217-012",
+    "category": "Surfaces & Materials",
+    "brand": "Inkiostro Bianco",
+    "question": "2. What types of wallpaper does Inkiostro Bianco offer?",
+    "answer": "The brand offers several wallpaper materials, including Vinyl Wallpaper, Raw natural-fibre wallpaper, EQ•dekor fiberglass, Goldenwall, Silk Touch and Tela. Each material provides different aesthetic and technical characteristics for specific interior applications.",
+    "sequenceNumber": 12
+  },
+  {
+    "id": "faq-1788329217-013",
+    "category": "Surfaces & Materials",
+    "brand": "Inkiostro Bianco",
+    "question": "3. What is Inkiostro Bianco EQ•dekor?",
+    "answer": "EQ•dekor is a decorative fiberglass wallcovering developed for applications where conventional wallpaper may not be suitable. It is waterproof and designed for areas such as showers, bathrooms, kitchen backsplashes, wellness spaces and selected flooring applications.",
+    "sequenceNumber": 13
+  },
+  {
+    "id": "faq-1788329217-014",
+    "category": "Surfaces & Materials",
+    "brand": "Inkiostro Bianco",
+    "question": "4. Can Inkiostro Bianco wallpaper be used in bathrooms and showers?",
+    "answer": "Yes, selected materials—particularly EQ•dekor fiberglass—are designed for wet and moisture-prone environments. EQ•dekor can be applied inside showers, bathrooms, kitchen backsplashes and wellness areas when installed with the specified adhesive and protective finishing system.",
+    "sequenceNumber": 14
+  },
+  {
+    "id": "faq-1788329217-015",
+    "category": "Surfaces & Materials",
+    "brand": "Inkiostro Bianco",
+    "question": "5. What is Inkiostro Bianco Goldenwall?",
+    "answer": "Goldenwall is a decorative wallcovering designed to create a luxurious metallic appearance. It is available in finishes including Gold Leaf, Pink Gold and gold vinyl, making it suitable for statement walls and high-end interiors.",
+    "sequenceNumber": 15
+  },
+  {
+    "id": "faq-1788329217-016",
+    "category": "Surfaces & Materials",
+    "brand": "Inkiostro Bianco",
+    "question": "6. Does Inkiostro Bianco offer customised wallpaper designs?",
+    "answer": "Yes. Inkiostro Bianco offers customised graphic solutions in addition to its extensive catalogue of designs. Graphics can be adapted to the dimensions of the surface, while fully customised designs can also be developed for individual projects.",
+    "sequenceNumber": 16
+  },
+  {
+    "id": "faq-1788329217-017",
+    "category": "Surfaces & Materials",
+    "brand": "Inkiostro Bianco",
+    "question": "7. What is lineadeko® by Inkiostro Bianco?",
+    "answer": "lineadeko® is a multilayer birch-wood covering system featuring digitally decorated wood surfaces. It can be used for boiserie, furniture elements, decorative wall compositions and other interior design applications.",
+    "sequenceNumber": 17
+  },
+  {
+    "id": "faq-1788329217-018",
+    "category": "Surfaces & Materials",
+    "brand": "Inkiostro Bianco",
+    "question": "8. Does Inkiostro Bianco offer rugs and carpets?",
+    "answer": "Yes. Through its INK.RUGS collection, Inkiostro Bianco reinterprets the traditional rug concept through creative graphics and design. Rugs are part of the brand's wider decorative surface portfolio.",
+    "sequenceNumber": 18
+  },
+  {
+    "id": "faq-1788329217-019",
+    "category": "Surfaces & Materials",
+    "brand": "Inkiostro Bianco",
+    "question": "9. What is the MATERIAPRIMA collection?",
+    "answer": "MATERIAPRIMA is a 2026 wallcovering collection focused on texture, materiality and decorative surfaces. It includes 47 graphics and 149 colour options across materials such as Vinyl Wallpaper, EQ•dekor fiberglass, Raw natural fibres, Tela and Silk Touch.",
+    "sequenceNumber": 19
+  },
+  {
+    "id": "faq-1788329217-020",
+    "category": "Surfaces & Materials",
+    "brand": "Inkiostro Bianco",
+    "question": "10. How do I choose the right Inkiostro Bianco product for my project?",
+    "answer": "The right product depends on the application and the desired visual and technical performance. Vinyl and Raw wallpapers are suited to many interior wall applications, while EQ•dekor is designed for demanding wet areas; Goldenwall can create luxury metallic effects, and wood coverings and rugs provide additional decorative options. For bespoke projects, Inkiostro Bianco can also adapt graphics or develop customised solutions.",
+    "sequenceNumber": 20
+  },
+  {
+    "id": "faq-1788329217-021",
+    "category": "Surfaces & Materials",
+    "brand": "Mirage",
+    "question": "1. What products does Mirage offer?",
+    "answer": "Mirage offers a wide range of Italian porcelain stoneware flooring and wall-covering solutions for residential, commercial and outdoor environments. Its portfolio includes stone-effect, wood-effect, concrete/resin-effect and other designer surfaces, along with specialised outdoor products and accessories.",
+    "sequenceNumber": 21
+  },
+  {
+    "id": "faq-1788329217-022",
+    "category": "Surfaces & Materials",
+    "brand": "Mirage",
+    "question": "2. What types of Mirage porcelain tiles are available?",
+    "answer": "Mirage offers porcelain stoneware inspired by materials such as natural stone, wood, concrete, resin, quartzite and marble. These collections combine the appearance of natural materials with the technical characteristics of porcelain stoneware.",
+    "sequenceNumber": 22
+  },
+  {
+    "id": "faq-1788329217-023",
+    "category": "Surfaces & Materials",
+    "brand": "Mirage",
+    "question": "3. Does Mirage offer wood-effect porcelain tiles?",
+    "answer": "Yes. Mirage offers several wood-effect collections, including NooN, Nau 2.0, Oudh and Jurupa. These collections recreate the warmth and character of natural wood while providing the durability and maintenance benefits of porcelain stoneware.",
+    "sequenceNumber": 23
+  },
+  {
+    "id": "faq-1788329217-024",
+    "category": "Surfaces & Materials",
+    "brand": "Mirage",
+    "question": "4. Does Mirage offer stone-effect tiles?",
+    "answer": "Yes. Mirage has an extensive range of stone-effect porcelain surfaces inspired by materials such as quartzite, basalt, porphyry, travertine and other natural stones. These products are available for both indoor and selected outdoor applications.",
+    "sequenceNumber": 24
+  },
+  {
+    "id": "faq-1788329217-025",
+    "category": "Surfaces & Materials",
+    "brand": "Mirage",
+    "question": "5. Does Mirage offer concrete and resin-effect tiles?",
+    "answer": "Yes. Mirage's concrete and resin-effect collections are designed for contemporary interiors, particularly kitchens, bathrooms and living areas. They provide a neutral, modern aesthetic while retaining the technical performance of porcelain stoneware.",
+    "sequenceNumber": 25
+  },
+  {
+    "id": "faq-1788329217-026",
+    "category": "Surfaces & Materials",
+    "brand": "Mirage",
+    "question": "6. What is Mirage EVO_2/E™?",
+    "answer": "EVO_2/E™ is Mirage's outdoor porcelain stoneware system, developed around 20 mm-thick porcelain products and special pieces for residential and public outdoor spaces. It can be used for terraces, gardens, pool areas, paths and other outdoor environments.",
+    "sequenceNumber": 26
+  },
+  {
+    "id": "faq-1788329217-027",
+    "category": "Surfaces & Materials",
+    "brand": "Mirage",
+    "question": "7. Can Mirage porcelain tiles be used for outdoor areas?",
+    "answer": "Yes. Selected Mirage products are specifically designed for outdoor use. EVO_2/E™ offers solutions for gardens, terraces, pools, paths and public areas, with installation options including gravel, sand, grass, adhesive installation and raised systems.",
+    "sequenceNumber": 27
+  },
+  {
+    "id": "faq-1788329217-028",
+    "category": "Surfaces & Materials",
+    "brand": "Mirage",
+    "question": "8. Can Mirage create a continuous design between indoor and outdoor spaces?",
+    "answer": "Yes. One of Mirage's key product advantages is the ability to coordinate indoor and outdoor porcelain surfaces. Several EVO_2/E™ collections are designed to match indoor flooring, allowing designers to create visual continuity across living areas, terraces, gardens and pool spaces.",
+    "sequenceNumber": 28
+  },
+  {
+    "id": "faq-1788329217-029",
+    "category": "Surfaces & Materials",
+    "brand": "Mirage",
+    "question": "9. Does Mirage offer special pieces and outdoor accessories?",
+    "answer": "Yes. Mirage's outdoor system includes special trims and architectural pieces such as steps, pool pieces, decorative wall elements, shower trays, washbasins and outdoor tables. These products help create a more complete and coordinated outdoor design.",
+    "sequenceNumber": 29
+  },
+  {
+    "id": "faq-1788329217-030",
+    "category": "Surfaces & Materials",
+    "brand": "Mirage",
+    "question": "10. How do I choose the right Mirage porcelain tile for my project?",
+    "answer": "The selection should be based on the intended application, indoor or outdoor location, required size, surface finish, slip resistance, colour, design effect and installation method. Mirage offers different technical and aesthetic options, allowing architects and designers to coordinate flooring and wall surfaces across different areas of a project.",
+    "sequenceNumber": 30
+  },
+  {
+    "id": "faq-1788329217-031",
+    "category": "Bathroom & Wellness",
+    "brand": "Livingceramics",
+    "question": "1. What products does Livingceramics offer?",
+    "answer": "Livingceramics offers a comprehensive range of architectural ceramic products including porcelain tiles, through-body porcelain, wall tiles, Ductile® surfaces, large-format wall slabs, Signature Surfaces, bathroom furniture, washbasins and shower trays.",
+    "sequenceNumber": 31
+  },
+  {
+    "id": "faq-1788329217-032",
+    "category": "Bathroom & Wellness",
+    "brand": "Livingceramics",
+    "question": "2. What types of porcelain tiles does Livingceramics offer?",
+    "answer": "Livingceramics offers porcelain surfaces in a variety of visual effects, including stone, marble, cement, microcement, wood, clay and monochrome finishes. The range is available in multiple formats and thicknesses for different architectural applications.",
+    "sequenceNumber": 32
+  },
+  {
+    "id": "faq-1788329217-033",
+    "category": "Bathroom & Wellness",
+    "brand": "Livingceramics",
+    "question": "3. Does Livingceramics offer large-format porcelain slabs?",
+    "answer": "Yes. Livingceramics offers large-format surfaces including sizes up to 120 × 270 cm, allowing designers to create surfaces with fewer joints across walls and other architectural applications.",
+    "sequenceNumber": 33
+  },
+  {
+    "id": "faq-1788329217-034",
+    "category": "Bathroom & Wellness",
+    "brand": "Livingceramics",
+    "question": "4. What is Ductile® by Livingceramics?",
+    "answer": "Ductile® is Livingceramics' range of thin-format wall tiles and relief surfaces. It allows designers to introduce three-dimensional textures and decorative effects while maintaining a coordinated relationship with the brand's ceramic collections.",
+    "sequenceNumber": 34
+  },
+  {
+    "id": "faq-1788329217-035",
+    "category": "Bathroom & Wellness",
+    "brand": "Livingceramics",
+    "question": "5. What are Livingceramics Signature Surfaces?",
+    "answer": "Signature Surfaces are specialised architectural surfaces designed to extend Livingceramics' material language beyond conventional floor and wall tiles. The range is intended to provide coordinated surface solutions across different elements of an interior project.",
+    "sequenceNumber": 35
+  },
+  {
+    "id": "faq-1788329217-036",
+    "category": "Bathroom & Wellness",
+    "brand": "Livingceramics",
+    "question": "6. Does Livingceramics offer bathroom furniture and washbasins?",
+    "answer": "Yes. Livingceramics has a dedicated Bathroom Furniture Series combining ceramic washbasins with furniture elements. The collection includes multiple sizes, designs and tap configurations, with options for solid-oak furniture finishes.",
+    "sequenceNumber": 36
+  },
+  {
+    "id": "faq-1788329217-037",
+    "category": "Bathroom & Wellness",
+    "brand": "Livingceramics",
+    "question": "7. Can Livingceramics bathroom furniture be customised?",
+    "answer": "Yes. Livingceramics offers Custom Design Software that allows selected bathroom pieces to be configured according to dimensions, finishes and other design requirements. Products such as A.71, W.37 and L.28 can be customised using the company's 3D configuration tools.",
+    "sequenceNumber": 37
+  },
+  {
+    "id": "faq-1788329217-038",
+    "category": "Bathroom & Wellness",
+    "brand": "Livingceramics",
+    "question": "8. Does Livingceramics offer shower trays?",
+    "answer": "Yes. Livingceramics has introduced a dedicated range of shower trays within its Bathroom Furniture Series. The models include different drainage and slope configurations, anti-slip surfaces and options for flush or raised installation.",
+    "sequenceNumber": 38
+  },
+  {
+    "id": "faq-1788329217-039",
+    "category": "Bathroom & Wellness",
+    "brand": "Livingceramics",
+    "question": "9. Can Livingceramics products be used to create a complete bathroom concept?",
+    "answer": "Yes. Livingceramics allows ceramic wall and floor surfaces to be coordinated with washbasins, bathroom furniture and shower solutions. This creates a consistent material language throughout the bathroom rather than treating each product as an independent element.",
+    "sequenceNumber": 39
+  },
+  {
+    "id": "faq-1788329217-040",
+    "category": "Bathroom & Wellness",
+    "brand": "Livingceramics",
+    "question": "10. How do I choose the right Livingceramics product for my project?",
+    "answer": "The choice depends on the application, required format and thickness, surface finish, indoor or outdoor requirements, technical performance and overall design concept. For bathrooms, the range can also be coordinated with Livingceramics furniture, washbasins and shower trays to create a unified design.",
+    "sequenceNumber": 40
+  },
+  {
+    "id": "faq-1788329217-041",
+    "category": "Surfaces & Materials",
+    "brand": "Florim",
+    "question": "1. What products does Florim offer?",
+    "answer": "Florim offers a wide range of porcelain stoneware tiles and slabs for floors, wall coverings, kitchen countertops, tables, furniture and architectural applications. Its collections reproduce the appearance of materials such as stone, marble, wood, concrete, metal and fabric.",
+    "sequenceNumber": 41
+  },
+  {
+    "id": "faq-1788329217-042",
+    "category": "Surfaces & Materials",
+    "brand": "Florim",
+    "question": "2. What are Florim large-format porcelain slabs?",
+    "answer": "Florim's large-format porcelain slabs are oversized surfaces designed to create more continuous architectural surfaces with fewer grout joints. Available formats include sizes up to 160 × 320 cm, alongside options such as 120 × 280 cm and 120 × 240 cm.",
+    "sequenceNumber": 42
+  },
+  {
+    "id": "faq-1788329217-043",
+    "category": "Surfaces & Materials",
+    "brand": "Florim",
+    "question": "3. Where can Florim large slabs be used?",
+    "answer": "Florim large slabs can be used for floors, walls, kitchen countertops, tables, furniture and façades. Their large dimensions make them particularly useful where designers want fewer joints and a more continuous material appearance.",
+    "sequenceNumber": 43
+  },
+  {
+    "id": "faq-1788329217-044",
+    "category": "Surfaces & Materials",
+    "brand": "Florim",
+    "question": "4. Does Florim offer marble-effect porcelain slabs?",
+    "answer": "Yes. Florim has several marble-inspired collections and colours, including options available in large formats. These surfaces provide the appearance of natural marble while offering the technical characteristics and easier maintenance associated with porcelain stoneware.",
+    "sequenceNumber": 44
+  },
+  {
+    "id": "faq-1788329217-045",
+    "category": "Surfaces & Materials",
+    "brand": "Florim",
+    "question": "5. Does Florim offer stone-effect porcelain tiles?",
+    "answer": "Yes. Stone is one of Florim's major design categories, with collections inspired by different natural stones and geological materials. These products are available in multiple formats and can be used across residential, commercial and architectural interiors.",
+    "sequenceNumber": 45
+  },
+  {
+    "id": "faq-1788329217-046",
+    "category": "Surfaces & Materials",
+    "brand": "Florim",
+    "question": "6. Does Florim offer wood-effect porcelain tiles?",
+    "answer": "Yes. Florim offers wood-inspired porcelain surfaces that reproduce the appearance of natural timber while providing the durability and maintenance advantages of porcelain stoneware. Wood-effect products can be used to create warm interiors without relying on natural wood flooring.",
+    "sequenceNumber": 46
+  },
+  {
+    "id": "faq-1788329217-047",
+    "category": "Surfaces & Materials",
+    "brand": "Florim",
+    "question": "7. Can Florim products be used for kitchen countertops and tables?",
+    "answer": "Yes. Florim's large porcelain slabs are specifically developed for applications including kitchen countertops, tables and furnishing elements. The 160 × 320 cm format is particularly suited to large furniture and countertop projects.",
+    "sequenceNumber": 47
+  },
+  {
+    "id": "faq-1788329217-048",
+    "category": "Surfaces & Materials",
+    "brand": "Florim",
+    "question": "8. Does Florim offer outdoor porcelain surfaces?",
+    "answer": "Yes. Florim has a dedicated outdoor range for gardens, terraces, patios and other open spaces. Selected porcelain surfaces are designed for outdoor flooring and wall-covering applications.",
+    "sequenceNumber": 48
+  },
+  {
+    "id": "faq-1788329217-049",
+    "category": "Surfaces & Materials",
+    "brand": "Florim",
+    "question": "9. Can Florim create a coordinated indoor and outdoor design?",
+    "answer": "Yes. Florim's porcelain collections can be specified across different applications to create visual continuity between indoor and outdoor spaces. This makes the products suitable for projects where interiors, terraces, gardens and other exterior areas need a coordinated material palette.",
+    "sequenceNumber": 49
+  },
+  {
+    "id": "faq-1788329217-050",
+    "category": "Surfaces & Materials",
+    "brand": "Florim",
+    "question": "10. How do I choose the right Florim product for my project?",
+    "answer": "The right Florim product depends on the application, format, thickness, surface finish, technical requirements and desired material effect. For example, standard porcelain tiles may be suitable for floors and walls, while large slabs can be considered for countertops, tables, furniture and continuous wall surfaces. Outdoor areas require products specifically suitable for exterior applications.",
+    "sequenceNumber": 50
+  },
+  {
+    "id": "faq-1788329217-051",
+    "category": "Bathroom & Wellness",
+    "brand": "Geelli",
+    "question": "1. What products does Geelli offer?",
+    "answer": "Geelli offers a wide range of contemporary furnishing accessories for bathrooms, kitchens, living spaces and work areas. Its portfolio includes bathroom accessories, adhesive wall accessories, storage products, mirrors, lighting, seating, kitchen and table accessories.",
+    "sequenceNumber": 51
+  },
+  {
+    "id": "faq-1788329217-052",
+    "category": "Bathroom & Wellness",
+    "brand": "Geelli",
+    "question": "2. What makes Geelli bathroom accessories different?",
+    "answer": "Geelli bathroom accessories combine functionality with soft, colourful and tactile forms. Many products are made using polyurethane gel, which provides softness, impact resistance and natural adhesiveness, allowing selected accessories to be fixed to surfaces without traditional drilling.",
+    "sequenceNumber": 52
+  },
+  {
+    "id": "faq-1788329217-053",
+    "category": "Bathroom & Wellness",
+    "brand": "Geelli",
+    "question": "3. Does Geelli offer accessories that can be installed without drilling?",
+    "answer": "Yes. Geelli has a dedicated Hang Without Drilling range. Products such as soap holders, toothbrush holders, towel holders, hooks and other accessories can use the adhesive properties of polyurethane gel for wall or furniture installation.",
+    "sequenceNumber": 53
+  },
+  {
+    "id": "faq-1788329217-054",
+    "category": "Bathroom & Wellness",
+    "brand": "Geelli",
+    "question": "4. What is the Geelli Filo collection?",
+    "answer": "Filo is a modular accessory system designed for showers, bathroom walls, kitchens and entrance areas. Individual accessories can be positioned along a rod according to the user's requirements. The shower version can be positioned over shower glass without drilling, with different versions accommodating different glass or profile dimensions.",
+    "sequenceNumber": 54
+  },
+  {
+    "id": "faq-1788329217-055",
+    "category": "Bathroom & Wellness",
+    "brand": "Geelli",
+    "question": "5. Does Geelli offer designer washbasins?",
+    "answer": "Yes. Geelli offers products such as the Coccola sit-on washbasin, designed by Monica Graffeo. Coccola is made from Stone material and is available in several colours, including Ambra, Fumé, Black, Sand and White.",
+    "sequenceNumber": 55
+  },
+  {
+    "id": "faq-1788329217-056",
+    "category": "Bathroom & Wellness",
+    "brand": "Geelli",
+    "question": "6. Does Geelli offer bathroom seating and shower seats?",
+    "answer": "Yes. Geelli offers stools, bathroom seating and dedicated shower seats, including products from the Viood and Quadra ranges. Selected polyurethane seats are designed to withstand wet environments and can be used inside showers.",
+    "sequenceNumber": 56
+  },
+  {
+    "id": "faq-1788329217-057",
+    "category": "Bathroom & Wellness",
+    "brand": "Geelli",
+    "question": "7. What types of mirrors does Geelli offer?",
+    "answer": "Geelli offers designer mirrors in different shapes and configurations, including the Rivedo, Eclisse, Macro, Miebrame and Nora collections. Some models use the adhesive properties of polyurethane gel, allowing them to be positioned without conventional wall fixing.",
+    "sequenceNumber": 57
+  },
+  {
+    "id": "faq-1788329217-058",
+    "category": "Bathroom & Wellness",
+    "brand": "Geelli",
+    "question": "8. Does Geelli offer storage and organisation products?",
+    "answer": "Yes. The Contain and Organize collection includes products such as towel holders, trays, cups, containers, baskets and organisers. The MAG, for example, is a polyurethane-gel storage container that can also function as a waste-paper basket for offices or bathrooms.",
+    "sequenceNumber": 58
+  },
+  {
+    "id": "faq-1788329217-059",
+    "category": "Bathroom & Wellness",
+    "brand": "Geelli",
+    "question": "9. Does Geelli offer lighting and living accessories?",
+    "answer": "Yes. Geelli's portfolio includes decorative lighting collections such as Fiamma, Fiammella, Plissé, Plissé Alta and Eva, along with living and working accessories such as cable holders, organisers and decorative objects.",
+    "sequenceNumber": 59
+  },
+  {
+    "id": "faq-1788329217-060",
+    "category": "Bathroom & Wellness",
+    "brand": "Geelli",
+    "question": "10. What Geelli products are suitable for luxury bathroom projects?",
+    "answer": "For premium bathroom projects, Geelli offers a broad selection of washbasins, shower seats, towel holders, soap holders, toothbrush holders, mirrors, storage accessories, shower organisers and other decorative accessories. Products such as Coccola, Filo, Viood, Macro and the various bathroom accessory collections can be combined to create a distinctive and coordinated bathroom environment.",
+    "sequenceNumber": 60
+  },
+  {
+    "id": "faq-1788329217-061",
+    "category": "Bathroom & Wellness",
+    "brand": "Jacuzzi",
+    "question": "1. What products does Jacuzzi® offer in India?",
+    "answer": "Jacuzzi® offers several wellness categories, including Hot Tubs, Swim Spas, Bathtubs, Showers and Wellness products such as saunas, hammams and infrared cabins.",
+    "sequenceNumber": 61
+  },
+  {
+    "id": "faq-1788329217-062",
+    "category": "Bathroom & Wellness",
+    "brand": "Jacuzzi",
+    "question": "2. What is a Jacuzzi® Hot Tub?",
+    "answer": "A Jacuzzi® Hot Tub is a wellness spa designed for relaxation and hydrotherapy. Its jet positioning and ergonomic seating are designed to provide targeted hydromassage for different areas of the body.",
+    "sequenceNumber": 62
+  },
+  {
+    "id": "faq-1788329217-063",
+    "category": "Bathroom & Wellness",
+    "brand": "Jacuzzi",
+    "question": "3. What is the difference between a Jacuzzi® Hot Tub and a Swim Spa?",
+    "answer": "A Hot Tub is primarily designed for relaxation, hydrotherapy and social wellness, while a Swim Spa combines water-based exercise and swimming with wellness features. Jacuzzi® Swim Spas can require significantly less space than a traditional swimming pool.",
+    "sequenceNumber": 63
+  },
+  {
+    "id": "faq-1788329217-064",
+    "category": "Bathroom & Wellness",
+    "brand": "Jacuzzi",
+    "question": "4. What types of Jacuzzi® Swim Spas are available?",
+    "answer": "The Jacuzzi® Swim Spa range includes PowerPro™, PowerActive™ and PowerPlay™. PowerPro focuses on high-performance swimming, PowerActive combines aqua fitness and family recreation, while PowerPlay combines swimming functionality with a hot-tub experience.",
+    "sequenceNumber": 64
+  },
+  {
+    "id": "faq-1788329217-065",
+    "category": "Bathroom & Wellness",
+    "brand": "Jacuzzi",
+    "question": "5. Can a Jacuzzi® Swim Spa be used for fitness?",
+    "answer": "Yes. Jacuzzi® Swim Spas are designed for swimming, aqua fitness, strengthening and aerobic exercise, making them suitable for residential wellness and fitness spaces.",
+    "sequenceNumber": 65
+  },
+  {
+    "id": "faq-1788329217-066",
+    "category": "Bathroom & Wellness",
+    "brand": "Jacuzzi",
+    "question": "6. Does Jacuzzi® offer bathtubs and showers?",
+    "answer": "Yes. The Jacuzzi® Bathroom collection includes bathtubs and showers designed around relaxation and personal wellness for indoor residential and hospitality environments.",
+    "sequenceNumber": 66
+  },
+  {
+    "id": "faq-1788329217-067",
+    "category": "Bathroom & Wellness",
+    "brand": "Jacuzzi",
+    "question": "7. What wellness products does Jacuzzi® offer apart from hot tubs?",
+    "answer": "The Jacuzzi® Wellness range includes saunas, hammams and infrared cabins, allowing homeowners, hotels and wellness facilities to create dedicated heat-therapy and relaxation areas.",
+    "sequenceNumber": 67
+  },
+  {
+    "id": "faq-1788329217-068",
+    "category": "Bathroom & Wellness",
+    "brand": "Jacuzzi",
+    "question": "8. Are Jacuzzi® products suitable for luxury hotels and hospitality projects?",
+    "answer": "Yes. Jacuzzi® has dedicated hospitality and commercial wellness solutions for hotels, health spas, holiday parks and shared wellness areas. Its commercial range includes hot tubs and saunas designed for intensive professional use.",
+    "sequenceNumber": 68
+  },
+  {
+    "id": "faq-1788329217-069",
+    "category": "Bathroom & Wellness",
+    "brand": "Jacuzzi",
+    "question": "9. Can Jacuzzi® products be installed in different types of spaces?",
+    "answer": "Yes. Jacuzzi® Hot Tubs are designed for different environments, including gardens, patios and rooftop terraces, while Bathroom and Wellness products are intended for indoor applications. The appropriate installation depends on the specific product and site requirements.",
+    "sequenceNumber": 69
+  },
+  {
+    "id": "faq-1788329217-070",
+    "category": "Bathroom & Wellness",
+    "brand": "Jacuzzi",
+    "question": "10. Where can I buy Jacuzzi® products in India?",
+    "answer": "Jacuzzi® products can be explored through its authorized dealer network in India. The official Jacuzzi® India website provides a dealer locator to help customers find a nearby showroom or dealer.",
+    "sequenceNumber": 70
+  },
+  {
+    "id": "faq-1788329217-071",
+    "category": "Surfaces & Materials",
+    "brand": "Alex Turco",
+    "question": "1. What are Alex Turco Artistic Surfaces?",
+    "answer": "Alex Turco Artistic Surfaces are custom decorative art panels combining digital imagery, hand-applied artistic treatments and a protective epoxy-resin layer. They are designed to bring artwork directly into architectural and interior surfaces.",
+    "sequenceNumber": 71
+  },
+  {
+    "id": "faq-1788329217-072",
+    "category": "Surfaces & Materials",
+    "brand": "Alex Turco",
+    "question": "2. What materials are used for Alex Turco art panels?",
+    "answer": "The panels are produced using different supports, including composite aluminium, pure aluminium and acrylic backlit panels. The artwork can incorporate digital printing, acrylic paints, metal powders, minerals and other decorative elements.",
+    "sequenceNumber": 72
+  },
+  {
+    "id": "faq-1788329217-073",
+    "category": "Surfaces & Materials",
+    "brand": "Alex Turco",
+    "question": "3. Can Alex Turco panels be used in bathrooms and wet areas?",
+    "answer": "Yes. Alex Turco's Artistic Surfaces are designed for environments exposed to water and moisture, including wet areas and shower applications. The waterproof epoxy-resin surface provides protection for the artwork.",
+    "sequenceNumber": 73
+  },
+  {
+    "id": "faq-1788329217-074",
+    "category": "Surfaces & Materials",
+    "brand": "Alex Turco",
+    "question": "4. Can Alex Turco panels be used instead of conventional wall tiles?",
+    "answer": "Yes. They can be used as an alternative decorative wall surface to conventional tiles, particularly where architects and interior designers want a continuous artistic feature rather than a conventional tiled finish.",
+    "sequenceNumber": 74
+  },
+  {
+    "id": "faq-1788329217-075",
+    "category": "Surfaces & Materials",
+    "brand": "Alex Turco",
+    "question": "5. Can Alex Turco panels be customized?",
+    "answer": "Yes. A major feature of the collection is customization. Clients can specify elements such as size, design, colour and finish, allowing the panel to be developed according to the requirements of a particular interior or architectural project.",
+    "sequenceNumber": 75
+  },
+  {
+    "id": "faq-1788329217-076",
+    "category": "Surfaces & Materials",
+    "brand": "Alex Turco",
+    "question": "6. What finishes are available for Alex Turco Artistic Surfaces?",
+    "answer": "Alex Turco offers five distinctive finishes: Flat, Moon, Brush Strokes, Bubbles and Minerals. Depending on the design, these can be specified with either a glossy or matte surface.",
+    "sequenceNumber": 76
+  },
+  {
+    "id": "faq-1788329217-077",
+    "category": "Surfaces & Materials",
+    "brand": "Alex Turco",
+    "question": "7. Can Alex Turco panels be used on curved surfaces and furniture?",
+    "answer": "Yes. Pure Aluminium Panels are designed particularly for curved walls, columns and furniture applications because of their ability to bend. The panels can also be used for doors, counters, backsplashes, ceilings and other architectural elements.",
+    "sequenceNumber": 77
+  },
+  {
+    "id": "faq-1788329217-078",
+    "category": "Surfaces & Materials",
+    "brand": "Alex Turco",
+    "question": "8. What are Alex Turco Backlit Art Panels?",
+    "answer": "Backlit Art Panels use translucent acrylic supports that allow artificial or natural light to pass through the artwork. They can be used with traditional or LED backlighting to create illuminated decorative surfaces for applications such as bars, bathrooms, kitchens and feature walls.",
+    "sequenceNumber": 78
+  },
+  {
+    "id": "faq-1788329217-079",
+    "category": "Surfaces & Materials",
+    "brand": "Alex Turco",
+    "question": "9. What is Alex Turco OnlyOne?",
+    "answer": "OnlyOne is Alex Turco's collection of one-of-a-kind art and design pieces, including sculptures, paintings, mirrors, tables and furnishing objects. These works combine natural materials with handcrafted techniques and epoxy resin, with each piece intended to be unique.",
+    "sequenceNumber": 79
+  },
+  {
+    "id": "faq-1788329217-080",
+    "category": "Surfaces & Materials",
+    "brand": "Alex Turco",
+    "question": "10. Where can Alex Turco Artistic Surfaces be used?",
+    "answer": "The panels can be used across residential, hospitality, retail, wellness and commercial environments. Applications include feature walls, bathrooms, showers, outdoor walls, furniture, doors, counters, backsplashes, elevators, ceilings, curved walls and columns.",
+    "sequenceNumber": 80
   }
 ]

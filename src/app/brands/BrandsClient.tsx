@@ -58,13 +58,13 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
   return (
     <div className="brands-page">
       {/* ── Page Header ── */}
-      <div className="brands-header">
-        <div className="brands-header__inner">
-          <div className="brands-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+      <div className="brands-header page-header">
+        <div className="brands-header__inner page-header__inner">
+          <div className="brands-header__meta page-meta">
             EXCLUSIVE PARTNERS — {brandsList.length} BRANDS
           </div>
-          <h1 className="brands-header__title">BRANDS</h1>
-          <p className="brands-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
+          <h1 className="brands-header__title page-title">BRANDS</h1>
+          <p className="brands-header__desc page-desc">
             A curated selection of the world&apos;s finest material and design brands — each chosen for their craft, innovation, and alignment with the Aaren philosophy.
           </p>
         </div>
@@ -184,6 +184,8 @@ export default function BrandsClient({ initialBrands }: BrandsClientProps) {
           display: flex;
           flex-wrap: wrap;
           width: 100%;
+          max-width: 1600px;
+          margin: 0 auto;
         }
 
         /* ── Brand Card ── */

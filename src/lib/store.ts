@@ -1962,18 +1962,19 @@ export function generateInquiriesCSV(inquiries: InquiryItem[]): string {
 export const createProjectStore = saveProjectStore;
 
 export async function getAllFAQsStore(): Promise<FaqItem[]> {
+  const json = readJsonStore();
+  const masterFaqs: FaqItem[] = (json.faqs && Array.isArray(json.faqs) && json.faqs.length > 0)
+    ? json.faqs
+    : (BRANDWISE_FAQS as FaqItem[]);
+
   const fbData = await fetchFromFirebaseCloudStore("faqs");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
-    const json = readJsonStore();
+  if (fbData && Array.isArray(fbData) && fbData.length >= masterFaqs.length) {
     json.faqs = fbData;
     globalThis.__AAREN_MEMORY_STORE__ = json;
     return fbData;
   }
-  const json = readJsonStore();
-  if (json.faqs && Array.isArray(json.faqs) && json.faqs.length > 0) {
-    return json.faqs;
-  }
-  return BRANDWISE_FAQS as FaqItem[];
+
+  return masterFaqs;
 }
 
 export async function saveFAQStore(faq: Partial<FaqItem>): Promise<FaqItem> {

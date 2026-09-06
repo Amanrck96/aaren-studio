@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
         </div>
       </div>
 
-      <div className="privacy-container">
+      <div className="privacy-container page-content-container">
         {/* Content Section */}
         <main className="privacy-body">
           <div className="privacy-section">
@@ -182,7 +182,7 @@ export default function PrivacyPolicyPage() {
         }
 
         .privacy-container {
-          max-width: 1080px;
+          max-width: 1600px;
           margin: 0 auto;
           padding: 4rem 4rem;
         }

@@ -129,13 +129,13 @@ export default function BlogClient({ initialPosts, initialFontSettings }: BlogCl
   return (
     <div className="blog-page">
       {/* ── Page Header ── */}
-      <div className="blog-header">
-        <div className="blog-header__inner">
-          <div className="blog-header__meta t-tag" style={{ color: "#81663F", fontWeight: 700, letterSpacing: "0.12em", marginBottom: "1.6rem" }}>
+      <div className="blog-header page-header">
+        <div className="blog-header__inner page-header__inner">
+          <div className="blog-header__meta page-meta">
             JOURNAL &amp; ARCHITECTURAL INSIGHTS
           </div>
-          <h1 className="blog-header__title">BLOG</h1>
-          <p className="blog-header__desc t-body" style={{ color: "rgba(0,0,0,0.65)", maxWidth: "58rem", fontSize: "1.6rem", lineHeight: 1.6 }}>
+          <h1 className="blog-header__title page-title">BLOG</h1>
+          <p className="blog-header__desc page-desc">
             Curated dispatches on luxury surfaces, spatial craft, technological innovations, and bespoke material curation.
           </p>
 
