@@ -1410,10 +1410,14 @@ export default function ProductDetailClient({ slug, initialProduct, initialAllPr
         }
 
         .section-title {
-          font-family: var(--font-jost), serif;
-          font-size: 24px;
-          font-weight: 400;
-          margin-bottom: 24px;
+          font-family: var(--font-jost), serif !important;
+          font-size: 24px !important;
+          font-weight: 400 !important;
+          letter-spacing: normal !important;
+          line-height: 1.3 !important;
+          color: #1e1e1e !important;
+          text-transform: none !important;
+          margin-bottom: 24px !important;
         }
 
         /* Editorial Gallery Grid */

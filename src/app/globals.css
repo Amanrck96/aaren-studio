@@ -214,8 +214,7 @@ h5 {
 
 /* ── Page H1 — hero title (About Us, Our Team, FAQ, Contact Us, etc.) ── */
 .page-title,
-.h1-page-title,
-.bd-hero__title {
+.h1-page-title {
   font-size: clamp(6rem, 15vw, 22rem) !important;
   font-weight: 700 !important;
   letter-spacing: -0.05em !important;
@@ -226,7 +225,8 @@ h5 {
 }
 
 /* ── Section subheading (Project Debrief, Our Mission, etc.) ── */
-.section-title,
+.page-content-container .section-title,
+.page-container .section-title,
 .h2-section,
 .form-title {
   font-size: clamp(2.4rem, 4vw, 3.6rem) !important;

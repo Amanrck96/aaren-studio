@@ -935,11 +935,11 @@ export default function BrandDetailClient({
         }
 
         .bd-hero__title {
-          font-size: clamp(6rem, 15vw, 22rem) !important;
+          font-size: clamp(5rem, 12vw, 18rem) !important;
           font-weight: 700;
           letter-spacing: -0.05em;
           line-height: 0.88;
-          color: #fff;
+          color: #fff !important;
           margin-bottom: 2.4rem;
         }
 
