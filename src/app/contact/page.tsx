@@ -38,7 +38,7 @@ export default function Contact() {
           phone: formData.phone || "Not provided",
           subject: formData.subject,
           message: formData.message,
-          type: "Project Inquiry",
+          type: "Enquiry",
         }),
       });
 
@@ -152,7 +152,7 @@ export default function Contact() {
 
         {/* Right Side: Form */}
         <div className="contact-form-wrapper">
-          <h2 className="form-title section-title" style={{ margin: 0 }}>PROJECT INQUIRY</h2>
+          <h2 className="form-title section-title" style={{ margin: 0 }}>ENQUIRY</h2>
           
           {sent ? (
             <div className="success-message">
@@ -213,7 +213,7 @@ export default function Contact() {
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   className="form-input"
-                  placeholder="Project Inquiry / Consultation"
+                  placeholder="Enquiry / Consultation"
                 />
               </div>
 
