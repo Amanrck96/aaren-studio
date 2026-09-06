@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getVerifiedWorkspaceClient } from "@/lib/workspaceAuth";
-import { addWorkspaceDocumentStore, deleteWorkspaceDocumentStore } from "@/lib/store";
+import { addWorkspaceDocumentStore, deleteWorkspaceDocumentStore, getWorkspaceProjectByIdStore } from "@/lib/store";
 import { v2 as cloudinary } from "cloudinary";
 
 // Configure Cloudinary
@@ -29,30 +29,49 @@ export async function GET(req: NextRequest) {
     }
 
     // QUERY-LAYER ISOLATION: verify project belongs to client
-    const project = await prisma.project.findFirst({
-      where: {
-        id: projectId,
-        ...(clientUser.role === "admin" && clientUser.clientId === "admin-scope"
-          ? {}
-          : {
-              OR: [
-                { clientId: clientUser.clientId },
-                { client: clientUser.name },
-              ],
-            }),
-      },
-    });
+    let project = null;
+    try {
+      project = await prisma.project.findFirst({
+        where: {
+          id: projectId,
+          ...(clientUser.role === "admin" && clientUser.clientId === "admin-scope"
+            ? {}
+            : {
+                OR: [
+                  { clientId: clientUser.clientId },
+                  { client: clientUser.name },
+                ],
+              }),
+        },
+      });
+    } catch (e) {}
 
+    let storeProject = null;
     if (!project) {
+      storeProject = await getWorkspaceProjectByIdStore(projectId, clientUser.clientId);
+    }
+
+    if (!project && !storeProject) {
       return NextResponse.json({ success: false, error: "Access denied to project documents" }, { status: 403 });
     }
 
-    const documents = await prisma.projectDocument.findMany({
-      where: { projectId },
-      orderBy: { createdAt: "desc" },
-    });
+    let documents: any = null;
+    if (project) {
+      try {
+        documents = await prisma.projectDocument.findMany({
+          where: { projectId },
+          orderBy: { createdAt: "desc" },
+        });
+      } catch (e) {
+        console.warn("Prisma documents lookup failed (falling back to store):", e);
+      }
+    }
 
-    return NextResponse.json({ success: true, data: documents });
+    if (!documents && storeProject) {
+      documents = storeProject.documents || [];
+    }
+
+    return NextResponse.json({ success: true, data: documents || [] });
   } catch (error: any) {
     console.error("Error fetching project documents:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -88,21 +107,29 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. QUERY-LAYER ISOLATION: Confirm project ownership
-    const project = await prisma.project.findFirst({
-      where: {
-        id: projectId,
-        ...(clientUser.role === "admin" && clientUser.clientId === "admin-scope"
-          ? {}
-          : {
-              OR: [
-                { clientId: clientUser.clientId },
-                { client: clientUser.name },
-              ],
-            }),
-      },
-    });
+    let project = null;
+    try {
+      project = await prisma.project.findFirst({
+        where: {
+          id: projectId,
+          ...(clientUser.role === "admin" && clientUser.clientId === "admin-scope"
+            ? {}
+            : {
+                OR: [
+                  { clientId: clientUser.clientId },
+                  { client: clientUser.name },
+                ],
+              }),
+        },
+      });
+    } catch (e) {}
 
+    let storeProject = null;
     if (!project) {
+      storeProject = await getWorkspaceProjectByIdStore(projectId, clientUser.clientId);
+    }
+
+    if (!project && !storeProject) {
       return NextResponse.json({ success: false, error: "Access denied to project" }, { status: 403 });
     }
 
@@ -117,7 +144,7 @@ export async function POST(req: NextRequest) {
           const uploadStream = cloudinary.uploader.upload_stream(
             {
               resource_type: "auto",
-              folder: `aaren_workspace/${project.id}`,
+              folder: `aaren_workspace/${project?.id || storeProject?.id || projectId}`,
               public_id: `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`,
             },
             (err, result) => {

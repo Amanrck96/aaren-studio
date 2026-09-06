@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getVerifiedWorkspaceClient } from "@/lib/workspaceAuth";
-import { updateWorkspaceInvoiceStatusStore } from "@/lib/store";
+import {
+  updateWorkspaceInvoiceStatusStore,
+  getWorkspaceProjectsByClientIdStore,
+  getWorkspaceProjectByIdStore,
+  saveWorkspaceProjectStore,
+} from "@/lib/store";
 import Stripe from "stripe";
 
 const stripe = process.env.STRIPE_SECRET_KEY
@@ -25,18 +30,45 @@ export async function GET(req: NextRequest) {
       ? {}
       : { clientId: clientUser.clientId };
 
-    const invoices = await prisma.invoice.findMany({
-      where: {
-        ...clientFilter,
-        ...(projectId ? { projectId } : {}),
-      },
-      include: {
-        project: {
-          select: { id: true, title: true, projectCode: true },
+    let invoices: any[] = [];
+    try {
+      invoices = await prisma.invoice.findMany({
+        where: {
+          ...clientFilter,
+          ...(projectId ? { projectId } : {}),
         },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+        include: {
+          project: {
+            select: { id: true, title: true, projectCode: true },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    } catch (e) {
+      console.warn("Prisma invoices lookup failed (falling back to store):", e);
+    }
+
+    if (!invoices || invoices.length === 0) {
+      const storeProjects = await getWorkspaceProjectsByClientIdStore(clientUser.clientId);
+      const storeInvoices: any[] = [];
+      storeProjects.forEach((proj: any) => {
+        if (Array.isArray(proj.invoices)) {
+          proj.invoices.forEach((inv: any) => {
+            if (!projectId || proj.id === projectId) {
+              storeInvoices.push({
+                ...inv,
+                project: {
+                  id: proj.id,
+                  title: proj.title,
+                  projectCode: proj.projectCode,
+                },
+              });
+            }
+          });
+        }
+      });
+      invoices = storeInvoices;
+    }
 
     return NextResponse.json({ success: true, data: invoices });
   } catch (error: any) {
@@ -162,8 +194,27 @@ export async function POST(req: NextRequest) {
       }
 
       const invNumber = `INV-${Date.now().toString().slice(-6)}`;
-      const newInvoice = await prisma.invoice.create({
-        data: {
+      let newInvoice: any = null;
+      try {
+        newInvoice = await prisma.invoice.create({
+          data: {
+            invoiceNumber: invNumber,
+            projectId,
+            clientId: clientUser.clientId,
+            title,
+            amount: parseFloat(amount),
+            currency: currency || "INR",
+            status: "UNPAID",
+            dueDate: dueDate ? new Date(dueDate) : null,
+          },
+        });
+      } catch (e) {
+        console.warn("Prisma invoice create failed (falling back to store):", e);
+      }
+
+      if (!newInvoice) {
+        newInvoice = {
+          id: `inv-${Date.now()}`,
           invoiceNumber: invNumber,
           projectId,
           clientId: clientUser.clientId,
@@ -171,9 +222,16 @@ export async function POST(req: NextRequest) {
           amount: parseFloat(amount),
           currency: currency || "INR",
           status: "UNPAID",
-          dueDate: dueDate ? new Date(dueDate) : null,
-        },
-      });
+          dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+          createdAt: new Date().toISOString(),
+        };
+        const proj = await getWorkspaceProjectByIdStore(projectId, clientUser.clientId);
+        if (proj) {
+          if (!Array.isArray(proj.invoices)) proj.invoices = [];
+          proj.invoices.unshift(newInvoice);
+          await saveWorkspaceProjectStore(proj);
+        }
+      }
 
       return NextResponse.json({ success: true, data: newInvoice });
     }

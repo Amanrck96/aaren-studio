@@ -9,14 +9,30 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, authenticated: false, message: "Unauthorized" }, { status: 401 });
     }
 
-    const clientRecord = await prisma.client.findUnique({
-      where: { id: clientUser.clientId },
-      include: {
-        projects: {
-          select: { id: true, title: true, slug: true, status: true },
+    let clientRecord = null;
+    try {
+      clientRecord = await prisma.client.findUnique({
+        where: { id: clientUser.clientId },
+        include: {
+          projects: {
+            select: { id: true, title: true, slug: true, status: true },
+          },
         },
-      },
-    });
+      });
+    } catch (e) {
+      console.warn("Prisma client findUnique failed (non-fatal):", e);
+    }
+
+    if (!clientRecord) {
+      clientRecord = {
+        id: clientUser.clientId,
+        name: clientUser.name,
+        email: clientUser.email,
+        company: clientUser.name,
+        accessCode: clientUser.clientId,
+        logoUrl: "/brands/logos/loco_logo.png",
+      };
+    }
 
     return NextResponse.json({
       success: true,

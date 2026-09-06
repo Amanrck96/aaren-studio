@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getVerifiedWorkspaceClient } from "@/lib/workspaceAuth";
-import { updateWorkspaceScheduleStatusStore, addWorkspaceCommentStore } from "@/lib/store";
+import {
+  updateWorkspaceScheduleStatusStore,
+  addWorkspaceCommentStore,
+  getWorkspaceProjectByIdStore,
+  saveWorkspaceProjectStore,
+} from "@/lib/store";
 
 export async function GET(req: NextRequest) {
   try {
@@ -18,39 +23,64 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Project ID is required" }, { status: 400 });
     }
 
-    // QUERY-LAYER ISOLATION: Confirm project belongs to this client
-    const project = await prisma.project.findFirst({
-      where: {
-        id: projectId,
-        ...(clientUser.role === "admin" && clientUser.clientId === "admin-scope"
-          ? {}
-          : {
-              OR: [
-                { clientId: clientUser.clientId },
-                { client: clientUser.name },
-              ],
-            }),
-      },
-    });
+    // 1. QUERY-LAYER ISOLATION: Confirm project belongs to this client
+    let project = null;
+    try {
+      project = await prisma.project.findFirst({
+        where: {
+          id: projectId,
+          ...(clientUser.role === "admin" && clientUser.clientId === "admin-scope"
+            ? {}
+            : {
+                OR: [
+                  { clientId: clientUser.clientId },
+                  { client: clientUser.name },
+                ],
+              }),
+        },
+      });
+    } catch (e) {
+      console.warn("Prisma project lookup failed (falling back to store):", e);
+    }
 
+    let storeProject = null;
     if (!project) {
+      storeProject = await getWorkspaceProjectByIdStore(projectId, clientUser.clientId);
+    }
+
+    if (!project && !storeProject) {
       return NextResponse.json({ success: false, error: "Access denied to project schedule" }, { status: 403 });
     }
 
-    const scheduleItems = await prisma.scheduleItem.findMany({
-      where: {
-        projectId,
-        ...(status ? { status: status as any } : {}),
-      },
-      include: {
-        comments: {
+    let scheduleItems: any = null;
+    if (project) {
+      try {
+        scheduleItems = await prisma.scheduleItem.findMany({
+          where: {
+            projectId,
+            ...(status ? { status: status as any } : {}),
+          },
+          include: {
+            comments: {
+              orderBy: { createdAt: "asc" },
+            },
+          },
           orderBy: { createdAt: "asc" },
-        },
-      },
-      orderBy: { createdAt: "asc" },
-    });
+        });
+      } catch (e) {
+        console.warn("Prisma schedule items lookup failed (falling back to store):", e);
+      }
+    }
 
-    return NextResponse.json({ success: true, data: scheduleItems });
+    if (!scheduleItems && storeProject) {
+      let items = storeProject.scheduleItems || [];
+      if (status) {
+        items = items.filter((it: any) => it.status === status);
+      }
+      scheduleItems = items;
+    }
+
+    return NextResponse.json({ success: true, data: scheduleItems || [] });
   } catch (error: any) {
     console.error("Error fetching schedule items:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -74,12 +104,17 @@ export async function POST(req: NextRequest) {
       }
 
       // Verify item belongs to a project owned by client
-      const item = await prisma.scheduleItem.findUnique({
-        where: { id: scheduleItemId },
-        include: { project: true },
-      });
+      let item: any = null;
+      try {
+        item = await prisma.scheduleItem.findUnique({
+          where: { id: scheduleItemId },
+          include: { project: true },
+        });
+      } catch (e) {
+        console.warn("Prisma schedule item lookup failed (non-fatal):", e);
+      }
 
-      if (!item || (clientUser.role !== "admin" && item.project.clientId !== clientUser.clientId && item.project.client !== clientUser.name)) {
+      if (item && clientUser.role !== "admin" && item.project.clientId !== clientUser.clientId && item.project.client !== clientUser.name) {
         return NextResponse.json({ success: false, error: "Access denied to comment on this item" }, { status: 403 });
       }
 
@@ -164,26 +199,59 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, error: "Project ID and Item Name are required" }, { status: 400 });
       }
 
-      const project = await prisma.project.findFirst({
-        where: {
-          id: projectId,
-          ...(clientUser.role === "admin" && clientUser.clientId === "admin-scope"
-            ? {}
-            : {
-                OR: [
-                  { clientId: clientUser.clientId },
-                  { client: clientUser.name },
-                ],
-              }),
-        },
-      });
+      let project = null;
+      try {
+        project = await prisma.project.findFirst({
+          where: {
+            id: projectId,
+            ...(clientUser.role === "admin" && clientUser.clientId === "admin-scope"
+              ? {}
+              : {
+                  OR: [
+                    { clientId: clientUser.clientId },
+                    { client: clientUser.name },
+                  ],
+                }),
+          },
+        });
+      } catch (e) {}
 
+      let storeProject = null;
       if (!project) {
+        storeProject = await getWorkspaceProjectByIdStore(projectId, clientUser.clientId);
+      }
+
+      if (!project && !storeProject) {
         return NextResponse.json({ success: false, error: "Access denied to project" }, { status: 403 });
       }
 
-      const newItem = await prisma.scheduleItem.create({
-        data: {
+      let newItem: any = null;
+      if (project) {
+        try {
+          newItem = await prisma.scheduleItem.create({
+            data: {
+              projectId,
+              name,
+              room: room || "General",
+              category: category || "Surfaces",
+              price: price ? parseFloat(price) : 0,
+              specs: specs || "",
+              dimensions: dimensions || "",
+              imageUrl: imageUrl || "/brands/brand_1_1.jpg",
+              status: "PENDING",
+            },
+            include: {
+              comments: true,
+            },
+          });
+        } catch (e) {
+          console.warn("Prisma create item failed (falling back to store):", e);
+        }
+      }
+
+      if (!newItem) {
+        newItem = {
+          id: `item-${Date.now()}`,
           projectId,
           name,
           room: room || "General",
@@ -193,11 +261,16 @@ export async function POST(req: NextRequest) {
           dimensions: dimensions || "",
           imageUrl: imageUrl || "/brands/brand_1_1.jpg",
           status: "PENDING",
-        },
-        include: {
-          comments: true,
-        },
-      });
+          comments: [],
+          createdAt: new Date().toISOString(),
+        };
+        const targetProj = storeProject || (await getWorkspaceProjectByIdStore(projectId, clientUser.clientId));
+        if (targetProj) {
+          if (!Array.isArray(targetProj.scheduleItems)) targetProj.scheduleItems = [];
+          targetProj.scheduleItems.push(newItem);
+          await saveWorkspaceProjectStore(targetProj);
+        }
+      }
 
       return NextResponse.json({ success: true, data: newItem });
     }
