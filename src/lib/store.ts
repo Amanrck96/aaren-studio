@@ -936,21 +936,46 @@ export async function getCategoriesStore(): Promise<CategoryItem[]> {
   return DEFAULT_CATEGORIES;
 }
 
+function sanitizeBrand(b: BrandItem): BrandItem {
+  let bannerUrl = b.bannerUrl || "";
+  let logoUrl = b.logoUrl || "";
+
+  if (bannerUrl.startsWith("data:")) {
+    if (b.id === "peelply") bannerUrl = "/brands/peelply_banner.jpg";
+    else bannerUrl = "/brands/brand_1_1.jpg";
+  }
+
+  if (logoUrl.startsWith("data:")) {
+    if (b.id === "living-ceramica") logoUrl = "/brands/logos/living-ceramica_logo.png";
+    else if (b.id === "florim") logoUrl = "/brands/logos/florim_logo.png";
+    else if (b.id === "jacuzzi") logoUrl = "/brands/logos/jacuzzi_logo.png";
+    else if (b.id === "alex-turco") logoUrl = "/brands/logos/alex-turco_logo.png";
+    else logoUrl = "";
+  }
+
+  return {
+    ...b,
+    bannerUrl,
+    logoUrl,
+  };
+}
+
 // BRANDS STORE
 export async function getBrandsStore(): Promise<BrandItem[]> {
   // 🔑 FIX: Always check Firebase FIRST so admin edits (logos, descriptions, catalogs) survive Vercel redeploys
   const fbData = await fetchFromFirebaseCloudStore("brands");
   if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const sanitized = fbData.map(sanitizeBrand);
     const json = readJsonStore();
-    json.brands = fbData;
+    json.brands = sanitized;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+    return sanitized;
   }
 
   // Fallback to local JSON if Firebase unavailable
   const json = readJsonStore();
   if (json.brands && Array.isArray(json.brands) && json.brands.length > 0) {
-    return json.brands;
+    return json.brands.map(sanitizeBrand);
   }
 
   // Fallback to Prisma

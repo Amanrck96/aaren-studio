@@ -25,6 +25,10 @@ const LOGO_MAP: Record<string, string> = {
   "inclass": "/brands/logos/inclass_logo.png",
   "wow": "/brands/logos/wow_logo.png",
   "iww": "/brands/logos/iww_logo.png",
+  "living-ceramica": "/brands/logos/living-ceramica_logo.png",
+  "florim": "/brands/logos/florim_logo.png",
+  "jacuzzi": "/brands/logos/jacuzzi_logo.png",
+  "alex-turco": "/brands/logos/alex-turco_logo.png",
 };
 
 interface BrandDetailClientProps {
