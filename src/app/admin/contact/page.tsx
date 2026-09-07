@@ -16,7 +16,7 @@ export default function AdminContactPage() {
 
   async function fetchSettings() {
     try {
-      const res = await fetch("/api/site-settings");
+      const res = await fetch(`/api/site-settings?t=${Date.now()}`, { cache: "no-store" });
       const json = await res.json();
       if (json.success) setSettings(json.data);
     } catch (e) {

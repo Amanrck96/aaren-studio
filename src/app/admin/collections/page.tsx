@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import AdminNav from "@/components/AdminNav";
 import { CollectionItem, BrandItem, ProductItem } from "@/lib/types";
 import { Plus, Trash2, Edit2, Image as ImageIcon, CheckCircle, RefreshCw, Eye, Sparkles, Filter } from "lucide-react";
+import { uploadFileWithCompression } from "@/lib/uploadHelper";
 
 export default function CollectionsAdminPage() {
   const [collections, setCollections] = useState<CollectionItem[]>([]);
@@ -98,17 +99,22 @@ export default function CollectionsAdminPage() {
     }).length;
   };
 
-  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setIconPreview(result);
-      setIconUrl(result);
-    };
-    reader.readAsDataURL(file);
+    try {
+      const result = await uploadFileWithCompression(file, "Collections");
+      const finalUrl = result.url || result.dataUrl;
+      if (result.success && finalUrl) {
+        setIconPreview(finalUrl);
+        setIconUrl(finalUrl);
+      } else {
+        alert("Upload failed: " + (result.error || "Upload error"));
+      }
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    }
   };
 
   const handleSaveCollection = async (e: React.FormEvent) => {

@@ -92,8 +92,8 @@ export default function AdminMediaPage() {
         });
 
         const json = await res.json();
-        if (json.success) {
-          finalUrl = json.url;
+        if (json.success && (json.url || json.dataUrl)) {
+          finalUrl = json.url || json.dataUrl;
         } else {
           throw new Error(json.error || "Upload failed");
         }

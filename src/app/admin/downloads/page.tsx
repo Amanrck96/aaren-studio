@@ -113,10 +113,11 @@ function AdminDownloadsContent() {
         body: formData,
       });
       const data = await res.json();
-      if (data.success && data.url) {
+      const finalUrl = data.url || data.dataUrl;
+      if (data.success && finalUrl) {
         setEditingPdf((prev) => ({
           ...prev,
-          fileUrl: data.url,
+          fileUrl: finalUrl,
           fileName: file.name,
           title: prev?.title || file.name.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " "),
           fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
@@ -148,10 +149,11 @@ function AdminDownloadsContent() {
         body: formData,
       });
       const data = await res.json();
-      if (data.success && data.url) {
+      const finalUrl = data.url || data.dataUrl;
+      if (data.success && finalUrl) {
         setEditingPdf((prev) => ({
           ...prev,
-          coverImage: data.url,
+          coverImage: finalUrl,
         }));
         setToast("✅ Cover thumbnail uploaded to Firebase Storage!");
         setTimeout(() => setToast(null), 4000);

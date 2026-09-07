@@ -509,8 +509,9 @@ export default function AdminTeamPage() {
                       setIsUploading(true);
                       try {
                         const result = await uploadFileWithCompression(e.target.files[0], "team");
-                        if (result.success && result.url) {
-                          setEditing((prev) => (prev ? { ...prev, photoUrl: result.url } : null));
+                        const finalUrl = result.url || result.dataUrl;
+                        if (result.success && finalUrl) {
+                          setEditing((prev) => (prev ? { ...prev, photoUrl: finalUrl } : null));
                         } else {
                           alert("Upload error: " + (result.error || "Upload failed"));
                         }

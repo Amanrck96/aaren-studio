@@ -151,8 +151,9 @@ function BlogRichTextEditor({
     setUploadingImg(true);
     try {
       const res = await uploadFileWithCompression(file, "BlogBodyImages");
-      if (res.success && res.url) {
-        setImgInput({ ...imgInput, url: res.url });
+      const finalUrl = res.url || res.dataUrl;
+      if (res.success && finalUrl) {
+        setImgInput({ ...imgInput, url: finalUrl });
         alert("✅ Content image uploaded successfully!");
       } else {
         alert("❌ Image upload failed: " + (res.error || "Unknown error"));
@@ -681,9 +682,10 @@ export default function AdminBlogsPage() {
     setUploading(true);
     try {
       const res = await uploadFileWithCompression(file, "Blogs");
-      if (res.success && res.url) {
-        setEditing({ ...editing, featuredImage: res.url });
-        alert("✅ Cover photo uploaded successfully: " + res.url);
+      const finalUrl = res.url || res.dataUrl;
+      if (res.success && finalUrl) {
+        setEditing({ ...editing, featuredImage: finalUrl });
+        alert("✅ Cover photo uploaded successfully: " + finalUrl);
       } else {
         alert("❌ Image upload failed: " + (res.error || "Unknown error"));
       }
