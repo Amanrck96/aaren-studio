@@ -28071,5 +28071,2096 @@
   ],
   "write_test": {
     "test": "write_check_142731"
+  },
+  "downloadFolders": [
+    {
+      "id": "slashform",
+      "brandName": "Slashform",
+      "brandLogo": "/brands/logos/slashform_logo.png",
+      "brandCategory": "Kitchen, Wardrobe, Doors & Windows",
+      "description": "Slashform is a premium interior and furniture brand specializing in custom kitchens, wardrobes and bespoke living spaces, combining craftsmanship, high-precision manufacturing and modern engineering.",
+      "sequenceNumber": 1,
+      "files": [
+        {
+          "id": "cat-1786509662646",
+          "title": "Kitchen",
+          "fileName": "Slashform_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787689568111_Slashform_Kitchen.pdf?alt=media&token=817ebe77-8b0d-49e8-ba55-0bbb25544676",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787689633808_Kitchen_page1_cover.jpg?alt=media&token=e6383723-8a96-43d9-886f-a68a01b1b1da",
+          "category": "Kitchen, Wardrobe, Doors & Windows",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786509691430",
+          "title": "Wardrobe",
+          "fileName": "Slashform_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787689590088_Slasform_Wardrobe.pdf?alt=media&token=e8163e76-f369-4c56-bc1f-7e4bd5790a19",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787689618472_Wardrobe_page1_cover.jpg?alt=media&token=e3ef7d1d-c1c0-41d9-98c9-189e6b21358c",
+          "category": "Kitchen, Wardrobe, Doors & Windows",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "waltz",
+      "brandName": "Waltz by JB Glass",
+      "brandLogo": "/brands/logos/waltz_logo.png",
+      "brandCategory": "Door System",
+      "description": "JB Glass is an innovation- and technology-driven brand that has transformed how glass is viewed, used and imagined in architecture, interior spaces and lifestyle products. The company focuses on technology, innovation and developing advanced glass products and solutions for architects, interior designers and product designers across India.",
+      "sequenceNumber": 2,
+      "files": [
+        {
+          "id": "cat-1786242973176",
+          "title": "Slide NXT",
+          "fileName": "Waltz by JB Glass_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787685641179_SlideNXT.pdf?alt=media&token=729b38ec-7418-48d5-bbe3-9f27cb7efaf3",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787685677006_Slide_NXT_page1_cover.jpg?alt=media&token=e45113a5-29cd-4f4c-b72e-a244515b2f79",
+          "category": "Door System",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786243025319",
+          "title": "Swing NXT",
+          "fileName": "Waltz by JB Glass_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787685693585_SwingNXT.pdf?alt=media&token=f761148f-86bc-4104-975c-0c2f46c2b333",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787685707475_Swing_NXT_page1_cover.jpg?alt=media&token=31c2a1e6-09fb-42f4-859d-2e4d2c36c45b",
+          "category": "Door System",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786243060336",
+          "title": "Glide NXT",
+          "fileName": "Waltz by JB Glass_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787686004806_GlideNXT.pdf?alt=media&token=acd692ad-b2bc-42d1-95ee-e4aad6e77fee",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787685988298_Glide_NXT_page1_cover.jpg?alt=media&token=3d3e4fc1-4945-4fb2-8d81-fda0949f12f9",
+          "category": "Door System",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786243105307",
+          "title": "Close NXT",
+          "fileName": "Waltz by JB Glass_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786243118121_CloseNXT.pdf?alt=media&token=06d8863b-29e9-45b6-b535-ac0fc35b0fce",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787685988406_Close_NXT_page1_cover.jpg?alt=media&token=24198df6-c142-4435-865a-db3002f1c76d",
+          "category": "Door System",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786243132841",
+          "title": "Wallways",
+          "fileName": "Waltz by JB Glass_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787686039213_WALLWAYS.pdf?alt=media&token=d2878186-5458-41b9-be85-69cee0f7c9f0",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787686056673_Wallways_page1_cover.jpg?alt=media&token=fcfe4266-fa10-40c1-811d-31300355e3e1",
+          "category": "Door System",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "newtech-wood",
+      "brandName": "Newtech Wood",
+      "brandLogo": "/brands/logos/newtechwood_logo.png",
+      "brandCategory": "Decking, Cladding & Facade Screens",
+      "description": "NewTechWood is a composite decking manufacturer offering composite decking, siding, cladding, railings, fencing and other outdoor-living products. Its products feature UltraShield technology, designed to protect against rotting, fading, staining and scratching.",
+      "sequenceNumber": 3,
+      "files": [
+        {
+          "id": "cat-1",
+          "title": "NewtechWood",
+          "fileName": "Newtech Wood_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705501279_NTW_product_catalog-V20250314_compressed__1_.pdf?alt=media&token=ed846b60-80c6-4367-8b2f-95258c22cf7c",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "/catalogs/thumbnails/newtechwood-product-catalog-2025_thumb.jpg",
+          "category": "Decking, Cladding & Facade Screens",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787705514172",
+          "title": "NewtechWood Pro",
+          "fileName": "Newtech Wood_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705531531_NTW-FULL_CATALOG.pdf?alt=media&token=0a3be05e-b489-44e4-8b96-064cd909f5b9",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787705533119_NTW-FULL_CATALOG_page1_cover.jpg?alt=media&token=69915f70-e687-44da-8db7-2b4e985de7e4",
+          "category": "Decking, Cladding & Facade Screens",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "formica",
+      "brandName": "Formica",
+      "brandLogo": "/brands/logos/formica_logo.png",
+      "brandCategory": "Laminates",
+      "description": "Formica is an iconic surface-material brand closely associated with the invention of the original High Pressure Laminate (HPL). Today, Formica Group provides designed surfacing solutions for residential and commercial applications worldwide.",
+      "sequenceNumber": 4,
+      "files": [
+        {
+          "id": "cat-1786205228363",
+          "title": "Formica Global",
+          "fileName": "Formica_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705671777_Formica-Global-Catalogue-V2.pdf?alt=media&token=b0aa3a3b-bfa3-436d-9263-e1b63ac24e34",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "/catalogs/thumbnails/formica-global-catalogue-v2_thumb.jpg",
+          "category": "Laminates",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786205374817",
+          "title": "Fenix",
+          "fileName": "Formica_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705685140_FENIX-India-E-brochure.pdf_20240430_191334_0000.pdf?alt=media&token=c287adc0-5c1c-484b-8ff4-9a08432c3619",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "/catalogs/thumbnails/2024-fenix-brochure-digital_thumb.jpg",
+          "category": "Laminates",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786510106279",
+          "title": "Formica 4X4",
+          "fileName": "Formica_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786510124749_Formica_Group_presents_4x4_brochure_EN.pdf?alt=media&token=954c4649-db3b-4441-9af4-b69616ff3c4d",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "/catalogs/thumbnails/formica-global-catalogue-v2_thumb.jpg",
+          "category": "Laminates",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787705756067",
+          "title": "VIS",
+          "fileName": "Formica_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705774608_arpa-vis-brochure_250122.pdf?alt=media&token=9cc9fef0-15cf-412f-bb10-e07834ee9e51",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787705775576_arpa-vis-brochure_250122_page1_cover.jpg?alt=media&token=0a565108-7a42-4e6e-a72e-2dd7d7e6a76a",
+          "category": "Laminates",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787705778501",
+          "title": "Cora",
+          "fileName": "Formica_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705792040_Cora-Printed-Brochure-Arrangement-EN-TH25.pdf?alt=media&token=6af3245c-841c-48f6-a78b-3b6d7dc35d96",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787705793022_Cora-Printed-Brochure-Arrangement-EN-TH25_page1_cover.jpg?alt=media&token=60c29d5f-8928-4d4f-baf1-2b3ee2f4d759",
+          "category": "Laminates",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787705798936",
+          "title": "Decometal",
+          "fileName": "Formica_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705817094_Decometal-Catalogue-Final.pdf?alt=media&token=1a3b2883-d39a-46fd-860d-8f87d020a21e",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787705817539_Decometal-Catalogue-Final_page1_cover.jpg?alt=media&token=a65ae73d-29fe-4221-9dd4-00faad0979a2",
+          "category": "Laminates",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "loco",
+      "brandName": "Loco",
+      "brandLogo": "/brands/logos/loco_logo.png",
+      "brandCategory": "Furniture",
+      "description": "LOCO Design is a multidisciplinary design brand inspired by a heritage of fine craftsmanship and innovation. Its work spans design, craft and enterprise, creating contemporary works and solutions.\nBrand Focus: The brand combines contemporary design with traditional craftsmanship, creating distinctive products and spaces across interior, architectural and lifestyle applications.",
+      "sequenceNumber": 5,
+      "files": []
+    },
+    {
+      "id": "falper",
+      "brandName": "Falper",
+      "brandLogo": "/brands/logos/falper_logo.png",
+      "brandCategory": "Wash Basins, Basin Mixers, Vanity & Mirrors",
+      "description": "Falper is an Italian luxury design brand creating high-end bathroom and kitchen furnishings. Its collections combine iconic design, refined materials, advanced technology and skilled craftsmanship.",
+      "sequenceNumber": 6,
+      "files": [
+        {
+          "id": "cat-1786517264691",
+          "title": "7.0",
+          "fileName": "Falper_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705931291_Catalogo-7.0-Falper.pdf?alt=media&token=e5598fb2-e03b-4116-af69-ec27d54c38f5",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787705931855_Catalogo-7_0-Falper_page1_cover.jpg?alt=media&token=102b9a99-9c49-44c8-814b-3e45e335d8cf",
+          "category": "Wash Basins, Basin Mixers, Vanity & Mirrors",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786517382038",
+          "title": "Acquifero",
+          "fileName": "Falper_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705953659_Catalogo-Acquifero-1.pdf?alt=media&token=d2f382f6-7535-4d06-aa48-8b2621a54eb4",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787705964036_Catalogo-Acquifero-1_page1_cover.jpg?alt=media&token=277314ab-df44-4cfb-ae72-e3a225482bfc",
+          "category": "Wash Basins, Basin Mixers, Vanity & Mirrors",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786517442167",
+          "title": "Cilindro",
+          "fileName": "Falper_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705972222_Catalogo-Cilindro.pdf?alt=media&token=eb60bdcf-4450-4ef2-9818-effc1c09097b",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787705972847_Catalogo-Cilindro_page1_cover.jpg?alt=media&token=326aead0-420b-4d87-b801-641261e4641e",
+          "category": "Wash Basins, Basin Mixers, Vanity & Mirrors",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787706042546",
+          "title": "Edge-Glass-Metal-Wood",
+          "fileName": "Falper_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787706064587_Catalogo-Edge-Glass-Metal-Wood.pdf?alt=media&token=b3091945-32be-4f71-adb2-682c243bb1ee",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787706065325_Catalogo-Edge-Glass-Metal-Wood_page1_cover.jpg?alt=media&token=d520405d-099b-4997-ae42-ef5708cbaec0",
+          "category": "Wash Basins, Basin Mixers, Vanity & Mirrors",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787717860469",
+          "title": "lavabi-da-appoggio-countertop-basins",
+          "fileName": "Falper_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787718800839_Catalogo-lavabi-da-appoggio-countertop-basins.pdf?alt=media&token=0647e8a6-0d64-4ff1-adcf-0136ee00c850",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787718801468_Catalogo-lavabi-da-appoggio-countertop-basins_page1_cover.jpg?alt=media&token=f343a7aa-6891-4b57-a8b3-768130ffbbeb",
+          "category": "Wash Basins, Basin Mixers, Vanity & Mirrors",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787717891629",
+          "title": "Lavabi-da-parete-Wall-mounted-basins",
+          "fileName": "Falper_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787718820117_Catalogo-Lavabi-da-parete-Wall-mounted-basins.pdf?alt=media&token=8707660c-b4de-4dd0-83ce-2a03372bbc24",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787718820522_Catalogo-Lavabi-da-parete-Wall-mounted-basins_page1_cover.jpg?alt=media&token=705dcdf1-7dc3-45fe-a273-d48941dcc090",
+          "category": "Wash Basins, Basin Mixers, Vanity & Mirrors",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787718175192",
+          "title": "Lavabi-freestanding-washbasins",
+          "fileName": "Falper_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787718838719_Catalogo-Lavabi-freestanding-Freestanding-washbasins.pdf?alt=media&token=b82d5250-9075-47d8-b3ca-a55f77e158ac",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787718839179_Catalogo-Lavabi-freestanding-Freestanding-washbasins_page1_cover.jpg?alt=media&token=2e8e7bb6-59ab-40c5-9ad5-473f55f85139",
+          "category": "Wash Basins, Basin Mixers, Vanity & Mirrors",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787719098711",
+          "title": "lavamani-wash-hand-basins",
+          "fileName": "Falper_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719108240_Catalogo-lavamani-wash-hand-basins.pdf?alt=media&token=bccc04a3-850f-494f-8f9a-41bea426a583",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787719108683_Catalogo-lavamani-wash-hand-basins_page1_cover.jpg?alt=media&token=d9ac3d19-6748-4056-84e7-11ee75c82dfb",
+          "category": "Wash Basins, Basin Mixers, Vanity & Mirrors",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787719113879",
+          "title": "Piani-Integrati-in-Vetro",
+          "fileName": "Falper_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719137263_Catalogo-Piani-Integrati-in-Vetro.pdf?alt=media&token=54db818d-19d7-4bf7-bf98-89f392b34bef",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787719137682_Catalogo-Piani-Integrati-in-Vetro_page1_cover.jpg?alt=media&token=9e4c2065-bec9-4923-97b6-44cf3b85cd1d",
+          "category": "Wash Basins, Basin Mixers, Vanity & Mirrors",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "fima",
+      "brandName": "Fima Carlo Frattini",
+      "brandLogo": "/brands/logos/fima_logo.png",
+      "brandCategory": "Bathroom Fittings, Sanitaryware & Wellness",
+      "description": "FIMA Carlo Frattini is an Italian luxury fittings brand known for combining Italian design, technical precision, craftsmanship and innovation in premium bathroom and kitchen solutions.",
+      "sequenceNumber": 7,
+      "files": [
+        {
+          "id": "cat-1786517673266",
+          "title": "aesthetic",
+          "fileName": "Fima Carlo Frattini_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719239783_2026_aesthetic_ISSUE05_web.pdf?alt=media&token=82d837fb-caf8-4a85-b942-39dbccb41363",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787719241405_2026_aesthetic_ISSUE05_web_page1_cover.jpg?alt=media&token=d9c3d74c-f2ce-4619-9923-62eecf5cc4c6",
+          "category": "Bathroom Fittings, Sanitaryware & Wellness",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786517763690",
+          "title": "Slide",
+          "fileName": "Fima Carlo Frattini_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719261665_MAGAZINE_SLIDE_2026_.pdf?alt=media&token=7d646d65-b59d-41b1-9156-bff0bb345031",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787719262349_MAGAZINE_SLIDE_2026__page1_cover.jpg?alt=media&token=7e391297-799c-4306-ad1d-7bbdb6b44640",
+          "category": "Bathroom Fittings, Sanitaryware & Wellness",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786517812674",
+          "title": "Park Lane",
+          "fileName": "Fima Carlo Frattini_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719278272_PARK-LANE-Magazine-2025.pdf?alt=media&token=4c0399e8-6aa9-46d8-91a4-a82fdb455199",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787719279228_PARK-LANE-Magazine-2025_page1_cover.jpg?alt=media&token=a6acfacc-0563-4ed2-91d8-8a60197ffa3b",
+          "category": "Bathroom Fittings, Sanitaryware & Wellness",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786517856578",
+          "title": "SO",
+          "fileName": "Fima Carlo Frattini_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719295489_FIMANEWS_SO_2024.pdf?alt=media&token=7cac7e56-0755-476c-a81b-4e1d6a6345fc",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787719296108_FIMANEWS_SO_2024_page1_cover.jpg?alt=media&token=c9fe63e0-7a57-46a1-9156-1e8f80a0db4a",
+          "category": "Bathroom Fittings, Sanitaryware & Wellness",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "inkiostro-bianco",
+      "brandName": "Inkiostro Bianco",
+      "brandLogo": "/brands/logos/inkiostro_bianco_logo.png",
+      "brandCategory": "Wall Covering",
+      "description": "Inkiostro Bianco is an Italian creative brand specializing in artistic wallpaper, wooden wallcoverings and designer rugs, transforming interiors through creative and innovative surface solutions.",
+      "sequenceNumber": 8,
+      "files": [
+        {
+          "id": "cat-1",
+          "title": "Inkiostro Bianco Specification Catalog",
+          "fileName": "Inkiostro Bianco_Catalog.pdf",
+          "fileUrl": "/catalogues/Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "/catalogs/thumbnails/catalogo-materiaprima-2026-2a_thumb.jpg",
+          "category": "Wall Covering",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "mafi",
+      "brandName": "Mafi",
+      "brandLogo": "/brands/logos/mafi_logo.png",
+      "brandCategory": "Wooden Flooring",
+      "description": "mafi specialises in high-quality, 100% ecological natural wood floors and coordinated interior solutions, combining traditional craftsmanship with technical innovation.",
+      "sequenceNumber": 9,
+      "files": [
+        {
+          "id": "cat-1786524953157",
+          "title": "Mafi",
+          "fileName": "Mafi_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719454300_mafi_Catalog.pdf?alt=media&token=7ccb5d50-7217-400f-9fcd-cf5524760363",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787719454993_mafi_Catalog_page1_cover.jpg?alt=media&token=382cbbad-43f9-4724-baad-3240372b265a",
+          "category": "Wooden Flooring",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787719468168",
+          "title": "Terrasse_Faltblat",
+          "fileName": "Mafi_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719504953_Terrasse_Faltblat_210x210mm_EN.pdf?alt=media&token=ce93f5bb-8742-41c1-9c3e-532afa62dcb9",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787719507048_Terrasse_Faltblat_210x210mm_EN_page1_cover.jpg?alt=media&token=b03968f1-e401-459b-b4f7-8466e6fb9ef4",
+          "category": "Wooden Flooring",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "mirage",
+      "brandName": "Mirage",
+      "brandLogo": "/brands/logos/mirage_logo.png",
+      "brandCategory": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+      "description": "Mirage is an Italian ceramics brand specialising in porcelain stoneware flooring and wall coverings for residential, commercial and public spaces. The brand combines design, research, technological innovation and high technical performance.",
+      "sequenceNumber": 10,
+      "files": [
+        {
+          "id": "cat-1787722196873",
+          "title": "elysian",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722213021_catalogue-elysian-pdf.pdf?alt=media&token=ffbaef8f-b44c-48dd-8ea8-8041bda1c29c",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787722213687_catalogue-elysian-pdf_page1_cover.jpg?alt=media&token=2f422236-9d86-4e6b-a954-30057c29fa14",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787722226378",
+          "title": "elysian-travertini",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722242752_catalogue-elysian-travertini-pdf.pdf?alt=media&token=56fc8b6f-724b-4368-aeb8-c1bcc35348d9",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787722243170_catalogue-elysian-travertini-pdf_page1_cover.jpg?alt=media&token=ebb2c7d3-f700-4b59-90bb-6b776565017f",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787722337821",
+          "title": "clay",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722352726_catalogue-clay-pdf.pdf?alt=media&token=5af306bd-d87d-4c19-b02b-423f3b06d2a5",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787722353129_catalogue-clay-pdf_page1_cover.jpg?alt=media&token=66d13420-b3ed-433a-8732-b53ee5a105ee",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787722386395",
+          "title": "glocal",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722402344_catalogue-glocal-pdf.pdf?alt=media&token=15e60683-4239-415c-b5d4-d8265084f04b",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787722402850_catalogue-glocal-pdf_page1_cover.jpg?alt=media&token=60e65715-cb69-4c3b-b5e6-d410d4954f77",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787722432876",
+          "title": "indomita",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722451750_catalogue-indomita-pdf.pdf?alt=media&token=798d277a-98c0-4fd1-bf5e-18c44b38d0dc",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787722452684_catalogue-indomita-pdf_page1_cover.jpg?alt=media&token=b14ab238-1678-4bca-a802-44cd2eeaa86b",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787722468626",
+          "title": "izumi",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722487983_catalogue-izumi-pdf.pdf?alt=media&token=63c8d1b1-0377-4988-a456-a7636132fc8d",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787722488557_catalogue-izumi-pdf_page1_cover.jpg?alt=media&token=1fee012d-2f44-4109-8ba4-0431702be198",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787722495902",
+          "title": "jewels",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722514677_catalogue-jewels-2-0-pdf.pdf?alt=media&token=522d6f4d-2cbb-469e-bf66-52491ca2ddce",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787722515401_catalogue-jewels-2-0-pdf_page1_cover.jpg?alt=media&token=9bfa757d-d195-4e3d-86d6-a2796ca48134",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787722519088",
+          "title": "jurupa",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722603990_catalogue-jurupa-pdf.pdf?alt=media&token=ad62b887-4d96-40b2-a18a-dd4b05506fcd",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787722604427_catalogue-jurupa-pdf_page1_cover.jpg?alt=media&token=ed1c47df-e8d3-407b-b077-833e6368bbf8",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787724454935",
+          "title": "kao",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724472326_catalogue-kao-pdf.pdf?alt=media&token=493dcdb3-7fbd-4a5e-8ce6-fec120c10b8f",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787724472776_catalogue-kao-pdf_page1_cover.jpg?alt=media&token=dc6f0bcf-ffc8-4d69-a7ea-393ed828ce87",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787724462701",
+          "title": "lemmy",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724509871_catalogue-lemmy-pdf.pdf?alt=media&token=e8831948-9bc5-4dcc-9f84-f1f8f7438f0f",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787724510413_catalogue-lemmy-pdf_page1_cover.jpg?alt=media&token=2ca7771b-27bf-4991-b0b4-3c6f13c49fa4",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787724551422",
+          "title": "mand",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724565396_catalogue-mand-pdf.pdf?alt=media&token=dd6ecc21-1676-498e-9272-e3ab66570562",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787724565901_catalogue-mand-pdf_page1_cover.jpg?alt=media&token=5077d816-78a6-489c-9d59-8de83d309c9a",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787724551959",
+          "title": "motley",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724686835_catalogue-motley-pdf.pdf?alt=media&token=b4e9362a-0869-461b-bfb6-38925f2453fa",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787724687501_catalogue-motley-pdf_page1_cover.jpg?alt=media&token=e68148e4-728f-45e3-a67a-c8cc64675376",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787724552199",
+          "title": "nagomi",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724785148_catalogue-nagomi-pdf.pdf?alt=media&token=0d58728e-fb74-4abf-a953-0e6b2cd201c0",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787724786355_catalogue-nagomi-pdf_page1_cover.jpg?alt=media&token=646ea498-686f-4715-ba07-8b8f4b46390e",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787724552415",
+          "title": "na-me",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724870193_catalogue-na-me-pdf.pdf?alt=media&token=bf4ef773-242f-4729-8258-19b2275fbff3",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787724871062_catalogue-na-me-pdf_page1_cover.jpg?alt=media&token=701b083d-17be-4995-be6c-4bd329faa844",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787724552627",
+          "title": "nau",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724921918_catalogue-nau-pdf.pdf?alt=media&token=bd64b6a2-ab40-443a-9ce0-ca8174c9d87c",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787724922467_catalogue-nau-pdf_page1_cover.jpg?alt=media&token=9fdd637a-e97d-4ca6-9de1-e7f0b30de12a",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787724552830",
+          "title": "norr",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724950179_catalogue-norr-pdf.pdf?alt=media&token=8313d1ad-7a3c-4a46-b33d-a1ab3d658922",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787724950868_catalogue-norr-pdf_page1_cover.jpg?alt=media&token=548541de-a398-4a1d-a0c7-2f4938b02275",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787724553047",
+          "title": "oltrenero",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725013722_catalogue-oltrenero-pdf.pdf?alt=media&token=1f86b4cf-defb-42fc-90ee-3fdec4b97268",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787725014883_catalogue-oltrenero-pdf_page1_cover.jpg?alt=media&token=bd947e4c-ae62-4851-bdcd-ad7453ea70f4",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787724553243",
+          "title": "onyce",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725040160_catalogue-onyce-pdf.pdf?alt=media&token=379f6c79-9177-4d5b-bb69-b68c0e106a2d",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787725040808_catalogue-onyce-pdf_page1_cover.jpg?alt=media&token=ad6669ac-697c-4d5f-9ec6-869b85a0efe8",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787725088150",
+          "title": "oudh",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725114897_catalogue-oudh-pdf.pdf?alt=media&token=bcec1750-f141-4194-8e0b-2a3031e44599",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787725115598_catalogue-oudh-pdf_page1_cover.jpg?alt=media&token=e313ae46-bd04-47a5-b7b6-783d15f04b69",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787725088778",
+          "title": "papier",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725172568_catalogue-papier-pdf.pdf?alt=media&token=f024bd2f-e6ef-4871-a95a-87bb90649e7e",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787725173586_catalogue-papier-pdf_page1_cover.jpg?alt=media&token=2f04d0e4-0ca7-4be1-b15a-dc5a353ef165",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787725089378",
+          "title": "plumage",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725210432_catalogue-plumage-pdf.pdf?alt=media&token=85329fcb-2d2b-4ad8-925d-f2e970d25e86",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787725211874_catalogue-plumage-pdf_page1_cover.jpg?alt=media&token=1314a3fc-db0c-440f-8008-dff58676713d",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787725089946",
+          "title": "quarziti",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725265410_catalogue-quarziti-2-0-pdf.pdf?alt=media&token=d0bee196-ab01-4166-b457-c34ef65663e5",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787725266218_catalogue-quarziti-2-0-pdf_page1_cover.jpg?alt=media&token=040745eb-baad-43c6-a3e9-3a8b199b6314",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787725090562",
+          "title": "reflet",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725284288_catalogue-reflet-pdf.pdf?alt=media&token=85d87478-10aa-4021-9969-0601e152f387",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787725285218_catalogue-reflet-pdf_page1_cover.jpg?alt=media&token=2b279a64-f06e-4266-8918-3855e4453895",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787725091062",
+          "title": "signature",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725318931_catalogue-signature-pdf.pdf?alt=media&token=ae1aa6cb-f46e-48d4-ae1d-2f1fe7cf4f98",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787725319318_catalogue-signature-pdf_page1_cover.jpg?alt=media&token=6fd1d1a7-51ac-4dc9-b321-df077663dae7",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787725091538",
+          "title": "silverlake",
+          "fileName": "Mirage_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725338716_catalogue-silverlake-pdf.pdf?alt=media&token=1778012e-647b-4219-a8e9-0d767c76a0b7",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787725339259_catalogue-silverlake-pdf_page1_cover.jpg?alt=media&token=a13e5469-20bc-4b2f-ab3d-5f01a627c89a",
+          "category": "Surface Tiles, Outdoor Tiles & Façade Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "freedom-screens",
+      "brandName": "Freedom Screens",
+      "brandLogo": "/brands/logos/freedom_screens_logo.jpg",
+      "brandCategory": "Infinite Zip line, Smart Manual & Smart Motorised",
+      "description": "Freedom Screens is a specialist in retrofit retractable screening solutions, offering balcony, privacy, insect, sun and rain-protection screens. The brand combines style, quality and intelligent innovation in its screening systems.",
+      "sequenceNumber": 11,
+      "files": [
+        {
+          "id": "cat-1786526021641",
+          "title": "Freedom Screens",
+          "fileName": "Freedom Screens_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787726279919_Freedom_Screens_-_SOFTCOPY_2026.pdf?alt=media&token=bee5965b-ed44-4ff6-b6fc-769f0bd5bc0b",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787726281009_Freedom_Screens_-_SOFTCOPY_2026_page1_cover.jpg?alt=media&token=0c55fd7a-3ccb-4897-9ac9-dfb45c1914d4",
+          "category": "Infinite Zip line, Smart Manual & Smart Motorised",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "peelply",
+      "brandName": "Peelply",
+      "brandLogo": "/brands/logos/peelply_logo.png",
+      "brandCategory": "Plywood",
+      "description": "Engineered premium plywood and veneers.",
+      "sequenceNumber": 12,
+      "files": [
+        {
+          "id": "cat-1787705188214",
+          "title": "Plywood",
+          "fileName": "Peelply_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705119917_ALCHEMIST_web-1.pdf?alt=media&token=07b7bcc4-663b-4efa-9ff2-9c4a1344e4af",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787705207041_CATALOGO_drops_web_page1_cover.jpg?alt=media&token=9559c704-6377-4cce-83e8-214350eceeae",
+          "category": "Plywood",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "inclass",
+      "brandName": "Inclass",
+      "brandLogo": "/brands/logos/inclass_logo.png",
+      "brandCategory": "MillWork",
+      "description": "Contemporary Spanish designer lifestyle furniture.",
+      "sequenceNumber": 13,
+      "files": []
+    },
+    {
+      "id": "wow",
+      "brandName": "WOW",
+      "brandLogo": "/brands/logos/wow_logo.png",
+      "brandCategory": "Highlighter Tiles",
+      "description": "WOW Design is a Spanish tile design studio specializing in unique, high-value ceramic tiles for architecture and interior design. It focuses particularly on small-format tiles, distinctive shapes, colours, textures and finishes.",
+      "sequenceNumber": 14,
+      "files": [
+        {
+          "id": "cat-1787728967527",
+          "title": "3D BARS",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787728977747_3DBARS-CAT_low.pdf?alt=media&token=17d7895a-9dc2-465d-898a-ead12876af91",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787728979266_3DBARS-CAT_low_page1_cover.jpg?alt=media&token=c0a1a553-72b7-4ac4-9bba-c027e0c01fad",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787728985051",
+          "title": "ABBEY_STONE",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787728993958_ABBEY_STONE_low.pdf?alt=media&token=4c3e8de6-60d4-4bbd-b9a7-9dad4832bf6c",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787728994511_ABBEY_STONE_low_page1_cover.jpg?alt=media&token=67a6f738-020d-4fe6-883b-41c95075889e",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729030537",
+          "title": "ALCHEMIST",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729040733_ALCHEMIST_web-1.pdf?alt=media&token=9a7db08b-589a-41b3-b930-5a5e40d047d2",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729047857_ALCHEMIST_web-1_page1_cover.jpg?alt=media&token=cf55346c-6867-4242-ae5f-ae09fb98c639",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729030917",
+          "title": "AQUA",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729069116_AQUA_web_low-1.pdf?alt=media&token=d1ea08df-af1b-44eb-a142-7b0cdf512a8e",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729070301_AQUA_web_low-1_page1_cover.jpg?alt=media&token=8a501fde-1007-4d3a-a4b3-600c544c38d1",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729031133",
+          "title": "AQUARELLE",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729086676_AQUARELLE.pdf?alt=media&token=fc06a72d-3a4b-417f-b5c2-3dcff1ea028f",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729087496_AQUARELLE_page1_cover.jpg?alt=media&token=4e47053c-d9b0-448f-965f-58e81af1b44f",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729031305",
+          "title": "BITS",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729110670_BITS.pdf?alt=media&token=24fbcb0f-a3e0-4860-a95f-f8862e77a7df",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729111271_BITS_page1_cover.jpg?alt=media&token=4c937396-6416-4ed5-ab8b-3d19491afb52",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729031661",
+          "title": "Casablanca",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729126375_Casablanca_web.pdf?alt=media&token=3b6c1070-3295-4cc5-b548-c7c41676d2c4",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729126896_Casablanca_web_page1_cover.jpg?alt=media&token=bbde40e8-9ac4-4e8a-9282-aec6dd04e42f",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729031833",
+          "title": "Casbah",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729147064_Casbah.pdf?alt=media&token=6036044e-a4de-4668-8150-76290199ca75",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729147803_Casbah_page1_cover.jpg?alt=media&token=5163a89e-66f1-4f69-870d-68720f3dbb1e",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729031989",
+          "title": "drops",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729192274_CATALOGO_drops_web.pdf?alt=media&token=c14ea34e-4895-4ca5-9d94-bc9981a5ccc0",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729192858_CATALOGO_drops_web_page1_cover.jpg?alt=media&token=3bd7a6ca-7161-43fe-b535-0c2d30560da0",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729032165",
+          "title": "HEXA_baja",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729211932_CATALOGO_HEXA_baja.pdf?alt=media&token=6756c34d-976c-4c7e-aa7b-21ef98028d14",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729214239_CATALOGO_HEXA_baja_page1_cover.jpg?alt=media&token=cb92ad55-522e-450b-a54e-88080c3cdd27",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729032353",
+          "title": "ROOTS",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729234241_CATALOGO_ROOTS.pdf?alt=media&token=467df53d-8a76-462d-b94e-c7c34bf18622",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729237797_CATALOGO_ROOTS_page1_cover.jpg?alt=media&token=1e1d2b3a-8269-41c6-a9a9-c3cc0d5ddad0",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729032541",
+          "title": "Solid_baja",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729413870_catalogo_solid_baja.pdf?alt=media&token=ab86e8f4-3f74-48aa-a89f-89892a0dacb2",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729414699_catalogo_solid_baja_page1_cover.jpg?alt=media&token=02e9870f-7c0e-43c5-9f29-045553a423b0",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729032689",
+          "title": "TWIN-PEAKS",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729435903_CATALOGO_TWIN-PEAKS_low.pdf?alt=media&token=3cd4cda1-bd94-4cbe-8715-c9e7f676571a",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729436603_CATALOGO_TWIN-PEAKS_low_page1_cover.jpg?alt=media&token=667dd8fb-3ea1-49f0-bdc3-5a914c1417ab",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729032853",
+          "title": "60 Grados",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729456610_catalogo60Grados.pdf?alt=media&token=e164674f-1a0e-4d09-8536-5400ae17f0f2",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729457295_catalogo60Grados_page1_cover.jpg?alt=media&token=3f57c1d5-5600-43c7-ac8d-7b4bdaff4eba",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729033021",
+          "title": "Bejmat",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729474154_catalogoBejmat.pdf?alt=media&token=87a88ccd-9de1-4aa2-8a8b-77b9a095c204",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729475114_catalogoBejmat_page1_cover.jpg?alt=media&token=39004f18-eacc-4180-b618-3ebc8cfd896e",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729828194",
+          "title": "BOHO-baja",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729860581_catalogo-BOHO-baja.pdf?alt=media&token=5ffb96d2-b768-4235-b87d-12224ed94c09",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729861171_catalogo-BOHO-baja_page1_cover.jpg?alt=media&token=248017f7-6d6b-4c69-891b-8683d1f22132",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729828474",
+          "title": "Cottage",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729877177_catalogoCottage.pdf?alt=media&token=0041f3f7-8937-4783-9f31-69ac877b3227",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729878267_catalogoCottage_page1_cover.jpg?alt=media&token=67c6a68c-c120-4392-abed-63eecdf289dc",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729828670",
+          "title": "Crafted",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729939606_catalogoCrafted.pdf?alt=media&token=1410e832-0168-49a8-a091-e3ffaecb5e89",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729940966_catalogoCrafted_page1_cover.jpg?alt=media&token=40275d8f-b1c1-441a-8d35-813241a974f6",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729828870",
+          "title": "Enso",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729970538_catalogoEnso.pdf?alt=media&token=012b1fa6-3344-4988-b2aa-fe9e36360b77",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787729972160_catalogoEnso_page1_cover.jpg?alt=media&token=1193bdbd-d2a5-4fb1-b6df-63baeab6c7bf",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729829067",
+          "title": "FAYENZA",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730022691_CATALOGO-FAYENZA.pdf?alt=media&token=1c578e8c-d5f9-4f29-b03a-4e1f8e025feb",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730023574_CATALOGO-FAYENZA_page1_cover.jpg?alt=media&token=c8148134-5eee-4792-8e00-7046a5a0aedc",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729829259",
+          "title": "Fez",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730078275_catalogoFez_.pdf?alt=media&token=51df44a9-39bb-45dc-b468-a9e8cda279ff",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730078868_catalogoFez__page1_cover.jpg?alt=media&token=864c473e-0bb3-4199-81b0-06aa0e22af2f",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729829459",
+          "title": "Gea",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730134028_catalogoGea.pdf?alt=media&token=3de7d442-cf14-492a-be97-2883d096a8dc",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730134860_catalogoGea_page1_cover.jpg?alt=media&token=9452af17-7dd8-4921-a093-b39c5252d06d",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729829639",
+          "title": "Grace",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730169131_catalogoGrace-1.pdf?alt=media&token=0840a18d-09e8-415e-a2f0-057996d42298",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730169708_catalogoGrace-1_page1_cover.jpg?alt=media&token=a07717c3-df58-4007-a2f2-1c4f16057784",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729829851",
+          "title": "Gradient",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730221538_catalogoGradient-1.pdf?alt=media&token=4cd90382-8cc7-40a2-8781-1db1f003e593",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730243827_catalogoGradient-1_page1_cover.jpg?alt=media&token=4ef7fe35-409f-479a-b8ec-9ab40c4935f1",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729830082",
+          "title": "ICON",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730298857_CATALOGO-ICON-INOUT.pdf?alt=media&token=0cf86b28-1572-465a-a502-795590b1a15e",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730299925_CATALOGO-ICON-INOUT_page1_cover.jpg?alt=media&token=7a98fe60-5533-452d-823a-0c5d507c5a7a",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729830290",
+          "title": "LOVE-AFFAIRS",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730354470_CATALOGO-LOVE-AFFAIRS-web.pdf?alt=media&token=511adfd9-bc23-411c-8f03-45b81ae69840",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730355098_CATALOGO-LOVE-AFFAIRS-web_page1_cover.jpg?alt=media&token=76b2b758-8670-4b97-9450-b68f7dd152cd",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729830546",
+          "title": "Nouvelle-baja",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730379293_Catalogo-Nouvelle-baja.pdf?alt=media&token=754d5be3-7b94-41e9-bb33-b6a18c28fa87",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730380219_Catalogo-Nouvelle-baja_page1_cover.jpg?alt=media&token=9dc8bb6b-95ad-40c0-b417-3e3cbc9e136b",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787729830806",
+          "title": "Pottery",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730398039_catalogoPottery.pdf?alt=media&token=6223757b-46bd-4b22-bdb9-18c8f5e3179e",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730398853_catalogoPottery_page1_cover.jpg?alt=media&token=e07aa47d-ff4c-46d9-adff-0dedfeb004cb",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787730534066",
+          "title": "RASTER",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730566416_CATALOGO-RASTER.pdf?alt=media&token=b67d8ea7-2353-45dc-9dae-3402c2c33f95",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730567406_CATALOGO-RASTER_page1_cover.jpg?alt=media&token=0ec74605-ac9c-4586-bd66-f400cac11a04",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787730534278",
+          "title": "REEF-baja",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730593225_catalogo-REEF-baja.pdf?alt=media&token=3540d8ae-567e-4d1c-8da0-8ec20f1ede53",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730594023_catalogo-REEF-baja_page1_cover.jpg?alt=media&token=4ac07bf2-63a2-4e97-abaf-f41ea5c81b12",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787730534490",
+          "title": "Sabil-baja",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730672901_Catalogo-Sabil-baja.pdf?alt=media&token=2291cf1f-713f-461d-b4e4-e6d69b02a76d",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730673447_Catalogo-Sabil-baja_page1_cover.jpg?alt=media&token=7e482208-7b28-4d4b-8983-87d8e074140e",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787730534698",
+          "title": "STRIPES",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730702172_CATALOGO-STRIPES.pdf?alt=media&token=cdb8f6ea-1384-427d-a95c-8817003d455a",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730702910_CATALOGO-STRIPES_page1_cover.jpg?alt=media&token=2fac00c5-7d40-4453-b209-865a37184515",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787730534922",
+          "title": "Terre",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730721018_Catalogo-Terre.pdf?alt=media&token=e7e92825-fd9e-4767-85bb-62c6ef08799d",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730721561_Catalogo-Terre_page1_cover.jpg?alt=media&token=fbab70b3-a435-4c0d-8bf7-586d97ecfc3a",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787730535258",
+          "title": "TESSERAE",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730746283_CATALOGOTESSERAE__1_.pdf?alt=media&token=52d61dc1-a0be-4b26-84bc-e0ed37988eab",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730747278_CATALOGOTESSERAE__1__page1_cover.jpg?alt=media&token=fdd1c847-94c9-456e-853c-692cc1ab7d28",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787730535606",
+          "title": "TEXITURE",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730783898_CATALOGO-TEXITURE.pdf?alt=media&token=10e65657-92ee-4254-8ac9-6f8eb375b98e",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787730784548_CATALOGO-TEXITURE_page1_cover.jpg?alt=media&token=466cb564-bf1e-424a-95df-7934d25a27e1",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787734980946",
+          "title": "Vestige-baja",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735008209_Catalogo-Vestige-baja.pdf?alt=media&token=8c2e09c5-da72-41fb-b199-cb702e3829d7",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735009063_Catalogo-Vestige-baja_page1_cover.jpg?alt=media&token=2cf516c6-41e2-4085-bc91-065f903beb49",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787734981378",
+          "title": "STARDUST",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735044549_CATALOG-STARDUST.pdf?alt=media&token=6496f14b-630d-46d7-a785-5984fb87d605",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735045359_CATALOG-STARDUST_page1_cover.jpg?alt=media&token=6cda1ea8-1180-4cd1-af5c-c0519ffc8e30",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787734981706",
+          "title": "NOTES-baja",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735069551_COLOUR-NOTES-baja-1.pdf?alt=media&token=a18496a1-9665-44c2-850b-4d53a4333563",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735070072_COLOUR-NOTES-baja-1_page1_cover.jpg?alt=media&token=8d08ccec-1881-4ff3-8ed2-50b6614a267a",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787734982062",
+          "title": "CROSS-CUT-CAT",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735087251_CROSS-CUT-CAT_low-1.pdf?alt=media&token=00c44cf9-05e2-4c78-a4f9-13bb557b5c06",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735087852_CROSS-CUT-CAT_low-1_page1_cover.jpg?alt=media&token=00fe0ec8-8782-4d75-bbdc-b59d80c03b0f",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787734982446",
+          "title": "FACES",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735113161_FACES.pdf?alt=media&token=10d56155-a1dd-427b-bf37-6100b5c0e9a8",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735113804_FACES_page1_cover.jpg?alt=media&token=6d1f23d3-186f-4bc8-9896-f2211e22e701",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787734982788",
+          "title": "GLOW",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735135962_GLOW_web.pdf?alt=media&token=c206ce87-327b-44cc-8738-48bc4303ba6a",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735136429_GLOW_web_page1_cover.jpg?alt=media&token=30e5a37d-7ec5-40f1-805b-bb82bfd4c71e",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787734983156",
+          "title": "HALO-CAT",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735156900_HALO-CAT.pdf?alt=media&token=c29239d6-90b1-4c68-a2ef-20e6fdd03b6a",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735158129_HALO-CAT_page1_cover.jpg?alt=media&token=20d4fddd-45c4-45e3-9c26-16d5686e9cff",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787734983524",
+          "title": "HAMMER",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735211308_HAMMER.pdf?alt=media&token=8a6843b9-7631-4ace-8b76-66ece2351010",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735212156_HAMMER_page1_cover.jpg?alt=media&token=8b59aca7-af65-4d73-8dfe-0ff3f496412f",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787734983880",
+          "title": "LONDON-CALLING",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735243031_LONDON-CALLING.pdf?alt=media&token=48788d6f-48e7-4c35-a837-bb9eaab36bf3",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735243651_LONDON-CALLING_page1_cover.jpg?alt=media&token=a2dd4ac9-09cf-4d17-b14b-65fa4e4ccc89",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787734984184",
+          "title": "MARBLE-web-baja",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735275460_MARBLE-web-baja.pdf?alt=media&token=97deec56-7e5e-4874-8cb5-d26b050acd38",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735276140_MARBLE-web-baja_page1_cover.jpg?alt=media&token=0ba40539-1b1f-40d3-8e07-30b55f5fa2c4",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735358185",
+          "title": "MELANGE-CAT",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735394470_MELANGE-CAT-WEB_low.pdf?alt=media&token=10d5438e-108b-432e-8c07-792db31dc405",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735395030_MELANGE-CAT-WEB_low_page1_cover.jpg?alt=media&token=70ec885e-0a0a-41df-9cc6-6561f78a8beb",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735358549",
+          "title": "MICARE-CAT",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735423104_MICARE-CAT_WEB.pdf?alt=media&token=b3f13e0c-7d5c-443e-bc0a-13d773038e8d",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735423763_MICARE-CAT_WEB_page1_cover.jpg?alt=media&token=f734e1bb-457b-4ea1-bedf-b77a0a3d4376",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735358973",
+          "title": "POTTERS-baja",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735440238_POTTERS-baja-2.pdf?alt=media&token=57b77463-b36d-4b7f-8f48-6f64758e0bbb",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735440904_POTTERS-baja-2_page1_cover.jpg?alt=media&token=1ee68d92-90de-45ec-9279-5ad750f7dd13",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735359534",
+          "title": "Rebels",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735467287_Rebels-Catalog.pdf?alt=media&token=1845f8c2-2ebe-40f6-b0d3-c81399343018",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735467867_Rebels-Catalog_page1_cover.jpg?alt=media&token=a6509d28-0739-45a9-8c05-a4d4f7e40399",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735359951",
+          "title": "Skin",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735490203_Skin.pdf?alt=media&token=773e19fa-045c-4665-b996-a44cd93fbed2",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735491129_Skin_page1_cover.jpg?alt=media&token=01db6792-0f9c-4802-a06b-c9fd31b2e9d8",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735360323",
+          "title": "Spike-Bars",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735521880_Spike-Bars_web_low.pdf?alt=media&token=fc58819c-0074-4ede-a1d5-3ea4e142a35c",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735522543_Spike-Bars_web_low_page1_cover.jpg?alt=media&token=1fbc2774-d684-4143-ac97-86090d98a040",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735360771",
+          "title": "SUKABUMI",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735541630_SUKABUMI-web-baja.pdf?alt=media&token=5ac16ba4-3864-4045-bfd9-15ff74be3648",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735542226_SUKABUMI-web-baja_page1_cover.jpg?alt=media&token=c15a9cad-7d56-448e-b69a-b34f9dcede5c",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735361215",
+          "title": "SWEET-BARS",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735562123_SWEET-BARS-baja-1.pdf?alt=media&token=0eefec4b-3f06-43da-9b49-7d3d281d87c5",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735563143_SWEET-BARS-baja-1_page1_cover.jpg?alt=media&token=980c40b8-86ee-4106-b1a3-4ddc1eb60d0a",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735361652",
+          "title": "TRENCADIS",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735590004_TRENCADIS_web.pdf?alt=media&token=d4c1912e-caae-4ddf-be2b-da8f7c7d94a6",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735590564_TRENCADIS_web_page1_cover.jpg?alt=media&token=9a09abf8-5b27-4376-81b1-84095d2cae5c",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735362039",
+          "title": "Twister",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735637469_Twister_.pdf?alt=media&token=d2f6a384-61ed-4e45-bc96-58f468a4a796",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735638167_Twister__page1_cover.jpg?alt=media&token=8a945c4d-584e-434b-b53a-bc33ba26f595",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787735362407",
+          "title": "yoko",
+          "fileName": "WOW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735653238_yoko_web_baja.pdf?alt=media&token=fe68e013-71e6-4160-8f5e-079f129fe40a",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735653881_yoko_web_baja_page1_cover.jpg?alt=media&token=200bfaa7-b3a4-48db-ac55-b6266b1b91bc",
+          "category": "Highlighter Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "iww",
+      "brandName": "IWW",
+      "brandLogo": "/brands/logos/iww_logo.png",
+      "brandCategory": "Surface Tiles",
+      "description": "IW is a Spanish architectural water systems brand focused on design, engineering and material integrity. It develops integrated water systems that treat water as an architectural element within bathrooms and wellness spaces.",
+      "sequenceNumber": 15,
+      "files": [
+        {
+          "id": "cat-1786510239498",
+          "title": "Aeon",
+          "fileName": "IWW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735787665_IW_Catalogue_Aeon_2025-2.pdf?alt=media&token=28530437-1e15-46bc-93f0-3884a0c2cb31",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735788848_IW_Catalogue_Aeon_2025-2_page1_cover.jpg?alt=media&token=54898bbb-8d47-4d0b-aa23-96104ef10258",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786510272608",
+          "title": "ARC",
+          "fileName": "IWW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735809821_IW_Catalogue_ARC_2025.pdf?alt=media&token=3c1bb832-f935-41cb-9096-061af433d463",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735812109_IW_Catalogue_ARC_2025_page1_cover.jpg?alt=media&token=9cd88bf9-ffcd-4839-8168-026c5310f076",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786510302581",
+          "title": "316 Steel",
+          "fileName": "IWW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735843246_IW_Catalogue_316Steel_2026.pdf?alt=media&token=1ab93dd9-b9f4-483e-ac3e-c0747891ae64",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735844253_IW_Catalogue_316Steel_2026_page1_cover.jpg?alt=media&token=50e31570-26e3-4932-b4eb-9e2197ace889",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786510340515",
+          "title": "Icon",
+          "fileName": "IWW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735887423_IW_Catalogue_ICON_2024.pdf?alt=media&token=f85f06cf-904f-4259-a137-e384d9c16563",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735888704_IW_Catalogue_ICON_2024_page1_cover.jpg?alt=media&token=9b6c6217-a93a-495e-9aaf-353c61eca39e",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786510373761",
+          "title": "Cuadro",
+          "fileName": "IWW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735910816_IW_CUADRO_2024.pdf?alt=media&token=b47c8ce8-f23c-4502-99c0-dd6b6c761614",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735911903_IW_CUADRO_2024_page1_cover.jpg?alt=media&token=833ac292-17b5-4b48-b3c2-6cdcaa745a37",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786510394891",
+          "title": "Oscuro",
+          "fileName": "IWW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735928849_IW_OSCURO_2025.pdf?alt=media&token=dee18d26-2642-4372-8f97-1713eb87b561",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735929378_IW_OSCURO_2025_page1_cover.jpg?alt=media&token=16c9df64-c338-41c4-923e-de60ac4b6771",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786510429709",
+          "title": "Flow",
+          "fileName": "IWW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735966903_IW-FLOW-2025-1.pdf?alt=media&token=6f9710a2-54ac-4c7e-aa7c-00ab0cc657c0",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735968181_IW-FLOW-2025-1_page1_cover.jpg?alt=media&token=7fba804e-3a38-4d10-a13d-a8032e79819a",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1786510450401",
+          "title": "Outdoor",
+          "fileName": "IWW_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735989348_IW-Outdoor-2025.pdf?alt=media&token=752c1070-24e9-49f3-af1e-002d0290db55",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787735989964_IW-Outdoor-2025_page1_cover.jpg?alt=media&token=e6ddcc70-af94-4df7-a449-21a0c583fd57",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "living-ceramica",
+      "brandName": "Living Ceramica",
+      "brandLogo": "/brands/logos/living-ceramica_logo.png",
+      "brandCategory": "Surface Tiles",
+      "description": "Livingceramics creates unique ceramic solutions for interior design and architecture, with innovation and design as fundamental pillars of its work. Its portfolio includes porcelain, wall and floor tiles, large-format surfaces, bathroom furniture and washbasins.",
+      "sequenceNumber": 16,
+      "files": []
+    },
+    {
+      "id": "florim",
+      "brandName": "Florim",
+      "brandLogo": "/brands/logos/florim_logo.png",
+      "brandCategory": "Surface Tiles",
+      "description": "Florim is an Italian company specialising in porcelain surfaces for architecture and interior design, offering solutions for floors, walls, countertops and furnishings. The brand combines design, technological innovation, quality and sustainability.",
+      "sequenceNumber": 17,
+      "files": [
+        {
+          "id": "cat-1787736733368",
+          "title": "FORMATECH",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736758177_Cat__FORMATECH.pdf?alt=media&token=5b50a2bd-5b02-4e15-9862-7356abc2333d",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787736759044_Cat__FORMATECH_page1_cover.jpg?alt=media&token=fed8e77d-ca97-414c-8e1e-01030c7c5185",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736760640",
+          "title": "Artifact",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736778713_Cat_Artifact.pdf?alt=media&token=958db3c8-4c6e-48b8-aec1-f2466987d163",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787736779421_Cat_Artifact_page1_cover.jpg?alt=media&token=709b1137-ac1d-4bf6-8687-8e53bcfcddd2",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736761108",
+          "title": "Atmosphères",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736795810_Cat_Atmosph_res.pdf?alt=media&token=0dc92304-4e15-4335-902b-7bfa031e5848",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787736796949_Cat_Atmosph_res_page1_cover.jpg?alt=media&token=b0a03501-6078-4971-a292-316b5dda00bd",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736761448",
+          "title": "Authentic Luxe",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736817930_Cat_Authentic_Luxe.pdf?alt=media&token=1150e088-0644-4bf0-bd19-1e546d54a230",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787736819019_Cat_Authentic_Luxe_page1_cover.jpg?alt=media&token=f7bc220e-08dd-448b-85ef-95f9e963a68a",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736761976",
+          "title": "B&W_Marble",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736841014_Cat_B_W_Marble.pdf?alt=media&token=95809724-7090-4ff8-b2f7-e9fe37900442",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787736841891_Cat_B_W_Marble_page1_cover.jpg?alt=media&token=95b80a21-e780-4f65-8c69-df329790d423",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736762172",
+          "title": "Biotech",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736940478_Cat_Biotech.pdf?alt=media&token=fd9413ba-9c05-4aae-998b-dc13b41f8206",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787736941245_Cat_Biotech_page1_cover.jpg?alt=media&token=e6e25dfc-2b11-489b-81ef-30aec5f7ad38",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736762352",
+          "title": "Buildtech",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736974520_Cat_Buildtech.pdf?alt=media&token=56a399be-b26b-468e-a5d4-2e79cc2c78b2",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787736975172_Cat_Buildtech_page1_cover.jpg?alt=media&token=c23a81c3-3659-4164-8c6b-b1bfbaa9c16f",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736762532",
+          "title": "CASUAL LIFE",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738203285_Cat_CASUAL_LIFE.pdf?alt=media&token=ea3a32ce-c95e-49fb-bc13-7bdec3907d87",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738203922_Cat_CASUAL_LIFE_page1_cover.jpg?alt=media&token=cca07372-46da-4345-8302-b9f237d13d0a",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736762708",
+          "title": "Coretech",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738227980_Cat_Coretech.pdf?alt=media&token=8397b4b5-3f54-4501-b968-4ac2d4768bb0",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738228983_Cat_Coretech_page1_cover.jpg?alt=media&token=57517361-7b14-4746-8997-688e3906d648",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736762880",
+          "title": "Crayons",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738256540_Cat_Crayons.pdf?alt=media&token=5fd856f7-f02d-4405-ac13-649ab11ad37c",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738257647_Cat_Crayons_page1_cover.jpg?alt=media&token=1d0916d0-90f9-4021-b87a-1db041e52e9e",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736763056",
+          "title": "Earthech",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738287641_Cat_Earthech.pdf?alt=media&token=cc659e96-ee31-4531-a805-54abf762f94a",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738288444_Cat_Earthech_page1_cover.jpg?alt=media&token=f4c5e3d1-6ba6-43b4-b664-7f2adec2f1bc",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736763228",
+          "title": "Easy Life",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738310108_Cat_Easy_Life.pdf?alt=media&token=a4dc4a5e-7656-41f0-8aae-792c77a0ffaf",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738310901_Cat_Easy_Life_page1_cover.jpg?alt=media&token=34c3fb4a-c562-438b-be38-c537df6d66ce",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736763417",
+          "title": "Eccentric Luxe",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738334875_Cat_Eccentric_Luxe.pdf?alt=media&token=6a639c0b-533b-4df8-ac85-6d0f4b4ea38e",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738335887_Cat_Eccentric_Luxe_page1_cover.jpg?alt=media&token=5fabfcdf-5127-4715-942d-bc7de14366b1",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736763600",
+          "title": "Elemental Stone",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738393144_Cat_Elemental_Stone.pdf?alt=media&token=784b6b26-ca5d-43a1-b343-be2aa1ed4613",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738394087_Cat_Elemental_Stone_page1_cover.jpg?alt=media&token=bc1d325a-7151-471c-96cb-7633f8e541c4",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787736763852",
+          "title": "Essential Mood",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738432079_Cat_Essential_Mood.pdf?alt=media&token=0512daf3-4978-4772-bd37-13f0ac69da3f",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738433162_Cat_Essential_Mood_page1_cover.jpg?alt=media&token=05bc0fe2-7429-4c9b-9a0c-2ba2c1931a69",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787738515115",
+          "title": "Etoile",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738543874_Cat_Etoile.pdf?alt=media&token=6202d22f-8d43-470c-b694-a3ed3e445223",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738544818_Cat_Etoile_page1_cover.jpg?alt=media&token=bddb9ba3-e076-4f17-9b64-551c1b10167e",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787738515491",
+          "title": "Flowtech",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738637280_Cat_Flowtech.pdf?alt=media&token=de474cb8-157a-42fb-9ab2-39b05c3ad3b2",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738638345_Cat_Flowtech_page1_cover.jpg?alt=media&token=788ee67c-af6b-433d-ab6d-17781b356714",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787738516071",
+          "title": "Heritage Luxe",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738659743_Cat_Heritage_Luxe.pdf?alt=media&token=ea9b14fc-b895-4d1d-816c-988066f54202",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738660910_Cat_Heritage_Luxe_page1_cover.jpg?alt=media&token=7338f973-3097-47cf-8041-f2c1237f3dcd",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787738516350",
+          "title": "Classici",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738686294_Cat_I_Classici.pdf?alt=media&token=20d649fd-4809-4424-9521-ad4193525f4b",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738687344_Cat_I_Classici_page1_cover.jpg?alt=media&token=0336619d-df37-4a80-9d8d-66f7d71720e8",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787738516711",
+          "title": "filati",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738708023_Cat_I_filati.pdf?alt=media&token=f3558c59-9864-446f-beb5-590208ec30c1",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738709303_Cat_I_filati_page1_cover.jpg?alt=media&token=c8027a64-b694-46ce-a5a4-e22ef5531d98",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787738517035",
+          "title": "ICONIC LIFE",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738741401_Cat_ICONIC_LIFE.pdf?alt=media&token=c1d73040-f7a7-4123-b88d-26ed70fea144",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738742114_Cat_ICONIC_LIFE_page1_cover.jpg?alt=media&token=dd5eea2a-fbe5-42de-9895-f7f1f71fc1d0",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787738517447",
+          "title": "La Roche",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738761725_Cat_La_Roche.pdf?alt=media&token=2106521d-f089-4353-874d-d1a8a32b2bd5",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738762493_Cat_La_Roche_page1_cover.jpg?alt=media&token=f12e865c-4df2-475f-bfd7-a19c20aba5c5",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787738517799",
+          "title": "Les Bijoux",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738850391_Cat_Les_Bijoux.pdf?alt=media&token=1f2455e2-a617-4d32-844e-e3b5b985c7ee",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787738851207_Cat_Les_Bijoux_page1_cover.jpg?alt=media&token=827fd574-c38b-4ffb-85ea-efa1be221512",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787739478574",
+          "title": "Les Origines",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739531152_Cat_Les_Origines.pdf?alt=media&token=972d6920-79e1-4c74-9d50-8acafa4dd4b2",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787739532131_Cat_Les_Origines_page1_cover.jpg?alt=media&token=32715fcf-a445-471e-bf6e-9c2ae297d80f",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787739478866",
+          "title": "Maps",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739590152_Cat_Maps.pdf?alt=media&token=004de113-89fe-4467-a810-20ad2147ee84",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787739591022_Cat_Maps_page1_cover.jpg?alt=media&token=ee481593-cefe-4c7e-a306-abc6239654f1",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787739479126",
+          "title": "Match-Up",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739614906_Cat_Match-Up.pdf?alt=media&token=fbf52792-a078-43db-9eb2-c6fa7d471e07",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787739615844_Cat_Match-Up_page1_cover.jpg?alt=media&token=1086cfd6-e70a-40b6-a483-a249bb28ba68",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787739479442",
+          "title": "Matières",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739642418_Cat_Mati_res.pdf?alt=media&token=fe663fb2-37f1-4dc9-96a9-b739988ff1a2",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787739643364_Cat_Mati_res_page1_cover.jpg?alt=media&token=c4a1df16-709e-41fe-a5f0-1a68d70bd9f4",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787739479842",
+          "title": "natural_stone",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739675273_cat_natural_stone.pdf?alt=media&token=f346f911-e88f-43cb-8f41-26820dd2c2ea",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787739675901_cat_natural_stone_page1_cover.jpg?alt=media&token=7a9abaab-6b3a-4013-9fc9-171f0094da59",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787739480404",
+          "title": "Nature_Mood",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739695129_Cat_Nature_Mood__1_.pdf?alt=media&token=d506f678-ef7a-42ae-b8d0-1d687f25abf7",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787739696123_Cat_Nature_Mood__1__page1_cover.jpg?alt=media&token=f1bd7072-9a6e-4704-80ab-bbdd503ce71e",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787739480812",
+          "title": "Neutra 6.0",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739725669_Cat_Neutra_6.0.pdf?alt=media&token=eb61e75b-0640-4cc5-8f49-7235f8e82ce1",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787739726415_Cat_Neutra_6_0_page1_cover.jpg?alt=media&token=5265258e-3d5b-4e70-bc36-8b5b2a6d94de",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740137473",
+          "title": "Oaky Life",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741303908_Cat_Oaky_Life.pdf?alt=media&token=5b30f9e0-d11e-4beb-9407-bf7f2501f9f9",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741305382_Cat_Oaky_Life_page1_cover.jpg?alt=media&token=5201d0c9-939f-47f1-89ac-6a6c6041dd80",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740137685",
+          "title": "Onyx&More",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741334294_Cat_Onyx_More.pdf?alt=media&token=9baa52f4-0246-4c72-a404-c7378d98885f",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741335559_Cat_Onyx_More_page1_cover.jpg?alt=media&token=c5e6f14b-742d-4f2b-8fbe-cfd67359c162",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740137897",
+          "title": "Planches",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741366741_Cat_Planches.pdf?alt=media&token=dec82f39-413c-400b-a090-aa420384c153",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741367965_Cat_Planches_page1_cover.jpg?alt=media&token=4ed5c50d-61d4-4048-8aa6-47d93720e0fe",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740138125",
+          "title": "Plimatech",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741389991_Cat_Plimatech.pdf?alt=media&token=c52d1d95-76ff-4a9b-8558-c0923bb65b5f",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741390950_Cat_Plimatech_page1_cover.jpg?alt=media&token=3a01f140-f055-46be-8f4b-2c73ed6ed64b",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740138354",
+          "title": "Prexious",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741418304_Cat_Prexious.pdf?alt=media&token=8b32c5d3-fa87-4ce4-a8ca-2fd53b96f19b",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741419219_Cat_Prexious_page1_cover.jpg?alt=media&token=8a5359af-dcee-4a09-bf7c-4fb1456df9ba",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740138573",
+          "title": "Rawtech",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741442334_Cat_Rawtech.pdf?alt=media&token=b1c48f46-c7e7-4fde-a479-73e02a80e1a6",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741443182_Cat_Rawtech_page1_cover.jpg?alt=media&token=2078de09-894f-4a9f-8bbf-e54028db3c2d",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740138837",
+          "title": "Reves",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741490349_Cat_Reves.pdf?alt=media&token=086d4ba3-7f42-4aef-9b7b-a1aad46e931f",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741491266_Cat_Reves_page1_cover.jpg?alt=media&token=8273f2e8-d3d6-4396-99d1-aeede2f7cebe",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740139061",
+          "title": "RINASCENZA",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741544020_Cat_RINASCENZA.pdf?alt=media&token=b52e027c-9869-4581-b65b-d4f4d23716e8",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741545177_Cat_RINASCENZA_page1_cover.jpg?alt=media&token=40c4295c-1af2-464d-aeae-60f5c2cbff77",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740139281",
+          "title": "Rock_Salt",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741776528_Cat_Rock_Salt.pdf?alt=media&token=4943ec2e-d8c1-47b0-82a8-a083d555ba16",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741777686_Cat_Rock_Salt_page1_cover.jpg?alt=media&token=bf356d91-d3b3-4283-8ab9-747ee1b076ec",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740139507",
+          "title": "Sensi",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741821741_Cat_Sensi.pdf?alt=media&token=1a04f8b9-dcc0-49aa-b6c1-e16feb92d04d",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741822857_Cat_Sensi_page1_cover.jpg?alt=media&token=344cddf9-7ecc-4caf-80c9-65e68ed1ef0b",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740139743",
+          "title": "Stones&More 2.0",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741858203_Cat_Stones_More_2.0.pdf?alt=media&token=eb56ed49-22b1-4a40-a2da-e74309bd49c1",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741859378_Cat_Stones_More_2_0_page1_cover.jpg?alt=media&token=f2161436-3955-4307-8808-f39cfb3aa52e",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740139971",
+          "title": "Stontech 4",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741884241_Cat_Stontech_4.pdf?alt=media&token=9fe7c828-5fab-4f1b-9c27-1c55bb844ca4",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741885324_Cat_Stontech_4_page1_cover.jpg?alt=media&token=989ed3c4-7c22-48ab-ad65-56736d7a8432",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740140183",
+          "title": "Timeless",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741905189_Cat_Timeless.pdf?alt=media&token=4b944b99-05d9-4883-be08-cf2daadbebc0",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741906098_Cat_Timeless_page1_cover.jpg?alt=media&token=a99aa793-3709-47da-965c-57114c0d75ad",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740140407",
+          "title": "walks",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741927157_cat_walks.pdf?alt=media&token=599c9e17-4c8b-4f00-8a77-229e2a83e688",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741928008_cat_walks_page1_cover.jpg?alt=media&token=3d540bab-bd9c-4f18-ad05-a2888f4513f5",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787740140715",
+          "title": "Wood Slate life",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741970492_Cat_Wood_Slate_life.pdf?alt=media&token=49d890f5-763c-4b22-95ba-b273a1c12351",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787741971601_Cat_Wood_Slate_life_page1_cover.jpg?alt=media&token=69697a87-78f0-40ea-b242-292a4dcad5ef",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787743229513",
+          "title": "wooden_tile_of_cdc",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787743256394_cat_wooden_tile_of_cdc.pdf?alt=media&token=16f3d63d-c3a3-413a-ab51-d6c8bab55017",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787743257131_cat_wooden_tile_of_cdc_page1_cover.jpg?alt=media&token=6056b993-25cb-497e-ab20-c46303c78579",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787743230209",
+          "title": "SensiColore",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787743280475_CRE-SensiColore-Catalogo-0925.pdf?alt=media&token=491b86ff-da62-4abd-ad8c-2d326debecd6",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787743286074_CRE-SensiColore-Catalogo-0925_page1_cover.jpg?alt=media&token=39f4347b-94ff-4bff-a574-04887e375ebc",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787743230838",
+          "title": "SensiEtna",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787743330322_CRE-SensiEtna-Catalogo-0925.pdf?alt=media&token=852f63aa-41fa-41ce-a6f3-d483be491027",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787743334027_CRE-SensiEtna-Catalogo-0925_page1_cover.jpg?alt=media&token=9d7562ee-755e-4eef-95c7-4379a9e11a5c",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787743231376",
+          "title": "LUX-mystic-luxe-rivista",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787743392174_LUX-mystic-luxe-rivista.pdf?alt=media&token=3fafc348-1aa4-4c9b-8548-b61dc1325da4",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787743393124_LUX-mystic-luxe-rivista_page1_cover.jpg?alt=media&token=20d461f6-1a3e-4ddf-ae73-6e1a5bb33dcb",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        },
+        {
+          "id": "cat-1787743231937",
+          "title": "Rivista_Stone Life",
+          "fileName": "Florim_Catalog.pdf",
+          "fileUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787743483571_Rivista_Stone_Life.pdf?alt=media&token=40df562e-b0f1-49f2-b647-4fb43e8d5b10",
+          "fileSize": "PDF Document",
+          "pageCount": 1,
+          "coverImage": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalog_Covers%2F1787743484518_Rivista_Stone_Life_page1_cover.jpg?alt=media&token=f6e2b30a-1bf7-496e-bd44-4b1e32b99d94",
+          "category": "Surface Tiles",
+          "createdAt": "2026-09-07T09:33:37.216Z"
+        }
+      ]
+    },
+    {
+      "id": "gelli",
+      "brandName": "Gelli",
+      "brandLogo": "/brands/brand_8_2.png",
+      "brandCategory": "Bathroom Accessories",
+      "description": "Artisanal decorative glass and mirrors.",
+      "sequenceNumber": 18,
+      "files": []
+    },
+    {
+      "id": "jacuzzi",
+      "brandName": "Jacuzzi",
+      "brandLogo": "/brands/logos/jacuzzi_logo.png",
+      "brandCategory": "Wellness",
+      "description": "Jacuzzi is a pioneering wellness and hydrotherapy brand, best known for its hot tubs, whirlpool baths and innovative water-therapy products. The brand continues to combine hydrotherapy, design, engineering and wellness technology.",
+      "sequenceNumber": 19,
+      "files": []
+    },
+    {
+      "id": "alex-turco",
+      "brandName": "Alex Turco",
+      "brandLogo": "/brands/logos/alex-turco_logo.png",
+      "brandCategory": "Wall Art Panels",
+      "description": "Alex Turco is an Italian artist and Art Designer known for creating handmade artistic surfaces, panels, paintings and collectible design pieces. His work combines art, interior design, photography, digital imagery and handcrafted materials such as epoxy resin.",
+      "sequenceNumber": 20,
+      "files": []
+    }
+  ],
+  "deletedIds": {
+    "services": []
   }
 }

@@ -13,7 +13,7 @@ export default function AdminDropdownsPage() {
   const fetchDropdowns = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/dropdowns");
+      const res = await fetch(`/api/dropdowns?t=${Date.now()}`, { cache: "no-store" });
       const json = await res.json();
       if (json.success) setItems(json.data);
     } catch (error) {
@@ -55,12 +55,14 @@ export default function AdminDropdownsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure?")) return;
+    setItems((prev) => prev.filter((item) => item.id !== id));
     try {
       await fetch(`/api/dropdowns?id=${id}`, { method: "DELETE" });
       fetchDropdowns();
     } catch (error) {
       console.error("Error deleting dropdown:", error);
       alert("Failed to delete dropdown.");
+      fetchDropdowns();
     }
   };
 

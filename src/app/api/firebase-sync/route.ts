@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { storage } from "@/lib/firebase";
+import { ref as fbStorageRef, uploadString } from "firebase/storage";
 import {
   readJsonStore,
   invalidateMemoryCache,
@@ -17,6 +19,12 @@ import {
   getBlogsStore,
   getServicesStore,
   getTestimonialsStore,
+  getDeletedIdsStore,
+  getCareersStore,
+  getAllFAQsStore,
+  getTaxonomiesStore,
+  getPagesStore,
+  getDownloadFoldersStore,
 } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -26,49 +34,86 @@ const FIREBASE_RTDB_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || "http
 
 async function pushToFirebase(key: string, data: any) {
   if (data === undefined || data === null) return;
-  await Promise.allSettled([
-    fetch(`${FIREBASE_RTDB_URL}/store/${key}.json`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }),
-    fetch(`${FIREBASE_RTDB_URL}/${key}.json`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }),
-  ]);
+  // 1. Authoritative Cloud Store: Firebase Storage (Permanent across all serverless instances)
+  try {
+    const r = fbStorageRef(storage, `store/${key}.json`);
+    await uploadString(r, JSON.stringify(data), "raw");
+  } catch (err) {
+    console.error(`Firebase Storage push failed for ${key}:`, err);
+  }
+
+  // 2. Secondary RTDB
+  try {
+    await Promise.allSettled([
+      fetch(`${FIREBASE_RTDB_URL}/store/${key}.json`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+      fetch(`${FIREBASE_RTDB_URL}/${key}.json`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    ]);
+  } catch (_) {}
 }
 
 /**
  * POST /api/firebase-sync
- * Force-pushes ALL store data to Firebase RTDB and revalidates all public pages.
+ * Force-pushes ALL store data to Firebase Storage & RTDB and revalidates all public pages.
  */
 export async function POST() {
   try {
     // 1. Invalidate memory caches first
     invalidateMemoryCache();
 
-    // 2. Read latest master JSON store
-    const localStore = readJsonStore();
+    // 2. Fetch authoritative active collections
+    const [
+      brands,
+      categories,
+      collections,
+      products,
+      projects,
+      team,
+      joinBanner,
+      settings,
+      catalogSettings,
+      roadmap,
+      catalogs,
+      blogs,
+      services,
+      testimonials,
+      deletedIds,
+      careers,
+      faqs,
+      taxonomies,
+      pages,
+      downloadFolders,
+    ] = await Promise.all([
+      getBrandsStore(),
+      getCategoriesStore(),
+      getAllCollectionsStore(),
+      getAllProductsStore(),
+      getAllProjectsStore(),
+      getTeamStore(),
+      getTeamJoinBannerStore(),
+      getSiteSettingsStore(),
+      getCatalogSettingsStore(),
+      getRoadmapStore(),
+      getCatalogsStore(),
+      getBlogsStore(),
+      getServicesStore(),
+      getTestimonialsStore(),
+      getDeletedIdsStore(),
+      getCareersStore(),
+      getAllFAQsStore(),
+      getTaxonomiesStore(),
+      getPagesStore(),
+      getDownloadFoldersStore(),
+    ]);
 
-    // 3. Fetch any missing collections with fallback getters
-    const brands = (localStore.brands && localStore.brands.length > 0) ? localStore.brands : await getBrandsStore();
-    const categories = (localStore.categories && localStore.categories.length > 0) ? localStore.categories : await getCategoriesStore();
-    const collections = (localStore.collections && localStore.collections.length > 0) ? localStore.collections : await getAllCollectionsStore();
-    const products = (localStore.products && localStore.products.length > 0) ? localStore.products : await getAllProductsStore();
-    const projects = (localStore.projects && localStore.projects.length > 0) ? localStore.projects : await getAllProjectsStore();
-    const team = (localStore.team && localStore.team.length > 0) ? localStore.team : await getTeamStore();
-    const joinBanner = localStore.joinBanner || await getTeamJoinBannerStore();
-    const settings = localStore.settings || await getSiteSettingsStore();
-    const catalogSettings = localStore.catalogSettings || await getCatalogSettingsStore();
-    const roadmap = (localStore.roadmap && localStore.roadmap.length > 0) ? localStore.roadmap : await getRoadmapStore();
-    const catalogs = (localStore.catalogs && localStore.catalogs.length > 0) ? localStore.catalogs : ((localStore.pdfCatalogs && localStore.pdfCatalogs.length > 0) ? localStore.pdfCatalogs : await getCatalogsStore());
-    const blogs = (localStore.blogs && localStore.blogs.length > 0) ? localStore.blogs : await getBlogsStore();
-    const services = (localStore.services && localStore.services.length > 0) ? localStore.services : await getServicesStore();
-    const testimonials = (localStore.testimonials && localStore.testimonials.length > 0) ? localStore.testimonials : await getTestimonialsStore();
-
-    // 4. Push all collections to Firebase in parallel
+    // 3. Push all collections to Firebase in parallel
     await Promise.all([
       pushToFirebase("brands", brands),
       pushToFirebase("categories", categories),
@@ -85,6 +130,12 @@ export async function POST() {
       pushToFirebase("blogs", blogs),
       pushToFirebase("services", services),
       pushToFirebase("testimonials", testimonials),
+      pushToFirebase("deletedIds", deletedIds),
+      pushToFirebase("careers", careers),
+      pushToFirebase("faqs", faqs),
+      pushToFirebase("taxonomies", taxonomies),
+      pushToFirebase("pages", pages),
+      pushToFirebase("downloadFolders", downloadFolders),
     ]);
 
     // 5. Invalidate memory cache again to ensure fresh reads

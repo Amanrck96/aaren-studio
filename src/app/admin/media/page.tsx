@@ -16,7 +16,7 @@ export default function AdminMediaPage() {
   const fetchMedia = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/media?t=" + Date.now());
+      const res = await fetch("/api/media?t=" + Date.now(), { cache: "no-store" });
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) setMedia(json.data);
     } catch (err) {
@@ -123,12 +123,14 @@ export default function AdminMediaPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this media asset?")) return;
+    setMedia((prev) => prev.filter((m) => m.id !== id));
     try {
       await fetch(`/api/media?id=${id}`, { method: "DELETE" });
       fetchMedia();
     } catch (err) {
       console.error(err);
       alert("Failed to delete media");
+      fetchMedia();
     }
   };
 

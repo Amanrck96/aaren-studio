@@ -162,22 +162,25 @@ export default function AdminProductsPage() {
   // Delete product - calls API so it is permanently removed from DB
   const handleDeleteProduct = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
+    setProducts((prev) => prev.filter((p) => p.id !== id));
     try {
       const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" });
       if (!res.ok) {
         showToast("Delete failed: HTTP " + res.status);
+        fetchProducts();
         return;
       }
       const json = await res.json();
       if (json.success) {
-        setProducts((prev) => prev.filter((p) => p.id !== id));
         showToast("Product permanently deleted from catalog");
       } else {
         showToast("Delete failed: " + (json.error || "Unknown error"));
+        fetchProducts();
       }
     } catch (err) {
       console.error(err);
       showToast("Delete failed. Please try again.");
+      fetchProducts();
     }
   };
 

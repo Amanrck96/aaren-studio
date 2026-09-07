@@ -13,7 +13,7 @@ export default function AdminServicesPage() {
   const fetchServices = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/services");
+      const res = await fetch(`/api/services?t=${Date.now()}`, { cache: "no-store" });
       const json = await res.json();
       if (json.success) setServices(json.data);
     } catch (err) {
@@ -54,12 +54,14 @@ export default function AdminServicesPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this service?")) return;
+    setServices((prev) => prev.filter((s) => s.id !== id));
     try {
       await fetch(`/api/services?id=${id}`, { method: "DELETE" });
       fetchServices();
     } catch (err) {
       console.error(err);
       alert("Error deleting service.");
+      fetchServices();
     }
   };
 

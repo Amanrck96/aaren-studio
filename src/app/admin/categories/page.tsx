@@ -22,7 +22,7 @@ export default function AdminCategoriesPage() {
   const fetchCategories = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/categories");
+      const res = await fetch(`/api/categories?t=${Date.now()}`, { cache: "no-store" });
       const json = await res.json();
       if (json.success) setCategories(json.data);
     } catch (err) {
@@ -63,11 +63,13 @@ export default function AdminCategoriesPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this category?")) return;
+    setCategories((prev) => prev.filter((c) => c.id !== id));
     try {
       await fetch(`/api/categories?id=${id}`, { method: "DELETE" });
       fetchCategories();
     } catch (err: any) {
       alert("Error: " + err.message);
+      fetchCategories();
     }
   };
 

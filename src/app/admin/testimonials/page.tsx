@@ -12,7 +12,7 @@ export default function AdminTestimonialsPage() {
 
   const fetchTestimonials = async () => {
     try {
-      const res = await fetch("/api/testimonials");
+      const res = await fetch(`/api/testimonials?t=${Date.now()}`, { cache: "no-store" });
       const json = await res.json();
       if (json.success) setTestimonials(json.data);
     } catch (e: any) {
@@ -49,11 +49,13 @@ export default function AdminTestimonialsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure?")) return;
+    setTestimonials((prev) => prev.filter((t) => t.id !== id));
     try {
       await fetch(`/api/testimonials?id=${id}`, { method: "DELETE" });
       fetchTestimonials();
     } catch (e: any) {
       alert("Error deleting testimonial: " + e.message);
+      fetchTestimonials();
     }
   };
 

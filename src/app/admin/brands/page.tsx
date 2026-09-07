@@ -76,7 +76,7 @@ export default function AdminBrandsPage() {
   async function fetchBrands() {
     setLoading(true);
     try {
-      const res = await fetch("/api/brands");
+      const res = await fetch(`/api/brands?t=${Date.now()}`, { cache: "no-store" });
       const json = await res.json();
       if (json.success) {
         setBrands(json.data);
@@ -129,10 +129,12 @@ export default function AdminBrandsPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("Are you sure you want to permanently delete this brand and all its linked records?")) return;
+    setBrands((prev) => prev.filter((b) => b.id !== id));
     try {
       const res = await fetch(`/api/brands?id=${id}`, { method: "DELETE" });
       if (!res.ok) {
         alert("Delete failed: HTTP " + res.status);
+        fetchBrands();
         return;
       }
       const json = await res.json();
@@ -140,10 +142,12 @@ export default function AdminBrandsPage() {
         fetchBrands();
       } else {
         alert("Delete failed: " + (json.error || "Unknown error"));
+        fetchBrands();
       }
     } catch (e: any) {
       console.error(e);
       alert("Error deleting brand: " + e.message);
+      fetchBrands();
     }
   }
 

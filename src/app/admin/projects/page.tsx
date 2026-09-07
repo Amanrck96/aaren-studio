@@ -32,8 +32,8 @@ export default function AdminProjectsPage() {
     setLoading(true);
     try {
       const [prodRes, projRes] = await Promise.all([
-        fetch("/api/products"),
-        fetch("/api/projects"),
+        fetch(`/api/products?t=${Date.now()}`, { cache: "no-store" }),
+        fetch(`/api/projects?t=${Date.now()}`, { cache: "no-store" }),
       ]);
 
       if (!prodRes.ok) throw new Error("Failed to fetch products: " + prodRes.statusText);
@@ -50,6 +50,24 @@ export default function AdminProjectsPage() {
       setLoading(false);
     }
   }
+
+  const handleDeleteProject = async (id: string, title: string) => {
+    if (!confirm(`Are you sure you want to permanently delete project "${title}"?`)) return;
+    setProjects((prev) => prev.filter((p) => p.id !== id));
+    try {
+      const res = await fetch(`/api/projects?id=${id}`, { method: "DELETE" });
+      const json = await res.json();
+      if (json.success) {
+        fetchInitialData();
+      } else {
+        alert("Delete failed: " + (json.error || "Unknown error"));
+        fetchInitialData();
+      }
+    } catch (e: any) {
+      alert("Error deleting project: " + e.message);
+      fetchInitialData();
+    }
+  };
 
   function toggleProductSelection(prodId: string) {
     setSelectedProductMap((prev) => {
@@ -328,12 +346,21 @@ export default function AdminProjectsPage() {
                         Client: <strong style={{ color: "#81663F" }}>{proj.client}</strong> | Category: <span style={{ color: "#1E1E1E" }}>{proj.category}</span> | Products: {proj.selectedProducts?.length || 0}
                       </div>
                     </div>
-                    <button
-                      onClick={() => downloadExistingProjectPDF(proj)}
-                      style={{ padding: "0.6rem 1.2rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.4rem", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
-                    >
-                      📄 Export PDF
-                    </button>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                      <button
+                        onClick={() => downloadExistingProjectPDF(proj)}
+                        style={{ padding: "0.6rem 1.2rem", background: "#1E1E1E", color: "#FFFFFF", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "0.88rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.4rem", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
+                      >
+                        📄 Export PDF
+                      </button>
+                      <button
+                        onClick={() => handleDeleteProject(proj.id, proj.title)}
+                        style={{ padding: "0.6rem 1rem", background: "#FEE2E2", color: "#DC2626", border: "1px solid #FCA5A5", borderRadius: "8px", cursor: "pointer", fontSize: "0.85rem", fontWeight: 700 }}
+                        title="Delete project"
+                      >
+                        🗑️ Delete
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

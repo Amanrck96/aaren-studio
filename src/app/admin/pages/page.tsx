@@ -13,7 +13,7 @@ export default function AdminPagesPage() {
   const fetchPages = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/pages");
+      const res = await fetch(`/api/pages?t=${Date.now()}`, { cache: "no-store" });
       const json = await res.json();
       if (json.success) setPages(json.data);
     } catch (error) {
@@ -55,12 +55,14 @@ export default function AdminPagesPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure?")) return;
+    setPages((prev) => prev.filter((p) => p.id !== id));
     try {
       await fetch(`/api/pages?id=${id}`, { method: "DELETE" });
       fetchPages();
     } catch (error) {
       console.error("Error deleting page:", error);
       alert("Failed to delete page.");
+      fetchPages();
     }
   };
 

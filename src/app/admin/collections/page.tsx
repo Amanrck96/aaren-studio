@@ -168,7 +168,7 @@ export default function CollectionsAdminPage() {
 
   const handleDelete = async (id: string, colName: string) => {
     if (!confirm(`Are you sure you want to delete collection "${colName}"?`)) return;
-
+    setCollections((prev) => prev.filter((c) => c.id !== id));
     try {
       const res = await fetch(`/api/collections?id=${encodeURIComponent(id)}`, { method: "DELETE" });
       const data = await res.json();
@@ -179,9 +179,12 @@ export default function CollectionsAdminPage() {
           setName("");
         }
         await loadData();
+      } else {
+        await loadData();
       }
     } catch (e) {
       console.error("Delete error:", e);
+      await loadData();
     }
   };
 

@@ -176,6 +176,7 @@ export default function AdminAboutPage() {
   // Delete Step
   async function handleDeleteStep(id: string, stepNumber: string) {
     if (!confirm(`Are you sure you want to delete roadmap node ${stepNumber}?`)) return;
+    setRoadmap((prev) => prev.filter((s) => s.id !== id));
     try {
       const res = await fetch(`/api/team?id=${encodeURIComponent(id)}&type=roadmap`, {
         method: "DELETE",
@@ -187,9 +188,11 @@ export default function AdminAboutPage() {
         fetchData();
       } else {
         showToast("Error deleting: " + json.error);
+        fetchData();
       }
     } catch (e: any) {
       showToast("Error: " + e.message);
+      fetchData();
     }
   }
 

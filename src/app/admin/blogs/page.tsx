@@ -530,7 +530,7 @@ export default function AdminBlogsPage() {
 
   const fetchBlogs = async () => {
     try {
-      const res = await fetch("/api/blogs");
+      const res = await fetch(`/api/blogs?t=${Date.now()}`, { cache: "no-store" });
       const json = await res.json();
       if (json.success) {
         setBlogs(json.data);
@@ -653,12 +653,14 @@ export default function AdminBlogsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this blog post?")) return;
+    setBlogs((prev) => prev.filter((b) => b.id !== id));
     try {
       await fetch(`/api/blogs?id=${id}`, { method: "DELETE" });
       fetchBlogs();
     } catch (err) {
       console.error(err);
       alert("❌ Error deleting blog.");
+      fetchBlogs();
     }
   };
 

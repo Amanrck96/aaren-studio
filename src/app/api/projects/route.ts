@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAllProjectsStore, createProjectStore } from "@/lib/store";
+import { getAllProjectsStore, createProjectStore, deleteProjectStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -39,6 +39,20 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, data: newProject });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) {
+      return NextResponse.json({ success: false, error: "Project ID is required" }, { status: 400 });
+    }
+    await deleteProjectStore(id);
+    return NextResponse.json({ success: true, message: "Project deleted permanently" }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

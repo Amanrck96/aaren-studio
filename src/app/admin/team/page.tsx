@@ -173,12 +173,14 @@ export default function AdminTeamPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this team member?")) return;
+    setTeam((prev) => prev.filter((m) => m.id !== id));
     try {
       await fetch(`/api/team?id=${id}`, { method: "DELETE" });
       fetchTeam();
     } catch (err) {
       console.error(err);
       alert("Error deleting team member.");
+      fetchTeam();
     }
   };
 

@@ -2,6 +2,8 @@ import { prisma } from "./prisma";
 import * as xlsx from "xlsx";
 import fs from "fs";
 import path from "path";
+import { storage } from "./firebase";
+import { ref as fbStorageRef, uploadString } from "firebase/storage";
 import {
   SiteSettingsItem,
   CategoryItem,
@@ -102,6 +104,7 @@ function normalizeFirebaseData(data: any): any {
   return data;
 }
 
+const FIREBASE_STORAGE_STORE_BASE = "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/store%2F";
 const FIREBASE_RTDB_STORE_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || "https://aarenintpro-1c09f-default-rtdb.firebaseio.com";
 
 function getFirebaseStoreUrl(pathWithDotJson: string): string {
@@ -120,42 +123,44 @@ async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
   if (cached !== null) return cached;
 
   try {
-    // 1. Check /store/${key}.json (Primary live admin path with 4500ms timeout)
+    // 1. Primary Authoritative Cloud Store: Firebase Storage (Public media bucket, 100% active, 0 auth barriers)
+    const storageUrl = `${FIREBASE_STORAGE_STORE_BASE}${encodeURIComponent(key)}.json?alt=media`;
+    const res = await fetch(storageUrl, {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
+      signal: AbortSignal.timeout(12000),
+    });
+    if (res.ok) {
+      const raw = await res.json();
+      const data = normalizeFirebaseData(raw);
+      if (data !== null && data !== undefined) {
+        logStoreRead(key, "firebase-storage", Array.isArray(data) ? data.length : 1);
+        setMemoryCached(key, data, "firebase-storage");
+        return data;
+      }
+    }
+  } catch (err) {
+    console.warn(`[STORE READ] Firebase storage fetch timeout/failed for key="${key}":`, (err as any)?.message || err);
+  }
+
+  // 2. Secondary fallback: Firebase RTDB (if secret configured)
+  try {
     const storeRes = await fetch(getFirebaseStoreUrl(`/store/${key}.json`), {
       cache: "no-store",
       headers: { "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
-      signal: AbortSignal.timeout(4500),
-      next: { revalidate: 0 },
+      signal: AbortSignal.timeout(2000),
     });
     if (storeRes.ok) {
       const raw = await storeRes.json();
       const data = normalizeFirebaseData(raw);
       if (data !== null && data !== undefined) {
-        logStoreRead(key, "firebase-store", Array.isArray(data) ? data.length : 1);
-        setMemoryCached(key, data, "firebase-store");
+        logStoreRead(key, "firebase-rtdb", Array.isArray(data) ? data.length : 1);
+        setMemoryCached(key, data, "firebase-rtdb");
         return data;
       }
     }
+  } catch (_) {}
 
-    // 2. Fallback to /${key}.json
-    const rootRes = await fetch(getFirebaseStoreUrl(`/${key}.json`), {
-      cache: "no-store",
-      headers: { "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
-      signal: AbortSignal.timeout(4500),
-      next: { revalidate: 0 },
-    });
-    if (rootRes.ok) {
-      const raw = await rootRes.json();
-      const data = normalizeFirebaseData(raw);
-      if (data !== null && data !== undefined) {
-        logStoreRead(key, "firebase-root", Array.isArray(data) ? data.length : 1);
-        setMemoryCached(key, data, "firebase-root");
-        return data;
-      }
-    }
-  } catch (err) {
-    console.warn(`[STORE READ] Firebase fetch timeout/failed for key="${key}":`, (err as any)?.message || err);
-  }
   return null;
 }
 
@@ -249,27 +254,91 @@ async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
   setMemoryCached(key, data, "admin-write");
 
   try {
-    // 2. Instant Dual-write to Firebase Realtime Database (/store/ and /)
-    await Promise.allSettled([
+    // 2. Authoritative Cloud Store: Firebase Storage (Permanent across all serverless instances)
+    const r = fbStorageRef(storage, `store/${key}.json`);
+    await uploadString(r, JSON.stringify(data), "raw");
+  } catch (err) {
+    console.error(`[STORE SYNC] Failed to upload ${key} to Firebase Storage:`, err);
+  }
+
+  // 3. Fire-and-forget sync to RTDB and backups
+  try {
+    Promise.allSettled([
       fetch(getFirebaseStoreUrl(`/store/${key}.json`), {
         method: "PUT",
         cache: "no-store",
-        headers: { "Content-Type": "application/json", "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       }),
       fetch(getFirebaseStoreUrl(`/${key}.json`), {
         method: "PUT",
         cache: "no-store",
-        headers: { "Content-Type": "application/json", "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       }),
-    ]);
+      createStoreBackup(key, data),
+    ]).catch(() => {});
+  } catch (_) {}
+}
 
-    // 3. Automated timestamped local + cloud backup creation
-    await createStoreBackup(key, data);
-  } catch (err) {
-    // Fail-safe
+// ==========================================
+// 🛡️ DELETION TOMBSTONES (PERMANENT EXCLUSION TRACKING)
+// ==========================================
+
+export async function getDeletedIdsStore(): Promise<Record<string, string[]>> {
+  const cached = getMemoryCached<Record<string, string[]>>("deletedIds");
+  if (cached && typeof cached === "object" && !Array.isArray(cached)) return cached;
+
+  const fb = await fetchFromFirebaseCloudStore("deletedIds");
+  if (fb && typeof fb === "object" && !Array.isArray(fb)) {
+    setMemoryCached("deletedIds", fb, "firebase-storage");
+    return fb;
   }
+
+  const json = readJsonStore();
+  return json.deletedIds || {};
+}
+
+export async function recordDeletedIdStore(collection: string, id: string): Promise<void> {
+  const normId = String(id).trim();
+  if (!normId) return;
+
+  const current = await getDeletedIdsStore();
+  const list = Array.isArray(current[collection]) ? [...current[collection]] : [];
+  if (!list.includes(normId)) {
+    list.push(normId);
+    current[collection] = list;
+    await syncToFirebaseCloudStore("deletedIds", current);
+    const json = readJsonStore();
+    json.deletedIds = current;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    writeJsonStore(json);
+  }
+}
+
+export async function removeDeletedIdStore(collection: string, id: string): Promise<void> {
+  const normId = String(id).trim();
+  if (!normId) return;
+
+  const current = await getDeletedIdsStore();
+  const list = Array.isArray(current[collection]) ? current[collection] : [];
+  if (list.includes(normId)) {
+    current[collection] = list.filter((x) => x !== normId);
+    await syncToFirebaseCloudStore("deletedIds", current);
+    const json = readJsonStore();
+    json.deletedIds = current;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    writeJsonStore(json);
+  }
+}
+
+async function filterActiveItems<T extends { id?: any }>(collection: string, items: T[]): Promise<T[]> {
+  if (!Array.isArray(items)) return [];
+  const deletedMap = await getDeletedIdsStore();
+  const deletedList = deletedMap[collection] || [];
+  if (deletedList.length === 0) return items;
+  const deletedSet = new Set(deletedList.map((x) => String(x).trim()));
+  return items.filter((item) => !deletedSet.has(String(item.id || "").trim()));
 }
 
 function getActiveStorePath(): string {
@@ -914,19 +983,19 @@ export async function saveCatalogSettingsStore(data: Partial<CatalogSettingsItem
 
 // CATEGORIES STORE
 export async function getCategoriesStore(): Promise<CategoryItem[]> {
-  // 🔑 FIX: Always check Firebase FIRST so admin edits survive Vercel redeploys
   const fbData = await fetchFromFirebaseCloudStore("categories");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems("categories", fbData);
     const json = readJsonStore();
-    json.categories = fbData;
+    json.categories = active;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+    return active;
   }
 
   // Fallback to local JSON if Firebase unavailable
   const json = readJsonStore();
-  if (json.categories && Array.isArray(json.categories) && json.categories.length > 0) {
-    return json.categories;
+  if (json.categories && Array.isArray(json.categories)) {
+    return await filterActiveItems("categories", json.categories);
   }
 
   // Fallback to Prisma
@@ -941,13 +1010,11 @@ export async function getCategoriesStore(): Promise<CategoryItem[]> {
         shortCode: c.shortCode || "",
         sequenceNumber: c.sequenceNumber || 1,
       }));
-      json.categories = mapped;
-      globalThis.__AAREN_MEMORY_STORE__ = json;
-      return mapped;
+      return await filterActiveItems("categories", mapped);
     }
   } catch (e) {}
 
-  return DEFAULT_CATEGORIES;
+  return await filterActiveItems("categories", DEFAULT_CATEGORIES);
 }
 
 function sanitizeBrand(b: BrandItem): BrandItem {
@@ -976,20 +1043,21 @@ function sanitizeBrand(b: BrandItem): BrandItem {
 
 // BRANDS STORE
 export async function getBrandsStore(): Promise<BrandItem[]> {
-  // 🔑 FIX: Always check Firebase FIRST so admin edits (logos, descriptions, catalogs) survive Vercel redeploys
   const fbData = await fetchFromFirebaseCloudStore("brands");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
     const sanitized = fbData.map(sanitizeBrand);
+    const active = await filterActiveItems("brands", sanitized);
     const json = readJsonStore();
-    json.brands = sanitized;
+    json.brands = active;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return sanitized;
+    return active;
   }
 
   // Fallback to local JSON if Firebase unavailable
   const json = readJsonStore();
-  if (json.brands && Array.isArray(json.brands) && json.brands.length > 0) {
-    return json.brands.map(sanitizeBrand);
+  if (json.brands && Array.isArray(json.brands)) {
+    const sanitized = json.brands.map(sanitizeBrand);
+    return await filterActiveItems("brands", sanitized);
   }
 
   // Fallback to Prisma
@@ -1007,13 +1075,11 @@ export async function getBrandsStore(): Promise<BrandItem[]> {
         catalogPdfUrl: b.catalogPdfUrl || undefined,
         galleryImages: b.galleryImages || undefined,
       }));
-      json.brands = mapped;
-      globalThis.__AAREN_MEMORY_STORE__ = json;
-      return mapped;
+      return await filterActiveItems("brands", mapped);
     }
   } catch (e) {}
 
-  return DEFAULT_BRANDS;
+  return await filterActiveItems("brands", DEFAULT_BRANDS);
 }
 
 export async function getBrandByIdStore(id: string): Promise<BrandItem | null> {
@@ -1028,6 +1094,7 @@ export async function getBrandByIdStore(id: string): Promise<BrandItem | null> {
 export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: string }): Promise<BrandItem> {
   const id = brand.id || brand.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full: BrandItem = { ...brand, id };
+  await removeDeletedIdStore("brands", id);
 
   // 1. Get current brands from Firebase
   let current: BrandItem[] = [];
@@ -1105,12 +1172,15 @@ export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: strin
 }
 
 export async function deleteBrandStore(id: string) {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("brands", normId);
+
   let current: BrandItem[] = [];
   const fbData = await fetchFromFirebaseCloudStore("brands");
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.brands || []; }
 
-  current = current.filter((b: any) => b.id !== id);
+  current = current.filter((b: any) => String(b.id).trim() !== normId);
   await syncToFirebaseCloudStore("brands", current);
 
   const json = readJsonStore();
@@ -1118,24 +1188,24 @@ export async function deleteBrandStore(id: string) {
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
 
-  try { await prisma.brand.delete({ where: { id } }); } catch (e) {}
+  try { await prisma.brand.delete({ where: { id: normId } }); } catch (e) {}
 }
 
 // PRODUCTS STORE
 export async function getAllProductsStore(): Promise<ProductItem[]> {
-  // 🔑 FIX: Always check Firebase FIRST so admin edits survive Vercel redeploys
   const fbData = await fetchFromFirebaseCloudStore("products");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems("products", fbData);
     const json = readJsonStore();
-    json.products = fbData;
+    json.products = active;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+    return active;
   }
 
   // Fallback to local JSON if Firebase unavailable
   const json = readJsonStore();
-  if (json.products && Array.isArray(json.products) && json.products.length > 0) {
-    return json.products;
+  if (json.products && Array.isArray(json.products)) {
+    return await filterActiveItems("products", json.products);
   }
 
   // Fallback to Prisma
@@ -1165,19 +1235,18 @@ export async function getAllProductsStore(): Promise<ProductItem[]> {
         price: p.price || undefined,
         finishOptions: p.finishOptions ? (typeof p.finishOptions === "string" ? JSON.parse(p.finishOptions) : p.finishOptions) : undefined,
       }));
-      json.products = mapped;
-      globalThis.__AAREN_MEMORY_STORE__ = json;
-      return mapped;
+      return await filterActiveItems("products", mapped);
     }
   } catch (e) {}
 
-  return DEFAULT_PRODUCTS;
+  return await filterActiveItems("products", DEFAULT_PRODUCTS);
 }
 
 export async function getProductByIdStore(id: string): Promise<ProductItem | null> {
   const all = await getAllProductsStore();
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
   const found = all.find(
-    (p) => p.id === id || p.id.toLowerCase() === id.toLowerCase() || p.id.replace(/[^a-zA-Z0-9]/g, "") === id.replace(/[^a-zA-Z0-9]/g, "")
+    (p) => p.id === id || norm(p.id) === norm(id)
   );
   return found || null;
 }
@@ -1185,6 +1254,7 @@ export async function getProductByIdStore(id: string): Promise<ProductItem | nul
 export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: string }): Promise<ProductItem> {
   const id = product.id || `prod-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const fullProduct: ProductItem = { ...product, id };
+  await removeDeletedIdStore("products", id);
 
   // 1. Get current products from Firebase
   let current: ProductItem[] = [];
@@ -1256,12 +1326,15 @@ export async function updateProductStore(id: string, updates: Partial<ProductIte
 }
 
 export async function deleteProductStore(id: string) {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("products", normId);
+
   let current: ProductItem[] = [];
   const fbData = await fetchFromFirebaseCloudStore("products");
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.products || []; }
 
-  current = current.filter((p: any) => p.id !== id);
+  current = current.filter((p: any) => String(p.id).trim() !== normId);
   await syncToFirebaseCloudStore("products", current);
 
   const json = readJsonStore();
@@ -1269,7 +1342,7 @@ export async function deleteProductStore(id: string) {
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
 
-  try { await prisma.product.delete({ where: { id } }); } catch (e) {}
+  try { await prisma.product.delete({ where: { id: normId } }); } catch (e) {}
 }
 
 
@@ -1432,24 +1505,26 @@ export async function parseAndImportExcelProducts(fileBuffer: Buffer): Promise<P
 // SHOWCASE PROJECTS STORE
 export async function getAllProjectsStore(): Promise<ProjectShowcaseItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("projects");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems("projects", fbData);
     const json = readJsonStore();
-    json.projects = fbData;
+    json.projects = active;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+    return active;
   }
 
   const json = readJsonStore();
-  if (json.projects && Array.isArray(json.projects) && json.projects.length > 0) {
-    return json.projects;
+  if (json.projects && Array.isArray(json.projects)) {
+    return await filterActiveItems("projects", json.projects);
   }
 
-  return DEFAULT_PROJECTS;
+  return await filterActiveItems("projects", DEFAULT_PROJECTS);
 }
 
 export async function saveCategoryStore(cat: Omit<CategoryItem, "id"> & { id?: string }): Promise<CategoryItem> {
   const id = cat.id || cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full: CategoryItem = { ...cat, id };
+  await removeDeletedIdStore("categories", id);
 
   // 1. Get current from Firebase
   let current: CategoryItem[] = [];
@@ -1477,12 +1552,15 @@ export async function saveCategoryStore(cat: Omit<CategoryItem, "id"> & { id?: s
 }
 
 export async function deleteCategoryStore(id: string) {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("categories", normId);
+
   let current: CategoryItem[] = [];
   const fbData = await fetchFromFirebaseCloudStore("categories");
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.categories || []; }
 
-  current = current.filter((c: any) => c.id !== id);
+  current = current.filter((c: any) => String(c.id).trim() !== normId);
   await syncToFirebaseCloudStore("categories", current);
 
   const json = readJsonStore();
@@ -1490,7 +1568,7 @@ export async function deleteCategoryStore(id: string) {
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
 
-  try { await prisma.category.delete({ where: { id } }); } catch (e) {}
+  try { await prisma.category.delete({ where: { id: normId } }); } catch (e) {}
 }
 
 export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "id"> & { id?: string }): Promise<ProjectShowcaseItem> {
@@ -1499,6 +1577,7 @@ export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "i
   const mainImg = projectData.imageUrl || "";
   const galleryImgs = projectData.gallery || (mainImg ? [mainImg] : []);
   const full: ProjectShowcaseItem = { ...projectData, id, slug, imageUrl: mainImg, gallery: galleryImgs };
+  await removeDeletedIdStore("projects", id);
 
   // 1. Get current from Firebase
   let current: ProjectShowcaseItem[] = [];
@@ -1524,17 +1603,20 @@ export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "i
 }
 
 export async function deleteProjectStore(id: string) {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("projects", normId);
+
   let current: ProjectShowcaseItem[] = [];
   const fbData = await fetchFromFirebaseCloudStore("projects");
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.projects || []; }
-  current = current.filter((p: any) => p.id !== id);
+  current = current.filter((p: any) => String(p.id).trim() !== normId);
   await syncToFirebaseCloudStore("projects", current);
   const json = readJsonStore();
   json.projects = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
-  try { await prisma.project.delete({ where: { id } }); } catch (e) {}
+  try { await prisma.project.delete({ where: { id: normId } }); } catch (e) {}
 }
 
 // CAREERS STORE
@@ -1546,22 +1628,25 @@ export const DEFAULT_CAREERS: CareerItem[] = [
 
 export async function getCareersStore(): Promise<CareerItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("careers");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems("careers", fbData);
     const json = readJsonStore();
-    json.careers = fbData;
+    json.careers = active;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+    return active;
   }
   const json = readJsonStore();
-  if (json.careers && Array.isArray(json.careers) && json.careers.length > 0) {
-    return json.careers;
+  if (json.careers && Array.isArray(json.careers)) {
+    return await filterActiveItems("careers", json.careers);
   }
-  return DEFAULT_CAREERS;
+  return await filterActiveItems("careers", DEFAULT_CAREERS);
 }
 
 export async function saveCareerStore(career: Omit<CareerItem, "id"> & { id?: string }): Promise<CareerItem> {
   const id = career.id || `cr-${Date.now()}`;
   const full: CareerItem = { ...career, id, createdAt: new Date().toISOString() };
+  await removeDeletedIdStore("careers", id);
+
   let current: CareerItem[] = await getCareersStore();
   const idx = current.findIndex((c) => c.id === id);
   if (idx >= 0) current[idx] = full;
@@ -1575,8 +1660,11 @@ export async function saveCareerStore(career: Omit<CareerItem, "id"> & { id?: st
 }
 
 export async function deleteCareerStore(id: string) {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("careers", normId);
+
   let current: CareerItem[] = await getCareersStore();
-  current = current.filter((c) => c.id !== id);
+  current = current.filter((c) => String(c.id).trim() !== normId);
   await syncToFirebaseCloudStore("careers", current);
   const json = readJsonStore();
   json.careers = current;
@@ -1595,18 +1683,19 @@ const LEADERSHIP_IDS = ["tm-01", "tm-02", "tm-03"];
 export async function getTeamStore(): Promise<TeamMemberItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("team");
   if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems("team", fbData);
     const json = readJsonStore();
-    json.team = fbData;
+    json.team = active;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+    return active;
   }
 
   const json = readJsonStore();
   if (json.team && Array.isArray(json.team)) {
-    return json.team;
+    return await filterActiveItems("team", json.team);
   }
 
-  return DEFAULT_TEAM;
+  return await filterActiveItems("team", DEFAULT_TEAM);
 }
 
 export async function reorderTeamStore(teamList: TeamMemberItem[]): Promise<TeamMemberItem[]> {
@@ -1638,6 +1727,8 @@ export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & {
   }
 
   const full: TeamMemberItem = { ...(currentTeam[idx] || {}), ...member, id: targetId };
+  await removeDeletedIdStore("team", targetId);
+
   if (idx >= 0) {
     currentTeam[idx] = full;
   } else {
@@ -1666,17 +1757,20 @@ export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & {
 }
 
 export async function deleteTeamMemberStore(id: string) {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("team", normId);
+
   // 1. Get current team from Firebase
   let currentTeam: TeamMemberItem[] = [];
   const fbTeam = await fetchFromFirebaseCloudStore("team");
-  if (fbTeam && Array.isArray(fbTeam) && fbTeam.length > 0) {
+  if (fbTeam && Array.isArray(fbTeam)) {
     currentTeam = fbTeam;
   } else {
     const json = readJsonStore();
     currentTeam = json.team || [];
   }
 
-  currentTeam = currentTeam.filter((t: any) => t.id !== id);
+  currentTeam = currentTeam.filter((t: any) => String(t.id).trim() !== normId);
 
   // 2. Sync deleted list back to Firebase immediately
   await syncToFirebaseCloudStore("team", currentTeam);
@@ -1688,22 +1782,26 @@ export async function deleteTeamMemberStore(id: string) {
   writeJsonStore(json);
 
   // 4. Background Prisma (fails silently on Vercel)
-  try { await prisma.teamMember.delete({ where: { id } }); } catch (e) {}
+  try { await prisma.teamMember.delete({ where: { id: normId } }); } catch (e) {}
 }
 
 export async function getRoadmapStore(): Promise<RoadmapStepItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("roadmap");
-  if (fbData && Array.isArray(fbData)) return fbData;
-  const json = readJsonStore();
-  if (json.roadmap && Array.isArray(json.roadmap) && json.roadmap.length > 0) {
-    return json.roadmap;
+  if (fbData && Array.isArray(fbData)) {
+    return await filterActiveItems("roadmap", fbData);
   }
-  return DEFAULT_ROADMAP;
+  const json = readJsonStore();
+  if (json.roadmap && Array.isArray(json.roadmap)) {
+    return await filterActiveItems("roadmap", json.roadmap);
+  }
+  return await filterActiveItems("roadmap", DEFAULT_ROADMAP);
 }
 
 export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & { id?: string }) {
   const id = step.id || `rm-${Date.now()}`;
   const full = { ...step, id };
+  await removeDeletedIdStore("roadmap", id);
+
   let current: RoadmapStepItem[] = [];
   const fbData = await fetchFromFirebaseCloudStore("roadmap");
   if (fbData && Array.isArray(fbData)) current = fbData;
@@ -1724,19 +1822,22 @@ export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & {
 }
 
 export async function deleteRoadmapStepStore(id: string) {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("roadmap", normId);
+
   let current: RoadmapStepItem[] = [];
   const fbData = await fetchFromFirebaseCloudStore("roadmap");
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.roadmap || [...DEFAULT_ROADMAP]; }
 
-  current = current.filter((r: any) => r.id !== id);
+  current = current.filter((r: any) => String(r.id).trim() !== normId);
   await syncToFirebaseCloudStore("roadmap", current);
   const json = readJsonStore();
   json.roadmap = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
 
-  try { await prisma.roadmapStep.delete({ where: { id } }); } catch (e) {}
+  try { await prisma.roadmapStep.delete({ where: { id: normId } }); } catch (e) {}
 }
 
 export async function reorderRoadmapStore(steps: RoadmapStepItem[]): Promise<RoadmapStepItem[]> {
@@ -1829,7 +1930,7 @@ export async function getInquiriesStore(): Promise<InquiryItem[]> {
 
   const all = Array.from(map.values());
   all.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  return all;
+  return await filterActiveItems("inquiries", all);
 }
 
 export async function logInquiryStore(data: {
@@ -1976,25 +2077,28 @@ export async function logPdfViewStore(data: {
 }
 
 export async function deleteInquiryStore(id: string): Promise<boolean> {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("inquiries", normId);
+
   // Delete from Firebase Cloud DB
   try {
-    await fetch(getFirebaseStoreUrl(`/inquiries/${id}.json`), { method: "DELETE" });
+    await fetch(getFirebaseStoreUrl(`/inquiries/${normId}.json`), { method: "DELETE" });
   } catch (e) {}
 
   // Delete from Prisma DB
   try {
-    await prisma.inquiry.delete({ where: { id } });
+    await prisma.inquiry.delete({ where: { id: normId } });
   } catch (e) {}
 
   // Delete from Memory Cache
   if (globalThis.__AAREN_INQUIRIES_CACHE__) {
-    globalThis.__AAREN_INQUIRIES_CACHE__ = globalThis.__AAREN_INQUIRIES_CACHE__.filter((i) => i.id !== id);
+    globalThis.__AAREN_INQUIRIES_CACHE__ = globalThis.__AAREN_INQUIRIES_CACHE__.filter((i) => i.id !== normId);
   }
 
   // Delete from JSON file
   const json = readJsonStore();
   if (json.inquiries) {
-    json.inquiries = json.inquiries.filter((i: any) => i.id !== id);
+    json.inquiries = json.inquiries.filter((i: any) => i.id !== normId);
     writeJsonStore(json);
   }
   return true;
@@ -2020,23 +2124,26 @@ export function generateInquiriesCSV(inquiries: InquiryItem[]): string {
 export const createProjectStore = saveProjectStore;
 
 export async function getAllFAQsStore(): Promise<FaqItem[]> {
-  const json = readJsonStore();
-  const masterFaqs: FaqItem[] = (json.faqs && Array.isArray(json.faqs) && json.faqs.length > 0)
-    ? json.faqs
-    : (BRANDWISE_FAQS as FaqItem[]);
-
   const fbData = await fetchFromFirebaseCloudStore("faqs");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
-    json.faqs = fbData;
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems("faqs", fbData);
+    const json = readJsonStore();
+    json.faqs = active;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+    return active;
   }
 
-  return masterFaqs;
+  const json = readJsonStore();
+  if (json.faqs && Array.isArray(json.faqs)) {
+    return await filterActiveItems("faqs", json.faqs);
+  }
+
+  return await filterActiveItems("faqs", BRANDWISE_FAQS as FaqItem[]);
 }
 
 export async function saveFAQStore(faq: Partial<FaqItem>): Promise<FaqItem> {
   const id = faq.id || `faq-${Date.now()}`;
+  await removeDeletedIdStore("faqs", id);
   const full: FaqItem = {
     id,
     category: faq.category || "General",
@@ -2060,8 +2167,10 @@ export async function saveFAQStore(faq: Partial<FaqItem>): Promise<FaqItem> {
 }
 
 export async function deleteFAQStore(id: string): Promise<void> {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("faqs", normId);
   let current = await getAllFAQsStore();
-  current = current.filter((f: any) => f.id !== id);
+  current = current.filter((f: any) => String(f.id).trim() !== normId);
   await syncToFirebaseCloudStore("faqs", current);
   const json = readJsonStore();
   json.faqs = current;
@@ -2070,36 +2179,45 @@ export async function deleteFAQStore(id: string): Promise<void> {
 }
 
 export async function importFAQsBulkStore(faqs: FaqItem[]): Promise<FaqItem[]> {
-  await syncToFirebaseCloudStore("faqs", faqs);
+  const active = await filterActiveItems("faqs", faqs);
+  await syncToFirebaseCloudStore("faqs", active);
   const json = readJsonStore();
-  json.faqs = faqs;
+  json.faqs = active;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
-  return faqs;
+  return active;
 }
 
 // SERVICES STORE
+export const DEFAULT_SERVICES: ServiceItem[] = [
+  { id: "srv-1", title: "Material Curation & Sourcing", description: "Exclusive European surfaces, FENIX nano-laminates, and natural wood cladding.", icon: "💎", sequenceNumber: 1 },
+  { id: "srv-2", title: "Architectural Specification & Detailing", description: "Bespoke CAD drawings, technical joinery, and material sample kits.", icon: "📐", sequenceNumber: 2 },
+  { id: "srv-3", title: "Italian Modular Living Systems", description: "Precision engineered Slashform kitchen and wardrobe systems.", icon: "🏛️", sequenceNumber: 3 },
+];
+
 export async function getServicesStore(): Promise<ServiceItem[]> {
   // 1. Firebase Cloud
   const fbData = await fetchFromFirebaseCloudStore("services");
-  if (fbData && Array.isArray(fbData)) return fbData;
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems("services", fbData);
+    const json = readJsonStore();
+    json.services = active;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return active;
+  }
   // 2. JSON fallback
   const json = readJsonStore();
-  if (json.services && Array.isArray(json.services) && json.services.length > 0) return json.services;
-  return [
-    { id: "srv-1", title: "Material Curation & Sourcing", description: "Exclusive European surfaces, FENIX nano-laminates, and natural wood cladding.", icon: "💎", sequenceNumber: 1 },
-    { id: "srv-2", title: "Architectural Specification & Detailing", description: "Bespoke CAD drawings, technical joinery, and material sample kits.", icon: "📐", sequenceNumber: 2 },
-    { id: "srv-3", title: "Italian Modular Living Systems", description: "Precision engineered Slashform kitchen and wardrobe systems.", icon: "🏛️", sequenceNumber: 3 },
-  ];
+  if (json.services && Array.isArray(json.services)) {
+    return await filterActiveItems("services", json.services);
+  }
+  return await filterActiveItems("services", DEFAULT_SERVICES);
 }
 
 export async function saveServiceStore(service: Omit<ServiceItem, "id"> & { id?: string }): Promise<ServiceItem> {
   const id = service.id || `srv-${Date.now()}`;
+  await removeDeletedIdStore("services", id);
   const full = { ...service, id };
-  let current: ServiceItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("services");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.services || []; }
+  let current: ServiceItem[] = await getServicesStore();
   const idx = current.findIndex((s: any) => s.id === id);
   if (idx >= 0) current[idx] = full; else current.push(full);
   await syncToFirebaseCloudStore("services", current);
@@ -2112,48 +2230,56 @@ export async function saveServiceStore(service: Omit<ServiceItem, "id"> & { id?:
 }
 
 export async function deleteServiceStore(id: string) {
-  let current: ServiceItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("services");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.services || []; }
-  current = current.filter((s: any) => s.id !== id);
+  const normId = String(id).trim();
+  await recordDeletedIdStore("services", normId);
+  let current: ServiceItem[] = await getServicesStore();
+  current = current.filter((s: any) => String(s.id).trim() !== normId);
   await syncToFirebaseCloudStore("services", current);
   const json = readJsonStore();
   json.services = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
-  try { await prisma.service.delete({ where: { id } }); } catch (e) {}
+  try { await prisma.service.delete({ where: { id: normId } }); } catch (e) {}
 }
+
+export const DEFAULT_TESTIMONIALS: TestimonialItem[] = [
+  { id: "t-1", clientName: "Vikramaditya Rao", company: "Oberoi Penthouse Owner", rating: 5, review: "Aaren Studio transformed our penthouse with incredible FENIX surfaces and Mafi oak floors.", sequenceNumber: 1 },
+  { id: "t-2", clientName: "Ananya Deshmukh", company: "Principal Architect, Studio AD", rating: 5, review: "The material sample kits and Italian joinery precision from Aaren are unmatched in India.", sequenceNumber: 2 },
+];
 
 export async function getTestimonialsStore(): Promise<TestimonialItem[]> {
   // 1. Firebase Cloud
   const fbData = await fetchFromFirebaseCloudStore("testimonials");
-  if (fbData && Array.isArray(fbData)) return fbData;
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems("testimonials", fbData);
+    const json = readJsonStore();
+    json.testimonials = active;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return active;
+  }
   // 2. Prisma fallback
   try {
     const dbT = await prisma.testimonial.findMany({ orderBy: { sequenceNumber: "asc" } });
     if (dbT && dbT.length > 0) {
       const mapped: TestimonialItem[] = dbT.map((t: any) => ({ id: t.id, clientName: t.clientName, company: t.company || "", rating: t.rating || 5, review: t.review || "", sequenceNumber: t.sequenceNumber || 1 }));
-      syncToFirebaseCloudStore("testimonials", mapped);
-      return mapped;
+      const active = await filterActiveItems("testimonials", mapped);
+      syncToFirebaseCloudStore("testimonials", active);
+      return active;
     }
   } catch (e) {}
   // 3. JSON fallback
   const json = readJsonStore();
-  if (json.testimonials && Array.isArray(json.testimonials) && json.testimonials.length > 0) return json.testimonials;
-  return [
-    { id: "t-1", clientName: "Vikramaditya Rao", company: "Oberoi Penthouse Owner", rating: 5, review: "Aaren Studio transformed our penthouse with incredible FENIX surfaces and Mafi oak floors.", sequenceNumber: 1 },
-    { id: "t-2", clientName: "Ananya Deshmukh", company: "Principal Architect, Studio AD", rating: 5, review: "The material sample kits and Italian joinery precision from Aaren are unmatched in India.", sequenceNumber: 2 },
-  ];
+  if (json.testimonials && Array.isArray(json.testimonials)) {
+    return await filterActiveItems("testimonials", json.testimonials);
+  }
+  return await filterActiveItems("testimonials", DEFAULT_TESTIMONIALS);
 }
 
 export async function saveTestimonialStore(testimonial: Omit<TestimonialItem, "id"> & { id?: string }): Promise<TestimonialItem> {
   const id = testimonial.id || `t-${Date.now()}`;
+  await removeDeletedIdStore("testimonials", id);
   const full = { ...testimonial, id };
-  let current: TestimonialItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("testimonials");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.testimonials || []; }
+  let current: TestimonialItem[] = await getTestimonialsStore();
   const idx = current.findIndex((t: any) => t.id === id);
   if (idx >= 0) current[idx] = full; else current.push(full);
   await syncToFirebaseCloudStore("testimonials", current);
@@ -2166,49 +2292,56 @@ export async function saveTestimonialStore(testimonial: Omit<TestimonialItem, "i
 }
 
 export async function deleteTestimonialStore(id: string) {
-  let current: TestimonialItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("testimonials");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.testimonials || []; }
-  current = current.filter((t: any) => t.id !== id);
+  const normId = String(id).trim();
+  await recordDeletedIdStore("testimonials", normId);
+  let current: TestimonialItem[] = await getTestimonialsStore();
+  current = current.filter((t: any) => String(t.id).trim() !== normId);
   await syncToFirebaseCloudStore("testimonials", current);
   const json = readJsonStore();
   json.testimonials = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
-  try { await prisma.testimonial.delete({ where: { id } }); } catch (e) {}
+  try { await prisma.testimonial.delete({ where: { id: normId } }); } catch (e) {}
 }
 
-
-
+export const DEFAULT_BLOGS: BlogItem[] = [
+  { id: "b-1", title: "The Evolution of FENIX Nano-Tech Surfaces in Indian Homes", slug: "fenix-surfaces-guide", category: "Surfaces", tags: ["FENIX", "Laminate", "Interior Design"], content: "FENIX nano-technology represents a breakthrough in thermal healing and ultra-matte surface aesthetics...", featuredImage: "/brands/brand_4_1.jpg", author: "Aaren Studio", publishDate: "2026-02-15", status: "Published" },
+];
 
 export async function getBlogsStore(): Promise<BlogItem[]> {
   // 1. Firebase Cloud
   const fbData = await fetchFromFirebaseCloudStore("blogs");
-  if (fbData && Array.isArray(fbData)) return fbData;
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems("blogs", fbData);
+    const json = readJsonStore();
+    json.blogs = active;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return active;
+  }
   // 2. Prisma fallback
   try {
     const dbBlogs = await prisma.blog.findMany({ orderBy: { publishDate: "desc" } });
     if (dbBlogs && dbBlogs.length > 0) {
       const mapped: BlogItem[] = dbBlogs.map((b: any) => ({ id: b.id, title: b.title, slug: b.slug, category: b.category || "", tags: b.tags || [], content: b.content || "", featuredImage: b.featuredImage || "", author: b.author || "Aaren Studio", publishDate: b.publishDate || "", status: b.status || "Draft" }));
-      syncToFirebaseCloudStore("blogs", mapped);
-      return mapped;
+      const active = await filterActiveItems("blogs", mapped);
+      syncToFirebaseCloudStore("blogs", active);
+      return active;
     }
   } catch (e) {}
   // 3. JSON fallback
   const json = readJsonStore();
-  if (json.blogs && Array.isArray(json.blogs) && json.blogs.length > 0) return json.blogs;
-  return [{ id: "b-1", title: "The Evolution of FENIX Nano-Tech Surfaces in Indian Homes", slug: "fenix-surfaces-guide", category: "Surfaces", tags: ["FENIX", "Laminate", "Interior Design"], content: "FENIX nano-technology represents a breakthrough in thermal healing and ultra-matte surface aesthetics...", featuredImage: "/brands/brand_4_1.jpg", author: "Aaren Studio", publishDate: "2026-02-15", status: "Published" }];
+  if (json.blogs && Array.isArray(json.blogs)) {
+    return await filterActiveItems("blogs", json.blogs);
+  }
+  return await filterActiveItems("blogs", DEFAULT_BLOGS);
 }
 
 export async function saveBlogStore(blog: Omit<BlogItem, "id"> & { id?: string }): Promise<BlogItem> {
   const id = blog.id || `blog-${Date.now()}`;
+  await removeDeletedIdStore("blogs", id);
   const slug = blog.slug || blog.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full = { ...blog, id, slug };
-  let current: BlogItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("blogs");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.blogs || []; }
+  let current: BlogItem[] = await getBlogsStore();
   const idx = current.findIndex((b: any) => b.id === id);
   if (idx >= 0) current[idx] = full; else current.unshift(full);
   await syncToFirebaseCloudStore("blogs", current);
@@ -2221,17 +2354,16 @@ export async function saveBlogStore(blog: Omit<BlogItem, "id"> & { id?: string }
 }
 
 export async function deleteBlogStore(id: string) {
-  let current: BlogItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("blogs");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.blogs || []; }
-  current = current.filter((b: any) => b.id !== id);
+  const normId = String(id).trim();
+  await recordDeletedIdStore("blogs", normId);
+  let current: BlogItem[] = await getBlogsStore();
+  current = current.filter((b: any) => String(b.id).trim() !== normId);
   await syncToFirebaseCloudStore("blogs", current);
   const json = readJsonStore();
   json.blogs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
-  try { await prisma.blog.delete({ where: { id } }); } catch (e) {}
+  try { await prisma.blog.delete({ where: { id: normId } }); } catch (e) {}
 }
 
 export async function reorderBlogsStore(blogsList: BlogItem[]): Promise<BlogItem[]> {
@@ -2335,11 +2467,12 @@ export async function getMediaStore(): Promise<MediaAsset[]> {
     }
   } catch (e) {}
 
-  return assets;
+  return await filterActiveItems("media", assets);
 }
 
 export async function saveMediaStore(media: Omit<MediaAsset, "id"> & { id?: string }): Promise<MediaAsset> {
   const id = media.id || `med-${Date.now()}`;
+  await removeDeletedIdStore("media", id);
   const full = { ...media, id, createdAt: new Date().toISOString() };
   try {
     await prisma.mediaItem.upsert({
@@ -2357,49 +2490,64 @@ export async function saveMediaStore(media: Omit<MediaAsset, "id"> & { id?: stri
 }
 
 export async function deleteMediaStore(id: string) {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("media", normId);
   try {
-    await prisma.mediaItem.delete({ where: { id } });
+    await prisma.mediaItem.delete({ where: { id: normId } });
   } catch (e) {}
   const json = readJsonStore();
-  if (json.media) json.media = json.media.filter((m: any) => m.id !== id);
+  if (json.media) json.media = json.media.filter((m: any) => String(m.id).trim() !== normId);
   writeJsonStore(json);
   await syncToFirebaseCloudStore("media", json.media || []);
 }
 
 // TAXONOMIES & DROPDOWNS STORE
+export const DEFAULT_TAXONOMIES: TaxonomyItem[] = [
+  { id: "tax-1", type: "Category", name: "Surfaces", code: "SRF", sequenceNumber: 1 },
+  { id: "tax-2", type: "Technology", name: "FENIX Nano-Tech", code: "FNT", sequenceNumber: 1 },
+  { id: "tax-3", type: "ProjectType", name: "Single Residential", code: "SR", sequenceNumber: 1 },
+  { id: "tax-4", type: "ProjectType", name: "Multi Residential", code: "MR", sequenceNumber: 2 },
+  { id: "tax-5", type: "ProjectType", name: "Property Staging", code: "PS", sequenceNumber: 3 },
+  { id: "tax-6", type: "ProjectType", name: "Commercial", code: "COM", sequenceNumber: 4 },
+  { id: "tax-7", type: "ProjectType", name: "Hospitality", code: "HOS", sequenceNumber: 5 },
+  { id: "tax-8", type: "ProjectType", name: "Retail", code: "RET", sequenceNumber: 6 },
+  { id: "tax-9", type: "ProjectType", name: "Healthcare", code: "HC", sequenceNumber: 7 },
+  { id: "tax-10", type: "ProjectType", name: "Institutional", code: "INS", sequenceNumber: 8 },
+  { id: "tax-11", type: "ProjectType", name: "Government", code: "GOV", sequenceNumber: 9 },
+  { id: "tax-12", type: "ProjectType", name: "Set And Creative Design", code: "SCD", sequenceNumber: 10 },
+  { id: "tax-13", type: "ProjectType", name: "Community Spaces", code: "CS", sequenceNumber: 11 },
+];
+
 export async function getTaxonomiesStore(): Promise<TaxonomyItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("taxonomies");
-  if (fbData && Array.isArray(fbData)) return fbData;
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems<TaxonomyItem>("taxonomies", fbData);
+    const json = readJsonStore();
+    json.taxonomies = active;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return active;
+  }
 
   try {
     const db = await prisma.taxonomy.findMany({ orderBy: { sequenceNumber: "asc" } });
-    if (db && db.length > 0) return db as any;
+    if (db && db.length > 0) {
+      const active = await filterActiveItems<TaxonomyItem>("taxonomies", db as unknown as TaxonomyItem[]);
+      syncToFirebaseCloudStore("taxonomies", active);
+      return active;
+    }
   } catch (e) {}
   const json = readJsonStore();
-  return json.taxonomies || [
-    { id: "tax-1", type: "Category", name: "Surfaces", code: "SRF", sequenceNumber: 1 },
-    { id: "tax-2", type: "Technology", name: "FENIX Nano-Tech", code: "FNT", sequenceNumber: 1 },
-    { id: "tax-3", type: "ProjectType", name: "Single Residential", code: "SR", sequenceNumber: 1 },
-    { id: "tax-4", type: "ProjectType", name: "Multi Residential", code: "MR", sequenceNumber: 2 },
-    { id: "tax-5", type: "ProjectType", name: "Property Staging", code: "PS", sequenceNumber: 3 },
-    { id: "tax-6", type: "ProjectType", name: "Commercial", code: "COM", sequenceNumber: 4 },
-    { id: "tax-7", type: "ProjectType", name: "Hospitality", code: "HOS", sequenceNumber: 5 },
-    { id: "tax-8", type: "ProjectType", name: "Retail", code: "RET", sequenceNumber: 6 },
-    { id: "tax-9", type: "ProjectType", name: "Healthcare", code: "HC", sequenceNumber: 7 },
-    { id: "tax-10", type: "ProjectType", name: "Institutional", code: "INS", sequenceNumber: 8 },
-    { id: "tax-11", type: "ProjectType", name: "Government", code: "GOV", sequenceNumber: 9 },
-    { id: "tax-12", type: "ProjectType", name: "Set And Creative Design", code: "SCD", sequenceNumber: 10 },
-    { id: "tax-13", type: "ProjectType", name: "Community Spaces", code: "CS", sequenceNumber: 11 },
-  ];
+  if (json.taxonomies && Array.isArray(json.taxonomies)) {
+    return await filterActiveItems<TaxonomyItem>("taxonomies", json.taxonomies);
+  }
+  return await filterActiveItems<TaxonomyItem>("taxonomies", DEFAULT_TAXONOMIES);
 }
 
 export async function saveTaxonomyStore(taxonomy: Omit<TaxonomyItem, "id"> & { id?: string }): Promise<TaxonomyItem> {
   const id = taxonomy.id || `tax-${Date.now()}`;
+  await removeDeletedIdStore("taxonomies", id);
   const full = { ...taxonomy, id };
-  let current: TaxonomyItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("taxonomies");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.taxonomies || []; }
+  let current: TaxonomyItem[] = await getTaxonomiesStore();
 
   const idx = current.findIndex((t: any) => t.id === id);
   if (idx >= 0) current[idx] = full;
@@ -2415,52 +2563,59 @@ export async function saveTaxonomyStore(taxonomy: Omit<TaxonomyItem, "id"> & { i
 }
 
 export async function deleteTaxonomyStore(id: string) {
-  let current: TaxonomyItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("taxonomies");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.taxonomies || []; }
-  current = current.filter((t: any) => t.id !== id);
+  const normId = String(id).trim();
+  await recordDeletedIdStore("taxonomies", normId);
+  let current: TaxonomyItem[] = await getTaxonomiesStore();
+  current = current.filter((t: any) => String(t.id).trim() !== normId);
   await syncToFirebaseCloudStore("taxonomies", current);
   const json = readJsonStore();
   json.taxonomies = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
-  try { await prisma.taxonomy.delete({ where: { id } }); } catch (e) {}
+  try { await prisma.taxonomy.delete({ where: { id: normId } }); } catch (e) {}
 }
 
 // DYNAMIC PAGE BUILDER STORE
+export const DEFAULT_PAGES: CustomPageItem[] = [
+  {
+    id: "page-home",
+    title: "Homepage",
+    slug: "home",
+    status: "Published",
+    seoTitle: "AAREN Studio | Luxury Architectural Surfaces",
+    seoDescription: "Aaren Studio curates European surfaces, FENIX laminates, Mafi wood flooring, and Falper vanities.",
+    sections: [
+      { id: "sec-1", type: "Hero", title: "Main Hero Video Banner", isVisible: true, order: 1 },
+      { id: "sec-2", type: "Services", title: "Material Curation & Services", isVisible: true, order: 2 },
+      { id: "sec-3", type: "Portfolio", title: "Showcase Projects", isVisible: true, order: 3 },
+      { id: "sec-4", type: "Testimonials", title: "Client Feedback", isVisible: true, order: 4 },
+    ],
+  },
+];
+
 export async function getPagesStore(): Promise<CustomPageItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("pages");
-  if (fbData && Array.isArray(fbData)) return fbData;
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems("pages", fbData);
+    const json = readJsonStore();
+    json.pages = active;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return active;
+  }
   const json = readJsonStore();
-  return json.pages || [
-    {
-      id: "page-home",
-      title: "Homepage",
-      slug: "home",
-      status: "Published",
-      seoTitle: "AAREN Studio | Luxury Architectural Surfaces",
-      seoDescription: "Aaren Studio curates European surfaces, FENIX laminates, Mafi wood flooring, and Falper vanities.",
-      sections: [
-        { id: "sec-1", type: "Hero", title: "Main Hero Video Banner", isVisible: true, order: 1 },
-        { id: "sec-2", type: "Services", title: "Material Curation & Services", isVisible: true, order: 2 },
-        { id: "sec-3", type: "Portfolio", title: "Showcase Projects", isVisible: true, order: 3 },
-        { id: "sec-4", type: "Testimonials", title: "Client Feedback", isVisible: true, order: 4 },
-      ],
-    },
-  ];
+  if (json.pages && Array.isArray(json.pages)) {
+    return await filterActiveItems("pages", json.pages);
+  }
+  return await filterActiveItems("pages", DEFAULT_PAGES);
 }
 
 export async function savePageStore(page: Omit<CustomPageItem, "id"> & { id?: string }): Promise<CustomPageItem> {
   const id = page.id || `pg-${Date.now()}`;
+  await removeDeletedIdStore("pages", id);
   const slug = page.slug || page.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full = { ...page, id, slug, createdAt: new Date().toISOString() };
 
-  let current: CustomPageItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("pages");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.pages || []; }
-
+  let current: CustomPageItem[] = await getPagesStore();
   const idx = current.findIndex((p: any) => p.id === id);
   if (idx >= 0) current[idx] = full;
   else current.push(full);
@@ -2474,11 +2629,10 @@ export async function savePageStore(page: Omit<CustomPageItem, "id"> & { id?: st
 }
 
 export async function deletePageStore(id: string) {
-  let current: CustomPageItem[] = [];
-  const fbData = await fetchFromFirebaseCloudStore("pages");
-  if (fbData && Array.isArray(fbData)) current = fbData;
-  else { const j = readJsonStore(); current = j.pages || []; }
-  current = current.filter((p: any) => p.id !== id);
+  const normId = String(id).trim();
+  await recordDeletedIdStore("pages", normId);
+  let current: CustomPageItem[] = await getPagesStore();
+  current = current.filter((p: any) => String(p.id).trim() !== normId);
   await syncToFirebaseCloudStore("pages", current);
   const json = readJsonStore();
   json.pages = current;
@@ -2491,17 +2645,17 @@ export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
   let catalogsList: PdfCatalogItem[] = [];
 
   const fbData = await fetchFromFirebaseCloudStore("pdfCatalogs");
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
     catalogsList = [...fbData];
   } else {
     const fbAlt = await fetchFromFirebaseCloudStore("catalogs");
-    if (fbAlt && Array.isArray(fbAlt) && fbAlt.length > 0) {
+    if (fbAlt && Array.isArray(fbAlt)) {
       catalogsList = [...fbAlt];
     } else {
       const json = readJsonStore();
-      if (json.pdfCatalogs && Array.isArray(json.pdfCatalogs) && json.pdfCatalogs.length > 0) {
+      if (json.pdfCatalogs && Array.isArray(json.pdfCatalogs)) {
         catalogsList = [...json.pdfCatalogs];
-      } else if (json.catalogs && Array.isArray(json.catalogs) && json.catalogs.length > 0) {
+      } else if (json.catalogs && Array.isArray(json.catalogs)) {
         catalogsList = [...json.catalogs];
       } else {
         const catalogsPath = path.join(process.cwd(), "data", "catalogs.json");
@@ -2547,10 +2701,11 @@ export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
     });
   } catch (_) {}
 
-  return catalogsList;
+  return await filterActiveItems("catalogs", catalogsList);
 }
 
 export async function saveCatalogStore(catalog: PdfCatalogItem): Promise<PdfCatalogItem> {
+  await removeDeletedIdStore("catalogs", catalog.id);
   let current: PdfCatalogItem[] = await getCatalogsStore();
 
   const idx = current.findIndex((c: any) => c.id === catalog.id);
@@ -2567,6 +2722,22 @@ export async function saveCatalogStore(catalog: PdfCatalogItem): Promise<PdfCata
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
   return catalog;
+}
+
+export async function deleteCatalogStore(id: string): Promise<void> {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("catalogs", normId);
+  let current = await getCatalogsStore();
+  current = current.filter((c: any) => String(c.id).trim() !== normId);
+  await Promise.allSettled([
+    syncToFirebaseCloudStore("pdfCatalogs", current),
+    syncToFirebaseCloudStore("catalogs", current),
+  ]);
+  const json = readJsonStore();
+  json.pdfCatalogs = current;
+  json.catalogs = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 }
 
 export async function incrementCatalogDownloadCount(id: string): Promise<number> {
@@ -2641,14 +2812,17 @@ export const DEFAULT_COLLECTIONS: CollectionItem[] = [
 export async function getAllCollectionsStore(brandId?: string): Promise<CollectionItem[]> {
   const fbData = await fetchFromFirebaseCloudStore("collections");
   let list: CollectionItem[] = [];
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
-    list = fbData;
+  if (fbData && Array.isArray(fbData)) {
+    list = await filterActiveItems("collections", fbData);
+    const json = readJsonStore();
+    json.collections = list;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
   } else {
     const json = readJsonStore();
-    if (json.collections && Array.isArray(json.collections) && json.collections.length > 0) {
-      list = json.collections;
+    if (json.collections && Array.isArray(json.collections)) {
+      list = await filterActiveItems("collections", json.collections);
     } else {
-      list = DEFAULT_COLLECTIONS;
+      list = await filterActiveItems("collections", DEFAULT_COLLECTIONS);
     }
   }
 
@@ -2667,6 +2841,7 @@ export async function getCollectionByIdStore(id: string): Promise<CollectionItem
 
 export async function saveCollectionStore(item: Partial<CollectionItem>): Promise<CollectionItem> {
   const slug = item.id || (item.name ? item.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : `collection-${Date.now()}`);
+  await removeDeletedIdStore("collections", slug);
   const full: CollectionItem = {
     id: slug,
     name: item.name || "Untitled Collection",
@@ -2695,8 +2870,10 @@ export async function saveCollectionStore(item: Partial<CollectionItem>): Promis
 }
 
 export async function deleteCollectionStore(id: string): Promise<void> {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("collections", normId);
   let list = await getAllCollectionsStore();
-  list = list.filter((c) => c.id !== id);
+  list = list.filter((c) => String(c.id).trim() !== normId);
   await syncToFirebaseCloudStore("collections", list);
   const json = readJsonStore();
   json.collections = list;
@@ -3076,6 +3253,9 @@ export async function addWorkspaceCommentStore(
 }
 
 export async function addWorkspaceDocumentStore(doc: any): Promise<any> {
+  if (doc.id) {
+    await removeDeletedIdStore("workspace_documents", doc.id);
+  }
   const all = await getAllWorkspaceProjectsStore();
   const proj = all.find((p: any) => p.id === doc.projectId);
   if (proj) {
@@ -3091,12 +3271,14 @@ export async function addWorkspaceDocumentStore(doc: any): Promise<any> {
 }
 
 export async function deleteWorkspaceDocumentStore(docId: string, projectId?: string): Promise<boolean> {
+  const normId = String(docId).trim();
+  await recordDeletedIdStore("workspace_documents", normId);
   const all = await getAllWorkspaceProjectsStore();
   let found = false;
   for (const proj of all) {
     if (projectId && proj.id !== projectId) continue;
     if (Array.isArray(proj.documents)) {
-      const idx = proj.documents.findIndex((d: any) => d.id === docId);
+      const idx = proj.documents.findIndex((d: any) => String(d.id).trim() === normId);
       if (idx !== -1) {
         proj.documents.splice(idx, 1);
         found = true;
@@ -3149,19 +3331,34 @@ export async function getDownloadFoldersStore(): Promise<BrandDownloadFolder[]> 
   const fbData = await fetchFromFirebaseCloudStore("downloadFolders");
   let folders: BrandDownloadFolder[] = [];
 
-  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+  if (fbData && Array.isArray(fbData)) {
     folders = fbData;
   } else {
     const json = readJsonStore();
-    if (json.downloadFolders && Array.isArray(json.downloadFolders) && json.downloadFolders.length > 0) {
+    if (json.downloadFolders && Array.isArray(json.downloadFolders)) {
       folders = json.downloadFolders;
     }
   }
 
-  // Ensure all 20 brands from the system have a folder
+  // Ensure all active brands from the system have a folder
   const brands = await getBrandsStore();
-  const existingFolderIds = new Set(folders.map((f) => f.id));
+  const activeBrandIds = new Set(brands.map((b) => b.id));
+  const activeBrandNames = new Set(brands.map((b) => b.name.toLowerCase()));
 
+  // Filter out any folders whose brand was deleted
+  folders = folders.filter((f) => activeBrandIds.has(f.id) || activeBrandNames.has(f.brandName.toLowerCase()));
+
+  // Filter out any deleted PDF files using deletedIds
+  const deletedMap = await getDeletedIdsStore();
+  const deletedPdfs = new Set((deletedMap["downloads"] || []).map((x) => String(x).trim()));
+
+  folders.forEach((f) => {
+    if (Array.isArray(f.files)) {
+      f.files = f.files.filter((file) => !deletedPdfs.has(String(file.id || "").trim()));
+    }
+  });
+
+  const existingFolderIds = new Set(folders.map((f) => f.id));
   let hasUpdates = false;
 
   for (const b of brands) {
@@ -3172,9 +3369,10 @@ export async function getDownloadFoldersStore(): Promise<BrandDownloadFolder[]> 
       // Add attached PDF catalogs if present
       if (Array.isArray(b.pdfCatalogs) && b.pdfCatalogs.length > 0) {
         b.pdfCatalogs.forEach((pc: any, idx: number) => {
-          if (pc && pc.pdfUrl) {
+          const pId = pc.id || `pdf-${b.id}-${idx}`;
+          if (pc && pc.pdfUrl && !deletedPdfs.has(pId)) {
             initialFiles.push({
-              id: pc.id || `pdf-${b.id}-${idx}`,
+              id: pId,
               title: pc.title || `${b.name} Catalog`,
               fileName: pc.fileName || `${b.name}_Catalog.pdf`,
               fileUrl: pc.pdfUrl,
@@ -3187,17 +3385,20 @@ export async function getDownloadFoldersStore(): Promise<BrandDownloadFolder[]> 
           }
         });
       } else if (b.catalogPdfUrl) {
-        initialFiles.push({
-          id: `pdf-${b.id}-0`,
-          title: `${b.name} Official Catalog`,
-          fileName: `${b.name}_Catalog.pdf`,
-          fileUrl: b.catalogPdfUrl,
-          fileSize: "PDF Document",
-          pageCount: 1,
-          coverImage: b.bannerUrl || "/brands/brand_1_1.jpg",
-          category: b.category || "Catalog",
-          createdAt: new Date().toISOString(),
-        });
+        const pId = `pdf-${b.id}-0`;
+        if (!deletedPdfs.has(pId)) {
+          initialFiles.push({
+            id: pId,
+            title: `${b.name} Official Catalog`,
+            fileName: `${b.name}_Catalog.pdf`,
+            fileUrl: b.catalogPdfUrl,
+            fileSize: "PDF Document",
+            pageCount: 1,
+            coverImage: b.bannerUrl || "/brands/brand_1_1.jpg",
+            category: b.category || "Catalog",
+            createdAt: new Date().toISOString(),
+          });
+        }
       }
 
       folders.push({
@@ -3250,6 +3451,8 @@ export async function addPdfToBrandFolderStore(brandId: string, pdf: Partial<Dow
     updatedAt: new Date().toISOString(),
   };
 
+  await removeDeletedIdStore("downloads", newPdf.id);
+
   if (folder) {
     if (!Array.isArray(folder.files)) folder.files = [];
     const idx = folder.files.findIndex((f) => f.id === newPdf.id);
@@ -3268,11 +3471,13 @@ export async function addPdfToBrandFolderStore(brandId: string, pdf: Partial<Dow
 }
 
 export async function deletePdfFromBrandFolderStore(brandId: string, pdfId: string): Promise<boolean> {
+  const normId = String(pdfId).trim();
+  await recordDeletedIdStore("downloads", normId);
   const folders = await getDownloadFoldersStore();
   const folder = folders.find((f) => f.id === brandId || f.brandName.toLowerCase() === brandId.toLowerCase());
 
   if (folder && Array.isArray(folder.files)) {
-    folder.files = folder.files.filter((f) => f.id !== pdfId);
+    folder.files = folder.files.filter((f) => String(f.id).trim() !== normId);
     await saveDownloadFoldersStore(folders);
     return true;
   }
