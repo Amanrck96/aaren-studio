@@ -134,6 +134,14 @@ export default function AdminIndividualBrandPage({ params }: Props) {
       }
       const json = await res.json();
       if (json.success) {
+        if (json.data) {
+          setFormData((prev) => ({
+            ...prev,
+            ...json.data,
+            bannerUrl: json.data.bannerUrl || prev.bannerUrl,
+            logoUrl: json.data.logoUrl || prev.logoUrl,
+          }));
+        }
         showToast("✓ Brand page details updated successfully!");
       } else {
         showToast("Error saving: " + (json.error || "Unknown error"));

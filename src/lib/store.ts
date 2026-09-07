@@ -1036,17 +1036,9 @@ function sanitizeBrand(b: BrandItem): BrandItem {
   let bannerUrl = b.bannerUrl || "";
   let logoUrl = b.logoUrl || "";
 
-  if (bannerUrl.startsWith("data:")) {
-    if (b.id === "peelply") bannerUrl = "/brands/peelply_banner.jpg";
-    else bannerUrl = "/brands/brand_1_1.jpg";
-  }
-
-  if (logoUrl.startsWith("data:")) {
-    if (b.id === "living-ceramica") logoUrl = "/brands/logos/living-ceramica_logo.png";
-    else if (b.id === "florim") logoUrl = "/brands/logos/florim_logo.png";
-    else if (b.id === "jacuzzi") logoUrl = "/brands/logos/jacuzzi_logo.png";
-    else if (b.id === "alex-turco") logoUrl = "/brands/logos/alex-turco_logo.png";
-    else logoUrl = "";
+  // Only provide fallback if URL is completely empty
+  if (!bannerUrl) {
+    bannerUrl = b.id === "peelply" ? "/brands/peelply_banner.jpg" : "/brands/brand_1_1.jpg";
   }
 
   return {

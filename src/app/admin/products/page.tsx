@@ -345,8 +345,8 @@ export default function AdminProductsPage() {
     if (!file) return;
     try {
       const result = await uploadFileWithCompression(file, "Products");
-      if (result.success && (result.dataUrl || result.url)) {
-        setForm((prev) => ({ ...prev, imageUrl: result.dataUrl || result.url || "" }));
+      if (result.success && (result.url || result.dataUrl)) {
+        setForm((prev) => ({ ...prev, imageUrl: result.url || result.dataUrl || "" }));
         showToast("Product image uploaded successfully to Google Firebase Storage!");
       } else {
         alert("Upload error: " + (result.error || "Upload failed"));

@@ -78,7 +78,7 @@ export default function AdminHeroPage() {
     try {
       const result = await uploadFileWithCompression(file, "Hero Videos");
       if (result.success && (result.url || result.dataUrl)) {
-        setSettings((prev) => (prev ? { ...prev, heroVideoUrl: result.dataUrl || result.url || "" } : null));
+        setSettings((prev) => (prev ? { ...prev, heroVideoUrl: result.url || result.dataUrl || "" } : null));
         alert("✅ Background MP4 Video uploaded successfully to Google Firebase Storage!");
       } else {
         alert("Upload failed: " + (result.error || "Upload error"));

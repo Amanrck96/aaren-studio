@@ -31,14 +31,10 @@ export default async function BrandsPage() {
   const brands = await getBrandsStore();
 
   const mapped: MappedBrand[] = (brands || []).map((b: any) => {
-    const isBase64 = typeof b.logoUrl === "string" && b.logoUrl.startsWith("data:");
-    const explicitLogo = b.logoUrl && !isBase64 && !b.logoUrl.includes("brand_") && !b.logoUrl.endsWith("_2.png") ? b.logoUrl : "";
+    const explicitLogo = b.logoUrl && !b.logoUrl.includes("brand_") && !b.logoUrl.endsWith("_2.png") ? b.logoUrl : (b.logoUrl || "");
     const resolvedLogo = explicitLogo || LOGO_MAP[b.id] || LOGO_MAP[b.id?.toLowerCase()] || "";
 
-    let heroUrl = b.bannerUrl || b.hero || b.imageUrl || b.image || "/brands/brand_1_1.jpg";
-    if (typeof heroUrl === "string" && heroUrl.startsWith("data:")) {
-      heroUrl = b.id === "peelply" ? "/brands/peelply_banner.jpg" : "/brands/brand_1_1.jpg";
-    }
+    const heroUrl = b.bannerUrl || b.hero || b.imageUrl || b.image || (b.id === "peelply" ? "/brands/peelply_banner.jpg" : "/brands/brand_1_1.jpg");
 
     return {
       id: b.id,

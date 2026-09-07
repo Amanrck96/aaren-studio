@@ -1,8 +1,8 @@
-"use client";
-
-import { use } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { getAllProjectsStore } from "@/lib/store";
+
+export const dynamic = "force-dynamic";
 
 const ALL_PROJECTS = [
   {
@@ -149,12 +149,26 @@ const ALL_PROJECTS = [
   },
 ];
 
-export default function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params);
-  const project = ALL_PROJECTS.find((p) => p.slug === slug);
-  const currentIdx = ALL_PROJECTS.findIndex((p) => p.slug === slug);
-  const prevProject = currentIdx > 0 ? ALL_PROJECTS[currentIdx - 1] : null;
-  const nextProject = currentIdx < ALL_PROJECTS.length - 1 ? ALL_PROJECTS[currentIdx + 1] : null;
+export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const rawProjects = await getAllProjectsStore().catch(() => []);
+  const mappedStoreProjects = (rawProjects || []).map((p: any, idx: number) => ({
+    slug: p.slug || p.id || `project-${idx + 1}`,
+    client: p.client || p.title,
+    code: p.code || (p.client ? p.client.substring(0, 2).toUpperCase() : "PR"),
+    title: p.title,
+    year: p.year || "2025",
+    category: p.category || "Commercial",
+    team: Array.isArray(p.team) ? p.team : ["Aaren Studio"],
+    description: p.description || `${p.title} architectural case study.`,
+    images: Array.isArray(p.images) && p.images.length > 0 ? p.images : [p.imageUrl || p.image || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=85"],
+  }));
+
+  const mergedProjects = [...mappedStoreProjects, ...ALL_PROJECTS.filter(ap => !mappedStoreProjects.some(sp => sp.slug === ap.slug))];
+  const project = mergedProjects.find((p) => p.slug === slug);
+  const currentIdx = mergedProjects.findIndex((p) => p.slug === slug);
+  const prevProject = currentIdx > 0 ? mergedProjects[currentIdx - 1] : null;
+  const nextProject = currentIdx >= 0 && currentIdx < mergedProjects.length - 1 ? mergedProjects[currentIdx + 1] : null;
 
   if (!project) {
     return (
@@ -263,7 +277,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ slug: stri
             Partners & Brands
           </p>
           <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "8px" }}>
-            {project.team.map((member) => (
+            {project.team.map((member: string) => (
               <li key={member} style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)", borderBottom: "1px solid #1a1a1a", paddingBottom: "8px" }}>
                 {member}
               </li>
@@ -273,7 +287,7 @@ export default function CaseStudyPage({ params }: { params: Promise<{ slug: stri
       </div>
 
       {/* ── Additional Images ── */}
-      {project.images.slice(1).map((img, i) => (
+      {project.images.slice(1).map((img: string, i: number) => (
         <div key={i} style={{ width: "100%", aspectRatio: i % 2 === 0 ? "16/9" : "21/9", overflow: "hidden", background: "#111", borderBottom: "1px solid #1a1a1a" }}>
           <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>

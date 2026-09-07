@@ -213,6 +213,13 @@ export default function AdminIndividualProductPage({ params }: Props) {
       });
       const json = await res.json();
       if (json.success) {
+        if (json.data) {
+          setFormData((prev) => ({
+            ...prev,
+            ...json.data,
+            imageUrl: json.data.imageUrl || prev.imageUrl,
+          }));
+        }
         showToast("✓ Product details saved successfully!");
       } else {
         showToast("Error saving: " + (json.error || "Unknown error"));

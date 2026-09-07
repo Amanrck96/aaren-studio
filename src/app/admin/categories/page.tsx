@@ -90,7 +90,7 @@ export default function AdminCategoriesPage() {
     try {
       const result = await uploadFileWithCompression(file, "Categories");
       if (result.success && (result.url || result.dataUrl)) {
-        setEditingCat((prev) => (prev ? { ...prev, coverImage: result.dataUrl || result.url } : null));
+        setEditingCat((prev) => (prev ? { ...prev, coverImage: result.url || result.dataUrl } : null));
         alert("✅ Category Cover Image uploaded successfully!");
       } else {
         alert("Upload failed: " + (result.error || "Upload error"));
