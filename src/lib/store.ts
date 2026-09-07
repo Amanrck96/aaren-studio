@@ -104,6 +104,16 @@ function normalizeFirebaseData(data: any): any {
 
 const FIREBASE_RTDB_STORE_URL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || "https://aarenintpro-1c09f-default-rtdb.firebaseio.com";
 
+function getFirebaseStoreUrl(pathWithDotJson: string): string {
+  const secret = process.env.FIREBASE_DATABASE_SECRET || process.env.FIREBASE_SECRET;
+  const baseUrl = `${FIREBASE_RTDB_STORE_URL}${pathWithDotJson}`;
+  if (secret) {
+    const sep = baseUrl.includes("?") ? "&" : "?";
+    return `${baseUrl}${sep}auth=${secret}`;
+  }
+  return baseUrl;
+}
+
 async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
   // Check short TTL cache first
   const cached = getMemoryCached(key);
@@ -111,7 +121,7 @@ async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
 
   try {
     // 1. Check /store/${key}.json (Primary live admin path with 4500ms timeout)
-    const storeRes = await fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
+    const storeRes = await fetch(getFirebaseStoreUrl(`/store/${key}.json`), {
       cache: "no-store",
       headers: { "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
       signal: AbortSignal.timeout(4500),
@@ -128,7 +138,7 @@ async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
     }
 
     // 2. Fallback to /${key}.json
-    const rootRes = await fetch(`${FIREBASE_RTDB_STORE_URL}/${key}.json`, {
+    const rootRes = await fetch(getFirebaseStoreUrl(`/${key}.json`), {
       cache: "no-store",
       headers: { "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
       signal: AbortSignal.timeout(4500),
@@ -241,13 +251,13 @@ async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
   try {
     // 2. Instant Dual-write to Firebase Realtime Database (/store/ and /)
     await Promise.allSettled([
-      fetch(`${FIREBASE_RTDB_STORE_URL}/store/${key}.json`, {
+      fetch(getFirebaseStoreUrl(`/store/${key}.json`), {
         method: "PUT",
         cache: "no-store",
         headers: { "Content-Type": "application/json", "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
         body: JSON.stringify(data),
       }),
-      fetch(`${FIREBASE_RTDB_STORE_URL}/${key}.json`, {
+      fetch(getFirebaseStoreUrl(`/${key}.json`), {
         method: "PUT",
         cache: "no-store",
         headers: { "Content-Type": "application/json", "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
@@ -355,7 +365,9 @@ function writeJsonStore(data: any) {
       console.warn("FileSystem write fallback to memory:", e);
     }
   }
-  // GitHub sync intentionally removed from here too — only sync individual collection writes
+
+  // Trigger GitHub commit sync if GITHUB_TOKEN is available
+  syncStoreToGitHub(data).catch(() => {});
 }
 
 // Default Data Definitions
@@ -804,6 +816,7 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
     json.settings = fbData;
     globalThis.__AAREN_MEMORY_STORE__ = json;
     return {
+      ...DEFAULT_SETTINGS,
       ...fbData,
       footerLinks: Array.from(new Set([...(fbData.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
     };
@@ -813,6 +826,7 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
   const json = readJsonStore();
   if (json.settings && json.settings.heroTitle) {
     return {
+      ...DEFAULT_SETTINGS,
       ...json.settings,
       footerLinks: Array.from(new Set([...(json.settings.footerLinks || []), "All Projects", "Brands", "Products", "Instagram", "FAQ", "Blog", "Privacy Policy"])),
     };
@@ -1067,6 +1081,7 @@ export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: strin
   const json = readJsonStore();
   json.brands = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   // 4. Background Prisma
   try {
@@ -1101,6 +1116,7 @@ export async function deleteBrandStore(id: string) {
   const json = readJsonStore();
   json.brands = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   try { await prisma.brand.delete({ where: { id } }); } catch (e) {}
 }
@@ -1187,6 +1203,7 @@ export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: 
   const json = readJsonStore();
   json.products = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   // 4. Background Prisma sync
   prisma.product.upsert({
@@ -1250,6 +1267,7 @@ export async function deleteProductStore(id: string) {
   const json = readJsonStore();
   json.products = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   try { await prisma.product.delete({ where: { id } }); } catch (e) {}
 }
@@ -1450,6 +1468,7 @@ export async function saveCategoryStore(cat: Omit<CategoryItem, "id"> & { id?: s
   const json = readJsonStore();
   json.categories = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   // 4. Background Prisma
   try { await prisma.category.upsert({ where: { id }, update: cat, create: { id, ...cat } }); } catch (e) {}
@@ -1469,6 +1488,7 @@ export async function deleteCategoryStore(id: string) {
   const json = readJsonStore();
   json.categories = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   try { await prisma.category.delete({ where: { id } }); } catch (e) {}
 }
@@ -1492,7 +1512,10 @@ export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "i
   await syncToFirebaseCloudStore("projects", current);
 
   // 3. Local memory
-  const json = readJsonStore(); json.projects = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.projects = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   // 4. Background Prisma
   try { await prisma.project.upsert({ where: { id }, update: { title: projectData.title, slug, description: projectData.description, category: projectData.category, client: projectData.client, projectCode: projectData.projectCode || "OB 01", sequenceNumber: projectData.sequenceNumber || 1, imageUrl: mainImg, gallery: galleryImgs }, create: { id, title: projectData.title, slug, description: projectData.description, category: projectData.category, client: projectData.client, projectCode: projectData.projectCode || "OB 01", sequenceNumber: projectData.sequenceNumber || 1, imageUrl: mainImg, gallery: galleryImgs } }); } catch (err) {}
@@ -1507,7 +1530,10 @@ export async function deleteProjectStore(id: string) {
   else { const j = readJsonStore(); current = j.projects || []; }
   current = current.filter((p: any) => p.id !== id);
   await syncToFirebaseCloudStore("projects", current);
-  const json = readJsonStore(); json.projects = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.projects = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   try { await prisma.project.delete({ where: { id } }); } catch (e) {}
 }
 
@@ -1588,6 +1614,7 @@ export async function reorderTeamStore(teamList: TeamMemberItem[]): Promise<Team
   const json = readJsonStore();
   json.team = teamList;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   return teamList;
 }
 
@@ -1624,6 +1651,7 @@ export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & {
   const json = readJsonStore();
   json.team = currentTeam;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   // 4. Background: try Prisma (will fail on Vercel with local DB, that's OK)
   try {
@@ -1657,6 +1685,7 @@ export async function deleteTeamMemberStore(id: string) {
   const json = readJsonStore();
   json.team = currentTeam;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   // 4. Background Prisma (fails silently on Vercel)
   try { await prisma.teamMember.delete({ where: { id } }); } catch (e) {}
@@ -1688,6 +1717,7 @@ export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & {
   const json = readJsonStore();
   json.roadmap = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   try { await prisma.roadmapStep.upsert({ where: { id }, update: step, create: { id, ...step } }); } catch (e) {}
   return full;
@@ -1704,6 +1734,7 @@ export async function deleteRoadmapStepStore(id: string) {
   const json = readJsonStore();
   json.roadmap = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 
   try { await prisma.roadmapStep.delete({ where: { id } }); } catch (e) {}
 }
@@ -1713,6 +1744,7 @@ export async function reorderRoadmapStore(steps: RoadmapStepItem[]): Promise<Roa
   const json = readJsonStore();
   json.roadmap = steps;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   return steps;
 }
 
@@ -1739,6 +1771,7 @@ export async function saveTeamJoinBannerStore(banner: TeamJoinBanner): Promise<T
   const json = readJsonStore();
   json.joinBanner = updated;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   return updated;
 }
 
@@ -1757,7 +1790,7 @@ export async function getInquiriesStore(): Promise<InquiryItem[]> {
 
   let firebaseInquiries: InquiryItem[] = [];
   try {
-    const res = await fetch(`${FIREBASE_RTDB_URL}/inquiries.json`, { cache: "no-store" });
+    const res = await fetch(getFirebaseStoreUrl(`/inquiries.json`), { cache: "no-store" });
     if (res.ok) {
       const fbData = await res.json();
       if (fbData && typeof fbData === "object") {
@@ -1845,7 +1878,7 @@ export async function logInquiryStore(data: {
 
   // 3. Firebase Realtime Database Cloud Sync (Ensures leads persist across Vercel serverless cold-starts)
   try {
-    await fetch(`${FIREBASE_RTDB_URL}/inquiries/${id}.json`, {
+    await fetch(getFirebaseStoreUrl(`/inquiries/${id}.json`), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(full),
@@ -1945,7 +1978,7 @@ export async function logPdfViewStore(data: {
 export async function deleteInquiryStore(id: string): Promise<boolean> {
   // Delete from Firebase Cloud DB
   try {
-    await fetch(`${FIREBASE_RTDB_URL}/inquiries/${id}.json`, { method: "DELETE" });
+    await fetch(getFirebaseStoreUrl(`/inquiries/${id}.json`), { method: "DELETE" });
   } catch (e) {}
 
   // Delete from Prisma DB
@@ -1993,7 +2026,7 @@ export async function getAllFAQsStore(): Promise<FaqItem[]> {
     : (BRANDWISE_FAQS as FaqItem[]);
 
   const fbData = await fetchFromFirebaseCloudStore("faqs");
-  if (fbData && Array.isArray(fbData) && fbData.length >= masterFaqs.length) {
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
     json.faqs = fbData;
     globalThis.__AAREN_MEMORY_STORE__ = json;
     return fbData;
@@ -2022,6 +2055,7 @@ export async function saveFAQStore(faq: Partial<FaqItem>): Promise<FaqItem> {
   const json = readJsonStore();
   json.faqs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   return full;
 }
 
@@ -2032,6 +2066,7 @@ export async function deleteFAQStore(id: string): Promise<void> {
   const json = readJsonStore();
   json.faqs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 }
 
 export async function importFAQsBulkStore(faqs: FaqItem[]): Promise<FaqItem[]> {
@@ -2039,6 +2074,7 @@ export async function importFAQsBulkStore(faqs: FaqItem[]): Promise<FaqItem[]> {
   const json = readJsonStore();
   json.faqs = faqs;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   return faqs;
 }
 
@@ -2067,7 +2103,10 @@ export async function saveServiceStore(service: Omit<ServiceItem, "id"> & { id?:
   const idx = current.findIndex((s: any) => s.id === id);
   if (idx >= 0) current[idx] = full; else current.push(full);
   await syncToFirebaseCloudStore("services", current);
-  const json = readJsonStore(); json.services = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.services = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   try { await prisma.service.upsert({ where: { id }, update: service, create: { id, ...service } }); } catch (e) {}
   return full;
 }
@@ -2079,7 +2118,10 @@ export async function deleteServiceStore(id: string) {
   else { const j = readJsonStore(); current = j.services || []; }
   current = current.filter((s: any) => s.id !== id);
   await syncToFirebaseCloudStore("services", current);
-  const json = readJsonStore(); json.services = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.services = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   try { await prisma.service.delete({ where: { id } }); } catch (e) {}
 }
 
@@ -2115,7 +2157,10 @@ export async function saveTestimonialStore(testimonial: Omit<TestimonialItem, "i
   const idx = current.findIndex((t: any) => t.id === id);
   if (idx >= 0) current[idx] = full; else current.push(full);
   await syncToFirebaseCloudStore("testimonials", current);
-  const json = readJsonStore(); json.testimonials = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.testimonials = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   try { await prisma.testimonial.upsert({ where: { id }, update: testimonial, create: { id, ...testimonial } }); } catch (e) {}
   return full;
 }
@@ -2127,7 +2172,10 @@ export async function deleteTestimonialStore(id: string) {
   else { const j = readJsonStore(); current = j.testimonials || []; }
   current = current.filter((t: any) => t.id !== id);
   await syncToFirebaseCloudStore("testimonials", current);
-  const json = readJsonStore(); json.testimonials = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.testimonials = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   try { await prisma.testimonial.delete({ where: { id } }); } catch (e) {}
 }
 
@@ -2164,7 +2212,10 @@ export async function saveBlogStore(blog: Omit<BlogItem, "id"> & { id?: string }
   const idx = current.findIndex((b: any) => b.id === id);
   if (idx >= 0) current[idx] = full; else current.unshift(full);
   await syncToFirebaseCloudStore("blogs", current);
-  const json = readJsonStore(); json.blogs = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.blogs = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   try { await prisma.blog.upsert({ where: { id }, update: full, create: full }); } catch (e) {}
   return full;
 }
@@ -2176,7 +2227,10 @@ export async function deleteBlogStore(id: string) {
   else { const j = readJsonStore(); current = j.blogs || []; }
   current = current.filter((b: any) => b.id !== id);
   await syncToFirebaseCloudStore("blogs", current);
-  const json = readJsonStore(); json.blogs = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.blogs = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   try { await prisma.blog.delete({ where: { id } }); } catch (e) {}
 }
 
@@ -2186,6 +2240,7 @@ export async function reorderBlogsStore(blogsList: BlogItem[]): Promise<BlogItem
   const json = readJsonStore();
   json.blogs = indexed;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   return indexed;
 }
 
@@ -2351,7 +2406,10 @@ export async function saveTaxonomyStore(taxonomy: Omit<TaxonomyItem, "id"> & { i
   else current.push(full);
 
   await syncToFirebaseCloudStore("taxonomies", current);
-  const json = readJsonStore(); json.taxonomies = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.taxonomies = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   try { await prisma.taxonomy.upsert({ where: { id }, update: full, create: full }); } catch (e) {}
   return full;
 }
@@ -2363,7 +2421,10 @@ export async function deleteTaxonomyStore(id: string) {
   else { const j = readJsonStore(); current = j.taxonomies || []; }
   current = current.filter((t: any) => t.id !== id);
   await syncToFirebaseCloudStore("taxonomies", current);
-  const json = readJsonStore(); json.taxonomies = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.taxonomies = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   try { await prisma.taxonomy.delete({ where: { id } }); } catch (e) {}
 }
 
@@ -2405,7 +2466,10 @@ export async function savePageStore(page: Omit<CustomPageItem, "id"> & { id?: st
   else current.push(full);
 
   await syncToFirebaseCloudStore("pages", current);
-  const json = readJsonStore(); json.pages = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.pages = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   return full;
 }
 
@@ -2416,7 +2480,10 @@ export async function deletePageStore(id: string) {
   else { const j = readJsonStore(); current = j.pages || []; }
   current = current.filter((p: any) => p.id !== id);
   await syncToFirebaseCloudStore("pages", current);
-  const json = readJsonStore(); json.pages = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.pages = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
 }
 
 // PDF CATALOGS STORE
@@ -2498,6 +2565,7 @@ export async function saveCatalogStore(catalog: PdfCatalogItem): Promise<PdfCata
   json.pdfCatalogs = current;
   json.catalogs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   return catalog;
 }
 
@@ -2514,7 +2582,10 @@ export async function incrementCatalogDownloadCount(id: string): Promise<number>
     count = current[idx].downloadCount;
     await syncToFirebaseCloudStore("pdfCatalogs", current);
   }
-  const json = readJsonStore(); json.pdfCatalogs = current; globalThis.__AAREN_MEMORY_STORE__ = json;
+  const json = readJsonStore();
+  json.pdfCatalogs = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   return count;
 }
 
@@ -2539,6 +2610,7 @@ export async function saveBlogSettingsStore(settings: any): Promise<any> {
   const json = readJsonStore();
   json.blogSettings = settings;
   globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
   return settings;
 }
 
