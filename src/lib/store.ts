@@ -365,9 +365,7 @@ function writeJsonStore(data: any) {
       console.warn("FileSystem write fallback to memory:", e);
     }
   }
-
-  // Trigger GitHub commit sync if GITHUB_TOKEN is available
-  syncStoreToGitHub(data).catch(() => {});
+  // GitHub sync intentionally removed from here too — only sync individual collection writes
 }
 
 // Default Data Definitions
@@ -1081,7 +1079,6 @@ export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: strin
   const json = readJsonStore();
   json.brands = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   // 4. Background Prisma
   try {
@@ -1116,7 +1113,6 @@ export async function deleteBrandStore(id: string) {
   const json = readJsonStore();
   json.brands = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   try { await prisma.brand.delete({ where: { id } }); } catch (e) {}
 }
@@ -1203,7 +1199,6 @@ export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: 
   const json = readJsonStore();
   json.products = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   // 4. Background Prisma sync
   prisma.product.upsert({
@@ -1267,7 +1262,6 @@ export async function deleteProductStore(id: string) {
   const json = readJsonStore();
   json.products = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   try { await prisma.product.delete({ where: { id } }); } catch (e) {}
 }
@@ -1468,7 +1462,6 @@ export async function saveCategoryStore(cat: Omit<CategoryItem, "id"> & { id?: s
   const json = readJsonStore();
   json.categories = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   // 4. Background Prisma
   try { await prisma.category.upsert({ where: { id }, update: cat, create: { id, ...cat } }); } catch (e) {}
@@ -1488,7 +1481,6 @@ export async function deleteCategoryStore(id: string) {
   const json = readJsonStore();
   json.categories = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   try { await prisma.category.delete({ where: { id } }); } catch (e) {}
 }
@@ -1515,7 +1507,6 @@ export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "i
   const json = readJsonStore();
   json.projects = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   // 4. Background Prisma
   try { await prisma.project.upsert({ where: { id }, update: { title: projectData.title, slug, description: projectData.description, category: projectData.category, client: projectData.client, projectCode: projectData.projectCode || "OB 01", sequenceNumber: projectData.sequenceNumber || 1, imageUrl: mainImg, gallery: galleryImgs }, create: { id, title: projectData.title, slug, description: projectData.description, category: projectData.category, client: projectData.client, projectCode: projectData.projectCode || "OB 01", sequenceNumber: projectData.sequenceNumber || 1, imageUrl: mainImg, gallery: galleryImgs } }); } catch (err) {}
@@ -1533,7 +1524,6 @@ export async function deleteProjectStore(id: string) {
   const json = readJsonStore();
   json.projects = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   try { await prisma.project.delete({ where: { id } }); } catch (e) {}
 }
 
@@ -1614,7 +1604,6 @@ export async function reorderTeamStore(teamList: TeamMemberItem[]): Promise<Team
   const json = readJsonStore();
   json.team = teamList;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   return teamList;
 }
 
@@ -1651,7 +1640,6 @@ export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & {
   const json = readJsonStore();
   json.team = currentTeam;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   // 4. Background: try Prisma (will fail on Vercel with local DB, that's OK)
   try {
@@ -1685,7 +1673,6 @@ export async function deleteTeamMemberStore(id: string) {
   const json = readJsonStore();
   json.team = currentTeam;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   // 4. Background Prisma (fails silently on Vercel)
   try { await prisma.teamMember.delete({ where: { id } }); } catch (e) {}
@@ -1717,7 +1704,6 @@ export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & {
   const json = readJsonStore();
   json.roadmap = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   try { await prisma.roadmapStep.upsert({ where: { id }, update: step, create: { id, ...step } }); } catch (e) {}
   return full;
@@ -1734,7 +1720,6 @@ export async function deleteRoadmapStepStore(id: string) {
   const json = readJsonStore();
   json.roadmap = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   try { await prisma.roadmapStep.delete({ where: { id } }); } catch (e) {}
 }
@@ -1744,7 +1729,6 @@ export async function reorderRoadmapStore(steps: RoadmapStepItem[]): Promise<Roa
   const json = readJsonStore();
   json.roadmap = steps;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   return steps;
 }
 
@@ -1771,7 +1755,6 @@ export async function saveTeamJoinBannerStore(banner: TeamJoinBanner): Promise<T
   const json = readJsonStore();
   json.joinBanner = updated;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   return updated;
 }
 
@@ -2055,7 +2038,6 @@ export async function saveFAQStore(faq: Partial<FaqItem>): Promise<FaqItem> {
   const json = readJsonStore();
   json.faqs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   return full;
 }
 
@@ -2066,7 +2048,6 @@ export async function deleteFAQStore(id: string): Promise<void> {
   const json = readJsonStore();
   json.faqs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 }
 
 export async function importFAQsBulkStore(faqs: FaqItem[]): Promise<FaqItem[]> {
@@ -2074,7 +2055,6 @@ export async function importFAQsBulkStore(faqs: FaqItem[]): Promise<FaqItem[]> {
   const json = readJsonStore();
   json.faqs = faqs;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   return faqs;
 }
 
@@ -2106,7 +2086,6 @@ export async function saveServiceStore(service: Omit<ServiceItem, "id"> & { id?:
   const json = readJsonStore();
   json.services = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   try { await prisma.service.upsert({ where: { id }, update: service, create: { id, ...service } }); } catch (e) {}
   return full;
 }
@@ -2121,7 +2100,6 @@ export async function deleteServiceStore(id: string) {
   const json = readJsonStore();
   json.services = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   try { await prisma.service.delete({ where: { id } }); } catch (e) {}
 }
 
@@ -2160,7 +2138,6 @@ export async function saveTestimonialStore(testimonial: Omit<TestimonialItem, "i
   const json = readJsonStore();
   json.testimonials = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   try { await prisma.testimonial.upsert({ where: { id }, update: testimonial, create: { id, ...testimonial } }); } catch (e) {}
   return full;
 }
@@ -2175,7 +2152,6 @@ export async function deleteTestimonialStore(id: string) {
   const json = readJsonStore();
   json.testimonials = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   try { await prisma.testimonial.delete({ where: { id } }); } catch (e) {}
 }
 
@@ -2215,7 +2191,6 @@ export async function saveBlogStore(blog: Omit<BlogItem, "id"> & { id?: string }
   const json = readJsonStore();
   json.blogs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   try { await prisma.blog.upsert({ where: { id }, update: full, create: full }); } catch (e) {}
   return full;
 }
@@ -2230,7 +2205,6 @@ export async function deleteBlogStore(id: string) {
   const json = readJsonStore();
   json.blogs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   try { await prisma.blog.delete({ where: { id } }); } catch (e) {}
 }
 
@@ -2240,7 +2214,6 @@ export async function reorderBlogsStore(blogsList: BlogItem[]): Promise<BlogItem
   const json = readJsonStore();
   json.blogs = indexed;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   return indexed;
 }
 
@@ -2409,7 +2382,6 @@ export async function saveTaxonomyStore(taxonomy: Omit<TaxonomyItem, "id"> & { i
   const json = readJsonStore();
   json.taxonomies = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   try { await prisma.taxonomy.upsert({ where: { id }, update: full, create: full }); } catch (e) {}
   return full;
 }
@@ -2424,7 +2396,6 @@ export async function deleteTaxonomyStore(id: string) {
   const json = readJsonStore();
   json.taxonomies = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   try { await prisma.taxonomy.delete({ where: { id } }); } catch (e) {}
 }
 
@@ -2469,7 +2440,6 @@ export async function savePageStore(page: Omit<CustomPageItem, "id"> & { id?: st
   const json = readJsonStore();
   json.pages = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   return full;
 }
 
@@ -2483,7 +2453,6 @@ export async function deletePageStore(id: string) {
   const json = readJsonStore();
   json.pages = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 }
 
 // PDF CATALOGS STORE
@@ -2565,7 +2534,6 @@ export async function saveCatalogStore(catalog: PdfCatalogItem): Promise<PdfCata
   json.pdfCatalogs = current;
   json.catalogs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   return catalog;
 }
 
@@ -2585,7 +2553,6 @@ export async function incrementCatalogDownloadCount(id: string): Promise<number>
   const json = readJsonStore();
   json.pdfCatalogs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   return count;
 }
 
@@ -2610,7 +2577,6 @@ export async function saveBlogSettingsStore(settings: any): Promise<any> {
   const json = readJsonStore();
   json.blogSettings = settings;
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
   return settings;
 }
 
