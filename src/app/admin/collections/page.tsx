@@ -138,6 +138,16 @@ export default function CollectionsAdminPage() {
       });
       const data = await res.json();
       if (data.success) {
+        const saved = data.data || payload;
+        setCollections((prev) => {
+          const idx = prev.findIndex((c) => c.id === saved.id);
+          if (idx >= 0) {
+            const copy = [...prev];
+            copy[idx] = { ...copy[idx], ...saved };
+            return copy;
+          }
+          return [...prev, saved];
+        });
         setMessage({ text: `Collection "${payload.name}" saved successfully!`, type: "success" });
         // Reset form
         setName("");

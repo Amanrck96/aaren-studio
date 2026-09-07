@@ -41,6 +41,18 @@ export default function AdminServicesPage() {
       const json = await res.json();
       if (json.success) {
         alert("Service saved successfully!");
+        const saved = json.data;
+        if (saved) {
+          setServices((prev) => {
+            const idx = prev.findIndex((s) => s.id === saved.id);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = saved;
+              return updated;
+            }
+            return [...prev, saved];
+          });
+        }
         setEditing(null);
         fetchServices();
       } else alert("Error: " + json.error);

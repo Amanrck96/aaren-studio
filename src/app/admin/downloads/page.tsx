@@ -198,6 +198,24 @@ function AdminDownloadsContent() {
 
       const json = await res.json();
       if (json.success) {
+        const savedPdf = json.data;
+        if (savedPdf && targetBrandId) {
+          setFolders((prev) => {
+            return prev.map((f) => {
+              if (f.id === targetBrandId || f.brandName.toLowerCase() === targetBrandId.toLowerCase()) {
+                const files = Array.isArray(f.files) ? [...f.files] : [];
+                const idx = files.findIndex((file) => file.id === savedPdf.id);
+                if (idx >= 0) {
+                  files[idx] = savedPdf;
+                } else {
+                  files.unshift(savedPdf);
+                }
+                return { ...f, files };
+              }
+              return f;
+            });
+          });
+        }
         setShowModal(false);
         setToast("✨ PDF link saved permanently to brand folder!");
         setTimeout(() => setToast(null), 5000);

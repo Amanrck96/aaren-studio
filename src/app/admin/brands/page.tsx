@@ -116,6 +116,18 @@ export default function AdminBrandsPage() {
       }
       const json = await res.json();
       if (json.success) {
+        const saved = json.data;
+        if (saved) {
+          setBrands((prev) => {
+            const idx = prev.findIndex((b) => b.id === saved.id);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = saved;
+              return updated;
+            }
+            return [...prev, saved];
+          });
+        }
         setShowModal(false);
         fetchBrands();
       } else {

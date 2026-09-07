@@ -151,6 +151,18 @@ export default function AdminFaqPage() {
 
       const json = await res.json();
       if (json.success) {
+        const saved = json.data;
+        if (saved) {
+          setFaqs((prev) => {
+            const idx = prev.findIndex((f) => f.id === saved.id);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = saved;
+              return updated;
+            }
+            return [saved, ...prev];
+          });
+        }
         showToast(editingFaq.id ? "✓ FAQ updated successfully!" : "✓ New FAQ created!");
         setShowModal(false);
         setCustomCategory("");

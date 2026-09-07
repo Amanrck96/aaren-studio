@@ -579,6 +579,18 @@ export default function AdminBlogsPage() {
       const json = await res.json();
       if (json.success) {
         alert("✅ Blog article saved successfully to database!");
+        const saved = json.data;
+        if (saved) {
+          setBlogs((prev) => {
+            const idx = prev.findIndex((b) => b.id === saved.id);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = saved;
+              return updated;
+            }
+            return [saved, ...prev];
+          });
+        }
         setEditing(null);
         fetchBlogs();
       } else alert("❌ Error saving blog: " + json.error);

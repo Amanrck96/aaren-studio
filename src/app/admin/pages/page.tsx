@@ -42,6 +42,18 @@ export default function AdminPagesPage() {
       const json = await res.json();
       if (json.success) {
         alert("Page and section layout saved!");
+        const saved = json.data;
+        if (saved) {
+          setPages((prev) => {
+            const idx = prev.findIndex((p) => p.id === saved.id);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = saved;
+              return updated;
+            }
+            return [...prev, saved];
+          });
+        }
         setEditing(null);
         fetchPages();
       } else alert("Error: " + json.error);

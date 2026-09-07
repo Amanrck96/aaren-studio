@@ -122,25 +122,30 @@ async function fetchFromFirebaseCloudStore(key: string): Promise<any> {
   const cached = getMemoryCached(key);
   if (cached !== null) return cached;
 
-  try {
-    // 1. Primary Authoritative Cloud Store: Firebase Storage (Public media bucket, 100% active, 0 auth barriers)
-    const storageUrl = `${FIREBASE_STORAGE_STORE_BASE}${encodeURIComponent(key)}.json?alt=media`;
-    const res = await fetch(storageUrl, {
-      cache: "no-store",
-      headers: { "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
-      signal: AbortSignal.timeout(12000),
-    });
-    if (res.ok) {
-      const raw = await res.json();
-      const data = normalizeFirebaseData(raw);
-      if (data !== null && data !== undefined) {
-        logStoreRead(key, "firebase-storage", Array.isArray(data) ? data.length : 1);
-        setMemoryCached(key, data, "firebase-storage");
-        return data;
+  // 1. Primary Authoritative Cloud Store: Firebase Storage (Public media bucket, 100% active, 0 auth barriers)
+  // Use unique cache buster _cb to prevent Google's Cloud Storage CDN edge from serving stale JSON
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const storageUrl = `${FIREBASE_STORAGE_STORE_BASE}${encodeURIComponent(key)}.json?alt=media&_cb=${Date.now()}`;
+      const res = await fetch(storageUrl, {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache" },
+        signal: AbortSignal.timeout(attempt === 1 ? 8000 : 12000),
+      });
+      if (res.ok) {
+        const raw = await res.json();
+        const data = normalizeFirebaseData(raw);
+        if (data !== null && data !== undefined) {
+          logStoreRead(key, "firebase-storage", Array.isArray(data) ? data.length : 1);
+          setMemoryCached(key, data, "firebase-storage");
+          return data;
+        }
+      }
+    } catch (err) {
+      if (attempt === 2) {
+        console.warn(`[STORE READ] Firebase storage fetch timeout/failed for key="${key}":`, (err as any)?.message || err);
       }
     }
-  } catch (err) {
-    console.warn(`[STORE READ] Firebase storage fetch timeout/failed for key="${key}":`, (err as any)?.message || err);
   }
 
   // 2. Secondary fallback: Firebase RTDB (if secret configured)
@@ -256,7 +261,10 @@ async function syncToFirebaseCloudStore(key: string, data: any): Promise<void> {
   try {
     // 2. Authoritative Cloud Store: Firebase Storage (Permanent across all serverless instances)
     const r = fbStorageRef(storage, `store/${key}.json`);
-    await uploadString(r, JSON.stringify(data), "raw");
+    await uploadString(r, JSON.stringify(data), "raw", {
+      contentType: "application/json",
+      cacheControl: "no-cache, no-store, max-age=0, must-revalidate",
+    });
   } catch (err) {
     console.error(`[STORE SYNC] Failed to upload ${key} to Firebase Storage:`, err);
   }
@@ -353,10 +361,14 @@ function getActiveStorePath(): string {
 }
 
 export function readJsonStore(): any {
+  if (globalThis.__AAREN_MEMORY_STORE__ && typeof globalThis.__AAREN_MEMORY_STORE__ === "object") {
+    return globalThis.__AAREN_MEMORY_STORE__;
+  }
   const targetPath = getActiveStorePath();
   try {
     if (fs.existsSync(targetPath)) {
       const data = JSON.parse(fs.readFileSync(targetPath, "utf-8"));
+      globalThis.__AAREN_MEMORY_STORE__ = data;
       return data;
     }
   } catch (err) {}
@@ -364,11 +376,12 @@ export function readJsonStore(): any {
   try {
     if (fs.existsSync(PRIMARY_STORE_PATH)) {
       const data = JSON.parse(fs.readFileSync(PRIMARY_STORE_PATH, "utf-8"));
+      globalThis.__AAREN_MEMORY_STORE__ = data;
       return data;
     }
   } catch (err) {}
 
-  return {
+  const fallback = {
     settings: DEFAULT_SETTINGS,
     categories: DEFAULT_CATEGORIES,
     brands: DEFAULT_BRANDS,
@@ -379,6 +392,8 @@ export function readJsonStore(): any {
     inquiries: [],
     pages: [],
   };
+  globalThis.__AAREN_MEMORY_STORE__ = fallback;
+  return fallback;
 }
 
 async function syncStoreToGitHub(data: any) {
@@ -880,7 +895,7 @@ export const DEFAULT_ROADMAP: RoadmapStepItem[] = [
 export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
   // 🔑 FIX: Always check Firebase FIRST so admin edits survive Vercel redeploys
   const fbData = await fetchFromFirebaseCloudStore("settings");
-  if (fbData && typeof fbData === "object" && fbData.heroTitle) {
+  if (fbData && typeof fbData === "object" && !Array.isArray(fbData) && Object.keys(fbData).length > 0) {
     const json = readJsonStore();
     json.settings = fbData;
     globalThis.__AAREN_MEMORY_STORE__ = json;
@@ -893,7 +908,7 @@ export async function getSiteSettingsStore(): Promise<SiteSettingsItem> {
 
   // Fallback to local JSON if Firebase unavailable
   const json = readJsonStore();
-  if (json.settings && json.settings.heroTitle) {
+  if (json.settings && typeof json.settings === "object" && !Array.isArray(json.settings) && Object.keys(json.settings).length > 0) {
     return {
       ...DEFAULT_SETTINGS,
       ...json.settings,
@@ -960,11 +975,11 @@ export async function updateSiteSettingsStore(data: Partial<SiteSettingsItem>): 
 // CATALOG SETTINGS STORE
 export async function getCatalogSettingsStore(): Promise<CatalogSettingsItem> {
   const fbData = await fetchFromFirebaseCloudStore("catalogSettings");
-  if (fbData && typeof fbData === "object" && fbData.modalTitle) {
+  if (fbData && typeof fbData === "object" && !Array.isArray(fbData) && Object.keys(fbData).length > 0) {
     return { ...DEFAULT_CATALOG_SETTINGS, ...fbData };
   }
   const json = readJsonStore();
-  if (json.catalogSettings && json.catalogSettings.modalTitle) {
+  if (json.catalogSettings && typeof json.catalogSettings === "object" && !Array.isArray(json.catalogSettings) && Object.keys(json.catalogSettings).length > 0) {
     return { ...DEFAULT_CATALOG_SETTINGS, ...json.catalogSettings };
   }
   return DEFAULT_CATALOG_SETTINGS;
@@ -1102,8 +1117,16 @@ export async function saveBrandStore(brand: Omit<BrandItem, "id"> & { id?: strin
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.brands || []; }
 
-  const idx = current.findIndex((b: any) => b.id === id || b.name.toLowerCase() === full.name.toLowerCase());
-  if (idx >= 0) current[idx] = { ...current[idx], ...full };
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const targetNormId = norm(id);
+  const targetNormName = norm(full.name || "");
+  const idx = current.findIndex(
+    (b: any) =>
+      b.id === id ||
+      (b.id && targetNormId && norm(b.id) === targetNormId) ||
+      (b.name && targetNormName && norm(b.name) === targetNormName)
+  );
+  if (idx >= 0) current[idx] = { ...current[idx], ...full, id: current[idx].id || id };
   else current.push(full);
 
   // 2. Save directly to Firebase
@@ -1262,8 +1285,12 @@ export async function addProductStore(product: Omit<ProductItem, "id"> & { id?: 
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.products || []; }
 
-  const idx = current.findIndex((p: any) => p.id === id);
-  if (idx >= 0) current[idx] = fullProduct;
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const targetNormId = norm(id);
+  const idx = current.findIndex(
+    (p: any) => p.id === id || (p.id && targetNormId && norm(p.id) === targetNormId)
+  );
+  if (idx >= 0) current[idx] = { ...current[idx], ...fullProduct, id: current[idx].id || id };
   else current.unshift(fullProduct);
 
   // 2. Save directly to Firebase
@@ -1319,7 +1346,7 @@ export async function updateProductStore(id: string, updates: Partial<ProductIte
       imageUrl: updates.imageUrl || "/brands/brand_1_1.jpg",
     }),
     ...updates,
-    id,
+    id: existing?.id || id,
   };
 
   return await addProductStore(fullUpdated);
@@ -1532,8 +1559,16 @@ export async function saveCategoryStore(cat: Omit<CategoryItem, "id"> & { id?: s
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.categories || []; }
 
-  const idx = current.findIndex((c: any) => c.id === id);
-  if (idx >= 0) current[idx] = full;
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const targetNormId = norm(id);
+  const targetNormName = norm(full.name || "");
+  const idx = current.findIndex(
+    (c: any) =>
+      c.id === id ||
+      (c.id && targetNormId && norm(c.id) === targetNormId) ||
+      (c.name && targetNormName && norm(c.name) === targetNormName)
+  );
+  if (idx >= 0) current[idx] = { ...current[idx], ...full, id: current[idx].id || id };
   else current.push(full);
 
   // 2. Save to Firebase directly
@@ -1584,8 +1619,19 @@ export async function saveProjectStore(projectData: Omit<ProjectShowcaseItem, "i
   const fbData = await fetchFromFirebaseCloudStore("projects");
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.projects || []; }
-  const idx = current.findIndex((p: any) => p.id === id);
-  if (idx >= 0) current[idx] = full; else current.push(full);
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const targetNormId = norm(id);
+  const targetNormSlug = norm(slug);
+  const targetNormTitle = norm(full.title || "");
+  const idx = current.findIndex(
+    (p: any) =>
+      p.id === id ||
+      (p.id && targetNormId && norm(p.id) === targetNormId) ||
+      (p.slug && targetNormSlug && norm(p.slug) === targetNormSlug) ||
+      (p.title && targetNormTitle && norm(p.title) === targetNormTitle)
+  );
+  if (idx >= 0) current[idx] = { ...current[idx], ...full, id: current[idx].id || id };
+  else current.push(full);
 
   // 2. Save to Firebase directly
   await syncToFirebaseCloudStore("projects", current);
@@ -1647,9 +1693,17 @@ export async function saveCareerStore(career: Omit<CareerItem, "id"> & { id?: st
   const full: CareerItem = { ...career, id, createdAt: new Date().toISOString() };
   await removeDeletedIdStore("careers", id);
 
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const targetNormId = norm(id);
+  const targetNormTitle = norm(full.title || "");
   let current: CareerItem[] = await getCareersStore();
-  const idx = current.findIndex((c) => c.id === id);
-  if (idx >= 0) current[idx] = full;
+  const idx = current.findIndex(
+    (c: any) =>
+      c.id === id ||
+      (c.id && targetNormId && norm(c.id) === targetNormId) ||
+      (c.title && targetNormTitle && norm(c.title) === targetNormTitle)
+  );
+  if (idx >= 0) current[idx] = { ...current[idx], ...full, id: current[idx].id || id };
   else current.unshift(full);
   await syncToFirebaseCloudStore("careers", current);
   const json = readJsonStore();
@@ -1711,13 +1765,16 @@ export async function saveTeamMemberStore(member: Omit<TeamMemberItem, "id"> & {
   // 1. Get complete current team (defaults + custom additions)
   let currentTeam = await getTeamStore();
 
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
   let targetId = member.id;
   let idx = -1;
   if (targetId) {
-    idx = currentTeam.findIndex((t: any) => t.id === targetId);
+    const targetNormId = norm(targetId);
+    idx = currentTeam.findIndex((t: any) => t.id === targetId || (t.id && targetNormId && norm(t.id) === targetNormId));
   }
   if (idx === -1 && member.name) {
-    idx = currentTeam.findIndex((t: any) => t.name.trim().toLowerCase() === member.name.trim().toLowerCase());
+    const targetNormName = norm(member.name);
+    idx = currentTeam.findIndex((t: any) => t.name && norm(t.name) === targetNormName);
   }
 
   if (idx >= 0) {
@@ -1798,6 +1855,7 @@ export async function getRoadmapStore(): Promise<RoadmapStepItem[]> {
 }
 
 export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & { id?: string }) {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   const id = step.id || `rm-${Date.now()}`;
   const full = { ...step, id };
   await removeDeletedIdStore("roadmap", id);
@@ -1807,9 +1865,23 @@ export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & {
   if (fbData && Array.isArray(fbData)) current = fbData;
   else { const j = readJsonStore(); current = j.roadmap || [...DEFAULT_ROADMAP]; }
 
-  const idx = current.findIndex((r: any) => r.id === id);
-  if (idx >= 0) current[idx] = full;
-  else current.push(full);
+  const targetNormId = norm(id);
+  const targetNormTitle = norm(step.title);
+  const idx = current.findIndex((r: any) => {
+    if (!r) return false;
+    if (r.id === id) return true;
+    if (targetNormId && norm(r.id) === targetNormId) return true;
+    if (targetNormTitle && norm(r.title) === targetNormTitle) return true;
+    return false;
+  });
+
+  if (idx >= 0) {
+    const existingId = current[idx].id;
+    full.id = existingId || id;
+    current[idx] = full;
+  } else {
+    current.push(full);
+  }
 
   await syncToFirebaseCloudStore("roadmap", current);
   const json = readJsonStore();
@@ -1817,7 +1889,7 @@ export async function saveRoadmapStepStore(step: Omit<RoadmapStepItem, "id"> & {
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
 
-  try { await prisma.roadmapStep.upsert({ where: { id }, update: step, create: { id, ...step } }); } catch (e) {}
+  try { await prisma.roadmapStep.upsert({ where: { id: full.id }, update: step, create: { id: full.id, ...step } }); } catch (e) {}
   return full;
 }
 
@@ -2142,6 +2214,7 @@ export async function getAllFAQsStore(): Promise<FaqItem[]> {
 }
 
 export async function saveFAQStore(faq: Partial<FaqItem>): Promise<FaqItem> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   const id = faq.id || `faq-${Date.now()}`;
   await removeDeletedIdStore("faqs", id);
   const full: FaqItem = {
@@ -2154,9 +2227,23 @@ export async function saveFAQStore(faq: Partial<FaqItem>): Promise<FaqItem> {
   };
 
   let current = await getAllFAQsStore();
-  const idx = current.findIndex((f: any) => f.id === id);
-  if (idx >= 0) current[idx] = full;
-  else current.unshift(full);
+  const targetNormId = norm(id);
+  const targetNormQ = norm(faq.question);
+  const idx = current.findIndex((f: any) => {
+    if (!f) return false;
+    if (f.id === id) return true;
+    if (targetNormId && norm(f.id) === targetNormId) return true;
+    if (targetNormQ && norm(f.question) === targetNormQ && norm(f.brand) === norm(faq.brand)) return true;
+    return false;
+  });
+
+  if (idx >= 0) {
+    const existingId = current[idx].id;
+    full.id = existingId || id;
+    current[idx] = full;
+  } else {
+    current.unshift(full);
+  }
 
   await syncToFirebaseCloudStore("faqs", current);
   const json = readJsonStore();
@@ -2214,18 +2301,35 @@ export async function getServicesStore(): Promise<ServiceItem[]> {
 }
 
 export async function saveServiceStore(service: Omit<ServiceItem, "id"> & { id?: string }): Promise<ServiceItem> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   const id = service.id || `srv-${Date.now()}`;
   await removeDeletedIdStore("services", id);
   const full = { ...service, id };
   let current: ServiceItem[] = await getServicesStore();
-  const idx = current.findIndex((s: any) => s.id === id);
-  if (idx >= 0) current[idx] = full; else current.push(full);
+  const targetNormId = norm(id);
+  const targetNormTitle = norm(service.title);
+  const idx = current.findIndex((s: any) => {
+    if (!s) return false;
+    if (s.id === id) return true;
+    if (targetNormId && norm(s.id) === targetNormId) return true;
+    if (targetNormTitle && norm(s.title) === targetNormTitle) return true;
+    return false;
+  });
+
+  if (idx >= 0) {
+    const existingId = current[idx].id;
+    full.id = existingId || id;
+    current[idx] = full;
+  } else {
+    current.push(full);
+  }
+
   await syncToFirebaseCloudStore("services", current);
   const json = readJsonStore();
   json.services = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
-  try { await prisma.service.upsert({ where: { id }, update: service, create: { id, ...service } }); } catch (e) {}
+  try { await prisma.service.upsert({ where: { id: full.id }, update: service, create: { id: full.id, ...service } }); } catch (e) {}
   return full;
 }
 
@@ -2276,12 +2380,29 @@ export async function getTestimonialsStore(): Promise<TestimonialItem[]> {
 }
 
 export async function saveTestimonialStore(testimonial: Omit<TestimonialItem, "id"> & { id?: string }): Promise<TestimonialItem> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   const id = testimonial.id || `t-${Date.now()}`;
   await removeDeletedIdStore("testimonials", id);
   const full = { ...testimonial, id };
   let current: TestimonialItem[] = await getTestimonialsStore();
-  const idx = current.findIndex((t: any) => t.id === id);
-  if (idx >= 0) current[idx] = full; else current.push(full);
+  const targetNormId = norm(id);
+  const targetNormName = norm(testimonial.clientName);
+  const idx = current.findIndex((t: any) => {
+    if (!t) return false;
+    if (t.id === id) return true;
+    if (targetNormId && norm(t.id) === targetNormId) return true;
+    if (targetNormName && norm(t.clientName) === targetNormName) return true;
+    return false;
+  });
+
+  if (idx >= 0) {
+    const existingId = current[idx].id;
+    full.id = existingId || id;
+    current[idx] = full;
+  } else {
+    current.push(full);
+  }
+
   await syncToFirebaseCloudStore("testimonials", current);
   const json = readJsonStore();
   json.testimonials = current;
@@ -2337,19 +2458,38 @@ export async function getBlogsStore(): Promise<BlogItem[]> {
 }
 
 export async function saveBlogStore(blog: Omit<BlogItem, "id"> & { id?: string }): Promise<BlogItem> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   const id = blog.id || `blog-${Date.now()}`;
   await removeDeletedIdStore("blogs", id);
   const slug = blog.slug || blog.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full = { ...blog, id, slug };
   let current: BlogItem[] = await getBlogsStore();
-  const idx = current.findIndex((b: any) => b.id === id);
-  if (idx >= 0) current[idx] = full; else current.unshift(full);
+  const targetNormId = norm(id);
+  const targetNormSlug = norm(slug);
+  const targetNormTitle = norm(blog.title);
+  const idx = current.findIndex((b: any) => {
+    if (!b) return false;
+    if (b.id === id) return true;
+    if (targetNormId && norm(b.id) === targetNormId) return true;
+    if (targetNormSlug && norm(b.slug) === targetNormSlug) return true;
+    if (targetNormTitle && norm(b.title) === targetNormTitle) return true;
+    return false;
+  });
+
+  if (idx >= 0) {
+    const existingId = current[idx].id;
+    full.id = existingId || id;
+    current[idx] = full;
+  } else {
+    current.unshift(full);
+  }
+
   await syncToFirebaseCloudStore("blogs", current);
   const json = readJsonStore();
   json.blogs = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
-  try { await prisma.blog.upsert({ where: { id }, update: full, create: full }); } catch (e) {}
+  try { await prisma.blog.upsert({ where: { id: full.id }, update: full, create: full }); } catch (e) {}
   return full;
 }
 
@@ -2544,21 +2684,37 @@ export async function getTaxonomiesStore(): Promise<TaxonomyItem[]> {
 }
 
 export async function saveTaxonomyStore(taxonomy: Omit<TaxonomyItem, "id"> & { id?: string }): Promise<TaxonomyItem> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   const id = taxonomy.id || `tax-${Date.now()}`;
   await removeDeletedIdStore("taxonomies", id);
   const full = { ...taxonomy, id };
   let current: TaxonomyItem[] = await getTaxonomiesStore();
 
-  const idx = current.findIndex((t: any) => t.id === id);
-  if (idx >= 0) current[idx] = full;
-  else current.push(full);
+  const targetNormId = norm(id);
+  const targetNormName = norm(taxonomy.name);
+  const targetType = taxonomy.type;
+  const idx = current.findIndex((t: any) => {
+    if (!t) return false;
+    if (t.id === id) return true;
+    if (targetNormId && norm(t.id) === targetNormId) return true;
+    if (targetType && t.type === targetType && targetNormName && norm(t.name) === targetNormName) return true;
+    return false;
+  });
+
+  if (idx >= 0) {
+    const existingId = current[idx].id;
+    full.id = existingId || id;
+    current[idx] = full;
+  } else {
+    current.push(full);
+  }
 
   await syncToFirebaseCloudStore("taxonomies", current);
   const json = readJsonStore();
   json.taxonomies = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
-  try { await prisma.taxonomy.upsert({ where: { id }, update: full, create: full }); } catch (e) {}
+  try { await prisma.taxonomy.upsert({ where: { id: full.id }, update: full, create: full }); } catch (e) {}
   return full;
 }
 
@@ -2610,15 +2766,30 @@ export async function getPagesStore(): Promise<CustomPageItem[]> {
 }
 
 export async function savePageStore(page: Omit<CustomPageItem, "id"> & { id?: string }): Promise<CustomPageItem> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   const id = page.id || `pg-${Date.now()}`;
   await removeDeletedIdStore("pages", id);
   const slug = page.slug || page.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const full = { ...page, id, slug, createdAt: new Date().toISOString() };
 
   let current: CustomPageItem[] = await getPagesStore();
-  const idx = current.findIndex((p: any) => p.id === id);
-  if (idx >= 0) current[idx] = full;
-  else current.push(full);
+  const targetNormId = norm(id);
+  const targetNormSlug = norm(slug);
+  const idx = current.findIndex((p: any) => {
+    if (!p) return false;
+    if (p.id === id) return true;
+    if (targetNormId && norm(p.id) === targetNormId) return true;
+    if (targetNormSlug && norm(p.slug) === targetNormSlug) return true;
+    return false;
+  });
+
+  if (idx >= 0) {
+    const existingId = current[idx].id;
+    full.id = existingId || id;
+    current[idx] = full;
+  } else {
+    current.push(full);
+  }
 
   await syncToFirebaseCloudStore("pages", current);
   const json = readJsonStore();
@@ -2705,12 +2876,29 @@ export async function getCatalogsStore(): Promise<PdfCatalogItem[]> {
 }
 
 export async function saveCatalogStore(catalog: PdfCatalogItem): Promise<PdfCatalogItem> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   await removeDeletedIdStore("catalogs", catalog.id);
   let current: PdfCatalogItem[] = await getCatalogsStore();
 
-  const idx = current.findIndex((c: any) => c.id === catalog.id);
-  if (idx >= 0) current[idx] = catalog;
-  else current.push(catalog);
+  const targetNormId = norm(catalog.id);
+  const targetNormTitle = norm(catalog.title);
+  const targetFileUrl = norm(catalog.fileUrl || catalog.pdfUrl || "");
+  const idx = current.findIndex((c: any) => {
+    if (!c) return false;
+    if (c.id === catalog.id) return true;
+    if (targetNormId && norm(c.id) === targetNormId) return true;
+    if (targetFileUrl && norm(c.fileUrl || c.pdfUrl || "") === targetFileUrl) return true;
+    if (targetNormTitle && norm(c.title) === targetNormTitle && norm(c.brand) === norm(catalog.brand)) return true;
+    return false;
+  });
+
+  if (idx >= 0) {
+    const existingId = current[idx].id;
+    catalog.id = existingId || catalog.id;
+    current[idx] = catalog;
+  } else {
+    current.push(catalog);
+  }
 
   await Promise.allSettled([
     syncToFirebaseCloudStore("pdfCatalogs", current),
@@ -2840,6 +3028,7 @@ export async function getCollectionByIdStore(id: string): Promise<CollectionItem
 }
 
 export async function saveCollectionStore(item: Partial<CollectionItem>): Promise<CollectionItem> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   const slug = item.id || (item.name ? item.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : `collection-${Date.now()}`);
   await removeDeletedIdStore("collections", slug);
   const full: CollectionItem = {
@@ -2854,8 +3043,20 @@ export async function saveCollectionStore(item: Partial<CollectionItem>): Promis
   };
 
   let list = await getAllCollectionsStore();
-  const idx = list.findIndex((c) => c.id === slug);
+  const targetNormId = norm(slug);
+  const targetNormName = norm(item.name);
+  const targetBrand = norm(item.brandId);
+  const idx = list.findIndex((c: any) => {
+    if (!c) return false;
+    if (c.id === slug) return true;
+    if (targetNormId && norm(c.id) === targetNormId) return true;
+    if (targetNormName && norm(c.name) === targetNormName && (!targetBrand || norm(c.brandId) === targetBrand)) return true;
+    return false;
+  });
+
   if (idx >= 0) {
+    const existingId = list[idx].id;
+    full.id = existingId || slug;
     list[idx] = full;
   } else {
     list.push(full);
@@ -3150,8 +3351,18 @@ export async function getWorkspaceProjectByIdStore(projectId: string, clientId?:
 }
 
 export async function saveWorkspaceProjectStore(project: any): Promise<any> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   const all = await getAllWorkspaceProjectsStore();
-  const idx = all.findIndex((p: any) => p.id === project.id);
+  const targetNormId = norm(project.id);
+  const targetNormTitle = norm(project.title || project.name);
+  const idx = all.findIndex((p: any) => {
+    if (!p) return false;
+    if (p.id === project.id) return true;
+    if (targetNormId && norm(p.id) === targetNormId) return true;
+    if (targetNormTitle && norm(p.title || p.name) === targetNormTitle) return true;
+    return false;
+  });
+
   if (idx >= 0) {
     all[idx] = { ...all[idx], ...project };
   } else {
@@ -3162,7 +3373,7 @@ export async function saveWorkspaceProjectStore(project: any): Promise<any> {
   json.workspace_projects = all;
   writeJsonStore(json);
   globalThis.__AAREN_MEMORY_STORE__ = json;
-  syncToFirebaseCloudStore("workspace_projects", all).catch(() => {});
+  await syncToFirebaseCloudStore("workspace_projects", all).catch(() => {});
   return project;
 }
 
@@ -3455,9 +3666,24 @@ export async function addPdfToBrandFolderStore(brandId: string, pdf: Partial<Dow
 
   if (folder) {
     if (!Array.isArray(folder.files)) folder.files = [];
-    const idx = folder.files.findIndex((f) => f.id === newPdf.id);
-    if (idx >= 0) folder.files[idx] = newPdf;
-    else folder.files.unshift(newPdf);
+    const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+    const targetNormId = norm(newPdf.id);
+    const targetNormUrl = norm(newPdf.fileUrl);
+    const targetNormTitle = norm(newPdf.title);
+    const idx = folder.files.findIndex((f: any) => {
+      if (!f) return false;
+      if (f.id === newPdf.id) return true;
+      if (targetNormId && norm(f.id) === targetNormId) return true;
+      if (targetNormUrl && norm(f.fileUrl) === targetNormUrl) return true;
+      if (targetNormTitle && norm(f.title) === targetNormTitle) return true;
+      return false;
+    });
+    if (idx >= 0) {
+      newPdf.id = folder.files[idx].id || newPdf.id;
+      folder.files[idx] = newPdf;
+    } else {
+      folder.files.unshift(newPdf);
+    }
   } else {
     folders.push({
       id: brandId,
@@ -3485,10 +3711,23 @@ export async function deletePdfFromBrandFolderStore(brandId: string, pdfId: stri
 }
 
 export async function updateBrandFolderStore(folderData: BrandDownloadFolder): Promise<BrandDownloadFolder> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
   const folders = await getDownloadFoldersStore();
-  const idx = folders.findIndex((f) => f.id === folderData.id);
-  if (idx >= 0) folders[idx] = folderData;
-  else folders.push(folderData);
+  const targetNormId = norm(folderData.id);
+  const targetNormName = norm(folderData.brandName);
+  const idx = folders.findIndex((f: any) => {
+    if (!f) return false;
+    if (f.id === folderData.id) return true;
+    if (targetNormId && norm(f.id) === targetNormId) return true;
+    if (targetNormName && norm(f.brandName) === targetNormName) return true;
+    return false;
+  });
+  if (idx >= 0) {
+    folderData.id = folders[idx].id || folderData.id;
+    folders[idx] = folderData;
+  } else {
+    folders.push(folderData);
+  }
 
   await saveDownloadFoldersStore(folders);
   return folderData;

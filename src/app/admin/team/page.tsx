@@ -139,6 +139,18 @@ export default function AdminTeamPage() {
     const json = await res.json();
     if (json.success) {
       alert("Team member saved successfully!");
+      const saved = json.data;
+      if (saved) {
+        setTeam((prev) => {
+          const idx = prev.findIndex((m) => m.id === saved.id);
+          if (idx >= 0) {
+            const updated = [...prev];
+            updated[idx] = saved;
+            return updated;
+          }
+          return [...prev, saved];
+        });
+      }
       setEditing(null);
       fetchTeam();
     } else {

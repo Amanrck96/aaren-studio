@@ -49,6 +49,18 @@ export default function AdminCategoriesPage() {
       const json = await res.json();
       if (json.success) {
         alert("Category saved successfully!");
+        const saved = json.data;
+        if (saved) {
+          setCategories((prev) => {
+            const idx = prev.findIndex((c) => c.id === saved.id);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = saved;
+              return updated;
+            }
+            return [...prev, saved];
+          });
+        }
         setEditingCat(null);
         fetchCategories();
       } else {

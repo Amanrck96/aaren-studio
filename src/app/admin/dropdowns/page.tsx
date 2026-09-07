@@ -42,6 +42,18 @@ export default function AdminDropdownsPage() {
       const json = await res.json();
       if (json.success) {
         alert("Dropdown taxonomy saved!");
+        const saved = json.data;
+        if (saved) {
+          setItems((prev) => {
+            const idx = prev.findIndex((i) => i.id === saved.id);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = saved;
+              return updated;
+            }
+            return [...prev, saved];
+          });
+        }
         setEditing(null);
         fetchDropdowns();
       } else alert("Error: " + json.error);

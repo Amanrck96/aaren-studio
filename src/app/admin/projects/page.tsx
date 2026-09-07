@@ -134,6 +134,19 @@ export default function AdminProjectsPage() {
 
       const json = await res.json();
       if (json.success) {
+        const saved = json.data;
+        if (saved) {
+          setProjects((prev) => {
+            const idx = prev.findIndex((p) => p.id === saved.id);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = saved;
+              return updated;
+            }
+            return [saved, ...prev];
+          });
+        }
+
         // Generate PDF
         const pdfDoc = generateAarenProjectPDF({
           title: projectForm.title,

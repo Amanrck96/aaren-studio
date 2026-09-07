@@ -73,7 +73,7 @@ export default function AdminAboutPage() {
   async function handleSaveAboutTexts() {
     setSaving(true);
     try {
-      const currentRes = await fetch("/api/site-settings");
+      const currentRes = await fetch(`/api/site-settings?t=${Date.now()}`, { cache: "no-store" });
       const currentJson = await currentRes.json();
       const currentSettings = currentJson.success ? currentJson.data : {};
 
@@ -133,6 +133,18 @@ export default function AdminAboutPage() {
 
       const json = await res.json();
       if (json.success) {
+        const saved = json.data;
+        if (saved) {
+          setRoadmap((prev) => {
+            const idx = prev.findIndex((s) => s.id === saved.id);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = saved;
+              return updated;
+            }
+            return [...prev, saved];
+          });
+        }
         showToast(editingStepId ? `✓ Updated roadmap step ${stepForm.stepNumber}!` : `✓ Added roadmap step ${stepForm.stepNumber}!`);
         handleCancelEdit();
         fetchData();

@@ -37,6 +37,18 @@ export default function AdminTestimonialsPage() {
       const json = await res.json();
       if (json.success) {
         alert("Testimonial saved!");
+        const saved = json.data;
+        if (saved) {
+          setTestimonials((prev) => {
+            const idx = prev.findIndex((t) => t.id === saved.id);
+            if (idx >= 0) {
+              const updated = [...prev];
+              updated[idx] = saved;
+              return updated;
+            }
+            return [...prev, saved];
+          });
+        }
         setEditing(null);
         fetchTestimonials();
       } else alert("Error: " + json.error);

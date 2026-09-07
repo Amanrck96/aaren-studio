@@ -228,6 +228,25 @@ export default function AdminProductsPage() {
 
       const json = await res.json();
       if (json.success || json.product || json.data) {
+        const savedProd = json.product || json.data || payload;
+        setProducts((prev) => {
+          const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+          const targetNormId = norm(savedProd.id);
+          const targetNormName = norm(savedProd.name);
+          const idx = prev.findIndex((p) => {
+            if (!p) return false;
+            if (p.id === savedProd.id) return true;
+            if (targetNormId && norm(p.id) === targetNormId) return true;
+            if (targetNormName && norm(p.name) === targetNormName) return true;
+            return false;
+          });
+          if (idx >= 0) {
+            const copy = [...prev];
+            copy[idx] = { ...copy[idx], ...savedProd };
+            return copy;
+          }
+          return [savedProd, ...prev];
+        });
         setModalOpen(false);
         fetchProducts();
         showToast(isEdit ? "Product details updated successfully!" : "Product added successfully!");

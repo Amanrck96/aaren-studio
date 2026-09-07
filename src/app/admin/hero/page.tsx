@@ -20,9 +20,9 @@ export default function AdminHeroPage() {
 
   async function fetchSettings() {
     try {
-      const res = await fetch("/api/site-settings");
+      const res = await fetch("/api/site-settings?t=" + Date.now(), { cache: "no-store" });
       const json = await res.json();
-      if (json.success) {
+      if (json.success && json.data) {
         setSettings(json.data);
       }
     } catch (e) {
@@ -47,6 +47,7 @@ export default function AdminHeroPage() {
       });
       const json = await res.json();
       if (json.success) {
+        if (json.data) setSettings(json.data);
         setMessage("🎉 Hero section settings updated & synced live!");
       } else {
         setMessage(`Error: ${json.error}`);

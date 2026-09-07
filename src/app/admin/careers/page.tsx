@@ -43,6 +43,16 @@ export default function AdminCareers() {
       });
       const data = await res.json();
       if (data.success) {
+        const saved = data.data || newRole;
+        setPositions((prev) => {
+          const idx = prev.findIndex((p) => p.id === saved.id);
+          if (idx >= 0) {
+            const updated = [...prev];
+            updated[idx] = saved;
+            return updated;
+          }
+          return [...prev, saved];
+        });
         setNotice("Role successfully created and saved to Google Firebase!");
         setTimeout(() => setNotice(null), 3000);
         setNewRole({ title: "", department: "", location: "", type: "Full-Time" });
