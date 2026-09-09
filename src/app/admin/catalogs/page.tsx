@@ -7,7 +7,7 @@ import { PdfCatalogItem } from "@/lib/types";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
 import { ExternalLink, RefreshCw, Search, Eye, QrCode, Copy, Check, Download, X } from "lucide-react";
 import CatalogPdfGateModal from "@/components/CatalogPdfGateModal";
-import QRCode from "qrcode";
+import { generateQrWithLogo, BRAND_LOGOS } from "@/utils/qrWithLogo";
 
 export default function AdminCatalogsPage() {
   const [catalogs, setCatalogs] = useState<PdfCatalogItem[]>([]);
@@ -34,13 +34,20 @@ export default function AdminCatalogsPage() {
       : `${origin}${rawUrl.startsWith("/") ? "" : "/"}${rawUrl}`;
 
     try {
-      const dataUrl = await QRCode.toDataURL(fullUrl, {
-        width: 600,
-        margin: 2,
-        color: {
-          dark: "#1E1E1E",
-          light: "#FFFFFF",
-        },
+      const canvas = document.createElement("canvas");
+      const matchingBrand = BRAND_LOGOS.find((b) =>
+        brand.toLowerCase().includes(b.name.toLowerCase())
+      );
+      const dataUrl = await generateQrWithLogo(canvas, {
+        url: fullUrl,
+        size: 1000,
+        color: "#1E1E1E",
+        bgColor: "#FFFFFF",
+        logoType: matchingBrand ? "brand" : "aaren",
+        logoUrl: matchingBrand?.file,
+        brandName: brand,
+        logoShape: "rounded",
+        badgeBorderColor: "#81663F",
       });
       setQrModal({
         isOpen: true,
@@ -608,6 +615,20 @@ export default function AdminCatalogsPage() {
             <p style={{ fontSize: "0.74rem", color: "#6A6359", marginTop: "1rem", lineHeight: 1.4 }}>
               💡 <strong>Instant direct scan:</strong> Works on all Android &amp; iPhone cameras with <strong>zero third-party redirect warning pages</strong> (unlike QRCodeChimp free links).
             </p>
+
+            <div style={{ marginTop: "0.8rem", paddingTop: "0.8rem", borderTop: "1px solid #F0ECE4" }}>
+              <Link
+                href="/admin/qr-generator"
+                style={{
+                  fontSize: "0.8rem",
+                  fontWeight: 700,
+                  color: "#81663F",
+                  textDecoration: "underline",
+                }}
+              >
+                Open Advanced QR Generator Studio (Colors, Logos, Print Sizes) →
+              </Link>
+            </div>
           </div>
         </div>
       )}

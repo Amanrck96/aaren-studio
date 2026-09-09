@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import AdminNav from "@/components/AdminNav";
 import { BrandDownloadFolder, DownloadPdfItem } from "@/lib/types";
 import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
+import { generateQrWithLogo, downloadQrCanvas, BRAND_LOGOS } from "@/utils/qrWithLogo";
 import {
   Folder,
   FileText,
@@ -22,6 +23,10 @@ import {
   ArrowLeft,
   ChevronRight,
   Sparkles,
+  QrCode,
+  Download,
+  Copy,
+  X,
 } from "lucide-react";
 
 function AdminDownloadsContent() {
@@ -40,6 +45,35 @@ function AdminDownloadsContent() {
   const [saving, setSaving] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+
+  // Direct QR Code Modal State
+  const [qrModal, setQrModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    brand: string;
+    url: string;
+  } | null>(null);
+  const [copiedQr, setCopiedQr] = useState(false);
+  const qrCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (qrModal && qrCanvasRef.current) {
+      const matchingBrand = BRAND_LOGOS.find((b) =>
+        qrModal.brand.toLowerCase().includes(b.name.toLowerCase())
+      );
+      generateQrWithLogo(qrCanvasRef.current, {
+        url: qrModal.url,
+        size: 1000,
+        color: "#1E1E1E",
+        bgColor: "#FFFFFF",
+        logoType: matchingBrand ? "brand" : "aaren",
+        logoUrl: matchingBrand?.file,
+        brandName: qrModal.brand,
+        logoShape: "rounded",
+        badgeBorderColor: "#81663F",
+      }).catch((e) => console.error("Failed to render QR:", e));
+    }
+  }, [qrModal]);
 
   const fetchFolders = async () => {
     setLoading(true);
@@ -718,6 +752,34 @@ function AdminDownloadsContent() {
                             </a>
 
                             <button
+                              onClick={() => {
+                                setQrModal({
+                                  isOpen: true,
+                                  title: pdf.title,
+                                  brand: selectedFolder.brandName,
+                                  url: pdf.fileUrl,
+                                });
+                                setCopiedQr(false);
+                              }}
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                padding: "6px 12px",
+                                background: "#81663F",
+                                border: "1px solid #81663F",
+                                borderRadius: "6px",
+                                color: "#FFFFFF",
+                                fontWeight: 700,
+                                fontSize: "0.78rem",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <QrCode size={12} />
+                              <span>QR Code</span>
+                            </button>
+
+                            <button
                               onClick={() => handleOpenEditModal(selectedFolder.id, pdf)}
                               style={{
                                 display: "inline-flex",
@@ -1053,6 +1115,163 @@ function AdminDownloadsContent() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Direct QR Code Generator Modal */}
+      {qrModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99999,
+            background: "rgba(0,0,0,0.65)",
+            backdropFilter: "blur(6px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1.5rem",
+          }}
+          onClick={() => setQrModal(null)}
+        >
+          <div
+            style={{
+              background: "#FFFFFF",
+              borderRadius: "16px",
+              padding: "2rem 2.4rem",
+              maxWidth: "480px",
+              width: "100%",
+              boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
+              border: "1px solid #D5CEBF",
+              textAlign: "center",
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setQrModal(null)}
+              style={{
+                position: "absolute",
+                top: "1rem",
+                right: "1rem",
+                background: "#FAF8F5",
+                border: "1px solid #D5CEBF",
+                borderRadius: "50%",
+                width: "32px",
+                height: "32px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                color: "#1E1E1E",
+              }}
+            >
+              <X size={16} />
+            </button>
+
+            <span style={{ fontSize: "0.8rem", fontWeight: 800, color: "#81663F", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              {qrModal.brand}
+            </span>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#1E1E1E", margin: "0.4rem 0 1.2rem", lineHeight: 1.3 }}>
+              {qrModal.title}
+            </h3>
+
+            {/* QR Code Canvas */}
+            <div
+              style={{
+                background: "#FAF8F5",
+                padding: "1rem",
+                borderRadius: "12px",
+                border: "1px solid #E2DCD2",
+                display: "inline-block",
+                boxShadow: "0 4px 14px rgba(0,0,0,0.06)",
+              }}
+            >
+              <canvas
+                ref={qrCanvasRef}
+                style={{ width: "240px", height: "240px", display: "block", borderRadius: "8px" }}
+              />
+            </div>
+
+            {/* Direct Link Info */}
+            <div style={{ marginTop: "1rem", background: "#FAF8F5", padding: "0.75rem 1rem", borderRadius: "8px", border: "1px solid #E2DCD2", textAlign: "left" }}>
+              <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase", marginBottom: "4px" }}>
+                Direct PDF Access (Zero Warning Screens):
+              </div>
+              <div style={{ fontSize: "0.75rem", color: "#1E1E1E", wordBreak: "break-all", fontFamily: "monospace", maxHeight: "50px", overflowY: "auto" }}>
+                {qrModal.url}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: "flex", gap: "10px", marginTop: "1.2rem" }}>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(qrModal.url);
+                  setCopiedQr(true);
+                  setTimeout(() => setCopiedQr(false), 2000);
+                }}
+                style={{
+                  flex: 1,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "6px",
+                  padding: "0.75rem",
+                  background: copiedQr ? "#15803d" : "#FAF8F5",
+                  border: "1px solid #D5CEBF",
+                  color: copiedQr ? "#FFFFFF" : "#1E1E1E",
+                  borderRadius: "8px",
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  cursor: "pointer",
+                }}
+              >
+                {copiedQr ? <Check size={14} /> : <Copy size={14} />}
+                <span>{copiedQr ? "Copied!" : "Copy URL"}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  if (qrCanvasRef.current) {
+                    downloadQrCanvas(qrCanvasRef.current, `${qrModal.brand}_${qrModal.title}_QR`);
+                  }
+                }}
+                style={{
+                  flex: 1,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "6px",
+                  padding: "0.75rem",
+                  background: "#1E1E1E",
+                  color: "#FFFFFF",
+                  borderRadius: "8px",
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                <Download size={14} />
+                <span>Download PNG</span>
+              </button>
+            </div>
+
+            <div style={{ marginTop: "1rem", paddingTop: "0.8rem", borderTop: "1px solid #F0ECE4" }}>
+              <Link
+                href="/admin/qr-generator"
+                style={{
+                  fontSize: "0.8rem",
+                  fontWeight: 700,
+                  color: "#81663F",
+                  textDecoration: "underline",
+                }}
+              >
+                Customize colors &amp; logos in QR Generator Studio →
+              </Link>
+            </div>
           </div>
         </div>
       )}
