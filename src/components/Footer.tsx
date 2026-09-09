@@ -118,7 +118,7 @@ export default function Footer() {
           fontFamily: "var(--font-jost), 'Jost', sans-serif",
           fontSize: "clamp(4.5rem, 14vw, 24rem)",
           fontWeight: 400,
-          letterSpacing: "0.25em",
+          letterSpacing: "0",
           textTransform: "uppercase",
           color: "#81663F",
           opacity: 0.38,
@@ -132,11 +132,11 @@ export default function Footer() {
           paddingBottom: "2rem",
         }}
       >
-        <span>A</span>
-        <span>A</span>
-        <span>R</span>
-        <span>E</span>
-        <span>N</span>
+        <span style={{ letterSpacing: "0" }}>A</span>
+        <span style={{ letterSpacing: "0" }}>A</span>
+        <span style={{ letterSpacing: "0" }}>R</span>
+        <span style={{ letterSpacing: "0" }}>E</span>
+        <span style={{ letterSpacing: "0" }}>N</span>
       </div>
 
       {/* ── Bottom copyright ── */}

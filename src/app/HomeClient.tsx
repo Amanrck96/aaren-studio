@@ -737,7 +737,7 @@ export default function HomeClient({
               fontFamily: "var(--font-jost), 'Jost', sans-serif",
               fontSize: logoLetters.length > 6 ? "clamp(3.5rem, 10vw, 16rem)" : "clamp(4.5rem, 14vw, 24rem)",
               fontWeight: 400,
-              letterSpacing: "0.25em",
+              letterSpacing: "0",
               textTransform: "uppercase",
               color: "#ffffff",
               display: "flex",
@@ -750,7 +750,7 @@ export default function HomeClient({
               <span
                 key={i}
                 className={`logo-letter${lettersRevealed[i] ? " is-revealed" : ""}`}
-                style={{ transitionDelay: `${i * 0.08}s` }}
+                style={{ transitionDelay: `${i * 0.08}s`, letterSpacing: "0" }}
               >
                 {letter}
               </span>

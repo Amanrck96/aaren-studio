@@ -29,8 +29,12 @@ import {
   CareerItem,
   DownloadPdfItem,
   BrandDownloadFolder,
+  ShopItem,
+  ShopSettingsItem,
   DEFAULT_SETTINGS,
   DEFAULT_CATALOG_SETTINGS,
+  DEFAULT_SHOP_ITEMS,
+  DEFAULT_SHOP_SETTINGS,
 } from "./types";
 import BRANDWISE_FAQS from "./brandwise_faqs.json";
 
@@ -3723,6 +3727,131 @@ export async function updateBrandFolderStore(folderData: BrandDownloadFolder): P
 
   await saveDownloadFoldersStore(folders);
   return folderData;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SHOP ITEMS & SETTINGS STORE (FULL ADMIN ACCESS CMS)
+   ══════════════════════════════════════════════════════════════ */
+
+export async function getShopItemsStore(): Promise<ShopItem[]> {
+  // 1. Firebase Cloud
+  const fbData = await fetchFromFirebaseCloudStore("shopItems");
+  if (fbData && Array.isArray(fbData)) {
+    const active = await filterActiveItems<ShopItem>("shopItems", fbData as ShopItem[]);
+    const json = readJsonStore();
+    json.shopItems = active;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    active.sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+    return active;
+  }
+
+  // 2. JSON Store fallback
+  const json = readJsonStore();
+  if (json.shopItems && Array.isArray(json.shopItems)) {
+    const active = await filterActiveItems<ShopItem>("shopItems", json.shopItems as ShopItem[]);
+    active.sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+    return active;
+  }
+
+  // 3. Default fallback
+  const active = await filterActiveItems<ShopItem>("shopItems", DEFAULT_SHOP_ITEMS);
+  active.sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+  return active;
+}
+
+export async function saveShopItemStore(item: Partial<ShopItem>): Promise<ShopItem> {
+  const norm = (s: any) => String(s || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+  const id = item.id || `shop-${Date.now()}`;
+  await removeDeletedIdStore("shopItems", id);
+
+  const full: ShopItem = {
+    id,
+    name: item.name || "Untitled Specimen",
+    category: item.category || "General",
+    code: item.code || "SP",
+    num: item.num || "01",
+    price: item.price || "Contact for Quote",
+    image: item.image || "/categories/cat_1.jpg",
+    spec: item.spec || "",
+    sequenceNumber: typeof item.sequenceNumber === "number" ? item.sequenceNumber : 1,
+    available: item.available !== false,
+  };
+
+  let current: ShopItem[] = await getShopItemsStore();
+  const targetNormId = norm(id);
+  const targetNormName = norm(full.name);
+
+  const idx = current.findIndex((it: any) => {
+    if (!it) return false;
+    if (it.id === id) return true;
+    if (targetNormId && norm(it.id) === targetNormId) return true;
+    if (targetNormName && norm(it.name) === targetNormName) return true;
+    return false;
+  });
+
+  if (idx >= 0) {
+    full.id = current[idx].id || id;
+    current[idx] = full;
+  } else {
+    current.push(full);
+  }
+
+  current.sort((a, b) => (a.sequenceNumber || 99) - (b.sequenceNumber || 99));
+
+  await syncToFirebaseCloudStore("shopItems", current);
+  const json = readJsonStore();
+  json.shopItems = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+
+  return full;
+}
+
+export async function deleteShopItemStore(id: string): Promise<boolean> {
+  const normId = String(id).trim();
+  await recordDeletedIdStore("shopItems", normId);
+  let current: ShopItem[] = await getShopItemsStore();
+  current = current.filter((it: any) => String(it.id).trim() !== normId);
+
+  await syncToFirebaseCloudStore("shopItems", current);
+  const json = readJsonStore();
+  json.shopItems = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+
+  return true;
+}
+
+export async function getShopSettingsStore(): Promise<ShopSettingsItem> {
+  // 1. Firebase Cloud
+  const fbData = await fetchFromFirebaseCloudStore("shopSettings");
+  if (fbData && typeof fbData === "object" && !Array.isArray(fbData)) {
+    const json = readJsonStore();
+    json.shopSettings = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return { ...DEFAULT_SHOP_SETTINGS, ...fbData };
+  }
+
+  // 2. JSON Store
+  const json = readJsonStore();
+  if (json.shopSettings && typeof json.shopSettings === "object") {
+    return { ...DEFAULT_SHOP_SETTINGS, ...json.shopSettings };
+  }
+
+  return DEFAULT_SHOP_SETTINGS;
+}
+
+export async function saveShopSettingsStore(settings: Partial<ShopSettingsItem>): Promise<ShopSettingsItem> {
+  const current = await getShopSettingsStore();
+  const updated: ShopSettingsItem = { ...current, ...settings };
+
+  await syncToFirebaseCloudStore("shopSettings", updated);
+  const json = readJsonStore();
+  json.shopSettings = updated;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+
+  return updated;
 }
 
 

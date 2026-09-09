@@ -1,24 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, CheckCircle2, X, Send, ShoppingBag } from "lucide-react";
-
-const SHOP_ITEMS = [
-  { id: "oak-veneer", name: "Premium Oak Veneer", category: "Veneers", code: "OV", num: "01", price: "₹1,400 / sqm", image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80", spec: "Natural European White Oak grain, 0.6mm thickness, FSC certified." },
-  { id: "terrazzo-slab", name: "Terrazzo Outdoor Slab", category: "Tiles", code: "TO", num: "02", price: "₹3,200 / slab", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80", spec: "Engineered aggregate terrazzo, anti-slip R11 finish, weather resistant." },
-  { id: "brushed-gold-tap", name: "Brushed Gold Tap", category: "Fittings", code: "BG", num: "03", price: "₹18,500 / unit", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80", spec: "Solid brass body, PVD titanium coating, ceramic disc cartridge." },
-  { id: "acoustic-panel", name: "Acoustic Wool Panel", category: "Screens", code: "AW", num: "04", price: "₹4,800 / panel", image: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80", spec: "NRC 0.85 sound absorption, recycled PET felt, flame retardant class A." },
-  { id: "fluted-panel", name: "Fluted Wall Panel", category: "Surfaces", code: "FW", num: "05", price: "₹2,600 / sqm", image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80", spec: "Thermo-treated architectural polymer, seamless interlocking joints." },
-  { id: "pivot-door", name: "Minimalist Pivot Door", category: "Doors", code: "PD", num: "06", price: "₹95,000 / unit", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80", spec: "Slimline aluminum frame, hydraulic pivot hinge, sound insulated core." },
-];
+import { ShopItem, ShopSettingsItem, DEFAULT_SHOP_ITEMS, DEFAULT_SHOP_SETTINGS } from "@/lib/types";
 
 export default function ShopPage() {
-  const [selectedItem, setSelectedItem] = useState<any | null>(null);
+  const [items, setItems] = useState<ShopItem[]>(DEFAULT_SHOP_ITEMS);
+  const [settings, setSettings] = useState<ShopSettingsItem>(DEFAULT_SHOP_SETTINGS);
+  const [selectedItem, setSelectedItem] = useState<ShopItem | null>(null);
   const [inquiryData, setInquiryData] = useState({ name: "", email: "", phone: "", quantity: "1", notes: "" });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/shop?t=${Date.now()}`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success) {
+          if (Array.isArray(json.data) && json.data.length > 0) {
+            setItems(json.data.filter((it: ShopItem) => it.available !== false));
+          }
+          if (json.settings) {
+            setSettings(json.settings);
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleInquire = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,15 +62,15 @@ export default function ShopPage() {
       <div className="shop-header page-header">
         <div className="shop-header__inner page-header__inner">
           <div className="shop-header__meta page-meta">
-            ARCHITECTURAL SPECIFICATION &amp; SOURCING — {SHOP_ITEMS.length} SAMPLE SPECIMENS
+            {settings.metaText || `ARCHITECTURAL SPECIFICATION & SOURCING — ${items.length} SAMPLE SPECIMENS`}
           </div>
-          <h1 className="shop-header__title page-title">SHOP</h1>
+          <h1 className="shop-header__title page-title">{settings.title || "SHOP"}</h1>
           <p className="shop-header__desc page-desc">
-            Direct access to material specifications, sample sets, fixtures, and custom components curated for luxury architectural projects across India.
+            {settings.description || "Direct access to material specifications, sample sets, fixtures, and custom components curated for luxury architectural projects across India."}
           </p>
           <div style={{ marginTop: "2.4rem" }}>
             <Link
-              href="/products"
+              href={settings.exploreCatalogLink || "/products"}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -76,7 +86,7 @@ export default function ShopPage() {
                 textDecoration: "none",
               }}
             >
-              <ShoppingBag size={16} /> Explore All 1,000+ Materials in Full Catalog
+              <ShoppingBag size={16} /> {settings.exploreCatalogText || "Explore All 1,000+ Materials in Full Catalog"}
               <ArrowUpRight size={16} />
             </Link>
           </div>
@@ -85,7 +95,7 @@ export default function ShopPage() {
 
       {/* ── Shop Grid ── */}
       <div className="shop-grid">
-        {SHOP_ITEMS.map((item) => (
+        {items.map((item) => (
           <div
             key={item.id}
             onClick={() => {
@@ -101,6 +111,7 @@ export default function ShopPage() {
                   src={item.image}
                   alt={item.name}
                   fill
+                  unoptimized
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="shop-card__img"
                   style={{ objectFit: "cover" }}

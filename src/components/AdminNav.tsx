@@ -33,6 +33,7 @@ export default function AdminNav() {
     { label: "🏢 Brands", href: "/admin/brands" },
     { label: "🖼️ Showcase Projects", href: "/admin/projects" },
     { label: "📦 Products", href: "/admin/products" },
+    { label: "🛍️ Shop Management", href: "/admin/shop" },
     { label: "📄 PDF Catalogs", href: "/admin/catalogs" },
     { label: "📁 Downloads Repository", href: "/admin/downloads" },
     { label: "❓ FAQ Management", href: "/admin/faq" },

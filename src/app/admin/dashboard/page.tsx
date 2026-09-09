@@ -28,6 +28,7 @@ import {
   ShieldCheck,
   RefreshCw,
   Folder,
+  ShoppingBag,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -47,6 +48,7 @@ export default function AdminDashboardPage() {
     inquiries: 0,
     catalogs: 0,
     faqs: 0,
+    shop: 0,
   });
 
   const [siteSettings, setSiteSettings] = useState<SiteSettingsItem | null>(null);
@@ -85,7 +87,7 @@ export default function AdminDashboardPage() {
     };
 
     try {
-      const [p, c, col, b, pr, s, t, bl, m, inq, cat, fq, st, bk] = await Promise.all([
+      const [p, c, col, b, pr, s, t, bl, m, inq, cat, fq, st, bk, sh] = await Promise.all([
         safeFetch("/api/projects?t=" + Date.now()),
         safeFetch("/api/categories?t=" + Date.now()),
         safeFetch("/api/collections?t=" + Date.now()),
@@ -100,6 +102,7 @@ export default function AdminDashboardPage() {
         safeFetch("/api/faq?t=" + Date.now()),
         safeFetch("/api/site-settings?t=" + Date.now()),
         safeFetch("/api/admin/backups?t=" + Date.now()),
+        safeFetch("/api/shop?t=" + Date.now()),
       ]);
 
       setStats({
@@ -115,6 +118,7 @@ export default function AdminDashboardPage() {
         inquiries: typeof inq?.count === "number" ? inq.count : inq?.data?.length || 0,
         catalogs: typeof cat?.count === "number" ? cat.count : cat?.data?.length || 0,
         faqs: typeof fq?.count === "number" ? fq.count : fq?.data?.length || 0,
+        shop: typeof sh?.count === "number" ? sh.count : sh?.data?.length || 0,
       });
 
       if (bk && bk.success && typeof bk.count === "number") {
@@ -230,6 +234,7 @@ export default function AdminDashboardPage() {
     { label: "❓ FAQs & Brand Help", count: stats.faqs, color: "#81663F", href: "/admin/faq" },
     { label: "🏢 Brands Registered", count: stats.brands, color: "#81663F", href: "/admin/brands" },
     { label: "📦 Products in Catalog", count: stats.products, color: "#81663F", href: "/admin/products" },
+    { label: "🛍️ Shop Specimens", count: stats.shop, color: "#81663F", href: "/admin/shop" },
     { label: "🗃️ Brand Collections", count: stats.collections, color: "#81663F", href: "/admin/collections" },
     { label: "🏷️ Categories", count: stats.categories, color: "#81663F", href: "/admin/categories" },
     { label: "📄 PDF Catalogs", count: stats.catalogs, color: "#81663F", href: "/admin/catalogs" },
@@ -239,6 +244,7 @@ export default function AdminDashboardPage() {
   ];
 
   const modules = [
+    { title: "🛍️ Shop & Material Specimens", desc: "Curate luxury architectural specimens, quote pricing, custom codes (OV 01), and technical specifications for live /shop.", href: "/admin/shop", icon: ShoppingBag },
     { title: "🗃️ Brand-Scoped Collections", desc: "Manage brand product collections (Kitchen, Wardrobe, Door Systems) with circular icons, storefront filter bar, and live product counts.", href: "/admin/collections", icon: Layers },
     { title: "❓ FAQ & Brand Knowledge Base", desc: "Manage 150+ brand FAQs, import/export Excel spreadsheets, edit questions, answers and categories.", href: "/admin/faq", icon: HelpCircle },
     { title: "🏢 Brand Management & Individual Pages", desc: "Manage partner brands, hero banners, logos, quote taglines, country of origin, founded year, story and PDF catalogs.", href: "/admin/brands", icon: Building },

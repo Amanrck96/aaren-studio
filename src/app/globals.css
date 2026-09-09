@@ -845,16 +845,27 @@ input, select, textarea {
   display: flex;
   align-items: flex-end;
   color: #81663F;
+  letter-spacing: 0 !important;
 }
 
 .footer-wordmark span {
   color: #81663F;
+  letter-spacing: 0 !important;
 }
 
 .footer-wordmark svg {
   width: 100%;
   height: auto;
   fill: #81663F;
+}
+
+/* ── Wordmark Symmetrical Alignment (Hero & Footer) ── */
+.hero-wordmark,
+.hero-wordmark span,
+.hero-wordmark .logo-letter,
+.footer-wordmark,
+.footer-wordmark span {
+  letter-spacing: 0 !important;
 }
 
 /* ── Misc utilities ── */
@@ -1426,7 +1437,7 @@ input, select, textarea {
   .hero-wordmark {
     font-weight: 200 !important;
     font-size: clamp(3.5rem, 12vw, 8rem) !important;
-    letter-spacing: 0.12em !important;
+    letter-spacing: 0 !important;
   }
 
   /* ── Hero section — reduce top padding on mobile ── */
