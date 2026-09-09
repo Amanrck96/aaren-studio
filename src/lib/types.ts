@@ -161,6 +161,8 @@ export type ShopItem = {
   spec: string;
   sequenceNumber?: number;
   available?: boolean;
+  shopifyUrl?: string;
+  buyNowText?: string;
 };
 
 export type ShopSettingsItem = {
@@ -169,15 +171,16 @@ export type ShopSettingsItem = {
   description?: string;
   exploreCatalogText?: string;
   exploreCatalogLink?: string;
+  defaultShopifyStoreUrl?: string;
 };
 
 export const DEFAULT_SHOP_ITEMS: ShopItem[] = [
-  { id: "oak-veneer", name: "Premium Oak Veneer", category: "Veneers", code: "OV", num: "01", price: "₹1,400 / sqm", image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80", spec: "Natural European White Oak grain, 0.6mm thickness, FSC certified.", sequenceNumber: 1, available: true },
-  { id: "terrazzo-slab", name: "Terrazzo Outdoor Slab", category: "Tiles", code: "TO", num: "02", price: "₹3,200 / slab", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80", spec: "Engineered aggregate terrazzo, anti-slip R11 finish, weather resistant.", sequenceNumber: 2, available: true },
-  { id: "brushed-gold-tap", name: "Brushed Gold Tap", category: "Fittings", code: "BG", num: "03", price: "₹18,500 / unit", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80", spec: "Solid brass body, PVD titanium coating, ceramic disc cartridge.", sequenceNumber: 3, available: true },
-  { id: "acoustic-panel", name: "Acoustic Wool Panel", category: "Screens", code: "AW", num: "04", price: "₹4,800 / panel", image: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80", spec: "NRC 0.85 sound absorption, recycled PET felt, flame retardant class A.", sequenceNumber: 4, available: true },
-  { id: "fluted-panel", name: "Fluted Wall Panel", category: "Surfaces", code: "FW", num: "05", price: "₹2,600 / sqm", image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80", spec: "Thermo-treated architectural polymer, seamless interlocking joints.", sequenceNumber: 5, available: true },
-  { id: "pivot-door", name: "Minimalist Pivot Door", category: "Doors", code: "PD", num: "06", price: "₹95,000 / unit", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80", spec: "Slimline aluminum frame, hydraulic pivot hinge, sound insulated core.", sequenceNumber: 6, available: true },
+  { id: "oak-veneer", name: "Premium Oak Veneer", category: "Veneers", code: "OV", num: "01", price: "₹1,400 / sqm", image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80", spec: "Natural European White Oak grain, 0.6mm thickness, FSC certified.", sequenceNumber: 1, available: true, shopifyUrl: "", buyNowText: "Buy on Shopify" },
+  { id: "terrazzo-slab", name: "Terrazzo Outdoor Slab", category: "Tiles", code: "TO", num: "02", price: "₹3,200 / slab", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80", spec: "Engineered aggregate terrazzo, anti-slip R11 finish, weather resistant.", sequenceNumber: 2, available: true, shopifyUrl: "", buyNowText: "Buy on Shopify" },
+  { id: "brushed-gold-tap", name: "Brushed Gold Tap", category: "Fittings", code: "BG", num: "03", price: "₹18,500 / unit", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80", spec: "Solid brass body, PVD titanium coating, ceramic disc cartridge.", sequenceNumber: 3, available: true, shopifyUrl: "", buyNowText: "Buy on Shopify" },
+  { id: "acoustic-panel", name: "Acoustic Wool Panel", category: "Screens", code: "AW", num: "04", price: "₹4,800 / panel", image: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80", spec: "NRC 0.85 sound absorption, recycled PET felt, flame retardant class A.", sequenceNumber: 4, available: true, shopifyUrl: "", buyNowText: "Buy on Shopify" },
+  { id: "fluted-panel", name: "Fluted Wall Panel", category: "Surfaces", code: "FW", num: "05", price: "₹2,600 / sqm", image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80", spec: "Thermo-treated architectural polymer, seamless interlocking joints.", sequenceNumber: 5, available: true, shopifyUrl: "", buyNowText: "Buy on Shopify" },
+  { id: "pivot-door", name: "Minimalist Pivot Door", category: "Doors", code: "PD", num: "06", price: "₹95,000 / unit", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80", spec: "Slimline aluminum frame, hydraulic pivot hinge, sound insulated core.", sequenceNumber: 6, available: true, shopifyUrl: "", buyNowText: "Buy on Shopify" },
 ];
 
 export const DEFAULT_SHOP_SETTINGS: ShopSettingsItem = {

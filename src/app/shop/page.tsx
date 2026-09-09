@@ -120,11 +120,28 @@ export default function ShopPage() {
               <div className="shop-card__price-badge t-tag">
                 {item.price}
               </div>
+
+              {item.shopifyUrl && (
+                <a
+                  href={item.shopifyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="shop-card__buy-btn"
+                  title={`Buy ${item.name} on Shopify`}
+                >
+                  <ShoppingBag size={13} />
+                  <span>{item.buyNowText || "Buy Now"}</span>
+                  <ArrowUpRight size={13} />
+                </a>
+              )}
             </div>
             <div className="shop-card__caption">
               <div className="shop-card__caption-left">
                 <span className="shop-card__caption-name">{item.name}</span>
-                <span className="shop-card__caption-cat t-tag">{item.category} • Click for Sample Quote</span>
+                <span className="shop-card__caption-cat t-tag">
+                  {item.category} • {item.shopifyUrl ? "Buy Now or Request Quote" : "Click for Sample Quote"}
+                </span>
               </div>
               <div className="shop-card__caption-right">
                 <span className="shop-card__caption-code">{item.code}</span>
@@ -224,6 +241,47 @@ export default function ShopPage() {
                 <p style={{ fontSize: "0.95rem", color: "#5E5852", marginBottom: "1.6rem", background: "rgba(129,102,63,0.08)", padding: "0.8rem 1rem", borderRadius: "6px" }}>
                   {selectedItem.spec}
                 </p>
+
+                {/* ── Direct Shopify Buy Connection ── */}
+                {selectedItem.shopifyUrl && (
+                  <div style={{ marginBottom: "1.6rem" }}>
+                    <a
+                      href={selectedItem.shopifyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.8rem",
+                        width: "100%",
+                        padding: "1rem 1.6rem",
+                        background: "#81663F",
+                        color: "#ffffff",
+                        borderRadius: "8px",
+                        fontWeight: 800,
+                        fontSize: "1.05rem",
+                        textDecoration: "none",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.04em",
+                        boxShadow: "0 6px 20px rgba(129, 102, 63, 0.25)",
+                        transition: "all 0.2s ease",
+                      }}
+                    >
+                      <ShoppingBag size={18} />
+                      {selectedItem.buyNowText || "Buy on Shopify"}
+                      <ArrowUpRight size={18} />
+                    </a>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "1.2rem 0 0.8rem" }}>
+                      <div style={{ flex: 1, height: "1px", background: "rgba(0,0,0,0.12)" }} />
+                      <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", textAlign: "center" }}>
+                        OR INQUIRE FOR SAMPLE / BESPOKE SPEC
+                      </span>
+                      <div style={{ flex: 1, height: "1px", background: "rgba(0,0,0,0.12)" }} />
+                    </div>
+                  </div>
+                )}
 
                 <form onSubmit={handleInquire} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   <input
@@ -427,6 +485,32 @@ export default function ShopPage() {
           font-weight: 700;
           letter-spacing: 0.05em;
           border-radius: 4px;
+        }
+
+        .shop-card__buy-btn {
+          position: absolute;
+          top: 1.4rem;
+          right: 1.4rem;
+          z-index: 5;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1.1rem;
+          background: #1E1E1E;
+          color: #ffffff;
+          border-radius: 9999px;
+          font-size: 0.85rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          text-decoration: none;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+          transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .shop-card__buy-btn:hover {
+          background: #81663F;
+          transform: translateY(-2px);
         }
 
         .shop-card__caption {

@@ -3775,6 +3775,8 @@ export async function saveShopItemStore(item: Partial<ShopItem>): Promise<ShopIt
     spec: item.spec || "",
     sequenceNumber: typeof item.sequenceNumber === "number" ? item.sequenceNumber : 1,
     available: item.available !== false,
+    shopifyUrl: item.shopifyUrl || "",
+    buyNowText: item.buyNowText || "Buy Now",
   };
 
   let current: ShopItem[] = await getShopItemsStore();

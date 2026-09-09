@@ -471,6 +471,18 @@ export default function AdminShopPage() {
                       <p style={{ fontSize: "0.85rem", color: "#5E5852", lineHeight: 1.5, margin: 0, minHeight: "2.6rem" }}>
                         {item.spec || "No technical specification provided."}
                       </p>
+
+                      <div style={{ marginTop: "0.8rem", display: "flex", alignItems: "center", gap: "6px" }}>
+                        {item.shopifyUrl ? (
+                          <span style={{ fontSize: "0.74rem", background: "rgba(16, 185, 129, 0.12)", color: "#065f46", border: "1px solid rgba(16, 185, 129, 0.3)", padding: "2px 8px", borderRadius: "4px", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                            🛍️ Shopify Buy Now Active
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: "0.74rem", background: "#EAE4D8", color: "#6A6359", padding: "2px 8px", borderRadius: "4px", fontWeight: 600 }}>
+                            📋 Quote Request Only (No Shopify link)
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -737,7 +749,49 @@ export default function AdminShopPage() {
                   />
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "0.6rem 0" }}>
+                {/* Shopify Direct Product Connection */}
+                <div style={{ background: "#F4EFE6", border: "1px solid #D5CEBF", borderRadius: "10px", padding: "1.2rem", marginTop: "0.2rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "0.6rem" }}>
+                    <ShoppingBag size={18} color="#81663F" />
+                    <span style={{ fontSize: "0.88rem", fontWeight: 800, color: "#1E1E1E" }}>
+                      Shopify Direct Checkout / Buy Now Connection
+                    </span>
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "0.8rem", alignItems: "flex-end" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 700, color: "#1E1E1E", marginBottom: "0.3rem" }}>
+                        Shopify Product URL / Buy Link
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://yourstore.myshopify.com/products/oak-veneer"
+                        value={editingItem.shopifyUrl || ""}
+                        onChange={(e) => setEditingItem({ ...editingItem, shopifyUrl: e.target.value })}
+                        style={{ width: "100%", padding: "10px 12px", border: "1px solid #D5CEBF", borderRadius: "8px", fontSize: "0.9rem", background: "#FFFFFF" }}
+                      />
+                    </div>
+
+                    <div style={{ width: "150px" }}>
+                      <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 700, color: "#1E1E1E", marginBottom: "0.3rem" }}>
+                        Button Label
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Buy on Shopify"
+                        value={editingItem.buyNowText || "Buy on Shopify"}
+                        onChange={(e) => setEditingItem({ ...editingItem, buyNowText: e.target.value })}
+                        style={{ width: "100%", padding: "10px 12px", border: "1px solid #D5CEBF", borderRadius: "8px", fontSize: "0.9rem", background: "#FFFFFF" }}
+                      />
+                    </div>
+                  </div>
+
+                  <p style={{ fontSize: "0.78rem", color: "#6A6359", margin: "0.5rem 0 0" }}>
+                    ℹ️ When configured, customers on the live Shop page can click <strong>Buy Now</strong> to jump directly into your Shopify product checkout.
+                  </p>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "0.4rem 0" }}>
                   <input
                     type="checkbox"
                     id="itemAvailable"
