@@ -449,3 +449,15 @@ export interface BrandDownloadFolder {
   files: DownloadPdfItem[];
 }
 
+export interface QrCodeItem {
+  id: string;
+  title?: string;
+  url: string;
+  imageUrl?: string;
+  fgColor?: string;
+  bgColor?: string;
+  logoUrl?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+

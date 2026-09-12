@@ -31,6 +31,7 @@ import {
   BrandDownloadFolder,
   ShopItem,
   ShopSettingsItem,
+  QrCodeItem,
   DEFAULT_SETTINGS,
   DEFAULT_CATALOG_SETTINGS,
   DEFAULT_SHOP_ITEMS,
@@ -3854,6 +3855,113 @@ export async function saveShopSettingsStore(settings: Partial<ShopSettingsItem>)
   writeJsonStore(json);
 
   return updated;
+}
+
+// QR CODES STORE
+export async function getQrCodesStore(): Promise<QrCodeItem[]> {
+  try {
+    const fromDb = await prisma.qrCode.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    if (fromDb && Array.isArray(fromDb)) {
+      return fromDb.map((q) => ({
+        id: q.id,
+        title: q.title || "QR Code",
+        url: q.url,
+        imageUrl: q.imageUrl || undefined,
+        fgColor: q.fgColor || undefined,
+        bgColor: q.bgColor || undefined,
+        logoUrl: q.logoUrl || undefined,
+        createdAt: q.createdAt.toISOString(),
+        updatedAt: q.updatedAt.toISOString(),
+      }));
+    }
+  } catch (dbErr) {
+    // Fallback to JSON store when database is not connected
+  }
+
+  const json = readJsonStore();
+  if (json.qrCodes && Array.isArray(json.qrCodes)) {
+    return json.qrCodes;
+  }
+  return [];
+}
+
+export async function saveQrCodeStore(qr: Partial<QrCodeItem>): Promise<QrCodeItem> {
+  const id = qr.id || `qr-${Date.now()}`;
+  const now = new Date();
+  const full: QrCodeItem = {
+    id,
+    title: qr.title || "QR Code",
+    url: qr.url || "",
+    imageUrl: qr.imageUrl || "",
+    fgColor: qr.fgColor || "#1E1E1E",
+    bgColor: qr.bgColor || "#FFFFFF",
+    logoUrl: qr.logoUrl || "",
+    createdAt: qr.createdAt || now.toISOString(),
+    updatedAt: now.toISOString(),
+  };
+
+  try {
+    const saved = await prisma.qrCode.upsert({
+      where: { id },
+      update: {
+        title: full.title,
+        url: full.url,
+        imageUrl: full.imageUrl,
+        fgColor: full.fgColor,
+        bgColor: full.bgColor,
+        logoUrl: full.logoUrl,
+      },
+      create: {
+        id,
+        title: full.title,
+        url: full.url,
+        imageUrl: full.imageUrl,
+        fgColor: full.fgColor,
+        bgColor: full.bgColor,
+        logoUrl: full.logoUrl,
+      },
+    });
+    full.id = saved.id;
+    full.createdAt = saved.createdAt.toISOString();
+    full.updatedAt = saved.updatedAt.toISOString();
+  } catch (dbErr) {
+    // Fallback to JSON store
+  }
+
+  const json = readJsonStore();
+  if (!json.qrCodes || !Array.isArray(json.qrCodes)) {
+    json.qrCodes = [];
+  }
+  const idx = json.qrCodes.findIndex((q: any) => q.id === id);
+  if (idx >= 0) {
+    json.qrCodes[idx] = full;
+  } else {
+    json.qrCodes.unshift(full);
+  }
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+
+  return full;
+}
+
+export async function deleteQrCodeStore(id: string): Promise<boolean> {
+  try {
+    await prisma.qrCode.delete({
+      where: { id },
+    });
+  } catch (dbErr) {
+    // Fallback to JSON store
+  }
+
+  const json = readJsonStore();
+  if (json.qrCodes && Array.isArray(json.qrCodes)) {
+    json.qrCodes = json.qrCodes.filter((q: any) => q.id !== id);
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    writeJsonStore(json);
+  }
+  return true;
 }
 
 

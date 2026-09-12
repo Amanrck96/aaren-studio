@@ -535,3 +535,15 @@ model Enquiry {
   createdAt  DateTime @default(now())
 }
 
+model QrCode {
+  id        String   @id @default(cuid())
+  title     String?  @default("QR Code")
+  url       String
+  imageUrl  String?
+  fgColor   String?  @default("#1E1E1E")
+  bgColor   String?  @default("#FFFFFF")
+  logoUrl   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
