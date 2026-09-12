@@ -489,9 +489,11 @@ export interface BrandFolderItem {
   id: string;
   name: string;
   slug: string;
+  tagline?: string;
   description?: string;
   bannerImageUrl?: string;
   files: BrandFolderPdf[];
+  ctaButtons?: IntroPageCtaButton[];
   createdAt?: string;
   updatedAt?: string;
 }

@@ -273,6 +273,31 @@ function AdminBrandDownloadsContent() {
     setEditingBrand({ ...editingBrand, files: newFiles });
   };
 
+  // CTA Buttons Handlers
+  const handleAddCta = () => {
+    if (!editingBrand) return;
+    const currentCtas = editingBrand.ctaButtons || [];
+    if (currentCtas.length >= 3) {
+      showToast("Maximum 3 CTA buttons allowed", "error");
+      return;
+    }
+    const newCtas = [...currentCtas, { label: "Explore Projects", destination: "/projects" }];
+    setEditingBrand({ ...editingBrand, ctaButtons: newCtas });
+  };
+
+  const handleRemoveCta = (index: number) => {
+    if (!editingBrand || !editingBrand.ctaButtons) return;
+    const newCtas = editingBrand.ctaButtons.filter((_, i) => i !== index);
+    setEditingBrand({ ...editingBrand, ctaButtons: newCtas });
+  };
+
+  const handleUpdateCta = (index: number, field: "label" | "destination", value: string) => {
+    if (!editingBrand || !editingBrand.ctaButtons) return;
+    const newCtas = [...editingBrand.ctaButtons];
+    newCtas[index] = { ...newCtas[index], [field]: value };
+    setEditingBrand({ ...editingBrand, ctaButtons: newCtas });
+  };
+
   // Save Brand
   const handleSaveBrand = async () => {
     if (!editingBrand) return;
@@ -632,6 +657,22 @@ function AdminBrandDownloadsContent() {
                   />
                 </div>
 
+                {/* Short Tagline */}
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#6A6359] mb-1.5">
+                    Short Tagline (Mobile Showroom Subtitle)
+                  </label>
+                  <input
+                    type="text"
+                    value={editingBrand.tagline || ""}
+                    onChange={(e) =>
+                      setEditingBrand({ ...editingBrand, tagline: e.target.value })
+                    }
+                    placeholder="e.g. Explore our latest collections, catalogues and product resources."
+                    className="w-full px-3.5 py-2 rounded-xl border border-[#D5CEBF] bg-[#FAF8F5] text-sm focus:outline-none focus:border-[#81663F] text-[#1E1E1E]"
+                  />
+                </div>
+
                 {/* Banner Image */}
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-[#6A6359] mb-1.5">
@@ -805,6 +846,72 @@ function AdminBrandDownloadsContent() {
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Optional CTA Buttons Section (Up to 3) */}
+                <div className="pt-4 border-t border-[#E4DCCE]">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-serif text-lg font-semibold text-[#1E1E1E]">
+                        Optional CTA Buttons (Up to 3)
+                      </h4>
+                      <p className="text-xs text-[#8A8275]">
+                        Secondary mobile showroom action buttons shown below resources.
+                      </p>
+                    </div>
+
+                    {(!editingBrand.ctaButtons || editingBrand.ctaButtons.length < 3) && (
+                      <button
+                        type="button"
+                        onClick={handleAddCta}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#D5CEBF] bg-white hover:bg-[#FAF8F5] text-xs font-semibold text-[#4A453E] transition-all"
+                      >
+                        <Plus className="w-3.5 h-3.5 text-[#81663F]" />
+                        <span>Add Button</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {(!editingBrand.ctaButtons || editingBrand.ctaButtons.length === 0) ? (
+                    <div className="p-4 rounded-xl border border-dashed border-[#D5CEBF] bg-[#FAF8F5] text-center text-xs text-[#8A8275]">
+                      No custom CTA buttons configured (defaults to "Showcase Projects" and "Contact Design Concierge").
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      {editingBrand.ctaButtons.map((cta, cIdx) => (
+                        <div
+                          key={cIdx}
+                          className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E4DCCE] flex flex-col sm:flex-row items-start sm:items-center gap-2.5"
+                        >
+                          <span className="text-xs font-mono font-bold text-[#81663F] shrink-0">
+                            #{cIdx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={cta.label}
+                            onChange={(e) => handleUpdateCta(cIdx, "label", e.target.value)}
+                            placeholder="Button Label (e.g. View Portfolio)"
+                            className="flex-1 w-full px-2.5 py-1.5 rounded-lg border border-[#D5CEBF] bg-white text-xs text-[#1E1E1E] focus:outline-none focus:border-[#81663F]"
+                          />
+                          <input
+                            type="text"
+                            value={cta.destination}
+                            onChange={(e) => handleUpdateCta(cIdx, "destination", e.target.value)}
+                            placeholder="Destination (/projects, /contact, or URL)"
+                            className="flex-1 w-full px-2.5 py-1.5 rounded-lg border border-[#D5CEBF] bg-white text-xs font-mono text-[#1E1E1E] focus:outline-none focus:border-[#81663F]"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveCta(cIdx)}
+                            className="p-1.5 rounded-lg border border-red-200 bg-white hover:bg-red-50 text-red-600 shrink-0 self-end sm:self-center"
+                            title="Remove button"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
                         </div>
                       ))}
                     </div>
