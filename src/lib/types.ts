@@ -461,3 +461,19 @@ export interface QrCodeItem {
   updatedAt?: string;
 }
 
+export interface IntroPageCtaButton {
+  label: string;
+  destination: string;
+}
+
+export interface IntroPageItem {
+  id: string;
+  slug: string;
+  title: string;
+  tagline?: string;
+  bannerImageUrl: string;
+  ctaButtons?: IntroPageCtaButton[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+

@@ -63,9 +63,13 @@ export async function POST(request: NextRequest) {
     const dataUri = `data:${mime};base64,${buffer.toString("base64")}`;
 
     // 6. Upload via existing Cloudinary integration (secrets remain server-side)
+    const folder = (formData.get("folder") as string) || "aaren_qr_logos";
+    const widthParam = formData.get("width") as string | null;
+    const width = widthParam ? parseInt(widthParam, 10) || 1200 : 800;
+
     const result = await uploadMedia(dataUri, {
-      folder: "aaren_qr_logos",
-      width: 800,
+      folder,
+      width,
     });
 
     if (!result || !result.secure_url) {

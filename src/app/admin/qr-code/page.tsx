@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import AdminNav from "@/components/AdminNav";
 import { BRAND_LOGOS } from "@/utils/qrWithLogo";
-import { QrCodeItem } from "@/lib/types";
+import { QrCodeItem, IntroPageItem } from "@/lib/types";
 import {
   QrCode as QrIcon,
   Download,
@@ -25,6 +25,11 @@ import {
   FileImage,
   FolderOpen,
   Eye,
+  Globe,
+  Plus,
+  X,
+  FileText,
+  Layers,
 } from "lucide-react";
 
 // Official AAREN luxury emblem monogram badge (inline SVG data URL)
@@ -37,6 +42,18 @@ interface DocumentOption {
   source: "page" | "catalog" | "download";
 }
 
+const CTA_PRESET_DESTINATIONS = [
+  { label: "Showcase Projects (/projects)", path: "/projects" },
+  { label: "Contact Concierge (/contact)", path: "/contact" },
+  { label: "About Studio (/about)", path: "/about" },
+  { label: "Services (/services)", path: "/services" },
+  { label: "Shop & Specimens (/shop)", path: "/shop" },
+  { label: "Partner Brands Directory (/brands)", path: "/brands" },
+  { label: "PDF Catalogs Portal (/catalogs)", path: "/catalogs" },
+  { label: "Downloads Repository (/downloads)", path: "/downloads" },
+  { label: "Custom URL or Path...", path: "custom" },
+];
+
 const LUXURY_PALETTES = [
   { name: "Classic Onyx", fg: "#1E1E1E", bg: "#FFFFFF" },
   { name: "Aaren Bronze", fg: "#81663F", bg: "#FAF8F5" },
@@ -44,9 +61,22 @@ const LUXURY_PALETTES = [
   { name: "Tuscan Gold", fg: "#6E4C1E", bg: "#FFFDF9" },
 ];
 
+function getPublicSiteUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, "");
+  }
+  if (typeof window !== "undefined" && !window.location.origin.includes("localhost")) {
+    return window.location.origin;
+  }
+  return "https://aarenstudio.vercel.app";
+}
+
 export default function AdminQrCodePage() {
   const qrContainerRef = useRef<HTMLDivElement>(null);
   const qrCodeInstanceRef = useRef<any>(null);
+
+  // Mode Switcher: "url" (external/catalog) vs "intro" (standalone intro microsite)
+  const [contentMode, setContentMode] = useState<"url" | "intro">("url");
 
   // Form State
   const [text, setText] = useState<string>("https://aarenstudio.com");
@@ -56,6 +86,34 @@ export default function AdminQrCodePage() {
   const [size, setSize] = useState<number>(1200);
   const [dotType, setDotType] = useState<"rounded" | "dots" | "classy" | "square">("rounded");
   const [cornerSquareType, setCornerSquareType] = useState<"extra-rounded" | "dot" | "square">("extra-rounded");
+
+  // Intro Pages State
+  const [introPages, setIntroPages] = useState<IntroPageItem[]>([]);
+  const [loadingIntroPages, setLoadingIntroPages] = useState<boolean>(false);
+  const [introSubMode, setIntroSubMode] = useState<"create" | "existing">("create");
+  const [selectedIntroId, setSelectedIntroId] = useState<string>("");
+
+  // Intro Page Creator Form State
+  const [introTitle, setIntroTitle] = useState<string>("");
+  const [introTagline, setIntroTagline] = useState<string>("");
+  const [introBannerUrl, setIntroBannerUrl] = useState<string>("");
+  const [introBannerName, setIntroBannerName] = useState<string>("");
+  const [uploadingBanner, setUploadingBanner] = useState<boolean>(false);
+  const [bannerError, setBannerError] = useState<string | null>(null);
+  const [introCtas, setIntroCtas] = useState<Array<{ label: string; destination: string }>>([
+    { label: "Explore Projects", destination: "/projects" },
+    { label: "Contact Concierge", destination: "/contact" },
+  ]);
+  const [publishingIntro, setPublishingIntro] = useState<boolean>(false);
+  const [publishedIntro, setPublishedIntro] = useState<{
+    id: string;
+    slug: string;
+    publicUrl: string;
+    title: string;
+  } | null>(null);
+
+  // Bottom Records View Tab
+  const [recordsTab, setRecordsTab] = useState<"qrcodes" | "intropages">("qrcodes");
 
   // Logo State
   const [logoMode, setLogoMode] = useState<"none" | "aaren" | "brand" | "custom">("aaren");
@@ -181,6 +239,235 @@ export default function AdminQrCodePage() {
   useEffect(() => {
     loadSavedQrCodes();
   }, [loadSavedQrCodes]);
+
+  // 2b. Fetch saved Intro Pages from database
+  const loadIntroPages = useCallback(async () => {
+    setLoadingIntroPages(true);
+    try {
+      const res = await fetch(`/api/admin/intro-page?t=${Date.now()}`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          setIntroPages(json.data);
+        }
+      }
+    } catch (err) {
+      console.warn("Could not load intro pages:", err);
+    } finally {
+      setLoadingIntroPages(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadIntroPages();
+  }, [loadIntroPages]);
+
+  // Intro Page CTA Handlers
+  const handleAddCta = () => {
+    if (introCtas.length >= 3) {
+      showToast("Maximum of 3 CTA buttons allowed.");
+      return;
+    }
+    setIntroCtas((prev) => [...prev, { label: "", destination: "/projects" }]);
+  };
+
+  const handleUpdateCta = (index: number, field: "label" | "destination", value: string) => {
+    setIntroCtas((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], [field]: value };
+      return copy;
+    });
+  };
+
+  const handleRemoveCta = (index: number) => {
+    setIntroCtas((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Intro Page Banner Upload via server-side Cloudinary
+  const handleBannerFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setBannerError(null);
+
+    const validMimes = ["image/png", "image/jpeg", "image/jpg", "image/webp", "image/svg+xml"];
+    if (!validMimes.includes(file.type.toLowerCase())) {
+      setBannerError("Invalid image type. Please select a PNG, JPEG, WebP, or SVG file.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setBannerError(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Max 5MB allowed.`);
+      return;
+    }
+
+    setUploadingBanner(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "aaren_intro_banners");
+      formData.append("width", "1920");
+
+      const res = await fetch("/api/qr-code/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        throw new Error(json.error || "Failed to upload banner to Cloudinary");
+      }
+
+      setIntroBannerUrl(json.url);
+      setIntroBannerName(file.name);
+      showToast("Hero banner uploaded successfully via Cloudinary!");
+    } catch (err: any) {
+      console.error("Banner upload failed:", err);
+      setBannerError(err.message || "Upload error");
+    } finally {
+      setUploadingBanner(false);
+      e.target.value = "";
+    }
+  };
+
+  // Publish Intro Page & Wire Directly to QR Code State
+  const handlePublishIntroPage = async () => {
+    if (!introTitle.trim()) {
+      showToast("Please enter a title for the intro page.");
+      return;
+    }
+    if (!introBannerUrl.trim()) {
+      showToast("Please upload a hero banner image.");
+      return;
+    }
+
+    const validCtas = introCtas
+      .filter((c) => c.label.trim() && c.destination.trim())
+      .map((c) => ({
+        label: c.label.trim(),
+        destination: c.destination.trim(),
+      }));
+
+    setPublishingIntro(true);
+    try {
+      const res = await fetch("/api/admin/intro-page", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: introTitle.trim(),
+          tagline: introTagline.trim() || undefined,
+          bannerImageUrl: introBannerUrl.trim(),
+          ctaButtons: validCtas,
+        }),
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        throw new Error(json.error || "Failed to publish intro page");
+      }
+
+      const publicUrl = json.publicUrl;
+      const savedPage = json.data;
+
+      // Automatically wire to QR code preview & title
+      setText(publicUrl);
+      setTitle(savedPage.title);
+      setPublishedIntro({
+        id: savedPage.id,
+        slug: savedPage.slug,
+        publicUrl,
+        title: savedPage.title,
+      });
+
+      showToast("Intro page published & QR Code connected!");
+      loadIntroPages();
+    } catch (err: any) {
+      console.error("Publish intro page error:", err);
+      showToast(`Publish failed: ${err.message}`);
+    } finally {
+      setPublishingIntro(false);
+    }
+  };
+
+  // Delete an Intro Page
+  const handleDeleteIntroPage = async (id: string, pageTitle: string) => {
+    if (!confirm(`Are you sure you want to delete intro page "${pageTitle}"?`)) return;
+
+    try {
+      const res = await fetch(`/api/admin/intro-page?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+
+      const json = await res.json();
+      if (json.success) {
+        setIntroPages((prev) => prev.filter((p) => p.id !== id));
+        if (publishedIntro?.id === id) {
+          setPublishedIntro(null);
+        }
+        showToast("Intro page deleted successfully.");
+      } else {
+        throw new Error(json.error || "Delete failed");
+      }
+    } catch (err: any) {
+      console.error("Delete intro page error:", err);
+      showToast(`Failed to delete: ${err.message}`);
+    }
+  };
+
+  // Select an Existing Intro Page to generate QR for
+  const handleSelectExistingIntro = (introId: string) => {
+    setSelectedIntroId(introId);
+    const chosen = introPages.find((p) => p.id === introId);
+    if (!chosen) return;
+
+    const baseSiteUrl = getPublicSiteUrl();
+    const fullUrl = `${baseSiteUrl}/intro/${chosen.slug}`;
+
+    setText(fullUrl);
+    setTitle(chosen.title);
+    setPublishedIntro({
+      id: chosen.id,
+      slug: chosen.slug,
+      publicUrl: fullUrl,
+      title: chosen.title,
+    });
+    showToast(`Linked QR Code to intro page: "${chosen.title}"`);
+  };
+
+  // Load existing intro page into creator form
+  const handleLoadIntroIntoEditor = (item: IntroPageItem) => {
+    setContentMode("intro");
+    setIntroSubMode("create");
+    setIntroTitle(item.title);
+    setIntroTagline(item.tagline || "");
+    setIntroBannerUrl(item.bannerImageUrl);
+    setIntroBannerName("Current Banner");
+    if (Array.isArray(item.ctaButtons) && item.ctaButtons.length > 0) {
+      setIntroCtas(
+        item.ctaButtons.map((b) => ({
+          label: b.label,
+          destination: b.destination,
+        }))
+      );
+    } else {
+      setIntroCtas([]);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    showToast(`Loaded "${item.title}" into Intro Page editor`);
+  };
+
+  const handleResetIntroForm = () => {
+    setIntroTitle("");
+    setIntroTagline("");
+    setIntroBannerUrl("");
+    setIntroBannerName("");
+    setBannerError(null);
+    setIntroCtas([
+      { label: "Explore Projects", destination: "/projects" },
+      { label: "Contact Concierge", destination: "/contact" },
+    ]);
+    setPublishedIntro(null);
+  };
 
   // 3. Initialize and dynamically update qr-code-styling
   useEffect(() => {
@@ -605,125 +892,870 @@ export default function AdminQrCodePage() {
             
             {/* Card 1: Content & Target URL */}
             <div style={{ background: "#FFFFFF", padding: "1.6rem", borderRadius: "14px", border: "1px solid #E2DCD2", boxShadow: "0 2px 10px rgba(0,0,0,0.03)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "1rem" }}>
-                <span style={{ fontSize: "1.2rem" }}>🎯</span>
-                <h3 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 800, color: "#1E1E1E" }}>
-                  1. Target Content or Destination URL
-                </h3>
-              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.2rem", flexWrap: "wrap", gap: "10px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{ fontSize: "1.2rem" }}>🎯</span>
+                  <h3 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 800, color: "#1E1E1E" }}>
+                    1. QR Target &amp; Content Source
+                  </h3>
+                </div>
 
-              {/* Pre-indexed Select from Website / Catalogs / Downloads */}
-              {documents.length > 0 && (
-                <div style={{ marginBottom: "1rem" }}>
-                  <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#81663F", marginBottom: "6px" }}>
-                    Quick Select from Website Pages or Catalogs:
-                  </label>
-                  <select
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (!val) return;
-                      const chosen = documents.find((d) => d.url === val);
-                      if (chosen) {
-                        const origin = typeof window !== "undefined" ? window.location.origin : "https://aarenstudio.com";
-                        const fullUrl = chosen.url.startsWith("/") ? `${origin}${chosen.url}` : chosen.url;
-                        setText(fullUrl);
-                        setTitle(chosen.title);
-                        // Auto match brand logo if applicable
-                        const matchedBrand = BRAND_LOGOS.find((b) => chosen.brand.toLowerCase().includes(b.name.toLowerCase()));
-                        if (matchedBrand) {
-                          setSelectedBrandLogo(matchedBrand.file);
-                          setLogoMode("brand");
-                        }
-                      }
-                    }}
-                    defaultValue=""
+                {publishedIntro && (
+                  <span
                     style={{
-                      width: "100%",
-                      padding: "0.75rem 1rem",
-                      borderRadius: "8px",
-                      border: "1px solid #D5CEBF",
-                      background: "#FAF8F5",
-                      fontSize: "0.88rem",
-                      color: "#1E1E1E",
-                      fontWeight: 600,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      background: "rgba(16, 185, 129, 0.1)",
+                      color: "#059669",
+                      padding: "3px 10px",
+                      borderRadius: "16px",
+                      fontSize: "0.74rem",
+                      fontWeight: 700,
                     }}
                   >
-                    <option value="" disabled>-- Select existing project asset (optional) --</option>
-                    <optgroup label="🌐 Live Website Pages">
-                      {documents.filter((d) => d.source === "page").map((d, i) => (
-                        <option key={`p-${i}`} value={d.url}>
-                          {d.title} ({d.url})
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="📄 PDF Catalogs">
-                      {documents.filter((d) => d.source === "catalog").map((d, i) => (
-                        <option key={`c-${i}`} value={d.url}>
-                          [{d.brand}] {d.title}
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="📁 Brand Downloads">
-                      {documents.filter((d) => d.source === "download").map((d, i) => (
-                        <option key={`d-${i}`} value={d.url}>
-                          [{d.brand}] {d.title}
-                        </option>
-                      ))}
-                    </optgroup>
-                  </select>
-                </div>
-              )}
-
-              {/* Text / URL input */}
-              <div style={{ marginBottom: "1rem" }}>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#81663F", marginBottom: "6px" }}>
-                  URL or Arbitrary Text: <span style={{ color: "#DC2626" }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="https://aarenstudio.com/shop or arbitrary text"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem 1rem",
-                    borderRadius: "8px",
-                    border: isTextEmpty ? "1px solid #F87171" : "1px solid #D5CEBF",
-                    background: "#FAF8F5",
-                    fontSize: "0.88rem",
-                    color: "#1E1E1E",
-                    boxSizing: "border-box",
-                  }}
-                />
-                {isTextEmpty && (
-                  <p style={{ margin: "6px 0 0", color: "#DC2626", fontSize: "0.78rem", fontWeight: 600 }}>
-                    Please enter a URL or text. Generation is paused until text is provided.
-                  </p>
+                    <CheckCircle size={13} />
+                    <span>Intro Page Active</span>
+                  </span>
                 )}
               </div>
 
-              {/* Code Title (for record & download file name) */}
-              <div>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#6A6359", marginBottom: "6px" }}>
-                  Title / Label (Used for Download Filename &amp; Saved Records):
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Falper Autumn Catalogue 2026"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+              {/* Mode Switcher Pills */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "6px",
+                  background: "#FAF8F5",
+                  padding: "4px",
+                  borderRadius: "10px",
+                  border: "1px solid #D5CEBF",
+                  marginBottom: "1.4rem",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setContentMode("url")}
                   style={{
-                    width: "100%",
-                    padding: "0.65rem 0.9rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                    padding: "0.7rem 0.5rem",
                     borderRadius: "8px",
-                    border: "1px solid #D5CEBF",
-                    background: "#FAF8F5",
-                    fontSize: "0.84rem",
-                    color: "#1E1E1E",
-                    boxSizing: "border-box",
+                    border: "none",
+                    background: contentMode === "url" ? "#81663F" : "transparent",
+                    color: contentMode === "url" ? "#FFFFFF" : "#555555",
+                    fontWeight: 800,
+                    fontSize: "0.82rem",
+                    cursor: "pointer",
+                    transition: "all 0.15s ease",
                   }}
-                />
+                >
+                  <Globe size={15} />
+                  <span>Link to External / Site URL</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setContentMode("intro")}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                    padding: "0.7rem 0.5rem",
+                    borderRadius: "8px",
+                    border: "none",
+                    background: contentMode === "intro" ? "#81663F" : "transparent",
+                    color: contentMode === "intro" ? "#FFFFFF" : "#555555",
+                    fontWeight: 800,
+                    fontSize: "0.82rem",
+                    cursor: "pointer",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  <Sparkles size={15} />
+                  <span>Link to an Intro Page</span>
+                </button>
               </div>
+
+              {/* MODE 1: EXTERNAL / SITE URL */}
+              {contentMode === "url" && (
+                <>
+                  {/* Pre-indexed Select from Website / Catalogs / Downloads */}
+                  {documents.length > 0 && (
+                    <div style={{ marginBottom: "1rem" }}>
+                      <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#81663F", marginBottom: "6px" }}>
+                        Quick Select from Website Pages or Catalogs:
+                      </label>
+                      <select
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (!val) return;
+                          const chosen = documents.find((d) => d.url === val);
+                          if (chosen) {
+                            const origin = typeof window !== "undefined" ? window.location.origin : "https://aarenstudio.com";
+                            const fullUrl = chosen.url.startsWith("/") ? `${origin}${chosen.url}` : chosen.url;
+                            setText(fullUrl);
+                            setTitle(chosen.title);
+                            setPublishedIntro(null);
+                            // Auto match brand logo if applicable
+                            const matchedBrand = BRAND_LOGOS.find((b) => chosen.brand.toLowerCase().includes(b.name.toLowerCase()));
+                            if (matchedBrand) {
+                              setSelectedBrandLogo(matchedBrand.file);
+                              setLogoMode("brand");
+                            }
+                          }
+                        }}
+                        defaultValue=""
+                        style={{
+                          width: "100%",
+                          padding: "0.75rem 1rem",
+                          borderRadius: "8px",
+                          border: "1px solid #D5CEBF",
+                          background: "#FAF8F5",
+                          fontSize: "0.88rem",
+                          color: "#1E1E1E",
+                          fontWeight: 600,
+                        }}
+                      >
+                        <option value="" disabled>-- Select existing project asset (optional) --</option>
+                        <optgroup label="🌐 Live Website Pages">
+                          {documents.filter((d) => d.source === "page").map((d, i) => (
+                            <option key={`p-${i}`} value={d.url}>
+                              {d.title} ({d.url})
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="📄 PDF Catalogs">
+                          {documents.filter((d) => d.source === "catalog").map((d, i) => (
+                            <option key={`c-${i}`} value={d.url}>
+                              [{d.brand}] {d.title}
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="📁 Brand Downloads">
+                          {documents.filter((d) => d.source === "download").map((d, i) => (
+                            <option key={`d-${i}`} value={d.url}>
+                              [{d.brand}] {d.title}
+                            </option>
+                          ))}
+                        </optgroup>
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Text / URL input */}
+                  <div style={{ marginBottom: "1rem" }}>
+                    <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#81663F", marginBottom: "6px" }}>
+                      URL or Arbitrary Text: <span style={{ color: "#DC2626" }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="https://aarenstudio.com/shop or arbitrary text"
+                      value={text}
+                      onChange={(e) => {
+                        setText(e.target.value);
+                        setPublishedIntro(null);
+                      }}
+                      style={{
+                        width: "100%",
+                        padding: "0.75rem 1rem",
+                        borderRadius: "8px",
+                        border: isTextEmpty ? "1px solid #F87171" : "1px solid #D5CEBF",
+                        background: "#FAF8F5",
+                        fontSize: "0.88rem",
+                        color: "#1E1E1E",
+                        boxSizing: "border-box",
+                      }}
+                    />
+                    {isTextEmpty && (
+                      <p style={{ margin: "6px 0 0", color: "#DC2626", fontSize: "0.78rem", fontWeight: 600 }}>
+                        Please enter a URL or text. Generation is paused until text is provided.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Code Title (for record & download file name) */}
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#6A6359", marginBottom: "6px" }}>
+                      Title / Label (Used for Download Filename &amp; Saved Records):
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Falper Autumn Catalogue 2026"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "0.65rem 0.9rem",
+                        borderRadius: "8px",
+                        border: "1px solid #D5CEBF",
+                        background: "#FAF8F5",
+                        fontSize: "0.84rem",
+                        color: "#1E1E1E",
+                        boxSizing: "border-box",
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* MODE 2: INTRO PAGE CREATOR & SELECTOR */}
+              {contentMode === "intro" && (
+                <div>
+                  {/* Sub-tabs: Create New vs Choose Saved */}
+                  <div style={{ display: "flex", gap: "8px", marginBottom: "1.2rem" }}>
+                    <button
+                      type="button"
+                      onClick={() => setIntroSubMode("create")}
+                      style={{
+                        flex: 1,
+                        padding: "0.6rem 0.8rem",
+                        borderRadius: "8px",
+                        border: introSubMode === "create" ? "2px solid #81663F" : "1px solid #D5CEBF",
+                        background: introSubMode === "create" ? "#FAF8F5" : "#FFFFFF",
+                        fontWeight: 800,
+                        fontSize: "0.8rem",
+                        color: introSubMode === "create" ? "#81663F" : "#555555",
+                        cursor: "pointer",
+                      }}
+                    >
+                      ✨ Build New Intro Page
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIntroSubMode("existing")}
+                      style={{
+                        flex: 1,
+                        padding: "0.6rem 0.8rem",
+                        borderRadius: "8px",
+                        border: introSubMode === "existing" ? "2px solid #81663F" : "1px solid #D5CEBF",
+                        background: introSubMode === "existing" ? "#FAF8F5" : "#FFFFFF",
+                        fontWeight: 800,
+                        fontSize: "0.8rem",
+                        color: introSubMode === "existing" ? "#81663F" : "#555555",
+                        cursor: "pointer",
+                      }}
+                    >
+                      📁 Choose Saved ({introPages.length})
+                    </button>
+                  </div>
+
+                  {/* Active Intro Connection Banner */}
+                  {publishedIntro && (
+                    <div
+                      style={{
+                        background: "linear-gradient(135deg, #FFFDF8 0%, #F5EFE6 100%)",
+                        border: "1px solid #D4B67D",
+                        borderRadius: "10px",
+                        padding: "0.9rem 1.1rem",
+                        marginBottom: "1.2rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "10px",
+                      }}
+                    >
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: "0.72rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase" }}>
+                          ✓ Connected to QR Generator:
+                        </div>
+                        <div style={{ fontSize: "0.88rem", fontWeight: 800, color: "#1E1E1E", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {publishedIntro.title}
+                        </div>
+                        <div style={{ fontSize: "0.76rem", fontFamily: "monospace", color: "#6A6359", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {publishedIntro.publicUrl}
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", gap: "6px", flexShrink: 0 }}>
+                        <a
+                          href={publishedIntro.publicUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            padding: "0.45rem 0.75rem",
+                            background: "#81663F",
+                            color: "#FFFFFF",
+                            borderRadius: "6px",
+                            fontWeight: 700,
+                            fontSize: "0.76rem",
+                            textDecoration: "none",
+                          }}
+                        >
+                          <ExternalLink size={12} />
+                          <span>View Page</span>
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* SUB-VIEW 1: CREATE NEW INTRO PAGE */}
+                  {introSubMode === "create" && (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+                      
+                      {/* Banner Image Upload */}
+                      <div>
+                        <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#81663F", marginBottom: "6px" }}>
+                          1. Hero Banner Image: <span style={{ color: "#DC2626" }}>*</span>
+                        </label>
+                        
+                        {introBannerUrl ? (
+                          <div
+                            style={{
+                              border: "1px solid #D5CEBF",
+                              borderRadius: "10px",
+                              padding: "0.8rem",
+                              background: "#FAF8F5",
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "8px",
+                            }}
+                          >
+                            <div style={{ position: "relative", width: "100%", height: "140px", borderRadius: "8px", overflow: "hidden", background: "#EAE5DC" }}>
+                              <img
+                                src={introBannerUrl}
+                                alt="Intro Banner Preview"
+                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                              />
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px" }}>
+                              <div style={{ fontSize: "0.78rem", color: "#1E1E1E", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                {introBannerName || "Banner ready on Cloudinary"}
+                              </div>
+                              <div style={{ display: "flex", gap: "6px" }}>
+                                <input
+                                  type="file"
+                                  id="intro-banner-replace"
+                                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                                  onChange={handleBannerFileChange}
+                                  disabled={uploadingBanner}
+                                  style={{ display: "none" }}
+                                />
+                                <label
+                                  htmlFor="intro-banner-replace"
+                                  style={{
+                                    padding: "0.35rem 0.7rem",
+                                    borderRadius: "6px",
+                                    border: "1px solid #D5CEBF",
+                                    background: "#FFFFFF",
+                                    color: "#81663F",
+                                    fontSize: "0.74rem",
+                                    fontWeight: 700,
+                                    cursor: uploadingBanner ? "wait" : "pointer",
+                                  }}
+                                >
+                                  {uploadingBanner ? "Uploading..." : "Replace"}
+                                </label>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setIntroBannerUrl("");
+                                    setIntroBannerName("");
+                                  }}
+                                  style={{
+                                    padding: "0.35rem 0.7rem",
+                                    borderRadius: "6px",
+                                    border: "1px solid #FCA5A5",
+                                    background: "#FEE2E2",
+                                    color: "#DC2626",
+                                    fontSize: "0.74rem",
+                                    fontWeight: 700,
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            style={{
+                              border: "2px dashed #D5CEBF",
+                              borderRadius: "10px",
+                              padding: "1.4rem",
+                              textAlign: "center",
+                              background: "#FAF8F5",
+                            }}
+                          >
+                            <input
+                              type="file"
+                              id="intro-banner-upload"
+                              accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                              onChange={handleBannerFileChange}
+                              disabled={uploadingBanner}
+                              style={{ display: "none" }}
+                            />
+                            <label
+                              htmlFor="intro-banner-upload"
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                padding: "0.65rem 1.2rem",
+                                background: "#81663F",
+                                color: "#FFFFFF",
+                                borderRadius: "8px",
+                                fontWeight: 700,
+                                fontSize: "0.84rem",
+                                cursor: uploadingBanner ? "wait" : "pointer",
+                              }}
+                            >
+                              {uploadingBanner ? (
+                                <>
+                                  <RefreshCw size={15} className="animate-spin" />
+                                  <span>Uploading Banner to Cloudinary...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Upload size={15} />
+                                  <span>Upload Hero Banner (PNG, JPG, WebP - Max 5MB)</span>
+                                </>
+                              )}
+                            </label>
+                            <p style={{ margin: "8px 0 0", color: "#6A6359", fontSize: "0.75rem" }}>
+                              Uploaded securely to Cloudinary at high resolution (1920px width).
+                            </p>
+                          </div>
+                        )}
+
+                        {bannerError && (
+                          <div style={{ marginTop: "6px", color: "#DC2626", fontSize: "0.78rem", fontWeight: 600 }}>
+                            ⚠️ {bannerError}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Intro Page Title */}
+                      <div>
+                        <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#81663F", marginBottom: "6px" }}>
+                          2. Page Title / Headline: <span style={{ color: "#DC2626" }}>*</span>
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g. Salone del Mobile 2026 Showcase"
+                          value={introTitle}
+                          onChange={(e) => setIntroTitle(e.target.value)}
+                          maxLength={120}
+                          style={{
+                            width: "100%",
+                            padding: "0.7rem 0.9rem",
+                            borderRadius: "8px",
+                            border: "1px solid #D5CEBF",
+                            background: "#FAF8F5",
+                            fontSize: "0.88rem",
+                            color: "#1E1E1E",
+                            boxSizing: "border-box",
+                          }}
+                        />
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px", fontSize: "0.72rem", color: "#6A6359" }}>
+                          <span>Displays as the primary centered title on the microsite</span>
+                          <span>{introTitle.length}/120</span>
+                        </div>
+                      </div>
+
+                      {/* Intro Tagline */}
+                      <div>
+                        <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#81663F", marginBottom: "6px" }}>
+                          3. Tagline / Subtitle (Optional):
+                        </label>
+                        <textarea
+                          placeholder="e.g. Discover Aaren Studio's private curation of Italian architectural fixtures and bespoke surfaces."
+                          value={introTagline}
+                          onChange={(e) => setIntroTagline(e.target.value)}
+                          maxLength={300}
+                          rows={2}
+                          style={{
+                            width: "100%",
+                            padding: "0.65rem 0.9rem",
+                            borderRadius: "8px",
+                            border: "1px solid #D5CEBF",
+                            background: "#FAF8F5",
+                            fontSize: "0.84rem",
+                            color: "#1E1E1E",
+                            boxSizing: "border-box",
+                            resize: "vertical",
+                          }}
+                        />
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px", fontSize: "0.72rem", color: "#6A6359" }}>
+                          <span>Centered underneath title in Warm Sand typography</span>
+                          <span>{introTagline.length}/300</span>
+                        </div>
+                      </div>
+
+                      {/* CTA Buttons (Up to 3) */}
+                      <div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                          <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#81663F", margin: 0 }}>
+                            4. Call-to-Action Buttons ({introCtas.length}/3):
+                          </label>
+                          {introCtas.length < 3 && (
+                            <button
+                              type="button"
+                              onClick={handleAddCta}
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                padding: "0.35rem 0.7rem",
+                                background: "#FAF8F5",
+                                border: "1px solid #D5CEBF",
+                                borderRadius: "6px",
+                                color: "#81663F",
+                                fontSize: "0.75rem",
+                                fontWeight: 700,
+                                cursor: "pointer",
+                              }}
+                            >
+                              <Plus size={13} />
+                              <span>Add CTA Button</span>
+                            </button>
+                          )}
+                        </div>
+
+                        {introCtas.length === 0 ? (
+                          <div style={{ padding: "1rem", textAlign: "center", border: "1px dashed #D5CEBF", borderRadius: "8px", color: "#6A6359", fontSize: "0.78rem" }}>
+                            No CTA buttons configured yet. Click &quot;Add CTA Button&quot; to add links.
+                          </div>
+                        ) : (
+                          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                            {introCtas.map((cta, idx) => {
+                              const isPreset = CTA_PRESET_DESTINATIONS.some((p) => p.path === cta.destination);
+                              const selectedVal = isPreset ? cta.destination : "custom";
+
+                              return (
+                                <div
+                                  key={`cta-${idx}`}
+                                  style={{
+                                    background: "#FAF8F5",
+                                    border: "1px solid #D5CEBF",
+                                    borderRadius: "8px",
+                                    padding: "0.8rem",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "6px",
+                                  }}
+                                >
+                                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                    <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#81663F" }}>
+                                      Button #{idx + 1}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveCta(idx)}
+                                      style={{
+                                        background: "transparent",
+                                        border: "none",
+                                        color: "#DC2626",
+                                        cursor: "pointer",
+                                        padding: "2px 4px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                      }}
+                                      title="Remove button"
+                                    >
+                                      <Trash2 size={13} />
+                                    </button>
+                                  </div>
+
+                                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                                    <input
+                                      type="text"
+                                      placeholder="Button Label (e.g. Explore Projects)"
+                                      value={cta.label}
+                                      onChange={(e) => handleUpdateCta(idx, "label", e.target.value)}
+                                      maxLength={40}
+                                      style={{
+                                        padding: "0.55rem 0.75rem",
+                                        borderRadius: "6px",
+                                        border: "1px solid #D5CEBF",
+                                        background: "#FFFFFF",
+                                        fontSize: "0.8rem",
+                                        color: "#1E1E1E",
+                                      }}
+                                    />
+
+                                    <select
+                                      value={selectedVal}
+                                      onChange={(e) => {
+                                        const v = e.target.value;
+                                        if (v === "custom") {
+                                          if (isPreset) handleUpdateCta(idx, "destination", "");
+                                        } else {
+                                          handleUpdateCta(idx, "destination", v);
+                                        }
+                                      }}
+                                      style={{
+                                        padding: "0.55rem 0.75rem",
+                                        borderRadius: "6px",
+                                        border: "1px solid #D5CEBF",
+                                        background: "#FFFFFF",
+                                        fontSize: "0.8rem",
+                                        color: "#1E1E1E",
+                                        fontWeight: 600,
+                                      }}
+                                    >
+                                      {CTA_PRESET_DESTINATIONS.map((preset) => (
+                                        <option key={preset.path} value={preset.path}>
+                                          {preset.label}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+
+                                  {selectedVal === "custom" && (
+                                    <input
+                                      type="text"
+                                      placeholder="Custom safe destination: /my-page or https://..."
+                                      value={cta.destination}
+                                      onChange={(e) => handleUpdateCta(idx, "destination", e.target.value)}
+                                      style={{
+                                        padding: "0.5rem 0.75rem",
+                                        borderRadius: "6px",
+                                        border: "1px solid #D5CEBF",
+                                        background: "#FFFFFF",
+                                        fontSize: "0.78rem",
+                                        fontFamily: "monospace",
+                                        color: "#1E1E1E",
+                                      }}
+                                    />
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Publish & Connect Button */}
+                      <div style={{ display: "flex", gap: "8px", marginTop: "0.5rem" }}>
+                        <button
+                          type="button"
+                          onClick={handlePublishIntroPage}
+                          disabled={publishingIntro || !introTitle.trim() || !introBannerUrl.trim()}
+                          style={{
+                            flex: 1,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "8px",
+                            padding: "0.85rem 1.2rem",
+                            background: "linear-gradient(135deg, #81663F 0%, #684F2E 100%)",
+                            color: "#FFFFFF",
+                            border: "none",
+                            borderRadius: "10px",
+                            fontWeight: 800,
+                            fontSize: "0.88rem",
+                            cursor: publishingIntro || !introTitle.trim() || !introBannerUrl.trim() ? "not-allowed" : "pointer",
+                            opacity: publishingIntro || !introTitle.trim() || !introBannerUrl.trim() ? 0.6 : 1,
+                            boxShadow: "0 4px 14px rgba(129, 102, 63, 0.25)",
+                          }}
+                        >
+                          {publishingIntro ? (
+                            <>
+                              <RefreshCw size={16} className="animate-spin" />
+                              <span>Publishing Intro Page...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles size={16} />
+                              <span>Publish Intro Page &amp; Connect to QR</span>
+                            </>
+                          )}
+                        </button>
+
+                        {(introTitle || introBannerUrl || introTagline) && (
+                          <button
+                            type="button"
+                            onClick={handleResetIntroForm}
+                            style={{
+                              padding: "0.85rem 1rem",
+                              background: "#FAF8F5",
+                              border: "1px solid #D5CEBF",
+                              borderRadius: "10px",
+                              color: "#6A6359",
+                              fontSize: "0.82rem",
+                              fontWeight: 700,
+                              cursor: "pointer",
+                            }}
+                            title="Reset creator form"
+                          >
+                            Reset
+                          </button>
+                        )}
+                      </div>
+
+                    </div>
+                  )}
+
+                  {/* SUB-VIEW 2: CHOOSE FROM EXISTING INTRO PAGES */}
+                  {introSubMode === "existing" && (
+                    <div>
+                      {loadingIntroPages ? (
+                        <div style={{ padding: "2rem", textAlign: "center", color: "#6A6359" }}>
+                          <RefreshCw size={20} className="animate-spin" style={{ margin: "0 auto 8px", color: "#81663F" }} />
+                          <div style={{ fontSize: "0.85rem" }}>Loading saved intro pages...</div>
+                        </div>
+                      ) : introPages.length === 0 ? (
+                        <div style={{ padding: "2.5rem 1rem", textAlign: "center", border: "1px dashed #D5CEBF", borderRadius: "10px", background: "#FAF8F5" }}>
+                          <Layers size={36} color="#D5CEBF" style={{ margin: "0 auto 10px" }} />
+                          <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#1E1E1E" }}>No Intro Pages Created Yet</div>
+                          <p style={{ margin: "6px 0 12px", fontSize: "0.8rem", color: "#6A6359" }}>
+                            Build your first microsite by switching to &quot;Build New Intro Page&quot;.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setIntroSubMode("create")}
+                            style={{
+                              padding: "0.5rem 1rem",
+                              background: "#81663F",
+                              color: "#FFFFFF",
+                              border: "none",
+                              borderRadius: "6px",
+                              fontSize: "0.8rem",
+                              fontWeight: 700,
+                              cursor: "pointer",
+                            }}
+                          >
+                            Create First Intro Page
+                          </button>
+                        </div>
+                      ) : (
+                        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                          <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#81663F", marginBottom: "2px" }}>
+                            Select Saved Intro Page:
+                          </label>
+                          <select
+                            value={selectedIntroId}
+                            onChange={(e) => handleSelectExistingIntro(e.target.value)}
+                            style={{
+                              width: "100%",
+                              padding: "0.75rem 1rem",
+                              borderRadius: "8px",
+                              border: "1px solid #D5CEBF",
+                              background: "#FAF8F5",
+                              fontSize: "0.88rem",
+                              color: "#1E1E1E",
+                              fontWeight: 600,
+                            }}
+                          >
+                            <option value="" disabled>-- Select an intro page --</option>
+                            {introPages.map((page) => (
+                              <option key={page.id} value={page.id}>
+                                {page.title} (/intro/{page.slug})
+                              </option>
+                            ))}
+                          </select>
+
+                          {/* Cards list for previewing / managing */}
+                          <div style={{ maxHeight: "320px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "8px", marginTop: "6px" }}>
+                            {introPages.map((page) => {
+                              const isConnected = publishedIntro?.id === page.id;
+                              return (
+                                <div
+                                  key={page.id}
+                                  style={{
+                                    border: isConnected ? "2px solid #81663F" : "1px solid #D5CEBF",
+                                    borderRadius: "8px",
+                                    padding: "0.75rem",
+                                    background: isConnected ? "#FAF8F5" : "#FFFFFF",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    gap: "10px",
+                                  }}
+                                >
+                                  <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0, flex: 1 }}>
+                                    {page.bannerImageUrl ? (
+                                      <img
+                                        src={page.bannerImageUrl}
+                                        alt={page.title}
+                                        style={{ width: "48px", height: "48px", borderRadius: "6px", objectFit: "cover", flexShrink: 0 }}
+                                      />
+                                    ) : (
+                                      <div style={{ width: "48px", height: "48px", borderRadius: "6px", background: "#EAE5DC", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                        <FileText size={18} color="#81663F" />
+                                      </div>
+                                    )}
+                                    <div style={{ minWidth: 0 }}>
+                                      <div style={{ fontSize: "0.85rem", fontWeight: 800, color: "#1E1E1E", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                        {page.title}
+                                      </div>
+                                      <div style={{ fontSize: "0.72rem", color: "#81663F", fontFamily: "monospace" }}>
+                                        /intro/{page.slug}
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div style={{ display: "flex", gap: "6px", flexShrink: 0 }}>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleSelectExistingIntro(page.id)}
+                                      style={{
+                                        padding: "0.4rem 0.7rem",
+                                        background: isConnected ? "#81663F" : "#FAF8F5",
+                                        color: isConnected ? "#FFFFFF" : "#81663F",
+                                        border: "1px solid #D5CEBF",
+                                        borderRadius: "6px",
+                                        fontSize: "0.74rem",
+                                        fontWeight: 700,
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      {isConnected ? "Connected" : "Connect"}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleLoadIntroIntoEditor(page)}
+                                      style={{
+                                        padding: "0.4rem 0.6rem",
+                                        background: "#FAF8F5",
+                                        color: "#1E1E1E",
+                                        border: "1px solid #D5CEBF",
+                                        borderRadius: "6px",
+                                        fontSize: "0.74rem",
+                                        fontWeight: 700,
+                                        cursor: "pointer",
+                                      }}
+                                      title="Load into editor"
+                                    >
+                                      Edit
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteIntroPage(page.id, page.title)}
+                                      style={{
+                                        padding: "0.4rem 0.6rem",
+                                        background: "#FFF5F5",
+                                        color: "#DC2626",
+                                        border: "1px solid #FED7D7",
+                                        borderRadius: "6px",
+                                        fontSize: "0.74rem",
+                                        cursor: "pointer",
+                                      }}
+                                      title="Delete intro page"
+                                    >
+                                      <Trash2 size={12} />
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                </div>
+              )}
+
             </div>
 
             {/* Card 2: Logo & Emblem Customization */}
@@ -1181,16 +2213,36 @@ export default function AdminQrCodePage() {
               {/* URL Preview Box */}
               <div
                 style={{
-                  background: "#FAF8F5",
+                  background: text.includes("/intro/") ? "linear-gradient(135deg, #FFFDF8 0%, #F5EFE6 100%)" : "#FAF8F5",
                   padding: "0.75rem 1rem",
                   borderRadius: "8px",
-                  border: "1px solid #E2DCD2",
+                  border: text.includes("/intro/") ? "1px solid #D4B67D" : "1px solid #E2DCD2",
                   textAlign: "left",
                   marginTop: "0.8rem",
                 }}
               >
-                <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase", marginBottom: "4px" }}>
-                  Destination URL:
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                  <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase" }}>
+                    Destination URL:
+                  </div>
+                  {text.includes("/intro/") && (
+                    <span
+                      style={{
+                        fontSize: "0.68rem",
+                        fontWeight: 800,
+                        color: "#81663F",
+                        background: "rgba(129, 102, 63, 0.12)",
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      <Sparkles size={11} />
+                      <span>Intro Microsite</span>
+                    </span>
+                  )}
                 </div>
                 <div
                   style={{
@@ -1353,188 +2405,477 @@ export default function AdminQrCodePage() {
 
         </div>
 
-        {/* BOTTOM SECTION: SAVED QR CODES MANAGEMENT */}
+        {/* BOTTOM SECTION: RECORDS MANAGEMENT */}
         <div style={{ marginTop: "3.5rem" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: "1rem" }}>
             <div>
               <h2 style={{ fontSize: "1.5rem", fontWeight: 900, color: "#81663F", margin: 0 }}>
-                Saved QR Code Records
+                Admin Asset Records
               </h2>
               <p style={{ color: "#5E5852", fontSize: "0.88rem", margin: "4px 0 0" }}>
-                Re-download, inspect, reload into the generator, or manage previously saved QR codes.
+                Re-download saved QR codes, or inspect and manage published intro microsites.
               </p>
             </div>
-            <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#81663F", background: "#FAF8F5", padding: "6px 14px", borderRadius: "20px", border: "1px solid #D5CEBF" }}>
-              Total Saved: {savedCodes.length}
+
+            {/* Tab switch */}
+            <div style={{ display: "flex", gap: "6px", background: "#FAF8F5", padding: "4px", borderRadius: "10px", border: "1px solid #D5CEBF" }}>
+              <button
+                type="button"
+                onClick={() => setRecordsTab("qrcodes")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "0.55rem 1rem",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: recordsTab === "qrcodes" ? "#81663F" : "transparent",
+                  color: recordsTab === "qrcodes" ? "#FFFFFF" : "#555555",
+                  fontWeight: 700,
+                  fontSize: "0.82rem",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <QrIcon size={14} />
+                <span>QR Codes ({savedCodes.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setRecordsTab("intropages")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "0.55rem 1rem",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: recordsTab === "intropages" ? "#81663F" : "transparent",
+                  color: recordsTab === "intropages" ? "#FFFFFF" : "#555555",
+                  fontWeight: 700,
+                  fontSize: "0.82rem",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <Layers size={14} />
+                <span>Intro Pages ({introPages.length})</span>
+              </button>
             </div>
           </div>
 
-          {loadingSaved ? (
-            <div style={{ background: "#FFFFFF", padding: "3rem", borderRadius: "14px", textAlign: "center", border: "1px solid #E2DCD2" }}>
-              <RefreshCw size={24} className="animate-spin" style={{ margin: "0 auto 10px", color: "#81663F" }} />
-              <div style={{ fontSize: "0.9rem", color: "#6A6359", fontWeight: 600 }}>Loading saved QR codes...</div>
-            </div>
-          ) : savedCodes.length === 0 ? (
-            <div style={{ background: "#FFFFFF", padding: "3.5rem 2rem", borderRadius: "14px", textAlign: "center", border: "1px dashed #D5CEBF" }}>
-              <FolderOpen size={42} color="#D5CEBF" style={{ margin: "0 auto 12px" }} />
-              <h3 style={{ margin: "0 0 6px", fontSize: "1.1rem", fontWeight: 800, color: "#1E1E1E" }}>
-                No Saved QR Codes Yet
-              </h3>
-              <p style={{ color: "#6A6359", fontSize: "0.85rem", maxWidth: "420px", margin: "0 auto" }}>
-                Generate a code above and click &quot;Save QR Code to Records&quot; to keep it accessible here for quick re-downloads and team reference.
-              </p>
-            </div>
-          ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-              {savedCodes.map((item) => (
-                <div
-                  key={item.id}
-                  style={{
-                    background: "#FFFFFF",
-                    borderRadius: "14px",
-                    border: "1px solid #E2DCD2",
-                    padding: "1.4rem",
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.03)",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div>
-                    {/* Header */}
-                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", marginBottom: "0.8rem" }}>
-                      <div style={{ flex: 1 }}>
-                        <h4 style={{ margin: 0, fontSize: "1rem", fontWeight: 800, color: "#1E1E1E" }}>
-                          {item.title || "QR Code"}
-                        </h4>
-                        <div style={{ fontSize: "0.72rem", color: "#81663F", marginTop: "2px" }}>
-                          {item.createdAt ? new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Recent"}
+          {/* TAB 1: SAVED QR CODES */}
+          {recordsTab === "qrcodes" && (
+            <>
+              {loadingSaved ? (
+                <div style={{ background: "#FFFFFF", padding: "3rem", borderRadius: "14px", textAlign: "center", border: "1px solid #E2DCD2" }}>
+                  <RefreshCw size={24} className="animate-spin" style={{ margin: "0 auto 10px", color: "#81663F" }} />
+                  <div style={{ fontSize: "0.9rem", color: "#6A6359", fontWeight: 600 }}>Loading saved QR codes...</div>
+                </div>
+              ) : savedCodes.length === 0 ? (
+                <div style={{ background: "#FFFFFF", padding: "3.5rem 2rem", borderRadius: "14px", textAlign: "center", border: "1px dashed #D5CEBF" }}>
+                  <FolderOpen size={42} color="#D5CEBF" style={{ margin: "0 auto 12px" }} />
+                  <h3 style={{ margin: "0 0 6px", fontSize: "1.1rem", fontWeight: 800, color: "#1E1E1E" }}>
+                    No Saved QR Codes Yet
+                  </h3>
+                  <p style={{ color: "#6A6359", fontSize: "0.85rem", maxWidth: "420px", margin: "0 auto" }}>
+                    Generate a code above and click &quot;Save QR Code to Records&quot; to keep it accessible here for quick re-downloads and team reference.
+                  </p>
+                </div>
+              ) : (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
+                  {savedCodes.map((item) => (
+                    <div
+                      key={item.id}
+                      style={{
+                        background: "#FFFFFF",
+                        borderRadius: "14px",
+                        border: "1px solid #E2DCD2",
+                        padding: "1.4rem",
+                        boxShadow: "0 2px 10px rgba(0,0,0,0.03)",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div>
+                        {/* Header */}
+                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", marginBottom: "0.8rem" }}>
+                          <div style={{ flex: 1 }}>
+                            <h4 style={{ margin: 0, fontSize: "1rem", fontWeight: 800, color: "#1E1E1E" }}>
+                              {item.title || "QR Code"}
+                            </h4>
+                            <div style={{ fontSize: "0.72rem", color: "#81663F", marginTop: "2px" }}>
+                              {item.createdAt ? new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Recent"}
+                            </div>
+                          </div>
+
+                          {/* Color dots badge */}
+                          <div style={{ display: "flex", gap: "4px", background: "#FAF8F5", padding: "4px 8px", borderRadius: "20px", border: "1px solid #E2DCD2" }}>
+                            <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: item.fgColor || "#1E1E1E", border: "1px solid #D5CEBF" }} title="Foreground" />
+                            <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: item.bgColor || "#FFFFFF", border: "1px solid #D5CEBF" }} title="Background" />
+                          </div>
+                        </div>
+
+                        {/* Preview Thumbnail */}
+                        {item.imageUrl && (
+                          <div
+                            style={{
+                              background: item.bgColor || "#FFFFFF",
+                              padding: "0.8rem",
+                              borderRadius: "10px",
+                              border: "1px solid #E8E2D7",
+                              marginBottom: "0.8rem",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <img
+                              src={item.imageUrl}
+                              alt={item.title || "QR Preview"}
+                              style={{ width: "140px", height: "140px", objectFit: "contain", borderRadius: "6px" }}
+                            />
+                          </div>
+                        )}
+
+                        {/* Target URL */}
+                        <div
+                          style={{
+                            background: "#FAF8F5",
+                            padding: "0.6rem 0.8rem",
+                            borderRadius: "8px",
+                            border: "1px solid #E8E2D7",
+                            fontSize: "0.75rem",
+                            fontFamily: "monospace",
+                            color: "#3D3730",
+                            wordBreak: "break-all",
+                            marginBottom: "1rem",
+                          }}
+                        >
+                          {item.url}
                         </div>
                       </div>
 
-                      {/* Color dots badge */}
-                      <div style={{ display: "flex", gap: "4px", background: "#FAF8F5", padding: "4px 8px", borderRadius: "20px", border: "1px solid #E2DCD2" }}>
-                        <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: item.fgColor || "#1E1E1E", border: "1px solid #D5CEBF" }} title="Foreground" />
-                        <span style={{ width: "12px", height: "12px", borderRadius: "50%", background: item.bgColor || "#FFFFFF", border: "1px solid #D5CEBF" }} title="Background" />
+                      {/* Actions Grid */}
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                          <button
+                            type="button"
+                            onClick={() => handleLoadSavedIntoEditor(item)}
+                            style={{
+                              padding: "0.55rem",
+                              background: "#FAF8F5",
+                              border: "1px solid #D5CEBF",
+                              color: "#81663F",
+                              borderRadius: "6px",
+                              fontWeight: 700,
+                              fontSize: "0.78rem",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              gap: "4px",
+                            }}
+                          >
+                            <Sliders size={13} />
+                            <span>Edit / Load</span>
+                          </button>
+
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              padding: "0.55rem",
+                              background: "#FAF8F5",
+                              border: "1px solid #D5CEBF",
+                              color: "#1E1E1E",
+                              borderRadius: "6px",
+                              fontWeight: 700,
+                              fontSize: "0.78rem",
+                              textDecoration: "none",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              gap: "4px",
+                            }}
+                          >
+                            <ExternalLink size={13} />
+                            <span>Test URL</span>
+                          </a>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteSaved(item.id, item.title || "QR Code")}
+                          style={{
+                            width: "100%",
+                            padding: "0.5rem",
+                            background: "#FFF5F5",
+                            border: "1px solid #FED7D7",
+                            color: "#DC2626",
+                            borderRadius: "6px",
+                            fontWeight: 700,
+                            fontSize: "0.75rem",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "6px",
+                          }}
+                        >
+                          <Trash2 size={13} />
+                          <span>Delete Record</span>
+                        </button>
                       </div>
                     </div>
-
-                    {/* Preview Thumbnail */}
-                    {item.imageUrl && (
-                      <div
-                        style={{
-                          background: item.bgColor || "#FFFFFF",
-                          padding: "0.8rem",
-                          borderRadius: "10px",
-                          border: "1px solid #E8E2D7",
-                          marginBottom: "0.8rem",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <img
-                          src={item.imageUrl}
-                          alt={item.title || "QR Preview"}
-                          style={{ width: "140px", height: "140px", objectFit: "contain", borderRadius: "6px" }}
-                        />
-                      </div>
-                    )}
-
-                    {/* Target URL */}
-                    <div
-                      style={{
-                        background: "#FAF8F5",
-                        padding: "0.6rem 0.8rem",
-                        borderRadius: "8px",
-                        border: "1px solid #E8E2D7",
-                        fontSize: "0.75rem",
-                        fontFamily: "monospace",
-                        color: "#3D3730",
-                        wordBreak: "break-all",
-                        marginBottom: "1rem",
-                      }}
-                    >
-                      {item.url}
-                    </div>
-                  </div>
-
-                  {/* Actions Grid */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                      <button
-                        type="button"
-                        onClick={() => handleLoadSavedIntoEditor(item)}
-                        style={{
-                          padding: "0.55rem",
-                          background: "#FAF8F5",
-                          border: "1px solid #D5CEBF",
-                          color: "#81663F",
-                          borderRadius: "6px",
-                          fontWeight: 700,
-                          fontSize: "0.78rem",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "4px",
-                        }}
-                      >
-                        <Sliders size={13} />
-                        <span>Edit / Load</span>
-                      </button>
-
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{
-                          padding: "0.55rem",
-                          background: "#FAF8F5",
-                          border: "1px solid #D5CEBF",
-                          color: "#1E1E1E",
-                          borderRadius: "6px",
-                          fontWeight: 700,
-                          fontSize: "0.78rem",
-                          textDecoration: "none",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "4px",
-                        }}
-                      >
-                        <ExternalLink size={13} />
-                        <span>Test URL</span>
-                      </a>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteSaved(item.id, item.title || "QR Code")}
-                      style={{
-                        width: "100%",
-                        padding: "0.5rem",
-                        background: "#FFF5F5",
-                        border: "1px solid #FED7D7",
-                        color: "#DC2626",
-                        borderRadius: "6px",
-                        fontWeight: 700,
-                        fontSize: "0.75rem",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "6px",
-                      }}
-                    >
-                      <Trash2 size={13} />
-                      <span>Delete Record</span>
-                    </button>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
+
+          {/* TAB 2: PUBLISHED INTRO PAGES */}
+          {recordsTab === "intropages" && (
+            <>
+              {loadingIntroPages ? (
+                <div style={{ background: "#FFFFFF", padding: "3rem", borderRadius: "14px", textAlign: "center", border: "1px solid #E2DCD2" }}>
+                  <RefreshCw size={24} className="animate-spin" style={{ margin: "0 auto 10px", color: "#81663F" }} />
+                  <div style={{ fontSize: "0.9rem", color: "#6A6359", fontWeight: 600 }}>Loading intro pages...</div>
+                </div>
+              ) : introPages.length === 0 ? (
+                <div style={{ background: "#FFFFFF", padding: "3.5rem 2rem", borderRadius: "14px", textAlign: "center", border: "1px dashed #D5CEBF" }}>
+                  <Layers size={42} color="#D5CEBF" style={{ margin: "0 auto 12px" }} />
+                  <h3 style={{ margin: "0 0 6px", fontSize: "1.1rem", fontWeight: 800, color: "#1E1E1E" }}>
+                    No Intro Pages Published Yet
+                  </h3>
+                  <p style={{ color: "#6A6359", fontSize: "0.85rem", maxWidth: "420px", margin: "0 auto 1rem" }}>
+                    Use the Intro Page builder above to create standalone luxury microsites for physical events, showrooms, and catalogue scans.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setContentMode("intro");
+                      setIntroSubMode("create");
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    style={{
+                      padding: "0.65rem 1.2rem",
+                      background: "#81663F",
+                      color: "#FFFFFF",
+                      borderRadius: "8px",
+                      border: "none",
+                      fontWeight: 700,
+                      fontSize: "0.84rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Build an Intro Page Now
+                  </button>
+                </div>
+              ) : (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "1.5rem" }}>
+                  {introPages.map((page) => {
+                    const pagePublicUrl = `${getPublicSiteUrl()}/intro/${page.slug}`;
+                    const isConnected = text === pagePublicUrl;
+
+                    return (
+                      <div
+                        key={page.id}
+                        style={{
+                          background: "#FFFFFF",
+                          borderRadius: "14px",
+                          border: isConnected ? "2px solid #81663F" : "1px solid #E2DCD2",
+                          padding: "1.4rem",
+                          boxShadow: "0 2px 10px rgba(0,0,0,0.03)",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>
+                          {/* Banner Preview */}
+                          <div style={{ position: "relative", width: "100%", height: "140px", borderRadius: "10px", overflow: "hidden", background: "#EAE5DC", marginBottom: "1rem" }}>
+                            {page.bannerImageUrl ? (
+                              <img
+                                src={page.bannerImageUrl}
+                                alt={page.title}
+                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                              />
+                            ) : (
+                              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <FileText size={32} color="#81663F" />
+                              </div>
+                            )}
+
+                            {isConnected && (
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  top: "8px",
+                                  right: "8px",
+                                  background: "#81663F",
+                                  color: "#FFFFFF",
+                                  padding: "3px 8px",
+                                  borderRadius: "4px",
+                                  fontSize: "0.7rem",
+                                  fontWeight: 800,
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                }}
+                              >
+                                <Check size={11} />
+                                <span>Connected to QR</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Title & Slug */}
+                          <h4 style={{ margin: "0 0 4px", fontSize: "1.05rem", fontWeight: 800, color: "#1E1E1E", lineHeight: 1.3 }}>
+                            {page.title}
+                          </h4>
+                          <div style={{ fontSize: "0.74rem", fontFamily: "monospace", color: "#81663F", marginBottom: "8px" }}>
+                            /intro/{page.slug}
+                          </div>
+
+                          {page.tagline && (
+                            <p style={{ margin: "0 0 10px", fontSize: "0.8rem", color: "#5E5852", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                              {page.tagline}
+                            </p>
+                          )}
+
+                          {/* CTA badges */}
+                          {Array.isArray(page.ctaButtons) && page.ctaButtons.length > 0 && (
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "1.2rem" }}>
+                              {page.ctaButtons.map((btn, bIdx) => (
+                                <span
+                                  key={bIdx}
+                                  style={{
+                                    fontSize: "0.7rem",
+                                    padding: "2px 8px",
+                                    background: "#FAF8F5",
+                                    border: "1px solid #D5CEBF",
+                                    borderRadius: "4px",
+                                    color: "#1E1E1E",
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  {btn.label}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Action buttons */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                handleSelectExistingIntro(page.id);
+                                window.scrollTo({ top: 0, behavior: "smooth" });
+                              }}
+                              style={{
+                                padding: "0.55rem",
+                                background: isConnected ? "#81663F" : "#FAF8F5",
+                                border: "1px solid #D5CEBF",
+                                color: isConnected ? "#FFFFFF" : "#81663F",
+                                borderRadius: "6px",
+                                fontWeight: 700,
+                                fontSize: "0.78rem",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "4px",
+                              }}
+                            >
+                              <QrIcon size={13} />
+                              <span>{isConnected ? "Connected" : "Connect QR"}</span>
+                            </button>
+
+                            <a
+                              href={pagePublicUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{
+                                padding: "0.55rem",
+                                background: "#FAF8F5",
+                                border: "1px solid #D5CEBF",
+                                color: "#1E1E1E",
+                                borderRadius: "6px",
+                                fontWeight: 700,
+                                fontSize: "0.78rem",
+                                textDecoration: "none",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "4px",
+                              }}
+                            >
+                              <ExternalLink size={13} />
+                              <span>View Live</span>
+                            </a>
+                          </div>
+
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                            <button
+                              type="button"
+                              onClick={() => handleLoadIntroIntoEditor(page)}
+                              style={{
+                                padding: "0.5rem",
+                                background: "#FAF8F5",
+                                border: "1px solid #D5CEBF",
+                                color: "#6A6359",
+                                borderRadius: "6px",
+                                fontWeight: 700,
+                                fontSize: "0.75rem",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "4px",
+                              }}
+                            >
+                              <Sliders size={12} />
+                              <span>Edit Microsite</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteIntroPage(page.id, page.title)}
+                              style={{
+                                padding: "0.5rem",
+                                background: "#FFF5F5",
+                                border: "1px solid #FED7D7",
+                                color: "#DC2626",
+                                borderRadius: "6px",
+                                fontWeight: 700,
+                                fontSize: "0.75rem",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "4px",
+                              }}
+                            >
+                              <Trash2 size={12} />
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </>
+          )}
+
         </div>
 
       </main>

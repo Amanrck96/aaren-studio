@@ -32,6 +32,8 @@ import {
   ShopItem,
   ShopSettingsItem,
   QrCodeItem,
+  IntroPageItem,
+  IntroPageCtaButton,
   DEFAULT_SETTINGS,
   DEFAULT_CATALOG_SETTINGS,
   DEFAULT_SHOP_ITEMS,
@@ -3958,6 +3960,194 @@ export async function deleteQrCodeStore(id: string): Promise<boolean> {
   const json = readJsonStore();
   if (json.qrCodes && Array.isArray(json.qrCodes)) {
     json.qrCodes = json.qrCodes.filter((q: any) => q.id !== id);
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    writeJsonStore(json);
+  }
+  return true;
+}
+
+// INTRO PAGES STORE & COLLISION-FREE SLUG RESOLUTION
+export async function generateUniqueIntroSlug(title: string, currentId?: string): Promise<string> {
+  const base = (title || "intro")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "intro";
+
+  let candidate = base;
+  let attempts = 0;
+
+  while (attempts < 10) {
+    let exists = false;
+    try {
+      const found = await prisma.introPage.findUnique({
+        where: { slug: candidate },
+      });
+      if (found && found.id !== currentId) {
+        exists = true;
+      }
+    } catch {
+      // Fallback check in JSON store
+      const json = readJsonStore();
+      if (json.introPages && Array.isArray(json.introPages)) {
+        const found = json.introPages.find((p: any) => p.slug === candidate);
+        if (found && found.id !== currentId) {
+          exists = true;
+        }
+      }
+    }
+
+    if (!exists) {
+      return candidate;
+    }
+
+    // On collision, append a short random suffix (nanoid(6) style: 6 alphanumeric chars) and retry
+    const suffix = Math.random().toString(36).substring(2, 8);
+    candidate = `${base}-${suffix}`;
+    attempts++;
+  }
+
+  return `${base}-${Date.now().toString(36)}`;
+}
+
+export async function getIntroPagesStore(): Promise<IntroPageItem[]> {
+  try {
+    const fromDb = await prisma.introPage.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    if (fromDb && Array.isArray(fromDb)) {
+      return fromDb.map((p) => ({
+        id: p.id,
+        slug: p.slug,
+        title: p.title,
+        tagline: p.tagline || undefined,
+        bannerImageUrl: p.bannerImageUrl,
+        ctaButtons: (p.ctaButtons as any) || [],
+        createdAt: p.createdAt.toISOString(),
+        updatedAt: p.updatedAt.toISOString(),
+      }));
+    }
+  } catch (dbErr) {
+    // Fallback to JSON store
+  }
+
+  const json = readJsonStore();
+  if (json.introPages && Array.isArray(json.introPages)) {
+    return json.introPages;
+  }
+  return [];
+}
+
+export async function getIntroPageBySlugStore(slug: string): Promise<IntroPageItem | null> {
+  const cleanSlug = (slug || "").trim().toLowerCase();
+  if (!cleanSlug) return null;
+
+  try {
+    const p = await prisma.introPage.findUnique({
+      where: { slug: cleanSlug },
+    });
+    if (p) {
+      return {
+        id: p.id,
+        slug: p.slug,
+        title: p.title,
+        tagline: p.tagline || undefined,
+        bannerImageUrl: p.bannerImageUrl,
+        ctaButtons: (p.ctaButtons as any) || [],
+        createdAt: p.createdAt.toISOString(),
+        updatedAt: p.updatedAt.toISOString(),
+      };
+    }
+  } catch (dbErr) {
+    // Fallback to JSON store
+  }
+
+  const json = readJsonStore();
+  if (json.introPages && Array.isArray(json.introPages)) {
+    const found = json.introPages.find((p: any) => (p.slug || "").toLowerCase() === cleanSlug);
+    if (found) return found;
+  }
+  return null;
+}
+
+export async function saveIntroPageStore(
+  page: Partial<IntroPageItem> & { title: string; bannerImageUrl: string }
+): Promise<IntroPageItem> {
+  const id = page.id || `intro-${Date.now()}`;
+  const now = new Date();
+
+  // If slug is not provided or empty, generate collision-free unique slug
+  let slug = page.slug?.trim().toLowerCase();
+  if (!slug) {
+    slug = await generateUniqueIntroSlug(page.title, id);
+  }
+
+  const full: IntroPageItem = {
+    id,
+    slug,
+    title: page.title.trim(),
+    tagline: page.tagline?.trim() || undefined,
+    bannerImageUrl: page.bannerImageUrl.trim(),
+    ctaButtons: page.ctaButtons || [],
+    createdAt: page.createdAt || now.toISOString(),
+    updatedAt: now.toISOString(),
+  };
+
+  try {
+    const saved = await prisma.introPage.upsert({
+      where: { id },
+      update: {
+        slug: full.slug,
+        title: full.title,
+        tagline: full.tagline,
+        bannerImageUrl: full.bannerImageUrl,
+        ctaButtons: full.ctaButtons as any,
+      },
+      create: {
+        id,
+        slug: full.slug,
+        title: full.title,
+        tagline: full.tagline,
+        bannerImageUrl: full.bannerImageUrl,
+        ctaButtons: full.ctaButtons as any,
+      },
+    });
+    full.id = saved.id;
+    full.slug = saved.slug;
+    full.createdAt = saved.createdAt.toISOString();
+    full.updatedAt = saved.updatedAt.toISOString();
+  } catch (dbErr) {
+    // Fallback to JSON store
+  }
+
+  const json = readJsonStore();
+  if (!json.introPages || !Array.isArray(json.introPages)) {
+    json.introPages = [];
+  }
+  const idx = json.introPages.findIndex((p: any) => p.id === id || p.slug === full.slug);
+  if (idx >= 0) {
+    json.introPages[idx] = full;
+  } else {
+    json.introPages.unshift(full);
+  }
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+
+  return full;
+}
+
+export async function deleteIntroPageStore(id: string): Promise<boolean> {
+  try {
+    await prisma.introPage.delete({
+      where: { id },
+    });
+  } catch (dbErr) {
+    // Fallback to JSON store
+  }
+
+  const json = readJsonStore();
+  if (json.introPages && Array.isArray(json.introPages)) {
+    json.introPages = json.introPages.filter((p: any) => p.id !== id);
     globalThis.__AAREN_MEMORY_STORE__ = json;
     writeJsonStore(json);
   }

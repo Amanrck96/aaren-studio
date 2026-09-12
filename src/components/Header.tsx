@@ -81,7 +81,7 @@ export default function Header() {
     };
   }, [open]);
 
-  if (path?.startsWith("/admin")) {
+  if (path?.startsWith("/admin") || path?.startsWith("/intro")) {
     return null;
   }
 
