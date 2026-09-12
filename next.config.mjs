@@ -41,6 +41,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
+      {
+        protocol: "https",
+        hostname: "cdn0030.qrcodechimp.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn0070.qrcodechimp.com",
+      },
     ],
   },
   async headers() {

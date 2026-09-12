@@ -84,7 +84,8 @@ export default function Header() {
   if (
     path?.startsWith("/admin") ||
     path?.startsWith("/intro") ||
-    (path?.startsWith("/downloads/") && path !== "/downloads")
+    path?.startsWith("/downloads") ||
+    path?.startsWith("/aarenintpro")
   ) {
     return null;
   }

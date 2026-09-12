@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { getBrandFoldersStore } from "@/lib/store";
 import QRCodeChimpShowroom from "@/components/QRCodeChimpShowroom";
-import DownloadsClient from "./DownloadsClient";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -16,17 +15,8 @@ export const metadata: Metadata = {
   },
 };
 
-interface PageProps {
-  searchParams?: Promise<{ view?: string }>;
-}
-
-export default async function DownloadsPage({ searchParams }: PageProps) {
-  const resolvedSearchParams = searchParams ? await searchParams : {};
+export default async function AarenIntproPage() {
   const brandFolders = await getBrandFoldersStore();
-
-  if (resolvedSearchParams?.view === "explorer" || resolvedSearchParams?.view === "table") {
-    return <DownloadsClient />;
-  }
 
   return (
     <QRCodeChimpShowroom

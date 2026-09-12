@@ -565,6 +565,7 @@ model BrandFolder {
   tagline        String?
   description    String?
   bannerImageUrl String?
+  logoUrl        String?
   files          Json?    @default("[]")
   ctaButtons     Json?
   createdAt      DateTime @default(now())

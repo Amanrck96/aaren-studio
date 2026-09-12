@@ -43,6 +43,8 @@ interface DocumentOption {
 }
 
 const CTA_PRESET_DESTINATIONS = [
+  { label: "Showroom Hub & Catalogues (/downloads)", path: "/downloads" },
+  { label: "QRCodeChimp Short Link (/aarenintpro)", path: "/aarenintpro" },
   { label: "Showcase Projects (/projects)", path: "/projects" },
   { label: "Contact Concierge (/contact)", path: "/contact" },
   { label: "About Studio (/about)", path: "/about" },
@@ -50,7 +52,6 @@ const CTA_PRESET_DESTINATIONS = [
   { label: "Shop & Specimens (/shop)", path: "/shop" },
   { label: "Partner Brands Directory (/brands)", path: "/brands" },
   { label: "PDF Catalogs Portal (/catalogs)", path: "/catalogs" },
-  { label: "Downloads Repository (/downloads)", path: "/downloads" },
   { label: "Custom URL or Path...", path: "custom" },
 ];
 

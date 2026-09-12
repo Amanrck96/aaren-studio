@@ -20,7 +20,8 @@ export default function Footer() {
   if (
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/intro") ||
-    (pathname?.startsWith("/downloads/") && pathname !== "/downloads")
+    pathname?.startsWith("/downloads") ||
+    pathname?.startsWith("/aarenintpro")
   ) {
     return null;
   }

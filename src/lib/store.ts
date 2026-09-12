@@ -4217,6 +4217,7 @@ export async function getBrandFoldersStore(): Promise<BrandFolderItem[]> {
         tagline: b.tagline || undefined,
         description: b.description || undefined,
         bannerImageUrl: b.bannerImageUrl || undefined,
+        logoUrl: (b as any).logoUrl || undefined,
         files: (b.files as any) || [],
         ctaButtons: (b.ctaButtons as any) || [],
         createdAt: b.createdAt.toISOString(),
@@ -4237,6 +4238,7 @@ export async function getBrandFoldersStore(): Promise<BrandFolderItem[]> {
               tagline: s.tagline,
               description: s.description,
               bannerImageUrl: s.bannerImageUrl,
+              logoUrl: s.logoUrl,
               files: s.files as any,
               ctaButtons: s.ctaButtons as any,
             },
@@ -4248,6 +4250,7 @@ export async function getBrandFoldersStore(): Promise<BrandFolderItem[]> {
             tagline: created.tagline || undefined,
             description: created.description || undefined,
             bannerImageUrl: created.bannerImageUrl || undefined,
+            logoUrl: (created as any).logoUrl || undefined,
             files: (created.files as any) || [],
             ctaButtons: (created.ctaButtons as any) || [],
             createdAt: created.createdAt.toISOString(),
@@ -4277,12 +4280,29 @@ export async function getBrandFoldersStore(): Promise<BrandFolderItem[]> {
 }
 
 export async function getBrandFolderBySlugStore(slug: string): Promise<BrandFolderItem | null> {
-  const cleanSlug = (slug || "").trim().toLowerCase();
-  if (!cleanSlug) return null;
+  let raw = (slug || "").trim();
+  try {
+    raw = decodeURIComponent(raw);
+  } catch {}
+
+  // Clean up any leading "All 20 Brand Folders/" or trailing "/X PDFs"
+  raw = raw
+    .replace(/^All\s*20\s*Brand\s*Folders\/?/i, "")
+    .replace(/\/\d+\s*PDFs\/?$/i, "")
+    .trim();
+
+  const cleanSlug = raw.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  if (!cleanSlug && !raw) return null;
 
   try {
-    const b = await prisma.brandFolder.findUnique({
-      where: { slug: cleanSlug },
+    const b = await prisma.brandFolder.findFirst({
+      where: {
+        OR: [
+          { slug: cleanSlug },
+          { slug: raw.toLowerCase() },
+          { name: { equals: raw, mode: "insensitive" } },
+        ],
+      },
     });
     if (b) {
       return {
@@ -4292,6 +4312,7 @@ export async function getBrandFolderBySlugStore(slug: string): Promise<BrandFold
         tagline: b.tagline || undefined,
         description: b.description || undefined,
         bannerImageUrl: b.bannerImageUrl || undefined,
+        logoUrl: (b as any).logoUrl || undefined,
         files: (b.files as any) || [],
         ctaButtons: (b.ctaButtons as any) || [],
         createdAt: b.createdAt.toISOString(),
@@ -4303,7 +4324,17 @@ export async function getBrandFolderBySlugStore(slug: string): Promise<BrandFold
   }
 
   const all = await getBrandFoldersStore();
-  const found = all.find((b) => (b.slug || "").toLowerCase() === cleanSlug);
+  const found = all.find((b) => {
+    const bSlug = (b.slug || "").toLowerCase();
+    const bName = (b.name || "").toLowerCase();
+    const bNormName = bName.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return (
+      bSlug === cleanSlug ||
+      bSlug === raw.toLowerCase() ||
+      bNormName === cleanSlug ||
+      bName === raw.toLowerCase()
+    );
+  });
   return found || null;
 }
 
@@ -4325,6 +4356,7 @@ export async function saveBrandFolderStore(
     tagline: folder.tagline?.trim() || undefined,
     description: folder.description?.trim() || undefined,
     bannerImageUrl: folder.bannerImageUrl?.trim() || undefined,
+    logoUrl: folder.logoUrl?.trim() || undefined,
     files: folder.files || [],
     ctaButtons: folder.ctaButtons || [],
     createdAt: folder.createdAt || now.toISOString(),
@@ -4340,6 +4372,7 @@ export async function saveBrandFolderStore(
         tagline: full.tagline,
         description: full.description,
         bannerImageUrl: full.bannerImageUrl,
+        logoUrl: full.logoUrl,
         files: full.files as any,
         ctaButtons: full.ctaButtons as any,
       },
@@ -4350,6 +4383,7 @@ export async function saveBrandFolderStore(
         tagline: full.tagline,
         description: full.description,
         bannerImageUrl: full.bannerImageUrl,
+        logoUrl: full.logoUrl,
         files: full.files as any,
         ctaButtons: full.ctaButtons as any,
       },
