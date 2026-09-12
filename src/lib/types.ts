@@ -477,3 +477,23 @@ export interface IntroPageItem {
   updatedAt?: string;
 }
 
+export interface BrandFolderPdf {
+  name: string;
+  url: string;
+  publicId?: string;
+  order: number;
+  fileSize?: string;
+}
+
+export interface BrandFolderItem {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  bannerImageUrl?: string;
+  files: BrandFolderPdf[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+

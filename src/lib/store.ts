@@ -34,12 +34,15 @@ import {
   QrCodeItem,
   IntroPageItem,
   IntroPageCtaButton,
+  BrandFolderItem,
+  BrandFolderPdf,
   DEFAULT_SETTINGS,
   DEFAULT_CATALOG_SETTINGS,
   DEFAULT_SHOP_ITEMS,
   DEFAULT_SHOP_SETTINGS,
 } from "./types";
 import BRANDWISE_FAQS from "./brandwise_faqs.json";
+import SEEDED_BRAND_FOLDERS from "./seeded_brand_folders.json";
 
 export * from "./types";
 
@@ -4154,7 +4157,227 @@ export async function deleteIntroPageStore(id: string): Promise<boolean> {
   return true;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   BRAND FOLDERS / QR LANDING PAGES STORE
+   ══════════════════════════════════════════════════════════════ */
 
+export async function generateUniqueBrandSlug(name: string, currentId?: string): Promise<string> {
+  const base = (name || "brand")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "brand";
 
+  let candidate = base;
+  let attempts = 0;
 
+  while (attempts < 10) {
+    let exists = false;
+    try {
+      const found = await prisma.brandFolder.findUnique({
+        where: { slug: candidate },
+      });
+      if (found && found.id !== currentId) {
+        exists = true;
+      }
+    } catch {
+      // Fallback check in JSON store
+      const json = readJsonStore();
+      if (json.brandFolders && Array.isArray(json.brandFolders)) {
+        const found = json.brandFolders.find((b: any) => b.slug === candidate);
+        if (found && found.id !== currentId) {
+          exists = true;
+        }
+      }
+    }
 
+    if (!exists) {
+      return candidate;
+    }
+
+    const suffix = Math.random().toString(36).substring(2, 6);
+    candidate = `${base}-${suffix}`;
+    attempts++;
+  }
+
+  return `${base}-${Date.now().toString(36)}`;
+}
+
+export async function getBrandFoldersStore(): Promise<BrandFolderItem[]> {
+  try {
+    const fromDb = await prisma.brandFolder.findMany({
+      orderBy: { name: "asc" },
+    });
+
+    if (fromDb && Array.isArray(fromDb) && fromDb.length > 0) {
+      return fromDb.map((b) => ({
+        id: b.id,
+        name: b.name,
+        slug: b.slug,
+        description: b.description || undefined,
+        bannerImageUrl: b.bannerImageUrl || undefined,
+        files: (b.files as any) || [],
+        createdAt: b.createdAt.toISOString(),
+        updatedAt: b.updatedAt.toISOString(),
+      }));
+    }
+
+    // Auto-seed if database table is empty
+    if (fromDb && fromDb.length === 0) {
+      const seededItems: BrandFolderItem[] = [];
+      for (const s of SEEDED_BRAND_FOLDERS as BrandFolderItem[]) {
+        try {
+          const created = await prisma.brandFolder.create({
+            data: {
+              id: s.id,
+              name: s.name,
+              slug: s.slug,
+              description: s.description,
+              bannerImageUrl: s.bannerImageUrl,
+              files: s.files as any,
+            },
+          });
+          seededItems.push({
+            id: created.id,
+            name: created.name,
+            slug: created.slug,
+            description: created.description || undefined,
+            bannerImageUrl: created.bannerImageUrl || undefined,
+            files: (created.files as any) || [],
+            createdAt: created.createdAt.toISOString(),
+            updatedAt: created.updatedAt.toISOString(),
+          });
+        } catch {
+          seededItems.push(s);
+        }
+      }
+      if (seededItems.length > 0) return seededItems;
+    }
+  } catch (dbErr) {
+    // Database fallback
+  }
+
+  const json = readJsonStore();
+  if (json.brandFolders && Array.isArray(json.brandFolders) && json.brandFolders.length > 0) {
+    return json.brandFolders;
+  }
+
+  // Fallback to seeded brands
+  const seeded = (SEEDED_BRAND_FOLDERS as BrandFolderItem[]) || [];
+  json.brandFolders = seeded;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+  return seeded;
+}
+
+export async function getBrandFolderBySlugStore(slug: string): Promise<BrandFolderItem | null> {
+  const cleanSlug = (slug || "").trim().toLowerCase();
+  if (!cleanSlug) return null;
+
+  try {
+    const b = await prisma.brandFolder.findUnique({
+      where: { slug: cleanSlug },
+    });
+    if (b) {
+      return {
+        id: b.id,
+        name: b.name,
+        slug: b.slug,
+        description: b.description || undefined,
+        bannerImageUrl: b.bannerImageUrl || undefined,
+        files: (b.files as any) || [],
+        createdAt: b.createdAt.toISOString(),
+        updatedAt: b.updatedAt.toISOString(),
+      };
+    }
+  } catch (dbErr) {
+    // Fallback
+  }
+
+  const all = await getBrandFoldersStore();
+  const found = all.find((b) => (b.slug || "").toLowerCase() === cleanSlug);
+  return found || null;
+}
+
+export async function saveBrandFolderStore(
+  folder: Partial<BrandFolderItem> & { name: string }
+): Promise<BrandFolderItem> {
+  const id = folder.id || `bf-${Date.now()}`;
+  const now = new Date();
+
+  let slug = folder.slug?.trim().toLowerCase();
+  if (!slug) {
+    slug = await generateUniqueBrandSlug(folder.name, id);
+  }
+
+  const full: BrandFolderItem = {
+    id,
+    name: folder.name.trim(),
+    slug,
+    description: folder.description?.trim() || undefined,
+    bannerImageUrl: folder.bannerImageUrl?.trim() || undefined,
+    files: folder.files || [],
+    createdAt: folder.createdAt || now.toISOString(),
+    updatedAt: now.toISOString(),
+  };
+
+  try {
+    const saved = await prisma.brandFolder.upsert({
+      where: { id },
+      update: {
+        name: full.name,
+        slug: full.slug,
+        description: full.description,
+        bannerImageUrl: full.bannerImageUrl,
+        files: full.files as any,
+      },
+      create: {
+        id,
+        name: full.name,
+        slug: full.slug,
+        description: full.description,
+        bannerImageUrl: full.bannerImageUrl,
+        files: full.files as any,
+      },
+    });
+    full.id = saved.id;
+    full.slug = saved.slug;
+    full.createdAt = saved.createdAt.toISOString();
+    full.updatedAt = saved.updatedAt.toISOString();
+  } catch (dbErr) {
+    // Fallback
+  }
+
+  const json = readJsonStore();
+  if (!json.brandFolders || !Array.isArray(json.brandFolders)) {
+    json.brandFolders = [];
+  }
+  const idx = json.brandFolders.findIndex((b: any) => b.id === id || b.slug === full.slug);
+  if (idx >= 0) {
+    json.brandFolders[idx] = full;
+  } else {
+    json.brandFolders.push(full);
+  }
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+
+  return full;
+}
+
+export async function deleteBrandFolderStore(id: string): Promise<boolean> {
+  try {
+    await prisma.brandFolder.delete({
+      where: { id },
+    });
+  } catch (dbErr) {
+    // Fallback
+  }
+
+  const json = readJsonStore();
+  if (json.brandFolders && Array.isArray(json.brandFolders)) {
+    json.brandFolders = json.brandFolders.filter((b: any) => b.id !== id);
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    writeJsonStore(json);
+  }
+  return true;
+}

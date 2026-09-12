@@ -153,6 +153,26 @@ export default function AdminQrCodePage() {
 
   // 1. Fetch pre-indexed website pages & catalogs for 1-click select
   useEffect(() => {
+    // Check for incoming query params from Brand Downloads or other pages
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const incomingUrl = params.get("url");
+      const incomingBrand = params.get("brand");
+      if (incomingUrl) {
+        setText(incomingUrl);
+        setTitle(incomingBrand ? `${incomingBrand} Showroom QR` : "Showroom QR Code");
+      }
+      if (incomingBrand) {
+        const matchingBrand = BRAND_LOGOS.find((b) =>
+          b.name.toLowerCase().includes(incomingBrand.toLowerCase())
+        );
+        if (matchingBrand) {
+          setSelectedBrandLogo(matchingBrand.file);
+          setLogoMode("brand");
+        }
+      }
+    }
+
     async function fetchOptions() {
       const docs: DocumentOption[] = [
         { title: "Homepage Live Showcase", brand: "AAREN", url: "/", source: "page" },
@@ -188,18 +208,35 @@ export default function AdminQrCodePage() {
       }
 
       try {
-        const dlRes = await fetch(`/api/downloads?t=${Date.now()}`);
+        const dlRes = await fetch(`/api/admin/brand-downloads?t=${Date.now()}`);
         if (dlRes.ok) {
           const dlJson = await dlRes.json();
           if (dlJson.success && Array.isArray(dlJson.data)) {
+            const siteUrl =
+              typeof window !== "undefined"
+                ? window.location.origin
+                : process.env.NEXT_PUBLIC_SITE_URL || "https://aarenstudio.vercel.app";
+
             dlJson.data.forEach((folder: any) => {
+              const bName = folder.name || folder.brandName || "Brand";
+              const slug = folder.slug;
+              if (slug) {
+                docs.push({
+                  title: `Showroom: ${bName} (/downloads/${slug})`,
+                  brand: bName,
+                  url: `${siteUrl}/downloads/${slug}`,
+                  source: "download",
+                });
+              }
+
               if (Array.isArray(folder.files)) {
                 folder.files.forEach((f: any) => {
-                  if (f.fileUrl) {
+                  const fUrl = f.url || f.fileUrl;
+                  if (fUrl) {
                     docs.push({
-                      title: `${folder.brandName} - ${f.title}`,
-                      brand: folder.brandName,
-                      url: f.fileUrl,
+                      title: `Catalog: ${bName} - ${f.name || f.title || "PDF"}`,
+                      brand: bName,
+                      url: fUrl,
                       source: "download",
                     });
                   }

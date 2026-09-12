@@ -6,6 +6,8 @@ import {
   addPdfToBrandFolderStore,
   deletePdfFromBrandFolderStore,
   updateBrandFolderStore,
+  getBrandFolderBySlugStore,
+  getBrandFoldersStore,
 } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -22,9 +24,15 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const brandQuery = (searchParams.get("brandId") || searchParams.get("slug") || "").toLowerCase().trim();
 
-    const folders = await getDownloadFoldersStore();
-
     if (brandQuery) {
+      // 1. Try modern BrandFolder by slug or name
+      const modernFolder = await getBrandFolderBySlugStore(brandQuery);
+      if (modernFolder) {
+        return NextResponse.json({ success: true, data: modernFolder }, { headers: NO_CACHE_HEADERS });
+      }
+
+      // 2. Fallback to legacy folders store
+      const folders = await getDownloadFoldersStore();
       const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
       const folder = folders.find(
         (f) =>
@@ -39,10 +47,11 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: true, data: folder }, { headers: NO_CACHE_HEADERS });
     }
 
+    const modernFolders = await getBrandFoldersStore();
     return NextResponse.json({
       success: true,
-      count: folders.length,
-      data: folders,
+      count: modernFolders.length,
+      data: modernFolders,
     }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500, headers: NO_CACHE_HEADERS });

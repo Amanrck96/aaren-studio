@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import AdminNav from "@/components/AdminNav";
-import { BrandDownloadFolder, DownloadPdfItem } from "@/lib/types";
-import { getPdfThumbnail, resolveCatalogDetails } from "@/utils/pdfThumbnail";
+import { BrandFolderItem, BrandFolderPdf } from "@/lib/types";
 import { generateQrWithLogo, downloadQrCanvas, BRAND_LOGOS } from "@/utils/qrWithLogo";
 import {
   Folder,
@@ -20,46 +20,102 @@ import {
   Link as LinkIcon,
   Check,
   Eye,
-  ArrowLeft,
-  ChevronRight,
-  Sparkles,
   QrCode,
   Download,
   Copy,
   X,
+  ArrowUp,
+  ArrowDown,
+  Building2,
+  Sparkles,
+  AlertCircle,
+  Clock,
+  ShieldCheck,
 } from "lucide-react";
 
-function AdminDownloadsContent() {
-  const searchParams = useSearchParams();
-  const initialBrandId = searchParams.get("brandId");
+export default function AdminBrandDownloadsPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-[#81663F]">Loading Brand Downloads...</div>}>
+      <AdminBrandDownloadsContent />
+    </Suspense>
+  );
+}
 
-  const [folders, setFolders] = useState<BrandDownloadFolder[]>([]);
+function AdminBrandDownloadsContent() {
+  const router = useRouter();
+  const [brands, setBrands] = useState<BrandFolderItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedFolderId, setSelectedFolderId] = useState<string>(initialBrandId || "");
   const [search, setSearch] = useState("");
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
-  // Modal / Form state
-  const [showModal, setShowModal] = useState(false);
-  const [editingPdf, setEditingPdf] = useState<Partial<DownloadPdfItem> | null>(null);
-  const [targetBrandId, setTargetBrandId] = useState<string>("");
-  const [saving, setSaving] = useState(false);
-  const [uploadingFile, setUploadingFile] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
+  // Edit Drawer / Modal State
+  const [editingBrand, setEditingBrand] = useState<BrandFolderItem | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [savingBrand, setSavingBrand] = useState(false);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [uploadingPdf, setUploadingPdf] = useState(false);
 
-  // Direct QR Code Modal State
+  // 1-Click QR Code Modal State
   const [qrModal, setQrModal] = useState<{
     isOpen: boolean;
-    title: string;
-    brand: string;
+    brand: BrandFolderItem;
     url: string;
   } | null>(null);
   const [copiedQr, setCopiedQr] = useState(false);
   const qrCanvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Hidden File Inputs
+  const bannerInputRef = useRef<HTMLInputElement>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
+
+  // Check auth session
+  useEffect(() => {
+    const checkAuth = () => {
+      const cookies = document.cookie.split("; ");
+      const session = cookies.find((row) => row.startsWith("aaren_admin_session="));
+      if (!session || !session.includes("authenticated")) {
+        router.push("/admin/login");
+      }
+    };
+    checkAuth();
+  }, [router]);
+
+  // Fetch Brands
+  const fetchBrands = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/brand-downloads?t=${Date.now()}`, {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          setBrands(json.data);
+        }
+      }
+    } catch (e) {
+      console.error("Error fetching brand folders:", e);
+      showToast("Failed to load brand folders", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBrands();
+  }, []);
+
+  // Toast Helper
+  const showToast = (message: string, type: "success" | "error" = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
+  // QR Canvas Rendering
   useEffect(() => {
     if (qrModal && qrCanvasRef.current) {
       const matchingBrand = BRAND_LOGOS.find((b) =>
-        qrModal.brand.toLowerCase().includes(b.name.toLowerCase())
+        qrModal.brand.name.toLowerCase().includes(b.name.toLowerCase())
       );
       generateQrWithLogo(qrCanvasRef.current, {
         url: qrModal.url,
@@ -68,1228 +124,830 @@ function AdminDownloadsContent() {
         bgColor: "#FFFFFF",
         logoType: matchingBrand ? "brand" : "aaren",
         logoUrl: matchingBrand?.file,
-        brandName: qrModal.brand,
+        brandName: qrModal.brand.name,
         logoShape: "rounded",
         badgeBorderColor: "#81663F",
       }).catch((e) => console.error("Failed to render QR:", e));
     }
   }, [qrModal]);
 
-  const fetchFolders = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/downloads?t=${Date.now()}`, {
-        cache: "no-store",
-        headers: { "Cache-Control": "no-cache", "Pragma": "no-cache" },
-      });
-      if (res.ok) {
-        const json = await res.json();
-        if (json.success && Array.isArray(json.data)) {
-          setFolders(json.data);
-          if (!selectedFolderId && json.data.length > 0) {
-            setSelectedFolderId(json.data[0].id);
-          }
-        }
-      }
-    } catch (e) {
-      console.error("Error fetching folders in admin:", e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchFolders();
-  }, []);
-
-  useEffect(() => {
-    if (initialBrandId) {
-      setSelectedFolderId(initialBrandId);
-    }
-  }, [initialBrandId]);
-
-  const selectedFolder = folders.find((f) => f.id === selectedFolderId) || folders[0];
-
-  const handleOpenAddModal = (brandId?: string) => {
-    const bId = brandId || selectedFolderId || (folders[0] ? folders[0].id : "");
-    const folder = folders.find((f) => f.id === bId);
-    setTargetBrandId(bId);
-    setEditingPdf({
-      title: "",
-      fileUrl: "",
-      fileName: "",
-      coverImage: "",
-      category: folder?.brandCategory || "Catalog",
-      fileSize: "PDF Document",
-      description: "",
-    });
-    setShowModal(true);
-  };
-
-  const handleOpenEditModal = (brandId: string, pdf: DownloadPdfItem) => {
-    setTargetBrandId(brandId);
-    setEditingPdf({ ...pdf });
-    setShowModal(true);
-  };
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploadingFile(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "Brand_Assets");
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      const finalUrl = data.url || data.dataUrl;
-      if (data.success && finalUrl) {
-        setEditingPdf((prev) => ({
-          ...prev,
-          fileUrl: finalUrl,
-          fileName: file.name,
-          title: prev?.title || file.name.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " "),
-          fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-        }));
-        setToast("✅ PDF uploaded successfully to Firebase Storage!");
-        setTimeout(() => setToast(null), 4000);
-      } else {
-        alert("Upload error: " + (data.error || "Failed to upload"));
-      }
-    } catch (err: any) {
-      alert("Error uploading file: " + err.message);
-    } finally {
-      setUploadingFile(false);
-    }
-  };
-
-  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploadingFile(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "Thumbnails");
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      const finalUrl = data.url || data.dataUrl;
-      if (data.success && finalUrl) {
-        setEditingPdf((prev) => ({
-          ...prev,
-          coverImage: finalUrl,
-        }));
-        setToast("✅ Cover thumbnail uploaded to Firebase Storage!");
-        setTimeout(() => setToast(null), 4000);
-      } else {
-        alert("Upload error: " + (data.error || "Failed to upload"));
-      }
-    } catch (err: any) {
-      alert("Error uploading cover: " + err.message);
-    } finally {
-      setUploadingFile(false);
-    }
-  };
-
-  const handleSavePdf = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!targetBrandId) {
-      alert("Please select a brand folder.");
-      return;
-    }
-    if (!editingPdf?.fileUrl) {
-      alert("Please enter or upload a Firebase PDF URL.");
-      return;
-    }
-    if (!editingPdf?.title) {
-      alert("Please enter a title for the PDF catalog.");
-      return;
-    }
-
-    setSaving(true);
-    try {
-      const res = await fetch("/api/downloads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          brandId: targetBrandId,
-          pdf: editingPdf,
-        }),
-      });
-
-      if (!res.ok) {
-        alert("Save failed with status " + res.status);
-        return;
-      }
-
-      const json = await res.json();
-      if (json.success) {
-        const savedPdf = json.data;
-        if (savedPdf && targetBrandId) {
-          setFolders((prev) => {
-            return prev.map((f) => {
-              if (f.id === targetBrandId || f.brandName.toLowerCase() === targetBrandId.toLowerCase()) {
-                const files = Array.isArray(f.files) ? [...f.files] : [];
-                const idx = files.findIndex((file) => file.id === savedPdf.id);
-                if (idx >= 0) {
-                  files[idx] = savedPdf;
-                } else {
-                  files.unshift(savedPdf);
-                }
-                return { ...f, files };
-              }
-              return f;
-            });
-          });
-        }
-        setShowModal(false);
-        setToast("✨ PDF link saved permanently to brand folder!");
-        setTimeout(() => setToast(null), 5000);
-        fetchFolders();
-      } else {
-        alert("Save error: " + (json.error || "Unknown error"));
-      }
-    } catch (err: any) {
-      alert("Error saving PDF: " + err.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleDeletePdf = async (brandId: string, pdfId: string, title: string) => {
-    if (!confirm(`Are you sure you want to remove "${title}" from this brand folder?`)) {
-      return;
-    }
-
-    try {
-      const res = await fetch(`/api/downloads?brandId=${brandId}&pdfId=${pdfId}`, {
-        method: "DELETE",
-      });
-      const json = await res.json();
-      if (json.success) {
-        setToast("🗑️ PDF removed from folder");
-        setTimeout(() => setToast(null), 4000);
-        fetchFolders();
-      } else {
-        alert("Delete error: " + (json.error || "Unknown error"));
-      }
-    } catch (err: any) {
-      alert("Error deleting PDF: " + err.message);
-    }
-  };
-
-  const filteredFolders = folders.filter((f) => {
-    if (!search) return true;
-    const q = search.toLowerCase();
-    return f.brandName.toLowerCase().includes(q) || (f.brandCategory && f.brandCategory.toLowerCase().includes(q));
+  // Filtered Brands
+  const filteredBrands = brands.filter((b) => {
+    const q = search.toLowerCase().trim();
+    if (!q) return true;
+    return b.name.toLowerCase().includes(q) || b.slug.toLowerCase().includes(q);
   });
 
+  const totalPdfs = brands.reduce((acc, b) => acc + (b.files?.length || 0), 0);
+
+  // Edit Brand Handler
+  const handleOpenEdit = (brand: BrandFolderItem) => {
+    // Deep clone to allow safe cancel
+    setEditingBrand(JSON.parse(JSON.stringify(brand)));
+    setIsDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    if (!savingBrand && !uploadingBanner && !uploadingPdf) {
+      setEditingBrand(null);
+      setIsDrawerOpen(false);
+    }
+  };
+
+  // Banner Upload
+  const handleBannerFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingBrand) return;
+
+    setUploadingBanner(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", "banner");
+      formData.append("folder", "aaren_brand_banners");
+
+      const res = await fetch("/api/admin/brand-downloads/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = await res.json();
+      if (res.ok && json.success) {
+        setEditingBrand({
+          ...editingBrand,
+          bannerImageUrl: json.url,
+        });
+        showToast("Banner image uploaded successfully!");
+      } else {
+        showToast(json.error || "Failed to upload banner", "error");
+      }
+    } catch (err: any) {
+      console.error("Banner upload error:", err);
+      showToast(err.message || "Banner upload failed", "error");
+    } finally {
+      setUploadingBanner(false);
+      if (bannerInputRef.current) bannerInputRef.current.value = "";
+    }
+  };
+
+  // PDF Upload
+  const handlePdfFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingBrand) return;
+
+    setUploadingPdf(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", "pdf");
+      formData.append("folder", "aaren_brand_catalogs");
+
+      const res = await fetch("/api/admin/brand-downloads/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = await res.json();
+      if (res.ok && json.success) {
+        const cleanTitle = file.name.replace(/\.pdf$/i, "").replace(/[-_]/g, " ");
+        const newPdf: BrandFolderPdf = {
+          name: cleanTitle,
+          url: json.url,
+          publicId: json.publicId,
+          order: (editingBrand.files?.length || 0) + 1,
+          fileSize: json.fileSize || "PDF Document",
+        };
+
+        const updatedFiles = [...(editingBrand.files || []), newPdf];
+        setEditingBrand({
+          ...editingBrand,
+          files: updatedFiles,
+        });
+        showToast(`Added "${cleanTitle}" to catalog collection!`);
+      } else {
+        showToast(json.error || "Failed to upload PDF", "error");
+      }
+    } catch (err: any) {
+      console.error("PDF upload error:", err);
+      showToast(err.message || "PDF upload failed", "error");
+    } finally {
+      setUploadingPdf(false);
+      if (pdfInputRef.current) pdfInputRef.current.value = "";
+    }
+  };
+
+  // Reorder PDFs
+  const handleMovePdf = (index: number, direction: "up" | "down") => {
+    if (!editingBrand || !editingBrand.files) return;
+    const newFiles = [...editingBrand.files];
+    const targetIdx = direction === "up" ? index - 1 : index + 1;
+    if (targetIdx < 0 || targetIdx >= newFiles.length) return;
+
+    const temp = newFiles[index];
+    newFiles[index] = newFiles[targetIdx];
+    newFiles[targetIdx] = temp;
+
+    // Normalize order values
+    newFiles.forEach((f, i) => {
+      f.order = i + 1;
+    });
+
+    setEditingBrand({ ...editingBrand, files: newFiles });
+  };
+
+  // Delete PDF from list
+  const handleDeletePdf = (index: number) => {
+    if (!editingBrand || !editingBrand.files) return;
+    const newFiles = editingBrand.files.filter((_, i) => i !== index);
+    newFiles.forEach((f, i) => {
+      f.order = i + 1;
+    });
+    setEditingBrand({ ...editingBrand, files: newFiles });
+  };
+
+  // Update PDF Title
+  const handlePdfTitleChange = (index: number, newTitle: string) => {
+    if (!editingBrand || !editingBrand.files) return;
+    const newFiles = [...editingBrand.files];
+    newFiles[index] = { ...newFiles[index], name: newTitle };
+    setEditingBrand({ ...editingBrand, files: newFiles });
+  };
+
+  // Save Brand
+  const handleSaveBrand = async () => {
+    if (!editingBrand) return;
+    if (!editingBrand.name.trim()) {
+      showToast("Brand name cannot be empty", "error");
+      return;
+    }
+    if (!editingBrand.slug.trim()) {
+      showToast("Slug cannot be empty", "error");
+      return;
+    }
+
+    setSavingBrand(true);
+    try {
+      const res = await fetch("/api/admin/brand-downloads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editingBrand),
+      });
+
+      const json = await res.json();
+      if (res.ok && json.success) {
+        showToast(`Saved changes for ${editingBrand.name}!`);
+        setIsDrawerOpen(false);
+        setEditingBrand(null);
+        fetchBrands();
+      } else {
+        showToast(json.error || "Failed to save brand", "error");
+      }
+    } catch (err: any) {
+      console.error("Error saving brand:", err);
+      showToast(err.message || "Failed to save brand", "error");
+    } finally {
+      setSavingBrand(false);
+    }
+  };
+
+  // Open 1-Click QR Code Modal
+  const handleOpenQrModal = (brand: BrandFolderItem) => {
+    const siteUrl =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : process.env.NEXT_PUBLIC_SITE_URL || "https://aarenstudio.vercel.app";
+    const fullUrl = `${siteUrl}/downloads/${brand.slug}`;
+    setQrModal({
+      isOpen: true,
+      brand,
+      url: fullUrl,
+    });
+    setCopiedQr(false);
+  };
+
+  // Copy QR URL
+  const handleCopyUrl = async () => {
+    if (!qrModal) return;
+    try {
+      await navigator.clipboard.writeText(qrModal.url);
+      setCopiedQr(true);
+      setTimeout(() => setCopiedQr(false), 2000);
+      showToast("Public URL copied to clipboard!");
+    } catch (e) {
+      console.error("Copy error:", e);
+    }
+  };
+
   return (
-    <div style={{ background: "#FAF8F5", color: "#1E1E1E", minHeight: "100vh", fontFamily: "var(--font-jost), 'Jost', sans-serif" }}>
+    <div className="flex min-h-screen bg-[#F7F5F0] text-[#1E1E1E]">
       <AdminNav />
 
-      <main className="admin-main-content" style={{ flex: 1, padding: "2.5rem 3rem", background: "#FAF8F5" }}>
-        {/* Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem", flexWrap: "wrap", gap: "1.5rem" }}>
+      <div className="flex-1 overflow-x-hidden p-6 md:p-10 lg:ml-64">
+        {/* Toast Notification */}
+        {toast && (
+          <div
+            className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-5 py-3 rounded-xl shadow-lg border text-sm font-medium transition-all ${
+              toast.type === "success"
+                ? "bg-[#1E1E1E] text-white border-[#81663F]"
+                : "bg-red-900 text-white border-red-700"
+            }`}
+          >
+            {toast.type === "success" ? (
+              <Check className="w-4 h-4 text-[#C2A378]" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-red-300" />
+            )}
+            <span>{toast.message}</span>
+          </div>
+        )}
+
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-8 border-b border-[#E4DCCE]">
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ fontSize: "1.8rem" }}>📁</span>
-              <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#81663F", margin: 0 }}>
-                Brand Downloads &amp; Firebase PDF Repository
-              </h1>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#E8DFC8] text-[#81663F]">
+                Digital Showroom CMS
+              </span>
+              <span className="text-xs text-[#8A8275]">Cloudinary-Powered</span>
             </div>
-            <p style={{ color: "#5E5852", fontSize: "0.92rem", margin: "4px 0 0" }}>
-              Manage open-access PDF catalog links for all 20 European luxury brands. All changes save live to Firebase.
+            <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#1E1E1E] mt-1">
+              Brand Downloads & QR Showrooms
+            </h1>
+            <p className="text-sm text-[#6A6359] mt-1">
+              Manage the 20 European luxury brands, their hero banners, clean QR landing page URLs, and Cloudinary-hosted PDF catalogs.
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
-            {toast && (
-              <span style={{ background: "#d1fae5", color: "#065f46", padding: "8px 14px", borderRadius: "8px", fontSize: "0.85rem", fontWeight: 700, border: "1px solid #a7f3d0" }}>
-                {toast}
-              </span>
-            )}
-
+          <div className="flex items-center gap-3">
             <button
-              onClick={fetchFolders}
-              disabled={loading}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "0.65rem 1.2rem",
-                background: "#FFFFFF",
-                border: "1px solid #D5CEBF",
-                borderRadius: "8px",
-                fontWeight: 700,
-                color: "#1E1E1E",
-                cursor: loading ? "wait" : "pointer",
-                fontSize: "0.85rem",
-              }}
+              onClick={fetchBrands}
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-[#D5CEBF] bg-white hover:bg-[#FAF8F5] text-xs font-medium text-[#4A453E] transition-colors"
             >
-              <RefreshCw size={14} className={loading ? "spin" : ""} />
+              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
               <span>Refresh</span>
             </button>
-
             <Link
-              href="/downloads"
-              target="_blank"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "0.65rem 1.2rem",
-                background: "#FAF8F5",
-                color: "#81663F",
-                border: "1px solid #D5CEBF",
-                borderRadius: "8px",
-                textDecoration: "none",
-                fontWeight: 800,
-                fontSize: "0.85rem",
-              }}
+              href="/admin/qr-code"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#81663F] hover:bg-[#684F2E] text-white text-xs font-semibold tracking-wide shadow-sm transition-all"
             >
-              <span>View Live /downloads</span>
-              <ExternalLink size={13} />
+              <QrCode className="w-4 h-4" />
+              <span>Full QR Studio</span>
             </Link>
-
-            <button
-              onClick={() => handleOpenAddModal()}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "0.65rem 1.4rem",
-                background: "#81663F",
-                color: "#FFFFFF",
-                border: "none",
-                borderRadius: "8px",
-                fontWeight: 800,
-                fontSize: "0.85rem",
-                cursor: "pointer",
-                boxShadow: "0 4px 12px rgba(129,102,63,0.25)",
-              }}
-            >
-              <Plus size={15} />
-              <span>Add PDF to Brand</span>
-            </button>
           </div>
         </div>
 
-        {/* Brand Folders Quick Switcher & Manager */}
-        <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: "2rem", alignItems: "start" }}>
-          {/* Left Sidebar: 20 Folders List */}
-          <div
-            style={{
-              background: "#FFFFFF",
-              borderRadius: "14px",
-              border: "1px solid #E2DCD2",
-              padding: "1.2rem",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
-            }}
-          >
-            <div style={{ marginBottom: "1rem", position: "relative" }}>
-              <input
-                type="text"
-                placeholder="Search 20 brand folders..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "0.55rem 0.8rem 0.55rem 2rem",
-                  borderRadius: "8px",
-                  border: "1px solid #D5CEBF",
-                  background: "#FAF8F5",
-                  fontSize: "0.85rem",
-                  color: "#1E1E1E",
-                }}
-              />
-              <Search size={13} style={{ position: "absolute", left: "0.7rem", top: "50%", transform: "translateY(-50%)", color: "#81663F" }} />
+        {/* Stats Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+          <div className="bg-white p-5 rounded-2xl border border-[#E4DCCE] shadow-sm">
+            <div className="text-xs uppercase tracking-wider font-semibold text-[#81663F]">
+              Total Brands
             </div>
-
-            <div style={{ fontSize: "0.75rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase", letterSpacing: "0.08em", padding: "0 0.4rem 0.6rem" }}>
-              Brand Folders ({folders.length})
+            <div className="text-3xl font-bold text-[#1E1E1E] mt-1 font-serif">
+              {brands.length}
             </div>
-
-            <div style={{ maxHeight: "calc(100vh - 300px)", overflowY: "auto", display: "flex", flexDirection: "column", gap: "4px" }}>
-              {filteredFolders.map((f, idx) => {
-                const isSelected = f.id === selectedFolder?.id;
-                const count = Array.isArray(f.files) ? f.files.length : 0;
-                return (
-                  <button
-                    key={f.id}
-                    onClick={() => setSelectedFolderId(f.id)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "0.7rem 0.8rem",
-                      borderRadius: "8px",
-                      border: isSelected ? "1px solid #81663F" : "1px solid transparent",
-                      background: isSelected ? "#FAF8F5" : "transparent",
-                      color: isSelected ? "#81663F" : "#1E1E1E",
-                      cursor: "pointer",
-                      textAlign: "left",
-                      width: "100%",
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", overflow: "hidden" }}>
-                      <div
-                        style={{
-                          width: "28px",
-                          height: "28px",
-                          borderRadius: "6px",
-                          background: isSelected ? "#81663F" : "rgba(129, 102, 63, 0.1)",
-                          color: isSelected ? "#FFFFFF" : "#81663F",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                          fontSize: "0.75rem",
-                          fontWeight: 800,
-                        }}
-                      >
-                        {String(idx + 1).padStart(2, "0")}
-                      </div>
-                      <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        <div style={{ fontWeight: 800, fontSize: "0.88rem", overflow: "hidden", textOverflow: "ellipsis" }}>
-                          {f.brandName}
-                        </div>
-                        <div style={{ fontSize: "0.72rem", color: "#8A8275" }}>
-                          {f.brandCategory || "Brand"}
-                        </div>
-                      </div>
-                    </div>
-
-                    <span
-                      style={{
-                        padding: "2px 7px",
-                        borderRadius: "999px",
-                        fontSize: "0.72rem",
-                        fontWeight: 800,
-                        background: count > 0 ? "rgba(16, 185, 129, 0.15)" : "#FAF8F5",
-                        color: count > 0 ? "#065f46" : "#8A8275",
-                        flexShrink: 0,
-                      }}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+            <div className="text-xs text-[#8A8275] mt-1">All 20 verified & seeded</div>
           </div>
 
-          {/* Right Main Area: Selected Brand Folder Details & Files */}
-          <div>
-            {selectedFolder ? (
-              <div
-                style={{
-                  background: "#FFFFFF",
-                  borderRadius: "14px",
-                  border: "1px solid #E2DCD2",
-                  padding: "1.8rem 2rem",
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
-                }}
-              >
-                {/* Brand Folder Top Header */}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #EAE4D8", paddingBottom: "1.2rem", marginBottom: "1.8rem", flexWrap: "wrap", gap: "1rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                    <div style={{ width: "56px", height: "56px", borderRadius: "10px", background: "#FAF8F5", border: "1px solid #D5CEBF", padding: "4px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      {selectedFolder.brandLogo ? (
-                        <img src={selectedFolder.brandLogo} alt={selectedFolder.brandName} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+          <div className="bg-white p-5 rounded-2xl border border-[#E4DCCE] shadow-sm">
+            <div className="text-xs uppercase tracking-wider font-semibold text-[#81663F]">
+              Total PDF Catalogs
+            </div>
+            <div className="text-3xl font-bold text-[#1E1E1E] mt-1 font-serif">
+              {totalPdfs}
+            </div>
+            <div className="text-xs text-[#8A8275] mt-1">Direct Cloudinary downloads</div>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-[#E4DCCE] shadow-sm">
+            <div className="text-xs uppercase tracking-wider font-semibold text-[#81663F]">
+              Landing Page Format
+            </div>
+            <div className="text-sm font-semibold text-[#1E1E1E] mt-2 font-mono truncate">
+              /downloads/[clean-slug]
+            </div>
+            <div className="text-xs text-[#8A8275] mt-1">QRCodeChimp luxury layout</div>
+          </div>
+        </div>
+
+        {/* Search Bar */}
+        <div className="flex items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 max-w-md">
+            <Search className="w-4 h-4 text-[#8A8275] absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search brands or clean slugs..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#D5CEBF] bg-white text-sm focus:outline-none focus:border-[#81663F] focus:ring-1 focus:ring-[#81663F] text-[#1E1E1E]"
+            />
+          </div>
+          <span className="text-xs text-[#8A8275]">
+            Showing {filteredBrands.length} of {brands.length} brands
+          </span>
+        </div>
+
+        {/* Brand Grid */}
+        {loading ? (
+          <div className="py-20 text-center text-[#81663F] flex flex-col items-center justify-center gap-2">
+            <RefreshCw className="w-6 h-6 animate-spin text-[#81663F]" />
+            <span className="text-sm font-medium">Loading Brand Folders...</span>
+          </div>
+        ) : filteredBrands.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-[#E4DCCE] p-12 text-center space-y-2">
+            <Building2 className="w-10 h-10 text-[#B89C74] mx-auto stroke-[1.5]" />
+            <h3 className="font-semibold text-lg text-[#1E1E1E]">No brands found</h3>
+            <p className="text-xs text-[#8A8275]">Try refining your search query.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {filteredBrands.map((brand, idx) => {
+              const count = brand.files?.length || 0;
+              return (
+                <div
+                  key={brand.id}
+                  className="bg-white rounded-2xl border border-[#E4DCCE] hover:border-[#B89C74] transition-all shadow-sm hover:shadow-md overflow-hidden flex flex-col justify-between"
+                >
+                  {/* Top Thumbnail & Badge */}
+                  <div>
+                    <div className="relative w-full aspect-[16/7] bg-[#EAE4D9] overflow-hidden">
+                      {brand.bannerImageUrl ? (
+                        <Image
+                          src={brand.bannerImageUrl}
+                          alt={brand.name}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover"
+                        />
                       ) : (
-                        <Folder size={28} color="#81663F" />
+                        <div className="w-full h-full flex items-center justify-center bg-[#F3EDE3]">
+                          <Building2 className="w-8 h-8 text-[#B89C74] stroke-[1.5]" />
+                        </div>
                       )}
+                      <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-black/70 text-white backdrop-blur-sm">
+                        #{idx + 1}
+                      </div>
                     </div>
-                    <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <h2 style={{ fontSize: "1.5rem", fontWeight: 900, color: "#1E1E1E", margin: 0 }}>
-                          {selectedFolder.brandName} Folder
-                        </h2>
-                        <span style={{ background: "rgba(129, 102, 63, 0.12)", color: "#81663F", padding: "3px 8px", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 800 }}>
-                          {selectedFolder.brandCategory || "Category"}
+
+                    {/* Brand Info */}
+                    <div className="p-5">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <h3 className="font-serif text-xl font-bold text-[#1E1E1E]">
+                            {brand.name}
+                          </h3>
+                          <div className="flex items-center gap-1.5 mt-1 font-mono text-xs text-[#81663F]">
+                            <span>/downloads/{brand.slug}</span>
+                          </div>
+                        </div>
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                            count > 0
+                              ? "bg-[#EAF3EA] text-[#2E6A38] border border-[#D0E6D2]"
+                              : "bg-[#F7EFE2] text-[#81663F] border border-[#EADAC5]"
+                          }`}
+                        >
+                          {count} {count === 1 ? "PDF" : "PDFs"}
                         </span>
                       </div>
-                      <p style={{ color: "#5E5852", fontSize: "0.85rem", margin: "2px 0 0" }}>
-                        {selectedFolder.description || "Manage PDF brochures and catalogs for this brand."}
-                      </p>
+
+                      {brand.description && (
+                        <p className="text-xs text-[#6A6359] mt-3 line-clamp-2 leading-relaxed">
+                          {brand.description}
+                        </p>
+                      )}
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                  {/* Actions Footer */}
+                  <div className="px-5 py-3.5 bg-[#FAF8F5] border-t border-[#EAE4D9] flex items-center justify-between gap-2">
                     <Link
-                      href={`/downloads/All%2020%20Brand%20Folders/${encodeURIComponent(selectedFolder.brandName)}/${selectedFolder.files?.length || 0}%20PDFs`}
+                      href={`/downloads/${brand.slug}`}
                       target="_blank"
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        padding: "0.65rem 1.2rem",
-                        background: "#FAF8F5",
-                        color: "#81663F",
-                        border: "1px solid #D5CEBF",
-                        borderRadius: "8px",
-                        textDecoration: "none",
-                        fontWeight: 800,
-                        fontSize: "0.85rem",
-                      }}
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-[#81663F] hover:text-[#584325] transition-colors"
+                      title="Preview public digital showroom"
                     >
-                      <span>View Live Brand Downloads</span>
-                      <ExternalLink size={13} />
+                      <span>Showroom</span>
+                      <ExternalLink className="w-3 h-3" />
                     </Link>
 
-                    <button
-                      onClick={() => handleOpenAddModal(selectedFolder.id)}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        padding: "0.65rem 1.3rem",
-                        background: "#1E1E1E",
-                        color: "#FFFFFF",
-                        borderRadius: "8px",
-                        border: "none",
-                        fontWeight: 800,
-                        fontSize: "0.85rem",
-                        cursor: "pointer",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                      }}
-                    >
-                      <Plus size={14} />
-                      <span>Upload / Add PDF to {selectedFolder.brandName}</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleOpenQrModal(brand)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#D5CEBF] bg-white hover:bg-[#FAF8F5] text-xs font-medium text-[#4A453E] transition-colors"
+                        title="Generate QR code for this brand"
+                      >
+                        <QrCode className="w-3.5 h-3.5 text-[#81663F]" />
+                        <span>QR</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleOpenEdit(brand)}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#81663F] hover:bg-[#684F2E] text-white text-xs font-semibold shadow-sm transition-all"
+                      >
+                        <Edit className="w-3.5 h-3.5" />
+                        <span>Manage</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
+              );
+            })}
+          </div>
+        )}
 
-                {/* Direct Shareable Link Strip */}
-                <div
-                  style={{
-                    background: "#FAF8F5",
-                    borderRadius: "8px",
-                    border: "1px solid #E2DCD2",
-                    padding: "0.8rem 1.2rem",
-                    marginBottom: "1.5rem",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    gap: "0.8rem",
-                  }}
+        {/* ══════════════════════════════════════════════════════════
+            BRAND EDIT MODAL / DRAWER
+           ══════════════════════════════════════════════════════════ */}
+        {isDrawerOpen && editingBrand && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white w-full max-w-2xl max-h-[90vh] rounded-3xl shadow-2xl border border-[#D5CEBF] flex flex-col overflow-hidden">
+              {/* Modal Header */}
+              <div className="px-6 py-4 border-b border-[#E4DCCE] flex items-center justify-between bg-[#FAF8F5]">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#81663F]" />
+                  <h2 className="font-serif text-xl font-bold text-[#1E1E1E]">
+                    Edit Brand: {editingBrand.name}
+                  </h2>
+                </div>
+                <button
+                  onClick={handleCloseDrawer}
+                  className="w-8 h-8 rounded-full hover:bg-[#EAE4D9] flex items-center justify-center text-[#6A6359] transition-colors"
                 >
-                  <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.85rem", flexWrap: "wrap" }}>
-                      <span style={{ fontWeight: 800, color: "#81663F" }}>Full Link:</span>
-                      <code style={{ background: "#FFFFFF", padding: "3px 8px", borderRadius: "4px", border: "1px solid #D5CEBF", color: "#1E1E1E", fontWeight: 700 }}>
-                        /downloads/All 20 Brand Folders/{selectedFolder.brandName}/{selectedFolder.files?.length || 0} PDFs
-                      </code>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.82rem", color: "#6A6359", flexWrap: "wrap" }}>
-                      <span>Short Link:</span>
-                      <code style={{ background: "#FFFFFF", padding: "2px 6px", borderRadius: "4px", border: "1px solid #D5CEBF", color: "#81663F" }}>
-                        /downloads/brands/{selectedFolder.id}
-                      </code>
-                    </div>
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6 overflow-y-auto space-y-6 flex-1">
+                {/* Brand Name & Slug */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#6A6359] mb-1.5">
+                      Brand Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={editingBrand.name}
+                      onChange={(e) => setEditingBrand({ ...editingBrand, name: e.target.value })}
+                      className="w-full px-3.5 py-2 rounded-xl border border-[#D5CEBF] bg-[#FAF8F5] text-sm focus:outline-none focus:border-[#81663F] text-[#1E1E1E] font-medium"
+                    />
                   </div>
 
-                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                    <button
-                      onClick={() => {
-                        const url = `${window.location.origin}/downloads/All%2020%20Brand%20Folders/${encodeURIComponent(selectedFolder.brandName)}/${selectedFolder.files?.length || 0}%20PDFs`;
-                        navigator.clipboard.writeText(url);
-                        setToast(`✅ Copied Full Link: ${url}`);
-                        setTimeout(() => setToast(null), 3000);
-                      }}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        background: "#FFFFFF",
-                        border: "1px solid #D5CEBF",
-                        borderRadius: "6px",
-                        padding: "6px 12px",
-                        fontSize: "0.78rem",
-                        fontWeight: 800,
-                        color: "#81663F",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <Check size={12} />
-                      <span>Copy Full Link</span>
-                    </button>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#6A6359] mb-1.5">
+                      Clean Slug *
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#8A8275] font-mono">
+                        /downloads/
+                      </span>
+                      <input
+                        type="text"
+                        value={editingBrand.slug}
+                        onChange={(e) =>
+                          setEditingBrand({
+                            ...editingBrand,
+                            slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"),
+                          })
+                        }
+                        className="w-full pl-24 pr-3.5 py-2 rounded-xl border border-[#D5CEBF] bg-[#FAF8F5] text-sm font-mono text-[#81663F] font-semibold focus:outline-none focus:border-[#81663F]"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* PDF Files List in this Folder */}
-                {(!selectedFolder.files || selectedFolder.files.length === 0) ? (
-                  <div style={{ padding: "4rem 2rem", textAlign: "center", background: "#FAF8F5", borderRadius: "10px", border: "1px dashed #D5CEBF" }}>
-                    <Folder size={38} color="#81663F" style={{ margin: "0 auto 0.8rem", display: "block" }} />
-                    <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#1E1E1E", margin: 0 }}>
-                      No PDF Catalogs in this Brand Folder yet
-                    </h3>
-                    <p style={{ color: "#5E5852", fontSize: "0.85rem", margin: "4px 0 1rem" }}>
-                      Click the button below to link a Firebase Storage URL or upload a PDF document.
-                    </p>
-                    <button
-                      onClick={() => handleOpenAddModal(selectedFolder.id)}
-                      style={{
-                        padding: "0.6rem 1.4rem",
-                        background: "#81663F",
-                        color: "#FFFFFF",
-                        border: "none",
-                        borderRadius: "8px",
-                        fontWeight: 800,
-                        fontSize: "0.85rem",
-                        cursor: "pointer",
-                      }}
-                    >
-                      + Add Firebase PDF URL
-                    </button>
+                {/* Description */}
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#6A6359] mb-1.5">
+                    Brand Editorial Description
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={editingBrand.description || ""}
+                    onChange={(e) =>
+                      setEditingBrand({ ...editingBrand, description: e.target.value })
+                    }
+                    placeholder="Describe the brand's architectural focus, materials, and European craftsmanship..."
+                    className="w-full px-3.5 py-2 rounded-xl border border-[#D5CEBF] bg-[#FAF8F5] text-sm focus:outline-none focus:border-[#81663F] text-[#1E1E1E]"
+                  />
+                </div>
+
+                {/* Banner Image */}
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#6A6359] mb-1.5">
+                    Hero Banner Image (Cloudinary Hosted)
+                  </label>
+                  <div className="relative w-full aspect-[16/7] rounded-xl border border-[#D5CEBF] overflow-hidden bg-[#F3EDE3]">
+                    {editingBrand.bannerImageUrl ? (
+                      <Image
+                        src={editingBrand.bannerImageUrl}
+                        alt="Banner Preview"
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center text-[#8A8275]">
+                        <Building2 className="w-8 h-8 mb-1 stroke-[1.5]" />
+                        <span className="text-xs">No banner image uploaded</span>
+                      </div>
+                    )}
+
+                    {uploadingBanner && (
+                      <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center text-white text-xs font-medium gap-2">
+                        <RefreshCw className="w-4 h-4 animate-spin text-[#C2A378]" />
+                        <span>Uploading banner to Cloudinary...</span>
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    {selectedFolder.files.map((pdf, idx) => {
-                      const resolved = resolveCatalogDetails({
-                        catalogPdfUrl: pdf.fileUrl,
-                        title: pdf.title,
-                        brand: selectedFolder.brandName,
-                        coverImage: pdf.coverImage,
-                      });
-                      const coverThumb = resolved.coverThumb || pdf.coverImage || getPdfThumbnail(pdf.fileUrl, { title: pdf.title, brandId: selectedFolder.brandName });
 
-                      return (
+                  <div className="flex items-center gap-3 mt-2.5">
+                    <input
+                      ref={bannerInputRef}
+                      type="file"
+                      accept="image/png, image/jpeg, image/webp, image/svg+xml"
+                      onChange={handleBannerFileSelected}
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      disabled={uploadingBanner}
+                      onClick={() => bannerInputRef.current?.click()}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-[#D5CEBF] bg-white hover:bg-[#FAF8F5] text-xs font-semibold text-[#4A453E] transition-colors"
+                    >
+                      <Upload className="w-3.5 h-3.5 text-[#81663F]" />
+                      <span>{editingBrand.bannerImageUrl ? "Replace Banner" : "Upload Banner"}</span>
+                    </button>
+
+                    {editingBrand.bannerImageUrl && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditingBrand({ ...editingBrand, bannerImageUrl: undefined })
+                        }
+                        className="text-xs text-red-600 hover:text-red-700 font-medium"
+                      >
+                        Remove Banner
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* PDF Catalogs Management */}
+                <div className="pt-2 border-t border-[#E4DCCE]">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-serif text-lg font-semibold text-[#1E1E1E]">
+                        PDF Catalogs & Specifications
+                      </h4>
+                      <p className="text-xs text-[#8A8275]">
+                        Uploaded files are served directly from Cloudinary.
+                      </p>
+                    </div>
+
+                    <div>
+                      <input
+                        ref={pdfInputRef}
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handlePdfFileSelected}
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        disabled={uploadingPdf}
+                        onClick={() => pdfInputRef.current?.click()}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#81663F] hover:bg-[#684F2E] text-white text-xs font-semibold shadow-sm transition-all"
+                      >
+                        {uploadingPdf ? (
+                          <>
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                            <span>Uploading PDF...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Add PDF Catalog</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* PDFs List */}
+                  {(!editingBrand.files || editingBrand.files.length === 0) ? (
+                    <div className="p-6 rounded-2xl border border-dashed border-[#D5CEBF] bg-[#FAF8F5] text-center space-y-1">
+                      <FileText className="w-8 h-8 text-[#B89C74] mx-auto stroke-[1.5]" />
+                      <div className="text-xs font-semibold text-[#1E1E1E]">No PDFs yet</div>
+                      <p className="text-[11px] text-[#8A8275]">
+                        Click "Add PDF Catalog" to upload a PDF from your computer directly to Cloudinary.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      {editingBrand.files.map((file, fIdx) => (
                         <div
-                          key={pdf.id || idx}
-                          style={{
-                            background: "#FAF8F5",
-                            borderRadius: "10px",
-                            border: "1px solid #E2DCD2",
-                            padding: "1rem 1.4rem",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            flexWrap: "wrap",
-                            gap: "1rem",
-                          }}
+                          key={`${file.url}-${fIdx}`}
+                          className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E4DCCE] flex items-center justify-between gap-3"
                         >
-                          {/* Left: Thumbnail & Title */}
-                          <div style={{ display: "flex", alignItems: "center", gap: "14px", flex: "1 1 300px" }}>
-                            <div
-                              style={{
-                                width: "46px",
-                                height: "62px",
-                                borderRadius: "4px",
-                                overflow: "hidden",
-                                background: "#181920",
-                                border: "1px solid #D5CEBF",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                flexShrink: 0,
-                              }}
-                            >
-                              {coverThumb ? (
-                                <img src={coverThumb} alt={pdf.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                              ) : (
-                                <FileText size={20} color="#81663F" />
-                              )}
-                            </div>
+                          <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#81663F] shrink-0">
+                            #{fIdx + 1}
+                          </div>
 
-                            <div>
-                              <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#1E1E1E" }}>
-                                {pdf.title}
-                              </div>
-                              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "3px" }}>
-                                <span style={{ fontSize: "0.72rem", color: "#81663F", fontWeight: 700 }}>
-                                  {pdf.category || "Specification"}
-                                </span>
-                                {pdf.fileSize && (
-                                  <span style={{ fontSize: "0.72rem", color: "#8A8275" }}>
-                                    • {pdf.fileSize}
-                                  </span>
-                                )}
-                              </div>
-                              <div style={{ fontSize: "0.72rem", color: "#8A8275", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "450px" }}>
-                                <a href={pdf.fileUrl} target="_blank" rel="noreferrer" style={{ color: "#81663F", textDecoration: "underline" }}>
-                                  {pdf.fileUrl}
-                                </a>
-                              </div>
+                          <div className="flex-1 min-w-0">
+                            <input
+                              type="text"
+                              value={file.name}
+                              onChange={(e) => handlePdfTitleChange(fIdx, e.target.value)}
+                              className="w-full px-2.5 py-1 rounded-lg border border-[#D5CEBF] bg-white text-xs font-medium text-[#1E1E1E] focus:outline-none focus:border-[#81663F]"
+                              placeholder="PDF Title"
+                            />
+                            <div className="flex items-center gap-2 mt-1 text-[11px] text-[#8A8275]">
+                              <span>{file.fileSize || "PDF"}</span>
+                              <span>•</span>
+                              <a
+                                href={file.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#81663F] hover:underline flex items-center gap-0.5 truncate max-w-[240px]"
+                              >
+                                <span>Preview file</span>
+                                <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                              </a>
                             </div>
                           </div>
 
-                          {/* Right: Action Buttons */}
-                          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <a
-                              href={pdf.fileUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "4px",
-                                padding: "6px 12px",
-                                background: "#FFFFFF",
-                                border: "1px solid #D5CEBF",
-                                borderRadius: "6px",
-                                color: "#1E1E1E",
-                                fontWeight: 700,
-                                fontSize: "0.78rem",
-                                textDecoration: "none",
-                              }}
-                            >
-                              <ExternalLink size={12} />
-                              <span>Open in New Tab</span>
-                            </a>
-
+                          {/* Reorder and Delete Actions */}
+                          <div className="flex items-center gap-1 shrink-0">
                             <button
-                              onClick={() => {
-                                setQrModal({
-                                  isOpen: true,
-                                  title: pdf.title,
-                                  brand: selectedFolder.brandName,
-                                  url: pdf.fileUrl,
-                                });
-                                setCopiedQr(false);
-                              }}
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "4px",
-                                padding: "6px 12px",
-                                background: "#81663F",
-                                border: "1px solid #81663F",
-                                borderRadius: "6px",
-                                color: "#FFFFFF",
-                                fontWeight: 700,
-                                fontSize: "0.78rem",
-                                cursor: "pointer",
-                              }}
+                              type="button"
+                              disabled={fIdx === 0}
+                              onClick={() => handleMovePdf(fIdx, "up")}
+                              className="p-1.5 rounded-lg border border-[#D5CEBF] bg-white hover:bg-[#FAF8F5] disabled:opacity-30 text-[#4A453E]"
+                              title="Move up"
                             >
-                              <QrCode size={12} />
-                              <span>QR Code</span>
+                              <ArrowUp className="w-3.5 h-3.5" />
                             </button>
-
                             <button
-                              onClick={() => handleOpenEditModal(selectedFolder.id, pdf)}
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "4px",
-                                padding: "6px 12px",
-                                background: "#FFFFFF",
-                                border: "1px solid #D5CEBF",
-                                borderRadius: "6px",
-                                color: "#81663F",
-                                fontWeight: 700,
-                                fontSize: "0.78rem",
-                                cursor: "pointer",
-                              }}
+                              type="button"
+                              disabled={fIdx === (editingBrand.files?.length || 0) - 1}
+                              onClick={() => handleMovePdf(fIdx, "down")}
+                              className="p-1.5 rounded-lg border border-[#D5CEBF] bg-white hover:bg-[#FAF8F5] disabled:opacity-30 text-[#4A453E]"
+                              title="Move down"
                             >
-                              <Edit size={12} />
-                              <span>Edit</span>
+                              <ArrowDown className="w-3.5 h-3.5" />
                             </button>
-
                             <button
-                              onClick={() => handleDeletePdf(selectedFolder.id, pdf.id, pdf.title)}
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "4px",
-                                padding: "6px 12px",
-                                background: "#fee2e2",
-                                border: "1px solid #fca5a5",
-                                borderRadius: "6px",
-                                color: "#b91c1c",
-                                fontWeight: 700,
-                                fontSize: "0.78rem",
-                                cursor: "pointer",
-                              }}
+                              type="button"
+                              onClick={() => handleDeletePdf(fIdx)}
+                              className="p-1.5 rounded-lg border border-red-200 bg-white hover:bg-red-50 text-red-600 ml-1"
+                              title="Delete PDF"
                             >
-                              <Trash2 size={12} />
-                              <span>Delete</span>
+                              <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div style={{ padding: "4rem", textAlign: "center", color: "#81663F", fontWeight: 700 }}>
-                Select a brand folder on the left.
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
-
-      {/* Upload / Add / Edit PDF Modal */}
-      {showModal && editingPdf && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0, 0, 0, 0.6)",
-            backdropFilter: "blur(4px)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "1rem",
-          }}
-        >
-          <div
-            style={{
-              background: "#FFFFFF",
-              borderRadius: "16px",
-              width: "100%",
-              maxWidth: "600px",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              padding: "2rem",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
-              border: "1px solid #E2DCD2",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.4rem", borderBottom: "1px solid #EAE4D8", paddingBottom: "0.8rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "rgba(129, 102, 63, 0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <FileText size={18} color="#81663F" />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: "1.25rem", fontWeight: 900, color: "#1E1E1E", margin: 0 }}>
-                    {editingPdf.id ? "Edit Brand PDF" : "Add Brand PDF Document"}
-                  </h3>
-                  <p style={{ fontSize: "0.8rem", color: "#5E5852", margin: "2px 0 0" }}>
-                    Paste a Firebase Storage URL or upload directly.
-                  </p>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <button
-                onClick={() => setShowModal(false)}
-                style={{ background: "none", border: "none", fontSize: "1.2rem", color: "#8A8275", cursor: "pointer", fontWeight: 700 }}
-              >
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleSavePdf} style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-              {/* Target Brand Selection */}
-              <div>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 800, color: "#81663F", marginBottom: "0.4rem" }}>
-                  Brand Folder *
-                </label>
-                <select
-                  value={targetBrandId}
-                  onChange={(e) => setTargetBrandId(e.target.value)}
-                  required
-                  style={{
-                    width: "100%",
-                    padding: "0.65rem",
-                    borderRadius: "8px",
-                    border: "1px solid #D5CEBF",
-                    background: "#FAF8F5",
-                    fontSize: "0.88rem",
-                    fontWeight: 700,
-                    color: "#1E1E1E",
-                  }}
+              {/* Modal Footer */}
+              <div className="px-6 py-4 border-t border-[#E4DCCE] bg-[#FAF8F5] flex items-center justify-between">
+                <Link
+                  href={`/downloads/${editingBrand.slug}`}
+                  target="_blank"
+                  className="text-xs font-semibold text-[#81663F] hover:underline inline-flex items-center gap-1"
                 >
-                  {folders.map((f) => (
-                    <option key={f.id} value={f.id}>
-                      {f.brandName} ({f.brandCategory || "Category"})
-                    </option>
-                  ))}
-                </select>
+                  <span>Test Public Link</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    disabled={savingBrand}
+                    onClick={handleCloseDrawer}
+                    className="px-4 py-2 rounded-xl border border-[#D5CEBF] bg-white hover:bg-[#FAF8F5] text-xs font-semibold text-[#4A453E]"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={savingBrand}
+                    onClick={handleSaveBrand}
+                    className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#81663F] hover:bg-[#684F2E] text-white text-xs font-semibold shadow-sm transition-all"
+                  >
+                    {savingBrand ? (
+                      <>
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Save Changes</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════
+            1-CLICK QR CODE MODAL
+           ══════════════════════════════════════════════════════════ */}
+        {qrModal && qrModal.isOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-[#D5CEBF] p-6 text-center space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[#F0EAE1] text-[#81663F]">
+                  Branded QR Code
+                </span>
+                <button
+                  onClick={() => setQrModal(null)}
+                  className="w-8 h-8 rounded-full hover:bg-[#FAF8F5] flex items-center justify-center text-[#6A6359]"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
 
-              {/* Title */}
               <div>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 800, color: "#81663F", marginBottom: "0.4rem" }}>
-                  Document Title *
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Slide NXT Specification Manual 2026"
-                  value={editingPdf.title || ""}
-                  onChange={(e) => setEditingPdf({ ...editingPdf, title: e.target.value })}
-                  required
-                  style={{
-                    width: "100%",
-                    padding: "0.65rem",
-                    borderRadius: "8px",
-                    border: "1px solid #D5CEBF",
-                    background: "#FAF8F5",
-                    fontSize: "0.88rem",
-                    color: "#1E1E1E",
-                  }}
+                <h3 className="font-serif text-2xl font-bold text-[#1E1E1E]">
+                  {qrModal.brand.name}
+                </h3>
+                <p className="text-xs text-[#8A8275] mt-0.5">
+                  Scan to open the luxury digital showroom
+                </p>
+              </div>
+
+              {/* QR Canvas */}
+              <div className="p-4 bg-white rounded-2xl border border-[#EAE4D9] shadow-inner inline-block mx-auto">
+                <canvas
+                  ref={qrCanvasRef}
+                  className="w-56 h-56 max-w-full rounded-xl"
+                  style={{ width: "224px", height: "224px" }}
                 />
               </div>
 
-              {/* Firebase PDF URL */}
-              <div>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 800, color: "#81663F", marginBottom: "0.4rem" }}>
-                  Firebase PDF URL Link *
-                </label>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <input
-                    type="url"
-                    placeholder="https://firebasestorage.googleapis.com/v0/b/... or /catalogues/..."
-                    value={editingPdf.fileUrl || ""}
-                    onChange={(e) => setEditingPdf({ ...editingPdf, fileUrl: e.target.value })}
-                    required
-                    style={{
-                      flex: 1,
-                      padding: "0.65rem",
-                      borderRadius: "8px",
-                      border: "1px solid #D5CEBF",
-                      background: "#FAF8F5",
-                      fontSize: "0.85rem",
-                      color: "#1E1E1E",
-                    }}
-                  />
-                  <label
-                    style={{
-                      padding: "0.65rem 1rem",
-                      background: "#FAF8F5",
-                      border: "1px solid #D5CEBF",
-                      borderRadius: "8px",
-                      cursor: uploadingFile ? "wait" : "pointer",
-                      fontSize: "0.82rem",
-                      fontWeight: 800,
-                      color: "#81663F",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <Upload size={14} />
-                    <span>{uploadingFile ? "Uploading..." : "Upload File"}</span>
-                    <input type="file" accept="application/pdf" onChange={handleFileUpload} style={{ display: "none" }} disabled={uploadingFile} />
-                  </label>
-                </div>
-                <small style={{ color: "#8A8275", fontSize: "0.72rem", marginTop: "4px", display: "block" }}>
-                  Paste any Firebase Storage download URL, Google Cloud link, or upload directly.
-                </small>
-              </div>
-
-              {/* Cover Image URL / Page 1 Cover */}
-              <div>
-                <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 800, color: "#81663F", marginBottom: "0.4rem" }}>
-                  Page 1 Cover Thumbnail URL (Optional)
-                </label>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <input
-                    type="text"
-                    placeholder="Auto-resolved from catalog or paste thumbnail image URL"
-                    value={editingPdf.coverImage || ""}
-                    onChange={(e) => setEditingPdf({ ...editingPdf, coverImage: e.target.value })}
-                    style={{
-                      flex: 1,
-                      padding: "0.65rem",
-                      borderRadius: "8px",
-                      border: "1px solid #D5CEBF",
-                      background: "#FAF8F5",
-                      fontSize: "0.85rem",
-                      color: "#1E1E1E",
-                    }}
-                  />
-                  <label
-                    style={{
-                      padding: "0.65rem 1rem",
-                      background: "#FAF8F5",
-                      border: "1px solid #D5CEBF",
-                      borderRadius: "8px",
-                      cursor: uploadingFile ? "wait" : "pointer",
-                      fontSize: "0.82rem",
-                      fontWeight: 800,
-                      color: "#81663F",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <Upload size={14} />
-                    <span>Upload Cover</span>
-                    <input type="file" accept="image/*" onChange={handleCoverUpload} style={{ display: "none" }} disabled={uploadingFile} />
-                  </label>
-                </div>
-                <small style={{ color: "#8A8275", fontSize: "0.72rem", marginTop: "4px", display: "block" }}>
-                  If left blank, the system automatically resolves the official brand catalog Page 1 cover thumbnail.
-                </small>
-              </div>
-
-              {/* Category & File Size Grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-                <div>
-                  <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 800, color: "#81663F", marginBottom: "0.4rem" }}>
-                    Category / Tag
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Master Catalog, Finishes"
-                    value={editingPdf.category || ""}
-                    onChange={(e) => setEditingPdf({ ...editingPdf, category: e.target.value })}
-                    style={{
-                      width: "100%",
-                      padding: "0.65rem",
-                      borderRadius: "8px",
-                      border: "1px solid #D5CEBF",
-                      background: "#FAF8F5",
-                      fontSize: "0.88rem",
-                      color: "#1E1E1E",
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 800, color: "#81663F", marginBottom: "0.4rem" }}>
-                    File Size
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 12.4 MB"
-                    value={editingPdf.fileSize || ""}
-                    onChange={(e) => setEditingPdf({ ...editingPdf, fileSize: e.target.value })}
-                    style={{
-                      width: "100%",
-                      padding: "0.65rem",
-                      borderRadius: "8px",
-                      border: "1px solid #D5CEBF",
-                      background: "#FAF8F5",
-                      fontSize: "0.88rem",
-                      color: "#1E1E1E",
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Modal Buttons */}
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "1rem", borderTop: "1px solid #EAE4D8", paddingTop: "1rem" }}>
+              {/* Target URL */}
+              <div className="p-2.5 bg-[#FAF8F5] rounded-xl border border-[#E4DCCE] flex items-center justify-between gap-2">
+                <span className="text-xs font-mono text-[#81663F] truncate flex-1 text-left">
+                  {qrModal.url}
+                </span>
                 <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  style={{
-                    padding: "0.65rem 1.3rem",
-                    background: "#FAF8F5",
-                    border: "1px solid #D5CEBF",
-                    borderRadius: "8px",
-                    color: "#1E1E1E",
-                    fontWeight: 700,
-                    fontSize: "0.85rem",
-                    cursor: "pointer",
-                  }}
+                  onClick={handleCopyUrl}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-[#D5CEBF] hover:bg-[#FAF8F5] text-xs font-medium text-[#4A453E] shrink-0"
                 >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={saving}
-                  style={{
-                    padding: "0.65rem 1.6rem",
-                    background: "#81663F",
-                    color: "#FFFFFF",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontWeight: 800,
-                    fontSize: "0.85rem",
-                    cursor: saving ? "wait" : "pointer",
-                    boxShadow: "0 4px 12px rgba(129,102,63,0.25)",
-                  }}
-                >
-                  {saving ? "Saving to Firebase..." : "Save PDF to Brand"}
+                  {copiedQr ? (
+                    <>
+                      <Check className="w-3 h-3 text-green-600" />
+                      <span className="text-green-600">Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>Copy</span>
+                    </>
+                  )}
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
 
-      {/* Direct QR Code Generator Modal */}
-      {qrModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 99999,
-            background: "rgba(0,0,0,0.65)",
-            backdropFilter: "blur(6px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "1.5rem",
-          }}
-          onClick={() => setQrModal(null)}
-        >
-          <div
-            style={{
-              background: "#FFFFFF",
-              borderRadius: "16px",
-              padding: "2rem 2.4rem",
-              maxWidth: "480px",
-              width: "100%",
-              boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
-              border: "1px solid #D5CEBF",
-              textAlign: "center",
-              position: "relative",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setQrModal(null)}
-              style={{
-                position: "absolute",
-                top: "1rem",
-                right: "1rem",
-                background: "#FAF8F5",
-                border: "1px solid #D5CEBF",
-                borderRadius: "50%",
-                width: "32px",
-                height: "32px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                color: "#1E1E1E",
-              }}
-            >
-              <X size={16} />
-            </button>
+              {/* Action Buttons */}
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <button
+                  onClick={() => {
+                    if (qrCanvasRef.current) {
+                      downloadQrCanvas(
+                        qrCanvasRef.current,
+                        `Aaren_Studio_${qrModal.brand.slug}_QR.png`
+                      );
+                      showToast("Downloaded high-res PNG!");
+                    }
+                  }}
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#81663F] hover:bg-[#684F2E] text-white text-xs font-semibold shadow-sm transition-all"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download PNG</span>
+                </button>
 
-            <span style={{ fontSize: "0.8rem", fontWeight: 800, color: "#81663F", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              {qrModal.brand}
-            </span>
-            <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#1E1E1E", margin: "0.4rem 0 1.2rem", lineHeight: 1.3 }}>
-              {qrModal.title}
-            </h3>
-
-            {/* QR Code Canvas */}
-            <div
-              style={{
-                background: "#FAF8F5",
-                padding: "1rem",
-                borderRadius: "12px",
-                border: "1px solid #E2DCD2",
-                display: "inline-block",
-                boxShadow: "0 4px 14px rgba(0,0,0,0.06)",
-              }}
-            >
-              <canvas
-                ref={qrCanvasRef}
-                style={{ width: "240px", height: "240px", display: "block", borderRadius: "8px" }}
-              />
-            </div>
-
-            {/* Direct Link Info */}
-            <div style={{ marginTop: "1rem", background: "#FAF8F5", padding: "0.75rem 1rem", borderRadius: "8px", border: "1px solid #E2DCD2", textAlign: "left" }}>
-              <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "#81663F", textTransform: "uppercase", marginBottom: "4px" }}>
-                Direct PDF Access (Zero Warning Screens):
-              </div>
-              <div style={{ fontSize: "0.75rem", color: "#1E1E1E", wordBreak: "break-all", fontFamily: "monospace", maxHeight: "50px", overflowY: "auto" }}>
-                {qrModal.url}
+                <Link
+                  href={`/admin/qr-code?url=${encodeURIComponent(qrModal.url)}&brand=${encodeURIComponent(
+                    qrModal.brand.name
+                  )}`}
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-[#D5CEBF] bg-white hover:bg-[#FAF8F5] text-xs font-semibold text-[#4A453E] transition-all"
+                >
+                  <QrCode className="w-3.5 h-3.5 text-[#81663F]" />
+                  <span>Full QR Studio</span>
+                </Link>
               </div>
             </div>
-
-            {/* Actions */}
-            <div style={{ display: "flex", gap: "10px", marginTop: "1.2rem" }}>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(qrModal.url);
-                  setCopiedQr(true);
-                  setTimeout(() => setCopiedQr(false), 2000);
-                }}
-                style={{
-                  flex: 1,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "6px",
-                  padding: "0.75rem",
-                  background: copiedQr ? "#15803d" : "#FAF8F5",
-                  border: "1px solid #D5CEBF",
-                  color: copiedQr ? "#FFFFFF" : "#1E1E1E",
-                  borderRadius: "8px",
-                  fontWeight: 700,
-                  fontSize: "0.85rem",
-                  cursor: "pointer",
-                }}
-              >
-                {copiedQr ? <Check size={14} /> : <Copy size={14} />}
-                <span>{copiedQr ? "Copied!" : "Copy URL"}</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  if (qrCanvasRef.current) {
-                    downloadQrCanvas(qrCanvasRef.current, `${qrModal.brand}_${qrModal.title}_QR`);
-                  }
-                }}
-                style={{
-                  flex: 1,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "6px",
-                  padding: "0.75rem",
-                  background: "#1E1E1E",
-                  color: "#FFFFFF",
-                  borderRadius: "8px",
-                  fontWeight: 700,
-                  fontSize: "0.85rem",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                <Download size={14} />
-                <span>Download PNG</span>
-              </button>
-            </div>
-
-            <div style={{ marginTop: "1rem", paddingTop: "0.8rem", borderTop: "1px solid #F0ECE4" }}>
-              <Link
-                href="/admin/qr-generator"
-                style={{
-                  fontSize: "0.8rem",
-                  fontWeight: 700,
-                  color: "#81663F",
-                  textDecoration: "underline",
-                }}
-              >
-                Customize colors &amp; logos in QR Generator Studio →
-              </Link>
-            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
-
-export default function AdminDownloadsPage() {
-  return (
-    <Suspense
-      fallback={
-        <div style={{ background: "#FAF8F5", color: "#81663F", minHeight: "100vh", padding: "4rem", textAlign: "center", fontWeight: 800 }}>
-          Loading Downloads Repository...
-        </div>
-      }
-    >
-      <AdminDownloadsContent />
-    </Suspense>
-  );
-}
-

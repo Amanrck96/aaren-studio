@@ -30169,5 +30169,1213 @@
     "services": []
   },
   "qrCodes": [],
-  "introPages": []
+  "introPages": [],
+  "brandFolders": [
+    {
+      "id": "bf-waltz-by-jb-glass",
+      "name": "Waltz by JB Glass",
+      "slug": "waltz-by-jb-glass",
+      "description": "JB Glass is an innovation- and technology-driven brand that has transformed how glass is viewed, used and imagined in architecture, interior spaces and lifestyle products. The company focuses on technology, innovation and developing advanced glass products and solutions for architects, interior designers and product designers across India.",
+      "bannerImageUrl": "/brands/brand_2_1.png",
+      "files": [
+        {
+          "name": "Slide NXT",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787685641179_SlideNXT.pdf?alt=media&token=729b38ec-7418-48d5-bbe3-9f27cb7efaf3",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Swing NXT",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787685693585_SwingNXT.pdf?alt=media&token=f761148f-86bc-4104-975c-0c2f46c2b333",
+          "order": 2,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Glide NXT",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787686004806_GlideNXT.pdf?alt=media&token=acd692ad-b2bc-42d1-95ee-e4aad6e77fee",
+          "order": 3,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Close NXT",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786243118121_CloseNXT.pdf?alt=media&token=06d8863b-29e9-45b6-b535-ac0fc35b0fce",
+          "order": 4,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Wallways",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787686039213_WALLWAYS.pdf?alt=media&token=d2878186-5458-41b9-be85-69cee0f7c9f0",
+          "order": 5,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-slashform",
+      "name": "Slashform",
+      "slug": "slashform",
+      "description": "Slashform is a premium interior and furniture brand specializing in custom kitchens, wardrobes and bespoke living spaces, combining craftsmanship, high-precision manufacturing and modern engineering.",
+      "bannerImageUrl": "/brands/brand_1_1.png",
+      "files": [
+        {
+          "name": "Kitchen",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787689568111_Slashform_Kitchen.pdf?alt=media&token=817ebe77-8b0d-49e8-ba55-0bbb25544676",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Wardrobe",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787689590088_Slasform_Wardrobe.pdf?alt=media&token=e8163e76-f369-4c56-bc1f-7e4bd5790a19",
+          "order": 2,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-newtechwood",
+      "name": "NewTechWood",
+      "slug": "newtechwood",
+      "description": "NewTechWood is a composite decking manufacturer offering composite decking, siding, cladding, railings, fencing and other outdoor-living products. Its products feature UltraShield technology, designed to protect against rotting, fading, staining and scratching.",
+      "bannerImageUrl": "/brands/brand_3_1.png",
+      "files": [
+        {
+          "name": "NewtechWood",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705501279_NTW_product_catalog-V20250314_compressed__1_.pdf?alt=media&token=ed846b60-80c6-4367-8b2f-95258c22cf7c",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "NewtechWood Pro",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705531531_NTW-FULL_CATALOG.pdf?alt=media&token=0a3be05e-b489-44e4-8b96-064cd909f5b9",
+          "order": 2,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-formica",
+      "name": "Formica",
+      "slug": "formica",
+      "description": "Formica is an iconic surface-material brand closely associated with the invention of the original High Pressure Laminate (HPL). Today, Formica Group provides designed surfacing solutions for residential and commercial applications worldwide.",
+      "bannerImageUrl": "/brands/brand_4_1.png",
+      "files": [
+        {
+          "name": "Formica Global",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705671777_Formica-Global-Catalogue-V2.pdf?alt=media&token=b0aa3a3b-bfa3-436d-9263-e1b63ac24e34",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Fenix",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705685140_FENIX-India-E-brochure.pdf_20240430_191334_0000.pdf?alt=media&token=c287adc0-5c1c-484b-8ff4-9a08432c3619",
+          "order": 2,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Formica 4X4",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786510124749_Formica_Group_presents_4x4_brochure_EN.pdf?alt=media&token=954c4649-db3b-4441-9af4-b69616ff3c4d",
+          "order": 3,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "VIS",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705774608_arpa-vis-brochure_250122.pdf?alt=media&token=9cc9fef0-15cf-412f-bb10-e07834ee9e51",
+          "order": 4,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Cora",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705792040_Cora-Printed-Brochure-Arrangement-EN-TH25.pdf?alt=media&token=6af3245c-841c-48f6-a78b-3b6d7dc35d96",
+          "order": 5,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Decometal",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705817094_Decometal-Catalogue-Final.pdf?alt=media&token=1a3b2883-d39a-46fd-860d-8f87d020a21e",
+          "order": 6,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-loco",
+      "name": "Loco",
+      "slug": "loco",
+      "description": "LOCO Design is a multidisciplinary design brand inspired by a heritage of fine craftsmanship and innovation. Its work spans design, craft and enterprise, creating contemporary works and solutions.\nBrand Focus: The brand combines contemporary design with traditional craftsmanship, creating distinctive products and spaces across interior, architectural and lifestyle applications.",
+      "bannerImageUrl": "/brands/brand_5_1.png",
+      "files": []
+    },
+    {
+      "id": "bf-falper",
+      "name": "Falper",
+      "slug": "falper",
+      "description": "Falper is an Italian luxury design brand creating high-end bathroom and kitchen furnishings. Its collections combine iconic design, refined materials, advanced technology and skilled craftsmanship.",
+      "bannerImageUrl": "/brands/brand_6_1.png",
+      "files": [
+        {
+          "name": "7.0",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705931291_Catalogo-7.0-Falper.pdf?alt=media&token=e5598fb2-e03b-4116-af69-ec27d54c38f5",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Acquifero",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705953659_Catalogo-Acquifero-1.pdf?alt=media&token=d2f382f6-7535-4d06-aa48-8b2621a54eb4",
+          "order": 2,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Cilindro",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705972222_Catalogo-Cilindro.pdf?alt=media&token=eb60bdcf-4450-4ef2-9818-effc1c09097b",
+          "order": 3,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Edge-Glass-Metal-Wood",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787706064587_Catalogo-Edge-Glass-Metal-Wood.pdf?alt=media&token=b3091945-32be-4f71-adb2-682c243bb1ee",
+          "order": 4,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "lavabi-da-appoggio-countertop-basins",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787718800839_Catalogo-lavabi-da-appoggio-countertop-basins.pdf?alt=media&token=0647e8a6-0d64-4ff1-adcf-0136ee00c850",
+          "order": 5,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Lavabi-da-parete-Wall-mounted-basins",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787718820117_Catalogo-Lavabi-da-parete-Wall-mounted-basins.pdf?alt=media&token=8707660c-b4de-4dd0-83ce-2a03372bbc24",
+          "order": 6,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Lavabi-freestanding-washbasins",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787718838719_Catalogo-Lavabi-freestanding-Freestanding-washbasins.pdf?alt=media&token=b82d5250-9075-47d8-b3ca-a55f77e158ac",
+          "order": 7,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "lavamani-wash-hand-basins",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719108240_Catalogo-lavamani-wash-hand-basins.pdf?alt=media&token=bccc04a3-850f-494f-8f9a-41bea426a583",
+          "order": 8,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Piani-Integrati-in-Vetro",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719137263_Catalogo-Piani-Integrati-in-Vetro.pdf?alt=media&token=54db818d-19d7-4bf7-bf98-89f392b34bef",
+          "order": 9,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-fima-carlo-frattini",
+      "name": "Fima Carlo Frattini",
+      "slug": "fima-carlo-frattini",
+      "description": "FIMA Carlo Frattini is an Italian luxury fittings brand known for combining Italian design, technical precision, craftsmanship and innovation in premium bathroom and kitchen solutions.",
+      "bannerImageUrl": "/brands/brand_7_1.png",
+      "files": [
+        {
+          "name": "aesthetic",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719239783_2026_aesthetic_ISSUE05_web.pdf?alt=media&token=82d837fb-caf8-4a85-b942-39dbccb41363",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Slide",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719261665_MAGAZINE_SLIDE_2026_.pdf?alt=media&token=7d646d65-b59d-41b1-9156-bff0bb345031",
+          "order": 2,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Park Lane",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719278272_PARK-LANE-Magazine-2025.pdf?alt=media&token=4c0399e8-6aa9-46d8-91a4-a82fdb455199",
+          "order": 3,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "SO",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719295489_FIMANEWS_SO_2024.pdf?alt=media&token=7cac7e56-0755-476c-a81b-4e1d6a6345fc",
+          "order": 4,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-inkiostro-bianco",
+      "name": "Inkiostro Bianco",
+      "slug": "inkiostro-bianco",
+      "description": "Inkiostro Bianco is an Italian creative brand specializing in artistic wallpaper, wooden wallcoverings and designer rugs, transforming interiors through creative and innovative surface solutions.",
+      "bannerImageUrl": "/brands/brand_8_1.png",
+      "files": [
+        {
+          "name": "Inkiostro Bianco Specification Catalog",
+          "url": "/catalogues/Inkiastro Bianco/CATALOGO_MATERIAPRIMA_2026_2a.pdf",
+          "order": 1,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-mafi",
+      "name": "Mafi",
+      "slug": "mafi",
+      "description": "mafi specialises in high-quality, 100% ecological natural wood floors and coordinated interior solutions, combining traditional craftsmanship with technical innovation.",
+      "bannerImageUrl": "/brands/brand_9_1.png",
+      "files": [
+        {
+          "name": "Mafi",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719454300_mafi_Catalog.pdf?alt=media&token=7ccb5d50-7217-400f-9fcd-cf5524760363",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Terrasse_Faltblat",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787719504953_Terrasse_Faltblat_210x210mm_EN.pdf?alt=media&token=ce93f5bb-8742-41c1-9c3e-532afa62dcb9",
+          "order": 2,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-mirage",
+      "name": "Mirage",
+      "slug": "mirage",
+      "description": "Mirage is an Italian ceramics brand specialising in porcelain stoneware flooring and wall coverings for residential, commercial and public spaces. The brand combines design, research, technological innovation and high technical performance.",
+      "bannerImageUrl": "/brands/brand_10_1.png",
+      "files": [
+        {
+          "name": "elysian",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722213021_catalogue-elysian-pdf.pdf?alt=media&token=ffbaef8f-b44c-48dd-8ea8-8041bda1c29c",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "elysian-travertini",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722242752_catalogue-elysian-travertini-pdf.pdf?alt=media&token=56fc8b6f-724b-4368-aeb8-c1bcc35348d9",
+          "order": 2,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "clay",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722352726_catalogue-clay-pdf.pdf?alt=media&token=5af306bd-d87d-4c19-b02b-423f3b06d2a5",
+          "order": 3,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "glocal",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722402344_catalogue-glocal-pdf.pdf?alt=media&token=15e60683-4239-415c-b5d4-d8265084f04b",
+          "order": 4,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "indomita",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722451750_catalogue-indomita-pdf.pdf?alt=media&token=798d277a-98c0-4fd1-bf5e-18c44b38d0dc",
+          "order": 5,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "izumi",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722487983_catalogue-izumi-pdf.pdf?alt=media&token=63c8d1b1-0377-4988-a456-a7636132fc8d",
+          "order": 6,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "jewels",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722514677_catalogue-jewels-2-0-pdf.pdf?alt=media&token=522d6f4d-2cbb-469e-bf66-52491ca2ddce",
+          "order": 7,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "jurupa",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787722603990_catalogue-jurupa-pdf.pdf?alt=media&token=ad62b887-4d96-40b2-a18a-dd4b05506fcd",
+          "order": 8,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "kao",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724472326_catalogue-kao-pdf.pdf?alt=media&token=493dcdb3-7fbd-4a5e-8ce6-fec120c10b8f",
+          "order": 9,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "lemmy",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724509871_catalogue-lemmy-pdf.pdf?alt=media&token=e8831948-9bc5-4dcc-9f84-f1f8f7438f0f",
+          "order": 10,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "mand",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724565396_catalogue-mand-pdf.pdf?alt=media&token=dd6ecc21-1676-498e-9272-e3ab66570562",
+          "order": 11,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "motley",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724686835_catalogue-motley-pdf.pdf?alt=media&token=b4e9362a-0869-461b-bfb6-38925f2453fa",
+          "order": 12,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "nagomi",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724785148_catalogue-nagomi-pdf.pdf?alt=media&token=0d58728e-fb74-4abf-a953-0e6b2cd201c0",
+          "order": 13,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "na-me",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724870193_catalogue-na-me-pdf.pdf?alt=media&token=bf4ef773-242f-4729-8258-19b2275fbff3",
+          "order": 14,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "nau",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724921918_catalogue-nau-pdf.pdf?alt=media&token=bd64b6a2-ab40-443a-9ce0-ca8174c9d87c",
+          "order": 15,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "norr",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787724950179_catalogue-norr-pdf.pdf?alt=media&token=8313d1ad-7a3c-4a46-b33d-a1ab3d658922",
+          "order": 16,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "oltrenero",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725013722_catalogue-oltrenero-pdf.pdf?alt=media&token=1f86b4cf-defb-42fc-90ee-3fdec4b97268",
+          "order": 17,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "onyce",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725040160_catalogue-onyce-pdf.pdf?alt=media&token=379f6c79-9177-4d5b-bb69-b68c0e106a2d",
+          "order": 18,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "oudh",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725114897_catalogue-oudh-pdf.pdf?alt=media&token=bcec1750-f141-4194-8e0b-2a3031e44599",
+          "order": 19,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "papier",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725172568_catalogue-papier-pdf.pdf?alt=media&token=f024bd2f-e6ef-4871-a95a-87bb90649e7e",
+          "order": 20,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "plumage",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725210432_catalogue-plumage-pdf.pdf?alt=media&token=85329fcb-2d2b-4ad8-925d-f2e970d25e86",
+          "order": 21,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "quarziti",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725265410_catalogue-quarziti-2-0-pdf.pdf?alt=media&token=d0bee196-ab01-4166-b457-c34ef65663e5",
+          "order": 22,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "reflet",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725284288_catalogue-reflet-pdf.pdf?alt=media&token=85d87478-10aa-4021-9969-0601e152f387",
+          "order": 23,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "signature",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725318931_catalogue-signature-pdf.pdf?alt=media&token=ae1aa6cb-f46e-48d4-ae1d-2f1fe7cf4f98",
+          "order": 24,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "silverlake",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787725338716_catalogue-silverlake-pdf.pdf?alt=media&token=1778012e-647b-4219-a8e9-0d767c76a0b7",
+          "order": 25,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-freedom-screens",
+      "name": "Freedom Screens",
+      "slug": "freedom-screens",
+      "description": "Freedom Screens is a specialist in retrofit retractable screening solutions, offering balcony, privacy, insect, sun and rain-protection screens. The brand combines style, quality and intelligent innovation in its screening systems.",
+      "bannerImageUrl": "/brands/brand_freedom_screens.jpg",
+      "files": [
+        {
+          "name": "Freedom Screens",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787726279919_Freedom_Screens_-_SOFTCOPY_2026.pdf?alt=media&token=bee5965b-ed44-4ff6-b6fc-769f0bd5bc0b",
+          "order": 1,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-peelply",
+      "name": "Peelply",
+      "slug": "peelply",
+      "description": "Engineered premium plywood and veneers.",
+      "bannerImageUrl": "/brands/peelply_banner.jpg",
+      "files": [
+        {
+          "name": "Plywood",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787705119917_ALCHEMIST_web-1.pdf?alt=media&token=07b7bcc4-663b-4efa-9ff2-9c4a1344e4af",
+          "order": 1,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-inclass",
+      "name": "Inclass",
+      "slug": "inclass",
+      "description": "Contemporary Spanish designer lifestyle furniture.",
+      "bannerImageUrl": "/brands/brand_3_1.png",
+      "files": []
+    },
+    {
+      "id": "bf-wow",
+      "name": "WOW",
+      "slug": "wow",
+      "description": "WOW Design is a Spanish tile design studio specializing in unique, high-value ceramic tiles for architecture and interior design. It focuses particularly on small-format tiles, distinctive shapes, colours, textures and finishes.",
+      "bannerImageUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786952315481_27.jpg?alt=media&token=b335418d-3965-41ab-b97e-6800d98a5f03",
+      "files": [
+        {
+          "name": "3D BARS",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787728977747_3DBARS-CAT_low.pdf?alt=media&token=17d7895a-9dc2-465d-898a-ead12876af91",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "ABBEY_STONE",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787728993958_ABBEY_STONE_low.pdf?alt=media&token=4c3e8de6-60d4-4bbd-b9a7-9dad4832bf6c",
+          "order": 2,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "ALCHEMIST",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729040733_ALCHEMIST_web-1.pdf?alt=media&token=9a7db08b-589a-41b3-b930-5a5e40d047d2",
+          "order": 3,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "AQUA",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729069116_AQUA_web_low-1.pdf?alt=media&token=d1ea08df-af1b-44eb-a142-7b0cdf512a8e",
+          "order": 4,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "AQUARELLE",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729086676_AQUARELLE.pdf?alt=media&token=fc06a72d-3a4b-417f-b5c2-3dcff1ea028f",
+          "order": 5,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "BITS",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729110670_BITS.pdf?alt=media&token=24fbcb0f-a3e0-4860-a95f-f8862e77a7df",
+          "order": 6,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Casablanca",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729126375_Casablanca_web.pdf?alt=media&token=3b6c1070-3295-4cc5-b548-c7c41676d2c4",
+          "order": 7,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Casbah",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729147064_Casbah.pdf?alt=media&token=6036044e-a4de-4668-8150-76290199ca75",
+          "order": 8,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "drops",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729192274_CATALOGO_drops_web.pdf?alt=media&token=c14ea34e-4895-4ca5-9d94-bc9981a5ccc0",
+          "order": 9,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "HEXA_baja",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729211932_CATALOGO_HEXA_baja.pdf?alt=media&token=6756c34d-976c-4c7e-aa7b-21ef98028d14",
+          "order": 10,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "ROOTS",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729234241_CATALOGO_ROOTS.pdf?alt=media&token=467df53d-8a76-462d-b94e-c7c34bf18622",
+          "order": 11,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Solid_baja",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729413870_catalogo_solid_baja.pdf?alt=media&token=ab86e8f4-3f74-48aa-a89f-89892a0dacb2",
+          "order": 12,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "TWIN-PEAKS",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729435903_CATALOGO_TWIN-PEAKS_low.pdf?alt=media&token=3cd4cda1-bd94-4cbe-8715-c9e7f676571a",
+          "order": 13,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "60 Grados",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729456610_catalogo60Grados.pdf?alt=media&token=e164674f-1a0e-4d09-8536-5400ae17f0f2",
+          "order": 14,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Bejmat",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729474154_catalogoBejmat.pdf?alt=media&token=87a88ccd-9de1-4aa2-8a8b-77b9a095c204",
+          "order": 15,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "BOHO-baja",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729860581_catalogo-BOHO-baja.pdf?alt=media&token=5ffb96d2-b768-4235-b87d-12224ed94c09",
+          "order": 16,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Cottage",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729877177_catalogoCottage.pdf?alt=media&token=0041f3f7-8937-4783-9f31-69ac877b3227",
+          "order": 17,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Crafted",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729939606_catalogoCrafted.pdf?alt=media&token=1410e832-0168-49a8-a091-e3ffaecb5e89",
+          "order": 18,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Enso",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787729970538_catalogoEnso.pdf?alt=media&token=012b1fa6-3344-4988-b2aa-fe9e36360b77",
+          "order": 19,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "FAYENZA",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730022691_CATALOGO-FAYENZA.pdf?alt=media&token=1c578e8c-d5f9-4f29-b03a-4e1f8e025feb",
+          "order": 20,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Fez",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730078275_catalogoFez_.pdf?alt=media&token=51df44a9-39bb-45dc-b468-a9e8cda279ff",
+          "order": 21,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Gea",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730134028_catalogoGea.pdf?alt=media&token=3de7d442-cf14-492a-be97-2883d096a8dc",
+          "order": 22,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Grace",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730169131_catalogoGrace-1.pdf?alt=media&token=0840a18d-09e8-415e-a2f0-057996d42298",
+          "order": 23,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Gradient",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730221538_catalogoGradient-1.pdf?alt=media&token=4cd90382-8cc7-40a2-8781-1db1f003e593",
+          "order": 24,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "ICON",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730298857_CATALOGO-ICON-INOUT.pdf?alt=media&token=0cf86b28-1572-465a-a502-795590b1a15e",
+          "order": 25,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "LOVE-AFFAIRS",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730354470_CATALOGO-LOVE-AFFAIRS-web.pdf?alt=media&token=511adfd9-bc23-411c-8f03-45b81ae69840",
+          "order": 26,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Nouvelle-baja",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730379293_Catalogo-Nouvelle-baja.pdf?alt=media&token=754d5be3-7b94-41e9-bb33-b6a18c28fa87",
+          "order": 27,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Pottery",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730398039_catalogoPottery.pdf?alt=media&token=6223757b-46bd-4b22-bdb9-18c8f5e3179e",
+          "order": 28,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "RASTER",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730566416_CATALOGO-RASTER.pdf?alt=media&token=b67d8ea7-2353-45dc-9dae-3402c2c33f95",
+          "order": 29,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "REEF-baja",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730593225_catalogo-REEF-baja.pdf?alt=media&token=3540d8ae-567e-4d1c-8da0-8ec20f1ede53",
+          "order": 30,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Sabil-baja",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730672901_Catalogo-Sabil-baja.pdf?alt=media&token=2291cf1f-713f-461d-b4e4-e6d69b02a76d",
+          "order": 31,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "STRIPES",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730702172_CATALOGO-STRIPES.pdf?alt=media&token=cdb8f6ea-1384-427d-a95c-8817003d455a",
+          "order": 32,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Terre",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730721018_Catalogo-Terre.pdf?alt=media&token=e7e92825-fd9e-4767-85bb-62c6ef08799d",
+          "order": 33,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "TESSERAE",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730746283_CATALOGOTESSERAE__1_.pdf?alt=media&token=52d61dc1-a0be-4b26-84bc-e0ed37988eab",
+          "order": 34,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "TEXITURE",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787730783898_CATALOGO-TEXITURE.pdf?alt=media&token=10e65657-92ee-4254-8ac9-6f8eb375b98e",
+          "order": 35,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Vestige-baja",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735008209_Catalogo-Vestige-baja.pdf?alt=media&token=8c2e09c5-da72-41fb-b199-cb702e3829d7",
+          "order": 36,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "STARDUST",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735044549_CATALOG-STARDUST.pdf?alt=media&token=6496f14b-630d-46d7-a785-5984fb87d605",
+          "order": 37,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "NOTES-baja",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735069551_COLOUR-NOTES-baja-1.pdf?alt=media&token=a18496a1-9665-44c2-850b-4d53a4333563",
+          "order": 38,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "CROSS-CUT-CAT",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735087251_CROSS-CUT-CAT_low-1.pdf?alt=media&token=00c44cf9-05e2-4c78-a4f9-13bb557b5c06",
+          "order": 39,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "FACES",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735113161_FACES.pdf?alt=media&token=10d56155-a1dd-427b-bf37-6100b5c0e9a8",
+          "order": 40,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "GLOW",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735135962_GLOW_web.pdf?alt=media&token=c206ce87-327b-44cc-8738-48bc4303ba6a",
+          "order": 41,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "HALO-CAT",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735156900_HALO-CAT.pdf?alt=media&token=c29239d6-90b1-4c68-a2ef-20e6fdd03b6a",
+          "order": 42,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "HAMMER",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735211308_HAMMER.pdf?alt=media&token=8a6843b9-7631-4ace-8b76-66ece2351010",
+          "order": 43,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "LONDON-CALLING",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735243031_LONDON-CALLING.pdf?alt=media&token=48788d6f-48e7-4c35-a837-bb9eaab36bf3",
+          "order": 44,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "MARBLE-web-baja",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735275460_MARBLE-web-baja.pdf?alt=media&token=97deec56-7e5e-4874-8cb5-d26b050acd38",
+          "order": 45,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "MELANGE-CAT",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735394470_MELANGE-CAT-WEB_low.pdf?alt=media&token=10d5438e-108b-432e-8c07-792db31dc405",
+          "order": 46,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "MICARE-CAT",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735423104_MICARE-CAT_WEB.pdf?alt=media&token=b3f13e0c-7d5c-443e-bc0a-13d773038e8d",
+          "order": 47,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "POTTERS-baja",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735440238_POTTERS-baja-2.pdf?alt=media&token=57b77463-b36d-4b7f-8f48-6f64758e0bbb",
+          "order": 48,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Rebels",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735467287_Rebels-Catalog.pdf?alt=media&token=1845f8c2-2ebe-40f6-b0d3-c81399343018",
+          "order": 49,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Skin",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735490203_Skin.pdf?alt=media&token=773e19fa-045c-4665-b996-a44cd93fbed2",
+          "order": 50,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Spike-Bars",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735521880_Spike-Bars_web_low.pdf?alt=media&token=fc58819c-0074-4ede-a1d5-3ea4e142a35c",
+          "order": 51,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "SUKABUMI",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735541630_SUKABUMI-web-baja.pdf?alt=media&token=5ac16ba4-3864-4045-bfd9-15ff74be3648",
+          "order": 52,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "SWEET-BARS",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735562123_SWEET-BARS-baja-1.pdf?alt=media&token=0eefec4b-3f06-43da-9b49-7d3d281d87c5",
+          "order": 53,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "TRENCADIS",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735590004_TRENCADIS_web.pdf?alt=media&token=d4c1912e-caae-4ddf-be2b-da8f7c7d94a6",
+          "order": 54,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Twister",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735637469_Twister_.pdf?alt=media&token=d2f6a384-61ed-4e45-bc96-58f468a4a796",
+          "order": 55,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "yoko",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735653238_yoko_web_baja.pdf?alt=media&token=fe68e013-71e6-4160-8f5e-079f129fe40a",
+          "order": 56,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-iww",
+      "name": "IWW",
+      "slug": "iww",
+      "description": "IW is a Spanish architectural water systems brand focused on design, engineering and material integrity. It develops integrated water systems that treat water as an architectural element within bathrooms and wellness spaces.",
+      "bannerImageUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786952351549_28.jpg?alt=media&token=6d902bfd-22dc-46b3-97bc-3c4bfd0445ed",
+      "files": [
+        {
+          "name": "Aeon",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735787665_IW_Catalogue_Aeon_2025-2.pdf?alt=media&token=28530437-1e15-46bc-93f0-3884a0c2cb31",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "ARC",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735809821_IW_Catalogue_ARC_2025.pdf?alt=media&token=3c1bb832-f935-41cb-9096-061af433d463",
+          "order": 2,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "316 Steel",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735843246_IW_Catalogue_316Steel_2026.pdf?alt=media&token=1ab93dd9-b9f4-483e-ac3e-c0747891ae64",
+          "order": 3,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Icon",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735887423_IW_Catalogue_ICON_2024.pdf?alt=media&token=f85f06cf-904f-4259-a137-e384d9c16563",
+          "order": 4,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Cuadro",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735910816_IW_CUADRO_2024.pdf?alt=media&token=b47c8ce8-f23c-4502-99c0-dd6b6c761614",
+          "order": 5,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Oscuro",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735928849_IW_OSCURO_2025.pdf?alt=media&token=dee18d26-2642-4372-8f97-1713eb87b561",
+          "order": 6,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Flow",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735966903_IW-FLOW-2025-1.pdf?alt=media&token=6f9710a2-54ac-4c7e-aa7c-00ab0cc657c0",
+          "order": 7,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Outdoor",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787735989348_IW-Outdoor-2025.pdf?alt=media&token=752c1070-24e9-49f3-af1e-002d0290db55",
+          "order": 8,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-living-ceramica",
+      "name": "Living Ceramica",
+      "slug": "living-ceramica",
+      "description": "Livingceramics creates unique ceramic solutions for interior design and architecture, with innovation and design as fundamental pillars of its work. Its portfolio includes porcelain, wall and floor tiles, large-format surfaces, bathroom furniture and washbasins.",
+      "bannerImageUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786952437280_29.jpg?alt=media&token=4b753f58-085b-4f99-a513-574c86e4318b",
+      "files": []
+    },
+    {
+      "id": "bf-florim",
+      "name": "Florim",
+      "slug": "florim",
+      "description": "Florim is an Italian company specialising in porcelain surfaces for architecture and interior design, offering solutions for floors, walls, countertops and furnishings. The brand combines design, technological innovation, quality and sustainability.",
+      "bannerImageUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786952481255_30.jpg?alt=media&token=9b85fe32-3226-481e-be65-a0b9e8168457",
+      "files": [
+        {
+          "name": "FORMATECH",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736758177_Cat__FORMATECH.pdf?alt=media&token=5b50a2bd-5b02-4e15-9862-7356abc2333d",
+          "order": 1,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Artifact",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736778713_Cat_Artifact.pdf?alt=media&token=958db3c8-4c6e-48b8-aec1-f2466987d163",
+          "order": 2,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Atmosphères",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736795810_Cat_Atmosph_res.pdf?alt=media&token=0dc92304-4e15-4335-902b-7bfa031e5848",
+          "order": 3,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Authentic Luxe",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736817930_Cat_Authentic_Luxe.pdf?alt=media&token=1150e088-0644-4bf0-bd19-1e546d54a230",
+          "order": 4,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "B&W_Marble",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736841014_Cat_B_W_Marble.pdf?alt=media&token=95809724-7090-4ff8-b2f7-e9fe37900442",
+          "order": 5,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Biotech",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736940478_Cat_Biotech.pdf?alt=media&token=fd9413ba-9c05-4aae-998b-dc13b41f8206",
+          "order": 6,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Buildtech",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787736974520_Cat_Buildtech.pdf?alt=media&token=56a399be-b26b-468e-a5d4-2e79cc2c78b2",
+          "order": 7,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "CASUAL LIFE",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738203285_Cat_CASUAL_LIFE.pdf?alt=media&token=ea3a32ce-c95e-49fb-bc13-7bdec3907d87",
+          "order": 8,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Coretech",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738227980_Cat_Coretech.pdf?alt=media&token=8397b4b5-3f54-4501-b968-4ac2d4768bb0",
+          "order": 9,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Crayons",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738256540_Cat_Crayons.pdf?alt=media&token=5fd856f7-f02d-4405-ac13-649ab11ad37c",
+          "order": 10,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Earthech",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738287641_Cat_Earthech.pdf?alt=media&token=cc659e96-ee31-4531-a805-54abf762f94a",
+          "order": 11,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Easy Life",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738310108_Cat_Easy_Life.pdf?alt=media&token=a4dc4a5e-7656-41f0-8aae-792c77a0ffaf",
+          "order": 12,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Eccentric Luxe",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738334875_Cat_Eccentric_Luxe.pdf?alt=media&token=6a639c0b-533b-4df8-ac85-6d0f4b4ea38e",
+          "order": 13,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Elemental Stone",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738393144_Cat_Elemental_Stone.pdf?alt=media&token=784b6b26-ca5d-43a1-b343-be2aa1ed4613",
+          "order": 14,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Essential Mood",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738432079_Cat_Essential_Mood.pdf?alt=media&token=0512daf3-4978-4772-bd37-13f0ac69da3f",
+          "order": 15,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Etoile",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738543874_Cat_Etoile.pdf?alt=media&token=6202d22f-8d43-470c-b694-a3ed3e445223",
+          "order": 16,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Flowtech",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738637280_Cat_Flowtech.pdf?alt=media&token=de474cb8-157a-42fb-9ab2-39b05c3ad3b2",
+          "order": 17,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Heritage Luxe",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738659743_Cat_Heritage_Luxe.pdf?alt=media&token=ea9b14fc-b895-4d1d-816c-988066f54202",
+          "order": 18,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Classici",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738686294_Cat_I_Classici.pdf?alt=media&token=20d649fd-4809-4424-9521-ad4193525f4b",
+          "order": 19,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "filati",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738708023_Cat_I_filati.pdf?alt=media&token=f3558c59-9864-446f-beb5-590208ec30c1",
+          "order": 20,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "ICONIC LIFE",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738741401_Cat_ICONIC_LIFE.pdf?alt=media&token=c1d73040-f7a7-4123-b88d-26ed70fea144",
+          "order": 21,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "La Roche",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738761725_Cat_La_Roche.pdf?alt=media&token=2106521d-f089-4353-874d-d1a8a32b2bd5",
+          "order": 22,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Les Bijoux",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787738850391_Cat_Les_Bijoux.pdf?alt=media&token=1f2455e2-a617-4d32-844e-e3b5b985c7ee",
+          "order": 23,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Les Origines",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739531152_Cat_Les_Origines.pdf?alt=media&token=972d6920-79e1-4c74-9d50-8acafa4dd4b2",
+          "order": 24,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Maps",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739590152_Cat_Maps.pdf?alt=media&token=004de113-89fe-4467-a810-20ad2147ee84",
+          "order": 25,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Match-Up",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739614906_Cat_Match-Up.pdf?alt=media&token=fbf52792-a078-43db-9eb2-c6fa7d471e07",
+          "order": 26,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Matières",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739642418_Cat_Mati_res.pdf?alt=media&token=fe663fb2-37f1-4dc9-96a9-b739988ff1a2",
+          "order": 27,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "natural_stone",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739675273_cat_natural_stone.pdf?alt=media&token=f346f911-e88f-43cb-8f41-26820dd2c2ea",
+          "order": 28,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Nature_Mood",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739695129_Cat_Nature_Mood__1_.pdf?alt=media&token=d506f678-ef7a-42ae-b8d0-1d687f25abf7",
+          "order": 29,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Neutra 6.0",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787739725669_Cat_Neutra_6.0.pdf?alt=media&token=eb61e75b-0640-4cc5-8f49-7235f8e82ce1",
+          "order": 30,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Oaky Life",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741303908_Cat_Oaky_Life.pdf?alt=media&token=5b30f9e0-d11e-4beb-9407-bf7f2501f9f9",
+          "order": 31,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Onyx&More",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741334294_Cat_Onyx_More.pdf?alt=media&token=9baa52f4-0246-4c72-a404-c7378d98885f",
+          "order": 32,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Planches",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741366741_Cat_Planches.pdf?alt=media&token=dec82f39-413c-400b-a090-aa420384c153",
+          "order": 33,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Plimatech",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741389991_Cat_Plimatech.pdf?alt=media&token=c52d1d95-76ff-4a9b-8558-c0923bb65b5f",
+          "order": 34,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Prexious",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741418304_Cat_Prexious.pdf?alt=media&token=8b32c5d3-fa87-4ce4-a8ca-2fd53b96f19b",
+          "order": 35,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Rawtech",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741442334_Cat_Rawtech.pdf?alt=media&token=b1c48f46-c7e7-4fde-a479-73e02a80e1a6",
+          "order": 36,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Reves",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741490349_Cat_Reves.pdf?alt=media&token=086d4ba3-7f42-4aef-9b7b-a1aad46e931f",
+          "order": 37,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "RINASCENZA",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741544020_Cat_RINASCENZA.pdf?alt=media&token=b52e027c-9869-4581-b65b-d4f4d23716e8",
+          "order": 38,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Rock_Salt",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741776528_Cat_Rock_Salt.pdf?alt=media&token=4943ec2e-d8c1-47b0-82a8-a083d555ba16",
+          "order": 39,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Sensi",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741821741_Cat_Sensi.pdf?alt=media&token=1a04f8b9-dcc0-49aa-b6c1-e16feb92d04d",
+          "order": 40,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Stones&More 2.0",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741858203_Cat_Stones_More_2.0.pdf?alt=media&token=eb56ed49-22b1-4a40-a2da-e74309bd49c1",
+          "order": 41,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Stontech 4",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741884241_Cat_Stontech_4.pdf?alt=media&token=9fe7c828-5fab-4f1b-9c27-1c55bb844ca4",
+          "order": 42,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Timeless",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741905189_Cat_Timeless.pdf?alt=media&token=4b944b99-05d9-4883-be08-cf2daadbebc0",
+          "order": 43,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "walks",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741927157_cat_walks.pdf?alt=media&token=599c9e17-4c8b-4f00-8a77-229e2a83e688",
+          "order": 44,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Wood Slate life",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787741970492_Cat_Wood_Slate_life.pdf?alt=media&token=49d890f5-763c-4b22-95ba-b273a1c12351",
+          "order": 45,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "wooden_tile_of_cdc",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787743256394_cat_wooden_tile_of_cdc.pdf?alt=media&token=16f3d63d-c3a3-413a-ab51-d6c8bab55017",
+          "order": 46,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "SensiColore",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787743280475_CRE-SensiColore-Catalogo-0925.pdf?alt=media&token=491b86ff-da62-4abd-ad8c-2d326debecd6",
+          "order": 47,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "SensiEtna",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787743330322_CRE-SensiEtna-Catalogo-0925.pdf?alt=media&token=852f63aa-41fa-41ce-a6f3-d483be491027",
+          "order": 48,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "LUX-mystic-luxe-rivista",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787743392174_LUX-mystic-luxe-rivista.pdf?alt=media&token=3fafc348-1aa4-4c9b-8548-b61dc1325da4",
+          "order": 49,
+          "fileSize": "PDF Document"
+        },
+        {
+          "name": "Rivista_Stone Life",
+          "url": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Catalogues%2F1787743483571_Rivista_Stone_Life.pdf?alt=media&token=40df562e-b0f1-49f2-b647-4fb43e8d5b10",
+          "order": 50,
+          "fileSize": "PDF Document"
+        }
+      ]
+    },
+    {
+      "id": "bf-gelli",
+      "name": "Gelli",
+      "slug": "gelli",
+      "description": "Artisanal decorative glass and mirrors.",
+      "bannerImageUrl": "/brands/brand_8_1.png",
+      "files": []
+    },
+    {
+      "id": "bf-jacuzzi",
+      "name": "Jacuzzi",
+      "slug": "jacuzzi",
+      "description": "Jacuzzi is a pioneering wellness and hydrotherapy brand, best known for its hot tubs, whirlpool baths and innovative water-therapy products. The brand continues to combine hydrotherapy, design, engineering and wellness technology.",
+      "bannerImageUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786952507777_31.jpg?alt=media&token=2b97319f-fa25-4e01-862d-934e84bb0b98",
+      "files": []
+    },
+    {
+      "id": "bf-alex-turco",
+      "name": "Alex Turco",
+      "slug": "alex-turco",
+      "description": "Alex Turco is an Italian artist and Art Designer known for creating handmade artistic surfaces, panels, paintings and collectible design pieces. His work combines art, interior design, photography, digital imagery and handcrafted materials such as epoxy resin.",
+      "bannerImageUrl": "https://firebasestorage.googleapis.com/v0/b/aarenintpro-1c09f.firebasestorage.app/o/Brand_Assets%2F1786952529507_32.jpg?alt=media&token=e3ef9329-ceef-4cb2-80fd-c52312566dec",
+      "files": []
+    }
+  ]
 }

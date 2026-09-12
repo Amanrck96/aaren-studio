@@ -680,7 +680,7 @@ export default function DownloadsClient() {
                 return (
                   <Link
                     key={folder.id}
-                    href={`/downloads/All%2020%20Brand%20Folders/${encodeURIComponent(folder.brandName)}/${count}%20PDFs`}
+                    href={`/downloads/${(folder as any).slug || folder.id.toLowerCase()}`}
                     style={{
                       background: "#FFFFFF",
                       border: "1px solid #E2DCD2",

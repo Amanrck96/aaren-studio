@@ -81,7 +81,11 @@ export default function Header() {
     };
   }, [open]);
 
-  if (path?.startsWith("/admin") || path?.startsWith("/intro")) {
+  if (
+    path?.startsWith("/admin") ||
+    path?.startsWith("/intro") ||
+    (path?.startsWith("/downloads/") && path !== "/downloads")
+  ) {
     return null;
   }
 

@@ -17,7 +17,11 @@ export default function Footer() {
       .catch(() => {});
   }, []);
 
-  if (pathname?.startsWith("/admin") || pathname?.startsWith("/intro")) {
+  if (
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/intro") ||
+    (pathname?.startsWith("/downloads/") && pathname !== "/downloads")
+  ) {
     return null;
   }
 
