@@ -54,6 +54,8 @@ function AdminBrandDownloadsContent() {
   const [savingBrand, setSavingBrand] = useState(false);
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [uploadingPdf, setUploadingPdf] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [deletingBrand, setDeletingBrand] = useState<string | null>(null);
 
   // 1-Click QR Code Modal State
   const [qrModal, setQrModal] = useState<{
@@ -67,6 +69,7 @@ function AdminBrandDownloadsContent() {
   // Hidden File Inputs
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   // Check auth session
   useEffect(() => {
@@ -298,6 +301,77 @@ function AdminBrandDownloadsContent() {
     setEditingBrand({ ...editingBrand, ctaButtons: newCtas });
   };
 
+  // Add New Brand
+  const handleAddNewBrand = () => {
+    const newBrand: BrandFolderItem = {
+      id: `bf-new-${Date.now()}`,
+      name: "New Brand",
+      slug: `new-brand-${Date.now()}`,
+      description: "",
+      tagline: "",
+      bannerImageUrl: undefined,
+      logoUrl: undefined,
+      files: [],
+      ctaButtons: [],
+    };
+    setEditingBrand(newBrand);
+    setIsDrawerOpen(true);
+  };
+
+  // Delete Brand
+  const handleDeleteBrand = async (brand: BrandFolderItem) => {
+    if (!confirm(`Delete "${brand.name}"? This cannot be undone.`)) return;
+    setDeletingBrand(brand.id || brand.slug);
+    try {
+      const res = await fetch(`/api/admin/brand-downloads?id=${encodeURIComponent(brand.id || brand.slug)}`, {
+        method: "DELETE",
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        showToast(`"${brand.name}" deleted.`);
+        fetchBrands();
+      } else {
+        showToast(json.error || "Failed to delete brand", "error");
+      }
+    } catch (err: any) {
+      showToast(err.message || "Delete failed", "error");
+    } finally {
+      setDeletingBrand(null);
+    }
+  };
+
+  // Logo Upload
+  const handleLogoFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingBrand) return;
+
+    setUploadingLogo(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", "banner");
+      formData.append("folder", "aaren_brand_logos");
+
+      const res = await fetch("/api/admin/brand-downloads/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = await res.json();
+      if (res.ok && json.success) {
+        setEditingBrand({ ...editingBrand, logoUrl: json.url });
+        showToast("Brand logo uploaded successfully!");
+      } else {
+        showToast(json.error || "Failed to upload logo", "error");
+      }
+    } catch (err: any) {
+      showToast(err.message || "Logo upload failed", "error");
+    } finally {
+      setUploadingLogo(false);
+      if (logoInputRef.current) logoInputRef.current.value = "";
+    }
+  };
+
   // Save Brand
   const handleSaveBrand = async () => {
     if (!editingBrand) return;
@@ -410,6 +484,13 @@ function AdminBrandDownloadsContent() {
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
               <span>Refresh</span>
+            </button>
+            <button
+              onClick={handleAddNewBrand}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1E1E1E] hover:bg-[#333] text-white text-xs font-semibold tracking-wide shadow-sm transition-all"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Brand</span>
             </button>
             <Link
               href="/admin/qr-code"
@@ -563,6 +644,15 @@ function AdminBrandDownloadsContent() {
                       >
                         <QrCode className="w-3.5 h-3.5 text-[#81663F]" />
                         <span>QR</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleDeleteBrand(brand)}
+                        disabled={deletingBrand === (brand.id || brand.slug)}
+                        className="p-1.5 rounded-lg border border-red-200 bg-white hover:bg-red-50 text-red-600 disabled:opacity-40"
+                        title="Delete this brand"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
 
                       <button
@@ -731,6 +821,68 @@ function AdminBrandDownloadsContent() {
                       </button>
                     )}
                   </div>
+                </div>
+
+                {/* Brand Logo (Hub Card Logo) */}
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#6A6359] mb-1.5">
+                    Brand Logo (Shown on Hub Card) *
+                  </label>
+                  <div className="relative w-full h-[80px] rounded-xl border border-[#D5CEBF] overflow-hidden bg-[#F3EDE3] flex items-center justify-center">
+                    {editingBrand.logoUrl ? (
+                      <Image
+                        src={editingBrand.logoUrl}
+                        alt="Logo Preview"
+                        fill
+                        className="object-contain p-3"
+                      />
+                    ) : (
+                      <span className="text-xs text-[#8A8275]">No logo uploaded</span>
+                    )}
+                    {uploadingLogo && (
+                      <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center text-white text-xs font-medium gap-2">
+                        <RefreshCw className="w-4 h-4 animate-spin text-[#C2A378]" />
+                        <span>Uploading logo...</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 mt-2.5">
+                    <input
+                      ref={logoInputRef}
+                      type="file"
+                      accept="image/png, image/jpeg, image/webp, image/svg+xml"
+                      onChange={handleLogoFileSelected}
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      disabled={uploadingLogo}
+                      onClick={() => logoInputRef.current?.click()}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-[#D5CEBF] bg-white hover:bg-[#FAF8F5] text-xs font-semibold text-[#4A453E] transition-colors"
+                    >
+                      <Upload className="w-3.5 h-3.5 text-[#81663F]" />
+                      <span>{editingBrand.logoUrl ? "Replace Logo" : "Upload Logo"}</span>
+                    </button>
+                    {editingBrand.logoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setEditingBrand({ ...editingBrand, logoUrl: undefined })}
+                        className="text-xs text-red-600 hover:text-red-700 font-medium"
+                      >
+                        Remove Logo
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-[#8A8275] mt-1.5">
+                    Or paste a URL directly:
+                  </p>
+                  <input
+                    type="url"
+                    value={editingBrand.logoUrl || ""}
+                    onChange={(e) => setEditingBrand({ ...editingBrand, logoUrl: e.target.value })}
+                    placeholder="https://cdn.example.com/logo.png"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[#D5CEBF] bg-[#FAF8F5] text-xs font-mono text-[#81663F] focus:outline-none focus:border-[#81663F] mt-1"
+                  />
                 </div>
 
                 {/* PDF Catalogs Management */}
