@@ -16,13 +16,18 @@ import {
   ArrowUpRight,
   Share2,
   Check,
+  Building2,
+  Layers,
+  Search,
 } from "lucide-react";
-import { BrandFolderItem, BrandFolderPdf } from "@/lib/types";
+import { BrandFolderItem, BrandFolderPdf, CategoryItem } from "@/lib/types";
 
 interface QRCodeChimpShowroomProps {
   mode: "hub" | "brand";
   brandFolders: BrandFolderItem[];
   currentBrand?: BrandFolderItem;
+  categories?: CategoryItem[];
+  initialTab?: "brands" | "categories";
 }
 
 const DEFAULT_HERO_IMAGE =
@@ -62,10 +67,45 @@ export default function QRCodeChimpShowroom({
   mode,
   brandFolders,
   currentBrand,
+  categories = [],
+  initialTab = "brands",
 }: QRCodeChimpShowroomProps) {
   const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState<"brands" | "categories">(initialTab);
+  const [categoriesList, setCategoriesList] = useState<CategoryItem[]>(categories);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  React.useEffect(() => {
+    if (!categoriesList || categoriesList.length === 0) {
+      fetch("/api/categories")
+        .then((r) => r.json())
+        .then((d) => {
+          if (d.success && Array.isArray(d.data)) {
+            setCategoriesList(d.data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [categoriesList]);
 
   const isHub = mode === "hub" || !currentBrand;
+
+  const filteredBrands = brandFolders.filter((b) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    const name = (b.name || "").toLowerCase();
+    const desc = (b.description || "").toLowerCase();
+    return name.includes(q) || desc.includes(q);
+  });
+
+  const filteredCategories = categoriesList.filter((c) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    const name = (c.name || "").toLowerCase();
+    const code = (c.shortCode || "").toLowerCase();
+    const desc = (c.description || "").toLowerCase();
+    return name.includes(q) || code.includes(q) || desc.includes(q);
+  });
   const pageTitle = isHub ? "Aaren Intpro" : currentBrand.name;
   const pageTagline = isHub
     ? "i am Where Design Is"
@@ -358,74 +398,421 @@ export default function QRCodeChimpShowroom({
         </header>
 
         {/* ══════════════════════════════════════
-            2. HUB: Brand Cards List
+            2. HUB: Brands vs Categories Tabs & Cards
                BRAND: PDF Catalogues List
             ══════════════════════════════════════ */}
-        {isHub ? (
-          <div style={{ width: "100%", marginTop: "14px", display: "flex", flexDirection: "column", gap: "12px" }}>
-            {brandFolders.map((b) => {
-              const displayName = getDisplayBrandName(b);
-              const logoSrc = b.logoUrl || DEFAULT_BRAND_LOGO;
-
-              return (
-                <Link
-                  key={b.id || b.slug}
-                  href={`/downloads/${b.slug}`}
+        {isHub && (
+          <div
+            style={{
+              width: "100%",
+              marginTop: "16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+            }}
+          >
+            {/* ── Tabs Bar: Brands vs Categories ── */}
+            <div
+              role="tablist"
+              aria-label="Showroom Navigation Tabs"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                backdropFilter: "blur(12px)",
+                borderRadius: "16px",
+                padding: "5px",
+                boxShadow: "0 7px 25px rgba(100, 100, 111, 0.15)",
+                border: "1px solid rgba(129, 102, 63, 0.18)",
+                boxSizing: "border-box",
+                width: "100%",
+              }}
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === "brands"}
+                onClick={() => {
+                  setActiveTab("brands");
+                  setSearchQuery("");
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  padding: "11px 16px",
+                  borderRadius: "12px",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+                  backgroundColor: activeTab === "brands" ? "#81663F" : "transparent",
+                  color: activeTab === "brands" ? "#FFFFFF" : "#6A6359",
+                  boxShadow:
+                    activeTab === "brands"
+                      ? "0 4px 14px rgba(129, 102, 63, 0.35)"
+                      : "none",
+                  fontWeight: activeTab === "brands" ? 700 : 500,
+                  fontSize: "14px",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                <Building2 style={{ width: 16, height: 16 }} />
+                <span>Brands</span>
+                <span
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "16px",
-                    width: "100%",
-                    backgroundColor: "#fff",
-                    borderRadius: "16px",
-                    boxShadow: "0 7px 29px rgba(100,100,111,0.2)",
-                    border: "1px solid rgba(0,0,0,0.05)",
-                    padding: "16px 20px",
-                    boxSizing: "border-box",
-                    textDecoration: "none",
+                    fontSize: "11px",
+                    padding: "2px 7px",
+                    borderRadius: "9999px",
+                    backgroundColor:
+                      activeTab === "brands"
+                        ? "rgba(255, 255, 255, 0.22)"
+                        : "rgba(129, 102, 63, 0.1)",
+                    color: activeTab === "brands" ? "#FFFFFF" : "#81663F",
+                    fontWeight: 700,
                   }}
                 >
-                  {/* Logo + Brand Name */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
-                    <div
+                  {brandFolders.length}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === "categories"}
+                onClick={() => {
+                  setActiveTab("categories");
+                  setSearchQuery("");
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  padding: "11px 16px",
+                  borderRadius: "12px",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+                  backgroundColor: activeTab === "categories" ? "#81663F" : "transparent",
+                  color: activeTab === "categories" ? "#FFFFFF" : "#6A6359",
+                  boxShadow:
+                    activeTab === "categories"
+                      ? "0 4px 14px rgba(129, 102, 63, 0.35)"
+                      : "none",
+                  fontWeight: activeTab === "categories" ? 700 : 500,
+                  fontSize: "14px",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                <Layers style={{ width: 16, height: 16 }} />
+                <span>Categories</span>
+                <span
+                  style={{
+                    fontSize: "11px",
+                    padding: "2px 7px",
+                    borderRadius: "9999px",
+                    backgroundColor:
+                      activeTab === "categories"
+                        ? "rgba(255, 255, 255, 0.22)"
+                        : "rgba(129, 102, 63, 0.1)",
+                    color: activeTab === "categories" ? "#FFFFFF" : "#81663F",
+                    fontWeight: 700,
+                  }}
+                >
+                  {categoriesList.length}
+                </span>
+              </button>
+            </div>
+
+            {/* ── Search Input ── */}
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Search
+                style={{
+                  position: "absolute",
+                  left: "14px",
+                  width: 15,
+                  height: 15,
+                  color: "#8A8275",
+                  pointerEvents: "none",
+                }}
+              />
+              <input
+                type="text"
+                placeholder={activeTab === "brands" ? "Search 20 luxury brands…" : "Search 15 categories…"}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "10px 14px 10px 38px",
+                  borderRadius: "14px",
+                  border: "1px solid rgba(129, 102, 63, 0.15)",
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                  backdropFilter: "blur(8px)",
+                  fontSize: "13px",
+                  color: "#1E1E1E",
+                  outline: "none",
+                  boxSizing: "border-box",
+                  boxShadow: "0 4px 14px rgba(0, 0, 0, 0.04)",
+                }}
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  style={{
+                    position: "absolute",
+                    right: "12px",
+                    border: "none",
+                    background: "transparent",
+                    color: "#8A8275",
+                    fontSize: "12px",
+                    cursor: "pointer",
+                    padding: "4px",
+                  }}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {isHub ? (
+          <div style={{ width: "100%", marginTop: "12px", display: "flex", flexDirection: "column", gap: "12px" }}>
+            {activeTab === "brands" ? (
+              /* ── BRANDS TAB ── */
+              filteredBrands.length > 0 ? (
+                filteredBrands.map((b) => {
+                  const displayName = getDisplayBrandName(b);
+                  const logoSrc = b.logoUrl || DEFAULT_BRAND_LOGO;
+
+                  return (
+                    <Link
+                      key={b.id || b.slug}
+                      href={`/downloads/${b.slug}`}
                       style={{
-                        position: "relative",
-                        width: "72px",
-                        height: "34px",
-                        flexShrink: 0,
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "flex-start",
+                        justifyContent: "space-between",
+                        gap: "16px",
+                        width: "100%",
+                        backgroundColor: "#fff",
+                        borderRadius: "16px",
+                        boxShadow: "0 7px 29px rgba(100,100,111,0.2)",
+                        border: "1px solid rgba(0,0,0,0.05)",
+                        padding: "16px 20px",
+                        boxSizing: "border-box",
+                        textDecoration: "none",
                       }}
                     >
-                      <Image
-                        src={logoSrc}
-                        alt={displayName}
-                        fill
-                        sizes="72px"
-                        style={{ objectFit: "contain", objectPosition: "left center" }}
-                      />
-                    </div>
-                    <span
-                      style={{
-                        fontSize: "17px",
-                        fontWeight: 500,
-                        color: "#4A3821",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {displayName}
-                    </span>
-                  </div>
+                      {/* Logo + Brand Name */}
+                      <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                        <div
+                          style={{
+                            position: "relative",
+                            width: "72px",
+                            height: "34px",
+                            flexShrink: 0,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "flex-start",
+                          }}
+                        >
+                          <Image
+                            src={logoSrc}
+                            alt={displayName}
+                            fill
+                            sizes="72px"
+                            style={{ objectFit: "contain", objectPosition: "left center" }}
+                          />
+                        </div>
+                        <span
+                          style={{
+                            fontSize: "17px",
+                            fontWeight: 500,
+                            color: "#4A3821",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {displayName}
+                        </span>
+                      </div>
 
-                  {/* Bare Chevron */}
-                  <ChevronRight style={{ width: 20, height: 20, color: "#81663F", flexShrink: 0, strokeWidth: 1.75 }} />
-                </Link>
-              );
-            })}
+                      {/* Bare Chevron */}
+                      <ChevronRight style={{ width: 20, height: 20, color: "#81663F", flexShrink: 0, strokeWidth: 1.75 }} />
+                    </Link>
+                  );
+                })
+              ) : (
+                <div
+                  style={{
+                    backgroundColor: "#fff",
+                    borderRadius: "16px",
+                    padding: "24px",
+                    textAlign: "center",
+                    boxShadow: "0 7px 29px rgba(100,100,111,0.2)",
+                    border: "1px solid rgba(0,0,0,0.05)",
+                  }}
+                >
+                  <p style={{ margin: 0, fontSize: "14px", color: "#6A6359" }}>No brands found matching "{searchQuery}"</p>
+                </div>
+              )
+            ) : (
+              /* ── CATEGORIES TAB (SAME TO SAME LUXURY STYLE) ── */
+              <>
+                {filteredCategories.length > 0 ? (
+                  filteredCategories.map((c) => {
+                    return (
+                      <Link
+                        key={c.id}
+                        href={`/products?category=${encodeURIComponent(c.name)}`}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "16px",
+                          width: "100%",
+                          backgroundColor: "#fff",
+                          borderRadius: "16px",
+                          boxShadow: "0 7px 29px rgba(100,100,111,0.2)",
+                          border: "1px solid rgba(0,0,0,0.05)",
+                          padding: "16px 20px",
+                          boxSizing: "border-box",
+                          textDecoration: "none",
+                        }}
+                      >
+                        {/* Category Thumbnail + Name & Info */}
+                        <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                          <div
+                            style={{
+                              position: "relative",
+                              width: "72px",
+                              height: "44px",
+                              borderRadius: "10px",
+                              overflow: "hidden",
+                              backgroundColor: "#FAF8F5",
+                              border: "1px solid #EAE4D9",
+                              flexShrink: 0,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            {c.coverImage ? (
+                              <Image
+                                src={c.coverImage}
+                                alt={c.name}
+                                fill
+                                sizes="72px"
+                                style={{ objectFit: "cover" }}
+                              />
+                            ) : (
+                              <span style={{ fontSize: "18px" }}>🏷️</span>
+                            )}
+                          </div>
+                          <div style={{ minWidth: 0, flex: 1 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                              <span
+                                style={{
+                                  fontSize: "17px",
+                                  fontWeight: 500,
+                                  color: "#4A3821",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {c.name}
+                              </span>
+                              {c.shortCode && (
+                                <span
+                                  style={{
+                                    fontSize: "10px",
+                                    fontWeight: 700,
+                                    padding: "2px 6px",
+                                    borderRadius: "4px",
+                                    backgroundColor: "rgba(129, 102, 63, 0.1)",
+                                    color: "#81663F",
+                                    letterSpacing: "0.04em",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {c.shortCode}
+                                </span>
+                              )}
+                            </div>
+                            {c.description && (
+                              <p
+                                style={{
+                                  fontSize: "12px",
+                                  color: "#8A8275",
+                                  margin: "2px 0 0",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {c.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Bare Chevron */}
+                        <ChevronRight style={{ width: 20, height: 20, color: "#81663F", flexShrink: 0, strokeWidth: 1.75 }} />
+                      </Link>
+                    );
+                  })
+                ) : (
+                  <div
+                    style={{
+                      backgroundColor: "#fff",
+                      borderRadius: "16px",
+                      padding: "24px",
+                      textAlign: "center",
+                      boxShadow: "0 7px 29px rgba(100,100,111,0.2)",
+                      border: "1px solid rgba(0,0,0,0.05)",
+                    }}
+                  >
+                    <p style={{ margin: 0, fontSize: "14px", color: "#6A6359" }}>No categories found matching "{searchQuery}"</p>
+                  </div>
+                )}
+
+                {/* Direct link to Categories Directory */}
+                <div style={{ textAlign: "center", marginTop: "4px" }}>
+                  <Link
+                    href="/categories"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      color: "#81663F",
+                      textDecoration: "none",
+                      padding: "8px 16px",
+                      borderRadius: "9999px",
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                      border: "1px solid rgba(129, 102, 63, 0.2)",
+                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
+                    }}
+                  >
+                    <span>View Full Categories Grid</span>
+                    <ArrowUpRight style={{ width: 13, height: 13 }} />
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         ) : (
           /* ── BRAND SHOWROOM: PDF CATALOGUES ── */

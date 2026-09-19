@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getBrandFolderBySlugStore, getBrandFoldersStore } from "@/lib/store";
+import { getBrandFolderBySlugStore, getBrandFoldersStore, getCategoriesStore } from "@/lib/store";
 import QRCodeChimpShowroom from "@/components/QRCodeChimpShowroom";
 
 export const dynamic = "force-dynamic";
@@ -72,7 +72,8 @@ export default async function BrandDownloadPage({ params }: Props) {
   const allBrands = await getBrandFoldersStore();
 
   if (lower === "aarenintpro" || lower === "all") {
-    return <QRCodeChimpShowroom mode="hub" brandFolders={allBrands} />;
+    const categories = await getCategoriesStore();
+    return <QRCodeChimpShowroom mode="hub" brandFolders={allBrands} categories={categories} />;
   }
 
   const brand = await getBrandFolderBySlugStore(slugStr);

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getBrandFoldersStore } from "@/lib/store";
+import { getBrandFoldersStore, getCategoriesStore } from "@/lib/store";
 import QRCodeChimpShowroom from "@/components/QRCodeChimpShowroom";
 import DownloadsClient from "./DownloadsClient";
 
@@ -17,12 +17,15 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams?: Promise<{ view?: string }>;
+  searchParams?: Promise<{ view?: string; tab?: string }>;
 }
 
 export default async function DownloadsPage({ searchParams }: PageProps) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
-  const brandFolders = await getBrandFoldersStore();
+  const [brandFolders, categories] = await Promise.all([
+    getBrandFoldersStore(),
+    getCategoriesStore(),
+  ]);
 
   if (resolvedSearchParams?.view === "explorer" || resolvedSearchParams?.view === "table") {
     return <DownloadsClient />;
@@ -32,6 +35,8 @@ export default async function DownloadsPage({ searchParams }: PageProps) {
     <QRCodeChimpShowroom
       mode="hub"
       brandFolders={brandFolders}
+      categories={categories}
+      initialTab={resolvedSearchParams?.tab === "categories" ? "categories" : "brands"}
     />
   );
 }

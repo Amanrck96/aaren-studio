@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getBrandFoldersStore } from "@/lib/store";
+import { getBrandFoldersStore, getCategoriesStore } from "@/lib/store";
 import QRCodeChimpShowroom from "@/components/QRCodeChimpShowroom";
 
 export const dynamic = "force-dynamic";
@@ -16,12 +16,16 @@ export const metadata: Metadata = {
 };
 
 export default async function AarenIntproPage() {
-  const brandFolders = await getBrandFoldersStore();
+  const [brandFolders, categories] = await Promise.all([
+    getBrandFoldersStore(),
+    getCategoriesStore(),
+  ]);
 
   return (
     <QRCodeChimpShowroom
       mode="hub"
       brandFolders={brandFolders}
+      categories={categories}
     />
   );
 }
