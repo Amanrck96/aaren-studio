@@ -28,6 +28,7 @@ export default function AdminNav() {
     { label: "📄 Page Builder", href: "/admin/pages" },
     { label: "🏠 Hero Section", href: "/admin/hero" },
     { label: "🛠️ Services", href: "/admin/services" },
+    { label: "🏷️ Categories", href: "/admin/categories" },
     { label: "🗃️ Collections / Groups", href: "/admin/collections" },
     { label: "🏢 Brands", href: "/admin/brands" },
     { label: "🖼️ Showcase Projects", href: "/admin/projects" },
