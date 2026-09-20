@@ -1359,14 +1359,16 @@ export default function QRCodeChimpShowroom({
               color: "#81663F",
             }}
           >
-            AAREN STUDIO
+            Aaren Intpro
           </div>
           <p style={{ fontSize: "11px", color: "#4A453E", marginTop: "4px", maxWidth: "280px", margin: "4px auto 0" }}>
-            Curated by Aaren Studio · Luxury Surfaces & Architectural Systems
+            Curated by Aaren Intpro · Luxury Surfaces &amp; Architectural Systems
           </p>
           <div style={{ marginTop: "6px" }}>
-            <Link
-              href="/"
+            <a
+              href="https://www.aarenintpro.com"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 fontSize: "11px",
                 fontWeight: 600,
@@ -1375,8 +1377,8 @@ export default function QRCodeChimpShowroom({
                 textUnderlineOffset: "4px",
               }}
             >
-              aarenstudio.com
-            </Link>
+              www.aarenintpro.com
+            </a>
           </div>
         </footer>
       </div>
