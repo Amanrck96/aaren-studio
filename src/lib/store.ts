@@ -36,6 +36,8 @@ import {
   IntroPageCtaButton,
   BrandFolderItem,
   BrandFolderPdf,
+  CategoryFolderItem,
+  CategoryFolderPdf,
   DEFAULT_SETTINGS,
   DEFAULT_CATALOG_SETTINGS,
   DEFAULT_SHOP_ITEMS,
@@ -4429,3 +4431,134 @@ export async function deleteBrandFolderStore(id: string): Promise<boolean> {
   }
   return true;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   CATEGORY FOLDERS / DOWNLOADS STORE
+   ══════════════════════════════════════════════════════════════ */
+
+export async function generateUniqueCategorySlug(name: string, currentId?: string): Promise<string> {
+  const base = (name || "category")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "category";
+
+  let candidate = base;
+  let attempts = 0;
+
+  while (attempts < 10) {
+    let exists = false;
+    const json = readJsonStore();
+    if (json.categoryFolders && Array.isArray(json.categoryFolders)) {
+      const found = json.categoryFolders.find((b: any) => b.slug === candidate);
+      if (found && found.id !== currentId) {
+        exists = true;
+      }
+    }
+
+    if (!exists) {
+      return candidate;
+    }
+
+    const suffix = Math.random().toString(36).substring(2, 6);
+    candidate = `${base}-${suffix}`;
+    attempts++;
+  }
+
+  return `${base}-${Date.now().toString(36)}`;
+}
+
+export async function getCategoryFoldersStore(): Promise<CategoryFolderItem[]> {
+  const json = readJsonStore();
+  if (json.categoryFolders && Array.isArray(json.categoryFolders) && json.categoryFolders.length > 0) {
+    return json.categoryFolders;
+  }
+
+  // Auto-seed from existing categories if empty
+  const defaultCats = await getCategoriesStore();
+  const seededItems: CategoryFolderItem[] = (defaultCats || []).map((c) => ({
+    id: `cf-${c.id}`,
+    name: c.name,
+    slug: c.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || `cat-${c.id}`,
+    tagline: c.description || "Official Catalogues & Specifications",
+    description: c.description || undefined,
+    bannerImageUrl: c.coverImage || undefined,
+    logoUrl: c.coverImage || undefined,
+    files: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }));
+
+  json.categoryFolders = seededItems;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+  return seededItems;
+}
+
+export async function getCategoryFolderBySlugStore(slug: string): Promise<CategoryFolderItem | null> {
+  if (!slug) return null;
+  const cleanSlug = slug.trim().toLowerCase();
+  const all = await getCategoryFoldersStore();
+  const exact = all.find((b) => b.slug.toLowerCase() === cleanSlug);
+  if (exact) return exact;
+
+  return (
+    all.find(
+      (b) =>
+        b.slug.toLowerCase().includes(cleanSlug) ||
+        b.name.toLowerCase().trim() === cleanSlug
+    ) || null
+  );
+}
+
+export async function saveCategoryFolderStore(
+  folder: Partial<CategoryFolderItem> & { name: string }
+): Promise<CategoryFolderItem> {
+  const id = folder.id || `cf-${Date.now()}`;
+  const now = new Date();
+
+  let slug = folder.slug?.trim().toLowerCase();
+  if (!slug) {
+    slug = await generateUniqueCategorySlug(folder.name, id);
+  }
+
+  const full: CategoryFolderItem = {
+    id,
+    name: folder.name.trim(),
+    slug,
+    tagline: folder.tagline?.trim() || undefined,
+    description: folder.description?.trim() || undefined,
+    bannerImageUrl: folder.bannerImageUrl?.trim() || undefined,
+    logoUrl: folder.logoUrl?.trim() || undefined,
+    files: folder.files || [],
+    ctaButtons: folder.ctaButtons || [],
+    createdAt: folder.createdAt || now.toISOString(),
+    updatedAt: now.toISOString(),
+  };
+
+  const json = readJsonStore();
+  if (!json.categoryFolders || !Array.isArray(json.categoryFolders)) {
+    json.categoryFolders = [];
+  }
+  const idx = json.categoryFolders.findIndex((b: any) => b.id === id || b.slug === full.slug);
+  if (idx >= 0) {
+    json.categoryFolders[idx] = full;
+  } else {
+    json.categoryFolders.push(full);
+  }
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+
+  return full;
+}
+
+export async function deleteCategoryFolderStore(id: string): Promise<boolean> {
+  const json = readJsonStore();
+  if (json.categoryFolders && Array.isArray(json.categoryFolders)) {
+    json.categoryFolders = json.categoryFolders.filter((b: any) => b.id !== id);
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    writeJsonStore(json);
+  }
+  return true;
+}
+

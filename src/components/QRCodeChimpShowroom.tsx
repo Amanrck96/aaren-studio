@@ -672,10 +672,11 @@ export default function QRCodeChimpShowroom({
               <>
                 {filteredCategories.length > 0 ? (
                   filteredCategories.map((c) => {
+                    const catSlug = c.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
                     return (
                       <Link
                         key={c.id}
-                        href={`/products?category=${encodeURIComponent(c.name)}`}
+                        href={`/category-downloads/${catSlug}`}
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -788,10 +789,10 @@ export default function QRCodeChimpShowroom({
                   </div>
                 )}
 
-                {/* Direct link to Categories Directory */}
-                <div style={{ textAlign: "center", marginTop: "4px" }}>
+                {/* Direct links to Category Showrooms */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginTop: "6px", flexWrap: "wrap" }}>
                   <Link
-                    href="/categories"
+                    href="/category-downloads"
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -807,7 +808,26 @@ export default function QRCodeChimpShowroom({
                       boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
                     }}
                   >
-                    <span>View Full Categories Grid</span>
+                    <span>Category Downloads Hub</span>
+                    <ArrowUpRight style={{ width: 13, height: 13 }} />
+                  </Link>
+                  <Link
+                    href="/categories"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      color: "#6A6359",
+                      textDecoration: "none",
+                      padding: "8px 16px",
+                      borderRadius: "9999px",
+                      backgroundColor: "rgba(255, 255, 255, 0.7)",
+                      border: "1px solid rgba(0, 0, 0, 0.08)",
+                    }}
+                  >
+                    <span>Categories Grid</span>
                     <ArrowUpRight style={{ width: 13, height: 13 }} />
                   </Link>
                 </div>

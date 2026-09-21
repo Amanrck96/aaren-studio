@@ -499,4 +499,26 @@ export interface BrandFolderItem {
   updatedAt?: string;
 }
 
+export interface CategoryFolderPdf {
+  name: string;
+  url: string;
+  publicId?: string;
+  order: number;
+  fileSize?: string;
+}
+
+export interface CategoryFolderItem {
+  id: string;
+  name: string;
+  slug: string;
+  tagline?: string;
+  description?: string;
+  bannerImageUrl?: string;
+  logoUrl?: string;
+  files: CategoryFolderPdf[];
+  ctaButtons?: IntroPageCtaButton[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 

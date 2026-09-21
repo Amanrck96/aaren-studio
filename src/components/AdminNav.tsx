@@ -36,6 +36,7 @@ export default function AdminNav() {
     { label: "🛍️ Shop Management", href: "/admin/shop" },
     { label: "📄 PDF Catalogs", href: "/admin/catalogs" },
     { label: "📁 Brand Downloads & Uploads", href: "/admin/downloads" },
+    { label: "📂 Category Downloads & Uploads", href: "/admin/category-downloads" },
     { label: "🏷️ Categories CMS", href: "/admin/categories" },
     { label: "📱 QR Code Generator", href: "/admin/qr-code" },
     { label: "❓ FAQ Management", href: "/admin/faq" },
