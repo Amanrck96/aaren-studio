@@ -11,7 +11,7 @@ import {
   FileText, Plus, Trash2, Edit, ExternalLink,
   RefreshCw, Search, Upload, Check, QrCode,
   Download, Copy, X, ArrowUp, ArrowDown,
-  Building2, AlertCircle,
+  Building2, AlertCircle, Link2,
 } from "lucide-react";
 
 // ─── Shared style tokens ───────────────────────────────────────
@@ -71,6 +71,8 @@ function AdminBrandDownloadsContent() {
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [deletingBrand, setDeletingBrand] = useState<string | null>(null);
+  const [linkPdfTitle, setLinkPdfTitle] = useState("");
+  const [linkPdfUrl, setLinkPdfUrl] = useState("");
   const [qrModal, setQrModal] = useState<{ isOpen: boolean; brand: BrandFolderItem; url: string } | null>(null);
   const [copiedQr, setCopiedQr] = useState(false);
   const qrCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -117,11 +119,25 @@ function AdminBrandDownloadsContent() {
   });
   const totalPdfs = brands.reduce((acc, b) => acc + (b.files?.length || 0), 0);
 
-  const handleOpenEdit = (brand: BrandFolderItem) => { setEditingBrand(JSON.parse(JSON.stringify(brand))); setIsDrawerOpen(true); };
-  const handleCloseDrawer = () => { if (!savingBrand && !uploadingBanner && !uploadingPdf && !uploadingLogo) { setEditingBrand(null); setIsDrawerOpen(false); } };
+  const handleOpenEdit = (brand: BrandFolderItem) => {
+    setEditingBrand(JSON.parse(JSON.stringify(brand)));
+    setLinkPdfTitle("");
+    setLinkPdfUrl("");
+    setIsDrawerOpen(true);
+  };
+  const handleCloseDrawer = () => {
+    if (!savingBrand && !uploadingBanner && !uploadingPdf && !uploadingLogo) {
+      setEditingBrand(null);
+      setLinkPdfTitle("");
+      setLinkPdfUrl("");
+      setIsDrawerOpen(false);
+    }
+  };
 
   const handleAddNewBrand = () => {
     setEditingBrand({ id: `bf-new-${Date.now()}`, name: "New Brand", slug: `new-brand-${Date.now()}`, description: "", tagline: "", bannerImageUrl: undefined, logoUrl: undefined, files: [], ctaButtons: [] });
+    setLinkPdfTitle("");
+    setLinkPdfUrl("");
     setIsDrawerOpen(true);
   };
 
@@ -189,6 +205,44 @@ function AdminBrandDownloadsContent() {
   const handlePdfTitleChange = (index: number, title: string) => {
     if (!editingBrand?.files) return;
     const f = [...editingBrand.files]; f[index] = { ...f[index], name: title }; setEditingBrand({ ...editingBrand, files: f });
+  };
+
+  const handlePdfUrlChange = (index: number, url: string) => {
+    if (!editingBrand?.files) return;
+    const f = [...editingBrand.files]; f[index] = { ...f[index], url }; setEditingBrand({ ...editingBrand, files: f });
+  };
+
+  const handleAddPdfByLink = () => {
+    if (!editingBrand) return;
+    if (!linkPdfUrl.trim()) {
+      showToast("Please enter a Firebase PDF link or URL", "error");
+      return;
+    }
+    const cleanUrl = linkPdfUrl.trim();
+    let defaultTitle = `Catalogue ${(editingBrand.files?.length || 0) + 1}`;
+    if (!linkPdfTitle.trim()) {
+      try {
+        const urlObj = new URL(cleanUrl);
+        const pathPart = decodeURIComponent(urlObj.pathname.split("/").pop() || "");
+        if (pathPart && pathPart.endsWith(".pdf")) {
+          defaultTitle = pathPart.replace(/\.pdf$/i, "").replace(/[-_]/g, " ");
+        }
+      } catch (_) {}
+    }
+    const title = linkPdfTitle.trim() || defaultTitle;
+    const newPdf: BrandFolderPdf = {
+      name: title,
+      url: cleanUrl,
+      order: (editingBrand.files?.length || 0) + 1,
+      fileSize: "Firebase PDF",
+    };
+    setEditingBrand({
+      ...editingBrand,
+      files: [...(editingBrand.files || []), newPdf],
+    });
+    setLinkPdfTitle("");
+    setLinkPdfUrl("");
+    showToast(`Added "${title}" from Firebase link!`);
   };
 
   const handleAddCta = () => {
@@ -446,39 +500,173 @@ function AdminBrandDownloadsContent() {
                 <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 20 }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                     <div>
-                      <h4 style={{ fontSize: 15, fontWeight: 700, color: C.text, margin: 0 }}>PDF Catalogs &amp; Specifications</h4>
-                      <p style={{ fontSize: 11, color: C.textFaint, marginTop: 2 }}>Served from Cloudinary (30MB max per file)</p>
+                      <h4 style={{ fontSize: 15, fontWeight: 700, color: C.text, margin: 0, display: "flex", alignItems: "center", gap: 6 }}>
+                        <FileText style={{ width: 16, height: 16, color: C.gold }} />
+                        <span>PDF Catalogs &amp; Specifications</span>
+                      </h4>
+                      <p style={{ fontSize: 11, color: C.textFaint, marginTop: 2 }}>
+                        Paste Firebase Storage PDF links directly or upload PDF files from your device (30MB max).
+                      </p>
                     </div>
-                    <div>
-                      <input ref={pdfInputRef} type="file" accept="application/pdf" onChange={handlePdfFileSelected} style={{ display: "none" }} />
-                      <button type="button" disabled={uploadingPdf} onClick={() => pdfInputRef.current?.click()} style={btnGold}>
-                        {uploadingPdf ? <><RefreshCw style={{ width: 13, height: 13 }} /> Uploading...</> : <><Plus style={{ width: 13, height: 13 }} /> Add PDF</>}
+                  </div>
+
+                  {/* ── Option 1: Direct Firebase PDF Link Box ── */}
+                  <div
+                    style={{
+                      padding: "16px",
+                      borderRadius: 14,
+                      backgroundColor: "#FAF6EE",
+                      border: `1px solid #D5CEBF`,
+                      marginBottom: 16,
+                      boxShadow: "0 2px 8px rgba(129, 102, 63, 0.06)",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: C.gold, display: "flex", alignItems: "center", gap: 6 }}>
+                        <Link2 style={{ width: 14, height: 14 }} />
+                        <span>Add via Firebase PDF Link</span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: 9,
+                          fontWeight: 700,
+                          padding: "2px 8px",
+                          borderRadius: 9999,
+                          backgroundColor: "rgba(129, 102, 63, 0.15)",
+                          color: C.gold,
+                          letterSpacing: "0.05em",
+                        }}
+                      >
+                        Recommended
+                      </span>
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      <div>
+                        <label style={{ ...labelStyle, fontSize: 10, marginBottom: 3 }}>Catalog Title</label>
+                        <input
+                          type="text"
+                          value={linkPdfTitle}
+                          onChange={(e) => setLinkPdfTitle(e.target.value)}
+                          placeholder="e.g. Official Technical Specifications 2026"
+                          style={{ ...inputStyle, backgroundColor: C.white, fontSize: 12, padding: "7px 12px" }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ ...labelStyle, fontSize: 10, marginBottom: 3 }}>Firebase PDF Link / URL *</label>
+                        <input
+                          type="url"
+                          value={linkPdfUrl}
+                          onChange={(e) => setLinkPdfUrl(e.target.value)}
+                          placeholder="https://firebasestorage.googleapis.com/... or any PDF link"
+                          style={{
+                            ...inputStyle,
+                            backgroundColor: C.white,
+                            fontSize: 11,
+                            padding: "7px 12px",
+                            fontFamily: "monospace",
+                            color: C.gold,
+                          }}
+                        />
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleAddPdfByLink}
+                        style={{
+                          ...btnGold,
+                          justifyContent: "center",
+                          padding: "9px 14px",
+                          borderRadius: 10,
+                          marginTop: 4,
+                        }}
+                      >
+                        <Plus style={{ width: 14, height: 14 }} />
+                        <span>＋ Add Firebase PDF Link</span>
                       </button>
                     </div>
                   </div>
+
+                  {/* ── Option 2: Upload PDF File ── */}
+                  <div style={{ marginBottom: 16 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                      <div style={{ flex: 1, height: 1, backgroundColor: C.borderLight }} />
+                      <span style={{ fontSize: 10, fontWeight: 700, color: C.textFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                        Or Upload PDF File
+                      </span>
+                      <div style={{ flex: 1, height: 1, backgroundColor: C.borderLight }} />
+                    </div>
+
+                    <input ref={pdfInputRef} type="file" accept="application/pdf" onChange={handlePdfFileSelected} style={{ display: "none" }} />
+                    <button
+                      type="button"
+                      disabled={uploadingPdf}
+                      onClick={() => pdfInputRef.current?.click()}
+                      style={{
+                        ...btnOutline,
+                        width: "100%",
+                        padding: "10px 16px",
+                        borderRadius: 12,
+                        justifyContent: "center",
+                      }}
+                    >
+                      {uploadingPdf ? <><RefreshCw style={{ width: 14, height: 14, color: C.gold }} /> Uploading...</> : <><Upload style={{ width: 14, height: 14, color: C.gold }} /> Upload PDF File from Device</>}
+                    </button>
+                  </div>
+
+                  {/* ── PDF List ── */}
                   {!editingBrand.files?.length ? (
                     <div style={{ padding: 24, borderRadius: 16, border: `2px dashed ${C.borderLight}`, backgroundColor: C.surface, textAlign: "center" }}>
                       <FileText style={{ width: 28, height: 28, color: C.accent, margin: "0 auto 6px", strokeWidth: 1.5 }} />
                       <div style={{ fontSize: 12, fontWeight: 600, color: C.text }}>No PDFs yet</div>
-                      <p style={{ fontSize: 11, color: C.textFaint, marginTop: 4 }}>Click "Add PDF" to upload to Cloudinary.</p>
+                      <p style={{ fontSize: 11, color: C.textFaint, marginTop: 4 }}>Paste a Firebase PDF link above or click to upload.</p>
                     </div>
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                        Catalogs in this Brand ({editingBrand.files?.length || 0})
+                      </div>
                       {editingBrand.files.map((file, fIdx) => (
-                        <div key={`${file.url}-${fIdx}`} style={{ padding: 12, backgroundColor: C.surface, borderRadius: 12, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: 10 }}>
-                          <span style={{ fontSize: 10, fontFamily: "monospace", fontWeight: 700, color: C.gold, flexShrink: 0 }}>#{fIdx + 1}</span>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <input type="text" value={file.name} onChange={(e) => handlePdfTitleChange(fIdx, e.target.value)} style={{ ...inputStyle, fontSize: 12, padding: "6px 10px" }} placeholder="PDF Title" />
-                            <div style={{ display: "flex", gap: 8, marginTop: 4, fontSize: 11, color: C.textFaint }}>
-                              <span>{file.fileSize || "PDF"}</span>
-                              <span>·</span>
-                              <a href={file.url} target="_blank" rel="noopener noreferrer" style={{ color: C.gold, textDecoration: "none", display: "flex", alignItems: "center", gap: 3 }}>Preview <ExternalLink style={{ width: 10, height: 10 }} /></a>
-                            </div>
+                        <div key={`${file.url}-${fIdx}`} style={{ padding: 12, backgroundColor: C.surface, borderRadius: 12, border: `1px solid ${C.border}`, display: "flex", flexDirection: "column", gap: 8 }}>
+                          {/* Title */}
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <span style={{ fontSize: 10, fontFamily: "monospace", fontWeight: 700, color: C.gold, width: 20 }}>#{fIdx + 1}</span>
+                            <input type="text" value={file.name} onChange={(e) => handlePdfTitleChange(fIdx, e.target.value)} style={{ ...inputStyle, fontSize: 12, padding: "6px 10px", flex: 1, backgroundColor: C.white }} placeholder="PDF Title" />
                           </div>
-                          <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                            <button type="button" disabled={fIdx === 0} onClick={() => handleMovePdf(fIdx, "up")} style={{ ...btnOutline, padding: "4px 8px", opacity: fIdx === 0 ? 0.3 : 1 }}><ArrowUp style={{ width: 12, height: 12 }} /></button>
-                            <button type="button" disabled={fIdx === (editingBrand.files?.length || 0) - 1} onClick={() => handleMovePdf(fIdx, "down")} style={{ ...btnOutline, padding: "4px 8px", opacity: fIdx === (editingBrand.files?.length || 0) - 1 ? 0.3 : 1 }}><ArrowDown style={{ width: 12, height: 12 }} /></button>
-                            <button type="button" onClick={() => handleDeletePdf(fIdx)} style={{ padding: "4px 8px", borderRadius: 8, border: "1px solid #FCA5A5", backgroundColor: C.white, color: "#DC2626", cursor: "pointer" }}><Trash2 style={{ width: 12, height: 12 }} /></button>
+
+                          {/* Editable URL (Firebase Link) */}
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <Link2 style={{ width: 14, height: 14, color: C.textFaint, flexShrink: 0 }} />
+                            <input
+                              type="url"
+                              value={file.url}
+                              onChange={(e) => handlePdfUrlChange(fIdx, e.target.value)}
+                              placeholder="PDF URL / Firebase Link"
+                              style={{
+                                ...inputStyle,
+                                padding: "5px 10px",
+                                fontSize: 11,
+                                flex: 1,
+                                backgroundColor: C.white,
+                                fontFamily: "monospace",
+                                color: C.gold,
+                              }}
+                            />
+                          </div>
+
+                          {/* Footer with Preview & Actions */}
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 4 }}>
+                            <div style={{ display: "flex", gap: 8, fontSize: 11, color: C.textFaint, alignItems: "center" }}>
+                              <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, backgroundColor: C.borderLight, color: C.textMuted }}>{file.fileSize || "PDF"}</span>
+                              <span>·</span>
+                              <a href={file.url} target="_blank" rel="noopener noreferrer" style={{ color: C.gold, textDecoration: "none", display: "flex", alignItems: "center", gap: 3, fontSize: 11 }}>Preview <ExternalLink style={{ width: 11, height: 11 }} /></a>
+                            </div>
+                            <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                              <button type="button" disabled={fIdx === 0} onClick={() => handleMovePdf(fIdx, "up")} style={{ ...btnOutline, padding: "4px 8px", opacity: fIdx === 0 ? 0.3 : 1 }}><ArrowUp style={{ width: 12, height: 12 }} /></button>
+                              <button type="button" disabled={fIdx === (editingBrand.files?.length || 0) - 1} onClick={() => handleMovePdf(fIdx, "down")} style={{ ...btnOutline, padding: "4px 8px", opacity: fIdx === (editingBrand.files?.length || 0) - 1 ? 0.3 : 1 }}><ArrowDown style={{ width: 12, height: 12 }} /></button>
+                              <button type="button" onClick={() => handleDeletePdf(fIdx)} style={{ padding: "4px 8px", borderRadius: 8, border: "1px solid #FCA5A5", backgroundColor: C.white, color: "#DC2626", cursor: "pointer" }}><Trash2 style={{ width: 12, height: 12 }} /></button>
+                            </div>
                           </div>
                         </div>
                       ))}

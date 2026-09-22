@@ -10,7 +10,7 @@ import {
   FileText, Plus, Trash2, Edit, ExternalLink,
   RefreshCw, Search, Upload, Check,
   Download, X, ArrowUp, ArrowDown,
-  Layers, AlertCircle, Eye,
+  Layers, AlertCircle, Eye, Link2,
 } from "lucide-react";
 
 // ─── Shared style tokens ───────────────────────────────────────
@@ -70,6 +70,8 @@ function AdminCategoryDownloadsContent() {
   const [uploadingPdf, setUploadingPdf] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [deletingCategory, setDeletingCategory] = useState<string | null>(null);
+  const [linkPdfTitle, setLinkPdfTitle] = useState("");
+  const [linkPdfUrl, setLinkPdfUrl] = useState("");
 
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
@@ -115,12 +117,16 @@ function AdminCategoryDownloadsContent() {
 
   const handleOpenEdit = (cat: CategoryFolderItem) => {
     setEditingCategory(JSON.parse(JSON.stringify(cat)));
+    setLinkPdfTitle("");
+    setLinkPdfUrl("");
     setIsDrawerOpen(true);
   };
 
   const handleCloseDrawer = () => {
     if (!savingCategory && !uploadingBanner && !uploadingPdf && !uploadingLogo) {
       setEditingCategory(null);
+      setLinkPdfTitle("");
+      setLinkPdfUrl("");
       setIsDrawerOpen(false);
     }
   };
@@ -137,6 +143,8 @@ function AdminCategoryDownloadsContent() {
       files: [],
       ctaButtons: [],
     });
+    setLinkPdfTitle("");
+    setLinkPdfUrl("");
     setIsDrawerOpen(true);
   };
 
@@ -264,6 +272,49 @@ function AdminCategoryDownloadsContent() {
     const f = [...editingCategory.files];
     f[index] = { ...f[index], name: title };
     setEditingCategory({ ...editingCategory, files: f });
+  };
+
+  const handlePdfUrlChange = (index: number, url: string) => {
+    if (!editingCategory?.files) return;
+    const f = [...editingCategory.files];
+    f[index] = { ...f[index], url };
+    setEditingCategory({ ...editingCategory, files: f });
+  };
+
+  const handleAddPdfByLink = () => {
+    if (!editingCategory) return;
+    if (!linkPdfUrl.trim()) {
+      showToast("Please enter a Firebase PDF link or URL", "error");
+      return;
+    }
+    const cleanUrl = linkPdfUrl.trim();
+    // Try to guess a sensible name from URL if title is blank
+    let defaultTitle = `Catalogue ${(editingCategory.files?.length || 0) + 1}`;
+    if (!linkPdfTitle.trim()) {
+      try {
+        const urlObj = new URL(cleanUrl);
+        const pathPart = decodeURIComponent(urlObj.pathname.split("/").pop() || "");
+        if (pathPart && pathPart.endsWith(".pdf")) {
+          defaultTitle = pathPart.replace(/\.pdf$/i, "").replace(/[-_]/g, " ");
+        }
+      } catch (_) {}
+    }
+    const title = linkPdfTitle.trim() || defaultTitle;
+
+    const newPdf: CategoryFolderPdf = {
+      name: title,
+      url: cleanUrl,
+      order: (editingCategory.files?.length || 0) + 1,
+      fileSize: "Firebase PDF",
+    };
+
+    setEditingCategory({
+      ...editingCategory,
+      files: [...(editingCategory.files || []), newPdf],
+    });
+    setLinkPdfTitle("");
+    setLinkPdfUrl("");
+    showToast(`Added "${title}" from Firebase link!`);
   };
 
   const handleSaveCategory = async () => {
@@ -757,6 +808,18 @@ function AdminCategoryDownloadsContent() {
                       </button>
                     </div>
                   </div>
+                  <div style={{ marginTop: 8 }}>
+                    <label style={{ ...labelStyle, fontSize: 9, marginBottom: 3, textTransform: "none", letterSpacing: "normal" }}>
+                      Or paste Cover image URL directly (Firebase link):
+                    </label>
+                    <input
+                      type="url"
+                      value={editingCategory.logoUrl || ""}
+                      onChange={(e) => setEditingCategory({ ...editingCategory, logoUrl: e.target.value })}
+                      placeholder="https://firebasestorage.googleapis.com/... or image URL"
+                      style={{ ...inputStyle, fontSize: 11, fontFamily: "monospace", color: C.gold, backgroundColor: C.surface }}
+                    />
+                  </div>
                 </div>
 
                 {/* Banner Image */}
@@ -793,19 +856,122 @@ function AdminCategoryDownloadsContent() {
                       </button>
                     </div>
                   </div>
+                  <div style={{ marginTop: 8 }}>
+                    <label style={{ ...labelStyle, fontSize: 9, marginBottom: 3, textTransform: "none", letterSpacing: "normal" }}>
+                      Or paste Banner image URL directly (Firebase link):
+                    </label>
+                    <input
+                      type="url"
+                      value={editingCategory.bannerImageUrl || ""}
+                      onChange={(e) => setEditingCategory({ ...editingCategory, bannerImageUrl: e.target.value })}
+                      placeholder="https://firebasestorage.googleapis.com/... or banner URL"
+                      style={{ ...inputStyle, fontSize: 11, fontFamily: "monospace", color: C.gold, backgroundColor: C.surface }}
+                    />
+                  </div>
                 </div>
 
-                {/* ─── PDF Catalogues Upload Section ─── */}
-                <div style={{ paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
+                {/* ─── PDF Catalogues Upload & Link Section ─── */}
+                <div style={{ paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: C.text }}>PDF Catalogues &amp; Downloads</div>
-                      <div style={{ fontSize: 11, color: C.textMuted }}>Upload technical sheets, lookbooks, or full catalogues (up to 30MB)</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: C.text, display: "flex", alignItems: "center", gap: 6 }}>
+                        <FileText style={{ width: 16, height: 16, color: C.gold }} />
+                        <span>PDF Catalogues &amp; Downloads</span>
+                      </div>
+                      <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2 }}>
+                        Paste your Firebase PDF link directly or upload a PDF file from your device.
+                      </div>
                     </div>
                   </div>
 
-                  {/* Upload button */}
+                  {/* ── Option 1: Direct Firebase PDF Link Box ── */}
+                  <div
+                    style={{
+                      padding: "16px",
+                      borderRadius: 14,
+                      backgroundColor: "#FAF6EE",
+                      border: `1px solid #D5CEBF`,
+                      marginBottom: 16,
+                      boxShadow: "0 2px 8px rgba(129, 102, 63, 0.06)",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: C.gold, display: "flex", alignItems: "center", gap: 6 }}>
+                        <Link2 style={{ width: 14, height: 14 }} />
+                        <span>Add via Firebase PDF Link</span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: 9,
+                          fontWeight: 700,
+                          padding: "2px 8px",
+                          borderRadius: 9999,
+                          backgroundColor: "rgba(129, 102, 63, 0.15)",
+                          color: C.gold,
+                          letterSpacing: "0.05em",
+                        }}
+                      >
+                        Recommended
+                      </span>
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      <div>
+                        <label style={{ ...labelStyle, fontSize: 10, marginBottom: 3 }}>Catalogue Title</label>
+                        <input
+                          type="text"
+                          value={linkPdfTitle}
+                          onChange={(e) => setLinkPdfTitle(e.target.value)}
+                          placeholder="e.g. Official Kitchen Specifications 2026"
+                          style={{ ...inputStyle, backgroundColor: C.white, fontSize: 12, padding: "7px 12px" }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ ...labelStyle, fontSize: 10, marginBottom: 3 }}>Firebase PDF Link / URL *</label>
+                        <input
+                          type="url"
+                          value={linkPdfUrl}
+                          onChange={(e) => setLinkPdfUrl(e.target.value)}
+                          placeholder="https://firebasestorage.googleapis.com/... or any PDF link"
+                          style={{
+                            ...inputStyle,
+                            backgroundColor: C.white,
+                            fontSize: 11,
+                            padding: "7px 12px",
+                            fontFamily: "monospace",
+                            color: C.gold,
+                          }}
+                        />
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleAddPdfByLink}
+                        style={{
+                          ...btnGold,
+                          justifyContent: "center",
+                          padding: "9px 14px",
+                          borderRadius: 10,
+                          marginTop: 4,
+                        }}
+                      >
+                        <Plus style={{ width: 14, height: 14 }} />
+                        <span>＋ Add Firebase PDF Link</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* ── Option 2: Upload PDF from Computer ── */}
                   <div style={{ marginBottom: 16 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                      <div style={{ flex: 1, height: 1, backgroundColor: C.borderLight }} />
+                      <span style={{ fontSize: 10, fontWeight: 700, color: C.textFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                        Or Upload PDF File
+                      </span>
+                      <div style={{ flex: 1, height: 1, backgroundColor: C.borderLight }} />
+                    </div>
+
                     <input
                       ref={pdfInputRef}
                       type="file"
@@ -818,21 +984,24 @@ function AdminCategoryDownloadsContent() {
                       onClick={() => pdfInputRef.current?.click()}
                       disabled={uploadingPdf}
                       style={{
-                        ...btnGold,
+                        ...btnOutline,
                         width: "100%",
-                        padding: "12px 16px",
-                        borderRadius: 14,
+                        padding: "10px 16px",
+                        borderRadius: 12,
                         justifyContent: "center",
-                        backgroundColor: uploadingPdf ? C.goldDark : C.gold,
                       }}
                     >
-                      <Upload style={{ width: 16, height: 16 }} />
-                      <span>{uploadingPdf ? "Uploading PDF Document..." : "＋ Upload PDF Catalogue"}</span>
+                      <Upload style={{ width: 14, height: 14, color: C.gold }} />
+                      <span>{uploadingPdf ? "Uploading PDF..." : "Upload PDF File from Device"}</span>
                     </button>
                   </div>
 
-                  {/* Uploaded PDF List */}
+                  {/* ── Uploaded / Added PDF List ── */}
                   <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                      Catalogues in this Category ({editingCategory.files?.length || 0})
+                    </div>
+
                     {editingCategory.files && editingCategory.files.length > 0 ? (
                       editingCategory.files.map((file, idx) => (
                         <div
@@ -847,8 +1016,11 @@ function AdminCategoryDownloadsContent() {
                             gap: 8,
                           }}
                         >
+                          {/* Title Input */}
                           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            <FileText style={{ width: 16, height: 16, color: C.gold, flexShrink: 0 }} />
+                            <span style={{ fontSize: 10, fontWeight: 700, color: C.gold, fontFamily: "monospace", width: 20 }}>
+                              #{idx + 1}
+                            </span>
                             <input
                               type="text"
                               value={file.name}
@@ -858,18 +1030,41 @@ function AdminCategoryDownloadsContent() {
                             />
                           </div>
 
+                          {/* Editable PDF URL (Firebase Link) */}
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <Link2 style={{ width: 14, height: 14, color: C.textFaint, flexShrink: 0 }} />
+                            <input
+                              type="url"
+                              value={file.url}
+                              onChange={(e) => handlePdfUrlChange(idx, e.target.value)}
+                              placeholder="PDF URL / Firebase Link"
+                              style={{
+                                ...inputStyle,
+                                padding: "5px 10px",
+                                fontSize: 11,
+                                flex: 1,
+                                backgroundColor: C.white,
+                                fontFamily: "monospace",
+                                color: C.gold,
+                              }}
+                            />
+                          </div>
+
+                          {/* Footer with Preview & Actions */}
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 4 }}>
                             <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: C.textFaint }}>
-                              <span>{file.fileSize || "PDF"}</span>
+                              <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, backgroundColor: C.borderLight, color: C.textMuted }}>
+                                {file.fileSize || "PDF"}
+                              </span>
                               <span>·</span>
                               <a
                                 href={file.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{ color: C.gold, textDecoration: "underline", display: "inline-flex", alignItems: "center", gap: 3 }}
+                                style={{ color: C.gold, textDecoration: "underline", display: "inline-flex", alignItems: "center", gap: 3, fontSize: 11 }}
                               >
-                                <span>Preview</span>
-                                <Download style={{ width: 10, height: 10 }} />
+                                <span>Preview PDF</span>
+                                <ExternalLink style={{ width: 11, height: 11 }} />
                               </a>
                             </div>
 
@@ -905,8 +1100,8 @@ function AdminCategoryDownloadsContent() {
                         </div>
                       ))
                     ) : (
-                      <div style={{ textAlign: "center", padding: "18px 12px", border: `1px dashed ${C.borderLight}`, borderRadius: 12, color: C.textFaint, fontSize: 12 }}>
-                        No catalogues uploaded yet. Click above to upload a PDF.
+                      <div style={{ textAlign: "center", padding: "18px 12px", border: `1px dashed ${C.borderLight}`, borderRadius: 12, color: C.textFaint, fontSize: 12, backgroundColor: C.surface }}>
+                        No catalogues added yet. Paste a Firebase PDF link above or click to upload.
                       </div>
                     )}
                   </div>
