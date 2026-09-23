@@ -4206,13 +4206,22 @@ export async function generateUniqueBrandSlug(name: string, currentId?: string):
 }
 
 export async function getBrandFoldersStore(): Promise<BrandFolderItem[]> {
+  // 1. Authoritative Cloud Store: Firebase Storage (Permanent across all serverless instances)
+  const fbData = await fetchFromFirebaseCloudStore("brandFolders");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.brandFolders = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+
   try {
     const fromDb = await prisma.brandFolder.findMany({
       orderBy: { name: "asc" },
     });
 
     if (fromDb && Array.isArray(fromDb) && fromDb.length > 0) {
-      return fromDb.map((b) => ({
+      const items: BrandFolderItem[] = fromDb.map((b) => ({
         id: b.id,
         name: b.name,
         slug: b.slug,
@@ -4225,44 +4234,8 @@ export async function getBrandFoldersStore(): Promise<BrandFolderItem[]> {
         createdAt: b.createdAt.toISOString(),
         updatedAt: b.updatedAt.toISOString(),
       }));
-    }
-
-    // Auto-seed if database table is empty
-    if (fromDb && fromDb.length === 0) {
-      const seededItems: BrandFolderItem[] = [];
-      for (const s of SEEDED_BRAND_FOLDERS as BrandFolderItem[]) {
-        try {
-          const created = await prisma.brandFolder.create({
-            data: {
-              id: s.id,
-              name: s.name,
-              slug: s.slug,
-              tagline: s.tagline,
-              description: s.description,
-              bannerImageUrl: s.bannerImageUrl,
-              logoUrl: s.logoUrl,
-              files: s.files as any,
-              ctaButtons: s.ctaButtons as any,
-            },
-          });
-          seededItems.push({
-            id: created.id,
-            name: created.name,
-            slug: created.slug,
-            tagline: created.tagline || undefined,
-            description: created.description || undefined,
-            bannerImageUrl: created.bannerImageUrl || undefined,
-            logoUrl: (created as any).logoUrl || undefined,
-            files: (created.files as any) || [],
-            ctaButtons: (created.ctaButtons as any) || [],
-            createdAt: created.createdAt.toISOString(),
-            updatedAt: created.updatedAt.toISOString(),
-          });
-        } catch {
-          seededItems.push(s);
-        }
-      }
-      if (seededItems.length > 0) return seededItems;
+      syncToFirebaseCloudStore("brandFolders", items).catch(() => {});
+      return items;
     }
   } catch (dbErr) {
     // Database fallback
@@ -4270,11 +4243,13 @@ export async function getBrandFoldersStore(): Promise<BrandFolderItem[]> {
 
   const json = readJsonStore();
   if (json.brandFolders && Array.isArray(json.brandFolders) && json.brandFolders.length > 0) {
+    syncToFirebaseCloudStore("brandFolders", json.brandFolders).catch(() => {});
     return json.brandFolders;
   }
 
-  // Fallback to seeded brands
+  // Fallback to seeded brands and persist to Firebase Storage
   const seeded = (SEEDED_BRAND_FOLDERS as BrandFolderItem[]) || [];
+  await syncToFirebaseCloudStore("brandFolders", seeded);
   json.brandFolders = seeded;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
@@ -4293,7 +4268,9 @@ export async function getBrandFolderBySlugStore(slug: string): Promise<BrandFold
     .replace(/\/\d+\s*PDFs\/?$/i, "")
     .trim();
 
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
   const cleanSlug = raw.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const targetNorm = norm(raw);
   if (!cleanSlug && !raw) return null;
 
   try {
@@ -4329,11 +4306,13 @@ export async function getBrandFolderBySlugStore(slug: string): Promise<BrandFold
   const found = all.find((b) => {
     const bSlug = (b.slug || "").toLowerCase();
     const bName = (b.name || "").toLowerCase();
-    const bNormName = bName.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    const bNormSlug = norm(b.slug);
+    const bNormName = norm(b.name);
     return (
       bSlug === cleanSlug ||
       bSlug === raw.toLowerCase() ||
-      bNormName === cleanSlug ||
+      bNormSlug === targetNorm ||
+      bNormName === targetNorm ||
       bName === raw.toLowerCase()
     );
   });
@@ -4346,9 +4325,12 @@ export async function saveBrandFolderStore(
   const id = folder.id || `bf-${Date.now()}`;
   const now = new Date();
 
-  let slug = folder.slug?.trim().toLowerCase();
+  let slug = folder.slug?.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
   if (!slug) {
-    slug = await generateUniqueBrandSlug(folder.name, id);
+    slug = folder.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    if (!slug) {
+      slug = await generateUniqueBrandSlug(folder.name, id);
+    }
   }
 
   const full: BrandFolderItem = {
@@ -4359,14 +4341,58 @@ export async function saveBrandFolderStore(
     description: folder.description?.trim() || undefined,
     bannerImageUrl: folder.bannerImageUrl?.trim() || undefined,
     logoUrl: folder.logoUrl?.trim() || undefined,
-    files: folder.files || [],
+    files: Array.isArray(folder.files) ? folder.files : [],
     ctaButtons: folder.ctaButtons || [],
     createdAt: folder.createdAt || now.toISOString(),
     updatedAt: now.toISOString(),
   };
 
+  // 1. Authoritative Cloud Store fetch
+  let current: BrandFolderItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("brandFolders");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    current = fbData;
+  } else {
+    current = await getBrandFoldersStore();
+  }
+
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const targetId = full.id;
+  const targetNormSlug = norm(full.slug);
+  const targetNormName = norm(full.name);
+
+  const idx = current.findIndex(
+    (b) =>
+      b.id === targetId ||
+      (b.slug && norm(b.slug) === targetNormSlug) ||
+      (b.name && norm(b.name) === targetNormName)
+  );
+
+  if (idx >= 0) {
+    const existing = current[idx];
+    current[idx] = {
+      ...existing,
+      ...full,
+      id: existing.id || full.id,
+      createdAt: existing.createdAt || full.createdAt,
+      updatedAt: now.toISOString(),
+    };
+  } else {
+    current.push(full);
+  }
+
+  // 2. Authoritative save to Firebase Storage
+  await syncToFirebaseCloudStore("brandFolders", current);
+
+  // 3. Local cache update
+  const json = readJsonStore();
+  json.brandFolders = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+
+  // 4. Background Prisma upsert
   try {
-    const saved = await prisma.brandFolder.upsert({
+    await prisma.brandFolder.upsert({
       where: { id },
       update: {
         name: full.name,
@@ -4390,31 +4416,36 @@ export async function saveBrandFolderStore(
         ctaButtons: full.ctaButtons as any,
       },
     });
-    full.id = saved.id;
-    full.slug = saved.slug;
-    full.createdAt = saved.createdAt.toISOString();
-    full.updatedAt = saved.updatedAt.toISOString();
   } catch (dbErr) {
     // Fallback
   }
-
-  const json = readJsonStore();
-  if (!json.brandFolders || !Array.isArray(json.brandFolders)) {
-    json.brandFolders = [];
-  }
-  const idx = json.brandFolders.findIndex((b: any) => b.id === id || b.slug === full.slug);
-  if (idx >= 0) {
-    json.brandFolders[idx] = full;
-  } else {
-    json.brandFolders.push(full);
-  }
-  globalThis.__AAREN_MEMORY_STORE__ = json;
-  writeJsonStore(json);
 
   return full;
 }
 
 export async function deleteBrandFolderStore(id: string): Promise<boolean> {
+  let current: BrandFolderItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("brandFolders");
+  if (fbData && Array.isArray(fbData)) {
+    current = fbData;
+  } else {
+    const json = readJsonStore();
+    current = json.brandFolders || [];
+  }
+
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const targetNorm = norm(id);
+  current = current.filter(
+    (b) => b.id !== id && norm(b.id) !== targetNorm && norm(b.slug) !== targetNorm
+  );
+
+  await syncToFirebaseCloudStore("brandFolders", current);
+
+  const json = readJsonStore();
+  json.brandFolders = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+
   try {
     await prisma.brandFolder.delete({
       where: { id },
@@ -4423,12 +4454,6 @@ export async function deleteBrandFolderStore(id: string): Promise<boolean> {
     // Fallback
   }
 
-  const json = readJsonStore();
-  if (json.brandFolders && Array.isArray(json.brandFolders)) {
-    json.brandFolders = json.brandFolders.filter((b: any) => b.id !== id);
-    globalThis.__AAREN_MEMORY_STORE__ = json;
-    writeJsonStore(json);
-  }
   return true;
 }
 
@@ -4469,25 +4494,48 @@ export async function generateUniqueCategorySlug(name: string, currentId?: strin
 }
 
 export async function getCategoryFoldersStore(): Promise<CategoryFolderItem[]> {
+  // 1. Authoritative Cloud Store: Firebase Storage (Permanent across all serverless instances)
+  const fbData = await fetchFromFirebaseCloudStore("categoryFolders");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const json = readJsonStore();
+    json.categoryFolders = fbData;
+    globalThis.__AAREN_MEMORY_STORE__ = json;
+    return fbData;
+  }
+
+  // 2. Check local JSON fallback
   const json = readJsonStore();
   if (json.categoryFolders && Array.isArray(json.categoryFolders) && json.categoryFolders.length > 0) {
+    syncToFirebaseCloudStore("categoryFolders", json.categoryFolders).catch(() => {});
     return json.categoryFolders;
   }
 
-  // Auto-seed from existing categories if empty
+  // 3. Auto-seed from existing categories if empty
   const defaultCats = await getCategoriesStore();
-  const seededItems: CategoryFolderItem[] = (defaultCats || []).map((c) => ({
-    id: `cf-${c.id}`,
-    name: c.name,
-    slug: c.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || `cat-${c.id}`,
-    tagline: c.description || "Official Catalogues & Specifications",
-    description: c.description || undefined,
-    bannerImageUrl: c.coverImage || undefined,
-    logoUrl: c.coverImage || undefined,
-    files: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  }));
+  const now = new Date().toISOString();
+  const seededItems: CategoryFolderItem[] = (defaultCats || []).map((c, i) => {
+    const cleanSlug = (c.name || `cat-${i + 1}`)
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    return {
+      id: c.id ? (c.id.startsWith("cf-") ? c.id : `cf-${c.id}`) : `cf-${cleanSlug || i + 1}`,
+      name: c.name,
+      slug: cleanSlug || `cat-${i + 1}`,
+      tagline: c.description || "Official Catalogues & Specifications",
+      description: c.description || undefined,
+      bannerImageUrl: c.coverImage || undefined,
+      logoUrl: c.coverImage || undefined,
+      files: [],
+      ctaButtons: [],
+      createdAt: now,
+      updatedAt: now,
+    };
+  });
+
+  // Authoritative cloud write so it persists permanently in Firebase Storage!
+  await syncToFirebaseCloudStore("categoryFolders", seededItems);
 
   json.categoryFolders = seededItems;
   globalThis.__AAREN_MEMORY_STORE__ = json;
@@ -4497,16 +4545,38 @@ export async function getCategoryFoldersStore(): Promise<CategoryFolderItem[]> {
 
 export async function getCategoryFolderBySlugStore(slug: string): Promise<CategoryFolderItem | null> {
   if (!slug) return null;
-  const cleanSlug = slug.trim().toLowerCase();
-  const all = await getCategoryFoldersStore();
-  const exact = all.find((b) => b.slug.toLowerCase() === cleanSlug);
-  if (exact) return exact;
+  let raw = slug.trim();
+  try {
+    raw = decodeURIComponent(raw);
+  } catch {}
 
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const cleanSlug = raw.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const targetNorm = norm(raw);
+  if (!cleanSlug && !raw) return null;
+
+  const all = await getCategoryFoldersStore();
+
+  // 1. Exact slug match
+  const exactSlug = all.find(
+    (b) => (b.slug || "").toLowerCase() === cleanSlug || (b.slug || "").toLowerCase() === raw.toLowerCase()
+  );
+  if (exactSlug) return exactSlug;
+
+  // 2. Normalized slug or normalized name match
+  const normMatch = all.find((b) => {
+    const bNormSlug = norm(b.slug);
+    const bNormName = norm(b.name);
+    return bNormSlug === targetNorm || bNormName === targetNorm;
+  });
+  if (normMatch) return normMatch;
+
+  // 3. Fallback partial includes
   return (
     all.find(
       (b) =>
-        b.slug.toLowerCase().includes(cleanSlug) ||
-        b.name.toLowerCase().trim() === cleanSlug
+        (b.slug && b.slug.toLowerCase().includes(cleanSlug)) ||
+        (b.name && b.name.toLowerCase().includes(cleanSlug))
     ) || null
   );
 }
@@ -4517,9 +4587,12 @@ export async function saveCategoryFolderStore(
   const id = folder.id || `cf-${Date.now()}`;
   const now = new Date();
 
-  let slug = folder.slug?.trim().toLowerCase();
+  let slug = folder.slug?.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
   if (!slug) {
-    slug = await generateUniqueCategorySlug(folder.name, id);
+    slug = folder.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    if (!slug) {
+      slug = await generateUniqueCategorySlug(folder.name, id);
+    }
   }
 
   const full: CategoryFolderItem = {
@@ -4530,35 +4603,104 @@ export async function saveCategoryFolderStore(
     description: folder.description?.trim() || undefined,
     bannerImageUrl: folder.bannerImageUrl?.trim() || undefined,
     logoUrl: folder.logoUrl?.trim() || undefined,
-    files: folder.files || [],
+    files: Array.isArray(folder.files) ? folder.files : [],
     ctaButtons: folder.ctaButtons || [],
     createdAt: folder.createdAt || now.toISOString(),
     updatedAt: now.toISOString(),
   };
 
-  const json = readJsonStore();
-  if (!json.categoryFolders || !Array.isArray(json.categoryFolders)) {
-    json.categoryFolders = [];
-  }
-  const idx = json.categoryFolders.findIndex((b: any) => b.id === id || b.slug === full.slug);
-  if (idx >= 0) {
-    json.categoryFolders[idx] = full;
+  // 1. Authoritative Cloud Store fetch
+  let current: CategoryFolderItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("categoryFolders");
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    current = fbData;
   } else {
-    json.categoryFolders.push(full);
+    current = await getCategoryFoldersStore();
   }
+
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const targetId = full.id;
+  const targetNormSlug = norm(full.slug);
+  const targetNormName = norm(full.name);
+
+  const idx = current.findIndex(
+    (c) =>
+      c.id === targetId ||
+      (c.slug && norm(c.slug) === targetNormSlug) ||
+      (c.name && norm(c.name) === targetNormName)
+  );
+
+  if (idx >= 0) {
+    const existing = current[idx];
+    current[idx] = {
+      ...existing,
+      ...full,
+      id: existing.id || full.id,
+      createdAt: existing.createdAt || full.createdAt,
+      updatedAt: now.toISOString(),
+    };
+  } else {
+    current.push(full);
+  }
+
+  // 2. Authoritative save to Firebase Cloud Storage (Permanent across all serverless instances)
+  await syncToFirebaseCloudStore("categoryFolders", current);
+
+  // 3. Local cache update
+  const json = readJsonStore();
+  json.categoryFolders = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
+
+  // 4. Synchronize matching category in "categories" store if name matches
+  try {
+    const cats = await getCategoriesStore();
+    const catMatch = cats.find((c) => norm(c.name) === targetNormName || norm(c.id) === norm(full.id));
+    if (catMatch) {
+      let changed = false;
+      const newImg = full.logoUrl || full.bannerImageUrl;
+      if (newImg && catMatch.coverImage !== newImg) {
+        catMatch.coverImage = newImg;
+        changed = true;
+      }
+      if (full.description && catMatch.description !== full.description) {
+        catMatch.description = full.description;
+        changed = true;
+      }
+      if (changed) {
+        await saveCategoryStore(catMatch);
+      }
+    }
+  } catch (err) {
+    console.warn("[saveCategoryFolderStore] optional categories sync error:", err);
+  }
 
   return full;
 }
 
 export async function deleteCategoryFolderStore(id: string): Promise<boolean> {
-  const json = readJsonStore();
-  if (json.categoryFolders && Array.isArray(json.categoryFolders)) {
-    json.categoryFolders = json.categoryFolders.filter((b: any) => b.id !== id);
-    globalThis.__AAREN_MEMORY_STORE__ = json;
-    writeJsonStore(json);
+  let current: CategoryFolderItem[] = [];
+  const fbData = await fetchFromFirebaseCloudStore("categoryFolders");
+  if (fbData && Array.isArray(fbData)) {
+    current = fbData;
+  } else {
+    const json = readJsonStore();
+    current = json.categoryFolders || [];
   }
+
+  const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const targetNorm = norm(id);
+  current = current.filter(
+    (c) => c.id !== id && norm(c.id) !== targetNorm && norm(c.slug) !== targetNorm
+  );
+
+  await syncToFirebaseCloudStore("categoryFolders", current);
+
+  const json = readJsonStore();
+  json.categoryFolders = current;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+  writeJsonStore(json);
+
   return true;
 }
 

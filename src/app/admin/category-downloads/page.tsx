@@ -314,26 +314,57 @@ function AdminCategoryDownloadsContent() {
     });
     setLinkPdfTitle("");
     setLinkPdfUrl("");
-    showToast(`Added "${title}" from Firebase link!`);
+    showToast(`Added "${title}"! Click "Save Changes" below to publish.`);
   };
 
   const handleSaveCategory = async () => {
     if (!editingCategory) return;
     if (!editingCategory.name.trim()) { showToast("Category name required", "error"); return; }
     if (!editingCategory.slug.trim()) { showToast("Slug required", "error"); return; }
+
+    // If the admin pasted a Firebase PDF link but didn't click "＋ Add Firebase PDF Link", auto-stage it now!
+    let filesToSave = [...(editingCategory.files || [])];
+    if (linkPdfUrl.trim()) {
+      const cleanUrl = linkPdfUrl.trim();
+      let defaultTitle = `Catalogue ${filesToSave.length + 1}`;
+      if (!linkPdfTitle.trim()) {
+        try {
+          const urlObj = new URL(cleanUrl);
+          const pathPart = decodeURIComponent(urlObj.pathname.split("/").pop() || "");
+          if (pathPart && pathPart.endsWith(".pdf")) {
+            defaultTitle = pathPart.replace(/\.pdf$/i, "").replace(/[-_]/g, " ");
+          }
+        } catch (_) {}
+      }
+      const title = linkPdfTitle.trim() || defaultTitle;
+      filesToSave.push({
+        name: title,
+        url: cleanUrl,
+        order: filesToSave.length + 1,
+        fileSize: "Firebase PDF",
+      });
+      setLinkPdfTitle("");
+      setLinkPdfUrl("");
+    }
+
+    const payload = {
+      ...editingCategory,
+      files: filesToSave,
+    };
+
     setSavingCategory(true);
     try {
       const res = await fetch("/api/admin/category-downloads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editingCategory),
+        body: JSON.stringify(payload),
       });
       const json = await res.json();
       if (res.ok && json.success) {
-        showToast(`Saved "${editingCategory.name}"!`);
+        showToast(`Saved "${editingCategory.name}" successfully!`);
         setIsDrawerOpen(false);
         setEditingCategory(null);
-        fetchCategories();
+        await fetchCategories();
       } else {
         showToast(json.error || "Save failed", "error");
       }

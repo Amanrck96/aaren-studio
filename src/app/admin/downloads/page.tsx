@@ -260,11 +260,42 @@ function AdminBrandDownloadsContent() {
     if (!editingBrand) return;
     if (!editingBrand.name.trim()) { showToast("Brand name required", "error"); return; }
     if (!editingBrand.slug.trim()) { showToast("Slug required", "error"); return; }
+
+    // If the admin pasted a Firebase PDF link but didn't click "＋ Add Firebase PDF Link", auto-stage it now!
+    let filesToSave = [...(editingBrand.files || [])];
+    if (linkPdfUrl.trim()) {
+      const cleanUrl = linkPdfUrl.trim();
+      let defaultTitle = `Catalogue ${filesToSave.length + 1}`;
+      if (!linkPdfTitle.trim()) {
+        try {
+          const urlObj = new URL(cleanUrl);
+          const pathPart = decodeURIComponent(urlObj.pathname.split("/").pop() || "");
+          if (pathPart && pathPart.endsWith(".pdf")) {
+            defaultTitle = pathPart.replace(/\.pdf$/i, "").replace(/[-_]/g, " ");
+          }
+        } catch (_) {}
+      }
+      const title = linkPdfTitle.trim() || defaultTitle;
+      filesToSave.push({
+        name: title,
+        url: cleanUrl,
+        order: filesToSave.length + 1,
+        fileSize: "Firebase PDF",
+      });
+      setLinkPdfTitle("");
+      setLinkPdfUrl("");
+    }
+
+    const payload = {
+      ...editingBrand,
+      files: filesToSave,
+    };
+
     setSavingBrand(true);
     try {
-      const res = await fetch("/api/admin/brand-downloads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(editingBrand) });
+      const res = await fetch("/api/admin/brand-downloads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const json = await res.json();
-      if (res.ok && json.success) { showToast(`Saved ${editingBrand.name}!`); setIsDrawerOpen(false); setEditingBrand(null); fetchBrands(); }
+      if (res.ok && json.success) { showToast(`Saved ${editingBrand.name} successfully!`); setIsDrawerOpen(false); setEditingBrand(null); await fetchBrands(); }
       else showToast(json.error || "Save failed", "error");
     } catch (err: any) { showToast(err.message || "Save failed", "error"); } finally { setSavingBrand(false); }
   };

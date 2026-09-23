@@ -7,19 +7,29 @@ import {
 } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+  "Pragma": "no-cache",
+  "Expires": "0",
+};
 
 export async function GET() {
   try {
     const folders = await getCategoryFoldersStore();
-    return NextResponse.json({
-      success: true,
-      count: folders.length,
-      data: folders,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        count: folders.length,
+        data: folders,
+      },
+      { headers: NO_CACHE_HEADERS }
+    );
   } catch (err: any) {
     return NextResponse.json(
       { success: false, error: err.message || "Failed to fetch category folders" },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }
@@ -52,15 +62,18 @@ export async function POST(request: NextRequest) {
       revalidatePath("/admin/category-downloads");
     } catch (_) {}
 
-    return NextResponse.json({
-      success: true,
-      data: saved,
-      publicUrl: `/category-downloads/${saved.slug}`,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        data: saved,
+        publicUrl: `/category-downloads/${saved.slug}`,
+      },
+      { headers: NO_CACHE_HEADERS }
+    );
   } catch (err: any) {
     return NextResponse.json(
       { success: false, error: err.message || "Failed to save category folder" },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }
@@ -71,7 +84,7 @@ export async function DELETE(request: NextRequest) {
     if (sessionCookie !== "authenticated") {
       return NextResponse.json(
         { success: false, error: "Unauthorized: Admin session required" },
-        { status: 401 }
+        { status: 401, headers: NO_CACHE_HEADERS }
       );
     }
 
@@ -80,7 +93,7 @@ export async function DELETE(request: NextRequest) {
     if (!id) {
       return NextResponse.json(
         { success: false, error: "Category folder ID is required" },
-        { status: 400 }
+        { status: 400, headers: NO_CACHE_HEADERS }
       );
     }
 
@@ -93,11 +106,11 @@ export async function DELETE(request: NextRequest) {
       revalidatePath("/admin/category-downloads");
     } catch (_) {}
 
-    return NextResponse.json({ success: deleted });
+    return NextResponse.json({ success: deleted }, { headers: NO_CACHE_HEADERS });
   } catch (err: any) {
     return NextResponse.json(
       { success: false, error: err.message || "Failed to delete category folder" },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }

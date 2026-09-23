@@ -1,6 +1,11 @@
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getBrandFolderBySlugStore, getBrandFoldersStore, getCategoriesStore } from "@/lib/store";
+import { notFound, redirect } from "next/navigation";
+import {
+  getBrandFolderBySlugStore,
+  getBrandFoldersStore,
+  getCategoriesStore,
+  getCategoryFolderBySlugStore,
+} from "@/lib/store";
 import QRCodeChimpShowroom from "@/components/QRCodeChimpShowroom";
 
 export const dynamic = "force-dynamic";
@@ -32,6 +37,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const brand = await getBrandFolderBySlugStore(slugStr);
 
   if (!brand) {
+    const category = await getCategoryFolderBySlugStore(slugStr);
+    if (category) {
+      return {
+        title: `${category.name} | Official Catalogues & Specifications | Aaren Intpro`,
+        description:
+          category.tagline ||
+          category.description ||
+          `Official architectural catalogues, technical brochures, and specifications for ${category.name}. Curated by Aaren Intpro.`,
+      };
+    }
     return {
       title: "Brand Showroom Not Found | Aaren Studio",
       description: "The requested brand showroom could not be found.",
@@ -79,6 +94,10 @@ export default async function BrandDownloadPage({ params }: Props) {
   const brand = await getBrandFolderBySlugStore(slugStr);
 
   if (!brand) {
+    const category = await getCategoryFolderBySlugStore(slugStr);
+    if (category) {
+      redirect(`/category-downloads/${category.slug}`);
+    }
     notFound();
   }
 
