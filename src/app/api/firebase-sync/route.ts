@@ -25,6 +25,8 @@ import {
   getTaxonomiesStore,
   getPagesStore,
   getDownloadFoldersStore,
+  getCategoryFoldersStore,
+  getBrandFoldersStore,
 } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -90,6 +92,8 @@ export async function POST() {
       taxonomies,
       pages,
       downloadFolders,
+      categoryFolders,
+      brandFolders,
     ] = await Promise.all([
       getBrandsStore(),
       getCategoriesStore(),
@@ -111,6 +115,8 @@ export async function POST() {
       getTaxonomiesStore(),
       getPagesStore(),
       getDownloadFoldersStore(),
+      getCategoryFoldersStore(),
+      getBrandFoldersStore(),
     ]);
 
     // 3. Push all collections to Firebase in parallel
@@ -136,6 +142,8 @@ export async function POST() {
       pushToFirebase("taxonomies", taxonomies),
       pushToFirebase("pages", pages),
       pushToFirebase("downloadFolders", downloadFolders),
+      pushToFirebase("categoryFolders", categoryFolders),
+      pushToFirebase("brandFolders", brandFolders),
     ]);
 
     // 5. Invalidate memory cache again to ensure fresh reads

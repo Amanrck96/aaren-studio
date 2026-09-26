@@ -484,6 +484,9 @@ export const DEFAULT_CATEGORIES: CategoryItem[] = [
   { id: "cat-bf", name: "Bathroom Fittings", coverImage: "/categories/cat_13.jpg", description: "Falper and FIMA tapware and vanities", shortCode: "BF 13", sequenceNumber: 13 },
   { id: "cat-sw", name: "Sanitary Ware", coverImage: "/categories/cat_14.jpg", description: "Flaminia & Antonio Lupi basins", shortCode: "SW 14", sequenceNumber: 14 },
   { id: "cat-mr", name: "Mirrors", coverImage: "/categories/cat_15.jpg", description: "Architectural glass backlit mirrors", shortCode: "MR 15", sequenceNumber: 15 },
+  { id: "cladding", name: "Cladding", coverImage: "/brands/brand_3_1.jpg", description: "Architectural exterior composite and timber cladding", shortCode: "CL 16", sequenceNumber: 16 },
+  { id: "decking", name: "Decking", coverImage: "/brands/brand_3_1.jpg", description: "UltraShield composite outdoor decking and timber profiles", shortCode: "DK 17", sequenceNumber: 17 },
+  { id: "wallpaper", name: "Wallpaper", coverImage: "/brands/brand_8_1.jpg", description: "Artistic Italian designer wallpapers and wallcoverings", shortCode: "WP 18", sequenceNumber: 18 },
 ];
 
 export const DEFAULT_BRANDS: BrandItem[] = [
@@ -1010,38 +1013,97 @@ export async function saveCatalogSettingsStore(data: Partial<CatalogSettingsItem
 
 // CATEGORIES STORE
 export async function getCategoriesStore(): Promise<CategoryItem[]> {
+  let categories: CategoryItem[] = [];
   const fbData = await fetchFromFirebaseCloudStore("categories");
-  if (fbData && Array.isArray(fbData)) {
-    const active = await filterActiveItems("categories", fbData);
+  if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    categories = await filterActiveItems("categories", fbData);
+  } else {
+    // Fallback to local JSON if Firebase unavailable
     const json = readJsonStore();
-    json.categories = active;
-    globalThis.__AAREN_MEMORY_STORE__ = json;
-    return active;
-  }
+    if (json.categories && Array.isArray(json.categories) && json.categories.length > 0) {
+      categories = await filterActiveItems("categories", json.categories);
+    } else {
+      // Fallback to Prisma
+      try {
+        const dbCats = await prisma.category.findMany({ orderBy: { sequenceNumber: "asc" } });
+        if (dbCats && dbCats.length > 0) {
+          const mapped: CategoryItem[] = dbCats.map((c: any) => ({
+            id: c.id,
+            name: c.name,
+            coverImage: c.coverImage || "",
+            description: c.description || "",
+            shortCode: c.shortCode || "",
+            sequenceNumber: c.sequenceNumber || 1,
+          }));
+          categories = await filterActiveItems("categories", mapped);
+        }
+      } catch (e) {}
 
-  // Fallback to local JSON if Firebase unavailable
-  const json = readJsonStore();
-  if (json.categories && Array.isArray(json.categories)) {
-    return await filterActiveItems("categories", json.categories);
-  }
-
-  // Fallback to Prisma
-  try {
-    const dbCats = await prisma.category.findMany({ orderBy: { sequenceNumber: "asc" } });
-    if (dbCats && dbCats.length > 0) {
-      const mapped: CategoryItem[] = dbCats.map((c: any) => ({
-        id: c.id,
-        name: c.name,
-        coverImage: c.coverImage || "",
-        description: c.description || "",
-        shortCode: c.shortCode || "",
-        sequenceNumber: c.sequenceNumber || 1,
-      }));
-      return await filterActiveItems("categories", mapped);
+      if (categories.length === 0) {
+        categories = await filterActiveItems("categories", DEFAULT_CATEGORIES);
+      }
     }
-  } catch (e) {}
+  }
 
-  return await filterActiveItems("categories", DEFAULT_CATEGORIES);
+  // AUTO-SYNC: Automatically incorporate any categories added in Category Downloads (/admin/category-downloads)
+  try {
+    const fbFolders = await fetchFromFirebaseCloudStore("categoryFolders");
+    let folders: CategoryFolderItem[] = Array.isArray(fbFolders) ? fbFolders : [];
+    if (folders.length === 0) {
+      const json = readJsonStore();
+      folders = json.categoryFolders || [];
+    }
+
+    const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    let changed = false;
+
+    for (const folder of folders) {
+      if (!folder.name) continue;
+      const targetNorm = norm(folder.name);
+      const exists = categories.some(
+        (c) => norm(c.name) === targetNorm || norm(c.id) === norm(folder.id) || norm(c.id) === norm(folder.slug)
+      );
+
+      if (!exists) {
+        const nextSeq = categories.length + 1;
+        const codePrefix = folder.name.replace(/[^a-zA-Z]/g, "").slice(0, 2).toUpperCase() || "CT";
+        const fallbackCover =
+          folder.name.toLowerCase().includes("wallpaper")
+            ? "/brands/brand_8_1.jpg"
+            : folder.name.toLowerCase().includes("cladding") || folder.name.toLowerCase().includes("decking")
+            ? "/brands/brand_3_1.jpg"
+            : "/categories/cat_1.jpg";
+
+        const newCat: CategoryItem = {
+          id: folder.id ? (folder.id.startsWith("cf-") ? folder.id.replace("cf-", "cat-") : folder.id) : `cat-${folder.slug || nextSeq}`,
+          name: folder.name.trim(),
+          coverImage: folder.logoUrl || folder.bannerImageUrl || fallbackCover,
+          description: folder.tagline || folder.description || `${folder.name} architectural collection`,
+          shortCode: `${codePrefix} ${String(nextSeq).padStart(2, "0")}`,
+          sequenceNumber: nextSeq,
+        };
+
+        categories.push(newCat);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      syncToFirebaseCloudStore("categories", categories).catch(() => {});
+      const json = readJsonStore();
+      json.categories = categories;
+      globalThis.__AAREN_MEMORY_STORE__ = json;
+      writeJsonStore(json);
+    }
+  } catch (syncErr) {
+    console.warn("[getCategoriesStore] categoryFolders merge notice:", syncErr);
+  }
+
+  const json = readJsonStore();
+  json.categories = categories;
+  globalThis.__AAREN_MEMORY_STORE__ = json;
+
+  return categories;
 }
 
 function sanitizeBrand(b: BrandItem): BrandItem {
@@ -1586,6 +1648,22 @@ export async function saveCategoryStore(cat: Omit<CategoryItem, "id"> & { id?: s
 
   // 4. Background Prisma
   try { await prisma.category.upsert({ where: { id }, update: cat, create: { id, ...cat } }); } catch (e) {}
+
+  // 5. Ensure matching category folder exists in categoryFolders store
+  try {
+    const folders = await getCategoryFoldersStore();
+    const folderMatch = folders.find((f) => norm(f.name) === targetNormName || norm(f.id) === targetNormId);
+    if (!folderMatch) {
+      await saveCategoryFolderStore({
+        name: full.name,
+        tagline: full.description,
+        description: full.description,
+        bannerImageUrl: full.coverImage,
+        logoUrl: full.coverImage,
+        files: [],
+      });
+    }
+  } catch (_) {}
 
   return full;
 }
@@ -4652,7 +4730,7 @@ export async function saveCategoryFolderStore(
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
 
-  // 4. Synchronize matching category in "categories" store if name matches
+  // 4. Synchronize matching category in "categories" store if name matches or CREATE if missing
   try {
     const cats = await getCategoriesStore();
     const catMatch = cats.find((c) => norm(c.name) === targetNormName || norm(c.id) === norm(full.id));
@@ -4670,6 +4748,24 @@ export async function saveCategoryFolderStore(
       if (changed) {
         await saveCategoryStore(catMatch);
       }
+    } else {
+      const nextSeq = cats.length + 1;
+      const codePrefix = full.name.replace(/[^a-zA-Z]/g, "").slice(0, 2).toUpperCase() || "CT";
+      const fallbackCover =
+        full.name.toLowerCase().includes("wallpaper")
+          ? "/brands/brand_8_1.jpg"
+          : full.name.toLowerCase().includes("cladding") || full.name.toLowerCase().includes("decking")
+          ? "/brands/brand_3_1.jpg"
+          : "/categories/cat_1.jpg";
+
+      await saveCategoryStore({
+        id: full.id.startsWith("cf-") ? full.id.replace("cf-", "cat-") : `cat-${full.slug || nextSeq}`,
+        name: full.name,
+        coverImage: full.logoUrl || full.bannerImageUrl || fallbackCover,
+        description: full.tagline || full.description || `${full.name} architectural collection`,
+        shortCode: `${codePrefix} ${String(nextSeq).padStart(2, "0")}`,
+        sequenceNumber: nextSeq,
+      });
     }
   } catch (err) {
     console.warn("[saveCategoryFolderStore] optional categories sync error:", err);

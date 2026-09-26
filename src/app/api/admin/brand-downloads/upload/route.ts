@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadMedia } from "@/lib/cloudinary";
+import { storage } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const dynamic = "force-dynamic";
 
@@ -97,32 +99,55 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert file buffer to base64 Data URI for server-side Cloudinary upload
+    // Convert file buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const resolvedMime = isPdf ? "application/pdf" : mime || "image/jpeg";
-    const dataUri = `data:${resolvedMime};base64,${buffer.toString("base64")}`;
+    const cleanFolder = (formData.get("folder") as string) || (isPdf ? "Brand_Assets" : "Brands");
 
-    const folder = (formData.get("folder") as string) || (isPdf ? "aaren_brand_catalogs" : "aaren_brand_banners");
-    const resource_type: "raw" | "image" | "auto" = isPdf ? "raw" : "image";
+    let publicUrl = "";
 
-    const result = await uploadMedia(dataUri, {
-      folder,
-      resource_type,
-      width: isImage ? 1600 : undefined,
-    });
+    // 1. Primary: Direct Google Firebase Storage Upload
+    try {
+      const cleanName = fileName.replace(/[^a-zA-Z0-9_.-]/g, "_");
+      const storagePath = `${cleanFolder}/${Date.now()}_${cleanName}`;
+      const storageRef = ref(storage, storagePath);
+      const snapshot = await uploadBytes(storageRef, buffer, {
+        contentType: resolvedMime,
+        cacheControl: "public, max-age=31536000",
+      });
+      publicUrl = await getDownloadURL(snapshot.ref);
+    } catch (fbErr) {
+      console.warn("[Brand Downloads Upload] Firebase Storage write notice:", fbErr);
+    }
 
-    if (!result || !result.secure_url) {
+    // 2. Secondary fallback: Cloudinary upload
+    let publicId = "";
+    if (!publicUrl) {
+      const dataUri = `data:${resolvedMime};base64,${buffer.toString("base64")}`;
+      const resource_type: "raw" | "image" | "auto" = isPdf ? "raw" : "image";
+      const result = await uploadMedia(dataUri, {
+        folder: cleanFolder,
+        resource_type,
+        width: isImage ? 1600 : undefined,
+      });
+      if (result && result.secure_url) {
+        publicUrl = result.secure_url;
+        publicId = result.public_id;
+      }
+    }
+
+    if (!publicUrl) {
       return NextResponse.json(
-        { success: false, error: "Failed to upload file to Cloudinary" },
+        { success: false, error: "Failed to upload file to storage" },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      url: result.secure_url,
-      publicId: result.public_id,
+      url: publicUrl,
+      publicId,
       fileName,
       fileSize: formatBytes(file.size),
     });

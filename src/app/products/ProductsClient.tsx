@@ -18,6 +18,7 @@ const CATEGORIES_FILTER_LIST = [
   { id: "Doors", label: "Doors", symbol: "W", count: 24 },
   { id: "Kitchen", label: "Kitchen", symbol: "K", count: 18 },
   { id: "Tiles", label: "Tiles", symbol: "T", count: 40 },
+  { id: "Wallpaper", label: "Wallpaper", symbol: "W", count: 28 },
 ];
 
 interface ProductsClientProps {
@@ -227,6 +228,8 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
           matchesCategory = normCat.includes("bath") || normCat.includes("basin") || normCat.includes("shower") || normBrandLower.includes("falper") || normBrandLower.includes("fima");
         } else if (normCatQuery.includes("mirror")) {
           matchesCategory = normCat.includes("mirror") || normName.includes("mirror") || normBrandLower.includes("waltz");
+        } else if (normCatQuery.includes("wallpaper") || normCatQuery.includes("wall-covering")) {
+          matchesCategory = normCat.includes("wallpaper") || normName.includes("wallpaper") || normCat.includes("wall") || normBrandLower.includes("inkiostro");
         } else if (normCatQuery.includes("ital")) {
           matchesCategory =
             normName.includes("ital") ||
@@ -311,6 +314,7 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
       "Sanitary Ware",
       "Mirrors",
       "Bathroom",
+      "Wallpaper",
     ];
     const allCatNames = Array.from(new Set([...defaultCategories, ...Object.keys(counts)]));
 

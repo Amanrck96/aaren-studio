@@ -160,6 +160,7 @@ const CATEGORY_BRAND_LOGOS: Record<string, string> = {
   "cat-sw": "/brands/logos/falper_logo.png",
   "mirrors": "/brands/logos/waltz_logo.png",
   "cat-mr": "/brands/logos/waltz_logo.png",
+  "wallpaper": "/brands/logos/inkiostro_bianco_logo.png",
   "wallpapers": "/brands/logos/inkiostro_bianco_logo.png",
   "wall-covering": "/brands/logos/inkiostro_bianco_logo.png",
   "inkiostro": "/brands/logos/inkiostro_bianco_logo.png",
@@ -205,6 +206,9 @@ const HOME_CATEGORIES = [
   { id: "bathroom-fittings", code: "BF", num: "13", name: "Bathroom Fittings", sub: "Fima · Falper · Mildue", img: "/categories/cat_13.jpg", logo: "/brands/logos/fima_logo.png" },
   { id: "sanitary-ware", code: "SW", num: "14", name: "Sanitary Ware", sub: "IWW · Flaminia", img: "/categories/cat_14.jpg", logo: "/brands/logos/falper_logo.png" },
   { id: "mirrors", code: "MR", num: "15", name: "Mirrors", sub: "Mira · Waltz", img: "/categories/cat_15.jpg", logo: "/brands/logos/waltz_logo.png" },
+  { id: "cladding", code: "CL", num: "16", name: "Cladding", sub: "Exterior Composite Cladding", img: "/brands/brand_3_1.jpg", logo: "/brands/logos/newtechwood_logo.png" },
+  { id: "decking", code: "DK", num: "17", name: "Decking", sub: "Outdoor Composite Decking", img: "/brands/brand_3_1.jpg", logo: "/brands/logos/newtechwood_logo.png" },
+  { id: "wallpaper", code: "WP", num: "18", name: "Wallpaper", sub: "Artistic Wallcoverings", img: "/brands/brand_8_1.jpg", logo: "/brands/logos/inkiostro_bianco_logo.png" },
 ];
 
 const HOME_BRANDS = [

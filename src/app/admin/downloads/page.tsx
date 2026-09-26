@@ -13,6 +13,15 @@ import {
   Download, Copy, X, ArrowUp, ArrowDown,
   Building2, AlertCircle, Link2,
 } from "lucide-react";
+import { uploadFileToFirebase } from "@/lib/firebaseStorage";
+
+function formatBytes(bytes: number): string {
+  if (!bytes || bytes === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+}
 
 // ─── Shared style tokens ───────────────────────────────────────
 const C = {
@@ -154,10 +163,41 @@ function AdminBrandDownloadsContent() {
   };
 
   const doUpload = async (file: File, type: "banner" | "pdf" | "logo") => {
-    const folder = type === "pdf" ? "aaren_brand_catalogs" : type === "logo" ? "aaren_brand_logos" : "aaren_brand_banners";
+    const folder = type === "pdf" ? "Brand_Assets" : "Brands";
+
+    // 1. Primary: Direct Firebase Storage Upload (Bypasses Vercel Serverless 4.5MB limit completely)
+    try {
+      const fbResult = await uploadFileToFirebase(file, folder);
+      if (fbResult && fbResult.url) {
+        return {
+          success: true,
+          url: fbResult.url,
+          fileName: fbResult.fileName || file.name,
+          fileSize: formatBytes(file.size),
+        };
+      }
+    } catch (fbErr: any) {
+      console.warn("Direct Firebase upload notice, trying server fallback:", fbErr);
+    }
+
+    // 2. Secondary: Fallback to Server API Route with safe error catching
     const formData = new FormData();
     formData.append("file", file); formData.append("type", type === "pdf" ? "pdf" : "banner"); formData.append("folder", folder);
     const res = await fetch("/api/admin/brand-downloads/upload", { method: "POST", body: formData });
+    if (!res.ok) {
+      if (res.status === 413) {
+        throw new Error(`File is too large for server route (${formatBytes(file.size)}). Please try pasting a direct Firebase PDF link.`);
+      }
+      const errText = await res.text().catch(() => "");
+      let errMsg = "Upload failed";
+      try {
+        const errJson = JSON.parse(errText);
+        errMsg = errJson.error || errJson.message || errMsg;
+      } catch {
+        errMsg = errText.slice(0, 120) || `Upload failed with status ${res.status}`;
+      }
+      throw new Error(errMsg);
+    }
     return res.json();
   };
 

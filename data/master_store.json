@@ -2150,12 +2150,28 @@
       "shortCode": "MR 15"
     },
     {
-      "coverImage": "/categories/cat_1.png",
-      "description": "Architectural Cladding products collection",
+      "coverImage": "/brands/brand_3_1.jpg",
+      "description": "Architectural exterior composite and timber cladding",
       "id": "cladding",
       "name": "Cladding",
       "sequenceNumber": 16,
       "shortCode": "CL 16"
+    },
+    {
+      "coverImage": "/brands/brand_3_1.jpg",
+      "description": "UltraShield composite outdoor decking and timber profiles",
+      "id": "decking",
+      "name": "Decking",
+      "sequenceNumber": 17,
+      "shortCode": "DK 17"
+    },
+    {
+      "coverImage": "/brands/brand_8_1.jpg",
+      "description": "Artistic Italian designer wallpapers and wallcoverings",
+      "id": "wallpaper",
+      "name": "Wallpaper",
+      "sequenceNumber": 18,
+      "shortCode": "WP 18"
     }
   ],
   "collections": [
