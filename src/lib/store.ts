@@ -4283,14 +4283,23 @@ export async function generateUniqueBrandSlug(name: string, currentId?: string):
   return `${base}-${Date.now().toString(36)}`;
 }
 
+function sanitizeFolderPdfs<T extends { fileSize?: string }>(files?: T[]): T[] {
+  if (!Array.isArray(files)) return [];
+  return files.map((f) => ({
+    ...f,
+    fileSize: !f.fileSize || f.fileSize.toLowerCase().includes("firebase") ? "PDF Document" : f.fileSize,
+  }));
+}
+
 export async function getBrandFoldersStore(): Promise<BrandFolderItem[]> {
   // 1. Authoritative Cloud Store: Firebase Storage (Permanent across all serverless instances)
   const fbData = await fetchFromFirebaseCloudStore("brandFolders");
   if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const cleaned = fbData.map((b: BrandFolderItem) => ({ ...b, files: sanitizeFolderPdfs(b.files) }));
     const json = readJsonStore();
-    json.brandFolders = fbData;
+    json.brandFolders = cleaned;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+    return cleaned;
   }
 
   try {
@@ -4419,7 +4428,7 @@ export async function saveBrandFolderStore(
     description: folder.description?.trim() || undefined,
     bannerImageUrl: folder.bannerImageUrl?.trim() || undefined,
     logoUrl: folder.logoUrl?.trim() || undefined,
-    files: Array.isArray(folder.files) ? folder.files : [],
+    files: sanitizeFolderPdfs(Array.isArray(folder.files) ? folder.files : []),
     ctaButtons: folder.ctaButtons || [],
     createdAt: folder.createdAt || now.toISOString(),
     updatedAt: now.toISOString(),
@@ -4575,17 +4584,19 @@ export async function getCategoryFoldersStore(): Promise<CategoryFolderItem[]> {
   // 1. Authoritative Cloud Store: Firebase Storage (Permanent across all serverless instances)
   const fbData = await fetchFromFirebaseCloudStore("categoryFolders");
   if (fbData && Array.isArray(fbData) && fbData.length > 0) {
+    const cleaned = fbData.map((c: CategoryFolderItem) => ({ ...c, files: sanitizeFolderPdfs(c.files) }));
     const json = readJsonStore();
-    json.categoryFolders = fbData;
+    json.categoryFolders = cleaned;
     globalThis.__AAREN_MEMORY_STORE__ = json;
-    return fbData;
+    return cleaned;
   }
 
   // 2. Check local JSON fallback
   const json = readJsonStore();
   if (json.categoryFolders && Array.isArray(json.categoryFolders) && json.categoryFolders.length > 0) {
-    syncToFirebaseCloudStore("categoryFolders", json.categoryFolders).catch(() => {});
-    return json.categoryFolders;
+    const cleaned = json.categoryFolders.map((c: CategoryFolderItem) => ({ ...c, files: sanitizeFolderPdfs(c.files) }));
+    syncToFirebaseCloudStore("categoryFolders", cleaned).catch(() => {});
+    return cleaned;
   }
 
   // 3. Auto-seed from existing categories if empty
@@ -4681,7 +4692,7 @@ export async function saveCategoryFolderStore(
     description: folder.description?.trim() || undefined,
     bannerImageUrl: folder.bannerImageUrl?.trim() || undefined,
     logoUrl: folder.logoUrl?.trim() || undefined,
-    files: Array.isArray(folder.files) ? folder.files : [],
+    files: sanitizeFolderPdfs(Array.isArray(folder.files) ? folder.files : []),
     ctaButtons: folder.ctaButtons || [],
     createdAt: folder.createdAt || now.toISOString(),
     updatedAt: now.toISOString(),

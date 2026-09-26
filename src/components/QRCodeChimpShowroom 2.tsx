@@ -289,7 +289,7 @@ export default function QRCodeChimpShowroom({
                             {file.fileSize && (
                               <>
                                 <span>•</span>
-                                <span>{file.fileSize}</span>
+                                <span>{file.fileSize.toLowerCase().includes("firebase") ? "PDF Document" : file.fileSize}</span>
                               </>
                             )}
                           </div>

@@ -123,6 +123,7 @@ function AdminCategoryDownloadsContent() {
   });
 
   const totalPdfs = categories.reduce((acc, c) => acc + (c.files?.length || 0), 0);
+  const filteredPdfs = filteredCategories.reduce((acc, c) => acc + (c.files?.length || 0), 0);
 
   const handleOpenEdit = (cat: CategoryFolderItem) => {
     setEditingCategory(JSON.parse(JSON.stringify(cat)));
@@ -349,7 +350,7 @@ function AdminCategoryDownloadsContent() {
       name: title,
       url: cleanUrl,
       order: (editingCategory.files?.length || 0) + 1,
-      fileSize: "Firebase PDF",
+      fileSize: "PDF Document",
     };
 
     setEditingCategory({
@@ -385,7 +386,7 @@ function AdminCategoryDownloadsContent() {
         name: title,
         url: cleanUrl,
         order: filesToSave.length + 1,
-        fileSize: "Firebase PDF",
+        fileSize: "PDF Document",
       });
       setLinkPdfTitle("");
       setLinkPdfUrl("");
@@ -503,12 +504,30 @@ function AdminCategoryDownloadsContent() {
         {/* Stats Row */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, marginBottom: 24 }}>
           <div style={{ padding: "16px 20px", borderRadius: 14, backgroundColor: C.white, border: `1px solid ${C.border}` }}>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: C.textMuted, letterSpacing: "0.08em" }}>Total Categories</div>
-            <div style={{ fontSize: 26, fontWeight: 800, color: C.gold, marginTop: 4 }}>{categories.length}</div>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: C.textMuted, letterSpacing: "0.08em" }}>
+              {search.trim() ? "Matching Categories" : "Total Categories"}
+            </div>
+            <div style={{ fontSize: 26, fontWeight: 800, color: C.gold, marginTop: 4 }}>
+              {filteredCategories.length}
+              {search.trim() && (
+                <span style={{ fontSize: 13, color: C.textFaint, fontWeight: 500, marginLeft: 6 }}>
+                  / {categories.length} total
+                </span>
+              )}
+            </div>
           </div>
           <div style={{ padding: "16px 20px", borderRadius: 14, backgroundColor: C.white, border: `1px solid ${C.border}` }}>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: C.textMuted, letterSpacing: "0.08em" }}>Uploaded Catalogues</div>
-            <div style={{ fontSize: 26, fontWeight: 800, color: C.text, marginTop: 4 }}>{totalPdfs}</div>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: C.textMuted, letterSpacing: "0.08em" }}>
+              {search.trim() ? "Catalogues in Results" : "Uploaded Catalogues"}
+            </div>
+            <div style={{ fontSize: 26, fontWeight: 800, color: C.text, marginTop: 4 }}>
+              {filteredPdfs}
+              {search.trim() && (
+                <span style={{ fontSize: 13, color: C.textFaint, fontWeight: 500, marginLeft: 6 }}>
+                  / {totalPdfs} total
+                </span>
+              )}
+            </div>
           </div>
           <div style={{ padding: "16px 20px", borderRadius: 14, backgroundColor: C.white, border: `1px solid ${C.border}` }}>
             <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: C.textMuted, letterSpacing: "0.08em" }}>PDF Storage Limit</div>
@@ -533,6 +552,11 @@ function AdminCategoryDownloadsContent() {
             >
               ✕
             </button>
+          )}
+          {search.trim() && (
+            <div style={{ marginTop: 8, fontSize: 12, color: C.textMuted, paddingLeft: 4 }}>
+              Showing <strong>{filteredCategories.length}</strong> of {categories.length} categories ({filteredPdfs} {filteredPdfs === 1 ? "catalogue" : "catalogues"}) matching &ldquo;{search}&rdquo;
+            </div>
           )}
         </div>
 

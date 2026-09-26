@@ -176,6 +176,12 @@ export async function POST() {
       "/admin/brands",
       "/admin/products",
       "/admin/services",
+      "/downloads",
+      "/downloads/[slug]",
+      "/category-downloads",
+      "/category-downloads/[...slug]",
+      "/admin/downloads",
+      "/admin/category-downloads",
     ];
 
     for (const r of routesToRevalidate) {
@@ -202,6 +208,8 @@ export async function POST() {
         services: Array.isArray(services) ? services.length : 0,
         testimonials: Array.isArray(testimonials) ? testimonials.length : 0,
         catalogs: Array.isArray(catalogs) ? catalogs.length : 0,
+        categoryFolders: Array.isArray(categoryFolders) ? categoryFolders.length : 0,
+        brandFolders: Array.isArray(brandFolders) ? brandFolders.length : 0,
         settings: "✅",
         catalogSettings: "✅",
         roadmap: Array.isArray(roadmap) ? roadmap.length : 0,

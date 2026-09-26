@@ -471,6 +471,12 @@ export default function CategoryShowroom({
             )}
           </div>
 
+          {searchQuery.trim() && (
+            <div style={{ width: "100%", padding: "4px 8px 0", fontSize: "12px", color: "#6A6359", display: "flex", justifyContent: "space-between" }}>
+              <span>Showing <strong>{filteredCategories.length}</strong> of {categoryFolders.length} categories</span>
+            </div>
+          )}
+
           {/* Category Cards */}
           {filteredCategories.length > 0 ? (
             filteredCategories.map((c) => {
@@ -618,9 +624,32 @@ export default function CategoryShowroom({
                (SAME AS BRANDS: [ ↗ ] AND [ Download ])
             ══════════════════════════════════════ */
         <div style={{ width: "100%", marginTop: "14px", display: "flex", flexDirection: "column", gap: "12px" }}>
+          {files.length > 0 && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 4px" }}>
+              <span style={{ fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#81663F" }}>
+                Catalogues &amp; Specifications
+              </span>
+              <span
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  padding: "3px 9px",
+                  borderRadius: "9999px",
+                  backgroundColor: "rgba(129, 102, 63, 0.1)",
+                  color: "#81663F",
+                  border: "1px solid rgba(129, 102, 63, 0.2)",
+                }}
+              >
+                {files.length} {files.length === 1 ? "Catalogue" : "Catalogues"}
+              </span>
+            </div>
+          )}
           {files.length > 0 ? (
             files.map((file, idx) => {
               const pdfName = file.name || `Catalogue ${idx + 1}`;
+              const displayFileSize = (!file.fileSize || file.fileSize.toLowerCase().includes("firebase"))
+                ? "PDF Document"
+                : file.fileSize;
               return (
                 <div
                   key={`${file.url}-${idx}`}
@@ -671,7 +700,7 @@ export default function CategoryShowroom({
                         {pdfName}
                       </h3>
                       <p style={{ fontSize: "12px", color: "#8A8275", marginTop: "2px", margin: 0 }}>
-                        {file.fileSize || "PDF Document"}
+                        {displayFileSize}
                       </p>
                     </div>
                   </div>

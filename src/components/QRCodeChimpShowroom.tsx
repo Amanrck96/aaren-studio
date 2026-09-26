@@ -472,7 +472,7 @@ export default function QRCodeChimpShowroom({
                     fontWeight: 700,
                   }}
                 >
-                  {brandFolders.length}
+                  {searchQuery.trim() ? filteredBrands.length : brandFolders.length}
                 </span>
               </button>
 
@@ -520,7 +520,7 @@ export default function QRCodeChimpShowroom({
                     fontWeight: 700,
                   }}
                 >
-                  {categoriesList.length}
+                  {searchQuery.trim() ? filteredCategories.length : categoriesList.length}
                 </span>
               </button>
             </div>
@@ -584,6 +584,17 @@ export default function QRCodeChimpShowroom({
             </div>
           </div>
         )}
+
+        {isHub && searchQuery.trim() ? (
+          <div style={{ width: "100%", padding: "6px 8px 0", fontSize: "12px", color: "#6A6359", display: "flex", justifyContent: "space-between" }}>
+            <span>
+              Found <strong>{activeTab === "brands" ? filteredBrands.length : filteredCategories.length}</strong>{" "}
+              {activeTab === "brands"
+                ? filteredBrands.length === 1 ? "brand" : "brands"
+                : filteredCategories.length === 1 ? "category" : "categories"}
+            </span>
+          </div>
+        ) : null}
 
         {isHub ? (
           <div style={{ width: "100%", marginTop: "12px", display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -890,7 +901,7 @@ export default function QRCodeChimpShowroom({
                           {pdfName}
                         </h3>
                         <p style={{ fontSize: "12px", color: "#8A8275", marginTop: "2px" }}>
-                          {file.fileSize || "PDF Document"}
+                          {(!file.fileSize || file.fileSize.toLowerCase().includes("firebase")) ? "PDF Document" : file.fileSize}
                         </p>
                       </div>
                     </div>

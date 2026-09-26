@@ -17,7 +17,21 @@ Initialized: 2026-08-30
   * Created `docs/tasks/PRD.md` with full project specification, tech stack, and roadmap.
   * Created `docs/tasks/progress.txt` as central progress log and source of truth.
   * Created `docs/tasks/prompt.md` with agent instructions, constraints, and validation standards.
-- Next Steps:
-  * Run build/lint check to verify repository health.
-  * Execute Phase 1 tasks from PRD.md.
+--------------------------------------------------------------------------------
+[2026-09-26] PDF Document Labeling & Showroom/Admin Count Updates
+- Status: Completed
+- Tasks Completed:
+  * Replaced "Firebase PDF" badge with "PDF Document" across public showrooms and admin panels.
+  * Added sanitization in store so legacy or newly uploaded items with "Firebase PDF" automatically display as "PDF Document".
+  * Fixed search / section counts across Admin Category Downloads, Admin Brand Downloads, and public Showroom Hub tabs so matching result counts dynamically update when searching.
+  * Added document count header badge on single category download showrooms.
+  * Enhanced route revalidation in /api/firebase-sync and API handlers for real-time count updates.
+- Files Modified:
+  * src/components/CategoryShowroom.tsx
+  * src/components/QRCodeChimpShowroom.tsx
+  * src/components/QRCodeChimpShowroom 2.tsx
+  * src/app/admin/category-downloads/page.tsx
+  * src/app/admin/downloads/page.tsx
+  * src/lib/store.ts
+  * src/app/api/firebase-sync/route.ts
 --------------------------------------------------------------------------------

@@ -127,6 +127,7 @@ function AdminBrandDownloadsContent() {
     return b.name.toLowerCase().includes(q) || b.slug.toLowerCase().includes(q);
   });
   const totalPdfs = brands.reduce((acc, b) => acc + (b.files?.length || 0), 0);
+  const filteredPdfs = filteredBrands.reduce((acc, b) => acc + (b.files?.length || 0), 0);
 
   const handleOpenEdit = (brand: BrandFolderItem) => {
     setEditingBrand(JSON.parse(JSON.stringify(brand)));
@@ -274,7 +275,7 @@ function AdminBrandDownloadsContent() {
       name: title,
       url: cleanUrl,
       order: (editingBrand.files?.length || 0) + 1,
-      fileSize: "Firebase PDF",
+      fileSize: "PDF Document",
     };
     setEditingBrand({
       ...editingBrand,
@@ -320,7 +321,7 @@ function AdminBrandDownloadsContent() {
         name: title,
         url: cleanUrl,
         order: filesToSave.length + 1,
-        fileSize: "Firebase PDF",
+        fileSize: "PDF Document",
       });
       setLinkPdfTitle("");
       setLinkPdfUrl("");
@@ -389,8 +390,16 @@ function AdminBrandDownloadsContent() {
         {/* Stats */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 24 }}>
           {[
-            { label: "Total Brands", value: String(brands.length), sub: "All verified & seeded" },
-            { label: "Total PDFs", value: String(totalPdfs), sub: "Cloudinary downloads" },
+            {
+              label: search.trim() ? "Matching Brands" : "Total Brands",
+              value: search.trim() ? `${filteredBrands.length} / ${brands.length}` : String(brands.length),
+              sub: search.trim() ? "Filtered by search" : "All verified & seeded",
+            },
+            {
+              label: search.trim() ? "Catalogues in Results" : "Total PDFs",
+              value: search.trim() ? `${filteredPdfs} / ${totalPdfs}` : String(totalPdfs),
+              sub: search.trim() ? "Filtered catalogues" : "Cloudinary downloads",
+            },
             { label: "URL Format", value: "/downloads/[slug]", sub: "QRCodeChimp luxury layout", mono: true },
           ].map((s) => (
             <div key={s.label} style={{ backgroundColor: C.white, padding: 20, borderRadius: 16, border: `1px solid ${C.border}` }}>
@@ -407,7 +416,9 @@ function AdminBrandDownloadsContent() {
             <Search style={{ width: 14, height: 14, color: C.textFaint, position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
             <input type="text" placeholder="Search brands or slugs..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ ...inputStyle, paddingLeft: 38 }} />
           </div>
-          <span style={{ fontSize: 12, color: C.textFaint }}>Showing {filteredBrands.length} of {brands.length}</span>
+          <span style={{ fontSize: 12, color: C.textFaint }}>
+            Showing {filteredBrands.length} of {brands.length} ({filteredPdfs} {filteredPdfs === 1 ? "catalogue" : "catalogues"})
+          </span>
         </div>
 
         {/* Brand Grid */}
