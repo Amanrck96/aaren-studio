@@ -159,7 +159,13 @@ function AdminCategoryDownloadsContent() {
   };
 
   const handleDeleteCategory = async (cat: CategoryFolderItem) => {
-    if (!confirm(`Delete category folder "${cat.name}"? This cannot be undone.`)) return;
+    if (
+      !confirm(
+        `Delete category folder "${cat.name}" from Downloads page?\n\nNOTE: This will ONLY remove it from the Downloads page (/downloads) and will NOT affect any other page or main website categories.`
+      )
+    ) {
+      return;
+    }
     setDeletingCategory(cat.id || cat.slug);
     try {
       const res = await fetch(`/api/admin/category-downloads?id=${encodeURIComponent(cat.id || cat.slug)}`, {
@@ -446,6 +452,66 @@ function AdminCategoryDownloadsContent() {
             {toast.message}
           </div>
         )}
+
+        {/* ── ISOLATION ALERT BANNER ── */}
+        <div
+          style={{
+            backgroundColor: "#FFFDF9",
+            border: "1px solid #E4DCCE",
+            borderRadius: 16,
+            padding: "16px 20px",
+            marginBottom: 24,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            boxShadow: "0 2px 10px rgba(0,0,0,0.03)",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 260, flex: 1 }}>
+            <div
+              style={{
+                width: 42,
+                height: 42,
+                borderRadius: 12,
+                backgroundColor: "rgba(129, 102, 63, 0.12)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: C.gold,
+                flexShrink: 0,
+              }}
+            >
+              <Layers style={{ width: 22, height: 22 }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: C.text, display: "flex", alignItems: "center", gap: 8 }}>
+                <span>Dedicated Category Downloads Control</span>
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    padding: "2px 8px",
+                    borderRadius: 9999,
+                    backgroundColor: "#E8F5E9",
+                    color: "#2E7D32",
+                  }}
+                >
+                  Isolated System
+                </span>
+              </div>
+              <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
+                Categories managed here strictly belong to the Downloads page (<strong>/downloads</strong> and <strong>/category-downloads</strong>). Deleting or editing any category folder here will <strong>never affect the Main Website Categories</strong> or any other pages.
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <Link href="/admin/downloads" style={{ ...btnGold, fontSize: 12 }}>
+              <span>← Switch to Brands Downloads</span>
+            </Link>
+          </div>
+        </div>
 
         {/* Header */}
         <div

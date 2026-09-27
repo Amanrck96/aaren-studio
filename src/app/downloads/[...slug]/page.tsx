@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import {
   getBrandFolderBySlugStore,
   getBrandFoldersStore,
-  getCategoriesStore,
+  getCategoryFoldersStore,
   getCategoryFolderBySlugStore,
 } from "@/lib/store";
 import QRCodeChimpShowroom from "@/components/QRCodeChimpShowroom";
@@ -87,7 +87,7 @@ export default async function BrandDownloadPage({ params }: Props) {
   const allBrands = await getBrandFoldersStore();
 
   if (lower === "aarenintpro" || lower === "all") {
-    const categories = await getCategoriesStore();
+    const categories = await getCategoryFoldersStore();
     return <QRCodeChimpShowroom mode="hub" brandFolders={allBrands} categories={categories} />;
   }
 

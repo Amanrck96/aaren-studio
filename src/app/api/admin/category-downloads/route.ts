@@ -56,7 +56,6 @@ export async function POST(request: NextRequest) {
 
     try {
       revalidatePath("/downloads");
-      revalidatePath("/categories");
       revalidatePath("/category-downloads");
       revalidatePath(`/category-downloads/${saved.slug}`);
       revalidatePath("/admin/category-downloads");
@@ -101,7 +100,6 @@ export async function DELETE(request: NextRequest) {
 
     try {
       revalidatePath("/downloads");
-      revalidatePath("/categories");
       revalidatePath("/category-downloads");
       revalidatePath("/admin/category-downloads");
     } catch (_) {}

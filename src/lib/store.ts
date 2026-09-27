@@ -1045,60 +1045,6 @@ export async function getCategoriesStore(): Promise<CategoryItem[]> {
     }
   }
 
-  // AUTO-SYNC: Automatically incorporate any categories added in Category Downloads (/admin/category-downloads)
-  try {
-    const fbFolders = await fetchFromFirebaseCloudStore("categoryFolders");
-    let folders: CategoryFolderItem[] = Array.isArray(fbFolders) ? fbFolders : [];
-    if (folders.length === 0) {
-      const json = readJsonStore();
-      folders = json.categoryFolders || [];
-    }
-
-    const norm = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-    let changed = false;
-
-    for (const folder of folders) {
-      if (!folder.name) continue;
-      const targetNorm = norm(folder.name);
-      const exists = categories.some(
-        (c) => norm(c.name) === targetNorm || norm(c.id) === norm(folder.id) || norm(c.id) === norm(folder.slug)
-      );
-
-      if (!exists) {
-        const nextSeq = categories.length + 1;
-        const codePrefix = folder.name.replace(/[^a-zA-Z]/g, "").slice(0, 2).toUpperCase() || "CT";
-        const fallbackCover =
-          folder.name.toLowerCase().includes("wallpaper")
-            ? "/brands/brand_8_1.jpg"
-            : folder.name.toLowerCase().includes("cladding") || folder.name.toLowerCase().includes("decking")
-            ? "/brands/brand_3_1.jpg"
-            : "/categories/cat_1.jpg";
-
-        const newCat: CategoryItem = {
-          id: folder.id ? (folder.id.startsWith("cf-") ? folder.id.replace("cf-", "cat-") : folder.id) : `cat-${folder.slug || nextSeq}`,
-          name: folder.name.trim(),
-          coverImage: folder.logoUrl || folder.bannerImageUrl || fallbackCover,
-          description: folder.tagline || folder.description || `${folder.name} architectural collection`,
-          shortCode: `${codePrefix} ${String(nextSeq).padStart(2, "0")}`,
-          sequenceNumber: nextSeq,
-        };
-
-        categories.push(newCat);
-        changed = true;
-      }
-    }
-
-    if (changed) {
-      syncToFirebaseCloudStore("categories", categories).catch(() => {});
-      const json = readJsonStore();
-      json.categories = categories;
-      globalThis.__AAREN_MEMORY_STORE__ = json;
-      writeJsonStore(json);
-    }
-  } catch (syncErr) {
-    console.warn("[getCategoriesStore] categoryFolders merge notice:", syncErr);
-  }
-
   const json = readJsonStore();
   json.categories = categories;
   globalThis.__AAREN_MEMORY_STORE__ = json;
@@ -1648,22 +1594,6 @@ export async function saveCategoryStore(cat: Omit<CategoryItem, "id"> & { id?: s
 
   // 4. Background Prisma
   try { await prisma.category.upsert({ where: { id }, update: cat, create: { id, ...cat } }); } catch (e) {}
-
-  // 5. Ensure matching category folder exists in categoryFolders store
-  try {
-    const folders = await getCategoryFoldersStore();
-    const folderMatch = folders.find((f) => norm(f.name) === targetNormName || norm(f.id) === targetNormId);
-    if (!folderMatch) {
-      await saveCategoryFolderStore({
-        name: full.name,
-        tagline: full.description,
-        description: full.description,
-        bannerImageUrl: full.coverImage,
-        logoUrl: full.coverImage,
-        files: [],
-      });
-    }
-  } catch (_) {}
 
   return full;
 }
@@ -4740,47 +4670,6 @@ export async function saveCategoryFolderStore(
   json.categoryFolders = current;
   globalThis.__AAREN_MEMORY_STORE__ = json;
   writeJsonStore(json);
-
-  // 4. Synchronize matching category in "categories" store if name matches or CREATE if missing
-  try {
-    const cats = await getCategoriesStore();
-    const catMatch = cats.find((c) => norm(c.name) === targetNormName || norm(c.id) === norm(full.id));
-    if (catMatch) {
-      let changed = false;
-      const newImg = full.logoUrl || full.bannerImageUrl;
-      if (newImg && catMatch.coverImage !== newImg) {
-        catMatch.coverImage = newImg;
-        changed = true;
-      }
-      if (full.description && catMatch.description !== full.description) {
-        catMatch.description = full.description;
-        changed = true;
-      }
-      if (changed) {
-        await saveCategoryStore(catMatch);
-      }
-    } else {
-      const nextSeq = cats.length + 1;
-      const codePrefix = full.name.replace(/[^a-zA-Z]/g, "").slice(0, 2).toUpperCase() || "CT";
-      const fallbackCover =
-        full.name.toLowerCase().includes("wallpaper")
-          ? "/brands/brand_8_1.jpg"
-          : full.name.toLowerCase().includes("cladding") || full.name.toLowerCase().includes("decking")
-          ? "/brands/brand_3_1.jpg"
-          : "/categories/cat_1.jpg";
-
-      await saveCategoryStore({
-        id: full.id.startsWith("cf-") ? full.id.replace("cf-", "cat-") : `cat-${full.slug || nextSeq}`,
-        name: full.name,
-        coverImage: full.logoUrl || full.bannerImageUrl || fallbackCover,
-        description: full.tagline || full.description || `${full.name} architectural collection`,
-        shortCode: `${codePrefix} ${String(nextSeq).padStart(2, "0")}`,
-        sequenceNumber: nextSeq,
-      });
-    }
-  } catch (err) {
-    console.warn("[saveCategoryFolderStore] optional categories sync error:", err);
-  }
 
   return full;
 }

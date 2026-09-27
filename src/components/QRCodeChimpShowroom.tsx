@@ -19,6 +19,7 @@ import {
   Building2,
   Layers,
   Search,
+  Trash2,
 } from "lucide-react";
 import { BrandFolderItem, BrandFolderPdf, CategoryItem } from "@/lib/types";
 
@@ -26,7 +27,7 @@ interface QRCodeChimpShowroomProps {
   mode: "hub" | "brand";
   brandFolders: BrandFolderItem[];
   currentBrand?: BrandFolderItem;
-  categories?: CategoryItem[];
+  categories?: (CategoryItem | any)[];
   initialTab?: "brands" | "categories";
 }
 
@@ -72,12 +73,33 @@ export default function QRCodeChimpShowroom({
 }: QRCodeChimpShowroomProps) {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<"brands" | "categories">(initialTab);
-  const [categoriesList, setCategoriesList] = useState<CategoryItem[]>(categories);
+  const [brandsList, setBrandsList] = useState<BrandFolderItem[]>(brandFolders);
+  const [categoriesList, setCategoriesList] = useState<any[]>(categories);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    setBrandsList(brandFolders);
+  }, [brandFolders]);
+
+  React.useEffect(() => {
+    setCategoriesList(categories);
+  }, [categories]);
+
+  React.useEffect(() => {
+    try {
+      const cookies = document.cookie.split("; ");
+      const session = cookies.find((r) => r.startsWith("aaren_admin_session="));
+      if (session && session.includes("authenticated")) {
+        setIsAdmin(true);
+      }
+    } catch {}
+  }, []);
 
   React.useEffect(() => {
     if (!categoriesList || categoriesList.length === 0) {
-      fetch("/api/categories")
+      fetch("/api/category-downloads")
         .then((r) => r.json())
         .then((d) => {
           if (d.success && Array.isArray(d.data)) {
@@ -88,9 +110,69 @@ export default function QRCodeChimpShowroom({
     }
   }, [categoriesList]);
 
+  const handleDeleteBrand = async (e: React.MouseEvent, brand: BrandFolderItem) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const brandName = brand.name || "this brand";
+    if (
+      !confirm(
+        `Delete "${brandName}" from Downloads Showroom?\n\nNOTE: This will ONLY remove it from the Downloads page (/downloads) and will NOT affect any other page or main website brands.`
+      )
+    ) {
+      return;
+    }
+    const targetId = brand.id || brand.slug;
+    setDeletingId(targetId);
+    try {
+      const res = await fetch(`/api/admin/brand-downloads?id=${encodeURIComponent(targetId)}`, {
+        method: "DELETE",
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        setBrandsList((prev) => prev.filter((b) => (b.id || b.slug) !== targetId));
+      } else {
+        alert(json.error || "Failed to delete brand from downloads");
+      }
+    } catch (err: any) {
+      alert(err.message || "Failed to delete");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleDeleteCategory = async (e: React.MouseEvent, cat: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const catName = cat.name || "this category";
+    if (
+      !confirm(
+        `Delete "${catName}" from Downloads Showroom?\n\nNOTE: This will ONLY remove it from the Downloads page (/downloads) and will NOT affect any other page or main website categories.`
+      )
+    ) {
+      return;
+    }
+    const targetId = cat.id || cat.slug;
+    setDeletingId(targetId);
+    try {
+      const res = await fetch(`/api/admin/category-downloads?id=${encodeURIComponent(targetId)}`, {
+        method: "DELETE",
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        setCategoriesList((prev) => prev.filter((c) => (c.id || c.slug) !== targetId));
+      } else {
+        alert(json.error || "Failed to delete category from downloads");
+      }
+    } catch (err: any) {
+      alert(err.message || "Failed to delete");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const isHub = mode === "hub" || !currentBrand;
 
-  const filteredBrands = brandFolders.filter((b) => {
+  const filteredBrands = brandsList.filter((b) => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     const name = (b.name || "").toLowerCase();
@@ -98,13 +180,14 @@ export default function QRCodeChimpShowroom({
     return name.includes(q) || desc.includes(q);
   });
 
-  const filteredCategories = categoriesList.filter((c) => {
+  const filteredCategories = categoriesList.filter((c: any) => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     const name = (c.name || "").toLowerCase();
     const code = (c.shortCode || "").toLowerCase();
     const desc = (c.description || "").toLowerCase();
-    return name.includes(q) || code.includes(q) || desc.includes(q);
+    const tagline = (c.tagline || "").toLowerCase();
+    return name.includes(q) || code.includes(q) || desc.includes(q) || tagline.includes(q);
   });
   const pageTitle = isHub ? "Aaren Intpro" : currentBrand.name;
   const pageTagline = isHub
@@ -193,6 +276,51 @@ export default function QRCodeChimpShowroom({
           alignItems: "center",
         }}
       >
+        {/* ── Admin Badge & Quick Controls when logged in ── */}
+        {isAdmin && isHub && (
+          <div
+            style={{
+              width: "100%",
+              marginBottom: "12px",
+              padding: "10px 14px",
+              borderRadius: "14px",
+              background: "linear-gradient(135deg, rgba(30,30,30,0.96) 0%, rgba(55,42,28,0.96) 100%)",
+              color: "#FFF",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
+              fontSize: "12px",
+              boxSizing: "border-box",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "15px" }}>👑</span>
+              <div>
+                <div style={{ fontWeight: 700, color: "#E8DFC8" }}>Admin Mode: Downloads Hub</div>
+                <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.7)" }}>
+                  Changes here ONLY affect /downloads and NOT the main website
+                </div>
+              </div>
+            </div>
+            <Link
+              href="/admin/downloads"
+              style={{
+                padding: "5px 12px",
+                borderRadius: "8px",
+                background: "#81663F",
+                color: "#FFF",
+                fontWeight: 600,
+                fontSize: "11px",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Open CMS ↗
+            </Link>
+          </div>
+        )}
+
         {/* ── Brand sub-page back nav ── */}
         {!isHub && (
           <div
@@ -472,7 +600,7 @@ export default function QRCodeChimpShowroom({
                     fontWeight: 700,
                   }}
                 >
-                  {searchQuery.trim() ? filteredBrands.length : brandFolders.length}
+                  {searchQuery.trim() ? filteredBrands.length : brandsList.length}
                 </span>
               </button>
 
@@ -659,8 +787,32 @@ export default function QRCodeChimpShowroom({
                         </span>
                       </div>
 
-                      {/* Bare Chevron */}
-                      <ChevronRight style={{ width: 20, height: 20, color: "#81663F", flexShrink: 0, strokeWidth: 1.75 }} />
+                      {/* Actions: Admin delete button + Bare Chevron */}
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+                        {isAdmin && (
+                          <button
+                            type="button"
+                            title={`Delete ${displayName} from Downloads`}
+                            onClick={(e) => handleDeleteBrand(e, b)}
+                            disabled={deletingId === (b.id || b.slug)}
+                            style={{
+                              padding: "6px",
+                              borderRadius: "8px",
+                              background: "rgba(220, 38, 38, 0.08)",
+                              color: "#DC2626",
+                              border: "1px solid rgba(220, 38, 38, 0.2)",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              transition: "all 0.2s ease",
+                            }}
+                          >
+                            <Trash2 style={{ width: 14, height: 14 }} />
+                          </button>
+                        )}
+                        <ChevronRight style={{ width: 20, height: 20, color: "#81663F", flexShrink: 0, strokeWidth: 1.75 }} />
+                      </div>
                     </Link>
                   );
                 })
@@ -682,11 +834,12 @@ export default function QRCodeChimpShowroom({
               /* ── CATEGORIES TAB (SAME TO SAME LUXURY STYLE) ── */
               <>
                 {filteredCategories.length > 0 ? (
-                  filteredCategories.map((c) => {
-                    const catSlug = c.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+                  filteredCategories.map((c: any) => {
+                    const catSlug = c.slug || c.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+                    const catCover = c.logoUrl || c.bannerImageUrl || c.coverImage || "";
                     return (
                       <Link
-                        key={c.id}
+                        key={c.id || catSlug}
                         href={`/category-downloads/${catSlug}`}
                         style={{
                           display: "flex",
@@ -720,9 +873,9 @@ export default function QRCodeChimpShowroom({
                               justifyContent: "center",
                             }}
                           >
-                            {c.coverImage ? (
+                            {catCover ? (
                               <Image
-                                src={c.coverImage}
+                                src={catCover}
                                 alt={c.name}
                                 fill
                                 sizes="72px"
@@ -746,7 +899,7 @@ export default function QRCodeChimpShowroom({
                               >
                                 {c.name}
                               </span>
-                              {c.shortCode && (
+                              {c.shortCode ? (
                                 <span
                                   style={{
                                     fontSize: "10px",
@@ -761,9 +914,24 @@ export default function QRCodeChimpShowroom({
                                 >
                                   {c.shortCode}
                                 </span>
-                              )}
+                              ) : c.files && c.files.length > 0 ? (
+                                <span
+                                  style={{
+                                    fontSize: "10px",
+                                    fontWeight: 700,
+                                    padding: "2px 6px",
+                                    borderRadius: "4px",
+                                    backgroundColor: "rgba(129, 102, 63, 0.1)",
+                                    color: "#81663F",
+                                    letterSpacing: "0.04em",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {c.files.length} {c.files.length === 1 ? "PDF" : "PDFs"}
+                                </span>
+                              ) : null}
                             </div>
-                            {c.description && (
+                            {(c.description || c.tagline) && (
                               <p
                                 style={{
                                   fontSize: "12px",
@@ -774,14 +942,38 @@ export default function QRCodeChimpShowroom({
                                   whiteSpace: "nowrap",
                                 }}
                               >
-                                {c.description}
+                                {c.description || c.tagline}
                               </p>
                             )}
                           </div>
                         </div>
 
-                        {/* Bare Chevron */}
-                        <ChevronRight style={{ width: 20, height: 20, color: "#81663F", flexShrink: 0, strokeWidth: 1.75 }} />
+                        {/* Actions: Admin delete button + Bare Chevron */}
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+                          {isAdmin && (
+                            <button
+                              type="button"
+                              title={`Delete ${c.name} from Downloads`}
+                              onClick={(e) => handleDeleteCategory(e, c)}
+                              disabled={deletingId === (c.id || c.slug)}
+                              style={{
+                                padding: "6px",
+                                borderRadius: "8px",
+                                background: "rgba(220, 38, 38, 0.08)",
+                                color: "#DC2626",
+                                border: "1px solid rgba(220, 38, 38, 0.2)",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                transition: "all 0.2s ease",
+                              }}
+                            >
+                              <Trash2 style={{ width: 14, height: 14 }} />
+                            </button>
+                          )}
+                          <ChevronRight style={{ width: 20, height: 20, color: "#81663F", flexShrink: 0, strokeWidth: 1.75 }} />
+                        </div>
                       </Link>
                     );
                   })
