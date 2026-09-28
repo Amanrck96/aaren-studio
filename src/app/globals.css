@@ -1365,6 +1365,33 @@ input, select, textarea {
   transform: scale(1.04);
 }
 
+/* ── 3-Grid Carousel Track (Browse by Category & Browse by Brands) ── */
+.home-carousel-track-3 {
+  --cards-per-view: 3;
+  display: flex !important;
+  width: calc(var(--total-items) * 100% / var(--cards-per-view)) !important;
+  transform: translateX(calc(-1 * var(--current-idx) * 100% / var(--total-items))) !important;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.home-carousel-slide-3 {
+  flex: 0 0 calc(100% / var(--total-items)) !important;
+  padding: 0 1.2rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1023px) {
+  .home-carousel-track-3 {
+    --cards-per-view: 2;
+  }
+}
+
+@media (max-width: 639px) {
+  .home-carousel-track-3 {
+    --cards-per-view: 1;
+  }
+}
+
 /* ── Categories full-width grid: 5-col desktop, 3-col tablet, 2-col mobile ── */
 .home-categories-grid {
   display: grid;

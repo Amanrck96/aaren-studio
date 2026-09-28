@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { SiteSettingsItem, DEFAULT_SETTINGS } from "@/lib/types";
 import { applyTextCase } from "@/lib/textCase";
@@ -403,6 +403,12 @@ export default function HomeClient({
     return () => clearInterval(t);
   }, [catTotal, catPaused]);
 
+  /* Extended category list for 3-grid view so trailing slots are never empty */
+  const extendedCategories = useMemo(() => {
+    if (categoriesList.length === 0) return [];
+    return [...categoriesList, ...categoriesList.slice(0, 2)];
+  }, [categoriesList]);
+
   /* ── Brands full-width carousel state ── */
   const [brandIdx, setBrandIdx] = useState(0);
   const [brandPaused, setBrandPaused] = useState(false);
@@ -412,6 +418,12 @@ export default function HomeClient({
     const t = setInterval(() => setBrandIdx((p) => (p + 1) % brandTotal), 6000);
     return () => clearInterval(t);
   }, [brandTotal, brandPaused]);
+
+  /* Extended brand list for 3-grid view so trailing slots are never empty */
+  const extendedBrands = useMemo(() => {
+    if (brandsList.length === 0) return [];
+    return [...brandsList, ...brandsList.slice(0, 2)];
+  }, [brandsList]);
 
   /* ── Intro scroll-driven text refs ── */
   const introSectionRef = useRef<HTMLDivElement>(null);
@@ -938,7 +950,7 @@ export default function HomeClient({
       </section>
 
       {/* ══════════════════════════════════════
-          BROWSE BY CATEGORY — 2-card carousel (1920x1080)
+          BROWSE BY CATEGORY — 3-grid carousel (1920x1080)
           ══════════════════════════════════════ */}
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
@@ -970,23 +982,26 @@ export default function HomeClient({
           <Link href="/products" id="cat-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.35rem", fontWeight: 700 }}>View all</Link>
         </div>
 
-        {/* 2-card carousel — overflow hidden, slides via CSS transform */}
+        {/* 3-card carousel — overflow hidden, slides via CSS transform */}
         <div
           style={{ position: "relative", overflow: "hidden", width: "100%", padding: "2.4rem 1.2rem", boxSizing: "border-box" }}
           onMouseEnter={() => setCatPaused(true)}
           onMouseLeave={() => setCatPaused(false)}
         >
 
-          {/* Slide track — shifts by 50% per step (showing 2 cards) */}
+          {/* Slide track — 3 cards on desktop (shifts by 1 card per step) */}
           <div
+            className="home-carousel-track-3"
             style={{
               display: "flex",
-              width: `${catTotal * 50}%`,
-              transform: `translateX(-${(catIdx * 100) / catTotal}%)`,
+              width: `${(extendedCategories.length * 100) / 3}%`,
+              transform: `translateX(-${(catIdx * 100) / extendedCategories.length}%)`,
               transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
-            }}
+              ["--total-items" as string]: extendedCategories.length,
+              ["--current-idx" as string]: catIdx,
+            } as React.CSSProperties}
           >
-            {categoriesList.map((cat) => {
+            {extendedCategories.map((cat, idx) => {
               const isLogoAsset = Boolean(
                 cat.img &&
                 (cat.img.includes("googleusercontent.com") ||
@@ -997,16 +1012,17 @@ export default function HomeClient({
 
               return (
                 <div
-                  key={cat.id}
+                  key={`${cat.id}-${idx}`}
+                  className="home-carousel-slide-3"
                   style={{
-                    flex: `0 0 ${100 / catTotal}%`,
+                    flex: `0 0 ${100 / extendedCategories.length}%`,
                     padding: "0 1.2rem",
                     boxSizing: "border-box",
                   }}
                 >
                   <Link
                     href={getCategoryHref(cat)}
-                    id={`home-cat-${cat.id}`}
+                    id={idx < catTotal ? `home-cat-${cat.id}` : `home-cat-${cat.id}-clone-${idx}`}
                     style={{
                       display: "flex",
                       flexDirection: "column",
@@ -1022,7 +1038,7 @@ export default function HomeClient({
                     className="home-ticket-card"
                   >
                     {/* 1920x1080 Image Container */}
-                    <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "linear-gradient(135deg, #ede8df 0%, #ded8cb 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "18rem", background: "linear-gradient(135deg, #ede8df 0%, #ded8cb 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       {isLogoAsset ? (
                         <>
                           {/* Background architectural image fallback */}
@@ -1067,18 +1083,18 @@ export default function HomeClient({
                     </div>
 
                     {/* Caption Bar: Category Name (Left), Short Code & Serial Number side-by-side (Right) */}
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", borderTop: "0.1rem solid rgba(129, 102, 63, 0.12)", transition: "background 0.25s ease" }} className="home-ticket-caption">
-                      <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
-                        <span style={{ fontSize: "clamp(1.4rem, 1.8vw, 2.2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>
+                    <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "space-between", gap: "1.6rem", padding: "1.6rem 2rem", background: "#FAF9F6", borderTop: "0.1rem solid rgba(129, 102, 63, 0.12)", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left", minWidth: 0, flex: 1 }}>
+                        <span style={{ fontSize: "clamp(1.3rem, 1.4vw, 1.9rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.15, color: "#81663F", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                           {applyTextCase(cat.name, siteSettings?.textCase, "title")}
                         </span>
-                        <span style={{ fontSize: "1.15rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>
+                        <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.25, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                           {applyTextCase(cat.sub, siteSettings?.textCase, "sentence")}
                         </span>
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
-                        <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{cat.code}</span>
-                        <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{cat.num}</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "1.2rem", flexShrink: 0 }}>
+                        <span style={{ fontSize: "clamp(1.8rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{cat.code}</span>
+                        <span style={{ fontSize: "clamp(1.4rem, 1.8vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{cat.num}</span>
                       </div>
                     </div>
                   </Link>
@@ -1122,7 +1138,7 @@ export default function HomeClient({
       </section>
 
       {/* ══════════════════════════════════════
-          BROWSE BY BRANDS — 2-card full carousel showing ALL ~20 brands (1920x1080)
+          BROWSE BY BRANDS — 3-grid full carousel showing ALL ~20 brands (1920x1080)
           ══════════════════════════════════════ */}
       <section className="theme-light" style={{ borderBottom: "0.1rem solid rgba(0,0,0,0.12)" }}>
 
@@ -1154,34 +1170,38 @@ export default function HomeClient({
           <Link href="/brands" id="brand-view-all" className="t-tag ul-link cat-header-view-all" style={{ position: "absolute", right: "2.4rem", bottom: "2.4rem", color: "#81663F", letterSpacing: "0.08em", fontSize: "1.35rem", fontWeight: 700 }}>View all</Link>
         </div>
 
-        {/* 2-card carousel — overflow hidden, slides via CSS transform */}
+        {/* 3-card carousel — overflow hidden, slides via CSS transform */}
         <div
           style={{ position: "relative", overflow: "hidden", width: "100%", padding: "2.4rem 1.2rem", boxSizing: "border-box" }}
           onMouseEnter={() => setBrandPaused(true)}
           onMouseLeave={() => setBrandPaused(false)}
         >
 
-          {/* Slide track — shifts by 50% per step (showing 2 cards on desktop) */}
+          {/* Slide track — 3 cards on desktop (shifts by 1 card per step) */}
           <div
+            className="home-carousel-track-3"
             style={{
               display: "flex",
-              width: `${brandTotal * 50}%`,
-              transform: `translateX(-${(brandIdx * 100) / brandTotal}%)`,
+              width: `${(extendedBrands.length * 100) / 3}%`,
+              transform: `translateX(-${(brandIdx * 100) / extendedBrands.length}%)`,
               transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
-            }}
+              ["--total-items" as string]: extendedBrands.length,
+              ["--current-idx" as string]: brandIdx,
+            } as React.CSSProperties}
           >
-            {brandsList.map((brand) => (
+            {extendedBrands.map((brand, idx) => (
               <div
-                key={brand.id}
+                key={`${brand.id}-${idx}`}
+                className="home-carousel-slide-3"
                 style={{
-                  flex: `0 0 ${100 / brandTotal}%`,
+                  flex: `0 0 ${100 / extendedBrands.length}%`,
                   padding: "0 1.2rem",
                   boxSizing: "border-box",
                 }}
               >
                 <Link
                   href={getBrandHref(brand)}
-                  id={`home-brand-${brand.id}`}
+                  id={idx < brandTotal ? `home-brand-${brand.id}` : `home-brand-${brand.id}-clone-${idx}`}
                   style={{
                     display: "flex",
                     flexDirection: "column",
@@ -1197,7 +1217,7 @@ export default function HomeClient({
                   className="home-ticket-card"
                 >
                   {/* 1920x1080 Image Container */}
-                  <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "24rem", background: "#d8d4c8" }}>
+                  <div style={{ position: "relative", overflow: "hidden", width: "100%", aspectRatio: "1920 / 1080", minHeight: "18rem", background: "#d8d4c8" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={brand.img}
@@ -1211,18 +1231,18 @@ export default function HomeClient({
                       <div
                         style={{
                           position: "absolute",
-                          bottom: "1.4rem",
-                          left: "1.4rem",
+                          bottom: "1.2rem",
+                          left: "1.2rem",
                           background: "#ffffff",
-                          padding: "0.6rem 1.4rem",
+                          padding: "0.5rem 1.2rem",
                           borderRadius: "0.4rem",
                           boxShadow: "0 4px 14px rgba(0, 0, 0, 0.15)",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           zIndex: 5,
-                          minWidth: "7rem",
-                          minHeight: "3.2rem",
+                          minWidth: "6rem",
+                          minHeight: "2.8rem",
                         }}
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1230,8 +1250,8 @@ export default function HomeClient({
                           src={brand.logo}
                           alt={brand.name}
                           style={{
-                            maxHeight: "2.4rem",
-                            maxWidth: "9rem",
+                            maxHeight: "2.2rem",
+                            maxWidth: "8rem",
                             width: "auto",
                             height: "auto",
                             objectFit: "contain",
@@ -1246,18 +1266,18 @@ export default function HomeClient({
                   </div>
 
                   {/* Caption Bar: Brand Name (Left), Short Code & Number side-by-side (Right) */}
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2.4rem", padding: "1.8rem 2.4rem", background: "#FAF9F6", borderTop: "0.1rem solid rgba(129, 102, 63, 0.12)", transition: "background 0.25s ease" }} className="home-ticket-caption">
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left" }}>
-                      <span style={{ fontSize: "clamp(1.3rem, 1.6vw, 2rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#81663F" }}>
+                  <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "space-between", gap: "1.6rem", padding: "1.6rem 2rem", background: "#FAF9F6", borderTop: "0.1rem solid rgba(129, 102, 63, 0.12)", transition: "background 0.25s ease" }} className="home-ticket-caption">
+                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", textAlign: "left", minWidth: 0, flex: 1 }}>
+                      <span style={{ fontSize: "clamp(1.3rem, 1.4vw, 1.9rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.15, color: "#81663F", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                         {applyTextCase(brand.name, siteSettings?.textCase, "title")}
                       </span>
-                      <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.2 }}>
+                      <span style={{ fontSize: "1.1rem", color: "#5E5852", letterSpacing: "0.02em", lineHeight: 1.25, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                         {applyTextCase(brand.sub, siteSettings?.textCase, "sentence")}
                       </span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "1.6rem", flexShrink: 0 }}>
-                      <span style={{ fontSize: "clamp(2rem, 2.8vw, 3.8rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{brand.code}</span>
-                      <span style={{ fontSize: "clamp(1.6rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{brand.num}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "1.2rem", flexShrink: 0 }}>
+                      <span style={{ fontSize: "clamp(1.8rem, 2.2vw, 3rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "#81663F" }}>{brand.code}</span>
+                      <span style={{ fontSize: "clamp(1.4rem, 1.8vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1, color: "rgba(129,102,63,0.35)" }}>{brand.num}</span>
                     </div>
                   </div>
                 </Link>
