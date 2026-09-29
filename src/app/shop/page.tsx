@@ -3,16 +3,12 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, CheckCircle2, X, Send, ShoppingBag } from "lucide-react";
+import { ArrowUpRight, ShoppingBag } from "lucide-react";
 import { ShopItem, ShopSettingsItem, DEFAULT_SHOP_ITEMS, DEFAULT_SHOP_SETTINGS } from "@/lib/types";
 
 export default function ShopPage() {
   const [items, setItems] = useState<ShopItem[]>(DEFAULT_SHOP_ITEMS);
   const [settings, setSettings] = useState<ShopSettingsItem>(DEFAULT_SHOP_SETTINGS);
-  const [selectedItem, setSelectedItem] = useState<ShopItem | null>(null);
-  const [inquiryData, setInquiryData] = useState({ name: "", email: "", phone: "", quantity: "1", notes: "" });
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetch(`/api/shop?t=${Date.now()}`, { cache: "no-store" })
@@ -30,43 +26,21 @@ export default function ShopPage() {
       .catch(() => {});
   }, []);
 
-  const handleInquire = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedItem || !inquiryData.name || !inquiryData.email) return;
-    setSubmitting(true);
-    try {
-      await fetch("/api/inquiries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: inquiryData.name,
-          email: inquiryData.email,
-          phone: inquiryData.phone || "Direct Shop Inquiry",
-          type: "Quotation / Spec Request",
-          subject: `Shop Inquiry: ${selectedItem.name} (${selectedItem.code}-${selectedItem.num})`,
-          message: `Product: ${selectedItem.name}\nPrice: ${selectedItem.price}\nRequested Qty: ${inquiryData.quantity}\nClient Notes: ${inquiryData.notes || "None"}`,
-          productOrBrand: selectedItem.name,
-        }),
-      });
-      setSubmitted(true);
-    } catch (e) {
-      alert("Error submitting request. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
     <div className="shop-page">
       {/* ── Page Header ── */}
       <div className="shop-header page-header">
         <div className="shop-header__inner page-header__inner">
           <div className="shop-header__meta page-meta">
-            {settings.metaText || `ARCHITECTURAL SPECIFICATION & SOURCING — ${items.length} SAMPLE SPECIMENS`}
+            {settings.metaText && !settings.metaText.includes("SAMPLE SPECIMENS")
+              ? settings.metaText
+              : "AAREN STUDIO — CURATED SHOP"}
           </div>
           <h1 className="shop-header__title page-title">{settings.title || "SHOP"}</h1>
           <p className="shop-header__desc page-desc">
-            {settings.description || "Direct access to material specifications, sample sets, fixtures, and custom components curated for luxury architectural projects across India."}
+            {settings.description && !settings.description.includes("material specifications, sample sets")
+              ? settings.description
+              : "Direct access to curated lifestyle essentials, bespoke accessories, and signature products crafted for elevated living."}
           </p>
           <div style={{ marginTop: "2.4rem" }}>
             <Link
@@ -86,7 +60,7 @@ export default function ShopPage() {
                 textDecoration: "none",
               }}
             >
-              <ShoppingBag size={16} /> {settings.exploreCatalogText || "Explore All 1,000+ Materials in Full Catalog"}
+              <ShoppingBag size={16} /> {settings.exploreCatalogText || "Explore All Materials in Full Catalog"}
               <ArrowUpRight size={16} />
             </Link>
           </div>
@@ -96,279 +70,83 @@ export default function ShopPage() {
       {/* ── Shop Grid ── */}
       <div className="shop-grid">
         {items.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => {
-              setSelectedItem(item);
-              setSubmitted(false);
-            }}
-            className="shop-card"
-            style={{ cursor: "pointer" }}
-          >
+          <div key={item.id} className="shop-card">
+            {/* Product Image */}
             <div className="shop-card__fig-wrapper">
-              <div className="shop-card__fig">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  unoptimized
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="shop-card__img"
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-              <div className="shop-card__price-badge t-tag">
-                {item.price}
+              <a
+                href={item.shopifyUrl || "#"}
+                target={item.shopifyUrl ? "_blank" : undefined}
+                rel={item.shopifyUrl ? "noopener noreferrer" : undefined}
+                className="shop-card__fig-link"
+                title={`Buy ${item.name}`}
+              >
+                <div className="shop-card__fig">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    unoptimized
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="shop-card__img"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+                {item.price && (
+                  <div className="shop-card__price-badge t-tag">
+                    {item.price}
+                  </div>
+                )}
+              </a>
+            </div>
+
+            {/* Product Info, Description & Buy Now CTA */}
+            <div className="shop-card__caption">
+              <div className="shop-card__caption-header">
+                <div className="shop-card__caption-left">
+                  <span className="shop-card__caption-cat t-tag">
+                    {item.category || "ACCESSORIES"}
+                  </span>
+                  <h2 className="shop-card__caption-name">{item.name}</h2>
+                </div>
+                <div className="shop-card__caption-right">
+                  <span className="shop-card__caption-code">{item.code}</span>
+                  <span className="shop-card__caption-num">{item.num}</span>
+                </div>
               </div>
 
-              {item.shopifyUrl && (
-                <a
-                  href={item.shopifyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="shop-card__buy-btn"
-                  title={`Buy ${item.name} on Shopify`}
-                >
-                  <ShoppingBag size={13} />
-                  <span>{item.buyNowText || "Buy Now"}</span>
-                  <ArrowUpRight size={13} />
-                </a>
+              {item.spec && (
+                <p className="shop-card__caption-desc">
+                  {item.spec}
+                </p>
               )}
-            </div>
-            <div className="shop-card__caption">
-              <div className="shop-card__caption-left">
-                <span className="shop-card__caption-name">{item.name}</span>
-                <span className="shop-card__caption-cat t-tag">
-                  {item.category} • {item.shopifyUrl ? "Buy Now or Request Quote" : "Click for Sample Quote"}
-                </span>
-              </div>
-              <div className="shop-card__caption-right">
-                <span className="shop-card__caption-code">{item.code}</span>
-                <span className="shop-card__caption-num">{item.num}</span>
+
+              <div className="shop-card__caption-actions">
+                {item.shopifyUrl ? (
+                  <a
+                    href={item.shopifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shop-card__buy-btn-main"
+                    title={`Buy ${item.name} on Shopify`}
+                  >
+                    <ShoppingBag size={18} />
+                    <span>{item.buyNowText || `Buy on Shopify • ${item.price}`}</span>
+                    <ArrowUpRight size={18} />
+                  </a>
+                ) : (
+                  <a
+                    href={`mailto:info@aarenintpro.com?subject=Inquiry: ${encodeURIComponent(item.name)}`}
+                    className="shop-card__buy-btn-main"
+                  >
+                    <span>Inquire for Price</span>
+                    <ArrowUpRight size={18} />
+                  </a>
+                )}
               </div>
             </div>
           </div>
         ))}
       </div>
-
-      {/* ── Direct Specification & Quote Modal ── */}
-      {selectedItem && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 100000,
-            background: "rgba(0,0,0,0.75)",
-            backdropFilter: "blur(8px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "1.6rem",
-          }}
-          onClick={() => setSelectedItem(null)}
-        >
-          <div
-            style={{
-              background: "#FAF9F6",
-              borderRadius: "16px",
-              maxWidth: "540px",
-              width: "100%",
-              padding: "2.4rem",
-              boxShadow: "0 24px 48px rgba(0,0,0,0.3)",
-              color: "#1e1e1e",
-              position: "relative",
-              maxHeight: "90vh",
-              overflowY: "auto",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedItem(null)}
-              style={{
-                position: "absolute",
-                top: "1.6rem",
-                right: "1.6rem",
-                background: "rgba(0,0,0,0.06)",
-                border: "none",
-                borderRadius: "50%",
-                width: "36px",
-                height: "36px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                zIndex: 10,
-              }}
-            >
-              <X size={18} />
-            </button>
-
-            {submitted ? (
-              <div style={{ textAlign: "center", padding: "2rem 1rem" }}>
-                <CheckCircle2 size={48} color="#81663F" style={{ margin: "0 auto 1.2rem" }} />
-                <h3 style={{ fontSize: "1.8rem", fontWeight: 800, textTransform: "uppercase", color: "#81663F" }}>
-                  Quote Request Sent
-                </h3>
-                <p style={{ marginTop: "0.8rem", color: "#5E5852", fontSize: "1.1rem" }}>
-                  Our architectural material specialist will prepare specifications and pricing for <strong>{selectedItem.name}</strong> and contact you promptly.
-                </p>
-                <button
-                  onClick={() => setSelectedItem(null)}
-                  style={{
-                    marginTop: "1.8rem",
-                    padding: "0.8rem 2rem",
-                    background: "#81663F",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    cursor: "pointer",
-                  }}
-                >
-                  Done
-                </button>
-              </div>
-            ) : (
-              <div>
-                {/* Product Image in Modal */}
-                {selectedItem.image && (
-                  <div style={{ position: "relative", width: "100%", height: "260px", borderRadius: "12px", overflow: "hidden", marginBottom: "1.4rem", background: "#EAE4D8" }}>
-                    <Image
-                      src={selectedItem.image}
-                      alt={selectedItem.name}
-                      fill
-                      unoptimized
-                      style={{ objectFit: "cover" }}
-                    />
-                    <div style={{ position: "absolute", top: "12px", right: "12px", background: "rgba(30,30,30,0.85)", backdropFilter: "blur(4px)", color: "#FFFFFF", padding: "4px 10px", borderRadius: "6px", fontSize: "0.8rem", fontWeight: 800 }}>
-                      {selectedItem.code}-{selectedItem.num}
-                    </div>
-                  </div>
-                )}
-
-                <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "#81663F", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                  {selectedItem.category} • SPECIFICATION INQUIRY
-                </span>
-                <h2 style={{ fontSize: "2rem", fontWeight: 900, textTransform: "uppercase", color: "#1e1e1e", margin: "0.4rem 0" }}>
-                  {selectedItem.name}
-                </h2>
-                <p style={{ fontSize: "1.2rem", fontWeight: 700, color: "#81663F", marginBottom: "0.8rem" }}>
-                  Estimate: {selectedItem.price}
-                </p>
-                <p style={{ fontSize: "0.95rem", color: "#5E5852", marginBottom: "1.6rem", background: "rgba(129,102,63,0.08)", padding: "0.8rem 1rem", borderRadius: "6px", lineHeight: 1.6, whiteSpace: "pre-line" }}>
-                  {selectedItem.spec}
-                </p>
-
-                {/* ── Direct Shopify Buy Connection ── */}
-                {selectedItem.shopifyUrl && (
-                  <div style={{ marginBottom: "1.6rem" }}>
-                    <a
-                      href={selectedItem.shopifyUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "0.8rem",
-                        width: "100%",
-                        padding: "1rem 1.6rem",
-                        background: "#81663F",
-                        color: "#ffffff",
-                        borderRadius: "8px",
-                        fontWeight: 800,
-                        fontSize: "1.05rem",
-                        textDecoration: "none",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.04em",
-                        boxShadow: "0 6px 20px rgba(129, 102, 63, 0.25)",
-                        transition: "all 0.2s ease",
-                      }}
-                    >
-                      <ShoppingBag size={18} />
-                      {selectedItem.buyNowText || "Buy on Shopify"}
-                      <ArrowUpRight size={18} />
-                    </a>
-
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "1.2rem 0 0.8rem" }}>
-                      <div style={{ flex: 1, height: "1px", background: "rgba(0,0,0,0.12)" }} />
-                      <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", textAlign: "center" }}>
-                        OR INQUIRE FOR SAMPLE / BESPOKE SPEC
-                      </span>
-                      <div style={{ flex: 1, height: "1px", background: "rgba(0,0,0,0.12)" }} />
-                    </div>
-                  </div>
-                )}
-
-                <form onSubmit={handleInquire} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Your Full Name *"
-                    value={inquiryData.name}
-                    onChange={(e) => setInquiryData({ ...inquiryData, name: e.target.value })}
-                    style={{ padding: "0.85rem 1rem", border: "1px solid rgba(0,0,0,0.15)", borderRadius: "6px", fontSize: "1rem" }}
-                  />
-                  <input
-                    type="email"
-                    required
-                    placeholder="Email Address *"
-                    value={inquiryData.email}
-                    onChange={(e) => setInquiryData({ ...inquiryData, email: e.target.value })}
-                    style={{ padding: "0.85rem 1rem", border: "1px solid rgba(0,0,0,0.15)", borderRadius: "6px", fontSize: "1rem" }}
-                  />
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
-                    <input
-                      type="tel"
-                      placeholder="Phone (Optional)"
-                      value={inquiryData.phone}
-                      onChange={(e) => setInquiryData({ ...inquiryData, phone: e.target.value })}
-                      style={{ padding: "0.85rem 1rem", border: "1px solid rgba(0,0,0,0.15)", borderRadius: "6px", fontSize: "1rem" }}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Est. Quantity / Sqm"
-                      value={inquiryData.quantity}
-                      onChange={(e) => setInquiryData({ ...inquiryData, quantity: e.target.value })}
-                      style={{ padding: "0.85rem 1rem", border: "1px solid rgba(0,0,0,0.15)", borderRadius: "6px", fontSize: "1rem" }}
-                    />
-                  </div>
-                  <textarea
-                    rows={2}
-                    placeholder="Project details / finish requirements..."
-                    value={inquiryData.notes}
-                    onChange={(e) => setInquiryData({ ...inquiryData, notes: e.target.value })}
-                    style={{ padding: "0.85rem 1rem", border: "1px solid rgba(0,0,0,0.15)", borderRadius: "6px", fontSize: "1rem" }}
-                  />
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    style={{
-                      padding: "1rem",
-                      background: "#81663F",
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: "6px",
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "0.6rem",
-                    }}
-                  >
-                    <Send size={16} /> {submitting ? "Sending Request..." : "Request Official Quote & Sample"}
-                  </button>
-                </form>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       <style jsx>{`
         .shop-page {
@@ -420,27 +198,28 @@ export default function ShopPage() {
 
         /* ── Shop Grid ── */
         .shop-grid {
-          display: flex;
-          flex-wrap: wrap;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 520px));
+          gap: 3rem;
           width: 100%;
           max-width: 1600px;
           margin: 0 auto;
-          padding-left: 4rem;
-          padding-right: 4rem;
+          padding: 4rem 4rem 8rem;
           box-sizing: border-box;
         }
 
         @media (max-width: 1024px) {
           .shop-grid {
-            padding-left: 3rem;
-            padding-right: 3rem;
+            padding: 3rem 3rem 6rem;
+            gap: 2.4rem;
           }
         }
 
         @media (max-width: 768px) {
           .shop-grid {
-            padding-left: 2rem;
-            padding-right: 2rem;
+            grid-template-columns: 1fr;
+            padding: 2.4rem 1.6rem 5rem;
+            gap: 2rem;
           }
         }
 
@@ -448,36 +227,34 @@ export default function ShopPage() {
         .shop-card {
           display: flex;
           flex-direction: column;
-          flex: 0 0 100%;
-          width: 100%;
-          border-bottom: 0.1rem solid rgba(129,102,63,0.18);
-          text-decoration: none;
-          color: inherit;
+          background: #ECE7DE;
+          border: 0.1rem solid rgba(129, 102, 63, 0.22);
+          border-radius: 8px;
           overflow: hidden;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
-        @media (min-width: 768px) {
-          .shop-card {
-            flex: 0 0 50%;
-            width: 50%;
-            border-right: 0.1rem solid rgba(129,102,63,0.18);
-          }
-        }
-
-        @media (min-width: 1240px) {
-          .shop-card {
-            flex: 0 0 33.333333%;
-            width: 33.333333%;
-            border-right: 0.1rem solid rgba(129,102,63,0.18);
-          }
+        .shop-card:hover {
+          transform: translateY(-4px);
+          border-color: #81663F;
+          box-shadow: 0 16px 36px rgba(129, 102, 63, 0.12);
         }
 
         .shop-card__fig-wrapper {
           position: relative;
           width: 100%;
-          padding-top: 65%;
+          padding-top: 70%;
           background: #111;
           overflow: hidden;
+        }
+
+        .shop-card__fig-link {
+          position: absolute;
+          inset: 0;
+          display: block;
+          text-decoration: none;
+          cursor: pointer;
         }
 
         .shop-card__fig {
@@ -498,52 +275,30 @@ export default function ShopPage() {
           top: 1.4rem;
           left: 1.4rem;
           background: #81663F;
-          color: #fff;
-          padding: 0.5rem 1rem;
+          color: #ffffff;
+          padding: 0.5rem 1.1rem;
           font-size: 1.1rem;
           font-weight: 700;
           letter-spacing: 0.05em;
           border-radius: 4px;
-        }
-
-        .shop-card__buy-btn {
-          position: absolute;
-          top: 1.4rem;
-          right: 1.4rem;
-          z-index: 5;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.5rem 1.1rem;
-          background: #1E1E1E;
-          color: #ffffff;
-          border-radius: 9999px;
-          font-size: 0.85rem;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          text-decoration: none;
-          box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-          transition: transform 0.2s ease, background 0.2s ease;
-        }
-
-        .shop-card__buy-btn:hover {
-          background: #81663F;
-          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+          z-index: 2;
         }
 
         .shop-card__caption {
           display: flex;
+          flex-direction: column;
+          padding: 2.2rem 2.4rem;
+          background: #ECE7DE;
+          flex: 1;
+        }
+
+        .shop-card__caption-header {
+          display: flex;
           align-items: flex-start;
           justify-content: space-between;
           gap: 1.6rem;
-          padding: 1.6rem 2.4rem;
-          background: #E6E2D8;
-          transition: background 0.25s ease;
-        }
-
-        .shop-card:hover .shop-card__caption {
-          background: #dbd6ca;
+          margin-bottom: 1.2rem;
         }
 
         .shop-card__caption-left {
@@ -552,40 +307,86 @@ export default function ShopPage() {
           gap: 0.4rem;
         }
 
-        .shop-card__caption-name {
-          font-size: 1.4rem;
+        .shop-card__caption-cat {
+          font-size: 0.95rem;
           font-weight: 700;
-          letter-spacing: -0.02em;
-          line-height: 1.1;
+          color: #81663F;
+          letter-spacing: 0.08em;
           text-transform: uppercase;
         }
 
-        .shop-card__caption-cat {
-          font-size: 1.1rem;
-          color: rgba(0,0,0,0.5);
-          letter-spacing: 0.04em;
+        .shop-card__caption-name {
+          font-size: 1.7rem;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          line-height: 1.15;
+          text-transform: uppercase;
+          color: #1E1E1E;
+          margin: 0;
         }
 
         .shop-card__caption-right {
           display: flex;
           align-items: center;
-          gap: 1.6rem;
+          gap: 0.8rem;
           flex-shrink: 0;
         }
 
         .shop-card__caption-code {
-          font-size: 2.4rem;
-          font-weight: 700;
+          font-size: 2.2rem;
+          font-weight: 800;
           letter-spacing: -0.04em;
           line-height: 1;
+          color: #1E1E1E;
         }
 
         .shop-card__caption-num {
-          font-size: 2.2rem;
+          font-size: 2rem;
           font-weight: 700;
           letter-spacing: -0.04em;
           line-height: 1;
           color: rgba(0,0,0,0.25);
+        }
+
+        .shop-card__caption-desc {
+          font-size: 1.05rem;
+          line-height: 1.65;
+          color: #4A453F;
+          margin: 0 0 2rem 0;
+          background: rgba(129, 102, 63, 0.07);
+          padding: 1.2rem 1.4rem;
+          border-radius: 6px;
+          border-left: 3px solid #81663F;
+        }
+
+        .shop-card__caption-actions {
+          margin-top: auto;
+        }
+
+        .shop-card__buy-btn-main {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.8rem;
+          width: 100%;
+          padding: 1.1rem 1.8rem;
+          background: #81663F;
+          color: #ffffff;
+          border-radius: 8px;
+          font-size: 1.05rem;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          text-decoration: none;
+          box-shadow: 0 6px 20px rgba(129, 102, 63, 0.28);
+          transition: all 0.25s ease;
+          cursor: pointer;
+        }
+
+        .shop-card__buy-btn-main:hover {
+          background: #1E1E1E;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(30, 30, 30, 0.35);
         }
       `}</style>
     </div>
