@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import AdminNav from "@/components/AdminNav";
@@ -20,6 +20,10 @@ import {
   Layers,
   Sparkles,
   ArrowUpRight,
+  RefreshCw,
+  Zap,
+  Globe,
+  Upload,
 } from "lucide-react";
 
 export default function AdminShopPage() {
@@ -37,9 +41,129 @@ export default function AdminShopPage() {
   const [editingItem, setEditingItem] = useState<Partial<ShopItem> | null>(null);
   const [isSavingItem, setIsSavingItem] = useState(false);
 
+  // Instant Shopify Import State
+  const [quickShopifyUrl, setQuickShopifyUrl] = useState("");
+  const [isFetchingShopify, setIsFetchingShopify] = useState(false);
+
+  // Device Image Upload State
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const imageFileRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "Shop");
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const json = await res.json();
+      if (json.url) {
+        setEditingItem((prev) => prev ? { ...prev, image: json.url } : null);
+        showToast("✅ Image uploaded successfully!");
+      } else {
+        showToast("❌ " + (json.error || "Upload failed"));
+      }
+    } catch (err: any) {
+      showToast("❌ Upload error: " + err.message);
+    } finally {
+      setUploadingImage(false);
+      if (imageFileRef.current) imageFileRef.current.value = "";
+    }
+  };
+
   const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(null), 4000);
+  };
+
+  const handleFetchShopify = async (targetUrl?: string) => {
+    const urlToFetch = (targetUrl || quickShopifyUrl || editingItem?.shopifyUrl || "").trim();
+    if (!urlToFetch) {
+      showToast("⚠️ Please enter a Shopify product URL");
+      return;
+    }
+    setIsFetchingShopify(true);
+    try {
+      const res = await fetch("/api/shopify/fetch-product", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: urlToFetch }),
+      });
+      const json = await res.json();
+      if (json.success && json.data) {
+        const p = json.data;
+        const words = (p.name || "").split(" ").filter(Boolean);
+        const code = (words.length >= 2 ? words[0][0] + words[1][0] : (words[0] || "SP").slice(0, 2)).toUpperCase();
+
+        setEditingItem((prev) => ({
+          ...prev,
+          name: p.name || prev?.name || "Shopify Product",
+          category: p.category || prev?.category || "Accessories",
+          code: prev?.code && prev.code !== "SP" ? prev.code : code,
+          num: prev?.num || String(items.length + 1).padStart(2, "0"),
+          price: p.price || prev?.price || "₹120",
+          image: p.image || prev?.image || "",
+          spec: p.description || prev?.spec || "",
+          shopifyUrl: p.shopifyUrl || urlToFetch,
+          buyNowText: p.buyNowText || "Buy on Shopify",
+          available: true,
+          sequenceNumber: prev?.sequenceNumber ?? (items.length + 1),
+        }));
+        showToast(`🎉 Imported "${p.name}" details from Shopify!`);
+      } else {
+        showToast("❌ " + (json.error || "Failed to fetch from Shopify"));
+      }
+    } catch (err: any) {
+      showToast("❌ Network error: " + err.message);
+    } finally {
+      setIsFetchingShopify(false);
+    }
+  };
+
+  const handleQuickImportShopify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!quickShopifyUrl.trim()) {
+      showToast("⚠️ Please paste a Shopify product URL");
+      return;
+    }
+    setIsFetchingShopify(true);
+    try {
+      const res = await fetch("/api/shopify/fetch-product", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: quickShopifyUrl.trim() }),
+      });
+      const json = await res.json();
+      if (json.success && json.data) {
+        const p = json.data;
+        const words = (p.name || "").split(" ").filter(Boolean);
+        const code = (words.length >= 2 ? words[0][0] + words[1][0] : (words[0] || "SP").slice(0, 2)).toUpperCase();
+
+        setEditingItem({
+          name: p.name || "Shopify Product",
+          category: p.category || "Accessories",
+          code,
+          num: String(items.length + 1).padStart(2, "0"),
+          price: p.price || "₹120",
+          image: p.image || "",
+          spec: p.description || "",
+          shopifyUrl: p.shopifyUrl || quickShopifyUrl.trim(),
+          buyNowText: p.buyNowText || "Buy on Shopify",
+          available: true,
+          sequenceNumber: items.length + 1,
+        });
+        setQuickShopifyUrl("");
+        showToast(`🎉 Auto-filled "${p.name}"! Review and click "Save Specimen" to publish.`);
+      } else {
+        showToast("❌ " + (json.error || "Failed to fetch from Shopify"));
+      }
+    } catch (err: any) {
+      showToast("❌ Network error: " + err.message);
+    } finally {
+      setIsFetchingShopify(false);
+    }
   };
 
   const fetchShopData = async () => {
@@ -229,6 +353,98 @@ export default function AdminShopPage() {
               <Plus size={16} /> + Add New Specimen
             </button>
           </div>
+        </div>
+
+        {/* ── Instant Shopify Product Auto-Sync & Importer Banner ── */}
+        <div
+          style={{
+            background: "linear-gradient(135deg, #1E1E1E 0%, #2A2520 100%)",
+            border: "1px solid #81663F",
+            borderRadius: "16px",
+            padding: "1.6rem 2rem",
+            marginBottom: "2rem",
+            boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
+            color: "#FFFFFF",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "1rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div style={{ width: "42px", height: "42px", borderRadius: "10px", background: "rgba(129, 102, 63, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(129, 102, 63, 0.5)" }}>
+                <Zap size={22} color="#D5CEBF" />
+              </div>
+              <div>
+                <h2 style={{ fontSize: "1.2rem", fontWeight: 800, margin: 0, color: "#FFFFFF", letterSpacing: "0.02em" }}>
+                  ⚡ Instant Shopify Importer &amp; Live Sync
+                </h2>
+                <p style={{ color: "#D5CEBF", fontSize: "0.85rem", margin: "2px 0 0" }}>
+                  Paste any Shopify product link (e.g. <code>https://snvpvj-51.myshopify.com/products/car-diffusor</code>). Automatically retrieves <strong>Image</strong>, <strong>Description</strong>, <strong>Price</strong>, and sets up the <strong>Direct Buy Now</strong> button!
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: "8px" }}>
+              <a
+                href="https://snvpvj-51.myshopify.com/products/car-diffusor"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "6px 12px",
+                  background: "rgba(255,255,255,0.08)",
+                  borderRadius: "6px",
+                  fontSize: "0.75rem",
+                  color: "#D5CEBF",
+                  textDecoration: "none",
+                  border: "1px solid rgba(255,255,255,0.15)",
+                }}
+              >
+                <Globe size={13} /> View Live Shopify Store ↗
+              </a>
+            </div>
+          </div>
+
+          <form onSubmit={handleQuickImportShopify} style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <input
+              type="url"
+              placeholder="Paste Shopify Product URL, e.g. https://snvpvj-51.myshopify.com/products/car-diffusor"
+              value={quickShopifyUrl}
+              onChange={(e) => setQuickShopifyUrl(e.target.value)}
+              style={{
+                flex: 1,
+                minWidth: "280px",
+                padding: "12px 16px",
+                borderRadius: "8px",
+                border: "1px solid rgba(129, 102, 63, 0.5)",
+                background: "rgba(255,255,255,0.07)",
+                color: "#FFFFFF",
+                fontSize: "0.92rem",
+                outline: "none",
+              }}
+            />
+            <button
+              type="submit"
+              disabled={isFetchingShopify}
+              style={{
+                padding: "12px 24px",
+                background: "#81663F",
+                color: "#FFFFFF",
+                border: "none",
+                borderRadius: "8px",
+                fontWeight: 800,
+                fontSize: "0.92rem",
+                cursor: isFetchingShopify ? "wait" : "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                boxShadow: "0 4px 15px rgba(129, 102, 63, 0.4)",
+              }}
+            >
+              <RefreshCw size={16} className={isFetchingShopify ? "animate-spin" : ""} />
+              {isFetchingShopify ? "Fetching Shopify Data..." : "⚡ Auto-Fetch & Import"}
+            </button>
+          </form>
         </div>
 
         {/* Section 1: Shop Page Header & Branding Customization */}
@@ -625,6 +841,54 @@ export default function AdminShopPage() {
               </div>
 
               <form onSubmit={handleSaveItem} style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+                {/* ── Quick Shopify Auto-Fill inside Modal ── */}
+                <div style={{ background: "#F4EFE6", border: "1px solid #D5CEBF", borderRadius: "10px", padding: "1rem", marginBottom: "0.4rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <Zap size={16} color="#81663F" />
+                      <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "#1E1E1E" }}>
+                        Auto-Fill All Fields from Shopify
+                      </span>
+                    </div>
+                    <span style={{ fontSize: "0.72rem", background: "rgba(129, 102, 63, 0.15)", color: "#81663F", padding: "2px 6px", borderRadius: "4px", fontWeight: 700 }}>
+                      1-CLICK SYNC
+                    </span>
+                  </div>
+                  <p style={{ fontSize: "0.78rem", color: "#6A6359", margin: "0 0 0.6rem" }}>
+                    Paste a Shopify product URL to automatically retrieve its <strong>Image</strong>, <strong>Name</strong>, <strong>Price</strong>, and <strong>Description</strong>.
+                  </p>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <input
+                      type="url"
+                      placeholder="e.g. https://snvpvj-51.myshopify.com/products/car-diffusor"
+                      value={editingItem.shopifyUrl || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, shopifyUrl: e.target.value })}
+                      style={{ flex: 1, padding: "8px 12px", border: "1px solid #D5CEBF", borderRadius: "6px", fontSize: "0.85rem", background: "#FFFFFF" }}
+                    />
+                    <button
+                      type="button"
+                      disabled={isFetchingShopify}
+                      onClick={() => handleFetchShopify(editingItem.shopifyUrl)}
+                      style={{
+                        padding: "8px 14px",
+                        background: "#81663F",
+                        color: "#FFFFFF",
+                        border: "none",
+                        borderRadius: "6px",
+                        fontWeight: 700,
+                        fontSize: "0.82rem",
+                        cursor: isFetchingShopify ? "wait" : "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }}
+                    >
+                      <RefreshCw size={14} className={isFetchingShopify ? "animate-spin" : ""} />
+                      {isFetchingShopify ? "Fetching..." : "Fetch Details"}
+                    </button>
+                  </div>
+                </div>
+
                 <div>
                   <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#1E1E1E", marginBottom: "0.3rem" }}>
                     Specimen Name *
@@ -710,9 +974,39 @@ export default function AdminShopPage() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#1E1E1E", marginBottom: "0.3rem" }}>
-                    Image URL *
-                  </label>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.3rem" }}>
+                    <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1E1E1E" }}>
+                      Image URL *
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => imageFileRef.current?.click()}
+                      disabled={uploadingImage}
+                      style={{
+                        background: "#EAE4D8",
+                        border: "none",
+                        borderRadius: "6px",
+                        padding: "3px 8px",
+                        fontSize: "0.75rem",
+                        fontWeight: 700,
+                        color: "#1E1E1E",
+                        cursor: "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      <Upload size={12} />
+                      {uploadingImage ? "Uploading..." : "Upload from Device"}
+                    </button>
+                    <input
+                      ref={imageFileRef}
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={handleImageUpload}
+                    />
+                  </div>
                   <input
                     type="text"
                     required
@@ -751,28 +1045,62 @@ export default function AdminShopPage() {
 
                 {/* Shopify Direct Product Connection */}
                 <div style={{ background: "#F4EFE6", border: "1px solid #D5CEBF", borderRadius: "10px", padding: "1.2rem", marginTop: "0.2rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "0.6rem" }}>
-                    <ShoppingBag size={18} color="#81663F" />
-                    <span style={{ fontSize: "0.88rem", fontWeight: 800, color: "#1E1E1E" }}>
-                      Shopify Direct Checkout / Buy Now Connection
-                    </span>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.6rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <ShoppingBag size={18} color="#81663F" />
+                      <span style={{ fontSize: "0.88rem", fontWeight: 800, color: "#1E1E1E" }}>
+                        Shopify Direct Checkout / Buy Now Connection
+                      </span>
+                    </div>
+                    {editingItem.shopifyUrl && (
+                      <a
+                        href={editingItem.shopifyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: "0.75rem", color: "#81663F", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: "4px", textDecoration: "none" }}
+                      >
+                        Test Link <ArrowUpRight size={13} />
+                      </a>
+                    )}
                   </div>
 
                   <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "0.8rem", alignItems: "flex-end" }}>
                     <div>
-                      <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 700, color: "#1E1E1E", marginBottom: "0.3rem" }}>
-                        Shopify Product URL / Buy Link
-                      </label>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.3rem" }}>
+                        <label style={{ fontSize: "0.78rem", fontWeight: 700, color: "#1E1E1E" }}>
+                          Shopify Product URL / Buy Link
+                        </label>
+                        <button
+                          type="button"
+                          disabled={isFetchingShopify}
+                          onClick={() => handleFetchShopify(editingItem.shopifyUrl)}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: "#81663F",
+                            fontSize: "0.75rem",
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            padding: 0,
+                          }}
+                        >
+                          <RefreshCw size={11} className={isFetchingShopify ? "animate-spin" : ""} />
+                          Sync from this URL
+                        </button>
+                      </div>
                       <input
                         type="url"
-                        placeholder="https://yourstore.myshopify.com/products/oak-veneer"
+                        placeholder="https://yourstore.myshopify.com/products/car-diffusor"
                         value={editingItem.shopifyUrl || ""}
                         onChange={(e) => setEditingItem({ ...editingItem, shopifyUrl: e.target.value })}
                         style={{ width: "100%", padding: "10px 12px", border: "1px solid #D5CEBF", borderRadius: "8px", fontSize: "0.9rem", background: "#FFFFFF" }}
                       />
                     </div>
 
-                    <div style={{ width: "150px" }}>
+                    <div style={{ width: "160px" }}>
                       <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 700, color: "#1E1E1E", marginBottom: "0.3rem" }}>
                         Button Label
                       </label>

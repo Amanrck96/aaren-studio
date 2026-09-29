@@ -49,6 +49,22 @@ const nextConfig = {
         protocol: "https",
         hostname: "cdn0070.qrcodechimp.com",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.shopify.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.myshopify.com",
+      },
+      {
+        protocol: "https",
+        hostname: "snvpvj-51.myshopify.com",
+      },
+      {
+        protocol: "https",
+        hostname: "aarenintpro.myshopify.com",
+      },
     ],
   },
   async headers() {

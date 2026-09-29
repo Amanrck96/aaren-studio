@@ -178,6 +178,8 @@ export default function ShopPage() {
               boxShadow: "0 24px 48px rgba(0,0,0,0.3)",
               color: "#1e1e1e",
               position: "relative",
+              maxHeight: "90vh",
+              overflowY: "auto",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -196,6 +198,7 @@ export default function ShopPage() {
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
+                zIndex: 10,
               }}
             >
               <X size={18} />
@@ -229,6 +232,22 @@ export default function ShopPage() {
               </div>
             ) : (
               <div>
+                {/* Product Image in Modal */}
+                {selectedItem.image && (
+                  <div style={{ position: "relative", width: "100%", height: "260px", borderRadius: "12px", overflow: "hidden", marginBottom: "1.4rem", background: "#EAE4D8" }}>
+                    <Image
+                      src={selectedItem.image}
+                      alt={selectedItem.name}
+                      fill
+                      unoptimized
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div style={{ position: "absolute", top: "12px", right: "12px", background: "rgba(30,30,30,0.85)", backdropFilter: "blur(4px)", color: "#FFFFFF", padding: "4px 10px", borderRadius: "6px", fontSize: "0.8rem", fontWeight: 800 }}>
+                      {selectedItem.code}-{selectedItem.num}
+                    </div>
+                  </div>
+                )}
+
                 <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "#81663F", letterSpacing: "0.1em", textTransform: "uppercase" }}>
                   {selectedItem.category} • SPECIFICATION INQUIRY
                 </span>
@@ -238,7 +257,7 @@ export default function ShopPage() {
                 <p style={{ fontSize: "1.2rem", fontWeight: 700, color: "#81663F", marginBottom: "0.8rem" }}>
                   Estimate: {selectedItem.price}
                 </p>
-                <p style={{ fontSize: "0.95rem", color: "#5E5852", marginBottom: "1.6rem", background: "rgba(129,102,63,0.08)", padding: "0.8rem 1rem", borderRadius: "6px" }}>
+                <p style={{ fontSize: "0.95rem", color: "#5E5852", marginBottom: "1.6rem", background: "rgba(129,102,63,0.08)", padding: "0.8rem 1rem", borderRadius: "6px", lineHeight: 1.6, whiteSpace: "pre-line" }}>
                   {selectedItem.spec}
                 </p>
 
