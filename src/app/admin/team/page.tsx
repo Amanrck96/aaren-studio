@@ -34,7 +34,7 @@ export default function AdminTeamPage() {
     fontSize: "medium",
     hoursText: "Open 9am to 9pm (All days)",
     phone: "+91 88844 64444",
-    email: "info@aarenintpro.com",
+    email: "hr@aarenintpro.com",
     address: "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026",
   });
   const [showBannerForm, setShowBannerForm] = useState(false);
@@ -247,9 +247,9 @@ export default function AdminTeamPage() {
             </button>
             <button
               onClick={() => setShowBannerForm(!showBannerForm)}
-              style={{ padding: "0.75rem 1.4rem", background: "#FFFFFF", color: "#81663F", border: "1px solid #D5CEBF", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.9rem", boxShadow: "0 4px 14px rgba(0,0,0,0.04)" }}
+              style={{ padding: "0.75rem 1.4rem", background: showBannerForm ? "#81663F" : "#FFFFFF", color: showBannerForm ? "#FFFFFF" : "#81663F", border: "1px solid #D5CEBF", borderRadius: "8px", fontWeight: 800, cursor: "pointer", fontSize: "0.9rem", boxShadow: "0 4px 14px rgba(0,0,0,0.04)" }}
             >
-              ⚙️ Join Banner Settings
+              {showBannerForm ? "▲ Close Team Contact Settings" : "⚙️ Team Contact & Careers Settings"}
             </button>
             <button
               onClick={() => setEditing({ name: "", designation: "Sales Consultant", category: "Sales", memberCode: "TM " + String(team.length + 1).padStart(2, "0"), photoUrl: "", bio: "", sequenceNumber: team.length + 1 })}
@@ -260,11 +260,48 @@ export default function AdminTeamPage() {
           </div>
         </div>
 
+        {/* Dedicated Team Page Contact Quick Overview Card */}
+        <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "14px", padding: "1.2rem 1.6rem", marginBottom: "1.8rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", boxShadow: "0 2px 10px rgba(0,0,0,0.03)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <span style={{ fontSize: "1.8rem" }}>📧</span>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+                <strong style={{ fontSize: "0.95rem", color: "#1E1E1E" }}>Team Page Contact Email:</strong>
+                <span style={{ background: "rgba(129, 102, 63, 0.12)", color: "#81663F", border: "1px solid rgba(129, 102, 63, 0.3)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800, fontSize: "0.92rem", letterSpacing: "0.02em" }}>
+                  {joinBanner.email || "hr@aarenintpro.com"}
+                </span>
+                <span style={{ fontSize: "0.78rem", background: "#FAF8F5", color: "#6A6359", border: "1px solid #D5CEBF", padding: "0.15rem 0.5rem", borderRadius: "4px", fontWeight: 700 }}>
+                  Active on /team only
+                </span>
+              </div>
+              <p style={{ margin: "0.3rem 0 0", fontSize: "0.82rem", color: "#6A6359" }}>
+                This email displays exclusively in the <em>&quot;Do You Want To Join The Creative Team?&quot;</em> section at the bottom of the Team page.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowBannerForm((prev) => !prev)}
+            style={{
+              padding: "0.6rem 1.2rem",
+              background: showBannerForm ? "#1E1E1E" : "#FAF8F5",
+              color: showBannerForm ? "#FFFFFF" : "#81663F",
+              border: "1px solid " + (showBannerForm ? "#1E1E1E" : "#D5CEBF"),
+              borderRadius: "8px",
+              fontWeight: 800,
+              fontSize: "0.85rem",
+              cursor: "pointer",
+            }}
+          >
+            {showBannerForm ? "Hide Editor ▲" : "✏️ Edit Team Email & Banner ▼"}
+          </button>
+        </div>
+
         {/* Join Banner Settings Drawer/Form */}
         {showBannerForm && (
           <form onSubmit={handleSaveBanner} style={{ background: "#FFFFFF", padding: "2rem", borderRadius: "16px", border: "1px solid #E2DCD2", marginBottom: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
-            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "0.4rem", color: "#81663F" }}>Join Creative Team Banner Settings</h2>
-            <p style={{ fontSize: "0.85rem", color: "#555555", marginBottom: "1.5rem" }}>Customize the title text, font size, and contact details shown at the bottom of the Team page.</p>
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: "0.4rem", color: "#81663F" }}>Team Page Contact & Careers Banner Settings</h2>
+            <p style={{ fontSize: "0.85rem", color: "#555555", marginBottom: "1.5rem" }}>Customize the title text, contact email (hr@aarenintpro.com), working hours, and phone shown exclusively at the bottom of the Team page.</p>
 
             <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
               <div>
@@ -312,12 +349,14 @@ export default function AdminTeamPage() {
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.4rem" }}>Email Address</label>
+                <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", fontWeight: 700, marginBottom: "0.2rem" }}>Team Contact Email (Careers / HR) *</label>
+                <span style={{ display: "block", fontSize: "0.74rem", color: "#6A6359", marginBottom: "0.4rem" }}>Only on /team (defaults to hr@aarenintpro.com)</span>
                 <input
-                  type="text"
+                  type="email"
+                  required
                   value={joinBanner.email}
                   onChange={(e) => setJoinBanner({ ...joinBanner, email: e.target.value })}
-                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
+                  style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontWeight: 700 }}
                 />
               </div>
             </div>

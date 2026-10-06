@@ -10,6 +10,11 @@ export default function AdminContactPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  const [joinBanner, setJoinBanner] = useState<any>(null);
+  const [teamEmail, setTeamEmail] = useState("hr@aarenintpro.com");
+  const [savingTeamEmail, setSavingTeamEmail] = useState(false);
+  const [teamEmailMsg, setTeamEmailMsg] = useState<string | null>(null);
+
   useEffect(() => {
     fetchSettings();
   }, []);
@@ -19,10 +24,58 @@ export default function AdminContactPage() {
       const res = await fetch(`/api/site-settings?t=${Date.now()}`, { cache: "no-store" });
       const json = await res.json();
       if (json.success) setSettings(json.data);
+
+      const resTeam = await fetch(`/api/team?t=${Date.now()}`, { cache: "no-store" });
+      const jsonTeam = await resTeam.json();
+      if (jsonTeam && jsonTeam.success) {
+        const banner = jsonTeam.joinBanner || (jsonTeam.data && jsonTeam.data.joinBanner);
+        if (banner) {
+          setJoinBanner(banner);
+          if (banner.email) setTeamEmail(banner.email);
+        }
+      }
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleSaveTeamEmail(e: React.FormEvent) {
+    e.preventDefault();
+    if (!teamEmail || !teamEmail.includes("@")) {
+      setTeamEmailMsg("Error: Please provide a valid email address");
+      return;
+    }
+    setSavingTeamEmail(true);
+    setTeamEmailMsg(null);
+    try {
+      const bannerToSave = {
+        ...(joinBanner || {
+          title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
+          fontSize: "medium",
+          hoursText: "Open 9am to 9pm (All days)",
+          phone: "+91 88844 64444",
+          address: "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026",
+        }),
+        email: teamEmail.trim(),
+      };
+      const res = await fetch("/api/team", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "joinBanner", data: bannerToSave }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setJoinBanner(bannerToSave);
+        setTeamEmailMsg(`🎉 Team page recruitment email updated to ${teamEmail.trim()}!`);
+      } else {
+        setTeamEmailMsg(`Error: ${json.error}`);
+      }
+    } catch (err: any) {
+      setTeamEmailMsg(`Failed: ${err.message}`);
+    } finally {
+      setSavingTeamEmail(false);
     }
   }
 
@@ -128,6 +181,85 @@ export default function AdminContactPage() {
                   style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px" }}
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Section 1B: Team Page (Careers / HR) Specific Contact Info */}
+          <div style={{ background: "#FFFFFF", border: "1px solid #E2DCD2", borderRadius: "16px", padding: "2rem", boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.2rem", borderBottom: "1px solid #EAE4D8", paddingBottom: "0.8rem", flexWrap: "wrap", gap: "1rem" }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+                  <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#81663F", margin: 0 }}>👥 Team Page Contact (Careers &amp; Recruitment)</h2>
+                  <span style={{ fontSize: "0.78rem", background: "rgba(129, 102, 63, 0.12)", color: "#81663F", border: "1px solid rgba(129, 102, 63, 0.25)", padding: "0.2rem 0.6rem", borderRadius: "4px", fontWeight: 800 }}>
+                    ONLY ON /team
+                  </span>
+                </div>
+                <p style={{ color: "#555555", fontSize: "0.88rem", margin: "0.4rem 0 0" }}>
+                  Controls the direct recipient email shown in the bottom section of the Team page (<em>&quot;Do You Want To Join The Creative Team?&quot;</em>).
+                </p>
+              </div>
+              <a
+                href="/admin/team"
+                style={{
+                  padding: "0.5rem 1.1rem",
+                  background: "#FAF8F5",
+                  color: "#81663F",
+                  border: "1px solid #D5CEBF",
+                  borderRadius: "8px",
+                  fontSize: "0.85rem",
+                  fontWeight: 800,
+                  textDecoration: "none",
+                }}
+              >
+                Go to Team CMS ↗
+              </a>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "1rem", alignItems: "end" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.85rem", color: "#1E1E1E", marginBottom: "0.4rem", fontWeight: 700 }}>
+                    Team Page Careers Email *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={teamEmail}
+                    onChange={(e) => setTeamEmail(e.target.value)}
+                    placeholder="hr@aarenintpro.com"
+                    style={{ width: "100%", padding: "0.8rem", background: "#FAF8F5", border: "1px solid #D5CEBF", color: "#1E1E1E", borderRadius: "8px", fontWeight: 700 }}
+                  />
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={handleSaveTeamEmail}
+                    disabled={savingTeamEmail}
+                    style={{
+                      width: "100%",
+                      padding: "0.8rem 1.4rem",
+                      background: "#81663F",
+                      color: "#FFFFFF",
+                      border: "none",
+                      borderRadius: "8px",
+                      fontWeight: 800,
+                      cursor: savingTeamEmail ? "wait" : "pointer",
+                      fontSize: "0.9rem",
+                      boxShadow: "0 4px 14px rgba(129, 102, 63, 0.25)",
+                    }}
+                  >
+                    {savingTeamEmail ? "Saving..." : "Update Team Page Email"}
+                  </button>
+                </div>
+              </div>
+              <span style={{ fontSize: "0.8rem", color: "#6A6359" }}>
+                💡 Note: This email is dedicated strictly to the Team page careers section. All general website contact inquiries remain directed to <strong>{settings.contactEmail || "info@aarenintpro.com"}</strong>.
+              </span>
+              {teamEmailMsg && (
+                <div style={{ padding: "0.8rem 1rem", borderRadius: "8px", background: teamEmailMsg.startsWith("Error") || teamEmailMsg.startsWith("Failed") ? "#FEE2E2" : "#DCFCE7", color: teamEmailMsg.startsWith("Error") || teamEmailMsg.startsWith("Failed") ? "#DC2626" : "#15803D", fontSize: "0.88rem", fontWeight: 700, border: teamEmailMsg.startsWith("Error") || teamEmailMsg.startsWith("Failed") ? "1px solid #FCA5A5" : "1px solid #86EFAC" }}>
+                  {teamEmailMsg}
+                </div>
+              )}
             </div>
           </div>
 

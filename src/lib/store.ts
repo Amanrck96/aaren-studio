@@ -1938,7 +1938,7 @@ export const DEFAULT_TEAM_JOIN_BANNER: TeamJoinBanner = {
   fontSize: "medium",
   hoursText: "Open 9am to 9pm (All days)",
   phone: "+91 88844 64444",
-  email: "info@aarenintpro.com",
+  email: "hr@aarenintpro.com",
   address: "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026",
 };
 
