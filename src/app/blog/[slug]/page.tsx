@@ -636,7 +636,7 @@ export default function BlogDetail({ params }: PageProps) {
           </p>
           <div className="ed-cta-meta">
             <div><strong>Location</strong>Mysore Road, Bengaluru</div>
-            <div><strong>Hours</strong>Mon&ndash;Sat, 10am&ndash;6:30pm</div>
+            <div><strong>Hours</strong>Mon&ndash;Sat, 10am&ndash;7pm</div>
             <div><strong>Ideal for</strong>Architects, builders &amp; homeowners</div>
           </div>
           <Link className="ed-cta-button" href="/contact">
