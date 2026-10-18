@@ -54,7 +54,7 @@ export default function AdminContactPage() {
         ...(joinBanner || {
           title: "DO YOU WANT TO JOIN THE CREATIVE TEAM?",
           fontSize: "medium",
-          hoursText: "Open 9am to 9pm (All days)",
+          hoursText: "Open 10am to 7pm (Monday to Saturday)",
           phone: "+91 88844 64444",
           address: "NO. 342/8, NTY LAYOUT, MYSORE ROAD, BENGALURU - 560026",
         }),
