@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <g stroke="#81663F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Outer Triangle: Left Diagonal & Right Vertical Stem -->
+    <path d="M 18 86 L 74 14 L 74 86" />
+    <!-- Horizontal Baseline to Arch -->
+    <path d="M 18 86 L 48 86" />
+    <!-- Architectural Archway -->
+    <path d="M 48 86 L 48 54 Q 48 46, 61 46 Q 74 46, 74 54" />
+    <!-- Right Rounded Loop -->
+    <path d="M 74 54 Q 84 54, 84 64 L 84 76 Q 84 86, 74 86" />
+  </g>
+</svg>
+
