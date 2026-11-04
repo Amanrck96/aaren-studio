@@ -56,3 +56,15 @@ Initialized: 2026-08-30
   * src/app/layout.tsx
   * docs/tasks/progress.txt
 --------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+[2026-11-04] Google Analytics (gtag.js) Integration
+- Status: Completed
+- Tasks Completed:
+  * Integrated Google tag (gtag.js) for measurement ID G-TYW0VM6JQ4 in RootLayout.
+  * Used official Next.js next/script component with strategy="afterInteractive" to optimize Core Web Vitals and prevent hydration blocking.
+  * Configured both external script loader and inline initialization script with unique id="google-analytics".
+- Files Modified:
+  * src/app/layout.tsx
+  * docs/tasks/progress.txt
+--------------------------------------------------------------------------------
